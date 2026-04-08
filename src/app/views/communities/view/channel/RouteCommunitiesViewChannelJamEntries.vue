@@ -1,6 +1,7 @@
 <script lang="ts">
-import { PropType, computed, ref, toRef, toRefs, watch } from 'vue';
+import { computed, PropType, ref, toRef, toRefs, watch } from 'vue';
 import { RouteLocationNormalized, RouterLink, useRoute, useRouter } from 'vue-router';
+
 import { Api } from '../../../../../_common/api/api.service';
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import { CommunityCompetitionEntryModel } from '../../../../../_common/community/competition/entry/entry.model';

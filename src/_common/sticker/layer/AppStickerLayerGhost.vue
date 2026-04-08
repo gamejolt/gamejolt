@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { onUnmounted, ref, toRef } from 'vue';
+
 import { styleBorderRadiusLg, styleChangeBg, styleWhen } from '../../../_styles/mixins';
 import { Analytics } from '../../analytics/analytics.service';
 import AppAnimElectricity from '../../animation/AppAnimElectricity.vue';

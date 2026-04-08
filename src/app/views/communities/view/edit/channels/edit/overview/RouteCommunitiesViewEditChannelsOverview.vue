@@ -1,6 +1,7 @@
 <script lang="ts">
 import { computed, toRef } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+
 import AppButton from '../../../../../../../../_common/button/AppButton.vue';
 import {
 	$archiveCommunityChannel,

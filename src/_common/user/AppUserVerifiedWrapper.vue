@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, CSSProperties, PropType, toRefs } from 'vue';
+
 import { styleChangeBg } from '../../_styles/mixins';
 import { kThemeFg } from '../theme/variables';
 import AppUserVerifiedTick from './AppUserVerifiedTick.vue';

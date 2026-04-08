@@ -1,12 +1,13 @@
 <script lang="ts" setup>
-import AppButton from '../../../../../_common/button/AppButton.vue';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { computed } from 'vue';
+
 import { vAppAuthRequired } from '../../../../../_common/auth/auth-required-directive';
+import AppButton from '../../../../../_common/button/AppButton.vue';
 import { formatNumber } from '../../../../../_common/filters/number';
 import { useCommonStore } from '../../../../../_common/store/common-store';
-import { $gettext } from '../../../../../_common/translate/translate.service';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
+import { $gettext } from '../../../../../_common/translate/translate.service';
 import {
 	libraryFollowCollection,
 	libraryUnfollowCollection,
@@ -40,16 +41,13 @@ const isFollowing = computed(() => {
 
 	return (
 		collections.value.findIndex(
-			item =>
-				item.type === collection.type && (item as any).id === collection.id
+			item => item.type === collection.type && (item as any).id === collection.id
 		) !== -1
 	);
 });
 
 const badge = computed(() => {
-	return !circle && isFollowing.value && followerCount
-		? formatNumber(followerCount)
-		: '';
+	return !circle && isFollowing.value && followerCount ? formatNumber(followerCount) : '';
 });
 
 const tooltip = computed(() => {

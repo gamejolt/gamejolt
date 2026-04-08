@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { run } from '../../../../utils/utils';
+
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { showSuccessGrowl } from '../../../../_common/growls/growls.service';
@@ -9,6 +9,7 @@ import AppModal from '../../../../_common/modal/AppModal.vue';
 import { useModal } from '../../../../_common/modal/modal.service';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
+import { run } from '../../../../utils/utils';
 import FormWithdrawFunds from '../../forms/withdraw-funds/FormWithdrawFunds.vue';
 
 const modal = useModal()!;

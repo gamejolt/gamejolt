@@ -1,9 +1,17 @@
 <script lang="ts">
+import { computed, ref } from 'vue';
+
 import { Api } from '../../../../../_common/api/api.service';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
 } from '../../../../../_common/route/route-component';
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
+import { $gettext } from '../../../../../_common/translate/translate.service';
+import AppTrophyListPaged from '../../../../../_common/trophy/list/AppTrophyListPaged.vue';
+import { populateTrophies } from '../../../../../_common/user/trophy/trophy-utils';
+import { UserBaseTrophyModel } from '../../../../../_common/user/trophy/user-base-trophy.model';
+import { useProfileRouteStore } from '../../RouteProfile.vue';
 
 export default {
 	name: 'RouteProfileTrophiesSite',
@@ -16,14 +24,6 @@ export default {
 </script>
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import AppTrophyListPaged from '../../../../../_common/trophy/list/AppTrophyListPaged.vue';
-import { populateTrophies } from '../../../../../_common/user/trophy/trophy-utils';
-import { UserBaseTrophyModel } from '../../../../../_common/user/trophy/user-base-trophy.model';
-import { useProfileRouteStore } from '../../RouteProfile.vue';
-
 const { user } = useProfileRouteStore()!;
 
 const trophies = ref<UserBaseTrophyModel[]>([]);
@@ -54,9 +54,7 @@ createAppRoute({
 	<div>
 		<div v-if="!hasTrophies" class="alert alert-info">
 			<span>
-				<AppTranslate
-					>This user has not achieved any Game Jolt trophies...yet.</AppTranslate
-				>
+				<AppTranslate>This user has not achieved any Game Jolt trophies...yet.</AppTranslate>
 			</span>
 		</div>
 

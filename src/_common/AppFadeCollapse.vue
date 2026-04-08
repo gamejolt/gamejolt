@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { onMounted, PropType, ref, toRefs, watch } from 'vue';
+
 import { sleep } from '../utils/utils';
 import { Screen } from './screen/screen-service';
 import { Scroll } from './scroll/scroll.service';

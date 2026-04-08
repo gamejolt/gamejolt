@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
+
 import { RouteLocationDefinition } from '../../../../utils/router';
 import { TagsInfo } from '../tags-info.service';
 
@@ -29,12 +30,8 @@ const location = computed((): RouteLocationDefinition => {
 });
 
 const active = computed(() => {
-	return (
-		route.name === 'discover.games.list._fetch-tag' &&
-		route.params.tag === tag
-	);
+	return route.name === 'discover.games.list._fetch-tag' && route.params.tag === tag;
 });
-
 </script>
 
 <template>

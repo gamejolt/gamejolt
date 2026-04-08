@@ -1,5 +1,6 @@
 import { computed, reactive, shallowReadonly } from 'vue';
 import { Router } from 'vue-router';
+
 import { importNoSSR } from '../../../_common/code-splitting';
 import { CurrencyType } from '../../../_common/currency/currency-type';
 import { FiresidePostGotoGrowl } from '../../../_common/fireside/post/goto-growl/goto-growl.service';

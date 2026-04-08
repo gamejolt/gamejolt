@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
+
 import { Environment } from '../../_common/environment/environment.service';
 import AppJolticon from '../../_common/jolticon/AppJolticon.vue';
 import { SellableType } from '../../_common/sellable/sellable.model';

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, onBeforeUnmount, onMounted, toRaw, toRefs, watchEffect } from 'vue';
+
 import { registerContentFocusWatcher } from '../../content-focus/content-focus.service';
 import { useScroller } from '../../scroll/AppScrollScroller.vue';
 import { registerStickerLayer, unregisterStickerLayer, useStickerStore } from '../sticker-store';

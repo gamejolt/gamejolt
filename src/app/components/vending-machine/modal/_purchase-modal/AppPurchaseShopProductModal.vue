@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import { PropType, Ref, computed, onMounted, onUnmounted, ref, toRefs, watchEffect } from 'vue';
+import { computed, onMounted, onUnmounted, PropType, Ref, ref, toRefs, watchEffect } from 'vue';
 import { useRouter } from 'vue-router';
+
 import { Api } from '../../../../../_common/api/api.service';
 import { vAppAuthRequired } from '../../../../../_common/auth/auth-required-directive';
 import { AvatarFrameModel } from '../../../../../_common/avatar/frame.model';
@@ -13,9 +14,9 @@ import {
 import AppCurrencyImg from '../../../../../_common/currency/AppCurrencyImg.vue';
 import AppCurrencyPillList from '../../../../../_common/currency/AppCurrencyPillList.vue';
 import {
+	canAffordCurrency,
 	Currency,
 	CurrencyType,
-	canAffordCurrency,
 } from '../../../../../_common/currency/currency-type';
 import { shorthandReadableTime } from '../../../../../_common/filters/duration';
 import { formatNumber } from '../../../../../_common/filters/number';
@@ -28,8 +29,8 @@ import {
 	purchaseShopProduct,
 } from '../../../../../_common/inventory/shop/inventory-shop-product-sale.model';
 import {
-	PurchasableProductData,
 	getShopProductDisplayData,
+	PurchasableProductData,
 } from '../../../../../_common/inventory/shop/product-owner-helpers';
 import AppLoading from '../../../../../_common/loading/AppLoading.vue';
 import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
@@ -43,8 +44,8 @@ import AppSectionTitle from '../../../../../_common/section/AppSectionTitle.vue'
 import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
 import AppStickerGrid from '../../../../../_common/sticker/pack/AppStickerGrid.vue';
 import { StickerPackModel } from '../../../../../_common/sticker/pack/pack.model';
-import { useStickerStore } from '../../../../../_common/sticker/sticker-store';
 import { StickerModel } from '../../../../../_common/sticker/sticker.model';
+import { useStickerStore } from '../../../../../_common/sticker/sticker-store';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import {
 	kThemeBgOffset,
@@ -54,8 +55,8 @@ import {
 } from '../../../../../_common/theme/variables';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../../_common/translate/translate.service';
-import AppUserAvatarBubble from '../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import { UserModel } from '../../../../../_common/user/user.model';
+import AppUserAvatarBubble from '../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import { styleBorderRadiusLg, styleFlexCenter, styleWhen } from '../../../../../_styles/mixins';
 import {
 	kBorderWidthBase,

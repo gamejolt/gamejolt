@@ -1,5 +1,6 @@
 <script lang="ts">
 import { computed, PropType, toRefs } from 'vue';
+
 import { DogtagData } from '../dogtag/dogtag-data';
 </script>
 

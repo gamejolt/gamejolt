@@ -1,12 +1,13 @@
 <script lang="ts">
-import { PropType, computed, toRefs } from 'vue';
+import { computed, PropType, toRefs } from 'vue';
+
 import { styleMaxWidthForOptions, styleTextOverflow, styleWhen } from '../../_styles/mixins';
 import { kFontSizeLarge } from '../../_styles/variables';
 import { isInstance } from '../../utils/utils';
 import { defineDynamicSlotProps, useDynamicSlots } from '../component-helpers';
 import AppSpacer from '../spacer/AppSpacer.vue';
-import AppUserAvatarBubble from '../user/user-avatar/AppUserAvatarBubble.vue';
 import { UserModel } from '../user/user.model';
+import AppUserAvatarBubble from '../user/user-avatar/AppUserAvatarBubble.vue';
 
 const Slots = ['avatar', 'supertitle', 'title'] as const;
 </script>

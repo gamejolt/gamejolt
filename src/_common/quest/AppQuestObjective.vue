@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
+
 import { showInviteModal } from '../invite/modal/modal.service';
 import AppJolticon, { Jolticon } from '../jolticon/AppJolticon.vue';
 import AppSpacer from '../spacer/AppSpacer.vue';

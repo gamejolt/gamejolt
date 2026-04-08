@@ -1,5 +1,6 @@
 <script lang="ts">
 import { computed, onMounted, PropType, ref, toRaw, toRefs } from 'vue';
+
 import {
 	getRectForStickerTarget,
 	StickerLayerController,

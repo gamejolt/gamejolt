@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import type { IClientOSInfo } from 'client-voodoo';
+
 import { Api } from '../../../../_common/api/api.service';
 import { ClientLogger } from '../../../../_common/client/logger/logger.service';
 import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';

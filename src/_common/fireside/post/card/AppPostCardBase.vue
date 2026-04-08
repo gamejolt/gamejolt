@@ -1,9 +1,10 @@
 <script lang="ts">
 import { computed, nextTick, onMounted, PropType, ref, toRefs, useSlots, watch } from 'vue';
+
 import AppFadeCollapse from '../../../AppFadeCollapse.vue';
 import AppBackground from '../../../background/AppBackground.vue';
-import { useContentFocusService } from '../../../content-focus/content-focus.service';
 import AppContentViewer from '../../../content/content-viewer/AppContentViewer.vue';
+import { useContentFocusService } from '../../../content-focus/content-focus.service';
 import AppImgResponsive from '../../../img/AppImgResponsive.vue';
 import AppMediaItemBackdrop from '../../../media-item/backdrop/AppMediaItemBackdrop.vue';
 import { MediaItemType } from '../../../media-item/media-item-model';

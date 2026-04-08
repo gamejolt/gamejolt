@@ -1,4 +1,5 @@
 import { defineAsyncComponent } from 'vue';
+
 import { showModal } from '../../modal/modal.service';
 import { SupporterActionModel } from '../action.model';
 import { SupporterMessageModel } from '../message.model';

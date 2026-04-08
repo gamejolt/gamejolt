@@ -1,6 +1,7 @@
 <script lang="ts">
 import { computed } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
+
 import { GamePackageModel } from '../../../../../../../../_common/game/package/package.model';
 import AppJolticon from '../../../../../../../../_common/jolticon/AppJolticon.vue';
 import AppLinkHelp from '../../../../../../../../_common/link/AppLinkHelp.vue';

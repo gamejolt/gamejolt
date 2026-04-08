@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType, ref, toRefs } from 'vue';
+
 import { ContextCapabilities } from '../../../../_common/content/content-context';
 import { ContentDocument } from '../../../../_common/content/content-document';
 import AppEditableOverlay from '../../../../_common/editable-overlay/AppEditableOverlay.vue';
@@ -16,8 +17,8 @@ import {
 	validateUsername,
 } from '../../../../_common/form-vue/validators';
 import Onboarding from '../../../../_common/onboarding/onboarding.service';
-import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
 import { $saveUser, UserModel } from '../../../../_common/user/user.model';
+import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
 import { showUserAvatarModal } from '../../user/avatar-modal/avatar-modal.service';
 
 type FormModel = {

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
+
 import AppButton from '../../../button/AppButton.vue';
 import { showErrorGrowl } from '../../../growls/growls.service';
 import AppJolticon from '../../../jolticon/AppJolticon.vue';

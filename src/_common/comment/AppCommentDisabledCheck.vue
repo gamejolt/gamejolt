@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { PropType, toRefs } from 'vue';
+
 import AppAlertBox from '../alert/AppAlertBox.vue';
 import AppTranslate from '../translate/AppTranslate.vue';
 import { CommentableModel } from './comment-model';

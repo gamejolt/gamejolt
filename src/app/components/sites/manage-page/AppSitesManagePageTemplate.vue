@@ -1,12 +1,13 @@
 <script lang="ts" setup>
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import AppButton from '../../../../_common/button/AppButton.vue';
 import { computed } from 'vue';
+
+import AppButton from '../../../../_common/button/AppButton.vue';
 import { Environment } from '../../../../_common/environment/environment.service';
 import { showErrorGrowl, showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import { $activateSite, SiteModel } from '../../../../_common/site/site-model';
-import { $gettext } from '../../../../_common/translate/translate.service';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import { $gettext } from '../../../../_common/translate/translate.service';
 import FormSiteSettings from '../../forms/site/settings/FormSiteSettings.vue';
 
 type Props = {
@@ -27,9 +28,7 @@ const contentEditorLocation = computed(() => {
 
 const enableTooltip = computed(() => {
 	return staticEnabled
-		? $gettext(
-				'This will disable your static site and use a customizable template instead.'
-		  )
+		? $gettext('This will disable your static site and use a customizable template instead.')
 		: undefined;
 });
 
@@ -46,10 +45,7 @@ function enable() {
 }
 
 function onSettingsSaved() {
-	showSuccessGrowl(
-		$gettext(`Your site settings have been saved.`),
-		$gettext(`Settings Saved`)
-	);
+	showSuccessGrowl($gettext(`Your site settings have been saved.`), $gettext(`Settings Saved`));
 }
 
 function getEditorLocation(tab: string) {

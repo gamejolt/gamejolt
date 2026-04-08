@@ -1,17 +1,21 @@
 <script lang="ts" setup>
-import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
-import { validateFilesize, validateImageMaxDimensions, validateMaxLength } from '../../../../../_common/form-vue/validators';
-import AppFormControlSelect from '../../../../../_common/form-vue/controls/AppFormControlSelect.vue';
-import AppFormControlTextarea from '../../../../../_common/form-vue/controls/AppFormControlTextarea.vue';
 import { computed, ref, toRef } from 'vue';
+
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControl from '../../../../../_common/form-vue/AppFormControl.vue';
 import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
+import AppFormControlSelect from '../../../../../_common/form-vue/controls/AppFormControlSelect.vue';
+import AppFormControlTextarea from '../../../../../_common/form-vue/controls/AppFormControlTextarea.vue';
 import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
+import {
+	validateFilesize,
+	validateImageMaxDimensions,
+	validateMaxLength,
+} from '../../../../../_common/form-vue/validators';
 import { GameModel } from '../../../../../_common/game/game.model';
 import {
 	$clearGameTrophyImage,
@@ -20,9 +24,10 @@ import {
 } from '../../../../../_common/game/trophy/trophy.model';
 import AppImgResponsive from '../../../../../_common/img/AppImgResponsive.vue';
 import { showModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
-import { BaseTrophyDifficulty } from '../../../../../_common/trophy/base-trophy.model';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
+import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
+import { BaseTrophyDifficulty } from '../../../../../_common/trophy/base-trophy.model';
 
 type Props = {
 	game: GameModel;
@@ -109,7 +114,11 @@ async function clearImage() {
 		</div>
 
 		<!-- TODO(vue3) translate-comment="Refers to a difficulty level. How easy/hard it is to accomplish." -->
-		<AppFormGroup v-if="form.method === 'edit'" name="difficulty" :label="$gettext(`Difficulty`)">
+		<AppFormGroup
+			v-if="form.method === 'edit'"
+			name="difficulty"
+			:label="$gettext(`Difficulty`)"
+		>
 			<AppFormControlSelect>
 				<option v-for="item of difficultyOptions" :key="item.label" :value="item.value">
 					{{ item.label }}

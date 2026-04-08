@@ -1,6 +1,7 @@
 <script lang="ts">
 import { inject, InjectionKey, provide, ref } from 'vue';
 import { RouterLink, RouterView, useRoute } from 'vue-router';
+
 import { Api } from '../../../../_common/api/api.service';
 import AppAvatarFrame from '../../../../_common/avatar/AppAvatarFrame.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';

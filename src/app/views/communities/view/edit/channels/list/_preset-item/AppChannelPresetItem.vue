@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
+
 import AppCardListItem from '../../../../../../../../_common/card/list/AppCardListItem.vue';
 import {
 	CommunityModel,

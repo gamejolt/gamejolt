@@ -11,17 +11,10 @@ export const enum VideoStatus {
 	/** The video upload encountered some error */
 	ERROR = 'error',
 }
-</script>
-
-<script lang="ts" setup>
-import { validateFilesize } from '../../../../../_common/form-vue/validators';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
-import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppButton from '../../../../../_common/button/AppButton.vue';
 import { computed, ref, useTemplateRef, watch } from 'vue';
+
 import { Api, ApiProgressEvent } from '../../../../../_common/api/api.service';
+import AppButton from '../../../../../_common/button/AppButton.vue';
 import { formatNumber } from '../../../../../_common/filters/number';
 import {
 	$removeFiresidePostVideo,
@@ -29,15 +22,20 @@ import {
 } from '../../../../../_common/fireside/post/post-model';
 import { FiresidePostVideoModel } from '../../../../../_common/fireside/post/video/video-model';
 import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
+import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormLegend from '../../../../../_common/form-vue/AppFormLegend.vue';
 import AppFormControlUpload, {
 	AppFormControlUploadInterface,
 } from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
+import { validateFilesize } from '../../../../../_common/form-vue/validators';
 import { showErrorGrowl, showSuccessGrowl } from '../../../../../_common/growls/growls.service';
+import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
 import { showModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import { Payload } from '../../../../../_common/payload/payload-service';
 import AppProgressBar from '../../../../../_common/progress/AppProgressBar.vue';
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import AppVideoPlayer from '../../../../../_common/video/player/AppVideoPlayer.vue';
 import AppVideoProcessingProgress from '../../../../../_common/video/processing-progress/AppVideoProcessingProgress.vue';
@@ -200,9 +198,7 @@ function onProgressUpdate(e: ApiProgressEvent | null) {
 }
 
 function validateDataTransfer(e: DragEvent) {
-	return (
-		e.dataTransfer && e.dataTransfer.items.length && e.dataTransfer.items[0].kind === 'file'
-	);
+	return e.dataTransfer && e.dataTransfer.items.length && e.dataTransfer.items[0].kind === 'file';
 }
 
 function onDragOver(e: DragEvent) {
@@ -239,9 +235,7 @@ function onProcessingComplete({ video }: any) {
 
 	showSuccessGrowl({
 		title: $gettext('Video uploaded!'),
-		message: $gettext(
-			'Your video was successfully processed. The post can now be published.'
-		),
+		message: $gettext('Your video was successfully processed. The post can now be published.'),
 		system: true,
 	});
 

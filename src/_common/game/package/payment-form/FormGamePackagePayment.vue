@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { PropType, computed, ref, toRefs, watch } from 'vue';
+import { computed, PropType, ref, toRefs, watch } from 'vue';
+
 import { arrayIndexBy } from '../../../../utils/array';
 import { Api } from '../../../api/api.service';
 import AppButton from '../../../button/AppButton.vue';
@@ -7,7 +8,7 @@ import { getDeviceArch, getDeviceOS } from '../../../device/device.service';
 import { Environment } from '../../../environment/environment.service';
 import AppExpand from '../../../expand/AppExpand.vue';
 import { formatCurrency } from '../../../filters/currency';
-import AppForm, { FormController, createForm } from '../../../form-vue/AppForm.vue';
+import AppForm, { createForm, FormController } from '../../../form-vue/AppForm.vue';
 import AppFormButton from '../../../form-vue/AppFormButton.vue';
 import AppFormControl from '../../../form-vue/AppFormControl.vue';
 import AppFormControlError from '../../../form-vue/AppFormControlError.vue';

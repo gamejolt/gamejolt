@@ -1,8 +1,9 @@
 <script lang="ts">
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
-import AppFadeCollapse from '../../../../../_common/AppFadeCollapse.vue';
+
 import { Api } from '../../../../../_common/api/api.service';
+import AppFadeCollapse from '../../../../../_common/AppFadeCollapse.vue';
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import AppContentViewer from '../../../../../_common/content/content-viewer/AppContentViewer.vue';
 import { Environment } from '../../../../../_common/environment/environment.service';

@@ -1,7 +1,6 @@
 <script lang="ts" setup>
-import { validateMaxLength, validateAvailability } from '../../../../../_common/form-vue/validators';
-import AppFormControlRadio from '../../../../../_common/form-vue/controls/AppFormControlRadio.vue';
 import { toRef } from 'vue';
+
 import {
 	$inviteCollaborator,
 	CollaboratorModel,
@@ -14,6 +13,11 @@ import AppFormControlError from '../../../../../_common/form-vue/AppFormControlE
 import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
 import AppFormControlPrefix from '../../../../../_common/form-vue/AppFormControlPrefix.vue';
 import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
+import AppFormControlRadio from '../../../../../_common/form-vue/controls/AppFormControlRadio.vue';
+import {
+	validateAvailability,
+	validateMaxLength,
+} from '../../../../../_common/form-vue/validators';
 import { GameModel } from '../../../../../_common/game/game.model';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 

@@ -1,7 +1,9 @@
 <script lang="ts">
 import { computed, Ref, ref } from 'vue';
 import { RouterLink, RouterView, useRoute } from 'vue-router';
+
 import { Api } from '../../../../_common/api/api.service';
+import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { Meta } from '../../../../_common/meta/meta-service';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
@@ -27,7 +29,6 @@ export default {
 </script>
 
 <script lang="ts" setup>
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 interface PayloadCategory {
 	category: HelpCategoryModel;
 	pages: HelpPageModel[];

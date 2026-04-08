@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onMounted, ref, onUnmounted, toRefs } from 'vue';
+import { onMounted, onUnmounted, ref, toRefs } from 'vue';
 
 const props = defineProps({
 	expiresOn: {

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import AppTimeAgo from '../../../../_common/time/AppTimeAgo.vue';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import AppUserVerifiedTick from '../../../../_common/user/AppUserVerifiedTick.vue';
 import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
 import { UserGameScoreModel } from '../../../../_common/user/game-score/game-score.model';

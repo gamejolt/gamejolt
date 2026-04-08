@@ -1,5 +1,6 @@
 <script lang="ts">
 import { computed, ref } from 'vue';
+
 import { Api } from '../../../../../../../_common/api/api.service';
 import { formatNumber } from '../../../../../../../_common/filters/number';
 import { GameTrophyModel } from '../../../../../../../_common/game/trophy/trophy.model';
@@ -13,8 +14,8 @@ import { $gettext } from '../../../../../../../_common/translate/translate.servi
 import AppTrophyCompletion from '../../../../../../../_common/trophy/AppTrophyCompletion.vue';
 import AppTrophyList from '../../../../../../../_common/trophy/list/AppTrophyList.vue';
 import {
-	UserGameTrophyModel,
 	indexAchievedGameTrophies,
+	UserGameTrophyModel,
 } from '../../../../../../../_common/user/trophy/game-trophy.model';
 import { useGameRouteController } from '../../RouteDiscoverGamesView.vue';
 

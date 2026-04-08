@@ -1,7 +1,8 @@
 import { defineAsyncComponent } from 'vue';
+
 import { showModal } from '../../modal/modal.service';
-import { ModelStoreModel } from '../../model/model-store.service';
 import { Model } from '../../model/model.service';
+import { ModelStoreModel } from '../../model/model-store.service';
 
 export async function showReportModal(resource: Model | ModelStoreModel) {
 	await showModal({

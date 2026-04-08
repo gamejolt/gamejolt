@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { computed, ref, Ref } from 'vue';
+import { computed, Ref, ref } from 'vue';
+
 import AppAvatarFrame from '../../../../_common/avatar/AppAvatarFrame.vue';
 import { AvatarFrameModel, DefaultAvatarFrameScale } from '../../../../_common/avatar/frame.model';
 import AppButton from '../../../../_common/button/AppButton.vue';

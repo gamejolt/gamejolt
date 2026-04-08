@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { onMounted } from 'vue';
 import { RouterView } from 'vue-router';
+
 import { AppClientBase } from '../_common/client/safe-exports';
 import { Connection } from '../_common/connection/connection-service';
 import AppErrorPage from '../_common/error/page/AppErrorPage.vue';

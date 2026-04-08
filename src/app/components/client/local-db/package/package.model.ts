@@ -1,4 +1,5 @@
 import type { IParsedWrapper } from 'client-voodoo';
+
 import { Api } from '../../../../../_common/api/api.service';
 import { getDeviceArch, getDeviceOS } from '../../../../../_common/device/device.service';
 import { GameBuildModel } from '../../../../../_common/game/build/build.model';

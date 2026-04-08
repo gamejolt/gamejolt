@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
+
 import AppButton from '../../button/AppButton.vue';
 import AppContentViewer from '../../content/content-viewer/AppContentViewer.vue';
 import AppMediaItemBackdrop from '../../media-item/backdrop/AppMediaItemBackdrop.vue';

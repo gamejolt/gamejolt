@@ -1,5 +1,6 @@
 import { Channel } from 'phoenix';
 import { markRaw, reactive } from 'vue';
+
 import { Analytics } from '../../../_common/analytics/analytics.service';
 import { CommunityModel } from '../../../_common/community/community.model';
 import { ensureConfig } from '../../../_common/config/config.service';
@@ -17,8 +18,8 @@ import Onboarding from '../../../_common/onboarding/onboarding.service';
 import { SettingFeedNotifications } from '../../../_common/settings/settings.service';
 import { SiteTrophyModel } from '../../../_common/site/trophy/trophy.model';
 import {
-	SocketController,
 	createSocketController,
+	SocketController,
 } from '../../../_common/socket/socket-controller';
 import { commonStore } from '../../../_common/store/common-store';
 import { $gettext } from '../../../_common/translate/translate.service';
@@ -36,10 +37,10 @@ import { gotoNotification } from '../activity/feed/notification/notification-rou
 import { ChatClient, clearChat, connectChat, createChatClient } from '../chat/client';
 import {
 	CommentTopicPayload,
-	GridCommentChannel,
 	createGridCommentChannel,
+	GridCommentChannel,
 } from './comment-channel';
-import { GridNotificationChannel, createGridNotificationChannel } from './notification-channel';
+import { createGridNotificationChannel,GridNotificationChannel } from './notification-channel';
 
 type ClearNotificationsType =
 	// For the user's activity feed.

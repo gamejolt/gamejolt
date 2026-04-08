@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
+
 import { Environment } from '../../environment/environment.service';
 import { SellableModel } from '../../sellable/sellable.model';
 

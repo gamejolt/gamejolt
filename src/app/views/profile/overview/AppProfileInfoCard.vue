@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType, computed } from 'vue';
+import { computed, CSSProperties, PropType } from 'vue';
+
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import { kThemeFg10 } from '../../../../_common/theme/variables';
@@ -9,11 +10,11 @@ import AppUserAvatarBubble from '../../../../_common/user/user-avatar/AppUserAva
 import { styleFlexCenter, styleLineClamp, styleWhen } from '../../../../_styles/mixins';
 import { kFontSizeSmall, kFontSizeTiny, kStrongEaseOut } from '../../../../_styles/variables';
 import { showCommentModal } from '../../../components/comment/modal/modal.service';
-import { useProfileRouteStore } from '../RouteProfile.vue';
 import { showProfileCommunitiesModal } from '../communities/modal.service';
 import AppProfileDogtags from '../dogtags/AppProfileDogtags.vue';
 import { showProfileFollowersModal } from '../followers/modal.service';
 import { showProfileFollowingModal } from '../following/modal.service';
+import { useProfileRouteStore } from '../RouteProfile.vue';
 import AppProfileActionButtons from './AppProfileActionButtons.vue';
 import AppProfileBio from './AppProfileBio.vue';
 import AppProfileShortcuts, { ProfileQuickLink } from './shortcut/AppProfileShortcuts.vue';

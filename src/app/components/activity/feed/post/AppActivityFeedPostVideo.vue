@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, CSSProperties, PropType, ref, toRefs } from 'vue';
+
 import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
 import { $viewPostVideo } from '../../../../../_common/fireside/post/video/video-model';
 import { Screen } from '../../../../../_common/screen/screen-service';

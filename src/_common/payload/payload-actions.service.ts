@@ -1,7 +1,7 @@
 import { clampNumber } from '../../utils/number';
 import { CreatorExperienceModel } from '../creator/experience/experience.model';
-import { storeModel } from '../model/model-store.service';
 import { UnknownModelData } from '../model/model.service';
+import { storeModel } from '../model/model-store.service';
 import { getShellNotice } from '../shell/notice/notice.service';
 import { showStickerPackOpenModal } from '../sticker/pack/open-modal/modal.service';
 import { UserStickerPackModel } from '../sticker/pack/user-pack.model';

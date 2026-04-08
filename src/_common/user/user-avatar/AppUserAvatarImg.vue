@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { PropType, ref } from 'vue';
+
 import { imageGuestAvatar } from '../../img/images';
 import { UserCommonFields } from '../user.model';
 

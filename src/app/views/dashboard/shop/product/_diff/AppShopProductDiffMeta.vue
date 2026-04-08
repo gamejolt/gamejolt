@@ -1,5 +1,6 @@
 <script lang="ts">
-import { PropType, computed, toRefs } from 'vue';
+import { computed, PropType, toRefs } from 'vue';
+
 import { StickerModel } from '../../../../../../_common/sticker/sticker.model';
 import { useShopDashStore } from '../../shop.store';
 import AppShopProductDiffMetaEntry from './AppShopProductDiffMetaEntry.vue';

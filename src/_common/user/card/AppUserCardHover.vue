@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType, ref, toRefs, watch } from 'vue';
+
 import { Api } from '../../api/api.service';
 import AppPopper from '../../popper/AppPopper.vue';
 import { Screen } from '../../screen/screen-service';

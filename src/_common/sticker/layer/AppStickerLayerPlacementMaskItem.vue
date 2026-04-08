@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { onMounted, PropType, ref, toRefs } from 'vue';
+
 import { getStickerLayerTargetBoundingBox } from './AppStickerLayerPlacementMaskTarget.vue';
 import { getRectForStickerTarget, StickerLayerController } from './layer-controller';
 import { StickerLayerItem } from './layer-item';

@@ -1,9 +1,27 @@
 <script lang="ts">
+import { computed, ref } from 'vue';
+import { useRouter } from 'vue-router';
+
 import { Api } from '../../../../../../../../../_common/api/api.service';
+import { GameBuildModel } from '../../../../../../../../../_common/game/build/build.model';
+import { GameBuildLaunchOptionModel } from '../../../../../../../../../_common/game/build/launch-option/launch-option.model';
+import { GamePackageModel } from '../../../../../../../../../_common/game/package/package.model';
+import {
+	$removeGameRelease,
+	$unpublishGameRelease,
+	GameReleaseModel,
+} from '../../../../../../../../../_common/game/release/release.model';
+import { showSuccessGrowl } from '../../../../../../../../../_common/growls/growls.service';
+import AppJolticon from '../../../../../../../../../_common/jolticon/AppJolticon.vue';
+import { showModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
 } from '../../../../../../../../../_common/route/route-component';
+import AppTranslate from '../../../../../../../../../_common/translate/AppTranslate.vue';
+import { $gettext } from '../../../../../../../../../_common/translate/translate.service';
+import FormGameRelease from '../../../../../../../../components/forms/game/release/FormGameRelease.vue';
+import { useGameDashRouteController } from '../../../../manage.store';
 
 export default {
 	name: 'RouteDashGamesManageGamePackageReleaseEdit',
@@ -23,24 +41,6 @@ export default {
 </script>
 
 <script lang="ts" setup>
-import AppTranslate from '../../../../../../../../../_common/translate/AppTranslate.vue';
-import AppJolticon from '../../../../../../../../../_common/jolticon/AppJolticon.vue';
-import { computed, ref } from 'vue';
-import { useRouter } from 'vue-router';
-import { GameBuildModel } from '../../../../../../../../../_common/game/build/build.model';
-import { GameBuildLaunchOptionModel } from '../../../../../../../../../_common/game/build/launch-option/launch-option.model';
-import { GamePackageModel } from '../../../../../../../../../_common/game/package/package.model';
-import {
-	$removeGameRelease,
-	$unpublishGameRelease,
-	GameReleaseModel,
-} from '../../../../../../../../../_common/game/release/release.model';
-import { showSuccessGrowl } from '../../../../../../../../../_common/growls/growls.service';
-import { showModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
-import { $gettext } from '../../../../../../../../../_common/translate/translate.service';
-import FormGameRelease from '../../../../../../../../components/forms/game/release/FormGameRelease.vue';
-import { useGameDashRouteController } from '../../../../manage.store';
-
 const router = useRouter();
 const { game } = useGameDashRouteController()!;
 

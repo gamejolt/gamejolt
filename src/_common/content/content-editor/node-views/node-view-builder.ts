@@ -1,5 +1,6 @@
 import { Node } from 'prosemirror-model';
 import { Decoration, EditorView, NodeView } from 'prosemirror-view';
+
 import { ContentEditorController } from '../content-editor-controller';
 import { ContentEditorSchema } from '../schemas/content-editor-schema';
 import { CustomButtonNodeView } from './custom-button';

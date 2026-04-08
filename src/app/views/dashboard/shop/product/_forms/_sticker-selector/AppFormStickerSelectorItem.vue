@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType, computed, toRefs } from 'vue';
+import { computed, CSSProperties, PropType, toRefs } from 'vue';
+
 import AppJolticon from '../../../../../../../_common/jolticon/AppJolticon.vue';
 import AppStickerImg from '../../../../../../../_common/sticker/AppStickerImg.vue';
 import { StickerModel } from '../../../../../../../_common/sticker/sticker.model';

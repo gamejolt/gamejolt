@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { PropType, computed, toRefs } from 'vue';
+import { computed, PropType, toRefs } from 'vue';
+
 import { vAppAuthRequired } from '../../../../_common/auth/auth-required-directive';
 import { CommentableModel } from '../../../../_common/comment/comment-model';
 import { Model } from '../../../../_common/model/model.service';

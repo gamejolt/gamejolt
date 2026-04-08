@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
+
 import AppChatList from '../_list/AppChatList.vue';
 import { ChatRoomModel } from '../room';
 import { ChatUser } from '../user';

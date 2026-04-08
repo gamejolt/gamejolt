@@ -1,5 +1,14 @@
 <script lang="ts">
+import { ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+
+import { Client } from '../../../../../_common/client/safe-exports';
+import { showErrorGrowl } from '../../../../../_common/growls/growls.service';
+import AppLoading from '../../../../../_common/loading/AppLoading.vue';
+import AppProgressPoller from '../../../../../_common/progress/poller/AppProgressPoller.vue';
 import { defineAppRouteOptions } from '../../../../../_common/route/route-component';
+import { createAppRoute } from '../../../../../_common/route/route-component';
+import { $gettext } from '../../../../../_common/translate/translate.service';
 
 export default {
 	name: 'RouteAuthLinkedAccountPoll',
@@ -10,15 +19,6 @@ export default {
 </script>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import { Client } from '../../../../../_common/client/safe-exports';
-import { showErrorGrowl } from '../../../../../_common/growls/growls.service';
-import AppLoading from '../../../../../_common/loading/AppLoading.vue';
-import AppProgressPoller from '../../../../../_common/progress/poller/AppProgressPoller.vue';
-import { createAppRoute } from '../../../../../_common/route/route-component';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-
 const route = useRoute();
 const router = useRouter();
 

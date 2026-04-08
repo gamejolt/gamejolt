@@ -1,10 +1,11 @@
 import type { PatchEvents, PatchInstance } from 'client-voodoo';
-import { ComputedRef, Ref, markRaw, reactive } from 'vue';
+import { ComputedRef, markRaw, reactive,Ref } from 'vue';
+
 import { Api } from '../../../_common/api/api.service';
 import {
 	Patcher,
-	State as PatcherState,
 	Rollbacker,
+	State as PatcherState,
 	Uninstaller,
 } from '../../../_common/client/client-voodoo-imports';
 import type { GameBuildModel } from '../../../_common/game/build/build.model';

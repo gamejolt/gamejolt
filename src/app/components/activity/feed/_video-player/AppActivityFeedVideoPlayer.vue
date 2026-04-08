@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { PropType, Ref, computed, onBeforeUnmount, ref, toRefs, watch } from 'vue';
+import { computed, onBeforeUnmount, PropType, Ref, ref, toRefs, watch } from 'vue';
+
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import { MediaItemModel } from '../../../../../_common/media-item/media-item-model';
 import AppScrollInview, {
@@ -11,9 +12,9 @@ import AppVideoPlayer, {
 	createDenseReadableTimestamp,
 } from '../../../../../_common/video/player/AppVideoPlayer.vue';
 import {
-	VideoPlayerController,
 	createVideoPlayerController,
 	queueVideoTimeChange,
+	VideoPlayerController,
 } from '../../../../../_common/video/player/controller';
 import { styleBorderRadiusBase, styleOverlayTextShadow } from '../../../../../_styles/mixins';
 import { kFontSizeLarge, kFontSizeSmall } from '../../../../../_styles/variables';

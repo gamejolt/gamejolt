@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType, ref, toRef, toRefs } from 'vue';
+
 import { Analytics } from '../../analytics/analytics.service';
 import { vAppObserveDimensions } from '../../observe-dimensions/observe-dimensions.directive';
 import { useScroller } from '../../scroll/AppScrollScroller.vue';

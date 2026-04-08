@@ -1,6 +1,7 @@
 <script lang="ts">
 import { toRef } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+
 import AppAlertDismissable from '../../../../../../_common/alert/dismissable/AppAlertDismissable.vue';
 import AppButton from '../../../../../../_common/button/AppButton.vue';
 import { $removeCollaboratorInvite } from '../../../../../../_common/collaborator/collaborator.model';
@@ -16,12 +17,12 @@ import { useThemeStore } from '../../../../../../_common/theme/theme.store';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
 import { enforceLocation } from '../../../../../../utils/router';
 import AppCommunityPerms from '../../../../../components/community/perms/AppCommunityPerms.vue';
-import FormCommunity from '../../../../../components/forms/community/FormCommunity.vue';
 import FormCommunityDescription from '../../../../../components/forms/community/description/FormCommunityDescription.vue';
+import FormCommunity from '../../../../../components/forms/community/FormCommunity.vue';
 import { useGridStore } from '../../../../../components/grid/grid-store';
 import { useAppStore } from '../../../../../store';
-import { CommunityThemeKey } from '../../RouteCommunitiesView.vue';
 import AppCommunityPageContainer from '../../_page-container/AppCommunityPageContainer.vue';
+import { CommunityThemeKey } from '../../RouteCommunitiesView.vue';
 import { useCommunityRouteStore } from '../../view.store';
 
 export default {

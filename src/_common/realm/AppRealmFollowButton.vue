@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType, ref, toRefs } from 'vue';
+
 import { RealmFollowSource } from '../analytics/analytics.service';
 import { vAppAuthRequired } from '../auth/auth-required-directive';
 import AppButton from '../button/AppButton.vue';

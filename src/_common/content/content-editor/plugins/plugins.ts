@@ -2,6 +2,7 @@ import { baseKeymap } from 'prosemirror-commands';
 import { history } from 'prosemirror-history';
 import { keymap } from 'prosemirror-keymap';
 import { Plugin } from 'prosemirror-state';
+
 import { ContentEditorController } from '../content-editor-controller';
 import { ContentEditorSchema } from '../schemas/content-editor-schema';
 import { createInputRules } from './input-rules';

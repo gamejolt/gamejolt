@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
+
 import AppButton from '../../../_common/button/AppButton.vue';
 import AppContentViewer from '../../../_common/content/content-viewer/AppContentViewer.vue';
 import { FiresidePostModel } from '../../../_common/fireside/post/post-model';

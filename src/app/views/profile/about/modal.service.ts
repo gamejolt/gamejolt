@@ -1,7 +1,8 @@
 import { defineAsyncComponent, markRaw } from 'vue';
+
 import { showModal } from '../../../../_common/modal/modal.service';
-import { ProfileRouteStore } from '../RouteProfile.vue';
 import { ProfileQuickLink } from '../overview/shortcut/AppProfileShortcuts.vue';
+import { ProfileRouteStore } from '../RouteProfile.vue';
 
 export async function showProfileAboutModal({
 	routeStore,

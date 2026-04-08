@@ -1,4 +1,5 @@
 import { defineAsyncComponent } from 'vue';
+
 import { GameModel } from '../../../../../_common/game/game.model';
 import { showModal } from '../../../../../_common/modal/modal.service';
 import { Media } from '../../../../views/dashboard/games/manage/manage.store';

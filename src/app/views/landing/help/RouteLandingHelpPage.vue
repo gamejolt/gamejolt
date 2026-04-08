@@ -1,8 +1,11 @@
 <script lang="ts">
 import { computed, ref } from 'vue';
+
 import { Api } from '../../../../_common/api/api.service';
+import AppButton from '../../../../_common/button/AppButton.vue';
 import AppContentViewer from '../../../../_common/content/content-viewer/AppContentViewer.vue';
 import { Environment } from '../../../../_common/environment/environment.service';
+import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { Meta } from '../../../../_common/meta/meta-service';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import AppShareCard from '../../../../_common/share/card/AppShareCard.vue';
@@ -23,8 +26,6 @@ export default {
 </script>
 
 <script lang="ts" setup>
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import AppButton from '../../../../_common/button/AppButton.vue';
 const page = ref<HelpPageModel>();
 
 const { user } = useCommonStore();

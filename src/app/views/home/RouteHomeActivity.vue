@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { inject, ref, watch } from 'vue';
 import { RouterLink } from 'vue-router';
+
 import { Api } from '../../../_common/api/api.service';
 import AppButton from '../../../_common/button/AppButton.vue';
 import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
@@ -13,8 +14,8 @@ import { useGridStore } from '../../components/grid/grid-store';
 import { AppActivityFeedLazy } from '../../components/lazy';
 import { useAppStore } from '../../store/index';
 import { routeDiscoverHome } from '../discover/home/home.route';
-import { RouteActivityFeedController } from './RouteHomeFeed.vue';
 import { shouldUseFYPDefault } from './home-feed.service';
+import { RouteActivityFeedController } from './RouteHomeFeed.vue';
 
 defineOptions(
 	defineAppRouteOptions({

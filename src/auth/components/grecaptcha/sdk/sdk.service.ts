@@ -10,7 +10,7 @@ export class GrecaptchaSdk {
 
 		if (!this.bootstrapPromise) {
 			this.bootstrapPromise = new Promise((resolve, reject) => {
-				let bootstrapLib = (d: Document, id: string) => {
+				const bootstrapLib = (d: Document, id: string) => {
 					(window as any).grecaptchaOnLoaded = () => resolve();
 
 					let js: HTMLScriptElement,
@@ -21,7 +21,8 @@ export class GrecaptchaSdk {
 						js.type = 'text/javascript';
 						js.src =
 							'https://www.google.com/recaptcha/api.js?onload=grecaptchaOnLoaded&render=explicit';
-						js.onerror = err => reject('Failed to load recaptcha api: ' + (err as any).message);
+						js.onerror = err =>
+							reject('Failed to load recaptcha api: ' + (err as any).message);
 						fjs.parentNode!.insertBefore(js, fjs);
 					}
 				};

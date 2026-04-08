@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
+
 import AppAspectRatio from '../aspect-ratio/AppAspectRatio.vue';
 import { beans } from './beans';
 

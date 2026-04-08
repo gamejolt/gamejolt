@@ -1,11 +1,12 @@
 <script lang="ts" setup>
-import AppTranslate from '../../../../../../../_common/translate/AppTranslate.vue';
-import AppJolticon from '../../../../../../../_common/jolticon/AppJolticon.vue';
-import AppLinkExternal from '../../../../../../../_common/link/AppLinkExternal.vue';
 import { computed } from 'vue';
+
 import { formatDate } from '../../../../../../../_common/filters/date';
 import { GameCreationToolOther } from '../../../../../../../_common/game/game.model';
+import AppJolticon from '../../../../../../../_common/jolticon/AppJolticon.vue';
 import AppLazyPlaceholder from '../../../../../../../_common/lazy/placeholder/AppLazyPlaceholder.vue';
+import AppLinkExternal from '../../../../../../../_common/link/AppLinkExternal.vue';
+import AppTranslate from '../../../../../../../_common/translate/AppTranslate.vue';
 import { useGameRouteController } from '../../RouteDiscoverGamesView.vue';
 
 const routeStore = useGameRouteController()!;

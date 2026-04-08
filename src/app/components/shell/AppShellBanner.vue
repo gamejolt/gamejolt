@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import { onUnmounted, unref, watch } from 'vue';
+
+import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import { Scroll } from '../../../_common/scroll/scroll.service';
 import { useBannerStore } from '../../store/banner';
 

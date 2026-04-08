@@ -1,5 +1,8 @@
 <script lang="ts" setup>
+import './comment.styl';
+
 import { PropType, ref } from 'vue';
+
 import { kFontSizeBase } from '../../_styles/variables';
 import AppFadeCollapse from '../AppFadeCollapse.vue';
 import AppContentViewer from '../content/content-viewer/AppContentViewer.vue';
@@ -8,7 +11,6 @@ import { formatDate } from '../filters/date';
 import AppReactionList from '../reaction/list/AppReactionList.vue';
 import AppTranslate from '../translate/AppTranslate.vue';
 import { CommentModel } from './comment-model';
-import './comment.styl';
 
 defineProps({
 	comment: {

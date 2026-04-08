@@ -1,6 +1,7 @@
 <script lang="ts">
 import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
+
 import AppAlertDismissable from '../../../../_common/alert/dismissable/AppAlertDismissable.vue';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';

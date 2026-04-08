@@ -1,4 +1,5 @@
 import { defineAsyncComponent } from 'vue';
+
 import { showModal } from '../../../../../../../_common/modal/modal.service';
 import { StickerModel } from '../../../../../../../_common/sticker/sticker.model';
 

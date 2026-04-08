@@ -1,10 +1,9 @@
 <script lang="ts" setup>
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import { TranslateDirective as vTranslate } from '../../../../_common/translate/translate-directive';
 import { formatDistanceStrict } from 'date-fns';
 import { computed, nextTick, onMounted, useTemplateRef } from 'vue';
+
 import AppAlertDismissable from '../../../../_common/alert/dismissable/AppAlertDismissable.vue';
+import AppButton from '../../../../_common/button/AppButton.vue';
 import { ContentDocument } from '../../../../_common/content/content-document';
 import { ContentWriter } from '../../../../_common/content/content-writer';
 import {
@@ -12,6 +11,8 @@ import {
 	FiresidePostModel,
 } from '../../../../_common/fireside/post/post-model';
 import { useCommonStore } from '../../../../_common/store/common-store';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import { TranslateDirective as vTranslate } from '../../../../_common/translate/translate-directive';
 import { UserModel } from '../../../../_common/user/user.model';
 import { sleep } from '../../../../utils/utils';
 import { showCommentModal } from '../../comment/modal/modal.service';
@@ -80,16 +81,10 @@ async function showNewPost() {
 
 async function drop(elem: HTMLDivElement) {
 	await nextTick();
-	elem.animate(
-		[
-			{ top: elem.style.top },
-			{ top: '100%' },
-		],
-		{
-			duration: Math.random() * 2000 + 2000,
-			iterations: Infinity,
-		}
-	);
+	elem.animate([{ top: elem.style.top }, { top: '100%' }], {
+		duration: Math.random() * 2000 + 2000,
+		iterations: Infinity,
+	});
 }
 
 onMounted(async () => {

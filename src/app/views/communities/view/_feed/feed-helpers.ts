@@ -1,4 +1,5 @@
 import { RouteLocationNormalized } from 'vue-router';
+
 import { Api } from '../../../../../_common/api/api.service';
 import {
 	CommunityModel,

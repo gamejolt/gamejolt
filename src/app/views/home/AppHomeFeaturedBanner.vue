@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
+
 import AppImgResponsive from '../../../_common/img/AppImgResponsive.vue';
 import { styleBorderRadiusBase } from '../../../_styles/mixins';
 import { FeaturedItemModel } from '../../components/featured-item/featured-item.model';

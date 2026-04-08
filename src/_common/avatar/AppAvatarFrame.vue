@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, CSSProperties, PropType, toRefs } from 'vue';
+
 import AppAspectRatio from '../aspect-ratio/AppAspectRatio.vue';
 import { AvatarFrameModel, DefaultAvatarFrameScale } from './frame.model';
 

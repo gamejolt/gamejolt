@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType, ref } from 'vue';
+
 import { CommunityModel } from '../../../../_common/community/community.model';
 import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
 import Onboarding from '../../../../_common/onboarding/onboarding.service';

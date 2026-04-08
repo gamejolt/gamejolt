@@ -1,12 +1,16 @@
 <script lang="ts" setup>
-import { TranslateDirective as vTranslate } from '../../../../../../_common/translate/translate-directive';
 import { computed, ref, toRef, watch } from 'vue';
+
+import AppButton from '../../../../../../_common/button/AppButton.vue';
 import {
 	$clearCommunityCompetitionHeader,
 	$saveCommunityCompetitionHeader,
 	CommunityCompetitionModel,
 } from '../../../../../../_common/community/competition/competition.model';
-import AppForm, { createForm, FormController } from '../../../../../../_common/form-vue/AppForm.vue';
+import AppForm, {
+	createForm,
+	FormController,
+} from '../../../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControlErrors from '../../../../../../_common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '../../../../../../_common/form-vue/AppFormGroup.vue';
@@ -17,11 +21,11 @@ import {
 	validateImageMaxDimensions,
 	validateImageMinDimensions,
 } from '../../../../../../_common/form-vue/validators';
-import AppButton from '../../../../../../_common/button/AppButton.vue';
 import AppLinkHelp from '../../../../../../_common/link/AppLinkHelp.vue';
 import { showModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
 import AppTranslate from '../../../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
+import { TranslateDirective as vTranslate } from '../../../../../../_common/translate/translate-directive';
 
 type FormModel = CommunityCompetitionModel & {
 	header_crop?: any;
@@ -42,9 +46,7 @@ const minHeight = ref(0);
 const maxWidth = ref(0);
 const maxHeight = ref(0);
 
-const crop = computed(() =>
-	form.formModel.header ? form.formModel.header.getCrop() : undefined
-);
+const crop = computed(() => (form.formModel.header ? form.formModel.header.getCrop() : undefined));
 
 const form: FormController<FormModel> = createForm({
 	modelClass: CommunityCompetitionModel,

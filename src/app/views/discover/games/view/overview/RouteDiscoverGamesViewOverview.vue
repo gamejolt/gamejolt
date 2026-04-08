@@ -1,14 +1,15 @@
 <script lang="ts">
-import { Ref, computed, ref } from 'vue';
+import { computed, Ref, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import AppFadeCollapse from '../../../../../../_common/AppFadeCollapse.vue';
-import AppAdStickyRail from '../../../../../../_common/ad/AppAdStickyRail.vue';
+
 import { useAdStore } from '../../../../../../_common/ad/ad-store';
+import AppAdStickyRail from '../../../../../../_common/ad/AppAdStickyRail.vue';
 import AppAdWidget from '../../../../../../_common/ad/widget/AppAdWidget.vue';
 import { trackExperimentEngagement } from '../../../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../../../_common/api/api.service';
+import AppFadeCollapse from '../../../../../../_common/AppFadeCollapse.vue';
 import AppButton from '../../../../../../_common/button/AppButton.vue';
-import { CommentModel, canCommentOnModel } from '../../../../../../_common/comment/comment-model';
+import { canCommentOnModel, CommentModel } from '../../../../../../_common/comment/comment-model';
 import {
 	getCommentStore,
 	useCommentStoreManager,
@@ -38,6 +39,7 @@ import AppShareCard from '../../../../../../_common/share/card/AppShareCard.vue'
 import AppSpacer from '../../../../../../_common/spacer/AppSpacer.vue';
 import { kThemeBgSubtle } from '../../../../../../_common/theme/variables';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
+import { TranslateDirective as vTranslate } from '../../../../../../_common/translate/translate-directive';
 import { styleChangeBg, styleElevate, styleWhen } from '../../../../../../_styles/mixins';
 import {
 	kBorderRadiusLg,
@@ -49,8 +51,8 @@ import { getAbsoluteLink } from '../../../../../../utils/router';
 import AppActivityFeedPlaceholder from '../../../../../components/activity/feed/AppActivityFeedPlaceholder.vue';
 import { ActivityFeedService } from '../../../../../components/activity/feed/feed-service';
 import { ActivityFeedView } from '../../../../../components/activity/feed/view';
-import AppCommentOverview from '../../../../../components/comment/AppCommentOverview.vue';
 import AppCommentAddButton from '../../../../../components/comment/add-button/AppCommentAddButton.vue';
+import AppCommentOverview from '../../../../../components/comment/AppCommentOverview.vue';
 import { showCommentModal } from '../../../../../components/comment/modal/modal.service';
 import {
 	CommentThreadModalPermalinkDeregister,
@@ -67,9 +69,9 @@ import AppPostAddButton from '../../../../../components/post/add-button/AppPostA
 import AppShellPageBackdrop from '../../../../../components/shell/AppShellPageBackdrop.vue';
 import AppUserKnownFollowers from '../../../../../components/user/known-followers/AppUserKnownFollowers.vue';
 import { useGameRouteController } from '../RouteDiscoverGamesView.vue';
-import AppDiscoverGamesViewOverviewSupporters from './AppDiscoverGamesViewOverviewSupporters.vue';
 import AppGameDetails from './_details/AppGameDetails.vue';
 import AppGameStatbar from './_statbar/AppGameStatbar.vue';
+import AppDiscoverGamesViewOverviewSupporters from './AppDiscoverGamesViewOverviewSupporters.vue';
 
 export default {
 	...defineAppRouteOptions({
@@ -99,7 +101,6 @@ export default {
 </script>
 
 <script lang="ts" setup>
-import { TranslateDirective as vTranslate } from '../../../../../../_common/translate/translate-directive';
 const {
 	game,
 	browserBuilds,

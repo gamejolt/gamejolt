@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, CSSProperties, PropType, ref, toRefs } from 'vue';
+
 import { useResizeObserver } from '../../utils/resize-observer';
 import { Ruler } from '../ruler/ruler-service';
 import AppAnimSlideshow from './AppAnimSlideshow.vue';

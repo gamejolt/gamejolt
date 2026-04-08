@@ -1,6 +1,18 @@
 <script lang="ts">
-import { defineAppRouteOptions } from '../../../_common/route/route-component';
+import { computed, ref } from 'vue';
+import { useRoute } from 'vue-router';
+
 import { Api } from '../../../_common/api/api.service';
+import AppButton from '../../../_common/button/AppButton.vue';
+import { ContextCapabilities } from '../../../_common/content/content-context';
+import { ContentDocument } from '../../../_common/content/content-document';
+import AppContentEditor from '../../../_common/content/content-editor/AppContentEditor.vue';
+import AppLoading from '../../../_common/loading/AppLoading.vue';
+import { Navigate } from '../../../_common/navigate/navigate.service';
+import { defineAppRouteOptions } from '../../../_common/route/route-component';
+import { createAppRoute } from '../../../_common/route/route-component';
+import AppTimeAgo from '../../../_common/time/AppTimeAgo.vue';
+import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import { touchUser } from '../../../_common/user/user.model';
 
 export default {
@@ -18,18 +30,6 @@ export default {
 </script>
 
 <script lang="ts" setup>
-import AppTranslate from '../../../_common/translate/AppTranslate.vue';
-import AppButton from '../../../_common/button/AppButton.vue';
-import { computed, ref } from 'vue';
-import { useRoute } from 'vue-router';
-import { ContextCapabilities } from '../../../_common/content/content-context';
-import { ContentDocument } from '../../../_common/content/content-document';
-import AppContentEditor from '../../../_common/content/content-editor/AppContentEditor.vue';
-import AppLoading from '../../../_common/loading/AppLoading.vue';
-import { Navigate } from '../../../_common/navigate/navigate.service';
-import { createAppRoute } from '../../../_common/route/route-component';
-import AppTimeAgo from '../../../_common/time/AppTimeAgo.vue';
-
 const route = useRoute();
 
 const isHydrated = ref(false);
@@ -85,8 +85,7 @@ createAppRoute({
 		ownerName.value = payload.ownerName;
 		ownerUrl.value = payload.ownerUrl;
 		resourceType.value = payload.resourceType;
-		resourceId.value =
-			payload.resourceId || parseInt(route.params.resourceId.toString(), 10);
+		resourceId.value = payload.resourceId || parseInt(route.params.resourceId.toString(), 10);
 		requireLog.value = payload.requireLog;
 		maxLength.value = payload.maxLength;
 		contentCapabilities.value = ContextCapabilities.fromPayloadList(

@@ -1,9 +1,12 @@
 <script lang="ts">
+import { ref } from 'vue';
+
 import { Api } from '../../../../_common/api/api.service';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '../../../../_common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
+import { Screen } from '../../../../_common/screen/screen-service';
+import { stringSort } from '../../../../utils/array';
+import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
+import AppProfileTrophiesNav, { TrophyNavGame } from './_nav/AppProfileTrophiesNav.vue';
 
 export default {
 	name: 'RouteProfileTrophies',
@@ -15,12 +18,6 @@ export default {
 </script>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
-import { Screen } from '../../../../_common/screen/screen-service';
-import { stringSort } from '../../../../utils/array';
-import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
-import AppProfileTrophiesNav, { TrophyNavGame } from './_nav/AppProfileTrophiesNav.vue';
-
 const games = ref<TrophyNavGame[]>([]);
 const siteTrophyCount = ref(0);
 const unviewedGames = ref<number[]>([]);

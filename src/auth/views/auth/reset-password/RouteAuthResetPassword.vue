@@ -1,6 +1,14 @@
 <script lang="ts">
-import { defineAppRouteOptions } from '../../../../_common/route/route-component';
+import { computed } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+
 import { Api } from '../../../../_common/api/api.service';
+import { showSuccessGrowl } from '../../../../_common/growls/growls.service';
+import { defineAppRouteOptions } from '../../../../_common/route/route-component';
+import { createAppRoute } from '../../../../_common/route/route-component';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import { $gettext } from '../../../../_common/translate/translate.service';
+import FormResetPassword from '../../../components/forms/reset-password/FormResetPassword.vue';
 
 export default {
 	name: 'RouteAuthResetPassword',
@@ -16,14 +24,6 @@ export default {
 </script>
 
 <script lang="ts" setup>
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { computed } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import { showSuccessGrowl } from '../../../../_common/growls/growls.service';
-import { createAppRoute } from '../../../../_common/route/route-component';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import FormResetPassword from '../../../components/forms/reset-password/FormResetPassword.vue';
-
 const route = useRoute();
 const router = useRouter();
 

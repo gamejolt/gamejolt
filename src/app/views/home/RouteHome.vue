@@ -1,7 +1,7 @@
 <script lang="ts">
 import { defineAsyncComponent } from 'vue';
 import { useRoute } from 'vue-router';
-import { router } from '..';
+
 import { Api } from '../../../_common/api/api.service';
 import { showSuccessGrowl } from '../../../_common/growls/growls.service';
 import {
@@ -13,6 +13,7 @@ import { useCommonStore } from '../../../_common/store/common-store';
 import { $gettext } from '../../../_common/translate/translate.service';
 import { objectOmit } from '../../../utils/object';
 import { IntentService } from '../../components/intent/intent.service';
+import { router } from '..';
 import { HomeFeedService } from './home-feed.service';
 
 const RouteHomeFeed = defineAsyncComponent(() =>

@@ -9,7 +9,7 @@ export class YoutubeSdk {
 		}
 
 		if (!this.isBootstrapped) {
-			let bootstrapLib = (d: any, s: any, id: any) => {
+			const bootstrapLib = (d: any, s: any, id: any) => {
 				let js: any,
 					fjs = d.getElementsByTagName(s)[0];
 				if (!d.getElementById(id)) {

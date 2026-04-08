@@ -1,7 +1,8 @@
 <script lang="ts" setup>
-import AppTranslate from '../../../../../../../_common/translate/AppTranslate.vue';
-import AppButton from '../../../../../../../_common/button/AppButton.vue';
 import { computed } from 'vue';
+
+import AppButton from '../../../../../../../_common/button/AppButton.vue';
+import AppTranslate from '../../../../../../../_common/translate/AppTranslate.vue';
 import AppGamePerms from '../../../../../../components/game/perms/AppGamePerms.vue';
 import { useGameDashRouteController } from '../../manage.store';
 import AppGameManageNavRequired from './AppGameManageNavRequired.vue';

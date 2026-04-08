@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
+
+import { UserModel } from '../../../_common/user/user.model';
 import AppUserAvatar from '../../../_common/user/user-avatar/AppUserAvatar.vue';
 import AppUserAvatarBubble from '../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
-import { UserModel } from '../../../_common/user/user.model';
 import { styleWhen } from '../../../_styles/mixins';
 
 defineProps({

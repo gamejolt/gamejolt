@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
+
 import AppContentSticker from '../../components/AppContentSticker.vue';
 import { ContentObject } from '../../content-object';
 

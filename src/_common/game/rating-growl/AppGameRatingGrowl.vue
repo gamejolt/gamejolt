@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { PropType, toRefs } from 'vue';
+
 import { useEventSubscription } from '../../system/event/event-topic';
 import { GameModel } from '../game.model';
 import AppGameRatingWidget, { onRatingWidgetChange } from '../rating/AppGameRatingWidget.vue';

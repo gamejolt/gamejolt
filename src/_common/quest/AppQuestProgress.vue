@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
+
 import AppJolticon, { Jolticon } from '../jolticon/AppJolticon.vue';
 import AppProgressBar from '../progress/AppProgressBar.vue';
 import AppSpacer from '../spacer/AppSpacer.vue';

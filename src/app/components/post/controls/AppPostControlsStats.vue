@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
+
 import { formatNumber } from '../../../../_common/filters/number';
 import { FiresidePostModel } from '../../../../_common/fireside/post/post-model';
 import { useCommonStore } from '../../../../_common/store/common-store';

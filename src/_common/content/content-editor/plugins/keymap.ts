@@ -3,6 +3,7 @@ import { redo, undo } from 'prosemirror-history';
 import { Slice } from 'prosemirror-model';
 import { sinkListItem, splitListItem } from 'prosemirror-schema-list';
 import { EditorState, Selection, Transaction } from 'prosemirror-state';
+
 import { isMac } from '../../../../utils/utils';
 import {
 	ContentEditorController,

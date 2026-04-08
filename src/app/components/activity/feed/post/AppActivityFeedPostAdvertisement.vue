@@ -1,5 +1,6 @@
 <script lang="ts">
 import { computed } from 'vue';
+
 import AppAspectRatio from '../../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import AppImgResponsive from '../../../../../_common/img/AppImgResponsive.vue';

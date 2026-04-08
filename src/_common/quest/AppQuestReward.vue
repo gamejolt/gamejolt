@@ -1,5 +1,6 @@
 <script lang="ts">
-import { PropType, computed, toRefs } from 'vue';
+import { computed, PropType, toRefs } from 'vue';
+
 import {
 	styleBorderRadiusLg,
 	styleChangeBg,

@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
 import { RouterLink } from 'vue-router';
+
 import { trackGotoCommunity } from '../../analytics/analytics.service';
 import { CommunityModel } from '../community.model';
 import AppCommunityThumbnailImg from './AppCommunityThumbnailImg.vue';

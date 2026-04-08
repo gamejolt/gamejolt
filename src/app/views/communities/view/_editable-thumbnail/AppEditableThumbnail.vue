@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { computed, toRef } from 'vue';
 import { useRoute } from 'vue-router';
+
 import { isEditingCommunity } from '../../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import AppEditableOverlay from '../../../../../_common/editable-overlay/AppEditableOverlay.vue';

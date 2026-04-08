@@ -1,13 +1,14 @@
 <script lang="ts">
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
+
 import { Api } from '../../../../../_common/api/api.service';
 import { showErrorGrowl, showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import AppLinkedAccount from '../../../../../_common/linked-account/AppLinkedAccount.vue';
 import {
+	getLinkedAccountProviderDisplayName,
 	LinkedAccountModel,
 	LinkedAccountProvider,
-	getLinkedAccountProviderDisplayName,
 } from '../../../../../_common/linked-account/linked-account.model';
 import { LinkedAccounts } from '../../../../../_common/linked-account/linked-accounts.service';
 import {

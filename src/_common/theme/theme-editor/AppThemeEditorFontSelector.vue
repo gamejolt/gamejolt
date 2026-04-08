@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { PropType, computed, nextTick, ref, toRefs, watch } from 'vue';
+import { computed, nextTick, PropType, ref, toRefs, watch } from 'vue';
+
 import { Api } from '../../api/api.service';
 import { $gettext } from '../../translate/translate.service';
 import AppThemeEditorFontSelectorStyleInjector from './AppThemeEditorFontSelectorStyleInjector.vue';

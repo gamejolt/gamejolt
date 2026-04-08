@@ -1,14 +1,15 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
+
+import { useForm } from '../../../../../_common/form-vue/AppForm.vue';
+import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import { validateFilesize } from '../../../../../_common/form-vue/validators';
+import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import { StripeFileUploadUrl, useFormManagedAccount } from './FormFinancialsManagedAccount.vue';
-import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
-import { useForm } from '../../../../../_common/form-vue/AppForm.vue';
 
 export interface AppFinancialsManagedAccountDocumentInterface {
 	uploadDocument: (stripePublishableKey: string) => Promise<string>;

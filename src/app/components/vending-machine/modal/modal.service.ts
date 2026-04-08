@@ -1,4 +1,5 @@
 import { defineAsyncComponent } from 'vue';
+
 import { ShopOpenLocation, trackShopOpen } from '../../../../_common/analytics/analytics.service';
 import { showModal } from '../../../../_common/modal/modal.service';
 

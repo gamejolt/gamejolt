@@ -1,8 +1,9 @@
 <script lang="ts">
 import { RouterLink } from 'vue-router';
+
+import { useAdStore } from '../../../../_common/ad/ad-store';
 import AppAdStickyRail from '../../../../_common/ad/AppAdStickyRail.vue';
 import AppAdTakeoverFloat from '../../../../_common/ad/AppAdTakeoverFloat.vue';
-import { useAdStore } from '../../../../_common/ad/ad-store';
 import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
@@ -15,8 +16,8 @@ import AppScrollInview, {
 import { Scroll } from '../../../../_common/scroll/scroll.service';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import AppGameFilteringTags from '../filtering/AppGameFilteringTags.vue';
-import { GameFilteringContainer } from '../filtering/container';
 import AppGameFilteringWidget from '../filtering/AppGameFilteringWidget.vue';
+import { GameFilteringContainer } from '../filtering/container';
 import AppGameGridPlaceholder from '../grid/AppGameGridPlaceholder.vue';
 import { GameListingContainer } from './listing-container-service';
 

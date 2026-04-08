@@ -1,4 +1,5 @@
 import { EditorView } from 'prosemirror-view';
+
 import { ContentEditorController } from '../content-editor-controller';
 
 export function keydownEventHandler(c: ContentEditorController) {

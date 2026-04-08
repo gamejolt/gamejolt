@@ -1,7 +1,8 @@
-import type { OldLaunchInstance, LaunchInstance as TypeofLaunchInstance } from 'client-voodoo';
+import type { LaunchInstance as TypeofLaunchInstance,OldLaunchInstance } from 'client-voodoo';
 import type { Ref } from 'vue';
+
 import { Api } from '../../../_common/api/api.service';
-import { LaunchInstance, Launcher } from '../../../_common/client/client-voodoo-imports';
+import { Launcher,LaunchInstance } from '../../../_common/client/client-voodoo-imports';
 import { $gettext } from '../../../_common/translate/translate.service';
 import { arrayRemove } from '../../../utils/array';
 import type { LocalDbPackage } from '../../components/client/local-db/package/package.model';

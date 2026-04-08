@@ -1,4 +1,5 @@
 import { RouteRecordRaw } from 'vue-router';
+
 import { routeLegalAds } from './ads/ads.route';
 import { routeLegalCookies } from './cookies/cookies.route';
 import { routeLegalDeletion } from './deletion/deletion.route';

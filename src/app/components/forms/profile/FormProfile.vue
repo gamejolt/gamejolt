@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { formatDistanceToNow } from 'date-fns';
-import { type Ref, computed, onUnmounted, PropType, ref, shallowReactive, toRefs } from 'vue';
+import { computed, onUnmounted, PropType, type Ref, ref, shallowReactive, toRefs } from 'vue';
+
 import { ContextCapabilities } from '../../../../_common/content/content-context';
 import { DogtagModel, DogtagType } from '../../../../_common/dogtag/dogtag-model';
 import { Environment } from '../../../../_common/environment/environment.service';

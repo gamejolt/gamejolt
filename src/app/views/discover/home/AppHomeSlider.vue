@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
+
 import AppAdTakeoverFloat from '../../../../_common/ad/AppAdTakeoverFloat.vue';
 import AppAuthJoin from '../../../../_common/auth/join/AppAuthJoin.vue';
 import { Environment } from '../../../../_common/environment/environment.service';

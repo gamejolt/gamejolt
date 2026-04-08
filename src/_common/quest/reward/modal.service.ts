@@ -1,4 +1,5 @@
 import { defineAsyncComponent } from 'vue';
+
 import { showModal } from '../../modal/modal.service';
 import { QuestModel } from '../quest-model';
 import { QuestRewardData } from './AppQuestRewardModal.vue';

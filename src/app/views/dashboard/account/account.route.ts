@@ -1,4 +1,5 @@
 import { RouteRecordRaw } from 'vue-router';
+
 import { routeDashAccountAddresses } from './addresses/addresses.route';
 import { routeDashAccountBlocks } from './blocks/blocks.route';
 import { routeDashAccountChangePassword } from './change-password/change-password.route';

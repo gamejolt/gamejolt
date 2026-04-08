@@ -1,4 +1,5 @@
 import { reactive, ref } from 'vue';
+
 import { arrayRemove } from '../../utils/array';
 
 interface BackdropOptions {

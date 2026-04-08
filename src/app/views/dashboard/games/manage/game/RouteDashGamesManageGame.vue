@@ -1,5 +1,6 @@
 <script lang="ts">
 import { useRoute } from 'vue-router';
+
 import AppEditableOverlay from '../../../../../../_common/editable-overlay/AppEditableOverlay.vue';
 import AppExpand from '../../../../../../_common/expand/AppExpand.vue';
 import AppMediaItemCover from '../../../../../../_common/media-item/cover/AppMediaItemCover.vue';

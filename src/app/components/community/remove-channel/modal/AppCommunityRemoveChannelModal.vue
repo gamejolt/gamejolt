@@ -1,12 +1,13 @@
 <script lang="ts" setup>
-import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
 import { PropType } from 'vue';
+
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import { CommunityChannelModel } from '../../../../../_common/community/channel/channel.model';
 import { CommunityModel } from '../../../../../_common/community/community.model';
 import AppModal from '../../../../../_common/modal/AppModal.vue';
 import { useModal } from '../../../../../_common/modal/modal.service';
 import { $gettext } from '../../../../../_common/translate/translate.service';
+import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
 import AppCommunityRemoveChannel from '../AppCommunityRemoveChannel.vue';
 
 defineProps({

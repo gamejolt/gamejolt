@@ -1,16 +1,17 @@
 <script lang="ts" setup>
+import { computed, ref, watch } from 'vue';
+
+import { CommunityModel } from '../../../../../_common/community/community.model';
 import AppForm from '../../../../../_common/form-vue/AppForm.vue';
+import { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
+import AppFormControl from '../../../../../_common/form-vue/AppFormControl.vue';
+import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormControlRadio from '../../../../../_common/form-vue/controls/AppFormControlRadio.vue';
-import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormControl from '../../../../../_common/form-vue/AppFormControl.vue';
-import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
-import { computed, ref, watch } from 'vue';
-import { CommunityModel } from '../../../../../_common/community/community.model';
-import { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
 import { validateMaxLength } from '../../../../../_common/form-vue/validators';
 import { getDatalistOptions } from '../../../../../_common/settings/datalist-options.service';
 import { $gettext } from '../../../../../_common/translate/translate.service';
+import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
 import {
 	getCommunityMovePostReasons,
 	REASON_OTHER,

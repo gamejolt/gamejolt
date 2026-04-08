@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { DeepReadonly, PropType } from 'vue';
 import { RouterLink } from 'vue-router';
+
 import { formatNumber } from '../../../../../_common/filters/number';
 import AppGraph from '../../../../../_common/graph/AppGraph.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';

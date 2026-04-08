@@ -1,4 +1,5 @@
 import { RouteRecordRaw } from 'vue-router';
+
 import { routeDiscoverGamesViewDevlogView } from './devlog/view/view.route';
 import { routeDiscoverGamesViewFollowers } from './followers/followers.route';
 import { routeDiscoverGamesViewOverview } from './overview/overview.route';

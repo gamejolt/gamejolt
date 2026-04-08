@@ -1,8 +1,9 @@
 <script lang="ts">
 import type { Component } from 'vue';
 import { PropType, ref } from 'vue';
+
 import { isInstance } from '../../../utils/utils';
-import AppEmoji, { GJ_EMOJIS, emojiBaseSize } from '../../emoji/AppEmoji.vue';
+import AppEmoji, { emojiBaseSize, GJ_EMOJIS } from '../../emoji/AppEmoji.vue';
 import { EmojiModel } from '../../emoji/emoji.model';
 import { storeModel } from '../../model/model-store.service';
 import { useContentOwnerController } from '../content-owner';

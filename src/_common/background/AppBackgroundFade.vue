@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { CSSProperties, computed, toRefs } from 'vue';
+import { computed, CSSProperties, toRefs } from 'vue';
+
 import { styleAbsoluteFill, styleWhen } from '../../_styles/mixins';
 import { kStrongEaseOut } from '../../_styles/variables';
 

@@ -1,6 +1,7 @@
 <script lang="ts">
 import { computed, PropType, ref, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
+
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppCard from '../../../../_common/card/AppCard.vue';
 import { Screen } from '../../../../_common/screen/screen-service';

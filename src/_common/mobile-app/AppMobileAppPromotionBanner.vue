@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
+
 import { trackAppPromotionClick } from '../analytics/analytics.service';
 import AppButton from '../button/AppButton.vue';
 import { isDynamicGoogleBot } from '../device/device.service';

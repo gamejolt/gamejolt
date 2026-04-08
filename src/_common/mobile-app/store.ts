@@ -1,4 +1,5 @@
-import { InjectionKey, inject, provide, ref } from 'vue';
+import { inject, InjectionKey, provide, ref } from 'vue';
+
 import { UserModel } from '../user/user.model';
 
 export type AppPromotionSource =

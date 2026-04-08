@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { PropType, toRefs } from 'vue';
+
 import {
 	$inviteCollaborator,
 	CollaboratorModel,
@@ -7,9 +8,9 @@ import {
 } from '../../../../../_common/collaborator/collaborator.model';
 import { CommunityModel } from '../../../../../_common/community/community.model';
 import AppForm, {
-	FormController,
 	createForm,
 	defineFormProps,
+	FormController,
 } from '../../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControl from '../../../../../_common/form-vue/AppFormControl.vue';

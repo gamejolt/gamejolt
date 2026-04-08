@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { CSSProperties, ref, toRefs, watch } from 'vue';
 import { RouterLink } from 'vue-router';
+
 import { styleChangeBg } from '../../../../_styles/mixins';
 import AppJolticon from '../../../jolticon/AppJolticon.vue';
 import AppUserCardHover from '../../../user/card/AppUserCardHover.vue';

@@ -1,9 +1,6 @@
 <script lang="ts" setup>
-import { validateMaxLength, validateMinValue, validateMaxValue } from '../../../../../_common/form-vue/validators';
-import AppFormControlRadio from '../../../../../_common/form-vue/controls/AppFormControlRadio.vue';
-import AppFormControlTextarea from '../../../../../_common/form-vue/controls/AppFormControlTextarea.vue';
-import AppFormControlCheckbox from '../../../../../_common/form-vue/controls/AppFormControlCheckbox.vue';
 import { computed, toRef } from 'vue';
+
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../../../_common/filters/number';
 import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
@@ -11,6 +8,14 @@ import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControl from '../../../../../_common/form-vue/AppFormControl.vue';
 import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
+import AppFormControlCheckbox from '../../../../../_common/form-vue/controls/AppFormControlCheckbox.vue';
+import AppFormControlRadio from '../../../../../_common/form-vue/controls/AppFormControlRadio.vue';
+import AppFormControlTextarea from '../../../../../_common/form-vue/controls/AppFormControlTextarea.vue';
+import {
+	validateMaxLength,
+	validateMaxValue,
+	validateMinValue,
+} from '../../../../../_common/form-vue/validators';
 import { GameModel } from '../../../../../_common/game/game.model';
 import {
 	GamePackageModel,
@@ -138,7 +143,11 @@ const arePackagesChosen = computed(() => form.formModel.package_ids.length > 0);
 		</AppFormGroup>
 
 		<AppFormGroup
-			v-if="!!form.formModel.type && form.method === 'add' && form.formModel.type === KeyGroupTypeEmail"
+			v-if="
+				!!form.formModel.type &&
+				form.method === 'add' &&
+				form.formModel.type === KeyGroupTypeEmail
+			"
 			name="emails"
 			:label="$gettext(`Email Addresses`)"
 		>
@@ -152,7 +161,11 @@ const arePackagesChosen = computed(() => form.formModel.package_ids.length > 0);
 		</AppFormGroup>
 
 		<AppFormGroup
-			v-if="!!form.formModel.type && form.method === 'add' && form.formModel.type === KeyGroupTypeUser"
+			v-if="
+				!!form.formModel.type &&
+				form.method === 'add' &&
+				form.formModel.type === KeyGroupTypeUser
+			"
 			name="users"
 			:label="$gettext(`Usernames`)"
 		>

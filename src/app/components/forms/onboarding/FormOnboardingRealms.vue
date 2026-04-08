@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
-import AppForm, { FormController, createForm } from '../../../../_common/form-vue/AppForm.vue';
+
+import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
 import Onboarding from '../../../../_common/onboarding/onboarding.service';
 import AppRealmFullCard from '../../../../_common/realm/AppRealmFullCard.vue';
 import { RealmModel } from '../../../../_common/realm/realm-model';

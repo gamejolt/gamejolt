@@ -1,6 +1,7 @@
 <script lang="ts">
-import { Ref, computed, ref, toRef } from 'vue';
+import { computed, Ref, ref, toRef } from 'vue';
 import { RouteLocationNormalized, RouterLink, useRoute, useRouter } from 'vue-router';
+
 import { Api } from '../../../../../../_common/api/api.service';
 import { EventItemModel } from '../../../../../../_common/event-item/event-item.model';
 import { FiresidePostModel } from '../../../../../../_common/fireside/post/post-model';

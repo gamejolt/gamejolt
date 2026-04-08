@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
+
 import { UserModel } from '../user.model';
 import AppUserListItem from './AppUserListItem.vue';
 

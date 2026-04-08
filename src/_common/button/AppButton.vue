@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
 import { RouteLocationRaw, RouterLink } from 'vue-router';
+
 import { styleFlexCenter, styleWhen } from '../../_styles/mixins';
 import { kJolticonSize } from '../../_styles/variables';
 import { defineDynamicSlotProps, useDynamicSlots } from '../component-helpers';
@@ -113,7 +114,6 @@ const { hasSlot } = useDynamicSlots(dynamicSlots);
 		:is="ourTag"
 		type="button"
 		class="button"
-		@click="emit('click', $event)"
 		:class="{
 			'-primary': primary,
 			'-solid': solid,
@@ -139,6 +139,7 @@ const { hasSlot } = useDynamicSlots(dynamicSlots);
 		:href="href"
 		:target="target"
 		:disabled="disabled === true ? 'disabled' : null"
+		@click="emit('click', $event)"
 	>
 		<div v-if="loading" :style="styleFlexCenter()">
 			<AppCircularProgress

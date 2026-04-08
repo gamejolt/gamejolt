@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref, toRefs } from 'vue';
+
 import AppExpand from '../../expand/AppExpand.vue';
 import AppJolticon from '../../jolticon/AppJolticon.vue';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';

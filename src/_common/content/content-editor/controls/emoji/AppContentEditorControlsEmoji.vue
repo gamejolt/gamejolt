@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, onMounted, onUnmounted, ref } from 'vue';
+
 import AppEmoji, { GJ_EMOJIS } from '../../../../emoji/AppEmoji.vue';
 import { showEmojiSelectorModal } from '../../../../emoji/selector-modal/modal.service';
 import { vAppTooltip } from '../../../../tooltip/tooltip-directive';

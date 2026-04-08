@@ -1,9 +1,12 @@
 <script lang="ts">
+import { computed, ref } from 'vue';
+
 import { Api } from '../../../../_common/api/api.service';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '../../../../_common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
+import { $gettext } from '../../../../_common/translate/translate.service';
+import { GameCollectionModel } from '../../../components/game/collection/collection.model';
+import AppGameCollectionGrid from '../../../components/game/collection/grid/AppGameCollectionGrid.vue';
+import { useProfileRouteStore } from '../RouteProfile.vue';
 
 export default {
 	name: 'RouteProfileLibrary',
@@ -15,12 +18,6 @@ export default {
 </script>
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { GameCollectionModel } from '../../../components/game/collection/collection.model';
-import AppGameCollectionGrid from '../../../components/game/collection/grid/AppGameCollectionGrid.vue';
-import { useProfileRouteStore } from '../RouteProfile.vue';
-
 const { user } = useProfileRouteStore()!;
 
 const collections = ref<GameCollectionModel[]>([]);

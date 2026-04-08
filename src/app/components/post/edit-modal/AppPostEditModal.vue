@@ -1,18 +1,19 @@
 <script lang="ts" setup>
-import AppModal from '../../../../_common/modal/AppModal.vue';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { computed, ref, watch } from 'vue';
+
 import AppBackground from '../../../../_common/background/AppBackground.vue';
 import { BackgroundModel } from '../../../../_common/background/background.model';
+import AppButton from '../../../../_common/button/AppButton.vue';
 import { CommunityChannelModel } from '../../../../_common/community/channel/channel.model';
 import { CommunityModel } from '../../../../_common/community/community.model';
 import { FiresidePostModel } from '../../../../_common/fireside/post/post-model';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
+import AppModal from '../../../../_common/modal/AppModal.vue';
 import { useModal } from '../../../../_common/modal/modal.service';
 import { RealmModel } from '../../../../_common/realm/realm-model';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppTheme from '../../../../_common/theme/AppTheme.vue';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { VideoStatus } from '../../forms/post/_video/FormPostVideo.vue';
 import AppFormPost from '../../forms/post/AppFormPost.vue';
 import AppPostAddPlaceholder from '../add-placeholder/AppPostAddPlaceholder.vue';
@@ -42,7 +43,7 @@ const overlay = computed(() => {
 
 watch(
 	() => postProvider,
-	async (provider) => {
+	async provider => {
 		if (provider instanceof FiresidePostModel) {
 			post.value = provider;
 		} else {

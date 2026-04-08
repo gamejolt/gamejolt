@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType } from 'vue';
+
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppCommentDisabledCheck from '../../../../_common/comment/AppCommentDisabledCheck.vue';
 import { CommentableModel, CommentSort } from '../../../../_common/comment/comment-model';

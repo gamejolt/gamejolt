@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
+
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import AppNotificationBlip from '../../../../_common/notification/AppNotificationBlip.vue';

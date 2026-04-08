@@ -1,4 +1,5 @@
 import { ref, shallowRef } from 'vue';
+
 import { ContentEditorController } from './content-editor-controller';
 
 /**

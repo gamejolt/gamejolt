@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { RouterLink } from 'vue-router';
+
 import { trackAppPromotionClick } from '../../../_common/analytics/analytics.service';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import AppLinkExternal from '../../../_common/link/AppLinkExternal.vue';

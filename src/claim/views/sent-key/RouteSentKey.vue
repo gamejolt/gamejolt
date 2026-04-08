@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
+
 import { createAppRoute } from '../../../_common/route/route-component';
 import { $gettext } from '../../../_common/translate/translate.service';
 

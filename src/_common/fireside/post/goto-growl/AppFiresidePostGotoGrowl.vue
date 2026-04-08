@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import { PropType, computed, onMounted, onUnmounted, toRef, toRefs } from 'vue';
+import { computed, onMounted, onUnmounted, PropType, toRef, toRefs } from 'vue';
 import { RouteLocationRaw, RouterLink, useRoute, useRouter } from 'vue-router';
+
 import AppButton from '../../../button/AppButton.vue';
 import { GameModel } from '../../../game/game.model';
 import AppJolticon from '../../../jolticon/AppJolticon.vue';

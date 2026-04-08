@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 import { computed, onUnmounted, ref, watch } from 'vue';
 import { RouterLink } from 'vue-router';
-import { ClientUpdater } from '../../../../_common/client/client-updater.service';
+
 import { Client } from '../../../../_common/client/client.service';
+import { ClientUpdater } from '../../../../_common/client/client-updater.service';
 import { formatNumber } from '../../../../_common/filters/number';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';

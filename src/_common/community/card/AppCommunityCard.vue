@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { PropType, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
+
 import { trackGotoCommunity } from '../../analytics/analytics.service';
 import AppCommunityCardBase from '../card-base/AppCommunityCardBase.vue';
 import { CommunityModel } from '../community.model';

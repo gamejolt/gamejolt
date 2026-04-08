@@ -1,4 +1,5 @@
 import { defineAsyncComponent } from 'vue';
+
 import { FiresidePostCommunityModel } from '../../../../../_common/fireside/post/community/community.model';
 import {
 	CommunityNotifyOptions,

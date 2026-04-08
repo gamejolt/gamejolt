@@ -1,14 +1,15 @@
 <script lang="ts" setup>
-import { PropType, onUnmounted, ref, toRefs } from 'vue';
+import { onUnmounted, PropType, ref, toRefs } from 'vue';
 import { useRoute } from 'vue-router';
+
 import AppFadeCollapse from '../../../_common/AppFadeCollapse.vue';
 import AppButton from '../../../_common/button/AppButton.vue';
 import AppContentViewer from '../../../_common/content/content-viewer/AppContentViewer.vue';
 import { Environment } from '../../../_common/environment/environment.service';
-import { GameBundleModel } from '../../../_common/game-bundle/game-bundle.model';
 import { CustomGameMessage, GameModel } from '../../../_common/game/game.model';
 import AppGamePackageCard from '../../../_common/game/package/card/AppGamePackageCard.vue';
 import { GamePackagePayloadModel } from '../../../_common/game/package/package-payload.model';
+import { GameBundleModel } from '../../../_common/game-bundle/game-bundle.model';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import { KeyGroupModel, KeyGroupType } from '../../../_common/key-group/key-group.model';
 import AppMediaItemCover from '../../../_common/media-item/cover/AppMediaItemCover.vue';

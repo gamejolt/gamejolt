@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
+
 import AppEditableOverlay from '../../../../../../_common/editable-overlay/AppEditableOverlay.vue';
 import { MediaItemModel } from '../../../../../../_common/media-item/media-item-model';
 import { $gettext } from '../../../../../../_common/translate/translate.service';

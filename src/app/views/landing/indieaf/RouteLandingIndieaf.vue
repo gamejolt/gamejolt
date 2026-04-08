@@ -1,6 +1,7 @@
 <script lang="ts">
 import { computed, ref } from 'vue';
 import { RouterLink } from 'vue-router';
+
 import AppAuthJoin from '../../../../_common/auth/join/AppAuthJoin.vue';
 import { Meta } from '../../../../_common/meta/meta-service';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';

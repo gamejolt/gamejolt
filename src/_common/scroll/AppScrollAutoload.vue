@@ -1,5 +1,6 @@
 <script lang="ts">
 import { nextTick, onMounted, onUnmounted, PropType, ref, toRefs, watch } from 'vue';
+
 import { queuedThrottle } from '../../utils/utils';
 import AppLoading from '../loading/AppLoading.vue';
 import AppScrollInview, { ScrollInviewConfig } from './inview/AppScrollInview.vue';

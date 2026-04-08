@@ -1,5 +1,6 @@
 <script lang="ts">
 import { computed, ref } from 'vue';
+
 import { Api } from '../../../../../_common/api/api.service';
 import { formatNumber } from '../../../../../_common/filters/number';
 import { ForumChannelModel } from '../../../../../_common/forum/channel/channel.model';

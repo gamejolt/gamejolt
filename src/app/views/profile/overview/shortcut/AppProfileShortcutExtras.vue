@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { toRef } from 'vue';
 import { useRouter } from 'vue-router';
+
 import { showBlockModal } from '../../../../../_common/block/modal/modal.service';
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import { Environment } from '../../../../../_common/environment/environment.service';

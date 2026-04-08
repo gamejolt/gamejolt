@@ -1,6 +1,7 @@
 <script lang="ts">
 import { computed, provide, reactive, ref, toRef, watchEffect } from 'vue';
 import { RouterView, useRoute } from 'vue-router';
+
 import {
 	AdSettingsContainer,
 	releasePageAdsSettings,

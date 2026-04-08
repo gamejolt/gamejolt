@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType, ref, toRefs } from 'vue';
+
 import { Api } from '../../../api/api.service';
 import AppButton from '../../../button/AppButton.vue';
 import { ContextCapabilities } from '../../../content/content-context';

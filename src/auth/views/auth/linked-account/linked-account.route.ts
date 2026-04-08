@@ -1,4 +1,5 @@
 import { RouteRecordRaw } from 'vue-router';
+
 import { routeAuthLinkedAccountFacebookCallback } from './facebook/callback/callback.route';
 import { routeAuthLinkedAccountGoogleCallback } from './google/callback/callback.route';
 import { routeAuthLinkedAccountPoll } from './poll/poll.route';

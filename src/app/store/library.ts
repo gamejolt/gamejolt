@@ -1,25 +1,26 @@
 import { computed, inject, InjectionKey, Ref, ref } from 'vue';
 import { Router } from 'vue-router';
+
 import { trackGameFollow } from '../../_common/analytics/analytics.service';
+import { GameModel, unfollowGame } from '../../_common/game/game.model';
 import {
 	$addGameToGamePlaylist,
 	$removeGameFromGamePlaylist,
 	$removeGamePlaylist,
 	GamePlaylistModel,
 } from '../../_common/game-playlist/game-playlist.model';
-import { GameModel, unfollowGame } from '../../_common/game/game.model';
 import { showErrorGrowl, showSuccessGrowl } from '../../_common/growls/growls.service';
 import { showModalConfirm } from '../../_common/modal/confirm/confirm-service';
 import { Scroll } from '../../_common/scroll/scroll.service';
 import { $gettext } from '../../_common/translate/translate.service';
 import { arrayRemove } from '../../utils/array';
-import { showGamePlaylistSaveModal } from '../components/game-playlist/save-modal/save-modal.service';
 import {
 	$followGameCollection,
 	$unfollowGameCollection,
 	GameCollectionModel,
 	GameCollectionType,
 } from '../components/game/collection/collection.model';
+import { showGamePlaylistSaveModal } from '../components/game-playlist/save-modal/save-modal.service';
 import { router } from '../views';
 
 export const LibraryStoreKey: InjectionKey<LibraryStore> = Symbol('library-store');

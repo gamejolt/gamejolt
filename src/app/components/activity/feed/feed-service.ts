@@ -1,4 +1,5 @@
 import { RouteLocationNormalized, RouteLocationNormalizedLoaded, Router } from 'vue-router';
+
 import { EventItemModel } from '../../../../_common/event-item/event-item.model';
 import { FiresidePostGotoGrowl } from '../../../../_common/fireside/post/goto-growl/goto-growl.service';
 import {

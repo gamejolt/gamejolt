@@ -1,13 +1,13 @@
 <script lang="ts" setup>
-import { TranslateDirective as vTranslate } from '../../../../_common/translate/translate-directive';
 import { computed, PropType, toRefs } from 'vue';
+
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import { formatFilesize } from '../../../../_common/filters/filesize';
 import {
 	canInstallGameBuild,
-	GameBuildType,
 	type GameBuildModel,
+	GameBuildType,
 } from '../../../../_common/game/build/build.model';
 import { GameModel } from '../../../../_common/game/game.model';
 import AppGamePackageCardMoreOptions from '../../../../_common/game/package/card/AppGamePackageCardMoreOptions.vue';
@@ -18,6 +18,7 @@ import AppPopper from '../../../../_common/popper/AppPopper.vue';
 import { Popper } from '../../../../_common/popper/popper.service';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import { TranslateDirective as vTranslate } from '../../../../_common/translate/translate-directive';
 import { useClientLibraryStore } from '../../../store/client-library/index';
 import AppClientInstallProgress from '../AppClientInstallProgress.vue';
 import {

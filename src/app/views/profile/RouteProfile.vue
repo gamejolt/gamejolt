@@ -1,15 +1,16 @@
 <script lang="ts">
 import {
-	CSSProperties,
-	InjectionKey,
-	Ref,
 	computed,
+	CSSProperties,
 	inject,
+	InjectionKey,
 	provide,
+	Ref,
 	ref,
 	shallowReadonly,
 } from 'vue';
 import { RouterLink, RouterView, useRoute } from 'vue-router';
+
 import AppAdTakeoverBackground from '../../../_common/ad/AppAdTakeoverBackground.vue';
 import { Api } from '../../../_common/api/api.service';
 import { Environment } from '../../../_common/environment/environment.service';

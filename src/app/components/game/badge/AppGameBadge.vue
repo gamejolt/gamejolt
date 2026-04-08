@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
 import { RouterLink } from 'vue-router';
+
 import AppGameFollowWidget from '../../../../_common/game/follow-widget/AppGameFollowWidget.vue';
 import { GameModel } from '../../../../_common/game/game.model';
 import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';

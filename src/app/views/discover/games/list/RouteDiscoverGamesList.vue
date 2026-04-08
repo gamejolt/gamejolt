@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
+
 import AppAdTakeoverBackground from '../../../../../_common/ad/AppAdTakeoverBackground.vue';
 import AppAdTakeoverFloat from '../../../../../_common/ad/AppAdTakeoverFloat.vue';
 import { Api } from '../../../../../_common/api/api.service';
@@ -16,11 +17,11 @@ import {
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import { arrayShuffle } from '../../../../../utils/array';
-import { RouteLocationRedirect, getParam } from '../../../../../utils/router';
+import { getParam, RouteLocationRedirect } from '../../../../../utils/router';
 import { titleCase } from '../../../../../utils/string';
 import {
-	GameFilteringContainer,
 	checkGameFilteringRoute,
+	GameFilteringContainer,
 } from '../../../../components/game/filtering/container';
 import AppGameGrid from '../../../../components/game/grid/AppGameGrid.vue';
 import AppGameListing from '../../../../components/game/listing/AppGameListing.vue';

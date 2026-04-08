@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
+
 import { styleChangeBg, styleWhen } from '../../_styles/mixins';
 import { formatNumber } from '../filters/number';
 import { ThemeColor } from '../theme/variables';

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
 import { toRef, toRefs } from 'vue';
 import { useRouter } from 'vue-router';
+
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import AppCommunityJoinWidget from '../../../../../_common/community/join-widget/AppCommunityJoinWidget.vue';
 import AppCommunityVerifiedTick from '../../../../../_common/community/verified-tick/AppCommunityVerifiedTick.vue';
@@ -16,6 +16,7 @@ import { useSidebarStore } from '../../../../../_common/sidebar/sidebar.store';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppTheme from '../../../../../_common/theme/AppTheme.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
+import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
 import { getAbsoluteLink } from '../../../../../utils/router';
 import { showCommunitySidebarModal } from '../../../../components/community/sidebar/modal/modal.service';
 import { useAppStore } from '../../../../store';

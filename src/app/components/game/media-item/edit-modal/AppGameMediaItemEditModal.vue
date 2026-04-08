@@ -1,18 +1,19 @@
 <script lang="ts" setup>
-import AppModal from '../../../../../_common/modal/AppModal.vue';
-import AppButton from '../../../../../_common/button/AppButton.vue';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { computed } from 'vue';
+
+import AppButton from '../../../../../_common/button/AppButton.vue';
 import { Clipboard } from '../../../../../_common/clipboard/clipboard-service';
 import { Environment } from '../../../../../_common/environment/environment.service';
 import { GameModel } from '../../../../../_common/game/game.model';
 import { $removeGameScreenshot } from '../../../../../_common/game/screenshot/screenshot.model';
 import { $removeGameSketchfab } from '../../../../../_common/game/sketchfab/sketchfab.model';
 import { $removeGameVideo } from '../../../../../_common/game/video/video.model';
-import { useModal } from '../../../../../_common/modal/modal.service';
+import AppModal from '../../../../../_common/modal/AppModal.vue';
 import { showModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
-import { $gettext } from '../../../../../_common/translate/translate.service';
+import { useModal } from '../../../../../_common/modal/modal.service';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
+import { $gettext } from '../../../../../_common/translate/translate.service';
 import { Media } from '../../../../views/dashboard/games/manage/manage.store';
 import FormGameImage from '../../../forms/game/image/FormGameImage.vue';
 import FormGameSketchfab from '../../../forms/game/sketchfab/FormGameSketchfab.vue';
@@ -39,9 +40,7 @@ const copyLinkTooltip = computed(() => {
 	}
 
 	if (item.media_type === 'sketchfab') {
-		return $gettext(
-			`Copy the direct link to view this sketchfab model on your game page.`
-		);
+		return $gettext(`Copy the direct link to view this sketchfab model on your game page.`);
 	}
 
 	return undefined;

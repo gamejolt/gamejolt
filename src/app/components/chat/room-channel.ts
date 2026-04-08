@@ -1,11 +1,12 @@
 import { Presence } from 'phoenix';
 import { computed, markRaw, onMounted, onUnmounted, Ref, ref, shallowReadonly, watch } from 'vue';
+
 import { BackgroundModel } from '../../../_common/background/background.model';
 import { ContentDocument } from '../../../_common/content/content-document';
 import { ContentObject } from '../../../_common/content/content-object';
 import { MarkObject } from '../../../_common/content/mark-object';
-import { getModel, storeModel, storeModelList } from '../../../_common/model/model-store.service';
 import { UnknownModelData } from '../../../_common/model/model.service';
+import { getModel, storeModel, storeModelList } from '../../../_common/model/model-store.service';
 import {
 	RealtimeReactionsPayload,
 	updateReactionCount,

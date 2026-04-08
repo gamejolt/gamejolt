@@ -12,6 +12,7 @@ import {
 	watch,
 } from 'vue';
 import { useRouter } from 'vue-router';
+
 import { trackSearch } from '../../../_common/analytics/analytics.service';
 import AppPopper from '../../../_common/popper/AppPopper.vue';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
@@ -170,13 +171,7 @@ function onBlur() {
 		<!--
 			Put the action/method stuff so that crawlers can see how to submit the form.
 		-->
-		<form
-			class="navbar-form"
-			action="/search"
-			method="GET"
-			role="search"
-			@submit.prevent
-		>
+		<form class="navbar-form" action="/search" method="GET" role="search" @submit.prevent>
 			<div class="-input">
 				<label :for="`search-input-${inputId}`" class="sr-only">
 					<AppTranslate>Search</AppTranslate>

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType, computed, toRefs } from 'vue';
+import { computed, CSSProperties, PropType, toRefs } from 'vue';
+
 import { styleBorderRadiusBase, styleFlexCenter, styleWhen } from '../../_styles/mixins';
 import { kBorderRadiusBase, kFontSizeLarge, kFontSizeSmall } from '../../_styles/variables';
 import { showPurchaseShopProductModal } from '../../app/components/vending-machine/modal/_purchase-modal/modal.service';

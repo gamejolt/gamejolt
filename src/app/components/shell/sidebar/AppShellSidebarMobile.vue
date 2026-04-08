@@ -1,8 +1,9 @@
 <script lang="ts" setup>
-import AppLinkExternal from '../../../../_common/link/AppLinkExternal.vue';
 import { RouterLink } from 'vue-router';
+
 import { trackAppPromotionClick } from '../../../../_common/analytics/analytics.service';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
+import AppLinkExternal from '../../../../_common/link/AppLinkExternal.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import AppUserCreatorBadge from '../../../../_common/user/creator/AppUserCreatorBadge.vue';

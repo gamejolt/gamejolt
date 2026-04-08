@@ -1,9 +1,10 @@
 <script lang="ts" setup>
 import { PropType, ref, toRefs, watch } from 'vue';
+
 import { Api } from '../../../_common/api/api.service';
 import AppExpand from '../../../_common/expand/AppExpand.vue';
 import { formatCurrency } from '../../../_common/filters/currency';
-import AppForm, { FormController, createForm } from '../../../_common/form-vue/AppForm.vue';
+import AppForm, { createForm, FormController } from '../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../_common/form-vue/AppFormButton.vue';
 import AppFormControl from '../../../_common/form-vue/AppFormControl.vue';
 import AppFormControlError from '../../../_common/form-vue/AppFormControlError.vue';
@@ -134,7 +135,7 @@ const form: FormController<FormModel> = createForm({
 
 			const response = await new Promise<any>((resolve, reject) => {
 				// @ts-ignore
-			window.Stripe.card.createToken(formData, (_status: any, stripeResponse: any) => {
+				window.Stripe.card.createToken(formData, (_status: any, stripeResponse: any) => {
 					if (stripeResponse.error) {
 						stripeError.value = stripeResponse.error.message;
 						reject(stripeResponse);

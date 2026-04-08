@@ -1,9 +1,21 @@
 <script lang="ts">
+import { computed, ref } from 'vue';
+
 import { Api } from '../../../../../../../_common/api/api.service';
+import AppButton from '../../../../../../../_common/button/AppButton.vue';
+import { GameStatus } from '../../../../../../../_common/game/game.model';
+import { showSuccessGrowl } from '../../../../../../../_common/growls/growls.service';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
 } from '../../../../../../../_common/route/route-component';
+import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
+import { useCommonStore } from '../../../../../../../_common/store/common-store';
+import AppTranslate from '../../../../../../../_common/translate/AppTranslate.vue';
+import { $gettext } from '../../../../../../../_common/translate/translate.service';
+import { TranslateDirective as vTranslate } from '../../../../../../../_common/translate/translate-directive';
+import FormGameSettings from '../../../../../../components/forms/game/settings/FormGameSettings.vue';
+import { useGameDashRouteController } from '../../manage.store';
 
 export default {
 	name: 'RouteDashGamesManageGameSettings',
@@ -16,18 +28,6 @@ export default {
 </script>
 
 <script lang="ts" setup>
-import AppTranslate from '../../../../../../../_common/translate/AppTranslate.vue';
-import AppButton from '../../../../../../../_common/button/AppButton.vue';
-import { TranslateDirective as vTranslate } from '../../../../../../../_common/translate/translate-directive';
-import { computed, ref } from 'vue';
-import { GameStatus } from '../../../../../../../_common/game/game.model';
-import { showSuccessGrowl } from '../../../../../../../_common/growls/growls.service';
-import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
-import { useCommonStore } from '../../../../../../../_common/store/common-store';
-import { $gettext } from '../../../../../../../_common/translate/translate.service';
-import FormGameSettings from '../../../../../../components/forms/game/settings/FormGameSettings.vue';
-import { useGameDashRouteController } from '../../manage.store';
-
 const routeStore = useGameDashRouteController()!;
 const { user } = useCommonStore();
 
@@ -41,10 +41,7 @@ const isCanceled = computed(() => game.value.canceled);
 const isCollaborator = computed(() => user.value!.id !== game.value.developer.id);
 
 function onSaved() {
-	showSuccessGrowl(
-		$gettext('Your game settings have been saved.'),
-		$gettext('Settings Saved')
-	);
+	showSuccessGrowl($gettext('Your game settings have been saved.'), $gettext('Settings Saved'));
 	Scroll.to(0);
 }
 

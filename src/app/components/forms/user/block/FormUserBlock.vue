@@ -8,10 +8,13 @@ import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControl
 import AppFormControlPrefix from '../../../../../_common/form-vue/AppFormControlPrefix.vue';
 import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
-import { validateAvailability, validateMaxLength } from '../../../../../_common/form-vue/validators';
+import {
+	validateAvailability,
+	validateMaxLength,
+} from '../../../../../_common/form-vue/validators';
 import { showInfoGrowl } from '../../../../../_common/growls/growls.service';
-import { $gettext } from '../../../../../_common/translate/translate.service';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
+import { $gettext } from '../../../../../_common/translate/translate.service';
 
 type FormModel = {
 	username: string;

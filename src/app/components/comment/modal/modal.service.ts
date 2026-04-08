@@ -1,5 +1,6 @@
 import { defineAsyncComponent } from 'vue';
-import { CommentSort, CommentableModel } from '../../../../_common/comment/comment-model';
+
+import { CommentableModel,CommentSort } from '../../../../_common/comment/comment-model';
 import { showModal } from '../../../../_common/modal/modal.service';
 import { Model } from '../../../../_common/model/model.service';
 

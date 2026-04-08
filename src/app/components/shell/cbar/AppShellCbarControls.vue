@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
+
 import { trackCbarControlClick } from '../../../../_common/analytics/analytics.service';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { Screen } from '../../../../_common/screen/screen-service';

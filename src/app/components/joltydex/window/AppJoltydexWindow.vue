@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, nextTick, onMounted, onUnmounted, ref, toRefs, watch } from 'vue';
+
 import { trackJoltydex } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
@@ -8,8 +9,8 @@ import AppJoltydexBrowser from '../../../../_common/joltydex/AppJoltydexBrowser.
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import { kThemeFgMuted } from '../../../../_common/theme/variables';
-import AppUserAvatarBubble from '../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import { UserModel } from '../../../../_common/user/user.model';
+import AppUserAvatarBubble from '../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import { styleTextOverflow } from '../../../../_styles/mixins';
 import { kFontSizeLarge, kFontSizeSmall } from '../../../../_styles/variables';
 import { useAppStore } from '../../../store/index';

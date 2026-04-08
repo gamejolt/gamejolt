@@ -1,10 +1,11 @@
 <script lang="ts" setup>
 import { PropType, ref, toRef, toRefs, watch } from 'vue';
+
 import { FocusToken } from '../../../utils/focus-token';
 import { ContentContext, ContextCapabilities } from '../../content/content-context';
 import AppContentEditor from '../../content/content-editor/AppContentEditor.vue';
-import { ContentRules } from '../../content/content-rules';
 import { ContentEditorModelData } from '../../content/content-owner';
+import { ContentRules } from '../../content/content-rules';
 import {
 	createFormControl,
 	defineFormControlEmits,

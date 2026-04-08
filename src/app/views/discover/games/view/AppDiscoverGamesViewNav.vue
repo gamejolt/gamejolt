@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
+
 import {
 	getCommentStore,
 	useCommentStoreManager,

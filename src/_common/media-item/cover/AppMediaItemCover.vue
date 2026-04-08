@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { ref, toRefs, watch } from 'vue';
+
 import { useResizeObserver } from '../../../utils/resize-observer';
 import AppImgResponsive from '../../img/AppImgResponsive.vue';
 import { Ruler } from '../../ruler/ruler-service';
@@ -87,8 +88,8 @@ function onLoadChange(newIsLoaded: boolean) {
 					<AppImgResponsive
 						v-show="isLoaded"
 						:src="mediaItem.mediaserver_url"
-						@imgloadchange="onLoadChange"
 						alt=""
+						@imgloadchange="onLoadChange"
 					/>
 				</AppMediaItemBackdrop>
 			</div>

@@ -6,6 +6,7 @@
  */
 
 import { defineAsyncComponent } from 'vue';
+
 import AppNoop from '../AppNoop.vue';
 import type { ClientAutoStart as ClientAutoStartType } from './autostart/autostart.service';
 import type AppClientBaseType from './base/AppClientBase.vue';

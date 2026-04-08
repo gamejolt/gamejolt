@@ -1,4 +1,5 @@
-import { InjectionKey, Ref, computed, inject, provide, ref, shallowReadonly } from 'vue';
+import { computed, inject, InjectionKey, provide, Ref, ref, shallowReadonly } from 'vue';
+
 import { AvatarFrameModel } from '../../../../_common/avatar/frame.model';
 import { BackgroundModel } from '../../../../_common/background/background.model';
 import {
@@ -6,9 +7,9 @@ import {
 	CreatorChangeRequestStatus,
 } from '../../../../_common/creator/change-request/creator-change-request.model';
 import {
+	getShopProductResource,
 	ShopProductModel,
 	ShopProductResource,
-	getShopProductResource,
 } from '../../../../_common/shop/product/product-model';
 import { StickerPackModel } from '../../../../_common/sticker/pack/pack.model';
 import { StickerModel } from '../../../../_common/sticker/sticker.model';

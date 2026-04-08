@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { PropType, toRef, toRefs } from 'vue';
+
 import AppAdTakeoverFloat from '../../../../_common/ad/AppAdTakeoverFloat.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppButtonGroup from '../../../../_common/button/AppButtonGroup.vue';
@@ -8,8 +9,8 @@ import AppUserFollowButton from '../../../../_common/user/follow/AppUserFollowBu
 import { openChatRoom } from '../../../components/chat/client';
 import { useGridStore } from '../../../components/grid/grid-store';
 import { useAppStore } from '../../../store';
-import { useProfileRouteStore } from '../RouteProfile.vue';
 import { showProfileAboutModal } from '../about/modal.service';
+import { useProfileRouteStore } from '../RouteProfile.vue';
 import AppProfileShortcutExtras from './shortcut/AppProfileShortcutExtras.vue';
 import { ProfileQuickLink } from './shortcut/AppProfileShortcuts.vue';
 

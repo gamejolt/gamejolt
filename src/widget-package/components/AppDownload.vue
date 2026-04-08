@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
+
 import { Analytics } from '../../_common/analytics/analytics.service';
 import AppButton from '../../_common/button/AppButton.vue';
 import { Environment } from '../../_common/environment/environment.service';

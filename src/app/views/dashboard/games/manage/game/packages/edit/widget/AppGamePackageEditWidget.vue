@@ -1,9 +1,15 @@
 <script lang="ts">
+import { ref, watch } from 'vue';
+
 import { Api } from '../../../../../../../../../_common/api/api.service';
+import { Environment } from '../../../../../../../../../_common/environment/environment.service';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
 } from '../../../../../../../../../_common/route/route-component';
+import { Screen } from '../../../../../../../../../_common/screen/screen-service';
+import { SellableModel } from '../../../../../../../../../_common/sellable/sellable.model';
+import AppTranslate from '../../../../../../../../../_common/translate/AppTranslate.vue';
 
 export default {
 	name: 'RouteDashGamesManageGamePackagesEditWidget',
@@ -21,12 +27,6 @@ export default {
 </script>
 
 <script lang="ts" setup>
-import AppTranslate from '../../../../../../../../../_common/translate/AppTranslate.vue';
-import { ref, watch } from 'vue';
-import { Environment } from '../../../../../../../../../_common/environment/environment.service';
-import { Screen } from '../../../../../../../../../_common/screen/screen-service';
-import { SellableModel } from '../../../../../../../../../_common/sellable/sellable.model';
-
 const sellable = ref<SellableModel | null>(null);
 const theme = ref<string>(null as any);
 const widgetUrl = ref('');
@@ -43,9 +43,7 @@ watch(theme, () => {
 	}
 
 	widgetCode.value =
-		'<iframe src="' +
-		widgetUrl.value +
-		'" frameborder="0" width="500" height="245"></iframe>';
+		'<iframe src="' + widgetUrl.value + '" frameborder="0" width="500" height="245"></iframe>';
 });
 
 createAppRoute({

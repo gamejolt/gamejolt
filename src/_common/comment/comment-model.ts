@@ -5,6 +5,7 @@ import { Environment } from '../environment/environment.service';
 import { FiresidePostModel } from '../fireside/post/post-model';
 import { GameModel } from '../game/game.model';
 import { showErrorGrowl } from '../growls/growls.service';
+import { Model } from '../model/model.service';
 import {
 	ModelStoreModel,
 	RemovableModel,
@@ -12,8 +13,7 @@ import {
 	saveModel,
 	storeModel,
 } from '../model/model-store.service';
-import { Model } from '../model/model.service';
-import { ReactionCount, ReactionableModel } from '../reaction/reaction-count';
+import { ReactionableModel,ReactionCount } from '../reaction/reaction-count';
 import {
 	$createSubscription,
 	$removeSubscription,

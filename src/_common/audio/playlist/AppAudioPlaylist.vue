@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import AppButton from '../../button/AppButton.vue';
 import { computed, nextTick, ref, useTemplateRef } from 'vue';
+
+import AppButton from '../../button/AppButton.vue';
 import { formatTime } from '../../filters/time';
 import { GameSongModel } from '../../game/song/song.model';
 import AppAudioPlayer from '../player/AppAudioPlayer.vue';

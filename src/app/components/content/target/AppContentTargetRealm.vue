@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
+
 import AppImgResponsive from '../../../../_common/img/AppImgResponsive.vue';
 import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
 import { REALM_CARD_RATIO } from '../../../../_common/realm/AppRealmFullCard.vue';

@@ -1,13 +1,14 @@
 <script lang="ts" setup>
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import AppButton from '../../../../_common/button/AppButton.vue';
 import { computed } from 'vue';
+
 import { Api } from '../../../../_common/api/api.service';
+import AppButton from '../../../../_common/button/AppButton.vue';
 import { showErrorGrowl, showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import { SiteBuildModel } from '../../../../_common/site/build/build-model';
 import { SiteModel } from '../../../../_common/site/site-model';
-import { $gettext } from '../../../../_common/translate/translate.service';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import { $gettext } from '../../../../_common/translate/translate.service';
 import FormDashSiteBuild from '../../forms/site/build/FormSiteBuild.vue';
 
 type Props = {
@@ -31,10 +32,7 @@ function onBuildAdded(_model: SiteBuildModel, response: any) {
 	}
 
 	if (site.build) {
-		showSuccessGrowl(
-			$gettext(`Your new site build is now active.`),
-			$gettext(`Site Updated`)
-		);
+		showSuccessGrowl($gettext(`Your new site build is now active.`), $gettext(`Site Updated`));
 	}
 
 	site.assign(response.site);
@@ -80,7 +78,11 @@ async function activateBuild() {
 						</AppTranslate>
 					</p>
 
-					<FormDashSiteBuild v-if="site && !site.build" :site="site" @submit="onBuildAdded" />
+					<FormDashSiteBuild
+						v-if="site && !site.build"
+						:site="site"
+						@submit="onBuildAdded"
+					/>
 
 					<AppButton
 						v-else

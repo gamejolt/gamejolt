@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
+
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import { UserModel } from '../../../../_common/user/user.model';

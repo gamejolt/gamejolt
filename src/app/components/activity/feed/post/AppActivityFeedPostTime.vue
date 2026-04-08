@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
+
 import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import AppTimeAgo from '../../../../../_common/time/AppTimeAgo.vue';

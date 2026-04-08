@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { PropType, computed, toRef, toRefs } from 'vue';
+import { computed, PropType, toRef, toRefs } from 'vue';
+
 import AppButton from '../../../../../../../../_common/button/AppButton.vue';
 import AppCardListItem from '../../../../../../../../_common/card/list/AppCardListItem.vue';
 import { CommunityChannelModel } from '../../../../../../../../_common/community/channel/channel.model';

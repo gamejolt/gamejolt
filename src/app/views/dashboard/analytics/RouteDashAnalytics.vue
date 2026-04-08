@@ -1,6 +1,7 @@
 <script lang="ts">
 import { computed, ComputedRef, onMounted, Ref, ref } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
+
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppCurrencyImg from '../../../../_common/currency/AppCurrencyImg.vue';

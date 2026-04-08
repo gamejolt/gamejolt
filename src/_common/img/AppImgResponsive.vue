@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { nextTick, onMounted, ref, toRefs, watch } from 'vue';
+
 import { getMediaserverUrlForBounds } from '../../utils/image';
 import { sleep } from '../../utils/utils';
 import { Ruler } from '../ruler/ruler-service';

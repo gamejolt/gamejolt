@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
+
 import AppJolticon, { Jolticon } from '../jolticon/AppJolticon.vue';
 import AppTranslate from '../translate/AppTranslate.vue';
 import { useForm } from './AppForm.vue';

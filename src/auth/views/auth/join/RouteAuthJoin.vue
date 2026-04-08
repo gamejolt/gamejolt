@@ -1,6 +1,7 @@
 <script lang="ts">
 import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
+
 import AppAuthJoin from '../../../../_common/auth/join/AppAuthJoin.vue';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';

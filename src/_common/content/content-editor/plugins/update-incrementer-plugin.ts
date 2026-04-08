@@ -1,5 +1,6 @@
 import type { EditorState } from 'prosemirror-state';
 import type { EditorView } from 'prosemirror-view';
+
 import { ContentEditorController, editorUpdateContent } from '../content-editor-controller';
 import type { ContentEditorSchema } from '../schemas/content-editor-schema';
 

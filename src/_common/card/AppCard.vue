@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import AppJolticon from '../jolticon/AppJolticon.vue';
 import './card.styl';
+
+import AppJolticon from '../jolticon/AppJolticon.vue';
 
 defineProps({
 	isDraggable: {

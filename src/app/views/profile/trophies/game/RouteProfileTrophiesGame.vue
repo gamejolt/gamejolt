@@ -1,10 +1,23 @@
 <script lang="ts">
+import { computed, ref } from 'vue';
+
 import { Api } from '../../../../../_common/api/api.service';
+import AppButton from '../../../../../_common/button/AppButton.vue';
+import { GameModel } from '../../../../../_common/game/game.model';
+import AppGameThumbnail from '../../../../../_common/game/thumbnail/AppGameThumbnail.vue';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
 } from '../../../../../_common/route/route-component';
+import { useCommonStore } from '../../../../../_common/store/common-store';
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
+import { $gettext } from '../../../../../_common/translate/translate.service';
+import AppTrophyCompletion from '../../../../../_common/trophy/AppTrophyCompletion.vue';
+import AppTrophyListPaged from '../../../../../_common/trophy/list/AppTrophyListPaged.vue';
+import { populateTrophies } from '../../../../../_common/user/trophy/trophy-utils';
+import { UserBaseTrophyModel } from '../../../../../_common/user/trophy/user-base-trophy.model';
 import { RouteLocationRedirect } from '../../../../../utils/router';
+import { useProfileRouteStore } from '../../RouteProfile.vue';
 
 export default {
 	name: 'RouteProfileTrophiesGame',
@@ -29,19 +42,6 @@ export default {
 </script>
 
 <script lang="ts" setup>
-import AppButton from '../../../../../_common/button/AppButton.vue';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import { computed, ref } from 'vue';
-import { GameModel } from '../../../../../_common/game/game.model';
-import AppGameThumbnail from '../../../../../_common/game/thumbnail/AppGameThumbnail.vue';
-import { useCommonStore } from '../../../../../_common/store/common-store';
-import AppTrophyCompletion from '../../../../../_common/trophy/AppTrophyCompletion.vue';
-import AppTrophyListPaged from '../../../../../_common/trophy/list/AppTrophyListPaged.vue';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import { populateTrophies } from '../../../../../_common/user/trophy/trophy-utils';
-import { UserBaseTrophyModel } from '../../../../../_common/user/trophy/user-base-trophy.model';
-import { useProfileRouteStore } from '../../RouteProfile.vue';
-
 type CompletionData = {
 	experience: number;
 	totalCount: number;

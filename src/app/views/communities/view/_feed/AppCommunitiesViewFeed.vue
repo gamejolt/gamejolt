@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
-import { PropType, computed, toRef, toRefs } from 'vue';
+import { computed, PropType, toRef, toRefs } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
+
 import { Api } from '../../../../../_common/api/api.service';
 import { CommunityChannelModel } from '../../../../../_common/community/channel/channel.model';
 import { CommunityModel } from '../../../../../_common/community/community.model';
@@ -12,6 +12,7 @@ import { illNoCommentsSmall } from '../../../../../_common/illustration/illustra
 import AppNavTabList from '../../../../../_common/nav/tab-list/AppNavTabList.vue';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { $gettext } from '../../../../../_common/translate/translate.service';
+import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
 import AppActivityFeed from '../../../../components/activity/feed/AppActivityFeed.vue';
 import AppActivityFeedPlaceholder from '../../../../components/activity/feed/AppActivityFeedPlaceholder.vue';
 import { ActivityFeedView } from '../../../../components/activity/feed/view';

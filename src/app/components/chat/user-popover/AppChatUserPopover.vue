@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { computed, CSSProperties, PropType, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
+
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import AppOnHover from '../../../../_common/on/AppOnHover.vue';

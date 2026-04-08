@@ -1,4 +1,5 @@
 import { defineAsyncComponent } from 'vue';
+
 import { JoltydexFeed } from '../../joltydex/joltydex-feed';
 import { showModal } from '../../modal/modal.service';
 import { CollectibleModel } from '../collectible.model';

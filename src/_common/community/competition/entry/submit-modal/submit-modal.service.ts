@@ -1,4 +1,5 @@
 import { defineAsyncComponent } from 'vue';
+
 import { showModal } from '../../../../modal/modal.service';
 import { CommunityCompetitionModel } from '../../competition.model';
 import { CommunityCompetitionEntryModel } from '../entry.model';

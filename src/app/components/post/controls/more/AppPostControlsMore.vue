@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import { PropType, computed, toRef, toRefs } from 'vue';
+import { computed, PropType, toRef, toRefs } from 'vue';
 import { useRoute } from 'vue-router';
+
 import { Api } from '../../../../../_common/api/api.service';
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import { showCollectibleResourceDetailsModal } from '../../../../../_common/collectible/resource-details-modal/modal.service';

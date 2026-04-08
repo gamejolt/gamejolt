@@ -1,8 +1,6 @@
 <script lang="ts" setup>
-import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
-import { validateFilesize, validateImageMinDimensions, validateImageMaxDimensions } from '../../../../../_common/form-vue/validators';
-import AppLinkHelp from '../../../../../_common/link/AppLinkHelp.vue';
 import { computed, ref, toRef, watch } from 'vue';
+
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
@@ -11,13 +9,20 @@ import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormControlCrop from '../../../../../_common/form-vue/controls/AppFormControlCrop.vue';
 import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import {
+	validateFilesize,
+	validateImageMaxDimensions,
+	validateImageMinDimensions,
+} from '../../../../../_common/form-vue/validators';
+import {
 	$clearGameHeader,
 	$saveGameHeader,
 	GameModel,
 } from '../../../../../_common/game/game.model';
+import AppLinkHelp from '../../../../../_common/link/AppLinkHelp.vue';
 import { showModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
+import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
 
 type FormModel = GameModel & {
 	header_crop?: any;
@@ -58,9 +63,7 @@ const form: FormController<FormModel> = createForm({
 });
 
 const crop = computed(() =>
-	form.formModel.header_media_item
-		? form.formModel.header_media_item.getCrop()
-		: undefined
+	form.formModel.header_media_item ? form.formModel.header_media_item.getCrop() : undefined
 );
 
 watch(crop, () => {
@@ -100,12 +103,12 @@ function headerSelected() {
 					near the center of the image.
 				</AppTranslate>
 			</p>
-			<p class="help-block" v-translate>
+			<p v-translate class="help-block">
 				Your image must be a PNG or JPG.
 				<br />
 				<strong>PNGs are highly recommended as they produce a lossless image.</strong>
 			</p>
-			<p class="help-block strong" v-translate="{ dimensions: '2000×500' }">
+			<p v-translate="{ dimensions: '2000×500' }" class="help-block strong">
 				The recommended size for a header image is
 				<code>%{dimensions}</code>
 				(ratio of 4 ÷ 1).
@@ -130,9 +133,9 @@ function headerSelected() {
 		</AppFormGroup>
 
 		<AppFormGroup
+			v-if="form.formModel.header_media_item && !form.formModel.file"
 			name="header_crop"
 			:label="$gettext(`Crop Current Header`)"
-			v-if="form.formModel.header_media_item && !form.formModel.file"
 		>
 			<div class="form-control-static">
 				<AppFormControlCrop

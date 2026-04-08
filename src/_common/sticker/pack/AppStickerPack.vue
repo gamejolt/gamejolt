@@ -1,5 +1,6 @@
 <script lang="ts">
 import { CSSProperties, PropType, ref, toRefs } from 'vue';
+
 import {
 	styleBorderRadiusLg,
 	styleChangeBgRgba,

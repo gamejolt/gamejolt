@@ -1,4 +1,5 @@
 import { RouteRecordRaw } from 'vue-router';
+
 import { lazyImportNoSSR } from '../../../../../../../../../_common/code-splitting';
 
 export const routeCommunitiesViewEditChannelsCompetitionSettings: RouteRecordRaw = {

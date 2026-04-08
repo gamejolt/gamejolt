@@ -1,5 +1,6 @@
 <script lang="ts">
 import { RouterView } from 'vue-router';
+
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { $gettext } from '../../../../_common/translate/translate.service';

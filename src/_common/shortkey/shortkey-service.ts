@@ -1,4 +1,5 @@
 import { onMounted, onUnmounted } from 'vue';
+
 import { arrayRemove } from '../../utils/array';
 
 type ShortkeyCallback = (e: KeyboardEvent) => void;

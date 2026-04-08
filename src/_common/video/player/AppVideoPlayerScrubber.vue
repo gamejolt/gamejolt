@@ -1,11 +1,12 @@
 <script lang="ts" setup>
-import { PropType, Ref, computed, ref, toRefs } from 'vue';
+import { computed, PropType, Ref, ref, toRefs } from 'vue';
+
 import { styleChangeBg, styleWhen } from '../../../_styles/mixins';
 import { buildCSSPixelValue } from '../../../_styles/variables';
 import { Ruler } from '../../ruler/ruler-service';
 import { kThemeHighlight } from '../../theme/variables';
 import AppTouch, { AppTouchInput } from '../../touch/AppTouch.vue';
-import { VideoPlayerController, scrubVideo } from './controller';
+import { scrubVideo, VideoPlayerController } from './controller';
 
 const props = defineProps({
 	player: {

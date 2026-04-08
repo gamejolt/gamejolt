@@ -2,7 +2,8 @@ import { lift, toggleMark, wrapIn } from 'prosemirror-commands';
 import { Fragment, Mark, MarkType, Node, NodeType } from 'prosemirror-model';
 import { EditorState, Plugin, Selection, TextSelection, Transaction } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
-import { InjectionKey, MaybeRef, inject, markRaw, nextTick, reactive, unref, watch } from 'vue';
+import { inject, InjectionKey, markRaw, MaybeRef, nextTick, reactive, unref, watch } from 'vue';
+
 import { isImage } from '../../../utils/image';
 import { uuidv4 } from '../../../utils/uuid';
 import { GJ_EMOJIS } from '../../emoji/AppEmoji.vue';
@@ -15,7 +16,7 @@ import { ContentOwnerController } from '../content-owner';
 import { ContentEditorAppAdapterMessage, editorGetAppAdapter } from './app-adapter';
 import { ContentEditorService } from './content-editor.service';
 import buildEditorEvents from './events/build-events';
-import { MediaUploadTask, createMediaUploadTask } from './media-upload-task';
+import { createMediaUploadTask,MediaUploadTask } from './media-upload-task';
 import { CustomButtonData } from './modals/custom-button/custom-button-modal.service';
 import { SearchResult } from './modals/gif/gif-modal.service';
 import { NodeViewRenderData } from './node-views/base';

@@ -1,5 +1,6 @@
-import { computed, inject, InjectionKey, ref, Ref, shallowRef, ShallowRef, watch } from 'vue';
+import { computed, inject, InjectionKey, Ref, ref, ShallowRef, shallowRef, watch } from 'vue';
 import { Router } from 'vue-router';
+
 import { CommunityJoinLocation } from '../../_common/analytics/analytics.service';
 import { Api } from '../../_common/api/api.service';
 import { Backdrop, BackdropController } from '../../_common/backdrop/backdrop.service';

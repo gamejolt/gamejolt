@@ -1,5 +1,6 @@
 import { InputRule, inputRules } from 'prosemirror-inputrules';
 import { EditorState, Selection } from 'prosemirror-state';
+
 import {
 	ContentEditorController,
 	editorGetParentNode,

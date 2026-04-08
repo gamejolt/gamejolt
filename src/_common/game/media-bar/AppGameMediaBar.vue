@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import { PropType, nextTick, onUpdated, ref, toRef, toRefs, watch } from 'vue';
+import { nextTick, onUpdated, PropType, ref, toRef, toRefs, watch } from 'vue';
 import { useRouter } from 'vue-router';
+
 import { Analytics } from '../../analytics/analytics.service';
 import { showErrorGrowl } from '../../growls/growls.service';
 import { createLightbox } from '../../lightbox/lightbox-helpers';

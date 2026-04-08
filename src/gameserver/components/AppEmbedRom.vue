@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { onMounted } from 'vue';
+
 import { GameBuildEmulator } from '../../_common/game/build/build.model';
 import { loadScript } from '../../utils/utils';
 import { useGameserverStore } from '../store/index';

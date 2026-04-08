@@ -1,4 +1,5 @@
 import { Ref } from 'vue';
+
 import { IllustrationAsset } from '../illustration/AppIllustration.vue';
 import { illJoltbux } from '../img/ill/illustrations';
 import { imageCoins, imageCoinsSmall, imageGems } from '../img/images';

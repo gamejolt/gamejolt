@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { PropType, onMounted, ref, toRef, toRefs } from 'vue';
+import { onMounted, PropType, ref, toRef, toRefs } from 'vue';
+
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';

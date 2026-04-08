@@ -1,14 +1,15 @@
 <script lang="ts" setup>
-import { validateMaxLength } from '../../../../../_common/form-vue/validators';
-import AppFormControlTextarea from '../../../../../_common/form-vue/controls/AppFormControlTextarea.vue';
-import AppFormControlRadio from '../../../../../_common/form-vue/controls/AppFormControlRadio.vue';
 import { toRef } from 'vue';
+
 import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControl from '../../../../../_common/form-vue/AppFormControl.vue';
 import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
+import AppFormControlRadio from '../../../../../_common/form-vue/controls/AppFormControlRadio.vue';
+import AppFormControlTextarea from '../../../../../_common/form-vue/controls/AppFormControlTextarea.vue';
 import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
+import { validateMaxLength } from '../../../../../_common/form-vue/validators';
 import { GameModel } from '../../../../../_common/game/game.model';
 import {
 	$saveGameScoreTable,

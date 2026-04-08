@@ -2,6 +2,7 @@ import { Node } from 'prosemirror-model';
 import { EditorView, NodeView } from 'prosemirror-view';
 import type { Component, PropType } from 'vue';
 import { markRaw, nextTick, reactive } from 'vue';
+
 import { arrayRemove } from '../../../../utils/array';
 import { ContentEditorController } from '../content-editor-controller';
 import { ContentEditorSchema } from '../schemas/content-editor-schema';

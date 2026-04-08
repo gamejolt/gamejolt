@@ -1,5 +1,6 @@
 import { fetchAndActivate, getRemoteConfig, getValue } from 'firebase/remote-config';
 import { reactive } from 'vue';
+
 import { isDynamicGoogleBot } from '../device/device.service';
 import { getFirebaseApp } from '../firebase/firebase.service';
 import { commonStore } from '../store/common-store';

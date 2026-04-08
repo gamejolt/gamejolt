@@ -1,5 +1,6 @@
 import { defineAsyncComponent } from 'vue';
 import { Router } from 'vue-router';
+
 import { showModal } from '../../../../_common/modal/modal.service';
 import { Model } from '../../../../_common/model/model.service';
 import { DisplayMode } from '../modal/modal.service';

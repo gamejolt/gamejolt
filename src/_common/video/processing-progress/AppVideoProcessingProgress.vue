@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, CSSProperties, PropType, ref, toRefs } from 'vue';
+
 import { styleBorderRadiusLg, styleChangeBg } from '../../../_styles/mixins';
 import { FiresidePostModel } from '../../fireside/post/post-model';
 import AppImgResponsive from '../../img/AppImgResponsive.vue';

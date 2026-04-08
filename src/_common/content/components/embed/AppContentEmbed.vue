@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref } from 'vue';
+
 import { arrayShuffle } from '../../../../utils/array';
 import { showErrorGrowl } from '../../../growls/growls.service';
 import AppJolticon from '../../../jolticon/AppJolticon.vue';

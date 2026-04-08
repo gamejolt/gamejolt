@@ -1,5 +1,5 @@
-import { storeModel } from '../model/model-store.service';
 import { Model } from '../model/model.service';
+import { storeModel } from '../model/model-store.service';
 import { StickerModel } from './sticker.model';
 
 export class StickerRewardModel extends Model {

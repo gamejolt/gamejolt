@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
+
 import { styleBorderRadiusBase, styleWhen } from '../../_styles/mixins';
 import { kFontSizeSmall } from '../../_styles/variables';
 import AppJolticon, { Jolticon } from '../jolticon/AppJolticon.vue';

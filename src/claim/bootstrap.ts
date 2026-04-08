@@ -1,5 +1,6 @@
-import { bootstrapCommon } from '../_common/bootstrap';
 import './main.styl';
+
+import { bootstrapCommon } from '../_common/bootstrap';
 import { router } from './views/index';
 
 export async function createApp() {

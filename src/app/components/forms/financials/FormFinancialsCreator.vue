@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 import { computed, onMounted, onUnmounted, ref } from 'vue';
+
 import AppAlertBox from '../../../../_common/alert/AppAlertBox.vue';
 import { Api } from '../../../../_common/api/api.service';
-import AppForm, { FormController, createForm } from '../../../../_common/form-vue/AppForm.vue';
+import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { $gettext } from '../../../../_common/translate/translate.service';

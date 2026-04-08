@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { PropType, computed, toRefs } from 'vue';
+import { computed, PropType, toRefs } from 'vue';
+
 import { CommunityModel } from '../../../../../_common/community/community.model';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import AppTimeAgo from '../../../../../_common/time/AppTimeAgo.vue';

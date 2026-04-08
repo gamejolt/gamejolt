@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { PropType, computed, toRef, toRefs } from 'vue';
+import { computed, PropType, toRef, toRefs } from 'vue';
+
 import AppButton from '../../../_common/button/AppButton.vue';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
 import AppChatMemberListItem from './member-list/AppChatMemberListItem.vue';

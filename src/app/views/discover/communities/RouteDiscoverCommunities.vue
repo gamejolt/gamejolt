@@ -1,9 +1,10 @@
 <script lang="ts">
 import { computed, ref, toRef } from 'vue';
 import { useRoute } from 'vue-router';
+
 import { Api } from '../../../../_common/api/api.service';
-import AppCommunityCardCreatePlaceholder from '../../../../_common/community/card-create-placeholder/AppCommunityCardCreatePlaceholder.vue';
 import AppCommunityCard from '../../../../_common/community/card/AppCommunityCard.vue';
+import AppCommunityCardCreatePlaceholder from '../../../../_common/community/card-create-placeholder/AppCommunityCardCreatePlaceholder.vue';
 import { CommunityModel } from '../../../../_common/community/community.model';
 import { HistoryCache } from '../../../../_common/history/cache/cache.service';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';

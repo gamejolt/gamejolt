@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, useSlots } from 'vue';
+
 import { Screen } from '../../../../../_common/screen/screen-service';
 
 type Props = {
@@ -12,9 +13,7 @@ const slots = useSlots();
 
 const sidebarHasContent = computed(() => !!slots.sidebar);
 
-const shouldShowSidebar = computed(
-	() => Screen.isLg || (Screen.isMd && sidebarHasContent.value)
-);
+const shouldShowSidebar = computed(() => Screen.isLg || (Screen.isMd && sidebarHasContent.value));
 </script>
 
 <template>

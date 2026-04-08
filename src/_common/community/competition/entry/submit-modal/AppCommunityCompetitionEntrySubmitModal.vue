@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { TranslateDirective as vTranslate } from '../../../../translate/translate-directive';
-import { PropType, onMounted, ref, toRefs } from 'vue';
+import { onMounted, PropType, ref, toRefs } from 'vue';
+
 import { Api } from '../../../../api/api.service';
 import AppButton from '../../../../button/AppButton.vue';
 import { GameModel } from '../../../../game/game.model';
@@ -11,6 +11,7 @@ import AppLoading from '../../../../loading/AppLoading.vue';
 import AppModal from '../../../../modal/AppModal.vue';
 import { useModal } from '../../../../modal/modal.service';
 import { $gettext } from '../../../../translate/translate.service';
+import { TranslateDirective as vTranslate } from '../../../../translate/translate-directive';
 import { CommunityCompetitionModel } from '../../competition.model';
 import { CommunityCompetitionEntryModel } from '../entry.model';
 

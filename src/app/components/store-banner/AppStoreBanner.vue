@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType } from 'vue';
+
 import { trackBannerClick } from '../../../_common/analytics/analytics.service';
 import AppButton from '../../../_common/button/AppButton.vue';
 import { StoreBannerModel } from './store-banner-model';

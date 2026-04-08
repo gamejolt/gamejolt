@@ -1,11 +1,12 @@
 <script lang="ts" setup>
-import AppFormControlRadio from '../../../../../_common/form-vue/controls/AppFormControlRadio.vue';
 import { computed } from 'vue';
+
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import { Clipboard } from '../../../../../_common/clipboard/clipboard-service';
 import { Environment } from '../../../../../_common/environment/environment.service';
 import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
 import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
+import AppFormControlRadio from '../../../../../_common/form-vue/controls/AppFormControlRadio.vue';
 import { GameModel } from '../../../../../_common/game/game.model';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 

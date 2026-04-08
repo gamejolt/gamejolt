@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, onBeforeUnmount, watch } from 'vue';
+
 import { useSidebarStore } from '../../../../_common/sidebar/sidebar.store';
 import { useAppStore } from '../../../store/index';
 

@@ -1,4 +1,5 @@
 import { defineAsyncComponent } from 'vue';
+
 import { lazyImportNoSSR } from '../../_common/code-splitting';
 import AppActivityFeedPlaceholder from './activity/feed/AppActivityFeedPlaceholder.vue';
 

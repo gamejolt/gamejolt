@@ -1,11 +1,12 @@
 <script lang="ts" setup>
-import AppFormControlRadio from '../../../../../_common/form-vue/controls/AppFormControlRadio.vue';
 import { toRef } from 'vue';
+
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
+import AppFormControlRadio from '../../../../../_common/form-vue/controls/AppFormControlRadio.vue';
 import { $saveGameMaturity, GameModel } from '../../../../../_common/game/game.model';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
@@ -35,65 +36,124 @@ const age: MaturityField[] = [
 
 const cartoonViolence: MaturityField[] = [
 	{ label: $gettext('None') },
-	{ label: $gettext('Mild'), description: $gettext('Depictions of cartoon-like characters in unsafe situations.') },
-	{ label: $gettext('Moderate'), description: $gettext('Depictions of cartoon-like characters in aggressive conflict.') },
-	{ label: $gettext('Intense'), description: $gettext('Graphic depictions of violence involving cartoon-like characters.') },
+	{
+		label: $gettext('Mild'),
+		description: $gettext('Depictions of cartoon-like characters in unsafe situations.'),
+	},
+	{
+		label: $gettext('Moderate'),
+		description: $gettext('Depictions of cartoon-like characters in aggressive conflict.'),
+	},
+	{
+		label: $gettext('Intense'),
+		description: $gettext('Graphic depictions of violence involving cartoon-like characters.'),
+	},
 ];
 
 const fantasyViolence: MaturityField[] = [
 	{ label: $gettext('None') },
-	{ label: $gettext('Mild'), description: $gettext('Depictions of characters in unsafe situations easily distinguishable from real life.') },
-	{ label: $gettext('Moderate'), description: $gettext('Depictions of characters in aggressive conflict easily distinguishable from real life.') },
-	{ label: $gettext('Intense'), description: $gettext('Graphic depictions of violence involving situations easily distinguishable from real life.') },
+	{
+		label: $gettext('Mild'),
+		description: $gettext(
+			'Depictions of characters in unsafe situations easily distinguishable from real life.'
+		),
+	},
+	{
+		label: $gettext('Moderate'),
+		description: $gettext(
+			'Depictions of characters in aggressive conflict easily distinguishable from real life.'
+		),
+	},
+	{
+		label: $gettext('Intense'),
+		description: $gettext(
+			'Graphic depictions of violence involving situations easily distinguishable from real life.'
+		),
+	},
 ];
 
 const realisticViolence: MaturityField[] = [
 	{ label: $gettext('None') },
-	{ label: $gettext('Mild'), description: $gettext('Mild depictions of realistic characters in unsafe situations.') },
-	{ label: $gettext('Moderate'), description: $gettext('Depictions of realistic characters in aggressive conflict.') },
-	{ label: $gettext('Intense'), description: $gettext('Graphic depictions of violence involving realistic characters.') },
+	{
+		label: $gettext('Mild'),
+		description: $gettext('Mild depictions of realistic characters in unsafe situations.'),
+	},
+	{
+		label: $gettext('Moderate'),
+		description: $gettext('Depictions of realistic characters in aggressive conflict.'),
+	},
+	{
+		label: $gettext('Intense'),
+		description: $gettext('Graphic depictions of violence involving realistic characters.'),
+	},
 ];
 
 const bloodshed: MaturityField[] = [
 	{ label: $gettext('None') },
 	{ label: $gettext('Mild'), description: $gettext('Unrealistic depictions of bloodshed.') },
 	{ label: $gettext('Moderate'), description: $gettext('Realistic depictions of bloodshed.') },
-	{ label: $gettext('Intense'), description: $gettext('Depictions of bloodshed and the mutilation of body parts.') },
+	{
+		label: $gettext('Intense'),
+		description: $gettext('Depictions of bloodshed and the mutilation of body parts.'),
+	},
 ];
 
 const sexualViolence: MaturityField[] = [
 	{ label: $gettext('None') },
-	{ label: $gettext('Sexual Violence'), description: $gettext('Depictions of or graphic references to rape or other violent sexual behavior.') },
+	{
+		label: $gettext('Sexual Violence'),
+		description: $gettext(
+			'Depictions of or graphic references to rape or other violent sexual behavior.'
+		),
+	},
 ];
 
 const alcohol: MaturityField[] = [
 	{ label: $gettext('None') },
-	{ label: $gettext('Reference'), description: $gettext('References to or images of alcoholic beverages.') },
+	{
+		label: $gettext('Reference'),
+		description: $gettext('References to or images of alcoholic beverages.'),
+	},
 	{ label: $gettext('Use'), description: $gettext('Use of alcoholic beverages.') },
 ];
 
 const drugs: MaturityField[] = [
 	{ label: $gettext('None') },
-	{ label: $gettext('Reference'), description: $gettext('References to or images of illicit drugs.') },
+	{
+		label: $gettext('Reference'),
+		description: $gettext('References to or images of illicit drugs.'),
+	},
 	{ label: $gettext('Use'), description: $gettext('Use of illicit drugs.') },
 ];
 
 const tobacco: MaturityField[] = [
 	{ label: $gettext('None') },
-	{ label: $gettext('Reference'), description: $gettext('References to or images of tobacco products.') },
+	{
+		label: $gettext('Reference'),
+		description: $gettext('References to or images of tobacco products.'),
+	},
 	{ label: $gettext('Use'), description: $gettext('Use of tobacco products.') },
 ];
 
 const nudity: MaturityField[] = [
 	{ label: $gettext('None') },
-	{ label: $gettext('Brief Nudity'), description: $gettext('Brief depictions of nudity or artistic nudity.') },
+	{
+		label: $gettext('Brief Nudity'),
+		description: $gettext('Brief depictions of nudity or artistic nudity.'),
+	},
 	{ label: $gettext('Nudity'), description: $gettext('Prolonged depictions of nudity.') },
 ];
 
 const sexualThemes: MaturityField[] = [
 	{ label: $gettext('None') },
-	{ label: $gettext('Suggestive'), description: $gettext('Provocative references or depictions of provocative behavior.') },
-	{ label: $gettext('Moderate'), description: $gettext('Sexual references or depictions of sexual behavior.') },
+	{
+		label: $gettext('Suggestive'),
+		description: $gettext('Provocative references or depictions of provocative behavior.'),
+	},
+	{
+		label: $gettext('Moderate'),
+		description: $gettext('Sexual references or depictions of sexual behavior.'),
+	},
 	{ label: $gettext('Graphic'), description: $gettext('Graphic depictions of sexual behavior.') },
 ];
 
@@ -106,15 +166,30 @@ const language: MaturityField[] = [
 
 const humor: MaturityField[] = [
 	{ label: $gettext('None') },
-	{ label: $gettext('Comic Shenanigans'), description: $gettext('Depictions of or dialog including slapstick humor.') },
-	{ label: $gettext('Moderate'), description: $gettext('Depictions of or dialog including vulgar humor; bathroom humor.') },
-	{ label: $gettext('Strong'), description: $gettext('Depictions of or dialog including mature humor; sexual humor.') },
+	{
+		label: $gettext('Comic Shenanigans'),
+		description: $gettext('Depictions of or dialog including slapstick humor.'),
+	},
+	{
+		label: $gettext('Moderate'),
+		description: $gettext('Depictions of or dialog including vulgar humor; bathroom humor.'),
+	},
+	{
+		label: $gettext('Strong'),
+		description: $gettext('Depictions of or dialog including mature humor; sexual humor.'),
+	},
 ];
 
 const gambling: MaturityField[] = [
 	{ label: $gettext('None') },
-	{ label: $gettext('Simulated'), description: $gettext('Players can gamble using "play" money.') },
-	{ label: $gettext('Real Gambling'), description: $gettext('Players can gamble using real money.') },
+	{
+		label: $gettext('Simulated'),
+		description: $gettext('Players can gamble using "play" money.'),
+	},
+	{
+		label: $gettext('Real Gambling'),
+		description: $gettext('Players can gamble using real money.'),
+	},
 ];
 
 const form: FormController<GameModel> = createForm({

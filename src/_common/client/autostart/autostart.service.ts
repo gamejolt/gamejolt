@@ -1,7 +1,7 @@
 import { getDeviceOS } from '../../device/device.service';
 import { SettingAutostartClient } from '../../settings/settings.service';
-import { Autostarter } from '../client-voodoo-imports';
 import { Client } from '../client.service';
+import { Autostarter } from '../client-voodoo-imports';
 
 const path = require('path') as typeof import('path');
 

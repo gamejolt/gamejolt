@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType } from 'vue';
+
 import { BackdropController } from './backdrop.service';
 
 const props = defineProps({

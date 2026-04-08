@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { computed, CSSProperties, ref, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
+
 import { routeLandingCreators } from '../../../app/views/landing/creators/creators.route';
 import AppAnimChargeOrb from '../../animation/AppAnimChargeOrb.vue';
 import AppAnimElectricity from '../../animation/AppAnimElectricity.vue';

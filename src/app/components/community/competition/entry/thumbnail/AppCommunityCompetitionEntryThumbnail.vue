@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { TranslateDirective as vTranslate } from '../../../../../../_common/translate/translate-directive';
-import { PropType, computed, toRef, toRefs } from 'vue';
+import { computed, PropType, toRef, toRefs } from 'vue';
+
 import AppButton from '../../../../../../_common/button/AppButton.vue';
 import {
 	$removeCommunityCompetitionEntry,
@@ -15,6 +15,7 @@ import { showModalConfirm } from '../../../../../../_common/modal/confirm/confir
 import { useCommonStore } from '../../../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
+import { TranslateDirective as vTranslate } from '../../../../../../_common/translate/translate-directive';
 import { showEntryFromCommunityCompetitionEntryModal } from '../modal/modal.service';
 
 const props = defineProps({

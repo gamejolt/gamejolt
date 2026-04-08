@@ -1,4 +1,5 @@
 import { RouteLocationNormalized } from 'vue-router';
+
 import { showErrorGrowl, showInfoGrowl } from '../../../_common/growls/growls.service';
 import { $gettext } from '../../../_common/translate/translate.service';
 import { locationRedirectFromRoute } from '../../../utils/router';

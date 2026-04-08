@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
+
 import { styleElevate, styleFlexCenter, styleOverlayTextShadow } from '../../_styles/mixins';
 import { kFontSizeBase, kFontSizeTiny } from '../../_styles/variables';
 import AppImgResponsive from '../img/AppImgResponsive.vue';

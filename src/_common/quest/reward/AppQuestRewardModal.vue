@@ -1,5 +1,6 @@
 <script lang="ts">
-import { nextTick, onMounted, onUnmounted, PropType, ref, Ref, toRefs } from 'vue';
+import { nextTick, onMounted, onUnmounted, PropType, Ref, ref, toRefs } from 'vue';
+
 import { sleep } from '../../../utils/utils';
 import { illBackpackClosed, illBackpackOpen } from '../../img/ill/illustrations';
 import AppJolticon, { Jolticon } from '../../jolticon/AppJolticon.vue';

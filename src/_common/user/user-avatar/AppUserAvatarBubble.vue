@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType, computed, toRefs } from 'vue';
+import { computed, CSSProperties, PropType, toRefs } from 'vue';
+
 import { styleChangeBg } from '../../../_styles/mixins';
 import AppAvatarFrame from '../../avatar/AppAvatarFrame.vue';
 import { AvatarFrameModel } from '../../avatar/frame.model';

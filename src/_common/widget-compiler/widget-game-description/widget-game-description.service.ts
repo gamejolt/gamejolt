@@ -1,6 +1,7 @@
 import { h } from 'vue';
-import { WidgetCompilerWidget } from '../widget';
+
 import AppWidgetCompiler from '../AppWidgetCompiler.vue';
+import { WidgetCompilerWidget } from '../widget';
 import { WidgetCompilerContext } from '../widget-compiler.service';
 
 export class WidgetCompilerWidgetGameDescription extends WidgetCompilerWidget {

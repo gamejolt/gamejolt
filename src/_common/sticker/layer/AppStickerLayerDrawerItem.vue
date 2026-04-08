@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, CSSProperties, PropType, StyleValue, toRefs } from 'vue';
+
 import {
 	styleBorderRadiusLg,
 	styleChangeBg,
@@ -13,8 +14,8 @@ import AppSpacer from '../../spacer/AppSpacer.vue';
 import AppUserAvatar from '../../user/user-avatar/AppUserAvatar.vue';
 import AppStickerImg from '../AppStickerImg.vue';
 import AppStickerMastery from '../AppStickerMastery.vue';
-import { useStickerStore } from '../sticker-store';
 import { StickerModel } from '../sticker.model';
+import { useStickerStore } from '../sticker-store';
 
 const props = defineProps({
 	sticker: {

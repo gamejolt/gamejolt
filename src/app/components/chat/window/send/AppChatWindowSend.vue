@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, nextTick, onUnmounted, PropType, ref, toRefs, watch } from 'vue';
+
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import { ContextCapabilities } from '../../../../../_common/content/content-context';
 import { ContentDocument } from '../../../../../_common/content/content-document';

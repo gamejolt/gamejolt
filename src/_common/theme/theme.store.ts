@@ -1,4 +1,5 @@
 import { computed, inject, InjectionKey, ref } from 'vue';
+
 import { arrayRemove } from '../../utils/array';
 import { SettingThemeAlwaysOurs, SettingThemeDark } from '../settings/settings.service';
 import { CommonStore } from '../store/common-store';

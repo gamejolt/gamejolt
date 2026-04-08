@@ -1,8 +1,6 @@
 import type { PatchInstance } from 'client-voodoo';
 import { computed, ComputedRef, inject, InjectionKey, Ref, ref } from 'vue';
-import { arrayGroupBy, arrayIndexBy, arrayRemove } from '../../../utils/array';
-import { fuzzysearch } from '../../../utils/string';
-import { HidePrivateKeys } from '../../../utils/utils';
+
 import { ClientUpdater } from '../../../_common/client/client-updater.service';
 import { Config, Queue } from '../../../_common/client/client-voodoo-imports';
 import {
@@ -10,6 +8,9 @@ import {
 	SettingMaxExtractCount,
 	SettingQueueWhenPlaying,
 } from '../../../_common/settings/settings.service';
+import { arrayGroupBy, arrayIndexBy, arrayRemove } from '../../../utils/array';
+import { fuzzysearch } from '../../../utils/string';
+import { HidePrivateKeys } from '../../../utils/utils';
 import { LocalDbGame } from '../../components/client/local-db/game/game.model';
 import { LocalDb } from '../../components/client/local-db/local-db.service';
 import { LocalDbPackage } from '../../components/client/local-db/package/package.model';

@@ -1,7 +1,8 @@
 <script lang="ts" setup>
-import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import { PropType } from 'vue';
 import { RouterLink } from 'vue-router';
+
+import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import { routeLandingHelpPage } from '../../views/landing/help/help.route';
 import { HelpCategoryModel } from './category/category.model';
 import { HelpPageModel } from './page/page.model';

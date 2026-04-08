@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { DeepReadonly, PropType } from 'vue';
+
 import { formatNumber } from '../../../../../_common/filters/number';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { ReportComponent } from '../../../../components/site-analytics/site-analytics-service';

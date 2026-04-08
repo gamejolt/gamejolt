@@ -1,5 +1,6 @@
-import { bootstrapCommon } from '../_common/bootstrap';
 import './main.styl';
+
+import { bootstrapCommon } from '../_common/bootstrap';
 
 export async function createApp() {
 	const { app } = await bootstrapCommon({

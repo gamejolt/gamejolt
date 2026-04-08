@@ -1,5 +1,6 @@
 <script lang="ts">
 import { computed, onBeforeUnmount, onMounted, PropType, ref, toRaw, toRefs } from 'vue';
+
 import { arrayRemove } from '../../utils/array';
 import { PopcornKernelData, usePopcornKettleController } from './popcorn-kettle-controller';
 </script>

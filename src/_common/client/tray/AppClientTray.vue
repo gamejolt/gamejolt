@@ -5,15 +5,15 @@ let menuBuilderHook: MenuBuilderHook | undefined;
 export function setMenuBuilderHook(newHook: MenuBuilderHook) {
 	menuBuilderHook = newHook;
 }
-</script>
-
-<script lang="ts" setup>
 import { computed, onMounted, onUnmounted, Ref, ref } from 'vue';
+
 import { Navigate } from '../../navigate/navigate.service';
 import { Screen } from '../../screen/screen-service';
 import { $gettext } from '../../translate/translate.service';
 import { Client } from '../client.service';
+</script>
 
+<script lang="ts" setup>
 const path = require('path') as typeof import('path');
 
 const isFocused = ref(false);

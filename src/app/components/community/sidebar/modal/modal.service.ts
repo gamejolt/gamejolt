@@ -1,4 +1,5 @@
 import { defineAsyncComponent } from 'vue';
+
 import { CommunityModel } from '../../../../../_common/community/community.model';
 import { showModal } from '../../../../../_common/modal/modal.service';
 import { CommunitySidebarData } from '../sidebar-data';

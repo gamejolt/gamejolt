@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import { PropType, computed, toRefs } from 'vue';
+import { computed, PropType, toRefs } from 'vue';
 import { RouteLocationRaw } from 'vue-router';
+
 import { kElevateTransition, styleElevate, styleTyped, styleWhen } from '../../_styles/mixins';
 import { kBorderRadiusLg, kBorderWidthLg, kStrongEaseOut } from '../../_styles/variables';
 import { useOnHover } from '../on/useOnHover';

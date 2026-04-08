@@ -1,4 +1,5 @@
 import { App, computed, ref } from 'vue';
+
 import { arrayIndexBy } from '../../utils/array';
 import { isDynamicGoogleBot } from '../device/device.service';
 import AppTranslate from './AppTranslate.vue';

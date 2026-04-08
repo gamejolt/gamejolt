@@ -1,4 +1,5 @@
 import { defineAsyncComponent } from 'vue';
+
 import { showModal } from '../../modal/modal.service';
 import { UserBaseTrophyModel } from '../../user/trophy/user-base-trophy.model';
 

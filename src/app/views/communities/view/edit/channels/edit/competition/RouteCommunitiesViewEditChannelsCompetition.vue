@@ -1,5 +1,6 @@
 <script lang="ts">
 import { RouterView } from 'vue-router';
+
 import AppNavTabList from '../../../../../../../../_common/nav/tab-list/AppNavTabList.vue';
 import {
 	createAppRoute,

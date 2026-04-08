@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { computed, PropType, ref, shallowRef, toRefs, watch } from 'vue';
 import { RouteLocationRaw, useRoute, useRouter } from 'vue-router';
+
 import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
 import AppBackground from '../../../../_common/background/AppBackground.vue';
 import AppCommentDisabledCheck from '../../../../_common/comment/AppCommentDisabledCheck.vue';

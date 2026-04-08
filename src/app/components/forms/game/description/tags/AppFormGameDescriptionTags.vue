@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { PropType, toRef, toRefs } from 'vue';
+
 import { ContentDocument } from '../../../../../../_common/content/content-document';
 import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
 import AppTagSuggestion from '../../../../../../_common/tag/suggestion/AppTagSuggestion.vue';

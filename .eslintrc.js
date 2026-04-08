@@ -4,7 +4,7 @@ module.exports = {
 		parser: '@typescript-eslint/parser',
 		sourceType: 'module',
 	},
-	plugins: ['@typescript-eslint'],
+	plugins: ['@typescript-eslint', 'simple-import-sort'],
 	extends: [
 		'eslint:recommended',
 		'plugin:@typescript-eslint/recommended',
@@ -48,5 +48,7 @@ module.exports = {
 		'vue/max-attributes-per-line': 'off',
 		'vue/singleline-html-element-content-newline': 'off',
 		'vue/return-in-computed-property': 'off',
+		'simple-import-sort/imports': 'warn',
+		'simple-import-sort/exports': 'warn',
 	},
 };

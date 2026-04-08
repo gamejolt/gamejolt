@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import AppModal from '../../../../_common/modal/AppModal.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { GameModel } from '../../../../_common/game/game.model';
+import AppModal from '../../../../_common/modal/AppModal.vue';
 import { useModal } from '../../../../_common/modal/modal.service';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import FormGameHeader from '../../forms/game/header/FormGameHeader.vue';
 
 type Props = {

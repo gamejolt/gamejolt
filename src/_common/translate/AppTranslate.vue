@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType, ref, useSlots } from 'vue';
+
 import { uuidv4 } from '../../utils/uuid';
 import { getTranslation, interpolateTranslation, TranslationContext } from './translate.service';
 

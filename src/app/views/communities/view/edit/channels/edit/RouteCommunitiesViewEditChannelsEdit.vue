@@ -1,6 +1,7 @@
 <script lang="ts">
 import { computed, toRef } from 'vue';
 import { RouterLink, RouterView } from 'vue-router';
+
 import { Api } from '../../../../../../../_common/api/api.service';
 import AppButton from '../../../../../../../_common/button/AppButton.vue';
 import { CommunityChannelModel } from '../../../../../../../_common/community/channel/channel.model';

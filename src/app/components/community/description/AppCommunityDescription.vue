@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { PropType, ref } from 'vue';
+
 import AppFadeCollapse from '../../../../_common/AppFadeCollapse.vue';
 import { CommunityModel } from '../../../../_common/community/community.model';
 import AppContentViewer from '../../../../_common/content/content-viewer/AppContentViewer.vue';

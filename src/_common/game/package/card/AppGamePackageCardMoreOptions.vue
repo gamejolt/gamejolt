@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
+
 import { formatFilesize } from '../../../filters/filesize';
 import AppJolticon from '../../../jolticon/AppJolticon.vue';
 import AppTranslate from '../../../translate/AppTranslate.vue';

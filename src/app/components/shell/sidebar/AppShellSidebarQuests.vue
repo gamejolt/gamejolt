@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, onMounted } from 'vue';
+
 import { useEscapeStack } from '../../../../_common/escape-stack/escape-stack.service';
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
 import { illNoComments, illNoCommentsSmall } from '../../../../_common/illustration/illustrations';

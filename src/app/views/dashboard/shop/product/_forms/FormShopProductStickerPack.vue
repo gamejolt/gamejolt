@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { Ref, computed, ref, toRefs, watch } from 'vue';
+import { computed, Ref, ref, toRefs, watch } from 'vue';
+
 import AppAlertBox from '../../../../../../_common/alert/AppAlertBox.vue';
 import AppButton from '../../../../../../_common/button/AppButton.vue';
 import { defineFormProps } from '../../../../../../_common/form-vue/AppForm.vue';
@@ -24,8 +25,8 @@ import {
 import { kStrongEaseOut } from '../../../../../../_styles/variables';
 import { ShopDashProductType, useShopDashStore } from '../../shop.store';
 import AppDashShopProductHeader from '../AppDashShopProductHeader.vue';
-import FormShopProductBase, { createShopProductBaseForm } from './FormShopProductBase.vue';
 import { showFormStickerSelectorModal } from './_sticker-selector/modal.service';
+import FormShopProductBase, { createShopProductBaseForm } from './FormShopProductBase.vue';
 
 const props = defineProps({
 	...defineFormProps<StickerPackModel>(),

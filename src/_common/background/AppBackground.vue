@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType, computed, ref, toRefs, watch } from 'vue';
+import { computed, CSSProperties, PropType, ref, toRefs, watch } from 'vue';
+
 import { styleWhen } from '../../_styles/mixins';
 import { ImgHelper } from '../img/helper/helper-service';
 import AppMediaItemBackdrop from '../media-item/backdrop/AppMediaItemBackdrop.vue';

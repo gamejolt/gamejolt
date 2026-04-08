@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import { PropType, computed, ref, toRef, toRefs, watch } from 'vue';
+import { computed, PropType, ref, toRef, toRefs, watch } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
+
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { CommunityModel } from '../../../../_common/community/community.model';
@@ -13,8 +14,8 @@ import AppTimeAgo from '../../../../_common/time/AppTimeAgo.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserCreatorBadge from '../../../../_common/user/creator/AppUserCreatorBadge.vue';
-import AppUserAvatarList from '../../../../_common/user/user-avatar/AppUserAvatarList.vue';
 import { UserModel } from '../../../../_common/user/user.model';
+import AppUserAvatarList from '../../../../_common/user/user-avatar/AppUserAvatarList.vue';
 import { getAbsoluteLink } from '../../../../utils/router';
 import AppGameList from '../../game/list/AppGameList.vue';
 import AppCommunityDescription from '../description/AppCommunityDescription.vue';

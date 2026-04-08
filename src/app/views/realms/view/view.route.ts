@@ -1,4 +1,5 @@
 import { RouteRecordRaw } from 'vue-router';
+
 import { routeRealmsOverview } from './overview/overview.route';
 
 export const routeRealmsView: RouteRecordRaw = {

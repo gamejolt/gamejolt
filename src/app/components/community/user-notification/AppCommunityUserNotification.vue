@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { TranslateDirective as vTranslate } from '../../../../_common/translate/translate-directive';
-import { PropType, computed, toRef, toRefs } from 'vue';
+import { computed, PropType, toRef, toRefs } from 'vue';
+
 import AppAlertDismissable from '../../../../_common/alert/dismissable/AppAlertDismissable.vue';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import {
@@ -10,6 +10,7 @@ import {
 } from '../../../../_common/community/user-notification/user-notification.model';
 import AppTimeAgo from '../../../../_common/time/AppTimeAgo.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
+import { TranslateDirective as vTranslate } from '../../../../_common/translate/translate-directive';
 import {
 	getCommunityEjectPostReasons,
 	getCommunityMovePostReasons,

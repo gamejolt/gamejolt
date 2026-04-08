@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue';
+
 import AppLinkExternal from '../../_common/link/AppLinkExternal.vue';
 import AppTranslate from '../../_common/translate/AppTranslate.vue';
 import { loadScript } from '../../utils/utils';

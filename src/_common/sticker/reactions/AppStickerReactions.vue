@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, onMounted, PropType, ref, toRefs } from 'vue';
+
 import { numberSort } from '../../../utils/array';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import { StickerTargetController, toggleStickersShouldShow } from '../target/target-controller';

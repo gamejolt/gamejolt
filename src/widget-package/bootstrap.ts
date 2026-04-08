@@ -1,5 +1,6 @@
-import { bootstrapCommon } from '../_common/bootstrap';
 import './main.styl';
+
+import { bootstrapCommon } from '../_common/bootstrap';
 import { createWidgetPackageStore, WidgetPackageStoreKey } from './store';
 
 export async function createApp() {

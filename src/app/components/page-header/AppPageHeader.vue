@@ -1,12 +1,14 @@
 <script lang="ts" setup>
+import './page-header-content.styl';
+
 import { computed, CSSProperties, PropType, toRefs, useSlots } from 'vue';
+
 import AppEditableOverlay from '../../../_common/editable-overlay/AppEditableOverlay.vue';
 import AppMediaItemCover from '../../../_common/media-item/cover/AppMediaItemCover.vue';
 import { MediaItemModel } from '../../../_common/media-item/media-item-model';
 import { Screen } from '../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../_common/scroll/AppScrollAffix.vue';
 import AppAutoscrollAnchor from '../../../_common/scroll/auto-scroll/AppAutoscrollAnchor.vue';
-import './page-header-content.styl';
 
 interface PageHeaderSlots {
 	spotlight?: boolean;

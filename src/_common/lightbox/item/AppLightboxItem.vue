@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { PropType, computed, nextTick, onMounted, ref, toRef, toRefs, watch } from 'vue';
+import { computed, nextTick, onMounted, PropType, ref, toRef, toRefs, watch } from 'vue';
+
 import { isInstance } from '../../../utils/utils';
 import { GameScreenshotModel } from '../../game/screenshot/screenshot.model';
 import { GameSketchfabModel } from '../../game/sketchfab/sketchfab.model';
@@ -7,7 +8,7 @@ import { GameVideoModel } from '../../game/video/video.model';
 import AppImgResponsive from '../../img/AppImgResponsive.vue';
 import AppMediaItemBackdrop from '../../media-item/backdrop/AppMediaItemBackdrop.vue';
 import { MediaItemModel } from '../../media-item/media-item-model';
-import { Screen, onScreenResize } from '../../screen/screen-service';
+import { onScreenResize, Screen } from '../../screen/screen-service';
 import AppSketchfabEmbed from '../../sketchfab/embed/AppSketchfabEmbed.vue';
 import { useEventSubscription } from '../../system/event/event-topic';
 import AppVideo from '../../video/AppVideo.vue';

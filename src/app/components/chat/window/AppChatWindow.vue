@@ -12,6 +12,7 @@ import {
 	watchEffect,
 } from 'vue';
 import { RouterLink } from 'vue-router';
+
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { ContextCapabilities } from '../../../../_common/content/content-context';

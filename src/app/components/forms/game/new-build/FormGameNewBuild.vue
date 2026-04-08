@@ -1,11 +1,12 @@
 <script lang="ts" setup>
-import { validateFilesize } from '../../../../../_common/form-vue/validators';
-import { type Ref, computed, ref, toRef, watch } from 'vue';
+import { computed, type Ref, ref, toRef, watch } from 'vue';
+
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
 import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
+import { validateFilesize } from '../../../../../_common/form-vue/validators';
 import {
 	$saveGameBuild,
 	GameBuildModel,

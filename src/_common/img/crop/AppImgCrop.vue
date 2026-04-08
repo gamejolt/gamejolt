@@ -1,7 +1,8 @@
 <script lang="ts" setup>
-import Cropper from 'cropperjs';
 import 'cropperjs/dist/cropper.css';
-import { PropType, onBeforeUnmount, onMounted, ref, toRefs, watch } from 'vue';
+
+import Cropper from 'cropperjs';
+import { onBeforeUnmount, onMounted, PropType, ref, toRefs, watch } from 'vue';
 
 interface CropData {
 	x: number;

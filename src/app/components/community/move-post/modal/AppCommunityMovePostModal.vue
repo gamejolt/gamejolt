@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { PropType, computed, ref, toRef, toRefs } from 'vue';
+import { computed, PropType, ref, toRef, toRefs } from 'vue';
+
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import AppCommunityChannelSelect from '../../../../../_common/community/channel/AppCommunityChannelSelect.vue';
 import { CommunityChannelModel } from '../../../../../_common/community/channel/channel.model';
@@ -11,7 +12,9 @@ import { getDatalistOptions } from '../../../../../_common/settings/datalist-opt
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import { REASON_OTHER } from '../../../../../_common/user/action-reasons';
-import FormCommunityMovePost, { MovePostFormModel as FormModel } from '../form/FormCommunityMovePost.vue';
+import FormCommunityMovePost, {
+	MovePostFormModel as FormModel,
+} from '../form/FormCommunityMovePost.vue';
 import { CommunityMovePostModalResult } from './modal.service';
 
 const props = defineProps({

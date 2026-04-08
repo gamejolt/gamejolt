@@ -1,4 +1,5 @@
-import { computed, ComputedRef, onUnmounted, reactive, readonly, ref, Ref } from 'vue';
+import { computed, ComputedRef, onUnmounted, reactive, readonly, Ref,ref } from 'vue';
+
 import { MediaItemModel } from '../media-item/media-item-model';
 
 export const LightboxConfig = {

@@ -1,5 +1,6 @@
 <script lang="ts">
 import { computed, CSSProperties, PropType, ref, toRefs } from 'vue';
+
 import { kFontSizeBase } from '../../../../_styles/variables';
 import { Api } from '../../../api/api.service';
 import { Screen } from '../../../screen/screen-service';

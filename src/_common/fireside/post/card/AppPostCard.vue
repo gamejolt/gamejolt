@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs, useSlots } from 'vue';
 import { RouterLink } from 'vue-router';
+
 import { PostOpenSource, trackPostOpen } from '../../../analytics/analytics.service';
 import { ContentRules } from '../../../content/content-rules';
 import AppContentViewer from '../../../content/content-viewer/AppContentViewer.vue';

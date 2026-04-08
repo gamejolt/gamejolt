@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
+
 import AppContentGif from '../../components/AppContentGif.vue';
 import { ContentObject } from '../../content-object';
 

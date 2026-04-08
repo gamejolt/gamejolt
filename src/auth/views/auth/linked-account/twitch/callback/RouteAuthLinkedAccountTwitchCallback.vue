@@ -1,5 +1,6 @@
 <script lang="ts">
 import { useRouter } from 'vue-router';
+
 import { Api } from '../../../../../../_common/api/api.service';
 import {
 	authOnJoin,

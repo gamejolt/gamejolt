@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, onMounted, PropType, ref, toRef, toRefs, useTemplateRef } from 'vue';
+
 import { Clipboard } from '../../../../_common/clipboard/clipboard-service';
 import { CollaboratorModel } from '../../../../_common/collaborator/collaborator.model';
 import AppCommentBlocked from '../../../../_common/comment/AppCommentBlocked.vue';

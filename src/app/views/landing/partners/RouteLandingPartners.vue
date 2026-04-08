@@ -1,6 +1,7 @@
 <script lang="ts">
 import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
+
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';

@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import { Geo } from '../../../../../_common/geo/geo.service';
-import { useFormManagedAccount } from './FormFinancialsManagedAccount.vue';
-import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormControl from '../../../../../_common/form-vue/AppFormControl.vue';
 import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormControlSelect from '../../../../../_common/form-vue/controls/AppFormControlSelect.vue';
+import { Geo } from '../../../../../_common/geo/geo.service';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
+import { useFormManagedAccount } from './FormFinancialsManagedAccount.vue';
 
 defineProps({
 	namePrefix: {

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
+
 import AppModalWrapper from './AppModalWrapper.vue';
 import { Modals } from './modal.service';
 

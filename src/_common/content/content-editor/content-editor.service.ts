@@ -1,5 +1,6 @@
 import { EditorView } from 'prosemirror-view';
 import { shallowReactive } from 'vue';
+
 import { MediaUploadTask } from './media-upload-task';
 import { ContentEditorSchema } from './schemas/content-editor-schema';
 

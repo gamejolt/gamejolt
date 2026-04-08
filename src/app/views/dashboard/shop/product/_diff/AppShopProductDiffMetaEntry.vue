@@ -1,5 +1,6 @@
 <script lang="ts" setup generic="T extends Record<string, any>">
-import { PropType, computed, toRefs } from 'vue';
+import { computed, PropType, toRefs } from 'vue';
+
 import AppScrollScroller from '../../../../../../_common/scroll/AppScrollScroller.vue';
 import AppStickerImg from '../../../../../../_common/sticker/AppStickerImg.vue';
 import { StickerModel } from '../../../../../../_common/sticker/sticker.model';

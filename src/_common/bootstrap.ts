@@ -1,5 +1,6 @@
-import { AsyncComponentLoader, createApp, createSSRApp, type Component } from 'vue';
+import { AsyncComponentLoader, type Component,createApp, createSSRApp } from 'vue';
 import { Router } from 'vue-router';
+
 import { hijackLinks } from '../utils/router';
 import { initAnalytics, initAnalyticsRouter } from './analytics/analytics.service';
 import AppButton from './button/AppButton.vue';
@@ -14,8 +15,8 @@ import { initMetaService } from './meta/meta-service';
 import { Payload } from './payload/payload-service';
 import { Referrer } from './referrer/referrer.service';
 import { initScreenService } from './screen/screen-service';
-import { CommonStoreKey, commonStore } from './store/common-store';
-import { ThemeStoreKey, createThemeStore } from './theme/theme.store';
+import { commonStore,CommonStoreKey } from './store/common-store';
+import { createThemeStore,ThemeStoreKey } from './theme/theme.store';
 import { initTranslations } from './translate/translate.service';
 
 export type BootstrapOptions<T = Component> = {

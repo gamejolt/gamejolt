@@ -1,10 +1,11 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
+
 import { Api } from '../../../_common/api/api.service';
 import { Environment } from '../../../_common/environment/environment.service';
-import { GameBundleModel } from '../../../_common/game-bundle/game-bundle.model';
 import { GameModel } from '../../../_common/game/game.model';
+import { GameBundleModel } from '../../../_common/game-bundle/game-bundle.model';
 import { showErrorGrowl } from '../../../_common/growls/growls.service';
 import { showModalConfirm } from '../../../_common/modal/confirm/confirm-service';
 import { Navigate } from '../../../_common/navigate/navigate.service';

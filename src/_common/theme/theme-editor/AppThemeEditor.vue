@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { PropType, nextTick, ref, toRaw, toRefs, watch } from 'vue';
+import { nextTick, PropType, ref, toRaw, toRefs, watch } from 'vue';
+
 import { run } from '../../../utils/utils';
 import { Api } from '../../api/api.service';
 import AppColorpicker from '../../colorpicker/AppColorpicker.vue';

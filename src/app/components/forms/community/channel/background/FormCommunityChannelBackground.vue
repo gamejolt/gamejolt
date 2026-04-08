@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { ref, toRef, toRefs, watchEffect } from 'vue';
+
 import AppButton from '../../../../../../_common/button/AppButton.vue';
 import {
 	$clearCommunityChannelBackground,
@@ -7,9 +8,9 @@ import {
 	CommunityChannelModel,
 } from '../../../../../../_common/community/channel/channel.model';
 import AppForm, {
-	FormController,
 	createForm,
 	defineFormProps,
+	FormController,
 } from '../../../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControlErrors from '../../../../../../_common/form-vue/AppFormControlErrors.vue';

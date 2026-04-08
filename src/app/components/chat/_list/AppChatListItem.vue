@@ -1,5 +1,6 @@
 <script lang="ts">
 import { PropType, ref } from 'vue';
+
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppPopper, {
 	PopperPlacementType,

@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType, computed, ref, watch } from 'vue';
+import { computed, CSSProperties, PropType, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
+
 import { Api } from '../../../../../../_common/api/api.service';
 import { AvatarFrameModel } from '../../../../../../_common/avatar/frame.model';
 import { BackgroundModel } from '../../../../../../_common/background/background.model';

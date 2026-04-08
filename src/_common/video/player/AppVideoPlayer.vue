@@ -1,5 +1,6 @@
 <script lang="ts">
-import { PropType, Ref, computed, onBeforeUnmount, onMounted, ref, toRefs, watch } from 'vue';
+import { computed, onBeforeUnmount, onMounted, PropType, Ref, ref, toRefs, watch } from 'vue';
+
 import { styleWhen } from '../../../_styles/mixins';
 import { formatNumber } from '../../filters/number';
 import AppImgResponsive from '../../img/AppImgResponsive.vue';
@@ -19,13 +20,13 @@ import AppVideoPlayerPlayback from './AppVideoPlayerPlayback.vue';
 import AppVideoPlayerScrubber from './AppVideoPlayerScrubber.vue';
 import AppVideoPlayerVolume from './AppVideoPlayerVolume.vue';
 import {
-	VideoPlayerController,
-	VideoPlayerControllerContext,
 	createVideoPlayerController,
 	queueVideoTimeChange,
 	scrubVideoVolume,
 	toggleVideoPlayback,
 	trackVideoPlayerEvent,
+	VideoPlayerController,
+	VideoPlayerControllerContext,
 } from './controller';
 
 const KeyShortcutsList = ['ArrowUp', 'ArrowRight', 'ArrowDown', 'ArrowLeft', 'm', ' '];

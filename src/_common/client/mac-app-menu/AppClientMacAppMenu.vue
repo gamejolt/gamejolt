@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { onMounted } from 'vue';
+
 import { Client } from '../client.service';
 
 onMounted(() => {

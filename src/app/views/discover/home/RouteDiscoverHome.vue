@@ -1,6 +1,7 @@
 <script lang="ts">
 import { computed, ref, shallowRef } from 'vue';
 import { useRoute } from 'vue-router';
+
 import { Api } from '../../../../_common/api/api.service';
 import { CommunityModel } from '../../../../_common/community/community.model';
 import { Environment } from '../../../../_common/environment/environment.service';

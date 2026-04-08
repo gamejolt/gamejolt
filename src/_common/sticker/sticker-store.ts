@@ -9,6 +9,7 @@ import {
 	toRaw,
 	toRef,
 } from 'vue';
+
 import { buildCSSPixelValue } from '../../_styles/variables';
 import { arrayRemove, numberSort } from '../../utils/array';
 import { clampNumber } from '../../utils/number';
@@ -16,8 +17,8 @@ import { Api } from '../api/api.service';
 import { FiresidePostModel } from '../fireside/post/post-model';
 import { showErrorGrowl } from '../growls/growls.service';
 import { setModalBodyWrapper } from '../modal/modal.service';
-import { storeModel, storeModelList } from '../model/model-store.service';
 import { ModelData } from '../model/model.service';
+import { storeModel, storeModelList } from '../model/model-store.service';
 import { Screen } from '../screen/screen-service';
 import { $gettext } from '../translate/translate.service';
 import { UserModel } from '../user/user.model';
@@ -25,8 +26,8 @@ import AppStickerLayer from './layer/AppStickerLayer.vue';
 import { getCollidingStickerTarget, StickerLayerController } from './layer/layer-controller';
 import { UserStickerPackModel } from './pack/user-pack.model';
 import { StickerPlacementModel } from './placement/placement.model';
-import { StickerCount } from './sticker-count';
 import { StickerModel, StickerStack } from './sticker.model';
+import { StickerCount } from './sticker-count';
 import { ValidStickerResource } from './target/AppStickerTarget.vue';
 import {
 	addStickerToTarget,

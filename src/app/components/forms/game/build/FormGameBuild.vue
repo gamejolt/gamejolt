@@ -6,14 +6,8 @@ export interface FormGameBuildInterface {
 	isDeprecated: Ref<boolean>;
 	save: () => Promise<boolean>;
 }
-</script>
-
-<script lang="ts" setup>
-import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
-import { validateMaxLength } from '../../../../../_common/form-vue/validators';
-import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import AppFormControlCheckbox from '../../../../../_common/form-vue/controls/AppFormControlCheckbox.vue';
 import { computed, onBeforeUnmount, onMounted, ref, toRef, watch } from 'vue';
+
 import { Api } from '../../../../../_common/api/api.service';
 import AppCardListItem from '../../../../../_common/card/list/AppCardListItem.vue';
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
@@ -24,7 +18,9 @@ import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControl from '../../../../../_common/form-vue/AppFormControl.vue';
 import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
+import AppFormControlCheckbox from '../../../../../_common/form-vue/controls/AppFormControlCheckbox.vue';
 import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
+import { validateMaxLength } from '../../../../../_common/form-vue/validators';
 import {
 	$saveGameBuild,
 	GameBuildEmulatorInfo,
@@ -41,16 +37,20 @@ import { GameModel } from '../../../../../_common/game/game.model';
 import { GamePackageModel } from '../../../../../_common/game/package/package.model';
 import { GameReleaseModel } from '../../../../../_common/game/release/release.model';
 import { showErrorGrowl } from '../../../../../_common/growls/growls.service';
+import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import AppLoading from '../../../../../_common/loading/AppLoading.vue';
 import AppProgressBar from '../../../../../_common/progress/AppProgressBar.vue';
 import AppProgressPoller from '../../../../../_common/progress/poller/AppProgressPoller.vue';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
+import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
 import { arrayRemove } from '../../../../../utils/array';
 import { useFormGameRelease } from '../release/FormGameRelease.vue';
 import { showArchiveFileSelectorModal } from './archive-file-selector-modal.service';
+</script>
 
+<script lang="ts" setup>
 type GameBuildFormModel = GameBuildModel & {
 	launch_windows: string;
 	launch_windows_64: string;
@@ -114,7 +114,9 @@ const form: FormController<GameBuildFormModel> = createForm<GameBuildFormModel>(
 	reloadOnSubmit: true,
 	loadUrl: computed(
 		() =>
-			`/web/dash/developer/games/builds/save/${game.id}/${props.package.id}/${props.release.id}/${props.model!.id}`
+			`/web/dash/developer/games/builds/save/${game.id}/${props.package.id}/${
+				props.release.id
+			}/${props.model!.id}`
 	),
 	onInit() {
 		maxFilesize.value = 0;
@@ -145,7 +147,9 @@ const form: FormController<GameBuildFormModel> = createForm<GameBuildFormModel>(
 
 const pollUrl = computed(
 	() =>
-		`/web/dash/developer/games/builds/poll-progress/${game.id}/${props.package.id}/${props.release.id}/${props.model!.id}`
+		`/web/dash/developer/games/builds/poll-progress/${game.id}/${props.package.id}/${
+			props.release.id
+		}/${props.model!.id}`
 );
 
 const shouldPollProgress = computed(
@@ -219,9 +223,7 @@ const availablePlatformOptions = computed(() => {
 	return platformOptions.filter(platform => (props.model as any)[`os_${platform.key}`]);
 });
 
-const isFitToScreen = computed(
-	() => form.formModel && form.formModel.embed_fit_to_screen
-);
+const isFitToScreen = computed(() => form.formModel && form.formModel.embed_fit_to_screen);
 
 // Register with the release form.
 onMounted(() => {
@@ -306,9 +308,7 @@ function isPlatformDisabled(platform: string) {
 	}
 
 	if (platform !== 'other') {
-		const foundBuild = props.builds.find(
-			value => (value as any)[`os_${platform}`] === true
-		);
+		const foundBuild = props.builds.find(value => (value as any)[`os_${platform}`] === true);
 		if (foundBuild && foundBuild.id !== props.model!.id) {
 			return true;
 		}
@@ -864,7 +864,10 @@ function onBuildFieldChanged() {
 						</AppExpand>
 					</template>
 
-					<AppFormButton v-if="form.valid && wasChanged" class="game-build-form-submit-button">
+					<AppFormButton
+						v-if="form.valid && wasChanged"
+						class="game-build-form-submit-button"
+					>
 						<AppTranslate>Save Build</AppTranslate>
 					</AppFormButton>
 				</div>

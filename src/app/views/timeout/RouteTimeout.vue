@@ -1,5 +1,6 @@
 <script lang="ts">
 import { computed, onMounted, ref } from 'vue';
+
 import { Api } from '../../../_common/api/api.service';
 import AppButton from '../../../_common/button/AppButton.vue';
 import AppContactLink from '../../../_common/contact-link/AppContactLink.vue';

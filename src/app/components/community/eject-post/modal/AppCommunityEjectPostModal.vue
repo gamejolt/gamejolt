@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
 import { PropType, ref, toRef, toRefs } from 'vue';
+
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import { FiresidePostCommunityModel } from '../../../../../_common/fireside/post/community/community.model';
 import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
@@ -9,8 +9,11 @@ import { useModal } from '../../../../../_common/modal/modal.service';
 import { getDatalistOptions } from '../../../../../_common/settings/datalist-options.service';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import { $gettext } from '../../../../../_common/translate/translate.service';
+import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
 import { REASON_OTHER } from '../../../../../_common/user/action-reasons';
-import FormCommunityEjectPost, { EjectPostFormModel as FormModel } from '../form/FormCommunityEjectPost.vue';
+import FormCommunityEjectPost, {
+	EjectPostFormModel as FormModel,
+} from '../form/FormCommunityEjectPost.vue';
 import { CommunityEjectPostModalResult } from './modal.service';
 
 const props = defineProps({

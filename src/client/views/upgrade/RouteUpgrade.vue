@@ -1,5 +1,6 @@
 <script lang="ts">
 import { computed } from 'vue';
+
 import AppButton from '../../../_common/button/AppButton.vue';
 import { ClientUpdater } from '../../../_common/client/client-updater.service';
 import AppIllustration from '../../../_common/illustration/AppIllustration.vue';

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
+
 import AppRealmFullCard from '../../../../../_common/realm/AppRealmFullCard.vue';
 import { RealmModel } from '../../../../../_common/realm/realm-model';
 

@@ -1,5 +1,6 @@
 <script lang="ts">
 import { ref, toRefs } from 'vue';
+
 import AppImgResponsive from '../../../img/AppImgResponsive.vue';
 import AppJolticon from '../../../jolticon/AppJolticon.vue';
 import AppMediaItemBackdrop from '../../../media-item/backdrop/AppMediaItemBackdrop.vue';

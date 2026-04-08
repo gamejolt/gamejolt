@@ -1,4 +1,5 @@
 import { RouteRecordRaw } from 'vue-router';
+
 import { initRouter } from '../../utils/router';
 import RouteSiteEditor from './RouteSiteEditor.vue';
 

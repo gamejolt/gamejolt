@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { ref, toRefs } from 'vue';
+
 import { useForm } from '../../../../../_common/form-vue/AppForm.vue';
 import AppFinancialsManagedAccountAddress from './AppFinancialsManagedAccountAddress.vue';
 import AppFinancialsManagedAccountContact from './AppFinancialsManagedAccountContact.vue';

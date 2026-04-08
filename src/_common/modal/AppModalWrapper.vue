@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { provide } from 'vue';
 import { PropType } from 'vue';
+
 import { Modal, ModalKey } from './modal.service';
 
 const props = defineProps({

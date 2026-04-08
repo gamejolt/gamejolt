@@ -1,5 +1,6 @@
 <script lang="ts">
 import { defineComponent, h } from 'vue';
+
 import { WidgetCompiler, WidgetCompilerContext } from './widget-compiler.service';
 
 /**

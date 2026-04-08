@@ -1,9 +1,10 @@
 <script lang="ts" setup>
 import { ref, toRefs } from 'vue';
+
 import AppButton from '../../../_common/button/AppButton.vue';
-import { GameBundleModel } from '../../../_common/game-bundle/game-bundle.model';
 import { GameModel } from '../../../_common/game/game.model';
 import AppGameThumbnail from '../../../_common/game/thumbnail/AppGameThumbnail.vue';
+import { GameBundleModel } from '../../../_common/game-bundle/game-bundle.model';
 import { useCommonStore } from '../../../_common/store/common-store';
 import { $gettext } from '../../../_common/translate/translate.service';
 

@@ -1,4 +1,5 @@
 import { computed } from 'vue';
+
 import { Api } from '../../../_common/api/api.service';
 import { Graph } from '../../../_common/graph/graph.service';
 import { $gettext } from '../../../_common/translate/translate.service';

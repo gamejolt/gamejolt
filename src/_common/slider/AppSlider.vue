@@ -1,5 +1,6 @@
 <script lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, toRefs, watch } from 'vue';
+
 import { clampNumber } from '../../utils/number';
 import { Ruler } from '../ruler/ruler-service';
 import { vAppTooltip } from '../tooltip/tooltip-directive';

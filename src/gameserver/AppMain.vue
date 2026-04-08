@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { defineAsyncComponent } from 'vue';
+
 import { Environment } from '../_common/environment/environment.service';
 import { GameBuildType } from '../_common/game/build/build.model';
 import AppCommonShell from '../_common/shell/AppCommonShell.vue';

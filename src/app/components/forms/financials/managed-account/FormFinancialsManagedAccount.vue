@@ -182,31 +182,27 @@ export function createFormManagedAccount() {
 }
 
 // Re-export for type usage
-import {
-	UserStripeManagedAccountModel,
-} from '../../../../../_common/user/stripe-managed-account/stripe-managed-account';
-import { UserModel } from '../../../../../_common/user/user.model';
-</script>
-
-<script lang="ts" setup>
-import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormControlRadio from '../../../../../_common/form-vue/controls/AppFormControlRadio.vue';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormControlSelect from '../../../../../_common/form-vue/controls/AppFormControlSelect.vue';
-import AppLinkExternal from '../../../../../_common/link/AppLinkExternal.vue';
-import AppLinkHelp from '../../../../../_common/link/AppLinkHelp.vue';
-import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
 import { computed, useTemplateRef } from 'vue';
+
 import { Api } from '../../../../../_common/api/api.service';
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
+import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
+import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
+import AppFormControlRadio from '../../../../../_common/form-vue/controls/AppFormControlRadio.vue';
+import AppFormControlSelect from '../../../../../_common/form-vue/controls/AppFormControlSelect.vue';
 import { Geo } from '../../../../../_common/geo/geo.service';
+import AppLinkExternal from '../../../../../_common/link/AppLinkExternal.vue';
+import AppLinkHelp from '../../../../../_common/link/AppLinkHelp.vue';
 import AppLoading from '../../../../../_common/loading/AppLoading.vue';
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
+import { UserStripeManagedAccountModel } from '../../../../../_common/user/stripe-managed-account/stripe-managed-account';
 import {
 	UserStripeManagedAccountStatus,
 	UserStripeManagedAccountType,
 } from '../../../../../_common/user/stripe-managed-account/stripe-managed-account';
+import { UserModel } from '../../../../../_common/user/user.model';
 import { loadScript } from '../../../../../utils/utils';
 import AppFinancialsManagedAccountCompanyDetails from './AppFinancialsManagedAccountCompanyDetails.vue';
 import AppFinancialsManagedAccountPerson, {
@@ -227,7 +223,8 @@ let genericError = ref<boolean | string>(false);
 let stripeInst: stripe.Stripe = null as any;
 
 const individualRef = useTemplateRef<AppFinancialsManagedAccountPersonInterface>('individual');
-const representativeRef = useTemplateRef<AppFinancialsManagedAccountPersonInterface>('representative');
+const representativeRef =
+	useTemplateRef<AppFinancialsManagedAccountPersonInterface>('representative');
 
 const IndividualAccountType = UserStripeManagedAccountType.Individual;
 const CompanyAccountType = UserStripeManagedAccountType.Company;

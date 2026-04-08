@@ -28,7 +28,7 @@ provide(Key, c);
 </script>
 
 <script lang="ts">
-import { ExtractPropTypes, inject, InjectionKey, provide, ref, Ref, toRefs, watch } from 'vue';
+import { ExtractPropTypes, inject, InjectionKey, provide, Ref, ref, toRefs, watch } from 'vue';
 
 function defineCardListItems() {
 	return {

@@ -95,5 +95,5 @@ onMounted(() => {
 </script>
 
 <template>
-	<style ref="styleEl"></style>
+	<style ref="styleEl" />
 </template>

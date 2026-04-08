@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { PropType, computed, ref, toRefs } from 'vue';
+import { computed, PropType, ref, toRefs } from 'vue';
+
 import { Api } from '../api/api.service';
 import AppButton from '../button/AppButton.vue';
 import { CommentModel } from '../comment/comment-model';

@@ -1,17 +1,18 @@
 <script lang="ts" setup>
-import AppModal from '../../../../modal/AppModal.vue';
-import AppButton from '../../../../button/AppButton.vue';
-import AppTranslate from '../../../../translate/AppTranslate.vue';
 import { computed, nextTick, onMounted, ref, useTemplateRef } from 'vue';
+
 import { Api } from '../../../../api/api.service';
+import AppButton from '../../../../button/AppButton.vue';
 import { showErrorGrowl } from '../../../../growls/growls.service';
 import AppJolticon from '../../../../jolticon/AppJolticon.vue';
 import AppLoading from '../../../../loading/AppLoading.vue';
+import AppModal from '../../../../modal/AppModal.vue';
 import { AppModalInterface } from '../../../../modal/AppModal.vue';
 import { useModal } from '../../../../modal/modal.service';
 import { Ruler } from '../../../../ruler/ruler-service';
 import { Screen } from '../../../../screen/screen-service';
 import AppScrollScroller, { createScroller } from '../../../../scroll/AppScrollScroller.vue';
+import AppTranslate from '../../../../translate/AppTranslate.vue';
 import { $gettext } from '../../../../translate/translate.service';
 import { Category, SearchResult } from './gif-modal.service';
 import mascotImage from './mascot-complete.png';
@@ -51,9 +52,7 @@ const reachedLastPage = computed(
 const shouldShowMoreButton = computed(
 	() => Screen.isXs && searchValue.value.length > 0 && !isLoading.value
 );
-const isFavorites = computed(
-	() => currentSearchTerm.value.toLowerCase().trim() === 'favorites'
-);
+const isFavorites = computed(() => currentSearchTerm.value.toLowerCase().trim() === 'favorites');
 
 onMounted(async () => {
 	await populateCategories();

@@ -1,5 +1,6 @@
 <script lang="ts">
 import { onMounted, ref, toRefs, watch } from 'vue';
+
 import { useResizeObserver } from '../../utils/resize-observer';
 import { debounce } from '../../utils/utils';
 import { Ruler } from '../ruler/ruler-service';

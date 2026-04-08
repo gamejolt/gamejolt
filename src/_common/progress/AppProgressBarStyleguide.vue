@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
+
 import AppButton from '../button/AppButton.vue';
 import AppProgressBar from './AppProgressBar.vue';
 

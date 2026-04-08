@@ -1,12 +1,13 @@
 <script lang="ts">
 import { computed, ref, toRef } from 'vue';
 import { useRoute } from 'vue-router';
+
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { formatNumber } from '../../../../_common/filters/number';
+import { GameModel } from '../../../../_common/game/game.model';
 import { GameBundleModel } from '../../../../_common/game-bundle/game-bundle.model';
 import { GamePlaylistModel } from '../../../../_common/game-playlist/game-playlist.model';
-import { GameModel } from '../../../../_common/game/game.model';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
 import { Meta } from '../../../../_common/meta/meta-service';

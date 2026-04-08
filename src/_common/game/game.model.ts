@@ -1,4 +1,5 @@
 import { Router } from 'vue-router';
+
 import type { RouteLocationDefinition } from '../../utils/router';
 import { Api } from '../api/api.service';
 import { Collaboratable } from '../collaborator/collaboratable';
@@ -17,7 +18,7 @@ import { SiteModel } from '../site/site-model';
 import { ThemeModel } from '../theme/theme.model';
 import { $gettext } from '../translate/translate.service';
 import { UserModel } from '../user/user.model';
-import { GameBuildModel, GameBuildType, canInstallGameBuild } from './build/build.model';
+import { canInstallGameBuild,GameBuildModel, GameBuildType } from './build/build.model';
 import { GamePackageModel } from './package/package.model';
 
 export interface CustomGameMessage {

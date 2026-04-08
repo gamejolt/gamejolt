@@ -1,4 +1,5 @@
 import { Router } from 'vue-router';
+
 import { onRouteChangeAfter } from '../route/route-component';
 
 /**

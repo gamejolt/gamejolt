@@ -1,5 +1,6 @@
 <script lang="ts">
 import { RouterLink, useRoute, useRouter } from 'vue-router';
+
 import { Api } from '../../../../../_common/api/api.service';
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
@@ -18,7 +19,7 @@ import AppGamePerms from '../../../../components/game/perms/AppGamePerms.vue';
 import { IntentService } from '../../../../components/intent/intent.service';
 import AppPageHeader from '../../../../components/page-header/AppPageHeader.vue';
 import AppShellPageBackdrop from '../../../../components/shell/AppShellPageBackdrop.vue';
-import { ManageGameThemeKey, createGameDashRouteController } from './manage.store';
+import { createGameDashRouteController, ManageGameThemeKey } from './manage.store';
 
 export default {
 	...defineAppRouteOptions({

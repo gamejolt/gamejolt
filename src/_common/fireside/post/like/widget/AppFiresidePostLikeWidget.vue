@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { PropType, computed, ref, toRef, toRefs } from 'vue';
+import { computed, PropType, ref, toRef, toRefs } from 'vue';
+
 import { styleWhen } from '../../../../../_styles/mixins';
 import { PostOverlayTextStyles } from '../../../../../app/components/post/post-styles';
 import { PostControlsLocation, trackPostLike } from '../../../../analytics/analytics.service';

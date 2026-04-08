@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
+
 import { Perm } from '../../../../_common/collaborator/collaboratable';
 import { GameModel } from '../../../../_common/game/game.model';
 import { useGameDashRouteController } from '../../../views/dashboard/games/manage/manage.store';

@@ -1,6 +1,7 @@
 <script lang="ts">
 import { computed, PropType, toRefs } from 'vue';
 import { useRouter } from 'vue-router';
+
 import { Analytics } from '../../../analytics/analytics.service';
 import AppButton from '../../../button/AppButton.vue';
 import { showSuccessGrowl } from '../../../growls/growls.service';

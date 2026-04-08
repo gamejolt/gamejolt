@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
 import { computed, ref, toRef, watch } from 'vue';
+
 import {
 	$saveCommunityThumbnail,
 	CommunityModel,
@@ -18,6 +18,7 @@ import {
 } from '../../../../../_common/form-vue/validators';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
+import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
 
 type FormModel = CommunityModel & {
 	thumbnail_crop?: any;

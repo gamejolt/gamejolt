@@ -1,11 +1,12 @@
 <script lang="ts" setup>
 import { onUnmounted, toRefs } from 'vue';
 import { useRouter } from 'vue-router';
+
 import { $saveCommunity, CommunityModel } from '../../../../_common/community/community.model';
 import AppForm, {
-	FormController,
 	createForm,
 	defineFormProps,
+	FormController,
 } from '../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';

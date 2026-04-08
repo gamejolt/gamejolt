@@ -1,5 +1,6 @@
 <script lang="ts">
 import { computed, PropType, toRefs } from 'vue';
+
 import { styleWhen } from '../../_styles/mixins';
 import { buildCSSPixelValue } from '../../_styles/variables';
 import { EmojiModel } from './emoji.model';

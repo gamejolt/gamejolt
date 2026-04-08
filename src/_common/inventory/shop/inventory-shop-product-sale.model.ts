@@ -1,14 +1,15 @@
 import { Ref } from 'vue';
+
 import { trackGiftAction } from '../../analytics/analytics.service';
 import { Api } from '../../api/api.service';
 import { AvatarFrameModel } from '../../avatar/frame.model';
 import { BackgroundModel } from '../../background/background.model';
 import { markProductAsUnlocked } from '../../collectible/collectible.model';
 import {
+	canAffordCurrency,
 	Currency,
 	CurrencyCostData,
 	CurrencyType,
-	canAffordCurrency,
 } from '../../currency/currency-type';
 import { showErrorGrowl } from '../../growls/growls.service';
 import { ModelStoreModel, storeModel, storeModelList } from '../../model/model-store.service';
@@ -16,14 +17,14 @@ import { showStickerPackOpenModal } from '../../sticker/pack/open-modal/modal.se
 import { StickerPackModel } from '../../sticker/pack/pack.model';
 import { UserStickerPackModel } from '../../sticker/pack/user-pack.model';
 import { $gettext } from '../../translate/translate.service';
-import { UserAvatarFrameModel } from '../../user/user-avatar/frame/frame.model';
 import type { UserModel } from '../../user/user.model';
+import { UserAvatarFrameModel } from '../../user/user-avatar/frame/frame.model';
 import { InventoryShopProductSalePricingModel } from './inventory-shop-product-sale-pricing.model';
 import { showNewProductModal } from './product-modal/modal.service';
 import {
+	assignShopProductOwnerData,
 	InventoryShopProduct,
 	PurchasableProductType,
-	assignShopProductOwnerData,
 } from './product-owner-helpers';
 
 export class InventoryShopProductSaleModel implements ModelStoreModel {

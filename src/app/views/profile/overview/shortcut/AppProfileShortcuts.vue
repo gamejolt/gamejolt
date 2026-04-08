@@ -1,5 +1,6 @@
 <script lang="ts">
 import { PropType } from 'vue';
+
 import { Jolticon } from '../../../../../_common/jolticon/AppJolticon.vue';
 import { ProfileTileAction } from '../RouteProfileOverview.vue';
 import AppProfileShortcut from './AppProfileShortcut.vue';

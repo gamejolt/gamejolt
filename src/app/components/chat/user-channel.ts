@@ -1,10 +1,11 @@
 import { Presence } from 'phoenix';
 import { computed, markRaw, shallowReadonly } from 'vue';
+
 import { BackgroundModel } from '../../../_common/background/background.model';
 import { importNoSSR } from '../../../_common/code-splitting';
 import { useContentFocusService } from '../../../_common/content-focus/content-focus.service';
-import { storeModel } from '../../../_common/model/model-store.service';
 import { UnknownModelData } from '../../../_common/model/model.service';
+import { storeModel } from '../../../_common/model/model-store.service';
 import { createSocketChannelController } from '../../../_common/socket/socket-controller';
 import { arrayRemove } from '../../../utils/array';
 import type { TabLeaderInterface } from '../../../utils/tab-leader';

@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import { computed, ref, toRefs, watch } from 'vue';
-import { $gettext } from '../translate/translate.service';
+
 import AppJolticon from '../jolticon/AppJolticon.vue';
+import { $gettext } from '../translate/translate.service';
 
 const props = defineProps({
 	value: {

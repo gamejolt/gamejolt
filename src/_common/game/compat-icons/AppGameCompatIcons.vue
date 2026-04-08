@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { PropType, computed, toRefs } from 'vue';
+import { computed, PropType, toRefs } from 'vue';
+
 import AppJolticon, { Jolticon } from '../../jolticon/AppJolticon.vue';
 import { kThemeBgSubtle } from '../../theme/variables';
 import { GameModel } from '../game.model';

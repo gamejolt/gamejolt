@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { PropType, toRefs } from 'vue';
+
 import AppButton from '../../button/AppButton.vue';
 import { showInfoGrowl } from '../../growls/growls.service';
 import AppModal from '../../modal/AppModal.vue';

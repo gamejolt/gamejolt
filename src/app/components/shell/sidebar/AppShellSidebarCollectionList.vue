@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
+
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { stringSort } from '../../../../utils/array';

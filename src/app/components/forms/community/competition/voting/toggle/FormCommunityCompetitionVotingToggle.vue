@@ -1,13 +1,17 @@
 <script lang="ts" setup>
-import { TranslateDirective as vTranslate } from '../../../../../../../_common/translate/translate-directive';
 import { nextTick, toRef } from 'vue';
+
 import {
 	$setVotingEnabledOnCommunityCompetition,
 	CommunityCompetitionModel,
 } from '../../../../../../../_common/community/competition/competition.model';
-import AppForm, { createForm, FormController } from '../../../../../../../_common/form-vue/AppForm.vue';
+import AppForm, {
+	createForm,
+	FormController,
+} from '../../../../../../../_common/form-vue/AppForm.vue';
 import AppFormGroup from '../../../../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormControlToggle from '../../../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
+import { TranslateDirective as vTranslate } from '../../../../../../../_common/translate/translate-directive';
 
 const props = defineProps({
 	model: {
@@ -26,7 +30,10 @@ const form: FormController<CommunityCompetitionModel> = createForm({
 	model: toRef(props, 'model'),
 });
 
-function setField<K extends keyof CommunityCompetitionModel>(field: K, value: CommunityCompetitionModel[K]) {
+function setField<K extends keyof CommunityCompetitionModel>(
+	field: K,
+	value: CommunityCompetitionModel[K]
+) {
 	(form.formModel as any)[field] = value;
 }
 

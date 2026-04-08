@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { onMounted } from 'vue';
+
 import AppJolticon from '../_common/jolticon/AppJolticon.vue';
 import { SellableType } from '../_common/sellable/sellable.model';
 import AppTheme from '../_common/theme/AppTheme.vue';

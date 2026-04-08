@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
+
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 
 type Palette = {

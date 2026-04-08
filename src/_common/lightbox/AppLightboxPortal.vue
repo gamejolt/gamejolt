@@ -1,10 +1,11 @@
 <script lang="ts" setup>
 import { nextTick, ref, toRef, watch } from 'vue';
+
 import { Analytics } from '../analytics/analytics.service';
 import AppButton from '../button/AppButton.vue';
 import { EscapeStack, EscapeStackCallback } from '../escape-stack/escape-stack.service';
 import AppJolticon from '../jolticon/AppJolticon.vue';
-import { Screen, onScreenResize } from '../screen/screen-service';
+import { onScreenResize, Screen } from '../screen/screen-service';
 import AppShortkey from '../shortkey/AppShortkey.vue';
 import { EventSubscription } from '../system/event/event-topic';
 import AppTouch, { AppTouchInput } from '../touch/AppTouch.vue';

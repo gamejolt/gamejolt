@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { PropType, computed, toRefs } from 'vue';
+import { computed, PropType, toRefs } from 'vue';
+
 import AppHoverCard from '../../../../../../_common/card/AppHoverCard.vue';
 import { ShopProductModel } from '../../../../../../_common/shop/product/product-model';
 import { kThemeFgRgb } from '../../../../../../_common/theme/variables';

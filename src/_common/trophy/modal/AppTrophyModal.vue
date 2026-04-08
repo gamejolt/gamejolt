@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { TranslateDirective as vTranslate } from '../../translate/translate-directive';
-import { PropType, computed, onMounted, ref, toRefs } from 'vue';
+import { computed, onMounted, PropType, ref, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
+
 import { Api } from '../../api/api.service';
 import AppButton from '../../button/AppButton.vue';
 import AppJolticon from '../../jolticon/AppJolticon.vue';
@@ -13,15 +13,16 @@ import { useCommonStore } from '../../store/common-store';
 import AppTimeAgo from '../../time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import { $gettext } from '../../translate/translate.service';
+import { TranslateDirective as vTranslate } from '../../translate/translate-directive';
 import AppUserCardHover from '../../user/card/AppUserCardHover.vue';
 import { UserGameTrophyModel } from '../../user/trophy/game-trophy.model';
 import {
 	$viewUserBaseTrophyModel,
 	UserBaseTrophyModel,
 } from '../../user/trophy/user-base-trophy.model';
+import { UserModel } from '../../user/user.model';
 import AppUserAvatarImg from '../../user/user-avatar/AppUserAvatarImg.vue';
 import AppUserAvatarList from '../../user/user-avatar/AppUserAvatarList.vue';
-import { UserModel } from '../../user/user.model';
 import AppTrophyThumbnail from '../thumbnail/AppTrophyThumbnail.vue';
 
 const props = defineProps({

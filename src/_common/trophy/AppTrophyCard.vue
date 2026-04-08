@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { PropType, computed, toRefs } from 'vue';
+import { computed, PropType, toRefs } from 'vue';
+
 import AppFadeCollapse from '../AppFadeCollapse.vue';
 import { GameModel } from '../game/game.model';
 import AppJolticon from '../jolticon/AppJolticon.vue';

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
+
 import { styleFlexCenter } from '../../../../_styles/mixins';
 import AppImgResponsive from '../../../img/AppImgResponsive.vue';
 import AppJolticon, { Jolticon } from '../../../jolticon/AppJolticon.vue';

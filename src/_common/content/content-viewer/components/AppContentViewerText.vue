@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { PropType, computed, h, toRefs } from 'vue';
+import { computed, h, PropType, toRefs } from 'vue';
+
 import { Environment } from '../../../environment/environment.service';
 import AppLinkExternal from '../../../link/AppLinkExternal.vue';
 import { ContentObject } from '../../content-object';

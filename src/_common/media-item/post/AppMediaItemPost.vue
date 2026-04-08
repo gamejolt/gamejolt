@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, CSSProperties, PropType, ref, toRefs, toValue } from 'vue';
+
 import AppButton from '../../button/AppButton.vue';
 import { useContentFocusService } from '../../content-focus/content-focus.service';
 import AppImgResponsive from '../../img/AppImgResponsive.vue';

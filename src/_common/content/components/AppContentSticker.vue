@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
+
 import AppAnimElectricity from '../../animation/AppAnimElectricity.vue';
 import AppLoading from '../../loading/AppLoading.vue';
 import { storeModel } from '../../model/model-store.service';

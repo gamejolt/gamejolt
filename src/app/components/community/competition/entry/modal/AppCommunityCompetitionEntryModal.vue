@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import { PropType, computed, onMounted, ref, toRef, toRefs } from 'vue';
+import { computed, onMounted, PropType, ref, toRef, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
+
 import { Api } from '../../../../../../_common/api/api.service';
 import AppButton from '../../../../../../_common/button/AppButton.vue';
 import { Clipboard } from '../../../../../../_common/clipboard/clipboard-service';

@@ -1,13 +1,14 @@
 <script lang="ts" setup>
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { TranslateDirective as vTranslate } from '../../../../_common/translate/translate-directive';
 import { computed } from 'vue';
+
 import { formatNumber } from '../../../../_common/filters/number';
 import { ForumCategoryModel } from '../../../../_common/forum/category/category.model';
 import { ForumChannelModel } from '../../../../_common/forum/channel/channel.model';
 import { ForumPostModel } from '../../../../_common/forum/post/post.model';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppTimeAgo from '../../../../_common/time/AppTimeAgo.vue';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import { TranslateDirective as vTranslate } from '../../../../_common/translate/translate-directive';
 import AppUserVerifiedTick from '../../../../_common/user/AppUserVerifiedTick.vue';
 import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';

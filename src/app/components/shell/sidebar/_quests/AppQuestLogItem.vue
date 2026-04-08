@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { toRef } from 'vue';
+
 import AppConfetti from '../../../../../_common/particle-effects/AppConfetti.vue';
 import AppQuestProgress from '../../../../../_common/quest/AppQuestProgress.vue';
 import AppQuestThumbnail from '../../../../../_common/quest/AppQuestThumbnail.vue';

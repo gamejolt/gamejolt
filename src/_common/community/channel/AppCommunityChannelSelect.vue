@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType } from 'vue';
+
 import AppPill from '../../pill/AppPill.vue';
 import { CommunityChannelModel } from './channel.model';
 

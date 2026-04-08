@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType } from 'vue';
+
 import AppCard from '../../../../_common/card/AppCard.vue';
 import { showSuccessGrowl } from '../../../../_common/growls/growls.service';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';

@@ -7,6 +7,7 @@
 
 import { defineAsyncComponent } from 'vue';
 import { Router } from 'vue-router';
+
 import AppNoop from '../../../_common/AppNoop.vue';
 import type { routeLibraryInstalled as routeLibraryInstalledType } from '../../views/library/installed/installed.route';
 import type AppClientShellType from './AppClientShell.vue';

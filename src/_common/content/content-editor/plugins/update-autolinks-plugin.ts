@@ -1,5 +1,6 @@
 import { Mark, MarkType, Node } from 'prosemirror-model';
 import { EditorState, Plugin, Transaction } from 'prosemirror-state';
+
 import { ContentEditorController, editorResolveNodePosition } from '../content-editor-controller';
 import { ContentEditorSchema } from '../schemas/content-editor-schema';
 import { UrlDetector } from './url-detector';

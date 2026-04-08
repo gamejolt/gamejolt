@@ -1,4 +1,5 @@
 import type { Router } from 'vue-router';
+
 import { Client } from '../../../../../_common/client/client.service';
 import { commonStore } from '../../../../../_common/store/common-store';
 import { $gettext } from '../../../../../_common/translate/translate.service';

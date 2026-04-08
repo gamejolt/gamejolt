@@ -1,4 +1,5 @@
 import type { Component } from 'vue';
+
 import { loadScript } from '../../../utils/utils';
 import { isDynamicGoogleBot } from '../../device/device.service';
 import { AdSlot } from '../ad-slot-info';

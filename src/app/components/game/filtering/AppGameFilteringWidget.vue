@@ -1,8 +1,9 @@
 <script lang="ts" setup>
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { reactive } from 'vue';
+
 import { Analytics } from '../../../../_common/analytics/analytics.service';
 import { formatNumber } from '../../../../_common/filters/number';
+import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppPopper from '../../../../_common/popper/AppPopper.vue';
 import { GameFilteringContainer } from './container';
 

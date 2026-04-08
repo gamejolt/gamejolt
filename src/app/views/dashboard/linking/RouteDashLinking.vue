@@ -1,6 +1,7 @@
 <script lang="ts">
 import { computed, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+
 import { Client } from '../../../../_common/client/safe-exports';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';

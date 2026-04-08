@@ -1,6 +1,7 @@
 <script lang="ts">
 import { computed, ref } from 'vue';
 import { RouteParamsRaw, RouteRecordName } from 'vue-router';
+
 import { Api } from '../../../../_common/api/api.service';
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import { CreatorExperienceModel } from '../../../../_common/creator/experience/experience.model';

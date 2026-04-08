@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import { TranslateDirective as vTranslate } from '../../../../_common/translate/translate-directive';
 import { computed, ref } from 'vue';
+
 import AppAlertBox from '../../../../_common/alert/AppAlertBox.vue';
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { formatCurrency } from '../../../../_common/filters/currency';
-import AppForm, { FormController, createForm } from '../../../../_common/form-vue/AppForm.vue';
+import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
 import AppFormControlError from '../../../../_common/form-vue/AppFormControlError.vue';
@@ -21,6 +21,7 @@ import { Navigate } from '../../../../_common/navigate/navigate.service';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
+import { TranslateDirective as vTranslate } from '../../../../_common/translate/translate-directive';
 import { UserStripeManagedAccountModel } from '../../../../_common/user/stripe-managed-account/stripe-managed-account';
 import { bangRef } from '../../../../utils/vue';
 import AppDeveloperTerms from './AppDeveloperTerms.vue';

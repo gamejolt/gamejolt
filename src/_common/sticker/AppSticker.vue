@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
+
 import { styleWhen } from '../../_styles/mixins';
 import AppAnimElectricity from '../animation/AppAnimElectricity.vue';
 import { ComponentProps } from '../component-helpers';

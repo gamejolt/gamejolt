@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { validateMaxLength, validateFilesize } from '../../../../../_common/form-vue/validators';
 import { computed, ref, toRef } from 'vue';
+
 import { formatNumber } from '../../../../../_common/filters/number';
 import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
@@ -8,6 +8,7 @@ import AppFormControl from '../../../../../_common/form-vue/AppFormControl.vue';
 import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
+import { validateFilesize, validateMaxLength } from '../../../../../_common/form-vue/validators';
 import { GameModel } from '../../../../../_common/game/game.model';
 import { $saveGameSong, GameSongModel } from '../../../../../_common/game/song/song.model';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';

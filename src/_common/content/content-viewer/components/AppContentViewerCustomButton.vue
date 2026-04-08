@@ -1,5 +1,6 @@
 <script lang="ts">
 import type { PropType } from 'vue';
+
 import AppContentCustomButton from '../../components/AppContentCustomButton.vue';
 import { ContentObject } from '../../content-object';
 </script>

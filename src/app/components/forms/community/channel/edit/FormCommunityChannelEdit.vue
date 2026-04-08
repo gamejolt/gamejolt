@@ -1,14 +1,15 @@
 <script lang="ts" setup>
 import { PropType, toRef, toRefs } from 'vue';
+
 import {
 	$saveCommunityChannel,
 	CommunityChannelModel,
 } from '../../../../../../_common/community/channel/channel.model';
 import { CommunityModel } from '../../../../../../_common/community/community.model';
 import AppForm, {
-	FormController,
 	createForm,
 	defineFormProps,
+	FormController,
 } from '../../../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControl from '../../../../../../_common/form-vue/AppFormControl.vue';

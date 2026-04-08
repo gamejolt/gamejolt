@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { computed, ref, toRef } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+
 import { trackPostOpen } from '../../../../../_common/analytics/analytics.service';
 import AppBackground from '../../../../../_common/background/AppBackground.vue';
 import { CommunityChannelModel } from '../../../../../_common/community/channel/channel.model';

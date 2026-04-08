@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { toRefs } from 'vue';
+
 import { Navigate } from '../navigate/navigate.service';
 
 const props = defineProps({

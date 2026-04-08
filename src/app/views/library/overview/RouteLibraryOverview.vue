@@ -1,8 +1,17 @@
 <script lang="ts">
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '../../../../_common/route/route-component';
+import { computed } from 'vue';
+
+import { Connection } from '../../../../_common/connection/connection-service';
+import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
+import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
+import { Screen } from '../../../../_common/screen/screen-service';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import { $gettext } from '../../../../_common/translate/translate.service';
+import { GameCollectionModel } from '../../../components/game/collection/collection.model';
+import AppGameCollectionGrid from '../../../components/game/collection/grid/AppGameCollectionGrid.vue';
+import AppGameCollectionList from '../../../components/game/collection/list/AppGameCollectionList.vue';
+import AppPageHeader from '../../../components/page-header/AppPageHeader.vue';
+import { useLibraryStore } from '../../../store/library';
 
 export default {
 	name: 'RouteLibraryOverview',
@@ -13,18 +22,6 @@ export default {
 </script>
 
 <script lang="ts" setup>
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import { computed } from 'vue';
-import { Connection } from '../../../../_common/connection/connection-service';
-import { Screen } from '../../../../_common/screen/screen-service';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { GameCollectionModel } from '../../../components/game/collection/collection.model';
-import AppGameCollectionGrid from '../../../components/game/collection/grid/AppGameCollectionGrid.vue';
-import AppGameCollectionList from '../../../components/game/collection/list/AppGameCollectionList.vue';
-import AppPageHeader from '../../../components/page-header/AppPageHeader.vue';
-import { useLibraryStore } from '../../../store/library';
-
 const { followedCollection, developerCollection, ownedCollection, collections } = useLibraryStore();
 
 const mainCollections = computed(() => {

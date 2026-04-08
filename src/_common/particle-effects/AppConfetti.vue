@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { nextTick, onMounted, ref, toRefs, watch } from 'vue';
+
 import { useResizeObserver } from '../../utils/resize-observer.js';
 import { debounce } from '../../utils/utils.js';
 

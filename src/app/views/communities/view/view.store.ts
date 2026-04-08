@@ -1,5 +1,6 @@
-import { InjectionKey, inject } from 'vue';
+import { inject,InjectionKey } from 'vue';
 import { RouteLocationNormalized } from 'vue-router';
+
 import { Api } from '../../../../_common/api/api.service';
 import {
 	$acceptCollaboratorInvite,

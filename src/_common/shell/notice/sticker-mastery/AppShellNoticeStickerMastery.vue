@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType, computed, ref, toRefs } from 'vue';
+import { computed, CSSProperties, PropType, ref, toRefs } from 'vue';
+
 import { styleFlexCenter } from '../../../../_styles/mixins';
 import { kBorderWidthLg, kFontSizeLarge, kFontSizeTiny } from '../../../../_styles/variables';
 import { clampNumber } from '../../../../utils/number';

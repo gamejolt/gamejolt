@@ -1,5 +1,6 @@
-import { bootstrapCommon } from '../_common/bootstrap';
 import './main.styl';
+
+import { bootstrapCommon } from '../_common/bootstrap';
 import { authStore, AuthStoreKey } from './store';
 import { router } from './views/index';
 

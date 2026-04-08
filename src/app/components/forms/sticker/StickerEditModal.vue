@@ -1,10 +1,11 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, Ref, toRefs } from 'vue';
+import { computed, PropType, Ref, ref, toRefs } from 'vue';
+
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppModal from '../../../../_common/modal/AppModal.vue';
 import { useModal } from '../../../../_common/modal/modal.service';
-import { storeModel } from '../../../../_common/model/model-store.service';
 import { ModelData, UnknownModelData } from '../../../../_common/model/model.service';
+import { storeModel } from '../../../../_common/model/model-store.service';
 import { StickerPackModel } from '../../../../_common/sticker/pack/pack.model';
 import { StickerModel } from '../../../../_common/sticker/sticker.model';
 import FormSticker from './FormSticker.vue';

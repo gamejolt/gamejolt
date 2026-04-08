@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { TranslateDirective as vTranslate } from '../../../../_common/translate/translate-directive';
 import { computed, PropType, ref, toRef, watch } from 'vue';
+
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
@@ -17,6 +17,7 @@ import AppLinkHelp from '../../../../_common/link/AppLinkHelp.vue';
 import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
+import { TranslateDirective as vTranslate } from '../../../../_common/translate/translate-directive';
 import { $clearUserHeader, $saveUserHeader, UserModel } from '../../../../_common/user/user.model';
 
 type FormModel = UserModel & {

@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
 import { RouterLink } from 'vue-router';
+
 import { CommunityModel } from '../../../../_common/community/community.model';
 import { formatNumber } from '../../../../_common/filters/number';
 import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';

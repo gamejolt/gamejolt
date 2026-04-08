@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { nextTick, PropType, ref } from 'vue';
+
 import { FocusToken } from '../../../utils/focus-token';
 
 const props = defineProps({

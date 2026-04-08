@@ -1,4 +1,5 @@
 import { RouteLocationNormalized } from 'vue-router';
+
 import { GameModel } from '../../../../_common/game/game.model';
 
 export class GameListingContainer {

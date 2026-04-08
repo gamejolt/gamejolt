@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
-import { PropType, computed, ref, toRef, toRefs } from 'vue';
+import { computed, PropType, ref, toRef, toRefs } from 'vue';
 import { useRoute } from 'vue-router';
+
 import { vAppAuthRequired } from '../../../../../_common/auth/auth-required-directive';
 import {
 	CommunityCompetitionModel,
@@ -17,6 +17,7 @@ import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppTimeAgo from '../../../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../../_common/translate/translate.service';
+import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
 import { numberSort } from '../../../../../utils/array';
 import FormCommunityCompetitionVotingCast from '../../../forms/community/competition/voting/cast/FormCommunityCompetitionVotingCast.vue';
 

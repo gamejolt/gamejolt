@@ -1,14 +1,15 @@
 <script lang="ts" setup>
 import { computed, PropType, provide, ref, toRefs, watch } from 'vue';
+
 import { ContextCapabilities } from '../content-context';
 import { ContentDocument } from '../content-document';
-import { ContentRules } from '../content-rules';
 import { ContentHydrator } from '../content-hydrator';
 import {
 	ContentOwnerControllerKey,
 	ContentOwnerParentBounds,
 	createContentOwnerController,
 } from '../content-owner';
+import { ContentRules } from '../content-rules';
 import AppContentViewerBaseComponent from './components/AppContentViewerBaseComponent.vue';
 
 const props = defineProps({
@@ -40,7 +41,7 @@ const viewerStyleClass = computed(() => {
 	return controller.value.context + '-content';
 });
 
-const content = computed(() => doc.value ? ([...doc.value.content] as any[]) : []);
+const content = computed(() => (doc.value ? ([...doc.value.content] as any[]) : []));
 const context = computed(() => doc.value!.context);
 const capabilities = computed(() => ContextCapabilities.getPlaceholder());
 const contentRules = computed(() => displayRules?.value);

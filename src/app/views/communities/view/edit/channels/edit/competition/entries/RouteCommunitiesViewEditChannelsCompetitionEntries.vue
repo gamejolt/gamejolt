@@ -1,6 +1,7 @@
 <script lang="ts">
 import { computed, ref, toRef } from 'vue';
 import { RouteLocationNormalized, RouteLocationRaw, RouterLink, useRoute } from 'vue-router';
+
 import { Api } from '../../../../../../../../../_common/api/api.service';
 import AppButton from '../../../../../../../../../_common/button/AppButton.vue';
 import {
@@ -39,6 +40,8 @@ type Payload = {
 	entries: any[];
 	perPage: number;
 };
+
+import { TranslateDirective as vTranslate } from '../../../../../../../../../_common/translate/translate-directive';
 
 export default {
 	...defineAppRouteOptions({
@@ -113,7 +116,6 @@ function getValidSortDirectionQueryParam(route: RouteLocationNormalized) {
 </script>
 
 <script lang="ts" setup>
-import { TranslateDirective as vTranslate } from '../../../../../../../../../_common/translate/translate-directive';
 const routeStore = useCommunityRouteStore()!;
 const route = useRoute();
 

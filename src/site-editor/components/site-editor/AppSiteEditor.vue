@@ -1,14 +1,15 @@
 <script lang="ts" setup>
-import AppTranslate from '../../../_common/translate/AppTranslate.vue';
-import AppButton from '../../../_common/button/AppButton.vue';
 import { computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+
 import { Api } from '../../../_common/api/api.service';
+import AppButton from '../../../_common/button/AppButton.vue';
 import AppContentBlockEditor from '../../../_common/content-block/editor/AppContentBlockEditor.vue';
 import { showSuccessGrowl } from '../../../_common/growls/growls.service';
 import AppLoading from '../../../_common/loading/AppLoading.vue';
 import AppThemeSelector from '../../../_common/theme/selector/AppThemeSelector.vue';
 import AppThemeEditor from '../../../_common/theme/theme-editor/AppThemeEditor.vue';
+import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../_common/translate/translate.service';
 import { useSiteEditorStore } from '../../store/index';
 

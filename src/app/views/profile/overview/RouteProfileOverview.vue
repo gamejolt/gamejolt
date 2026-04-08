@@ -1,6 +1,7 @@
 <script lang="ts">
 import { computed, Ref, ref } from 'vue';
 import { RouteLocationRaw, RouterView, useRoute, useRouter } from 'vue-router';
+
 import AppAdTakeoverFloat from '../../../../_common/ad/AppAdTakeoverFloat.vue';
 import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
 import { Api } from '../../../../_common/api/api.service';

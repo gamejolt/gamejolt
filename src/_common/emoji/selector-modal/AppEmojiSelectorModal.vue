@@ -6,10 +6,11 @@ import {
 	onMounted,
 	onUnmounted,
 	PropType,
-	ref,
 	Ref,
+	ref,
 	toRefs,
 } from 'vue';
+
 import { styleChangeBg } from '../../../_styles/mixins';
 import { arrayRemove } from '../../../utils/array';
 import { debounceWithMaxTimeout } from '../../../utils/utils';
@@ -20,12 +21,12 @@ import { ContentEditorModelData } from '../../content/content-owner';
 import { showErrorGrowl } from '../../growls/growls.service';
 import AppModal from '../../modal/AppModal.vue';
 import { useModal } from '../../modal/modal.service';
-import { storeModelList } from '../../model/model-store.service';
 import { ModelData } from '../../model/model.service';
+import { storeModelList } from '../../model/model-store.service';
 import { EmojiGroupData, useCommonStore } from '../../store/common-store';
 import { $gettext } from '../../translate/translate.service';
-import { EmojiGroupModel, EmojiGroupType } from '../emoji-group.model';
 import { EmojiModel } from '../emoji.model';
+import { EmojiGroupModel, EmojiGroupType } from '../emoji-group.model';
 import AppEmojiSelectorGroup from './_group/AppEmojiSelectorGroup.vue';
 
 const props = defineProps({

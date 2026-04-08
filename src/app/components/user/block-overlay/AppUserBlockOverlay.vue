@@ -1,9 +1,10 @@
 <script lang="ts" setup>
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import AppButton from '../../../../_common/button/AppButton.vue';
 import { computed, ref, watch } from 'vue';
+
+import AppButton from '../../../../_common/button/AppButton.vue';
+import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { Scroll } from '../../../../_common/scroll/scroll.service';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { UserModel } from '../../../../_common/user/user.model';
 
 type Props = {
@@ -45,9 +46,9 @@ function proceed() {
 
 							<h4><AppTranslate>You blocked this user.</AppTranslate></h4>
 							<p>
-								<AppTranslate
-									>Are you sure you want to view their profile?</AppTranslate
-								>
+								<AppTranslate>
+									Are you sure you want to view their profile?
+								</AppTranslate>
 							</p>
 							<br />
 

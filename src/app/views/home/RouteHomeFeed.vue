@@ -1,7 +1,7 @@
 <script lang="ts">
 import { computed, defineAsyncComponent, provide, Ref, ref, toRef, watch } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
-import { router } from '..';
+
 import AppAdTakeoverBackground from '../../../_common/ad/AppAdTakeoverBackground.vue';
 import AppAdTakeoverFloat from '../../../_common/ad/AppAdTakeoverFloat.vue';
 import AppAdWidget from '../../../_common/ad/widget/AppAdWidget.vue';
@@ -32,6 +32,7 @@ import AppPostAddButton from '../../components/post/add-button/AppPostAddButton.
 import AppDailyQuests from '../../components/quest/AppDailyQuests.vue';
 import AppShellPageBackdrop from '../../components/shell/AppShellPageBackdrop.vue';
 import { fetchDailyQuests, useQuestStore } from '../../store/quest';
+import { router } from '..';
 import AppHomeFeaturedBanner from './AppHomeFeaturedBanner.vue';
 import AppHomeFeedMenu from './AppHomeFeedMenu.vue';
 import { HOME_FEED_ACTIVITY, HOME_FEED_FYP, HomeFeedService } from './home-feed.service';

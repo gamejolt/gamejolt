@@ -1,5 +1,6 @@
 <script lang="ts">
 import { nextTick, onBeforeUnmount, onMounted, PropType, ref, toRefs, watch } from 'vue';
+
 import AppLoading from '../loading/AppLoading.vue';
 import { setVideoMuted, trackVideoPlayerEvent, VideoPlayerController } from './player/controller';
 

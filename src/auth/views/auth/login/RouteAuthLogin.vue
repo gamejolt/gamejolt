@@ -1,6 +1,11 @@
 <script lang="ts">
-import { defineAppRouteOptions } from '../../../../_common/route/route-component';
+import { useRoute } from 'vue-router';
+
+import AppAuthLogin from '../../../../_common/auth/login/AppAuthLogin.vue';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
+import { defineAppRouteOptions } from '../../../../_common/route/route-component';
+import { createAppRoute } from '../../../../_common/route/route-component';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { locationRedirectFromRoute } from '../../../../utils/router';
 import { loggedUserBlock } from '../RouteAuth.vue';
@@ -25,14 +30,9 @@ export default {
 </script>
 
 <script lang="ts" setup>
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { useRoute } from 'vue-router';
-import AppAuthLogin from '../../../../_common/auth/login/AppAuthLogin.vue';
-import { createAppRoute } from '../../../../_common/route/route-component';
-
 const route = useRoute();
 
-const redirect = route.query.redirect as string || '';
+const redirect = (route.query.redirect as string) || '';
 
 createAppRoute({
 	routeTitle: $gettext('Log in to Game Jolt'),

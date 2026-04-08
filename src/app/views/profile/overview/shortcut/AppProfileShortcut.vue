@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
 import { RouterLink } from 'vue-router';
+
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import { kThemeFg } from '../../../../../_common/theme/variables';
 import { kFontSizeTiny } from '../../../../../_styles/variables';

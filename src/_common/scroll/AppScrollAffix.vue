@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { CSSProperties, PropType, ref, toRef, toRefs } from 'vue';
+
 import { styleWhen } from '../../_styles/mixins';
 import { useResizeObserver } from '../../utils/resize-observer';
 import { Ruler } from '../ruler/ruler-service';

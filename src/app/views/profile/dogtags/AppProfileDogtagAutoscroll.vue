@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
+
 import { Ruler } from '../../../../_common/ruler/ruler-service';
 import { styleWhen } from '../../../../_styles/mixins';
 import { buildCSSPixelValue } from '../../../../_styles/variables';

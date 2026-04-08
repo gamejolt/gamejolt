@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { PropType, toRef } from 'vue';
+
 import { Environment } from '../../environment/environment.service';
 import { GameModel } from '../../game/game.model';
 import AppGameThumbnailImg from '../../game/thumbnail/AppGameThumbnailImg.vue';

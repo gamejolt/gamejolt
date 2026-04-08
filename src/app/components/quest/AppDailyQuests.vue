@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { CSSProperties, computed, ref, toRef, useTemplateRef, watch } from 'vue';
+import { computed, CSSProperties, ref, toRef, useTemplateRef, watch } from 'vue';
+
 import AppAnimChargeOrb from '../../../_common/animation/AppAnimChargeOrb.vue';
 import AppAnimElectricity from '../../../_common/animation/AppAnimElectricity.vue';
 import { illChargeOrbEmpty } from '../../../_common/animation/slideshow/sheets';

@@ -1,4 +1,5 @@
-<script lang="ts" setup>import AppTranslate from '../../../../../../_common/translate/AppTranslate.vue';
+<script lang="ts" setup>
+import AppTranslate from '../../../../../../_common/translate/AppTranslate.vue';
 </script>
 
 <template>
@@ -14,7 +15,9 @@
 		<li>
 			<router-link
 				:to="{ name: 'dash.games.manage.api.trophies.list' }"
-				:class="{ active: String($route.name).indexOf('dash.games.manage.api.trophies') === 0 }"
+				:class="{
+					active: String($route.name).indexOf('dash.games.manage.api.trophies') === 0,
+				}"
 			>
 				<AppTranslate>Trophies</AppTranslate>
 			</router-link>
@@ -22,7 +25,9 @@
 		<li>
 			<router-link
 				:to="{ name: 'dash.games.manage.api.scoreboards.list' }"
-				:class="{ active: String($route.name).indexOf('dash.games.manage.api.scoreboards') === 0 }"
+				:class="{
+					active: String($route.name).indexOf('dash.games.manage.api.scoreboards') === 0,
+				}"
 			>
 				<AppTranslate>Scores</AppTranslate>
 			</router-link>
@@ -30,7 +35,9 @@
 		<li>
 			<router-link
 				:to="{ name: 'dash.games.manage.api.data-storage.items.list' }"
-				:class="{ active: String($route.name).indexOf('dash.games.manage.api.data-storage') === 0 }"
+				:class="{
+					active: String($route.name).indexOf('dash.games.manage.api.data-storage') === 0,
+				}"
 			>
 				<AppTranslate>Data Storage</AppTranslate>
 			</router-link>

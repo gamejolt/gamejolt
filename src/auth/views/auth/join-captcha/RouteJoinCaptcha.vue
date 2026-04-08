@@ -1,5 +1,15 @@
 <script lang="ts">
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+
+import { Api } from '../../../../_common/api/api.service';
+import AppButton from '../../../../_common/button/AppButton.vue';
+import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import { defineAppRouteOptions } from '../../../../_common/route/route-component';
+import { createAppRoute } from '../../../../_common/route/route-component';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import { $gettext } from '../../../../_common/translate/translate.service';
+import AppGrecaptchaWidget from '../../../components/grecaptcha/widget/AppGrecaptchaWidget.vue';
 
 export default {
 	name: 'RouteJoinCaptcha',
@@ -10,16 +20,6 @@ export default {
 </script>
 
 <script lang="ts" setup>
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-import { Api } from '../../../../_common/api/api.service';
-import { showErrorGrowl } from '../../../../_common/growls/growls.service';
-import { createAppRoute } from '../../../../_common/route/route-component';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import AppGrecaptchaWidget from '../../../components/grecaptcha/widget/AppGrecaptchaWidget.vue';
-
 const router = useRouter();
 
 type ServerErrors = {
@@ -112,7 +112,7 @@ function retryJoin() {
 		<br />
 		<AppGrecaptchaWidget @response="onRecaptchaResponse" />
 		<br />
-		<div class="alert alert-notice" v-if="serverErrors">
+		<div v-if="serverErrors" class="alert alert-notice">
 			<AppTranslate v-if="serverErrors.token">
 				Oh no, your sign-up session has expired!
 			</AppTranslate>
@@ -127,7 +127,7 @@ function retryJoin() {
 			</AppTranslate>
 			<AppTranslate v-else> Something weird happened! </AppTranslate>
 			<br />
-			<AppButton primary @click="retryJoin" v-if="!serverErrors['rate-limit']">
+			<AppButton v-if="!serverErrors['rate-limit']" primary @click="retryJoin">
 				<AppTranslate>Retry</AppTranslate>
 			</AppButton>
 		</div>

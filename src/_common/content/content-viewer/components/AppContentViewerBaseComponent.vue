@@ -1,5 +1,6 @@
 <script lang="ts">
 import { computed, h, PropType, toRefs } from 'vue';
+
 import { ContentObject } from '../../content-object';
 import { ContentRules } from '../../content-rules';
 import AppContentViewerBlockquote from './AppContentViewerBlockquote.vue';

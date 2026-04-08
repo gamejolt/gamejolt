@@ -1,8 +1,9 @@
 <script lang="ts" setup>
-import { PropType, computed, toRefs } from 'vue';
+import { computed, PropType, toRefs } from 'vue';
 import { RouteLocationRaw, useRouter } from 'vue-router';
+
 import AppButton from '../../../../_common/button/AppButton.vue';
-import AppForm, { FormController, createForm } from '../../../../_common/form-vue/AppForm.vue';
+import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
 import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormStickySubmit from '../../../../_common/form-vue/AppFormStickySubmit.vue';
@@ -10,14 +11,14 @@ import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormC
 import AppModal from '../../../../_common/modal/AppModal.vue';
 import { useModal } from '../../../../_common/modal/modal.service';
 import {
-	NotificationFeedTypes,
 	getNotificationFeedTypeLabels,
+	NotificationFeedTypes,
 } from '../../../../_common/notification/notification-model';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { stringSort } from '../../../../utils/array';
-import { NOTIFICATION_FILTER_QUERY } from '../RouteNotifications.vue';
 import { routeNotifications } from '../notifications.route';
+import { NOTIFICATION_FILTER_QUERY } from '../RouteNotifications.vue';
 
 interface FormModel {
 	[k: string]: boolean;

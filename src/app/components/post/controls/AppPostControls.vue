@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, onUnmounted, PropType, ref, toRefs } from 'vue';
+
 import {
 	Analytics,
 	PostControlsLocation,

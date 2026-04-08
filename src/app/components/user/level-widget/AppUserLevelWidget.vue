@@ -1,9 +1,10 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
+
 import { formatNumber } from '../../../../_common/filters/number';
 import AppProgressBar from '../../../../_common/progress/AppProgressBar.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import { $gettext } from '../../../../_common/translate/translate.service';
 import { UserModel } from '../../../../_common/user/user.model';
 
 type Props = {
@@ -36,10 +37,10 @@ const tooltip = computed(() => {
 			</div>
 		</div>
 		<AppProgressBar
+			v-app-tooltip="tooltip"
 			class="user-level-widget-progress"
 			thin
 			:percent="user.level_next_percentage ?? 0"
-			v-app-tooltip="tooltip"
 		/>
 	</div>
 </template>

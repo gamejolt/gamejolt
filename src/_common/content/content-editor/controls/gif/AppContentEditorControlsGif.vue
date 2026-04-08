@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
+
 import AppJolticon from '../../../../jolticon/AppJolticon.vue';
 import { vAppTooltip } from '../../../../tooltip/tooltip-directive';
 import { editorInsertGif, useContentEditorController } from '../../content-editor-controller';

@@ -1,5 +1,6 @@
 import { nextTick, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
+
 import { useSidebarStore } from '../../../_common/sidebar/sidebar.store';
 import { closeStickerDrawer, useStickerStore } from '../../../_common/sticker/sticker-store';
 import { TogglableLeftPane } from '../../store';

@@ -1,11 +1,12 @@
 <script lang="ts" setup>
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import AppButton from '../../../../_common/button/AppButton.vue';
 import { computed, ref, watch } from 'vue';
+
 import { Analytics } from '../../../../_common/analytics/analytics.service';
+import AppButton from '../../../../_common/button/AppButton.vue';
 import { GameModel } from '../../../../_common/game/game.model';
 import { Scroll } from '../../../../_common/scroll/scroll.service';
 import { SettingRestrictedBrowsing } from '../../../../_common/settings/settings.service';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import AppGameOgrs from '../ogrs/AppGameOgrs.vue';
 
 type Props = {
@@ -58,9 +59,9 @@ function removeRestriction() {
 					<div class="col-sm-10 col-md-8 col-lg-6 col-centered">
 						<div class="game-maturity-block">
 							<h4>
-								<AppTranslate
-									>This game is tagged for mature audiences.</AppTranslate
-								>
+								<AppTranslate>
+									This game is tagged for mature audiences.
+								</AppTranslate>
 							</h4>
 							<p>
 								<AppTranslate>

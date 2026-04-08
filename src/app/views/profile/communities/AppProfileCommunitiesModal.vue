@@ -1,5 +1,6 @@
 <script lang="ts">
-import { PropType, onMounted, ref, toRefs } from 'vue';
+import { onMounted, PropType, ref, toRefs } from 'vue';
+
 import { Api } from '../../../../_common/api/api.service';
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';

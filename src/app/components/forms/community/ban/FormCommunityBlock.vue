@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
-import { PropType, computed, ref, toRef, toRefs } from 'vue';
+import { computed, PropType, ref, toRef, toRefs } from 'vue';
+
 import { Api } from '../../../../../_common/api/api.service';
 import { CommunityModel } from '../../../../../_common/community/community.model';
-import AppForm, { FormController, createForm } from '../../../../../_common/form-vue/AppForm.vue';
+import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControl from '../../../../../_common/form-vue/AppFormControl.vue';
 import AppFormControlError from '../../../../../_common/form-vue/AppFormControlError.vue';
@@ -19,10 +19,11 @@ import {
 import { showErrorGrowl, showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import { getDatalistOptions } from '../../../../../_common/settings/datalist-options.service';
 import { $gettext } from '../../../../../_common/translate/translate.service';
+import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
 import {
+	getCommunityBlockReasons,
 	REASON_OTHER,
 	REASON_SPAM,
-	getCommunityBlockReasons,
 } from '../../../../../_common/user/action-reasons';
 import { UserModel } from '../../../../../_common/user/user.model';
 

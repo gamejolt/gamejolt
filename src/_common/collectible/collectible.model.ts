@@ -1,12 +1,12 @@
 import { isInstance } from '../../utils/utils';
 import { AvatarFrameModel } from '../avatar/frame.model';
 import { BackgroundModel } from '../background/background.model';
-import { ModelStoreModel, getModel, storeModelList } from '../model/model-store.service';
+import { getModel, ModelStoreModel, storeModelList } from '../model/model-store.service';
 import { StickerPackModel } from '../sticker/pack/pack.model';
 import { UserStickerPackModel } from '../sticker/pack/user-pack.model';
 import { StickerModel } from '../sticker/sticker.model';
-import { UserAvatarFrameModel } from '../user/user-avatar/frame/frame.model';
 import { UserModel } from '../user/user.model';
+import { UserAvatarFrameModel } from '../user/user-avatar/frame/frame.model';
 import { AcquisitionModel } from './acquisition.model';
 
 export const enum CollectibleType {

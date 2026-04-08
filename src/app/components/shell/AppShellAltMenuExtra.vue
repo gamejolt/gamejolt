@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { RouterLink } from 'vue-router';
+
 import { showTranslateLangSelectorModal } from '../../../_common/translate/lang-selector/lang-selector-modal.service';
 import { routeLandingHelpRedirect } from '../../views/landing/help/help.route';
 import { routeLegalCookies } from '../../views/legal/cookies/cookies.route';

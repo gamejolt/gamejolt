@@ -1,11 +1,12 @@
 import { App } from 'vue';
+
 import { ClientAutoStart } from '../_common/client/autostart/autostart.service';
 import { bootstrapCommonClient } from '../_common/client/bootstrap';
 import { ClientShortcut } from '../_common/client/shortcut/shortcut.service';
 import { setMenuBuilderHook } from '../_common/client/tray/AppClientTray.vue';
 import {
-	setMetaComponent,
 	setButtonsComponent as setPackageCardButtonsComponent,
+	setMetaComponent,
 } from '../_common/game/package/card/AppGamePackageCard.vue';
 import { setDownloadPackageHook } from '../_common/game/package/purchase-modal/AppGamePackagePurchaseModal.vue';
 import type { CommonStore } from '../_common/store/common-store';

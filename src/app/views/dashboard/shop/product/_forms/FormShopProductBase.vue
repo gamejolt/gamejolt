@@ -1,11 +1,11 @@
 <script lang="ts">
 import {
-	CSSProperties,
-	PropType,
-	Ref,
 	computed,
+	CSSProperties,
 	nextTick,
 	onUnmounted,
+	PropType,
+	Ref,
 	ref,
 	shallowReadonly,
 	toRaw,
@@ -13,6 +13,7 @@ import {
 	watch,
 } from 'vue';
 import { useRouter } from 'vue-router';
+
 import AppAlertBox from '../../../../../../_common/alert/AppAlertBox.vue';
 import { Api } from '../../../../../../_common/api/api.service';
 import { AvatarFrameModel } from '../../../../../../_common/avatar/frame.model';
@@ -29,8 +30,8 @@ import {
 } from '../../../../../../_common/creator/change-request/creator-change-request.model';
 import { formatFilesize } from '../../../../../../_common/filters/filesize';
 import AppForm, {
-	FormController,
 	createForm,
+	FormController,
 } from '../../../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControl from '../../../../../../_common/form-vue/AppFormControl.vue';
@@ -71,10 +72,10 @@ import { objectOmit } from '../../../../../../utils/object';
 import { assertNever, isInstance, run } from '../../../../../../utils/utils';
 import { routeDashShopOverview } from '../../overview/overview.route';
 import {
+	getShopDashProductType,
 	ShopDashGroup,
 	ShopDashProductType,
 	ShopDashStore,
-	getShopDashProductType,
 } from '../../shop.store';
 import AppShopProductDiff from '../_diff/AppShopProductDiff.vue';
 

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
+
 import AppContentMediaItem from '../../components/AppContentMediaItem.vue';
 import { ContentObject } from '../../content-object';
 

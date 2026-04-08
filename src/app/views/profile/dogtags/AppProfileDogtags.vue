@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { CSSProperties, PropType } from 'vue';
+
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppUserDogtag from '../../../../_common/user/AppUserDogtag.vue';
 import { UserFriendshipState } from '../../../../_common/user/friendship/friendship.model';

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, ref, toRef } from 'vue';
+
 import { Api, ApiProgressEvent } from '../../../api/api.service';
 import AppButton from '../../../button/AppButton.vue';
 import { Clipboard } from '../../../clipboard/clipboard-service';
@@ -7,7 +8,7 @@ import { MediaItemModel } from '../../../media-item/media-item-model';
 import { vAppTooltip } from '../../../tooltip/tooltip-directive';
 import AppTranslate from '../../../translate/AppTranslate.vue';
 import { $gettext } from '../../../translate/translate.service';
-import AppForm, { FormController, createForm, defineFormProps } from '../../AppForm.vue';
+import AppForm, { createForm, defineFormProps, FormController } from '../../AppForm.vue';
 import AppFormControlErrors from '../../AppFormControlErrors.vue';
 import AppFormGroup from '../../AppFormGroup.vue';
 import { validateFilesize, validateImageMaxDimensions } from '../../validators';

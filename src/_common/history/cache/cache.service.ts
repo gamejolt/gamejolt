@@ -1,4 +1,5 @@
 import { HistoryState, RouteLocationNormalized } from 'vue-router';
+
 import { arrayRemove } from '../../../utils/array';
 
 const MAX_ITEMS = 20;

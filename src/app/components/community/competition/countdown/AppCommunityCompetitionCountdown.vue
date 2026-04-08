@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { PropType, onBeforeUnmount, onMounted, ref, toRefs } from 'vue';
+import { onBeforeUnmount, onMounted, PropType, ref, toRefs } from 'vue';
+
 import { CommunityCompetitionModel } from '../../../../../_common/community/competition/competition.model';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 

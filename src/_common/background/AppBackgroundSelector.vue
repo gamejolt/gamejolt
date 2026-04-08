@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { PropType, toRefs } from 'vue';
+
 import AppImgResponsive from '../img/AppImgResponsive.vue';
 import AppScrollScroller from '../scroll/AppScrollScroller.vue';
 import { BackgroundModel } from './background.model';

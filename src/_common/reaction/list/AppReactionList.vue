@@ -1,12 +1,13 @@
 <script lang="ts" setup>
-import { PropType, computed, toRefs } from 'vue';
+import { computed, PropType, toRefs } from 'vue';
+
 import { styleWhen } from '../../../_styles/mixins';
 import { buildCSSPixelValue } from '../../../_styles/variables';
 import { ComponentProps } from '../../component-helpers';
 import { Screen } from '../../screen/screen-service';
 import AppScrollScroller, { createScroller } from '../../scroll/AppScrollScroller.vue';
 import { showReactionDetailsModal } from '../details-modal/modal.service';
-import { ReactionCount, ReactionableModel, toggleReactionOnResource } from '../reaction-count';
+import { ReactionableModel, ReactionCount, toggleReactionOnResource } from '../reaction-count';
 import AppReactionListItem from './AppReactionListItem.vue';
 
 type ClickAction = 'toggle' | 'emit-click';

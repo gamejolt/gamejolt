@@ -1,6 +1,7 @@
 <script lang="ts">
 import { computed, defineAsyncComponent, nextTick, watch } from 'vue';
 import { useRoute } from 'vue-router';
+
 import { AppClientBase } from '../../../_common/client/safe-exports';
 import { Connection } from '../../../_common/connection/connection-service';
 import { Meta } from '../../../_common/meta/meta-service';

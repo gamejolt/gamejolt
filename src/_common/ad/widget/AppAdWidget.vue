@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { ref, StyleValue, watch } from 'vue';
+
 import { styleWhen } from '../../../_styles/mixins';
 import AppAspectRatio from '../../aspect-ratio/AppAspectRatio.vue';
 import { AdSlot, AdUnitName } from '../ad-slot-info';

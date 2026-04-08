@@ -1,6 +1,7 @@
 import { Fragment, NodeRange, NodeType, Slice } from 'prosemirror-model';
 import { EditorState, Transaction } from 'prosemirror-state';
-import { ReplaceAroundStep, liftTarget } from 'prosemirror-transform';
+import { liftTarget,ReplaceAroundStep } from 'prosemirror-transform';
+
 import { ContentEditorSchema } from './schemas/content-editor-schema';
 
 type DispatchFunc = (tr: Transaction<ContentEditorSchema>) => void;

@@ -1,4 +1,5 @@
 import { RouteLocationNormalized } from 'vue-router';
+
 import { RouteLocationDefinition } from '../../utils/router';
 import { assertNever } from '../../utils/utils';
 import { CommunityJoinLocation, trackCommunityJoin } from '../analytics/analytics.service';

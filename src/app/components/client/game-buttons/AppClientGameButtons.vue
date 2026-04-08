@@ -1,13 +1,14 @@
 <script lang="ts" setup>
-import { PropType, computed, ref, toRefs, watch } from 'vue';
+import { computed, PropType, ref, toRefs, watch } from 'vue';
 import { RouterLink } from 'vue-router';
+
 import { Analytics } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { getDeviceArch, getDeviceOS } from '../../../../_common/device/device.service';
 import {
-	GameModel,
 	chooseBestGameBuild,
+	GameModel,
 	pluckInstallableGameBuilds,
 } from '../../../../_common/game/game.model';
 import { GamePackagePayloadModel } from '../../../../_common/game/package/package-payload.model';

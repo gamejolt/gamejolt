@@ -1,6 +1,7 @@
 <script lang="ts">
 import { computed, onMounted, onUnmounted, PropType, ref } from 'vue';
 import { isNavigationFailure, useRouter } from 'vue-router';
+
 import { Backdrop, BackdropController } from '../backdrop/backdrop.service';
 import { EscapeStack, EscapeStackCallback } from '../escape-stack/escape-stack.service';
 import { Screen } from '../screen/screen-service';

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, ref, toRefs, watch } from 'vue';
+
 import { Ruler } from '../../ruler/ruler-service';
 import AppTouch, { AppTouchInput } from '../../touch/AppTouch.vue';
 

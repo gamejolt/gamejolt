@@ -1,5 +1,6 @@
 <script lang="ts">
 import { nextTick, onMounted, ref, toRefs, watch } from 'vue';
+
 import { Ruler } from '../../ruler/ruler-service';
 import { onScreenResize } from '../../screen/screen-service';
 import { useEventSubscription } from '../../system/event/event-topic';

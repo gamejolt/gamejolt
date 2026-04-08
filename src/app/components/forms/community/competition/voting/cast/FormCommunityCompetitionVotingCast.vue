@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
+
 import { Api } from '../../../../../../../_common/api/api.service';
 import AppButton from '../../../../../../../_common/button/AppButton.vue';
 import { CommunityCompetitionModel } from '../../../../../../../_common/community/competition/competition.model';
@@ -105,7 +106,10 @@ function isCategoryNA(votingCategory: CommunityCompetitionVotingCategoryModel) {
 	return !vote || vote.rating === 0;
 }
 
-function onRatingMouseEnter(votingCategory: CommunityCompetitionVotingCategoryModel | null, i: number) {
+function onRatingMouseEnter(
+	votingCategory: CommunityCompetitionVotingCategoryModel | null,
+	i: number
+) {
 	if (votingCategory === null) {
 		hoveredRatings.value[0] = i;
 	} else {

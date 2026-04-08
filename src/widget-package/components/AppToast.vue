@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { onMounted } from 'vue';
+
 import AppJolticon from '../../_common/jolticon/AppJolticon.vue';
 
 defineProps({

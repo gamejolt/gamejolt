@@ -1,9 +1,10 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
+
 import { useCommonStore } from '../../../../_common/store/common-store';
 import { $gettext } from '../../../../_common/translate/translate.service';
-import AppUserAvatarList from '../../../../_common/user/user-avatar/AppUserAvatarList.vue';
 import { UserModel } from '../../../../_common/user/user.model';
+import AppUserAvatarList from '../../../../_common/user/user-avatar/AppUserAvatarList.vue';
 
 const props = defineProps({
 	users: {

@@ -1,13 +1,14 @@
 <script lang="ts" setup>
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import AppButton from '../../../../_common/button/AppButton.vue';
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
+
+import AppButton from '../../../../_common/button/AppButton.vue';
 import { GameModel } from '../../../../_common/game/game.model';
+import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppNavTabList from '../../../../_common/nav/tab-list/AppNavTabList.vue';
 import { $deactivateSite, SiteModel, SiteStatus } from '../../../../_common/site/site-model';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import AppSitesManagePageDomain from './AppSitesManagePageDomain.vue';
 import AppSitesManagePageStatic from './AppSitesManagePageStatic.vue';
 import AppSitesManagePageTemplate from './AppSitesManagePageTemplate.vue';

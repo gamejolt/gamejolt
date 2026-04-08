@@ -9,6 +9,7 @@ import {
 	toRef,
 	watch,
 } from 'vue';
+
 import {
 	styleBorderRadiusLg,
 	styleCaret,
@@ -32,6 +33,7 @@ import AppScrollScroller from '../../scroll/AppScrollScroller.vue';
 import { useEventSubscription } from '../../system/event/event-topic';
 import { kThemePrimary, kThemePrimaryFg } from '../../theme/variables';
 import AppTouch, { AppTouchInput } from '../../touch/AppTouch.vue';
+import { StickerModel, StickerStack } from '../sticker.model';
 import {
 	closeStickerDrawer,
 	commitStickerStoreItemPlacement,
@@ -39,7 +41,6 @@ import {
 	setStickerStoreActiveItem,
 	useStickerStore,
 } from '../sticker-store';
-import { StickerModel, StickerStack } from '../sticker.model';
 import AppStickerLayerDrawerItem from './AppStickerLayerDrawerItem.vue';
 
 const stickerStore = useStickerStore();

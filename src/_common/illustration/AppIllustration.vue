@@ -1,5 +1,6 @@
 <script lang="ts">
-import { CSSProperties, PropType, computed, toRefs, useSlots } from 'vue';
+import { computed, CSSProperties, PropType, toRefs, useSlots } from 'vue';
+
 import AppThemeSvg from '../theme/svg/AppThemeSvg.vue';
 
 /**

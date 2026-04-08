@@ -1,5 +1,6 @@
 <script lang="ts">
 import { useRoute } from 'vue-router';
+
 import { showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import {
 	createAppRoute,

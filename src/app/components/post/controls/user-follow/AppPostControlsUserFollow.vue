@@ -1,9 +1,10 @@
 <script lang="ts" setup>
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import AppButton from '../../../../../_common/button/AppButton.vue';
 import { computed } from 'vue';
+
+import AppButton from '../../../../../_common/button/AppButton.vue';
 import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
 import { Screen } from '../../../../../_common/screen/screen-service';
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import AppUserFollowButton from '../../../../../_common/user/follow/AppUserFollowButton.vue';
 
 type Props = {

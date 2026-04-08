@@ -1,9 +1,40 @@
 <script lang="ts">
+import { computed, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+
 import { Api } from '../../../../../../../_common/api/api.service';
+import AppButton from '../../../../../../../_common/button/AppButton.vue';
+import { Clipboard } from '../../../../../../../_common/clipboard/clipboard-service';
+import { Environment } from '../../../../../../../_common/environment/environment.service';
+import AppExpand from '../../../../../../../_common/expand/AppExpand.vue';
+import { formatNumber } from '../../../../../../../_common/filters/number';
+import { GamePackageModel } from '../../../../../../../_common/game/package/package.model';
+import {
+	showErrorGrowl,
+	showSuccessGrowl,
+} from '../../../../../../../_common/growls/growls.service';
+import AppJolticon from '../../../../../../../_common/jolticon/AppJolticon.vue';
+import { $removeKey, KeyModel } from '../../../../../../../_common/key/key-model';
+import {
+	$removeKeyGroup,
+	KeyGroupModel,
+	KeyGroupType,
+} from '../../../../../../../_common/key-group/key-group.model';
+import { showModalConfirm } from '../../../../../../../_common/modal/confirm/confirm-service';
+import AppProgressBar from '../../../../../../../_common/progress/AppProgressBar.vue';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
 } from '../../../../../../../_common/route/route-component';
+import AppTimeAgo from '../../../../../../../_common/time/AppTimeAgo.vue';
+import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
+import AppTranslate from '../../../../../../../_common/translate/AppTranslate.vue';
+import { $gettext } from '../../../../../../../_common/translate/translate.service';
+import { TranslateDirective as vTranslate } from '../../../../../../../_common/translate/translate-directive';
+import { arrayRemove } from '../../../../../../../utils/array';
+import FormGameKeyGroupAddKeys from '../../../../../../components/forms/game/key-group/add-keys/FormGameKeyGroupAddKeys.vue';
+import FormGameKeyGroup from '../../../../../../components/forms/game/key-group/FormGameKeyGroup.vue';
+import { useGameDashRouteController } from '../../manage.store';
 
 export default {
 	name: 'RouteDashGamesManageKeyGroupsEdit',
@@ -18,37 +49,6 @@ export default {
 </script>
 
 <script lang="ts" setup>
-import AppTranslate from '../../../../../../../_common/translate/AppTranslate.vue';
-import AppButton from '../../../../../../../_common/button/AppButton.vue';
-import AppJolticon from '../../../../../../../_common/jolticon/AppJolticon.vue';
-import { TranslateDirective as vTranslate } from '../../../../../../../_common/translate/translate-directive';
-import { computed, ref } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import { Clipboard } from '../../../../../../../_common/clipboard/clipboard-service';
-import { Environment } from '../../../../../../../_common/environment/environment.service';
-import AppExpand from '../../../../../../../_common/expand/AppExpand.vue';
-import { formatNumber } from '../../../../../../../_common/filters/number';
-import { GamePackageModel } from '../../../../../../../_common/game/package/package.model';
-import {
-	showErrorGrowl,
-	showSuccessGrowl,
-} from '../../../../../../../_common/growls/growls.service';
-import {
-	$removeKeyGroup,
-	KeyGroupModel,
-	KeyGroupType,
-} from '../../../../../../../_common/key-group/key-group.model';
-import { $removeKey, KeyModel } from '../../../../../../../_common/key/key-model';
-import { showModalConfirm } from '../../../../../../../_common/modal/confirm/confirm-service';
-import AppProgressBar from '../../../../../../../_common/progress/AppProgressBar.vue';
-import AppTimeAgo from '../../../../../../../_common/time/AppTimeAgo.vue';
-import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
-import { $gettext } from '../../../../../../../_common/translate/translate.service';
-import { arrayRemove } from '../../../../../../../utils/array';
-import FormGameKeyGroupAddKeys from '../../../../../../components/forms/game/key-group/add-keys/FormGameKeyGroupAddKeys.vue';
-import FormGameKeyGroup from '../../../../../../components/forms/game/key-group/FormGameKeyGroup.vue';
-import { useGameDashRouteController } from '../../manage.store';
-
 const route = useRoute();
 const router = useRouter();
 const routeStore = useGameDashRouteController()!;
@@ -107,10 +107,7 @@ async function removeGroup(kg: KeyGroupModel) {
 		return;
 	}
 
-	showSuccessGrowl(
-		$gettext('The key group has been removed.'),
-		$gettext('Removed Key Group')
-	);
+	showSuccessGrowl($gettext('The key group has been removed.'), $gettext('Removed Key Group'));
 
 	router.push({
 		name: 'dash.games.manage.key-groups.list',

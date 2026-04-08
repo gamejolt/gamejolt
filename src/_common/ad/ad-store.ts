@@ -9,6 +9,7 @@ import {
 	toRef,
 } from 'vue';
 import { RouteLocationNormalized, useRouter } from 'vue-router';
+
 import { objectEquals } from '../../utils/object';
 import { loadScript } from '../../utils/utils';
 import { isDynamicGoogleBot } from '../device/device.service';

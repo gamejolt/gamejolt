@@ -1,5 +1,6 @@
-import { ComponentOptions, MaybeRef, getCurrentInstance, onUnmounted, ref, watch } from 'vue';
+import { ComponentOptions, getCurrentInstance, MaybeRef, onUnmounted, ref, watch } from 'vue';
 import { NavigationGuardWithThis, RouteLocationNormalized, Router, useRouter } from 'vue-router';
+
 import { RouteLocationRedirect } from '../../utils/router';
 import { RequireAtLeastOne } from '../../utils/utils';
 import { ensureConfig } from '../config/config.service';

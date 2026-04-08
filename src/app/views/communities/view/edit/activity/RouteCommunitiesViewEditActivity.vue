@@ -1,12 +1,13 @@
 <script lang="ts">
 import { ref } from 'vue';
+
 import { Api } from '../../../../../../_common/api/api.service';
 import AppButton from '../../../../../../_common/button/AppButton.vue';
-import AppCommunityActivityItem from '../../../../../../_common/community/activity-item/AppCommunityActivityItem.vue';
 import {
 	CommunityActivityItemModel,
 	CommunityActivityItemType,
 } from '../../../../../../_common/community/activity-item/activity-item.model';
+import AppCommunityActivityItem from '../../../../../../_common/community/activity-item/AppCommunityActivityItem.vue';
 import { formatDate } from '../../../../../../_common/filters/date';
 import AppLoading from '../../../../../../_common/loading/AppLoading.vue';
 import {

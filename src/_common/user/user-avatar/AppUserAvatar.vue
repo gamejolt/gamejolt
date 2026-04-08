@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
+
 import { Environment } from '../../environment/environment.service';
 import { UserCommonFields } from '../user.model';
 import AppUserAvatarImg from './AppUserAvatarImg.vue';

@@ -1,6 +1,7 @@
 <script lang="ts">
 import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
+
 import AppAlertBox from '../../../../../../_common/alert/AppAlertBox.vue';
 import AppContactLink from '../../../../../../_common/contact-link/AppContactLink.vue';
 import AppIllustration from '../../../../../../_common/illustration/AppIllustration.vue';

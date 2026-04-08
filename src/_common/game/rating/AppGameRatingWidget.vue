@@ -1,5 +1,6 @@
 <script lang="ts">
-import { PropType, computed, onMounted, toRefs } from 'vue';
+import { computed, onMounted, PropType, toRefs } from 'vue';
+
 import { trackExperimentEngagement } from '../../analytics/analytics.service';
 import { vAppAuthRequired } from '../../auth/auth-required-directive';
 import AppButton from '../../button/AppButton.vue';

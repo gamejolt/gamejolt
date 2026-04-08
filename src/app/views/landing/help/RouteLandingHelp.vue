@@ -1,6 +1,7 @@
 <script lang="ts">
 import { computed } from 'vue';
 import { RouterLink, RouterView } from 'vue-router';
+
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
 import { kThemeFg } from '../../../../_common/theme/variables';

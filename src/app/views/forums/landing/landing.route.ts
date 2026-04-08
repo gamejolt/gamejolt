@@ -1,4 +1,5 @@
 import { RouteRecordRaw } from 'vue-router';
+
 import { routeForumsLandingActive } from './active/active.route';
 import { routeForumsLandingOverview } from './overview/overview.route';
 

@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
+
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../../_common/filters/number';

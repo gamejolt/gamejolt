@@ -1,5 +1,6 @@
 <script lang="ts">
-import { PropType, computed, ref, toRef, toRefs } from 'vue';
+import { computed, PropType, ref, toRef, toRefs } from 'vue';
+
 import {
 	FiresidePostEmbedModel,
 	TYPE_SKETCHFAB,

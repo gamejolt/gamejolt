@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { CSSProperties, PropType, ref, toRaw, toRefs } from 'vue';
+
 import {
 	styleAbsoluteFill,
 	styleFlexCenter,

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType, ref, toRefs } from 'vue';
+
 import AppFadeCollapse from '../../../_common/AppFadeCollapse.vue';
 import { ComponentProps } from '../../../_common/component-helpers';
 import { ContentRules } from '../../../_common/content/content-rules';

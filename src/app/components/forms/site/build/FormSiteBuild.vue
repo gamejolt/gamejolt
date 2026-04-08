@@ -1,14 +1,15 @@
 <script lang="ts" setup>
-import { validateFilesize } from '../../../../../_common/form-vue/validators';
-import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
 import { ref } from 'vue';
+
 import { Api } from '../../../../../_common/api/api.service';
 import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
+import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
+import { validateFilesize } from '../../../../../_common/form-vue/validators';
 import { SiteBuildModel } from '../../../../../_common/site/build/build-model';
 import { SiteModel } from '../../../../../_common/site/site-model';
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 
 type Props = {
 	site: SiteModel;

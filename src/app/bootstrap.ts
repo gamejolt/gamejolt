@@ -1,4 +1,7 @@
+import './main.styl';
+
 import { defineAsyncComponent } from 'vue';
+
 import { bootstrapCommon } from '../_common/bootstrap';
 import { setContentEmojiWrapper } from '../_common/content/components/AppContentEmoji.vue';
 import { setChatInviteComponent } from '../_common/content/content-viewer/components/AppContentViewerChatInvite.vue';
@@ -8,16 +11,15 @@ import handlePayloadActions from '../_common/payload/payload-actions.service';
 import { Payload } from '../_common/payload/payload-service';
 import { Registry } from '../_common/registry/registry.service';
 import { Scroll } from '../_common/scroll/scroll.service';
-import { SidebarStoreKey, createSidebarStore } from '../_common/sidebar/sidebar.store';
-import { StickerStoreKey, createStickerStore } from '../_common/sticker/sticker-store';
+import { createSidebarStore,SidebarStoreKey } from '../_common/sidebar/sidebar.store';
+import { createStickerStore,StickerStoreKey } from '../_common/sticker/sticker-store';
 import { initSafeExportsForClient } from './components/client/safe-exports';
-import { GridStoreKey, createGridStore } from './components/grid/grid-store';
-import './main.styl';
+import { createGridStore,GridStoreKey } from './components/grid/grid-store';
 import { BannerStoreKey, createBannerStore } from './store/banner';
 import { AppStoreKey, createAppStore } from './store/index';
-import { JoltydexStoreKey, createJoltydexStore } from './store/joltydex';
-import { LibraryStoreKey, createLibraryStore } from './store/library';
-import { QuestStoreKey, createQuestStore } from './store/quest';
+import { createJoltydexStore,JoltydexStoreKey } from './store/joltydex';
+import { createLibraryStore,LibraryStoreKey } from './store/library';
+import { createQuestStore,QuestStoreKey } from './store/quest';
 import { router } from './views/index';
 
 export async function createApp() {

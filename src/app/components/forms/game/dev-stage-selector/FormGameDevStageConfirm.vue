@@ -91,10 +91,9 @@ function cancel() {
 					</AppTranslate>
 				</li>
 				<li v-else-if="to === 'devlog'">
-					<AppTranslate
-						>Your game's devlog feed will move back to your game's main
-						page.</AppTranslate
-					>
+					<AppTranslate>
+						Your game's devlog feed will move back to your game's main page.
+					</AppTranslate>
 				</li>
 
 				<!-- Published Date -->
@@ -105,9 +104,9 @@ function cancel() {
 						action === 'wip:complete'
 					"
 				>
-					<AppTranslate
-						>Your game will be added to the top of the "new game" list.</AppTranslate
-					>
+					<AppTranslate>
+						Your game will be added to the top of the "new game" list.
+					</AppTranslate>
 				</li>
 			</ul>
 		</div>

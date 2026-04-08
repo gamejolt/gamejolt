@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { PropType, computed, toRefs } from 'vue';
+import { computed, PropType, toRefs } from 'vue';
+
 import AppAspectRatio from '../../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import {
 	AvatarFrameModel,
@@ -10,8 +11,8 @@ import { BackgroundModel } from '../../../../../_common/background/background.mo
 import AppHoverCard from '../../../../../_common/card/AppHoverCard.vue';
 import { InventoryShopGiftModel } from '../../../../../_common/inventory/shop/inventory-shop-gift.model';
 import {
-	InventoryShopProduct,
 	getReadablePurchasableProductType,
+	InventoryShopProduct,
 } from '../../../../../_common/inventory/shop/product-owner-helpers';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import AppStickerPack, {

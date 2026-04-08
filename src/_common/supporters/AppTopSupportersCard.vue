@@ -1,5 +1,6 @@
 <script lang="ts">
 import { PropType } from 'vue';
+
 import {
 	styleBorderRadiusBase,
 	styleBorderRadiusLg,
@@ -15,8 +16,8 @@ import { useCommonStore } from '../store/common-store';
 import { kThemeFg, kThemeFg10, kThemeFgMuted } from '../theme/variables';
 import { vAppTooltip } from '../tooltip/tooltip-directive';
 import AppUserCardHover from '../user/card/AppUserCardHover.vue';
-import AppUserAvatarBubble from '../user/user-avatar/AppUserAvatarBubble.vue';
 import { UserModel } from '../user/user.model';
+import AppUserAvatarBubble from '../user/user-avatar/AppUserAvatarBubble.vue';
 import AppTopSupportersHeader from './AppTopSupportersHeader.vue';
 
 export interface TopSupporter {

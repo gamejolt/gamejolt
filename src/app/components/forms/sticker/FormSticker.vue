@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { TranslateDirective as vTranslate } from '../../../../_common/translate/translate-directive';
-import { computed, CSSProperties, onUnmounted, ref, Ref, toRaw, toRefs } from 'vue';
+import { computed, CSSProperties, onUnmounted, Ref, ref, toRaw, toRefs } from 'vue';
+
 import { Api } from '../../../../_common/api/api.service';
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppForm, {
@@ -29,12 +29,13 @@ import {
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppLinkHelpDocs from '../../../../_common/link/AppLinkHelpDocs.vue';
 import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
-import { storeModel } from '../../../../_common/model/model-store.service';
 import { ModelData, UnknownModelData } from '../../../../_common/model/model.service';
+import { storeModel } from '../../../../_common/model/model-store.service';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { StickerPackModel } from '../../../../_common/sticker/pack/pack.model';
 import { StickerModel } from '../../../../_common/sticker/sticker.model';
 import { $gettext } from '../../../../_common/translate/translate.service';
+import { TranslateDirective as vTranslate } from '../../../../_common/translate/translate-directive';
 import { styleBorderRadiusLg, styleChangeBg, styleFlexCenter } from '../../../../_styles/mixins';
 import { kLineHeightComputed } from '../../../../_styles/variables';
 

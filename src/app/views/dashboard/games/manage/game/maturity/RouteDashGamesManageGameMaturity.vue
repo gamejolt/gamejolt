@@ -1,5 +1,6 @@
 <script lang="ts">
 import { computed, ref } from 'vue';
+
 import { GameModel } from '../../../../../../../_common/game/game.model';
 import { showSuccessGrowl } from '../../../../../../../_common/growls/growls.service';
 import AppLinkHelp from '../../../../../../../_common/link/AppLinkHelp.vue';

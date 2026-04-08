@@ -1,6 +1,7 @@
 <script lang="ts">
 import { toRef } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
+
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import { buildPayloadErrorForStatusCode } from '../../../_common/payload/payload-service';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';

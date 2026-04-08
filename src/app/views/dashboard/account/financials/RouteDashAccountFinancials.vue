@@ -1,6 +1,7 @@
 <script lang="ts">
 import { computed } from 'vue';
 import { RouterView } from 'vue-router';
+
 import {
 	createAppRoute,
 	defineAppRouteOptions,

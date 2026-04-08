@@ -1,11 +1,12 @@
 <script lang="ts" setup>
 import { Ref, ref } from 'vue';
+
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppCurrencyPillList from '../../../../_common/currency/AppCurrencyPillList.vue';
 import { CurrencyType } from '../../../../_common/currency/currency-type';
 import { shorthandReadableTime } from '../../../../_common/filters/duration';
-import AppForm, { FormController, createForm } from '../../../../_common/form-vue/AppForm.vue';
+import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
 import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
 import { illPointyThing } from '../../../../_common/illustration/illustrations';
 import { InventoryShopGiftModel } from '../../../../_common/inventory/shop/inventory-shop-gift.model';
@@ -21,9 +22,9 @@ import AppStickerPack, {
 import { showStickerPackOpenModal } from '../../../../_common/sticker/pack/open-modal/modal.service';
 import { UserStickerPackModel } from '../../../../_common/sticker/pack/user-pack.model';
 import {
-	StickerSortMethod,
 	getStickerStacksFromPayloadData,
 	sortStickerStacks,
+	StickerSortMethod,
 	useStickerStore,
 } from '../../../../_common/sticker/sticker-store';
 import { useCommonStore } from '../../../../_common/store/common-store';

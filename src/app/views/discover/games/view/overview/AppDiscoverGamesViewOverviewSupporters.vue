@@ -1,14 +1,15 @@
 <script lang="ts" setup>
 import { PropType, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
+
 import AppButton from '../../../../../../_common/button/AppButton.vue';
 import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
 import { showSupportersModal } from '../../../../../../_common/supporters/modal.service';
 import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../../../_common/translate/AppTranslate.vue';
 import AppUserCardHover from '../../../../../../_common/user/card/AppUserCardHover.vue';
-import AppUserAvatarImg from '../../../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import { UserModel } from '../../../../../../_common/user/user.model';
+import AppUserAvatarImg from '../../../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import { useGameRouteController } from '../RouteDiscoverGamesView.vue';
 
 const props = defineProps({

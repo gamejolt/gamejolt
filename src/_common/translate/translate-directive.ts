@@ -1,9 +1,10 @@
 import { Directive, DirectiveBinding, VNode } from 'vue';
+
 import {
-	TranslationContext,
 	getTranslation,
 	getTranslationLang,
 	interpolateTranslation,
+	TranslationContext,
 } from './translate.service';
 
 // TODO(vue3): I think we should get rid of this since there's no way the

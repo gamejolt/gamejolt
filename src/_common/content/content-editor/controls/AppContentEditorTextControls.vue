@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, nextTick, onMounted, ref, watch } from 'vue';
+
 import AppJolticon from '../../../jolticon/AppJolticon.vue';
 import { Screen } from '../../../screen/screen-service';
 import { vAppTooltip } from '../../../tooltip/tooltip-directive';

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
+
 import AppBackgroundFade from '../../../../../_common/background/AppBackgroundFade.vue';
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import AppImgResponsive from '../../../../../_common/img/AppImgResponsive.vue';

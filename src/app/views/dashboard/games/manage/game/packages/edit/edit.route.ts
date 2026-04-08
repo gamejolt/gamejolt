@@ -1,4 +1,5 @@
 import { RouteRecordRaw } from 'vue-router';
+
 import { routeDashGamesManageGamePackagesEditWidget } from './widget/widget.route';
 
 export const routeDashGamesManageGamePackagesEdit: RouteRecordRaw = {

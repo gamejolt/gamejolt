@@ -2,6 +2,7 @@
 // @ts-ignore
 import { Sketch as VuePicker } from '@ckpack/vue-color';
 import { computed, ref, toRef } from 'vue';
+
 import { Api } from '../../api/api.service';
 import AppButton from '../../button/AppButton.vue';
 import AppLoading from '../../loading/AppLoading.vue';
@@ -10,9 +11,9 @@ import AppThemeBubble from '../../theme/bubble/AppThemeBubble.vue';
 import { ThemePresetModel } from '../../theme/preset/preset.model';
 import {
 	DefaultTheme,
-	ThemeModel,
 	makeThemeFromColor,
 	makeThemeFromPreset,
+	ThemeModel,
 } from '../../theme/theme.model';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import { $gettext } from '../../translate/translate.service';
@@ -149,7 +150,7 @@ function clear() {
 								disable-alpha
 								:preset-colors="[]"
 								:model-value="customSelection"
-								@update:modelValue="onCustomChange"
+								@update:model-value="onCustomChange"
 							/>
 							<br />
 						</div>

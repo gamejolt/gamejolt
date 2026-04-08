@@ -1,4 +1,5 @@
 import { RouteRecordRaw } from 'vue-router';
+
 import { routeProfileTrophiesAll } from './all/all.route';
 import { routeProfileTrophiesGame } from './game/game.route';
 import { routeProfileTrophiesOverview } from './overview/overview.route';

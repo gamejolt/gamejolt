@@ -1,6 +1,9 @@
 <script lang="ts">
-import { InjectionKey, computed, inject, provide, ref, toRef } from 'vue';
+import './view-content.styl';
+
+import { computed, inject, InjectionKey, provide, ref, toRef } from 'vue';
 import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router';
+
 import {
 	AdSettingsContainer,
 	releasePageAdsSettings,
@@ -17,8 +20,8 @@ import {
 } from '../../../../../_common/collaborator/collaborator.model';
 import { CommentModel } from '../../../../../_common/comment/comment-model';
 import {
-	CommentStoreModel,
 	commentStoreCount,
+	CommentStoreModel,
 	lockCommentStore,
 	releaseCommentStore,
 	useCommentStoreManager,
@@ -67,7 +70,6 @@ import AppPageHeader from '../../../../components/page-header/AppPageHeader.vue'
 import AppPageHeaderAvatar from '../../../../components/page-header/AppPageHeaderAvatar.vue';
 import AppDiscoverGamesViewControls from './AppDiscoverGamesViewControls.vue';
 import AppDiscoverGamesViewNav from './AppDiscoverGamesViewNav.vue';
-import './view-content.styl';
 
 type Controller = ReturnType<typeof createController>;
 

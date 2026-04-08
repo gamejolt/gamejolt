@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
+
 import { Screen } from '../../screen/screen-service';
 import { AdAdapterComponentProps } from '../adapter-base';
 import AppAdMonetizeMoreNativePost, { AdNativePostProps } from './AppAdMonetizeMoreNativePost.vue';

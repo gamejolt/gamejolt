@@ -1,4 +1,5 @@
 import { RouteRecordRaw } from 'vue-router';
+
 import RouteHome from './RouteHome.vue';
 
 export const routeHome: RouteRecordRaw = {

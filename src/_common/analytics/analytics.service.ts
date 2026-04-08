@@ -8,6 +8,7 @@ import {
 } from 'firebase/analytics';
 import { unref, watch } from 'vue';
 import { Router } from 'vue-router';
+
 import { arrayRemove } from '../../utils/array';
 import { createLogger } from '../../utils/logging';
 import { AuthMethod } from '../auth/auth.service';

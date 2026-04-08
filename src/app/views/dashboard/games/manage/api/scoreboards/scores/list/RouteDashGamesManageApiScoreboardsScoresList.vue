@@ -1,6 +1,7 @@
 <script lang="ts">
 import { computed, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+
 import { Api } from '../../../../../../../../../_common/api/api.service';
 import { GameScoreTableModel } from '../../../../../../../../../_common/game/score-table/score-table.model';
 import {

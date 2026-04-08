@@ -13,6 +13,7 @@ import {
 	watch,
 } from 'vue';
 import { useRoute } from 'vue-router';
+
 import AppAlertBox from '../../../../_common/alert/AppAlertBox.vue';
 import { vAppAuthRequired } from '../../../../_common/auth/auth-required-directive';
 import AppButton from '../../../../_common/button/AppButton.vue';
@@ -50,8 +51,8 @@ import { FormCommentLazy } from '../../../../_common/lazy';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';
 import AppMessageThread from '../../../../_common/message-thread/AppMessageThread.vue';
 import AppMessageThreadAdd from '../../../../_common/message-thread/AppMessageThreadAdd.vue';
-import { storeModel } from '../../../../_common/model/model-store.service';
 import { Model } from '../../../../_common/model/model.service';
+import { storeModel } from '../../../../_common/model/model-store.service';
 import AppNavTabList from '../../../../_common/nav/tab-list/AppNavTabList.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';

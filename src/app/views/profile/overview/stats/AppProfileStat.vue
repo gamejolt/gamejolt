@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
+
 import { formatFuzzynumberOverThreshold } from '../../../../../_common/filters/fuzzynumber';
 import { formatNumber } from '../../../../../_common/filters/number';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';

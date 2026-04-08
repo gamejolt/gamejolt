@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
-import { type Ref, computed, PropType, ref, toRef, watch } from 'vue';
+import { computed, PropType, type Ref, ref, toRef, watch } from 'vue';
+
 import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
@@ -15,6 +15,7 @@ import {
 import { $saveGameThumbnail, GameModel } from '../../../../../_common/game/game.model';
 import AppLinkHelp from '../../../../../_common/link/AppLinkHelp.vue';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
+import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
 
 type FormModel = GameModel & {
 	thumb_crop: any;

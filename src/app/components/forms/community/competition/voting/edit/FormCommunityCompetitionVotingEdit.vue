@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { TranslateDirective as vTranslate } from '../../../../../../../_common/translate/translate-directive';
 import { computed, nextTick, ref, toRef } from 'vue';
+
 import AppButton from '../../../../../../../_common/button/AppButton.vue';
 import {
 	$saveCommunityCompetitionVoting,
@@ -9,7 +9,10 @@ import {
 	VotingType,
 	VotingUserRestriction,
 } from '../../../../../../../_common/community/competition/competition.model';
-import AppForm, { createForm, FormController } from '../../../../../../../_common/form-vue/AppForm.vue';
+import AppForm, {
+	createForm,
+	FormController,
+} from '../../../../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControlErrors from '../../../../../../../_common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '../../../../../../../_common/form-vue/AppFormGroup.vue';
@@ -21,6 +24,7 @@ import { FormTimezoneService } from '../../../../../../../_common/form-vue/form-
 import AppLoading from '../../../../../../../_common/loading/AppLoading.vue';
 import AppTranslate from '../../../../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../../../../_common/translate/translate.service';
+import { TranslateDirective as vTranslate } from '../../../../../../../_common/translate/translate-directive';
 
 type RadioOption<T> = {
 	radioValue: T;
@@ -160,9 +164,7 @@ function onClickCancel() {
 									class="radio"
 								>
 									<label>
-										<AppFormControlRadio
-											:value="option.radioValue"
-										/>
+										<AppFormControlRadio :value="option.radioValue" />
 										{{ option.text }}
 										<span v-if="option.helpText" class="help-inline">
 											- {{ option.helpText }}
@@ -177,9 +179,7 @@ function onClickCancel() {
 									class="radio"
 								>
 									<label>
-										<AppFormControlRadio
-											:value="option.radioValue"
-										/>
+										<AppFormControlRadio :value="option.radioValue" />
 										{{ option.text }}
 										<span v-if="option.helpText" class="help-inline">
 											- {{ option.helpText }}

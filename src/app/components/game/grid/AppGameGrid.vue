@@ -1,9 +1,10 @@
 <script lang="ts">
-import { PropType, computed, toRef, toRefs } from 'vue';
+import { computed, PropType, toRef, toRefs } from 'vue';
 import draggable from 'vuedraggable';
+
+import { useAdStore } from '../../../../_common/ad/ad-store';
 import AppAdFeedParent from '../../../../_common/ad/AppAdFeedParent.vue';
 import AppAdTakeoverFloat from '../../../../_common/ad/AppAdTakeoverFloat.vue';
-import { useAdStore } from '../../../../_common/ad/ad-store';
 import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
 import { formatNumber } from '../../../../_common/filters/number';
 import { GameModel } from '../../../../_common/game/game.model';

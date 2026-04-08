@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType } from 'vue';
+
 import { styleWhen } from '../../_styles/mixins';
 import { trackAppPromotionClick } from '../analytics/analytics.service';
 import appStoreImage from './button-app-store.svg';

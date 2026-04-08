@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
+
 import AppShareControl from '../share/AppShareControl.vue';
 import AppSpacer from '../spacer/AppSpacer.vue';
 import AppTranslate from '../translate/AppTranslate.vue';

@@ -2,6 +2,7 @@
 // @ts-ignore
 import { Sketch as VuePicker } from '@ckpack/vue-color';
 import { ref, toRefs, watch } from 'vue';
+
 import AppButton from '../button/AppButton.vue';
 import AppPopper from '../popper/AppPopper.vue';
 import { Popper } from '../popper/popper.service';

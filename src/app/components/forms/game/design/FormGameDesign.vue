@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import AppLinkHelp from '../../../../../_common/link/AppLinkHelp.vue';
 import { computed, onUnmounted, toRef, watch } from 'vue';
+
 import AppEditableOverlay from '../../../../../_common/editable-overlay/AppEditableOverlay.vue';
 import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
@@ -8,6 +8,7 @@ import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormControlTheme from '../../../../../_common/form-vue/controls/AppFormControlTheme.vue';
 import { $saveGameDesign, GameModel } from '../../../../../_common/game/game.model';
 import AppGameThumbnailImg from '../../../../../_common/game/thumbnail/AppGameThumbnailImg.vue';
+import AppLinkHelp from '../../../../../_common/link/AppLinkHelp.vue';
 import { DefaultTheme } from '../../../../../_common/theme/theme.model';
 import { useThemeStore } from '../../../../../_common/theme/theme.store';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
@@ -52,9 +53,7 @@ function showEditThumbnail() {
 function onThemeChanged() {
 	// Default theme would be the user theme. Don't want to fallback to page theme otherwise
 	// when clearing theme it'll show the page theme.
-	themeStore.setFormTheme(
-		form.formModel.theme ?? themeStore.userTheme.value ?? DefaultTheme
-	);
+	themeStore.setFormTheme(form.formModel.theme ?? themeStore.userTheme.value ?? DefaultTheme);
 }
 </script>
 

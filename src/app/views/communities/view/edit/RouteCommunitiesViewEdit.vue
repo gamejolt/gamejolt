@@ -1,6 +1,7 @@
 <script lang="ts">
 import { computed, toRef } from 'vue';
 import { RouterView } from 'vue-router';
+
 import { Api } from '../../../../../_common/api/api.service';
 import { CollaboratorModel } from '../../../../../_common/collaborator/collaborator.model';
 import {

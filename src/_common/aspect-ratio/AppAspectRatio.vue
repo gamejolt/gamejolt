@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType, StyleValue, computed, toRefs } from 'vue';
+import { computed, CSSProperties, PropType, StyleValue, toRefs } from 'vue';
+
 import { styleFlexCenter, styleWhen } from '../../_styles/mixins';
 
 /**

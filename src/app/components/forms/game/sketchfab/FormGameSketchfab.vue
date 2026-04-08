@@ -1,11 +1,12 @@
 <script lang="ts" setup>
-import { validatePattern } from '../../../../../_common/form-vue/validators';
 import { computed, toRef } from 'vue';
+
 import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControl from '../../../../../_common/form-vue/AppFormControl.vue';
 import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
+import { validatePattern } from '../../../../../_common/form-vue/validators';
 import { GameModel } from '../../../../../_common/game/game.model';
 import {
 	$saveGameSketchfab,
@@ -45,13 +46,10 @@ const form: FormController<GameSketchfabModel> = createForm({
 	},
 });
 
-const sketchfabId = computed(() =>
-	getSketchfabIdFromInput(form.formModel.sketchfab_id)
-);
+const sketchfabId = computed(() => getSketchfabIdFromInput(form.formModel.sketchfab_id));
 
-const hasValidSketchfabModelId = computed(() =>
-	form.formModel.sketchfab_id &&
-	form.formModel.sketchfab_id.match(SKETCHFAB_FIELD_REGEX)
+const hasValidSketchfabModelId = computed(
+	() => form.formModel.sketchfab_id && form.formModel.sketchfab_id.match(SKETCHFAB_FIELD_REGEX)
 );
 </script>
 

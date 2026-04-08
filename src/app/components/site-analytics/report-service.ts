@@ -1,4 +1,5 @@
-import { Ref, readonly, ref } from 'vue';
+import { readonly, Ref, ref } from 'vue';
+
 import { Api } from '../../../_common/api/api.service';
 import { FiresidePostModel } from '../../../_common/fireside/post/post-model';
 import { Geo } from '../../../_common/geo/geo.service';
@@ -43,7 +44,7 @@ export function createSiteAnalyticsReport(options: {
 		}
 
 		let conditions: Condition[] = [];
-		let field = component.field,
+		const field = component.field,
 			fetchFields = component.fetchFields;
 
 		// Conditions are added based on the fields that we're searching on in either the component.field or component.fetchFields fields.

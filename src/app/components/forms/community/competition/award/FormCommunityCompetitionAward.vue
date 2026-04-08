@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
+
 import {
 	$saveCommunityCompetitionAward,
 	CommunityCompetitionAwardModel,

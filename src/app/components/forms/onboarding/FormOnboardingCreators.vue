@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
+
 import AppCreatorCard from '../../../../_common/creator/AppCreatorCard.vue';
 import { FiresidePostModel } from '../../../../_common/fireside/post/post-model';
-import AppForm, { FormController, createForm } from '../../../../_common/form-vue/AppForm.vue';
+import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
 import Onboarding from '../../../../_common/onboarding/onboarding.service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import { arrayShuffle } from '../../../../utils/array';

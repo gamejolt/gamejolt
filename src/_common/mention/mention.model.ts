@@ -1,8 +1,8 @@
 import { CommentModel } from '../comment/comment-model';
 import { FiresidePostModel } from '../fireside/post/post-model';
 import { ForumPostModel } from '../forum/post/post.model';
-import { storeModel } from '../model/model-store.service';
 import { Model } from '../model/model.service';
+import { storeModel } from '../model/model-store.service';
 import { UserModel } from '../user/user.model';
 
 export class MentionModel extends Model {

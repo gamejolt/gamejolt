@@ -1,5 +1,6 @@
 <script lang="ts">
 import { computed, ref, toRefs, unref } from 'vue';
+
 import { useContentFocusService } from '../../content-focus/content-focus.service';
 import AppResponsiveDimensions from '../../responsive-dimensions/AppResponsiveDimensions.vue';
 import { Screen } from '../../screen/screen-service';

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
+
 import { CommunityModel } from '../../../../_common/community/community.model';
 import AppCreatorsList from '../../../../_common/creator/AppCreatorsList.vue';
 import { FiresidePostModel } from '../../../../_common/fireside/post/post-model';

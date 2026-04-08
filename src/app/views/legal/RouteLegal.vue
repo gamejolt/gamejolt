@@ -1,5 +1,6 @@
 <script lang="ts">
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
+import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import { touchUser } from '../../../_common/user/user.model';
 
 export default {
@@ -11,7 +12,6 @@ export default {
 </script>
 
 <script lang="ts" setup>
-import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 createAppRoute({});
 </script>
 

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { PropType, computed, ref, toRef, toRefs } from 'vue';
+import { computed, PropType, ref, toRef, toRefs } from 'vue';
+
 import { GameFollowLocation, trackGameFollow } from '../../analytics/analytics.service';
 import { vAppAuthRequired } from '../../auth/auth-required-directive';
 import AppButton from '../../button/AppButton.vue';
@@ -12,7 +13,7 @@ import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import { $gettext } from '../../translate/translate.service';
 import AppUserFollowButton from '../../user/follow/AppUserFollowButton.vue';
 import { UserFollowSuggestion } from '../../user/follow/suggestion.service';
-import { GameModel, followGame, unfollowGame } from '../game.model';
+import { followGame, GameModel, unfollowGame } from '../game.model';
 
 const props = defineProps({
 	game: {

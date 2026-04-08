@@ -7,13 +7,13 @@ import { FiresidePostCommunityModel } from '../fireside/post/community/community
 import { FiresidePostModel } from '../fireside/post/post-model';
 import { ForumPostModel } from '../forum/post/post.model';
 import { ForumTopicModel } from '../forum/topic/topic.model';
-import { GameLibraryGameModel } from '../game-library/game/game.model';
 import { GameModel } from '../game/game.model';
 import { GameRatingModel } from '../game/rating/rating.model';
+import { GameLibraryGameModel } from '../game-library/game/game.model';
 import { InventoryShopGiftModel } from '../inventory/shop/inventory-shop-gift.model';
 import { MentionModel } from '../mention/mention.model';
-import { storeModel } from '../model/model-store.service';
 import { Model } from '../model/model.service';
+import { storeModel } from '../model/model-store.service';
 import { OrderItemModel } from '../order/item/item.model';
 import { PollModel } from '../poll/poll.model';
 import { QuestNotificationModel } from '../quest/quest-notification-model';
@@ -25,8 +25,8 @@ import { $gettext } from '../translate/translate.service';
 import { UserFriendshipModel } from '../user/friendship/friendship.model';
 import { UserGameTrophyModel } from '../user/trophy/game-trophy.model';
 import { UserSiteTrophyModel } from '../user/trophy/site-trophy.model';
-import { UserAvatarFrameModel } from '../user/user-avatar/frame/frame.model';
 import { UserModel, UserType } from '../user/user.model';
+import { UserAvatarFrameModel } from '../user/user-avatar/frame/frame.model';
 
 export const enum NotificationType {
 	CommentAdd = 'comment-add',

@@ -1,14 +1,15 @@
 <script lang="ts" setup>
 import { determine } from 'jstimezonedetect';
-import { PropType, computed, nextTick, ref, toRef, toRefs } from 'vue';
+import { computed, nextTick, PropType, ref, toRef, toRefs } from 'vue';
+
 import {
 	$saveCommunityChannel,
 	CommunityChannelModel,
 } from '../../../../../../_common/community/channel/channel.model';
 import { CommunityModel } from '../../../../../../_common/community/community.model';
 import AppForm, {
-	FormController,
 	createForm,
+	FormController,
 } from '../../../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControl from '../../../../../../_common/form-vue/AppFormControl.vue';

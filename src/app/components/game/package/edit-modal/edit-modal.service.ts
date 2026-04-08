@@ -1,4 +1,5 @@
 import { defineAsyncComponent } from 'vue';
+
 import { GamePackageModel } from '../../../../../_common/game/package/package.model';
 import { showModal } from '../../../../../_common/modal/modal.service';
 import { SellableModel } from '../../../../../_common/sellable/sellable.model';

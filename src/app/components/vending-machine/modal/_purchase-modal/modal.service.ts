@@ -1,4 +1,5 @@
 import { defineAsyncComponent } from 'vue';
+
 import { PurchasableProductData } from '../../../../../_common/inventory/shop/product-owner-helpers';
 import { showModal } from '../../../../../_common/modal/modal.service';
 

@@ -1,4 +1,5 @@
 import { RouteRecordRaw } from 'vue-router';
+
 import { routeHome } from '../../home/home.route';
 
 export const routeQuestsView: RouteRecordRaw = {

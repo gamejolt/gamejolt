@@ -1,22 +1,26 @@
 <script lang="ts" setup>
-import { TranslateDirective as vTranslate } from '../../../../../../_common/translate/translate-directive';
 import { computed, ref, toRef } from 'vue';
+
 import {
 	$saveCommunityCompetition,
 	CommunityCompetitionModel,
 	CompetitionPeriodVoting,
 } from '../../../../../../_common/community/competition/competition.model';
-import AppForm, { createForm, FormController } from '../../../../../../_common/form-vue/AppForm.vue';
+import AppForm, {
+	createForm,
+	FormController,
+} from '../../../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControlErrors from '../../../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormControlSelect from '../../../../../../_common/form-vue/controls/AppFormControlSelect.vue';
 import AppFormGroup from '../../../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormLegend from '../../../../../../_common/form-vue/AppFormLegend.vue';
 import AppFormControlDate from '../../../../../../_common/form-vue/controls/AppFormControlDate.vue';
+import AppFormControlSelect from '../../../../../../_common/form-vue/controls/AppFormControlSelect.vue';
 import { FormTimezoneService } from '../../../../../../_common/form-vue/form-timezone.service';
 import AppLoading from '../../../../../../_common/loading/AppLoading.vue';
 import AppTranslate from '../../../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
+import { TranslateDirective as vTranslate } from '../../../../../../_common/translate/translate-directive';
 import AppCommunityCompetitionDate from '../../../../community/competition/date/AppCommunityCompetitionDate.vue';
 
 const props = defineProps({
@@ -28,9 +32,7 @@ const props = defineProps({
 
 const timezoneService = ref<FormTimezoneService<CommunityCompetitionModel> | null>(null);
 
-const shouldShowSaveButton = computed(
-	() => props.model!.periodNum < CompetitionPeriodVoting
-);
+const shouldShowSaveButton = computed(() => props.model!.periodNum < CompetitionPeriodVoting);
 
 const form: FormController<CommunityCompetitionModel> = createForm({
 	modelClass: CommunityCompetitionModel,
@@ -143,7 +145,9 @@ const form: FormController<CommunityCompetitionModel> = createForm({
 							:timezone-offset="timezoneService.activeTimezoneOffset"
 							:min-date="form.formModel.starts_on"
 							:max-date="
-								form.formModel.is_voting_enabled ? form.formModel.voting_ends_on : undefined
+								form.formModel.is_voting_enabled
+									? form.formModel.voting_ends_on
+									: undefined
 							"
 						/>
 						<AppFormControlErrors />

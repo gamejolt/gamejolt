@@ -1,19 +1,24 @@
 <script lang="ts" setup>
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import AppLinkExternal from '../../../../_common/link/AppLinkExternal.vue';
-import { TranslateDirective as vTranslate } from '../../../../_common/translate/translate-directive';
 import { computed, ref, watch } from 'vue';
+
 import { Api } from '../../../../_common/api/api.service';
-import AppFormControlCrop from '../../../../_common/form-vue/controls/AppFormControlCrop.vue';
-import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
-import AppFormControlUpload from '../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
+import AppButton from '../../../../_common/button/AppButton.vue';
 import AppForm, { createForm } from '../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControlErrors from '../../../../_common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
-import { validateFilesize, validateImageMaxDimensions, validateImageMinDimensions } from '../../../../_common/form-vue/validators';
+import AppFormControlCrop from '../../../../_common/form-vue/controls/AppFormControlCrop.vue';
+import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
+import AppFormControlUpload from '../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
+import {
+	validateFilesize,
+	validateImageMaxDimensions,
+	validateImageMinDimensions,
+} from '../../../../_common/form-vue/validators';
+import AppLinkExternal from '../../../../_common/link/AppLinkExternal.vue';
 import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import { TranslateDirective as vTranslate } from '../../../../_common/translate/translate-directive';
 import { $clearUserAvatar, $saveUserAvatar, UserModel } from '../../../../_common/user/user.model';
 
 type FormModel = UserModel & {
@@ -42,9 +47,7 @@ const form = createForm<FormModel>({
 });
 
 const crop = computed(() =>
-	form.formModel.avatar_media_item
-		? form.formModel.avatar_media_item.getCrop()
-		: undefined
+	form.formModel.avatar_media_item ? form.formModel.avatar_media_item.getCrop() : undefined
 );
 
 watch(crop, () => {
@@ -58,9 +61,7 @@ function avatarSelected() {
 }
 
 async function clearAvatar() {
-	const result = await showModalConfirm(
-		`Are you sure you want to remove your avatar?`
-	);
+	const result = await showModalConfirm(`Are you sure you want to remove your avatar?`);
 
 	if (result) {
 		$clearUserAvatar(form.formModel);

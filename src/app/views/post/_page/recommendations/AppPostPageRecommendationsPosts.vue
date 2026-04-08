@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { computed, PropType, ref, toRefs } from 'vue';
 import { useRoute } from 'vue-router';
+
 import { Api } from '../../../../../_common/api/api.service';
 import AppPostCard from '../../../../../_common/fireside/post/card/AppPostCard.vue';
 import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';

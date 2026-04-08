@@ -1,6 +1,7 @@
 <script lang="ts">
 import { ref } from 'vue';
 import { RouterLink } from 'vue-router';
+
 import { Api } from '../../../../../../_common/api/api.service';
 import { formatCurrency } from '../../../../../../_common/filters/currency';
 import { formatDate } from '../../../../../../_common/filters/date';

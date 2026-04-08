@@ -1,6 +1,7 @@
 <script lang="ts">
 import { computed, ref } from 'vue';
 import { RouterLink } from 'vue-router';
+
 import { Api } from '../../../../../_common/api/api.service';
 import { formatGemsCurrency } from '../../../../../_common/filters/currency';
 import { formatDate } from '../../../../../_common/filters/date';
@@ -13,9 +14,10 @@ import {
 } from '../../../../../_common/route/route-component';
 import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
 import { useCommonStore } from '../../../../../_common/store/common-store';
+import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../../_common/translate/translate.service';
-import AppUserAvatarImg from '../../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import { UserModel } from '../../../../../_common/user/user.model';
+import AppUserAvatarImg from '../../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import { styleTextOverflow } from '../../../../../_styles/mixins';
 import { kFontSizeLarge } from '../../../../../_styles/variables';
 import AppShellPageBackdrop from '../../../../components/shell/AppShellPageBackdrop.vue';
@@ -33,7 +35,6 @@ export default {
 </script>
 
 <script lang="ts" setup>
-import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 interface EarnedRevenue {
 	currency: string;
 	amount: number;

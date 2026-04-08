@@ -1,4 +1,5 @@
 import { RouteRecordRaw } from 'vue-router';
+
 import { routeProfileOverviewFeed } from './feed/feed.route';
 import { routeProfileOverviewShop } from './shop/shop.route';
 

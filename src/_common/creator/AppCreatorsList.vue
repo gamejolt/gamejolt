@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
+
 import AppPostCardPlaceholder from '../fireside/post/card/AppPostCardPlaceholder.vue';
 import { FiresidePostModel } from '../fireside/post/post-model';
 import { Screen } from '../screen/screen-service';

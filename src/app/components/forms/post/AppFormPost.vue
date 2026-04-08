@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import { addWeeks, startOfDay } from 'date-fns';
 import { determine } from 'jstimezonedetect';
-import { type Ref, PropType, computed, nextTick, ref, toRefs, watch } from 'vue';
+import { computed, nextTick, PropType, type Ref, ref, toRefs, watch } from 'vue';
+
 import { trackPostPublish } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import { BackgroundModel } from '../../../../_common/background/background.model';
@@ -21,9 +22,9 @@ import {
 import { FiresidePostRealmModel } from '../../../../_common/fireside/post/realm/realm.model';
 import { FiresidePostVideoModel } from '../../../../_common/fireside/post/video/video-model';
 import AppForm, {
-	FormController,
 	createForm,
 	defineFormProps,
+	FormController,
 } from '../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';

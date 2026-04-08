@@ -8,7 +8,8 @@
 	},
 	"editor.formatOnSave": true,
 	"editor.codeActionsOnSave": {
-		"source.organizeImports": "explicit"
+		"source.organizeImports": "never",
+		"source.fixAll.eslint": "explicit"
 	},
 	"[html]": {
 		"editor.defaultFormatter": "esbenp.prettier-vscode"

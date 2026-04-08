@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { onMounted, provide, reactive, watch } from 'vue';
 import { RouterView } from 'vue-router';
+
 import { createAdStore } from '../_common/ad/ad-store';
 import { CommentStoreManager, CommentStoreManagerKey } from '../_common/comment/comment-store';
 import AppErrorPage from '../_common/error/page/AppErrorPage.vue';

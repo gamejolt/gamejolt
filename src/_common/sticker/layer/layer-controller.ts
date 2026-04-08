@@ -3,13 +3,14 @@ import {
 	inject,
 	InjectionKey,
 	provide,
-	ref,
 	Ref,
+	ref,
 	shallowReactive,
-	shallowRef,
 	ShallowRef,
+	shallowRef,
 	toRaw,
 } from 'vue';
+
 import { arrayRemove } from '../../../utils/array';
 import { ScrollController } from '../../scroll/AppScrollScroller.vue';
 import { isStickerTargetMine, StickerStore } from '../sticker-store';

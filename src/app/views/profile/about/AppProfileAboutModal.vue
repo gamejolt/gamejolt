@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { PropType, ref } from 'vue';
+
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppInviteCard from '../../../../_common/invite/AppInviteCard.vue';
 import AppModal from '../../../../_common/modal/AppModal.vue';
@@ -13,12 +14,12 @@ import AppTimeAgo from '../../../../_common/time/AppTimeAgo.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { styleChangeBg } from '../../../../_styles/mixins';
 import AppProfileSocialLinks from '../AppProfileSocialLinks.vue';
-import { ProfileRouteStore, provideProfileRouteStore } from '../RouteProfile.vue';
 import AppProfileActionButtons from '../overview/AppProfileActionButtons.vue';
 import AppProfileBio from '../overview/AppProfileBio.vue';
 import AppProfileShortcuts, {
 	ProfileQuickLink,
 } from '../overview/shortcut/AppProfileShortcuts.vue';
+import { ProfileRouteStore, provideProfileRouteStore } from '../RouteProfile.vue';
 
 const props = defineProps({
 	routeStore: {

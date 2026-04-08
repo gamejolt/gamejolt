@@ -1,4 +1,5 @@
 import { Node } from 'prosemirror-model';
+
 import { isChildElement } from '../../../../utils/dom';
 import AppContentEmbed from '../../components/embed/AppContentEmbed.vue';
 import { ContentEditorService } from '../content-editor.service';

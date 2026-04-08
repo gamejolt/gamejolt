@@ -1,4 +1,5 @@
 import { defineAsyncComponent } from 'vue';
+
 import { CommunityChannelModel } from '../../../../_common/community/channel/channel.model';
 import { CommunityModel } from '../../../../_common/community/community.model';
 import { FiresidePostModel } from '../../../../_common/fireside/post/post-model';

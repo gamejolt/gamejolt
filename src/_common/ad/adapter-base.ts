@@ -1,4 +1,5 @@
 import type { PropType } from 'vue';
+
 import { isDynamicGoogleBot } from '../device/device.service';
 import { AdSlot } from './ad-slot-info';
 

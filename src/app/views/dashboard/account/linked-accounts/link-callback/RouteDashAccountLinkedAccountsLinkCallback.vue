@@ -1,11 +1,12 @@
 <script lang="ts">
 import { RouteLocationNormalized, useRoute, useRouter } from 'vue-router';
+
 import { Api } from '../../../../../../_common/api/api.service';
 import { showErrorGrowl, showSuccessGrowl } from '../../../../../../_common/growls/growls.service';
 import {
+	getLinkedAccountProviderDisplayName,
 	LinkedAccountModel,
 	LinkedAccountProvider,
-	getLinkedAccountProviderDisplayName,
 } from '../../../../../../_common/linked-account/linked-account.model';
 import {
 	createAppRoute,

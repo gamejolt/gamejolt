@@ -1,10 +1,11 @@
 <script lang="ts" setup>
-import { PropType, computed, ref, toRefs } from 'vue';
+import { computed, PropType, ref, toRefs } from 'vue';
+
 import { Api } from '../../../../../../_common/api/api.service';
 import AppButton from '../../../../../../_common/button/AppButton.vue';
 import AppForm, {
-	FormController,
 	createForm,
+	FormController,
 } from '../../../../../../_common/form-vue/AppForm.vue';
 import AppFormControl from '../../../../../../_common/form-vue/AppFormControl.vue';
 import AppFormGroup from '../../../../../../_common/form-vue/AppFormGroup.vue';
@@ -29,8 +30,8 @@ import {
 	kThemeFg10,
 } from '../../../../../../_common/theme/variables';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
-import AppUserAvatarBubble from '../../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import { UserModel } from '../../../../../../_common/user/user.model';
+import AppUserAvatarBubble from '../../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import {
 	styleChangeBg,
 	styleFlexCenter,

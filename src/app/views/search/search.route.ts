@@ -1,4 +1,5 @@
 import { RouteRecordRaw } from 'vue-router';
+
 import { routeSearchCommunities } from './communities/communities.route';
 import { routeSearchGames } from './games/games.route';
 import { routeSearchRealms } from './realms/realms.route';

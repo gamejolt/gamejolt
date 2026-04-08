@@ -1,4 +1,5 @@
 import { h, VNode } from 'vue';
+
 import { WidgetCompilerWidget } from './widget';
 import { WidgetCompilerWidgetSoundcloud } from './widget-soundcloud/widget-soundcloud.service';
 import { WidgetCompilerWidgetVimeo } from './widget-vimeo/widget-vimeo.service';

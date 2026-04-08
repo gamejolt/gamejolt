@@ -1,5 +1,6 @@
 <script lang="ts">
 import { RouterView } from 'vue-router';
+
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
 import { touchUser } from '../../../_common/user/user.model';
 

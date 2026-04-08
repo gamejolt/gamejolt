@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { onMounted } from 'vue';
 import { RouterView } from 'vue-router';
+
 import AppButton from '../_common/button/AppButton.vue';
 import { AppClientBase, ClientHistoryNavigator } from '../_common/client/safe-exports';
 import { Connection } from '../_common/connection/connection-service';
@@ -12,8 +13,8 @@ import AppCommonShell from '../_common/shell/AppCommonShell.vue';
 import { useCommonStore } from '../_common/store/common-store';
 import AppTranslate from '../_common/translate/AppTranslate.vue';
 import { loadCurrentLanguage } from '../_common/translate/translate.service';
-import AppUserBar from '../_common/user/user-bar/AppUserBar.vue';
 import { touchUser } from '../_common/user/user.model';
+import AppUserBar from '../_common/user/user-bar/AppUserBar.vue';
 
 const { user } = useCommonStore();
 const curDate = new Date();

@@ -1,5 +1,6 @@
 <script lang="ts">
 import { computed, onMounted, PropType, toRefs, useTemplateRef } from 'vue';
+
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollInview, {
 	ScrollInviewConfig,

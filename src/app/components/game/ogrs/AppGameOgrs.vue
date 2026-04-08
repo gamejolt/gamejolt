@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
+
 import { GameModel } from '../../../../_common/game/game.model';
 import AppGameOgrsTag from './AppGameOgrsTag.vue';
 

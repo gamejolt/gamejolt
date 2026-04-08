@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
+
 import AppAspectRatio from '../../../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppHoverCard from '../../../../../../_common/card/AppHoverCard.vue';
 import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';

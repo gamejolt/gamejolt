@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { formatDistanceStrict, formatDistanceToNow } from 'date-fns';
 import { onUnmounted, ref, toRefs, watch } from 'vue';
+
 import { formatDate } from '../filters/date';
 import { $gettext } from '../translate/translate.service';
 

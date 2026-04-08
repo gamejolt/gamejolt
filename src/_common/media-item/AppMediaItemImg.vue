@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
+
 import AppImgResponsive from '../img/AppImgResponsive.vue';
 import { getMediaItemImageSrc, MediaItemModel } from './media-item-model';
 

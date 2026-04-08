@@ -1,4 +1,5 @@
 import { RouteRecordRaw } from 'vue-router';
+
 import { routeCommunitiesViewEditActivity } from './activity/activity.route';
 import { routeCommunitiesViewEditBlocks } from './blocks/blocks.route';
 import { routeCommunitiesViewEditChannels } from './channels/channels.route';

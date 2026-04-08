@@ -1,14 +1,15 @@
 <script lang="ts" setup>
-import { PropType, computed, toRef, toRefs } from 'vue';
+import { computed, PropType, toRef, toRefs } from 'vue';
+
 import AppButton from '../button/AppButton.vue';
 import AppCard from '../card/AppCard.vue';
 import AppJolticon from '../jolticon/AppJolticon.vue';
 import { $gettext } from '../translate/translate.service';
 import {
-	LinkedAccountModel,
-	LinkedAccountProvider,
 	getLinkedAccountPlatformIcon,
 	getLinkedAccountProviderDisplayName,
+	LinkedAccountModel,
+	LinkedAccountProvider,
 } from './linked-account.model';
 
 const props = defineProps({

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
+
 import { Api } from '../../../_common/api/api.service';
 import AppForm, { createForm, FormController } from '../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../_common/form-vue/AppFormButton.vue';
@@ -7,8 +8,8 @@ import AppFormControl from '../../../_common/form-vue/AppFormControl.vue';
 import AppFormControlError from '../../../_common/form-vue/AppFormControlError.vue';
 import AppFormControlErrors from '../../../_common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '../../../_common/form-vue/AppFormGroup.vue';
-import { GameBundleModel } from '../../../_common/game-bundle/game-bundle.model';
 import { GameModel } from '../../../_common/game/game.model';
+import { GameBundleModel } from '../../../_common/game-bundle/game-bundle.model';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 
 const props = defineProps({

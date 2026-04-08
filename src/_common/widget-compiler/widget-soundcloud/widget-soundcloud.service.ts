@@ -1,4 +1,5 @@
 import { h } from 'vue';
+
 import { WidgetCompilerWidget } from '../widget';
 import { WidgetCompilerContext } from '../widget-compiler.service';
 import AppWidgetCompilerWidgetSoundcloud from './AppWidgetCompilerWidgetSoundcloud.vue';

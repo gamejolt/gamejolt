@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { DeepReadonly, PropType } from 'vue';
+
 import AppCurrencyImg from '../../../../../_common/currency/AppCurrencyImg.vue';
 import { CurrencyType } from '../../../../../_common/currency/currency-type';
 import { formatCurrency, formatGemsCurrency } from '../../../../../_common/filters/currency';

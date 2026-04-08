@@ -1,9 +1,9 @@
 import { defineAsyncComponent } from 'vue';
-import { showModal } from '../../modal/modal.service';
 
 import type { AvatarFrameModel } from '../../avatar/frame.model';
 import type { BackgroundModel } from '../../background/background.model';
 import type { EmojiModel } from '../../emoji/emoji.model';
+import { showModal } from '../../modal/modal.service';
 import type { StickerModel } from '../../sticker/sticker.model';
 
 export type CollectibleResourceItem =

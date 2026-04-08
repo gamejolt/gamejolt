@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { computed, PropType, toRef, toRefs } from 'vue';
 import { useRouter } from 'vue-router';
+
 import { vAppAuthRequired } from '../../../../_common/auth/auth-required-directive';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import {
@@ -12,8 +13,8 @@ import { CommentVoteType } from '../../../../_common/comment/vote/vote-model';
 import { formatFuzzynumber } from '../../../../_common/filters/fuzzynumber';
 import AppJolticon, { Jolticon } from '../../../../_common/jolticon/AppJolticon.vue';
 import { showLikersModal } from '../../../../_common/likers/modal.service';
-import { storeModel } from '../../../../_common/model/model-store.service';
 import { Model } from '../../../../_common/model/model.service';
+import { storeModel } from '../../../../_common/model/model-store.service';
 import { selectReactionForResource } from '../../../../_common/reaction/reaction-count';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { useCommonStore } from '../../../../_common/store/common-store';

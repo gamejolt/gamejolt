@@ -1,7 +1,8 @@
 <script lang="ts" setup>
-import { PropType, computed, ref, toRefs } from 'vue';
-import AppFadeCollapse from '../../../AppFadeCollapse.vue';
+import { computed, PropType, ref, toRefs } from 'vue';
+
 import { Analytics } from '../../../analytics/analytics.service';
+import AppFadeCollapse from '../../../AppFadeCollapse.vue';
 import AppButton from '../../../button/AppButton.vue';
 import AppCard from '../../../card/AppCard.vue';
 import AppJolticon from '../../../jolticon/AppJolticon.vue';

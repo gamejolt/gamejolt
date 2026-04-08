@@ -1,7 +1,8 @@
 <script lang="ts" setup>
-import AppJolticon from '../../jolticon/AppJolticon.vue';
 import { computed, toRaw, useSlots } from 'vue';
+
 import AppExpand from '../../expand/AppExpand.vue';
+import AppJolticon from '../../jolticon/AppJolticon.vue';
 import { Screen } from '../../screen/screen-service';
 import AppCard from '../AppCard.vue';
 import { useCardList } from './AppCardList.vue';

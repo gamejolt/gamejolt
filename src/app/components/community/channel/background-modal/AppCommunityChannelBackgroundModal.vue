@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { PropType, ref, toRefs } from 'vue';
+
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import { CommunityChannelModel } from '../../../../../_common/community/channel/channel.model';
 import AppModal from '../../../../../_common/modal/AppModal.vue';

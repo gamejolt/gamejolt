@@ -1,13 +1,14 @@
 <script lang="ts" setup>
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { ref, watch } from 'vue';
+
 import AppForm, { createForm } from '../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
 import AppFormControlErrors from '../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormControlSelect from '../../../../_common/form-vue/controls/AppFormControlSelect.vue';
 import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
+import AppFormControlSelect from '../../../../_common/form-vue/controls/AppFormControlSelect.vue';
 import { Geo, GeoRegion } from '../../../../_common/geo/geo.service';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $saveUserAddress, UserAddressModel } from '../../../../_common/user/address/address.model';
 
 const countries = Geo.getCountries();
@@ -19,17 +20,20 @@ const form = createForm<UserAddressModel>({
 	modelSaveHandler: $saveUserAddress,
 });
 
-watch(() => form.formModel.country, () => {
-	regions.value = Geo.getRegions(form.formModel.country || '') || null;
-	if (regions.value) {
-		if (!regions.value.some(r => r.code === form.formModel.region)) {
-			form.formModel.region = regions.value[0].code;
+watch(
+	() => form.formModel.country,
+	() => {
+		regions.value = Geo.getRegions(form.formModel.country || '') || null;
+		if (regions.value) {
+			if (!regions.value.some(r => r.code === form.formModel.region)) {
+				form.formModel.region = regions.value[0].code;
+			}
+		} else if (!initialLoad) {
+			form.formModel.region = '';
 		}
-	} else if (!initialLoad) {
-		form.formModel.region = '';
+		initialLoad = false;
 	}
-	initialLoad = false;
-});
+);
 </script>
 
 <template>

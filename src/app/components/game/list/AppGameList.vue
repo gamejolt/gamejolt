@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
+
 import { GameModel } from '../../../../_common/game/game.model';
 import AppGameListItem from './AppGameListItem.vue';
 

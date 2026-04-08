@@ -1,5 +1,6 @@
 <script lang="ts">
 import { computed } from 'vue';
+
 import {
 	createAppRoute,
 	defineAppRouteOptions,

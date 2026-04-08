@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { PropType, toRefs } from 'vue';
+
 import { ScrollInviewConfig } from '../../../../scroll/inview/AppScrollInview.vue';
 import { EmojiGroupData } from '../../../../store/common-store';
 import { EmojiModel } from '../../../emoji.model';

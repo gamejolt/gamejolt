@@ -1,12 +1,13 @@
 <script lang="ts" setup>
-import { PropType, onMounted, toRefs } from 'vue';
+import { onMounted, PropType, toRefs } from 'vue';
+
 import { trackGiftAction } from '../../../_common/analytics/analytics.service';
 import AppButton from '../../../_common/button/AppButton.vue';
 import AppShopProductDisplay from '../../../_common/inventory/shop/AppShopProductDisplay.vue';
 import { InventoryShopGiftModel } from '../../../_common/inventory/shop/inventory-shop-gift.model';
 import {
-	InventoryShopProduct,
 	getShopProductDisplayData,
+	InventoryShopProduct,
 } from '../../../_common/inventory/shop/product-owner-helpers';
 import AppModal from '../../../_common/modal/AppModal.vue';
 import { useModal } from '../../../_common/modal/modal.service';

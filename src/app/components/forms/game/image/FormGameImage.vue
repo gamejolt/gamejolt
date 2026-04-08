@@ -1,19 +1,24 @@
 <script lang="ts" setup>
-import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
-import { validateFilesize, validateImageMaxDimensions, validateMaxLength } from '../../../../../_common/form-vue/validators';
 import { computed, ref, toRef } from 'vue';
+
 import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControl from '../../../../../_common/form-vue/AppFormControl.vue';
 import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
+import {
+	validateFilesize,
+	validateImageMaxDimensions,
+	validateMaxLength,
+} from '../../../../../_common/form-vue/validators';
 import { GameModel } from '../../../../../_common/game/game.model';
 import {
 	$saveGameScreenshot,
 	GameScreenshotModel,
 } from '../../../../../_common/game/screenshot/screenshot.model';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
+import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
 
 type Props = {
 	game: GameModel;

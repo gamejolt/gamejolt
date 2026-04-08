@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, toRefs } from 'vue';
+
 import { formatNumber } from '../../../../_common/filters/number';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { Screen } from '../../../../_common/screen/screen-service';

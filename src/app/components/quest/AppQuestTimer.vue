@@ -1,5 +1,6 @@
 <script lang="ts">
-import { PropType, computed, onMounted, onUnmounted, ref, toRefs } from 'vue';
+import { computed, onMounted, onUnmounted, PropType, ref, toRefs } from 'vue';
+
 import { shorthandReadableTime } from '../../../_common/filters/duration';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';

@@ -1,5 +1,6 @@
 <script lang="ts">
 import { computed } from 'vue';
+
 import AppRealmFullCard from '../../../../_common/realm/AppRealmFullCard.vue';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import { $gettext } from '../../../../_common/translate/translate.service';

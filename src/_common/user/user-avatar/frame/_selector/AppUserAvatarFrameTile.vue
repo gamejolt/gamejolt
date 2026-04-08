@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType, computed, toRef, toRefs } from 'vue';
+import { computed, CSSProperties, PropType, toRef, toRefs } from 'vue';
+
 import {
 	styleBorderRadiusBase,
 	styleBorderRadiusLg,

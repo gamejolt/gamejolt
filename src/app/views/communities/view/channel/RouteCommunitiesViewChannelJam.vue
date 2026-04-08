@@ -1,8 +1,8 @@
 <script lang="ts">
 import { computed, defineAsyncComponent, ref, toRef } from 'vue';
-import { router } from '../../..';
-import AppFadeCollapse from '../../../../../_common/AppFadeCollapse.vue';
+
 import { Api } from '../../../../../_common/api/api.service';
+import AppFadeCollapse from '../../../../../_common/AppFadeCollapse.vue';
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import { CompetitionPeriodVoting } from '../../../../../_common/community/competition/competition.model';
 import { CommunityCompetitionEntryModel } from '../../../../../_common/community/competition/entry/entry.model';
@@ -23,6 +23,7 @@ import { arrayRemove } from '../../../../../utils/array';
 import AppCommunityCompetitionCountdown from '../../../../components/community/competition/countdown/AppCommunityCompetitionCountdown.vue';
 import AppCommunityCompetitionEntryGrid from '../../../../components/community/competition/entry/grid/AppCommunityCompetitionEntryGrid.vue';
 import AppCommunityPerms from '../../../../components/community/perms/AppCommunityPerms.vue';
+import { router } from '../../..';
 import AppCommunityPageContainer from '../_page-container/AppCommunityPageContainer.vue';
 import { getChannelPathFromRoute, setCommunityMeta, useCommunityRouteStore } from '../view.store';
 

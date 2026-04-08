@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, toRefs } from 'vue';
+
 import { styleChangeBg } from '../../_styles/mixins';
 
 const props = defineProps({

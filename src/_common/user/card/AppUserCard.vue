@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { computed, PropType, ref, toRef, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
+
 import { styleWhen } from '../../../_styles/mixins';
 import { getMediaserverUrlForBounds } from '../../../utils/image';
 import AppButton from '../../button/AppButton.vue';
@@ -12,9 +13,9 @@ import AppTheme from '../../theme/AppTheme.vue';
 import AppTranslate from '../../translate/AppTranslate.vue';
 import AppUserDogtag from '../AppUserDogtag.vue';
 import AppUserFollowButton from '../follow/AppUserFollowButton.vue';
+import { UserModel } from '../user.model';
 import AppUserAvatarBubble from '../user-avatar/AppUserAvatarBubble.vue';
 import AppUserAvatarImg from '../user-avatar/AppUserAvatarImg.vue';
-import { UserModel } from '../user.model';
 
 const props = defineProps({
 	user: {

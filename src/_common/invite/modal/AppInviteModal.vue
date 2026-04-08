@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs, triggerRef } from 'vue';
+
 import AppButton from '../../button/AppButton.vue';
 import { Clipboard } from '../../clipboard/clipboard-service';
 import AppModal from '../../modal/AppModal.vue';

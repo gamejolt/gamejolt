@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { computed, CSSProperties, PropType, ref, toRefs } from 'vue';
 import { RouteLocationRaw, RouterLink, useRoute, useRouter } from 'vue-router';
+
 import { CommunityUserNotificationModel } from '../../../../_common/community/user-notification/user-notification.model';
 import { FiresidePostModel } from '../../../../_common/fireside/post/post-model';
 import { FiresidePostVideoModel } from '../../../../_common/fireside/post/video/video-model';

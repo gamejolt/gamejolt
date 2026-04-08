@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { PropType, toRefs } from 'vue';
+
 import AppCard from '../../../../../_common/card/AppCard.vue';
 import {
 	$setGameDevStage,

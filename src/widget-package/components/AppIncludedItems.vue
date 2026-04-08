@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
+
 import { formatFilesize } from '../../_common/filters/filesize';
 import { GameBuildModel } from '../../_common/game/build/build.model';
 import { vAppTooltip } from '../../_common/tooltip/tooltip-directive';

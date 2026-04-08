@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import { toRef, useSlots } from 'vue';
 import './item-content.styl';
+
+import { toRef, useSlots } from 'vue';
 
 defineProps({
 	isActive: {

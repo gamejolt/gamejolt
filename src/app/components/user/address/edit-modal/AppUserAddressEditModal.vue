@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import AppModal from '../../../../../_common/modal/AppModal.vue';
 import AppButton from '../../../../../_common/button/AppButton.vue';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
+import AppModal from '../../../../../_common/modal/AppModal.vue';
 import { useModal } from '../../../../../_common/modal/modal.service';
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { UserAddressModel } from '../../../../../_common/user/address/address.model';
 import FormAddress from '../../../forms/address/FormAddress.vue';
 

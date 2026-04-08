@@ -1,38 +1,17 @@
 <script lang="ts">
-import { Api } from '../../../../../../../../_common/api/api.service';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '../../../../../../../../_common/route/route-component';
-
-export default {
-	name: 'RouteDashGamesManageGamePackagesEdit',
-	...defineAppRouteOptions({
-		reloadOn: { params: ['packageId'] },
-		resolver: ({ route }) =>
-			Api.sendRequest(
-				'/web/dash/developer/games/packages/' + route.params.id + '/' + route.params.packageId
-			),
-	}),
-};
-</script>
-
-<script lang="ts" setup>
-import AppTranslate from '../../../../../../../../_common/translate/AppTranslate.vue';
-import AppJolticon from '../../../../../../../../_common/jolticon/AppJolticon.vue';
-import AppButton from '../../../../../../../../_common/button/AppButton.vue';
-import AppLinkHelp from '../../../../../../../../_common/link/AppLinkHelp.vue';
-import { TranslateDirective as vTranslate } from '../../../../../../../../_common/translate/translate-directive';
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
+
+import { Api } from '../../../../../../../../_common/api/api.service';
+import AppButton from '../../../../../../../../_common/button/AppButton.vue';
 import AppCard from '../../../../../../../../_common/card/AppCard.vue';
 import { formatNumber } from '../../../../../../../../_common/filters/number';
 import AppGamePackageCard from '../../../../../../../../_common/game/package/card/AppGamePackageCard.vue';
-import { GamePackagePayloadModel } from '../../../../../../../../_common/game/package/package-payload.model';
 import {
 	GamePackageModel,
 	GamePackageVisibility,
 } from '../../../../../../../../_common/game/package/package.model';
+import { GamePackagePayloadModel } from '../../../../../../../../_common/game/package/package-payload.model';
 import {
 	$removeGameRelease,
 	GameReleaseModel,
@@ -42,19 +21,43 @@ import {
 	showErrorGrowl,
 	showSuccessGrowl,
 } from '../../../../../../../../_common/growls/growls.service';
+import AppJolticon from '../../../../../../../../_common/jolticon/AppJolticon.vue';
+import AppLinkHelp from '../../../../../../../../_common/link/AppLinkHelp.vue';
 import AppLoading from '../../../../../../../../_common/loading/AppLoading.vue';
 import { showModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
 import AppNavTabList from '../../../../../../../../_common/nav/tab-list/AppNavTabList.vue';
 import AppProgressPoller from '../../../../../../../../_common/progress/poller/AppProgressPoller.vue';
+import {
+	createAppRoute,
+	defineAppRouteOptions,
+} from '../../../../../../../../_common/route/route-component';
 import { SellableModel } from '../../../../../../../../_common/sellable/sellable.model';
 import AppTimeAgo from '../../../../../../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../../../../../../_common/tooltip/tooltip-directive';
+import AppTranslate from '../../../../../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../../../../../_common/translate/translate.service';
+import { TranslateDirective as vTranslate } from '../../../../../../../../_common/translate/translate-directive';
 import AppDashGameWizardControls from '../../../../../../../components/forms/game/wizard-controls/AppDashGameWizardControls.vue';
 import { showGamePackageEditModal } from '../../../../../../../components/game/package/edit-modal/edit-modal.service';
 import AppGamePerms from '../../../../../../../components/game/perms/AppGamePerms.vue';
 import { useGameDashRouteController } from '../../../manage.store';
 
+export default {
+	name: 'RouteDashGamesManageGamePackagesEdit',
+	...defineAppRouteOptions({
+		reloadOn: { params: ['packageId'] },
+		resolver: ({ route }) =>
+			Api.sendRequest(
+				'/web/dash/developer/games/packages/' +
+					route.params.id +
+					'/' +
+					route.params.packageId
+			),
+	}),
+};
+</script>
+
+<script lang="ts" setup>
 const router = useRouter();
 const routeStore = useGameDashRouteController()!;
 const { game } = routeStore;
@@ -81,10 +84,7 @@ async function loadPreview() {
 	isLoadingPreview.value = true;
 
 	const response = await Api.sendRequest(
-		'/web/dash/developer/games/packages/preview/' +
-			pkg.value.game_id +
-			'/' +
-			pkg.value.id,
+		'/web/dash/developer/games/packages/preview/' + pkg.value.game_id + '/' + pkg.value.id,
 		null,
 		{ detach: true }
 	);
@@ -269,8 +269,7 @@ const appRoute = createAppRoute({
 					<h3
 						:class="{
 							'section-header': !(
-								game._is_devlog &&
-								pkg.visibility === GamePackageVisibilityPublic
+								game._is_devlog && pkg.visibility === GamePackageVisibilityPublic
 							),
 						}"
 					>

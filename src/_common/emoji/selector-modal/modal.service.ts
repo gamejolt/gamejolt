@@ -1,4 +1,5 @@
 import { defineAsyncComponent } from 'vue';
+
 import { ContentEditorModelData } from '../../content/content-owner';
 import { showModal } from '../../modal/modal.service';
 import { EmojiModel } from '../emoji.model';

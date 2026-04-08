@@ -1,13 +1,25 @@
 <script lang="ts">
+import { computed, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+
 import { Api } from '../../../_common/api/api.service';
+import { CommunityUserNotificationModel } from '../../../_common/community/user-notification/user-notification.model';
 import { pullFiresidePostHashFromUrl } from '../../../_common/fireside/post/post-model';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '../../../_common/route/route-component';
+import { $viewPost, FiresidePostModel } from '../../../_common/fireside/post/post-model';
+import { Meta } from '../../../_common/meta/meta-service';
+import { Registry } from '../../../_common/registry/registry.service';
+import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
+import { useThemeStore } from '../../../_common/theme/theme.store';
 import { $gettext } from '../../../_common/translate/translate.service';
 import { enforceLocation } from '../../../utils/router';
+import {
+	CommentThreadModalPermalinkDeregister,
+	showCommentThreadModalFromPermalink,
+	watchForCommentThreadModalPermalink,
+} from '../../components/comment/thread/modal.service';
 import { IntentService } from '../../components/intent/intent.service';
+import AppPostPage from './_page/AppPostPage.vue';
+import AppPostPagePlaceholder from './_page-placeholder/AppPostPagePlaceholder.vue';
 
 export default {
 	name: 'RoutePost',
@@ -41,24 +53,6 @@ export default {
 </script>
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import { CommunityUserNotificationModel } from '../../../_common/community/user-notification/user-notification.model';
-import {
-	$viewPost,
-	FiresidePostModel,
-} from '../../../_common/fireside/post/post-model';
-import { Meta } from '../../../_common/meta/meta-service';
-import { Registry } from '../../../_common/registry/registry.service';
-import { useThemeStore } from '../../../_common/theme/theme.store';
-import {
-	CommentThreadModalPermalinkDeregister,
-	showCommentThreadModalFromPermalink,
-	watchForCommentThreadModalPermalink,
-} from '../../components/comment/thread/modal.service';
-import AppPostPagePlaceholder from './_page-placeholder/AppPostPagePlaceholder.vue';
-import AppPostPage from './_page/AppPostPage.vue';
-
 const PostThemeKey = 'post';
 
 const route = useRoute();

@@ -1,8 +1,8 @@
 import { GamePackageModel } from '../game/package/package.model';
 import { LinkedKeyModel } from '../linked-key/linked-key.model';
 import { MicrotransactionProductModel } from '../microtransaction/product.model';
-import { storeModel } from '../model/model-store.service';
 import { Model } from '../model/model.service';
+import { storeModel } from '../model/model-store.service';
 import { SellablePricingModel } from './pricing/pricing.model';
 
 export const enum SellableType {

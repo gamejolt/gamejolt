@@ -1,5 +1,6 @@
 <script lang="ts">
 import { computed, defineAsyncComponent } from 'vue';
+
 import {
 	createAppRoute,
 	defineAppRouteOptions,

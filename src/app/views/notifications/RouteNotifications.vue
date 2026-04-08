@@ -1,10 +1,14 @@
 <script lang="ts">
-import { computed, ref, Ref, watch } from 'vue';
+import { computed, Ref, ref, watch } from 'vue';
 import { RouteLocationNormalized, useRoute } from 'vue-router';
+
 import { Api } from '../../../_common/api/api.service';
 import AppButton from '../../../_common/button/AppButton.vue';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
-import { NotificationFeedTypes, NotificationType } from '../../../_common/notification/notification-model';
+import {
+	NotificationFeedTypes,
+	NotificationType,
+} from '../../../_common/notification/notification-model';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
 import { $gettext } from '../../../_common/translate/translate.service';

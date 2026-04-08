@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref, toRefs, watch } from 'vue';
+
 import { formatFuzzynumber } from '../../filters/fuzzynumber';
 
 const props = defineProps({

@@ -1,4 +1,5 @@
 import { Directive } from 'vue';
+
 import { Scroll } from '../scroll.service';
 
 export const vAppScrollTo: Directive<unknown, string | undefined> = {

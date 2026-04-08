@@ -1,5 +1,6 @@
 <script lang="ts" setup generic="T extends TrophyNavGame | GameScoreTableModel">
 import { PropType } from 'vue';
+
 import { TrophyNavGame } from '../../../app/views/profile/trophies/_nav/AppProfileTrophiesNav.vue';
 import { GameScoreTableModel } from '../../game/score-table/score-table.model';
 import AppJolticon from '../../jolticon/AppJolticon.vue';
@@ -45,7 +46,10 @@ function select(item: any) {
 						@click="select(item)"
 					>
 						<div class="list-group-item-addon">
-							<AppJolticon v-if="current && (current as any).id === (item as any).id" icon="check" />
+							<AppJolticon
+								v-if="current && (current as any).id === (item as any).id"
+								icon="check"
+							/>
 						</div>
 
 						<slot :item="item" />

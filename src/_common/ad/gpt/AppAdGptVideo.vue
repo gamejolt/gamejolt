@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { onMounted, onUnmounted, ref, toValue, useTemplateRef } from 'vue';
+
 import { kBorderRadiusBase } from '../../../_styles/variables';
 import { createLogger } from '../../../utils/logging';
 import { onScreenResize } from '../../screen/screen-service';

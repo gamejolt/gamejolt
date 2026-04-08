@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
+
 import AppEmoji from '../emoji/AppEmoji.vue';
 import AppScrollAffix from '../scroll/AppScrollAffix.vue';
 import { $gettext } from '../translate/translate.service';

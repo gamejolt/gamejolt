@@ -6,8 +6,8 @@ import {
 	MaybeRefOrGetter,
 	provide,
 	reactive,
-	ref,
 	Ref,
+	ref,
 	shallowReadonly,
 	ShallowRef,
 	shallowRef,
@@ -15,6 +15,7 @@ import {
 	toValue,
 	WritableComputedRef,
 } from 'vue';
+
 import { CommentModel } from '../../comment/comment-model';
 import { FiresidePostModel } from '../../fireside/post/post-model';
 import { MediaItemModel } from '../../media-item/media-item-model';

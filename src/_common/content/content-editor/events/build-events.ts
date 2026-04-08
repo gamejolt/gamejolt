@@ -1,4 +1,5 @@
 import { EditorView } from 'prosemirror-view';
+
 import { imageMimeTypes } from '../../../../utils/image';
 import { ContentEditorController, editorUploadImageFile } from '../content-editor-controller';
 import { dropEventHandler } from './drop-event-handler';

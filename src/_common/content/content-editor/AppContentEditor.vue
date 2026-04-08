@@ -1,5 +1,6 @@
 <script lang="ts">
 import 'prosemirror-view/style/prosemirror.css';
+
 import {
 	computed,
 	nextTick,
@@ -7,12 +8,13 @@ import {
 	onMounted,
 	PropType,
 	provide,
-	ref,
 	Ref,
+	ref,
 	shallowRef,
 	toRefs,
 	watch,
 } from 'vue';
+
 import { FocusToken } from '../../../utils/focus-token';
 import { vAppObserveDimensions } from '../../observe-dimensions/observe-dimensions.directive';
 import AppScrollScroller from '../../scroll/AppScrollScroller.vue';
@@ -151,7 +153,7 @@ const {
 	focusEnd,
 	focusToken,
 } = toRefs(props);
-void name;
+void name.value;
 
 const emit = defineEmits({
 	submit: () => true,

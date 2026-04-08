@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
 import { computed, PropType, ref, toRefs, watch } from 'vue';
+
 import { ContextCapabilities } from '../../../../../_common/content/content-context';
 import { ContentDocument } from '../../../../../_common/content/content-document';
 import { ContentWriter } from '../../../../../_common/content/content-writer';
@@ -22,6 +22,7 @@ import {
 import { $saveGameDescription, GameModel } from '../../../../../_common/game/game.model';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
+import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
 import AppGamePerms from '../../../game/perms/AppGamePerms.vue';
 import AppDashGameWizardControls from '../wizard-controls/AppDashGameWizardControls.vue';
 import AppFormGameDescriptionTags from './tags/AppFormGameDescriptionTags.vue';

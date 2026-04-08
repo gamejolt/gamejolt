@@ -1,4 +1,5 @@
 import { RouteRecordRaw } from 'vue-router';
+
 import { routeCommunitiesViewEditChannelsEdit } from './edit/edit.route';
 import { routeCommunitiesViewEditChannelsList } from './list/list.route';
 

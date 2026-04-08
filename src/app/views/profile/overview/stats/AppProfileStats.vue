@@ -1,5 +1,6 @@
 <script lang="ts">
 import { PropType } from 'vue';
+
 import { ProfileTileAction } from '../RouteProfileOverview.vue';
 
 export type ProfileStat = {

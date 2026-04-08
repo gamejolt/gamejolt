@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { CSSProperties, Ref, onMounted, ref } from 'vue';
+import { CSSProperties, onMounted, Ref, ref } from 'vue';
+
 import { styleWhen } from '../../../_styles/mixins';
 import { kBorderWidthBase } from '../../../_styles/variables';
 import { Api } from '../../api/api.service';

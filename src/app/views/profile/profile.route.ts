@@ -1,4 +1,5 @@
 import { RouteRecordRaw } from 'vue-router';
+
 import { routeProfileLibrary } from './library/library.route';
 import { routeProfileOverview } from './overview/overview.route';
 import { routeProfilePostView } from './post/view.route';

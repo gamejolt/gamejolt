@@ -1,15 +1,15 @@
 <script lang="ts">
+import { defineAsyncComponent } from 'vue';
+
+import AppGrowls from '../growls/AppGrowls.vue';
+import AppScrollInviewParent from '../scroll/inview/AppScrollInviewParent.vue';
+import AppTheme from '../theme/AppTheme.vue';
 export default {
 	inheritAttrs: false,
 };
 </script>
 
 <script lang="ts" setup>
-import { defineAsyncComponent } from 'vue';
-import AppGrowls from '../growls/AppGrowls.vue';
-import AppScrollInviewParent from '../scroll/inview/AppScrollInviewParent.vue';
-import AppTheme from '../theme/AppTheme.vue';
-
 const AppLoadingBar = defineAsyncComponent(() => import('../loading/AppLoadingBar.vue'));
 const AppBackdropPortal = defineAsyncComponent(() => import('../backdrop/AppBackdropPortal.vue'));
 const AppLightboxPortal = defineAsyncComponent(() => import('../lightbox/AppLightboxPortal.vue'));

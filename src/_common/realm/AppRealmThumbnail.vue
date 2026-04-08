@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
+
 import AppImgResponsive from '../img/AppImgResponsive.vue';
 import AppResponsiveDimensions from '../responsive-dimensions/AppResponsiveDimensions.vue';
 import { RealmModel } from './realm-model';

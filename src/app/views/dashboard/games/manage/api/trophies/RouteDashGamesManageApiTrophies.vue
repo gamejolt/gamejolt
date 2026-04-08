@@ -1,5 +1,6 @@
 <script lang="ts">
 import { computed, nextTick, ref } from 'vue';
+
 import { Api } from '../../../../../../../_common/api/api.service';
 import AppCardList from '../../../../../../../_common/card/list/AppCardList.vue';
 import AppCardListAdd from '../../../../../../../_common/card/list/AppCardListAdd.vue';

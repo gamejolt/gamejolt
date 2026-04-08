@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import { PropType, toRef } from 'vue';
+
 import { Environment } from '../../../environment/environment.service';
+import AppJolticon from '../../../jolticon/AppJolticon.vue';
 import AppTranslate from '../../../translate/AppTranslate.vue';
 import { useForm } from '../../AppForm.vue';
 import {
@@ -12,7 +14,6 @@ import { useFormGroup } from '../../AppFormGroup.vue';
 import { vAppFormAutosize } from '../../autosize.directive';
 import { vAppFocusWhen } from '../../focus-when.directive';
 import AppFormControlMarkdownMediaItems from './AppFormControlMarkdownMediaItems.vue';
-import AppJolticon from '../../../jolticon/AppJolticon.vue';
 
 const props = defineProps({
 	...defineFormControlProps(),

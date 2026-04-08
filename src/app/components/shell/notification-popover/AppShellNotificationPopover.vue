@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { Connection } from '../../../../_common/connection/connection-service';
@@ -17,12 +18,12 @@ import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { styleChangeBg } from '../../../../_styles/mixins';
 import { kBorderWidthLg } from '../../../../_styles/variables';
 import { useAppStore } from '../../../store';
+import { showNotificationsFilterModal } from '../../../views/notifications/filter/modal.service';
+import { routeNotifications } from '../../../views/notifications/notifications.route';
 import {
 	NOTIFICATION_FILTER_FIELD,
 	SUPPORTED_NOTIFICATION_FEED_TYPES,
 } from '../../../views/notifications/RouteNotifications.vue';
-import { showNotificationsFilterModal } from '../../../views/notifications/filter/modal.service';
-import { routeNotifications } from '../../../views/notifications/notifications.route';
 import { ActivityFeedView } from '../../activity/feed/view';
 import { useGridStore } from '../../grid/grid-store';
 import { AppActivityFeedLazy } from '../../lazy';

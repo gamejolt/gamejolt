@@ -1,5 +1,8 @@
 <script lang="ts" setup>
+import './comment.styl';
+
 import { computed, nextTick, PropType, ref, toRefs } from 'vue';
+
 import { kFontSizeSmall } from '../../_styles/variables';
 import AppAlertBox from '../alert/AppAlertBox.vue';
 import { trackCommentAdd } from '../analytics/analytics.service';
@@ -31,7 +34,6 @@ import {
 	getCommentModelResourceName,
 	saveComment,
 } from './comment-model';
-import './comment.styl';
 
 const props = defineProps({
 	comment: {

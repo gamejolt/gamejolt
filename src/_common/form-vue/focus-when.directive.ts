@@ -1,4 +1,5 @@
 import { Directive } from 'vue';
+
 import { Screen } from '../screen/screen-service';
 
 export const vAppFocusWhen: Directive<unknown, boolean | void> = {

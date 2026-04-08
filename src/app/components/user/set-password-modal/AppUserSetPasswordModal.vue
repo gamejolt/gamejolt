@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import AppModal from '../../../../_common/modal/AppModal.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import AppModal from '../../../../_common/modal/AppModal.vue';
 import { useModal } from '../../../../_common/modal/modal.service';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import FormSetPassword from '../../forms/set-password/FormSetPassword.vue';
 
 const modal = useModal()!;
@@ -27,8 +27,8 @@ function onPasswordSet() {
 		<div class="modal-body">
 			<p class="help-block">
 				<AppTranslate>
-					You don't have a password set on your account since you had signed up through a linked
-					account.
+					You don't have a password set on your account since you had signed up through a
+					linked account.
 				</AppTranslate>
 				<br />
 				<AppTranslate>

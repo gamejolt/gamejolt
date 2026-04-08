@@ -1,6 +1,6 @@
 import { MediaItemModel } from '../media-item/media-item-model';
-import { ModelStoreModel } from '../model/model-store.service';
 import { ModelData, UnknownModelData } from '../model/model.service';
+import { ModelStoreModel } from '../model/model-store.service';
 import { SellableModel } from '../sellable/sellable.model';
 
 export type MicrotransactionProductType = 'joltbux';

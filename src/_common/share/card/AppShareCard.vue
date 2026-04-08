@@ -1,11 +1,12 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
+
 import AppJolticon from '../../jolticon/AppJolticon.vue';
 import AppTranslate from '../../translate/AppTranslate.vue';
 import AppShareControl from '../AppShareControl.vue';
 import { ShareProvider, ShareResource } from '../share.service';
-import AppShareCardTile from './AppShareCardTile.vue';
 import { showShareModal } from './_modal/modal.service';
+import AppShareCardTile from './AppShareCardTile.vue';
 
 const props = defineProps({
 	resource: {

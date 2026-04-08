@@ -2,6 +2,7 @@
 import type { Component, PropType } from 'vue';
 import { computed, ref, toRefs } from 'vue';
 import { useRouter } from 'vue-router';
+
 import AppFadeCollapse from '../../../AppFadeCollapse.vue';
 import AppButton from '../../../button/AppButton.vue';
 import AppCard from '../../../card/AppCard.vue';

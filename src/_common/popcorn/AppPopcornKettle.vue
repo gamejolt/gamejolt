@@ -1,5 +1,6 @@
 <script lang="ts">
 import { computed, PropType, toRef, useSlots } from 'vue';
+
 import AppPopcornKernel from './AppPopcornKernel.vue';
 import {
 	createPopcornKettleController,

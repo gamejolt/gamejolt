@@ -1,5 +1,6 @@
 <script lang="ts">
 import { computed, ref } from 'vue';
+
 import { Api } from '../../../../_common/api/api.service';
 import { authOnJoin, redirectToOnboarding } from '../../../../_common/auth/auth.service';
 import AppLoading from '../../../../_common/loading/AppLoading.vue';

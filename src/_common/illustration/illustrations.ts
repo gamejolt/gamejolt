@@ -1,14 +1,14 @@
 import { IllustrationAsset } from './AppIllustration.vue';
 import illCreatorInfographicPath from './img/creator-infographic.png';
 import illEndOfFeedPath from './img/end-of-feed.png';
-import illExtremeSadnessSmallPath from './img/extreme-sadness-small.png';
 import illExtremeSadnessPath from './img/extreme-sadness.png';
+import illExtremeSadnessSmallPath from './img/extreme-sadness-small.png';
 import illJoltydexBrowsePath from './img/joltydex-browse.png';
 import illMaintenancePath from './img/maintenance.png';
 import illMobileKikkersteinPath from './img/mobile-kikkerstein.png';
 import illNoChatPath from './img/no-chat.png';
-import illNoCommentsSmallPath from './img/no-comments-small.png';
 import illNoCommentsPath from './img/no-comments.png';
+import illNoCommentsSmallPath from './img/no-comments-small.png';
 import illPointyThingPath from './img/pointy-thing.png';
 import illStreamingJellyPath from './img/streaming-jelly.png';
 import illTimeOutPath from './img/time-out.png';

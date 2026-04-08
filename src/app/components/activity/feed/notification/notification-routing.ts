@@ -1,12 +1,13 @@
 import { Router } from 'vue-router';
+
 import { CommentModel, getCommentUrl } from '../../../../../_common/comment/comment-model';
 import { CommunityModel } from '../../../../../_common/community/community.model';
 import {
 	CommunityUserNotificationModel,
 	CommunityUserNotificationType,
 } from '../../../../../_common/community/user-notification/user-notification.model';
-import { showCreatorExperienceLevelUpModal } from '../../../../../_common/creator/experience/level-up-modal/modal.service';
 import { CreatorExperienceLevelModel } from '../../../../../_common/creator/experience/level.model';
+import { showCreatorExperienceLevelUpModal } from '../../../../../_common/creator/experience/level-up-modal/modal.service';
 import { Environment } from '../../../../../_common/environment/environment.service';
 import { FiresidePostCommunityModel } from '../../../../../_common/fireside/post/community/community.model';
 import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
@@ -27,7 +28,7 @@ import { $gettext } from '../../../../../_common/translate/translate.service';
 import { showTrophyModal } from '../../../../../_common/trophy/modal/modal.service';
 import { UserBaseTrophyModel } from '../../../../../_common/user/trophy/user-base-trophy.model';
 import { UserModel } from '../../../../../_common/user/user.model';
-import { RouteLocationDefinition, isKnownRoute } from '../../../../../utils/router';
+import { isKnownRoute,RouteLocationDefinition } from '../../../../../utils/router';
 import { assertNever } from '../../../../../utils/utils';
 import { AppStore } from '../../../../store/index';
 import { routeDashAccountEdit } from '../../../../views/dashboard/account/edit/edit.route';

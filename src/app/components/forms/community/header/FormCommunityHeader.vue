@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
 import { computed, ref, toRef, watch } from 'vue';
+
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import {
 	$clearCommunityHeader,
@@ -22,6 +22,7 @@ import AppLinkHelp from '../../../../../_common/link/AppLinkHelp.vue';
 import { showModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
+import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
 
 type FormModel = CommunityModel & {
 	header_crop?: any;
@@ -44,9 +45,7 @@ const maxHeight = ref(0);
 
 const saveHandler = ref($saveCommunityHeader);
 
-const crop = computed(() =>
-	form.formModel.header ? form.formModel.header.getCrop() : undefined
-);
+const crop = computed(() => (form.formModel.header ? form.formModel.header.getCrop() : undefined));
 
 const form: FormController<FormModel> = createForm({
 	modelClass: CommunityModel,

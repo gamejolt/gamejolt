@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, Ref, toRefs } from 'vue';
+import { computed, PropType, Ref, ref, toRefs } from 'vue';
+
 import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import { createLightbox } from '../../../../../_common/lightbox/lightbox-helpers';

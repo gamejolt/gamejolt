@@ -1,5 +1,8 @@
 <script lang="ts">
 import { defineAppRouteOptions } from '../../../../_common/route/route-component';
+import { createAppRoute } from '../../../../_common/route/route-component';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import { $gettext } from '../../../../_common/translate/translate.service';
 
 export default {
 	name: 'RouteAuthForgotSent',
@@ -10,10 +13,6 @@ export default {
 </script>
 
 <script lang="ts" setup>
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { createAppRoute } from '../../../../_common/route/route-component';
-import { $gettext } from '../../../../_common/translate/translate.service';
-
 createAppRoute({
 	routeTitle: $gettext('Credentials Sent'),
 });

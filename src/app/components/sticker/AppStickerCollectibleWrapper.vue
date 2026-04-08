@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { PropType, toRef, toRefs } from 'vue';
+
 import { showCollectibleResourceDetailsModal } from '../../../_common/collectible/resource-details-modal/modal.service';
 import { EmojiModel } from '../../../_common/emoji/emoji.model';
 import { StickerModel } from '../../../_common/sticker/sticker.model';

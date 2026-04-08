@@ -2,6 +2,7 @@
 import { computed, ref, toRef } from 'vue';
 import { RouteLocationNormalized, useRoute } from 'vue-router';
 import draggable from 'vuedraggable';
+
 import { Api } from '../../../../../../../../../../_common/api/api.service';
 import AppButton from '../../../../../../../../../../_common/button/AppButton.vue';
 import { CommunityCompetitionAwardModel } from '../../../../../../../../../../_common/community/competition/award/award.model';
@@ -21,6 +22,7 @@ import {
 } from '../../../../../../../../../../_common/route/route-component';
 import { vAppTooltip } from '../../../../../../../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../../../../../../../_common/translate/translate.service';
+import { TranslateDirective as vTranslate } from '../../../../../../../../../../_common/translate/translate-directive';
 import { showEntryFromCommunityCompetitionEntryModal } from '../../../../../../../../../components/community/competition/entry/modal/modal.service';
 
 export default {
@@ -57,7 +59,6 @@ function makeRequest(route: RouteLocationNormalized, page = 1, filterValue = '')
 </script>
 
 <script lang="ts" setup>
-import { TranslateDirective as vTranslate } from '../../../../../../../../../../_common/translate/translate-directive';
 const emit = defineEmits({
 	assign: (_awardId: number) => true,
 	unassign: (_awardId: number) => true,

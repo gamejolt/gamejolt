@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, ref, toRefs, unref } from 'vue';
+
 import AppImgResponsive from '../../img/AppImgResponsive.vue';
 import AppJolticon from '../../jolticon/AppJolticon.vue';
 import { createLightbox } from '../../lightbox/lightbox-helpers';

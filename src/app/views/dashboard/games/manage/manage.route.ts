@@ -1,4 +1,5 @@
 import { RouteRecordRaw } from 'vue-router';
+
 import { routeDashGamesManageApi } from './api/api.route';
 import { routeDashGamesManageCollaborators } from './collaborators/collaborators.route';
 import { routeDashGamesManageDevlog } from './devlog/devlog.route';

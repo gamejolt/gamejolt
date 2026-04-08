@@ -1,6 +1,7 @@
 <script lang="ts">
 import { computed, onMounted, ref } from 'vue';
 import { RouterLink } from 'vue-router';
+
 import { trackCreatorApply } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
@@ -25,11 +26,11 @@ import { Screen } from '../../../../_common/screen/screen-service';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import AppTheme from '../../../../_common/theme/AppTheme.vue';
 import { DefaultTheme } from '../../../../_common/theme/theme.model';
-import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import { UserModel } from '../../../../_common/user/user.model';
+import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import { arrayIndexBy, arrayShuffle } from '../../../../utils/array';
-import AppCreatorMooMoo from './AppCreatorMooMoo.vue';
 import { creatorApplyDesktop, creatorApplySm, creatorApplyXs } from './_backgrounds/backgrounds';
+import AppCreatorMooMoo from './AppCreatorMooMoo.vue';
 import socialImage from './social.png';
 
 const postImages = import.meta.glob('./_posts/*.jpg', { eager: true, as: 'url' });

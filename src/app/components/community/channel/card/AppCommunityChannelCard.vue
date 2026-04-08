@@ -1,6 +1,7 @@
 <script lang="ts">
-import { PropType, computed, onMounted, ref, toRefs } from 'vue';
+import { computed, onMounted, PropType, ref, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
+
 import {
 	CommunityModel,
 	CommunityPresetChannelType,

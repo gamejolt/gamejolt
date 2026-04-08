@@ -1,5 +1,8 @@
 <script lang="ts">
+import './auth-content.styl';
+
 import { RouterView } from 'vue-router';
+
 import { Api } from '../../../_common/api/api.service';
 import { redirectToDashboard } from '../../../_common/auth/auth.service';
 import { Connection } from '../../../_common/connection/connection-service';
@@ -15,7 +18,6 @@ import { imageGameJoltLogo } from '../../../app/img/images';
 import AppCoverImg from '../../components/AppCoverImg.vue';
 import AppGameCoverCredits from '../../components/AppGameCoverCredits.vue';
 import { useAuthStore } from '../../store/index';
-import './auth-content.styl';
 
 export function loggedUserBlock() {
 	// Redirect right away if they are logged in.

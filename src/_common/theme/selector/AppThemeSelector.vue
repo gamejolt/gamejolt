@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { PropType, ref, toRefs, watch } from 'vue';
+
 import AppJolticon from '../../jolticon/AppJolticon.vue';
 import AppPopper from '../../popper/AppPopper.vue';
 import { Popper } from '../../popper/popper.service';

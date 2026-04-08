@@ -1,16 +1,17 @@
 <script lang="ts">
-import { PropType, computed, onMounted, ref, toRefs } from 'vue';
+import { computed, onMounted, PropType, ref, toRefs } from 'vue';
+
 import AppImgResponsive from '../../img/AppImgResponsive.vue';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import { BaseTrophyDifficulty, BaseTrophyModel } from '../base-trophy.model';
-import bronzeSecretImage from './bronze-secret.png';
 import bronzeImage from './bronze.png';
-import goldSecretImage from './gold-secret.png';
+import bronzeSecretImage from './bronze-secret.png';
 import goldImage from './gold.png';
-import platinumSecretImage from './platinum-secret.png';
+import goldSecretImage from './gold-secret.png';
 import platinumImage from './platinum.png';
-import silverSecretImage from './silver-secret.png';
+import platinumSecretImage from './platinum-secret.png';
 import silverImage from './silver.png';
+import silverSecretImage from './silver-secret.png';
 
 const imgMapping: any = {
 	bronze: bronzeImage,

@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { toRefs } from 'vue';
 import { useRouter } from 'vue-router';
+
 import { Navigate } from '../../navigate/navigate.service';
 import { authOnLogin, getRedirectUrl, redirectToDashboard } from '../auth.service';
 import AppAuthLoginForm from './AppAuthLoginForm.vue';

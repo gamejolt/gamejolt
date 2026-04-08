@@ -1,4 +1,5 @@
 import { defineAsyncComponent } from 'vue';
+
 import { showSuccessGrowl } from '../../../growls/growls.service';
 import { showModal } from '../../../modal/modal.service';
 import { $gettext } from '../../../translate/translate.service';

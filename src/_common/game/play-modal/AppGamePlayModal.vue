@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { PropType, onMounted, onUnmounted, ref, toRefs } from 'vue';
+import { onMounted, onUnmounted, PropType, ref, toRefs } from 'vue';
+
 import AppButton from '../../button/AppButton.vue';
 import { addMinbarItem, removeMinbarItem } from '../../minbar/minbar.service';
 import AppModal from '../../modal/AppModal.vue';

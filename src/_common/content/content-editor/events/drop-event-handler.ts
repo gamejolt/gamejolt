@@ -1,6 +1,7 @@
 import { EditorView } from 'prosemirror-view';
-import { ContentEditorController } from '../content-editor-controller';
+
 import { ContentEditorService } from '../content-editor.service';
+import { ContentEditorController } from '../content-editor-controller';
 import { handleImageUploads } from './build-events';
 
 /**

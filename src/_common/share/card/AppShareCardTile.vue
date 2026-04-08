@@ -1,9 +1,10 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
+
 import { trackShareLink } from '../../analytics/analytics.service';
+import AppJolticon from '../../jolticon/AppJolticon.vue';
 import { Navigate } from '../../navigate/navigate.service';
 import { copyShareLink, ShareProvider, ShareResource } from '../share.service';
-import AppJolticon from '../../jolticon/AppJolticon.vue';
 
 const props = defineProps({
 	resource: {

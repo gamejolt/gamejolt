@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { PropType, toRefs } from 'vue';
+
 import { GameModel } from '../../../../../../_common/game/game.model';
 import { GamePackageModel } from '../../../../../../_common/game/package/package.model';
 import AppGameThumbnailImg from '../../../../../../_common/game/thumbnail/AppGameThumbnailImg.vue';

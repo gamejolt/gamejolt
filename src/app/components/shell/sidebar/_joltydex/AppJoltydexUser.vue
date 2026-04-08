@@ -1,13 +1,14 @@
 <script lang="ts">
 import { PropType, ref, toRefs } from 'vue';
+
 import AppOnHover from '../../../../../_common/on/AppOnHover.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollInview, {
 	ScrollInviewConfig,
 } from '../../../../../_common/scroll/inview/AppScrollInview.vue';
 import { kThemeFg10 } from '../../../../../_common/theme/variables';
-import AppUserAvatarBubble from '../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import { UserModel } from '../../../../../_common/user/user.model';
+import AppUserAvatarBubble from '../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import { styleTextOverflow, styleWhen } from '../../../../../_styles/mixins';
 import { kBorderRadiusBase } from '../../../../../_styles/variables';
 import { useJoltydexStore } from '../../../../store/joltydex';

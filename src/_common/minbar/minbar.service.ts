@@ -1,4 +1,5 @@
 import { reactive } from 'vue';
+
 import { arrayRemove } from '../../utils/array';
 
 export interface MinbarItem {

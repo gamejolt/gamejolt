@@ -3,17 +3,18 @@ import type { UseOverlayScrollbarsInstance } from 'overlayscrollbars-vue';
 import { useOverlayScrollbars } from 'overlayscrollbars-vue';
 import { darken, lighten } from 'polished';
 import {
-	InjectionKey,
-	PropType,
 	computed,
 	inject,
+	InjectionKey,
 	onMounted,
+	PropType,
 	provide,
 	ref,
 	shallowReadonly,
 	toRefs,
 	watchPostEffect,
 } from 'vue';
+
 import { Screen } from '../screen/screen-service';
 import { DefaultTheme, GrayLight, GraySubtle } from '../theme/theme.model';
 import { useThemeStore } from '../theme/theme.store';

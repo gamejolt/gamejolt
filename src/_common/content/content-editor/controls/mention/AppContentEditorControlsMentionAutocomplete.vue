@@ -1,13 +1,14 @@
 <script lang="ts" setup>
-import { CSSProperties, computed, nextTick, onMounted, onUnmounted, ref, toRefs, watch } from 'vue';
+import { computed, CSSProperties, nextTick, onMounted, onUnmounted, ref, toRefs, watch } from 'vue';
+
 import { Api } from '../../../../api/api.service';
 import AppJolticon from '../../../../jolticon/AppJolticon.vue';
 import AppLoading from '../../../../loading/AppLoading.vue';
 import { Screen } from '../../../../screen/screen-service';
 import { $gettext } from '../../../../translate/translate.service';
 import AppUserVerifiedTick from '../../../../user/AppUserVerifiedTick.vue';
-import AppUserAvatarImg from '../../../../user/user-avatar/AppUserAvatarImg.vue';
 import { UserModel } from '../../../../user/user.model';
+import AppUserAvatarImg from '../../../../user/user-avatar/AppUserAvatarImg.vue';
 import { editorInsertMention, useContentEditorController } from '../../content-editor-controller';
 import ContentEditorMentionCache from './cache.service';
 

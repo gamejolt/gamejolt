@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { ref, Ref, toRefs, watch } from 'vue';
+import { Ref, ref, toRefs, watch } from 'vue';
+
 import { Api } from '../api/api.service';
 import AppLoading from '../loading/AppLoading.vue';
 import AppGraph from './AppGraph.vue';

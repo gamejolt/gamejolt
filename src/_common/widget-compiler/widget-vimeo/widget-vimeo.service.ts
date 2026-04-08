@@ -1,4 +1,5 @@
 import { h } from 'vue';
+
 import AppVideoEmbed from '../../video/embed/AppVideoEmbed.vue';
 import { WidgetCompilerWidget } from '../widget';
 import { WidgetCompilerContext } from '../widget-compiler.service';

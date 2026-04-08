@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
+
 import { formatCurrency } from '../../_common/filters/currency';
 import { useWidgetPackageStore } from '../store/index';
 

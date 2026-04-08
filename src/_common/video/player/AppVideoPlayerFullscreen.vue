@@ -1,11 +1,12 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
+
+import AppJolticon from '../../jolticon/AppJolticon.vue';
 import {
 	queueVideoFullscreenChange,
 	trackVideoPlayerEvent,
 	VideoPlayerController,
 } from './controller';
-import AppJolticon from '../../jolticon/AppJolticon.vue';
 
 const props = defineProps({
 	player: {

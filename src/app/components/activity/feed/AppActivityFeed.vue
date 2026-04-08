@@ -1,5 +1,6 @@
 <script lang="ts">
 import { computed, inject, PropType, provide, reactive, ref, toRefs } from 'vue';
+
 import { useAdStore } from '../../../../_common/ad/ad-store';
 import AppAdFeedParent from '../../../../_common/ad/AppAdFeedParent.vue';
 import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';

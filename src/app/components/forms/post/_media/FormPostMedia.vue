@@ -1,20 +1,24 @@
 <script lang="ts" setup>
-import { validateFilesize, validateImageMaxDimensions } from '../../../../../_common/form-vue/validators';
-import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
 import { computed, ref, useTemplateRef } from 'vue';
 import draggable from 'vuedraggable';
+
 import { Api, ApiProgressEvent } from '../../../../../_common/api/api.service';
 import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
 import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
+import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormControlUpload, {
 	AppFormControlUploadInterface,
 } from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
+import {
+	validateFilesize,
+	validateImageMaxDimensions,
+} from '../../../../../_common/form-vue/validators';
+import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
 import { MediaItemModel } from '../../../../../_common/media-item/media-item-model';
 import AppScrollScroller from '../../../../../_common/scroll/AppScrollScroller.vue';
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import AppFormPostMediaItem from './item/FormPostMediaItem.vue';
 
 interface FormModel {

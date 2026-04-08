@@ -1,5 +1,6 @@
 <script lang="ts">
 import { computed, PropType, toRefs } from 'vue';
+
 import { defineDynamicSlotProps, useDynamicSlots } from '../component-helpers';
 import { Screen } from '../screen/screen-service';
 

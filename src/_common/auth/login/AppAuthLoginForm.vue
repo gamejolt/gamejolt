@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import AppTranslate from '../../translate/AppTranslate.vue';
-import AppButton from '../../button/AppButton.vue';
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
+
 import AppGrecaptchaWidget from '../../../auth/components/grecaptcha/widget/AppGrecaptchaWidget.vue';
 import { trackLoginCaptcha } from '../../analytics/analytics.service';
 import { Api } from '../../api/api.service';
+import AppButton from '../../button/AppButton.vue';
 import { Connection } from '../../connection/connection-service';
 import AppForm, { createForm, FormController } from '../../form-vue/AppForm.vue';
 import AppFormButton from '../../form-vue/AppFormButton.vue';
@@ -16,6 +16,7 @@ import { validateMaxLength, validateUsername } from '../../form-vue/validators';
 import { LinkedAccountProvider } from '../../linked-account/linked-account.model';
 import { LinkedAccounts } from '../../linked-account/linked-accounts.service';
 import AppLoading from '../../loading/AppLoading.vue';
+import AppTranslate from '../../translate/AppTranslate.vue';
 import googleImage from '../google-icon.svg';
 
 type Props = {

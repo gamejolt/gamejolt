@@ -1,6 +1,7 @@
 <script lang="ts">
-import { Ref, computed, ref } from 'vue';
+import { computed, Ref, ref } from 'vue';
 import { RouteLocationNormalized, RouterLink, useRoute, useRouter } from 'vue-router';
+
 import AppAdTakeoverFloat from '../../../../../_common/ad/AppAdTakeoverFloat.vue';
 import { Api } from '../../../../../_common/api/api.service';
 import { EventItemModel } from '../../../../../_common/event-item/event-item.model';

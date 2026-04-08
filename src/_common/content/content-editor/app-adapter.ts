@@ -1,4 +1,5 @@
 import { markRaw, reactive } from 'vue';
+
 import { objectPick } from '../../../utils/object';
 import { assertNever } from '../../../utils/utils';
 import { EmojiModel } from '../../emoji/emoji.model';
@@ -8,6 +9,7 @@ import { ThemeModel } from '../../theme/theme.model';
 import { ThemeStore } from '../../theme/theme.store';
 import { ContentContext, ContextCapabilities } from '../content-context';
 import { ContentHydrationType } from '../content-hydrator';
+import { ContentEditorService } from './content-editor.service';
 import {
 	ContentEditorController,
 	createContentEditor,
@@ -28,7 +30,6 @@ import {
 	editorToggleMark,
 	editorUnlink,
 } from './content-editor-controller';
-import { ContentEditorService } from './content-editor.service';
 import { createMediaUploadTask } from './media-upload-task';
 
 const GJEditorAdapterKey = 'gjEditor' as const;

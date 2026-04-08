@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { CSSProperties, PropType, toRefs } from 'vue';
+
 import { styleWhen } from '../../_styles/mixins';
 import { ThemeColor } from '../theme/variables';
 import AppCurrencyPill from './AppCurrencyPill.vue';

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { CSSProperties, Ref, computed, onMounted, ref, toRefs } from 'vue';
+import { computed, CSSProperties, onMounted, Ref, ref, toRefs } from 'vue';
+
 import { Api } from '../../../../_common/api/api.service';
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
@@ -38,8 +39,8 @@ import {
 } from '../../../../_common/theme/variables';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../_common/translate/translate.service';
-import AppUserAvatarBubble from '../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import { UserModel } from '../../../../_common/user/user.model';
+import AppUserAvatarBubble from '../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import {
 	kElevateTransition,
 	styleBorderRadiusLg,
@@ -64,9 +65,9 @@ import {
 import { numberSort } from '../../../../utils/array';
 import { getMediaserverUrlForBounds } from '../../../../utils/image';
 import { run } from '../../../../utils/utils';
-import AppVendingMachineCurrencyCard from './AppVendingMachineCurrencyCard.vue';
 import AppVendingMachineProduct from './_product/AppVendingMachineProduct.vue';
 import { showPurchaseShopProductModal } from './_purchase-modal/modal.service';
+import AppVendingMachineCurrencyCard from './AppVendingMachineCurrencyCard.vue';
 import imageVance from './vance.png';
 
 interface Section {

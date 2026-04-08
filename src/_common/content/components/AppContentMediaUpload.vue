@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { EditorView } from 'prosemirror-view';
 import { computed, onMounted, PropType, toRefs } from 'vue';
+
 import { Api, ApiProgressEvent } from '../../api/api.service';
 import { showErrorGrowl } from '../../growls/growls.service';
 import AppLoading from '../../loading/AppLoading.vue';
@@ -8,11 +9,11 @@ import { MediaItemModel } from '../../media-item/media-item-model';
 import AppProgressBar from '../../progress/AppProgressBar.vue';
 import { $gettext } from '../../translate/translate.service';
 import { getMediaItemTypeForContext } from '../content-context';
+import { ContentEditorService } from '../content-editor/content-editor.service';
 import {
 	editorMediaUploadCancel,
 	editorMediaUploadFinalize,
 } from '../content-editor/content-editor-controller';
-import { ContentEditorService } from '../content-editor/content-editor.service';
 import { ContentEditorSchema } from '../content-editor/schemas/content-editor-schema';
 import { useContentOwnerController } from '../content-owner';
 

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType, computed, toRefs } from 'vue';
+import { computed, CSSProperties, PropType, toRefs } from 'vue';
+
 import AppAspectRatio from '../../../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import { AvatarFrameModel } from '../../../../../../_common/avatar/frame.model';
 import AppBackground from '../../../../../../_common/background/AppBackground.vue';
@@ -27,7 +28,7 @@ import {
 import { kFontSizeTiny } from '../../../../../../_styles/variables';
 import { isInstance } from '../../../../../../utils/utils';
 import AppDashShopProductType from '../../AppDashShopProductType.vue';
-import { ShopDashProductStates, getShopDashProductType } from '../../shop.store';
+import { getShopDashProductType, ShopDashProductStates } from '../../shop.store';
 
 const props = defineProps({
 	item: {

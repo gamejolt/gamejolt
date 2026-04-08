@@ -1,4 +1,5 @@
 import { defineAsyncComponent } from 'vue';
+
 import { BackgroundModel } from '../../../background/background.model';
 import { showModal } from '../../../modal/modal.service';
 import { UserAvatarFrameModel } from '../../../user/user-avatar/frame/frame.model';

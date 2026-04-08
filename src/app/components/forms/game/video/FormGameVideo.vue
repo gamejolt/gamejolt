@@ -1,13 +1,13 @@
 <script lang="ts" setup>
-import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
-import { validatePattern, validateMaxLength } from '../../../../../_common/form-vue/validators';
-import AppFormControlTextarea from '../../../../../_common/form-vue/controls/AppFormControlTextarea.vue';
 import { computed, toRef, watch } from 'vue';
+
 import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControl from '../../../../../_common/form-vue/AppFormControl.vue';
 import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
+import AppFormControlTextarea from '../../../../../_common/form-vue/controls/AppFormControlTextarea.vue';
+import { validateMaxLength, validatePattern } from '../../../../../_common/form-vue/validators';
 import { GameModel } from '../../../../../_common/game/game.model';
 import {
 	$saveGameVideo,
@@ -15,6 +15,7 @@ import {
 	GameVideoType,
 } from '../../../../../_common/game/video/video.model';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
+import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
 import AppVideoEmbed from '../../../../../_common/video/embed/AppVideoEmbed.vue';
 import { REGEX_VIDEO, REGEX_VIMEO, REGEX_YOUTUBE } from '../../../../../utils/regex';
 
@@ -73,7 +74,7 @@ const hasValidVideoUrl = computed(() => !!videoData.value);
 
 watch(
 	() => form.formModel._url,
-	(url) => {
+	url => {
 		if (url) {
 			const data = videoData.value;
 			if (data) {

@@ -1,5 +1,6 @@
 <script lang="ts">
 import { computed, toRef } from 'vue';
+
 import AppAuthJoin from '../../../../_common/auth/join/AppAuthJoin.vue';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppLinkExternal from '../../../../_common/link/AppLinkExternal.vue';
@@ -298,7 +299,9 @@ createAppRoute({
 
 								<span class="dot-separator hidden-xs" />
 
-								<AppSocialFacebookLike url="https://gamejolt.com/landing/redlight" />
+								<AppSocialFacebookLike
+									url="https://gamejolt.com/landing/redlight"
+								/>
 							</div>
 						</div>
 					</div>

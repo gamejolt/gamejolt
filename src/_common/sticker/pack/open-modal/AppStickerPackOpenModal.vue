@@ -9,6 +9,7 @@ import {
 	ref,
 	toRefs,
 } from 'vue';
+
 import { arrayRemove } from '../../../../utils/array';
 import { sleep } from '../../../../utils/utils';
 import { Api } from '../../../api/api.service';
@@ -26,8 +27,8 @@ import AppSpacer from '../../../spacer/AppSpacer.vue';
 import AppThemeSvg from '../../../theme/svg/AppThemeSvg.vue';
 import { $gettext } from '../../../translate/translate.service';
 import AppStickerImg from '../../AppStickerImg.vue';
-import { CreatorStickersMap, sortStickerStacks, useStickerStore } from '../../sticker-store';
 import { StickerModel, StickerStack } from '../../sticker.model';
+import { CreatorStickersMap, sortStickerStacks, useStickerStore } from '../../sticker-store';
 import AppStickerPack from '../AppStickerPack.vue';
 import { showStickerPackContentsModal } from '../contents-modal/modal.service';
 import { UserStickerPackModel } from '../user-pack.model';

@@ -1,4 +1,5 @@
 import { Router } from 'vue-router';
+
 import { Api } from '../api/api.service';
 import { Navigate } from '../navigate/navigate.service';
 import { LinkedAccountProvider } from './linked-account.model';

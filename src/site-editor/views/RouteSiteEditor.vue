@@ -1,6 +1,10 @@
 <script lang="ts">
-import { defineAppRouteOptions } from '../../_common/route/route-component';
+import { useRoute } from 'vue-router';
+
 import { Api } from '../../_common/api/api.service';
+import { defineAppRouteOptions } from '../../_common/route/route-component';
+import { createAppRoute } from '../../_common/route/route-component';
+import { useSiteEditorStore } from '../store/index';
 
 export default {
 	...defineAppRouteOptions({
@@ -16,10 +20,6 @@ export default {
 </script>
 
 <script lang="ts" setup>
-import { useRoute } from 'vue-router';
-import { createAppRoute } from '../../_common/route/route-component';
-import { useSiteEditorStore } from '../store/index';
-
 const store = useSiteEditorStore();
 const route = useRoute();
 

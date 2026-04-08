@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { darken, lighten, parseToHsl } from 'polished';
-import { PropType, computed, ref, toRefs, unref, watch } from 'vue';
+import { computed, PropType, ref, toRefs, unref, watch } from 'vue';
+
 import { arrayUnique } from '../../../utils/array';
 import { Api } from '../../api/api.service';
 import { isDynamicGoogleBot } from '../../device/device.service';

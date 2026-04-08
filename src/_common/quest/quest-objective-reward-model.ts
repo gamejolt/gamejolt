@@ -1,7 +1,7 @@
 import { BackgroundModel } from '../background/background.model';
 import { MediaItemModel } from '../media-item/media-item-model';
-import { storeModel } from '../model/model-store.service';
 import { Model } from '../model/model.service';
+import { storeModel } from '../model/model-store.service';
 import { SiteTrophyModel } from '../site/trophy/trophy.model';
 import { StickerRewardModel } from '../sticker/sticker-reward-model';
 

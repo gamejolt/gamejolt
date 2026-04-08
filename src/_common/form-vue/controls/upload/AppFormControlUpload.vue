@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
+
 import { formatNumber } from '../../../filters/number';
 import AppJolticon from '../../../jolticon/AppJolticon.vue';
 import { Model } from '../../../model/model.service';

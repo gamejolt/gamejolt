@@ -1,6 +1,7 @@
 <script lang="ts">
 import { ref, toRef } from 'vue';
 import { RouterLink } from 'vue-router';
+
 import { Api } from '../../../../../../_common/api/api.service';
 import AppButton from '../../../../../../_common/button/AppButton.vue';
 import AppCardList from '../../../../../../_common/card/list/AppCardList.vue';

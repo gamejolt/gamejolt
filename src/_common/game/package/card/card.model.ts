@@ -4,11 +4,11 @@ import { Jolticon } from '../../../jolticon/AppJolticon.vue';
 import { LinkedKeyModel } from '../../../linked-key/linked-key.model';
 import { SellableModel } from '../../../sellable/sellable.model';
 import {
-	GameBuildPlatformSupportInfo,
-	GameBuildType,
 	canInstallGameBuild,
 	canRunGameBuild,
 	type GameBuildModel,
+	GameBuildPlatformSupportInfo,
+	GameBuildType,
 } from '../../build/build.model';
 import { GameReleaseModel } from '../../release/release.model';
 

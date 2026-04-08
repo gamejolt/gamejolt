@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { PropType, computed, toRefs } from 'vue';
+import { computed, PropType, toRefs } from 'vue';
+
 import { kThemeGjBlue, kThemeGray } from '../../../../_common/theme/variables';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { styleBorderRadiusLg, styleWhen } from '../../../../_styles/mixins';

@@ -1,6 +1,7 @@
 <script lang="ts">
 import { computed, inject, InjectionKey, provide, ref } from 'vue';
 import { RouterLink, RouterView, useRoute } from 'vue-router';
+
 import AppAdStickyRail from '../../../_common/ad/AppAdStickyRail.vue';
 import AppAdTakeoverBackground from '../../../_common/ad/AppAdTakeoverBackground.vue';
 import AppExpand from '../../../_common/expand/AppExpand.vue';

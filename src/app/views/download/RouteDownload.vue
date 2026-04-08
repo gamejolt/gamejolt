@@ -1,14 +1,15 @@
 <script lang="ts" setup>
 import { computed, ref, toRef } from 'vue';
 import { useRoute } from 'vue-router';
-import AppAdTakeoverBackground from '../../../_common/ad/AppAdTakeoverBackground.vue';
-import AppAdTakeoverFloat from '../../../_common/ad/AppAdTakeoverFloat.vue';
+
 import {
 	AdSettingsContainer,
 	releasePageAdsSettings,
 	setPageAdsSettings,
 	useAdStore,
 } from '../../../_common/ad/ad-store';
+import AppAdTakeoverBackground from '../../../_common/ad/AppAdTakeoverBackground.vue';
+import AppAdTakeoverFloat from '../../../_common/ad/AppAdTakeoverFloat.vue';
 import AppAdGptVideo from '../../../_common/ad/gpt/AppAdGptVideo.vue';
 import AppAdWidget from '../../../_common/ad/widget/AppAdWidget.vue';
 import { Api } from '../../../_common/api/api.service';

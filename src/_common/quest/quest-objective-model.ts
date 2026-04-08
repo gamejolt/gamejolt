@@ -1,5 +1,5 @@
-import { storeModelList } from '../model/model-store.service';
 import { Model } from '../model/model.service';
+import { storeModelList } from '../model/model-store.service';
 import { StickerModel } from '../sticker/sticker.model';
 
 export const QuestObjectiveStatus = {

@@ -1,12 +1,13 @@
 <script lang="ts" setup>
-import { TranslateDirective as vTranslate } from '../../../_common/translate/translate-directive';
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
+
 import { Api } from '../../../_common/api/api.service';
-import { GameBundleModel } from '../../../_common/game-bundle/game-bundle.model';
 import { GameModel } from '../../../_common/game/game.model';
+import { GameBundleModel } from '../../../_common/game-bundle/game-bundle.model';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
 import { $gettext } from '../../../_common/translate/translate.service';
+import { TranslateDirective as vTranslate } from '../../../_common/translate/translate-directive';
 import AppInvalidKey from '../../components/AppInvalidKey.vue';
 import FormRetrieve from '../../components/forms/FormRetrieve.vue';
 

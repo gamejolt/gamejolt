@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
+
 import AppButton from '../../../../../../_common/button/AppButton.vue';
 import { CommunityModel } from '../../../../../../_common/community/community.model';
 import AppModal from '../../../../../../_common/modal/AppModal.vue';

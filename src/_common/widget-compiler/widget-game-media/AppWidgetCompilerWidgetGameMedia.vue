@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { PropType, ref, toRefs, watch } from 'vue';
+
 import AppGameMediaBar from '../../game/media-bar/AppGameMediaBar.vue';
 import { GameScreenshotModel } from '../../game/screenshot/screenshot.model';
 import { GameSketchfabModel } from '../../game/sketchfab/sketchfab.model';

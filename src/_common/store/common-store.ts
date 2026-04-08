@@ -1,9 +1,11 @@
-import { computed, inject, InjectionKey, ref, Ref } from 'vue';
+import '../model/model.service';
+
+import { computed, inject, InjectionKey, Ref,ref } from 'vue';
+
 import { loadScript } from '../../utils/utils';
 import { isDynamicGoogleBot } from '../device/device.service';
 import { EmojiGroupModel } from '../emoji/emoji-group.model';
 import { Environment } from '../environment/environment.service';
-import '../model/model.service';
 import { Navigate } from '../navigate/navigate.service';
 import { UserTimeoutModel } from '../user/timeout/timeout.model';
 import { UserModel } from '../user/user.model';

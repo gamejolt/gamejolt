@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { defineAsyncComponent, watch } from 'vue';
+
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
 import { useAppStore } from '../../../store';

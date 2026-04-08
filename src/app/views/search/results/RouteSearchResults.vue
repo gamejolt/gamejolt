@@ -1,6 +1,7 @@
 <script lang="ts">
 import { computed, Ref, ref } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
+
 import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppCommunityThumbnail from '../../../../_common/community/thumbnail/AppCommunityThumbnail.vue';

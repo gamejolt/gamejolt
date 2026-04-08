@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType, computed, ref, toRefs } from 'vue';
+import { computed, CSSProperties, PropType, ref, toRefs } from 'vue';
 import { useRouter } from 'vue-router';
+
 import { Api } from '../../../../../../../_common/api/api.service';
 import AppButton from '../../../../../../../_common/button/AppButton.vue';
 import AppIllustration from '../../../../../../../_common/illustration/AppIllustration.vue';

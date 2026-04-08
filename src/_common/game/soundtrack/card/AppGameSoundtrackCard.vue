@@ -1,16 +1,17 @@
 <script lang="ts" setup>
-import AppTranslate from '../../../translate/AppTranslate.vue';
-import AppJolticon from '../../../jolticon/AppJolticon.vue';
-import AppButton from '../../../button/AppButton.vue';
 import { ref, watch } from 'vue';
 import type { RouteLocationRaw } from 'vue-router';
 import { useRouter } from 'vue-router';
+
 import AppFadeCollapse from '../../../AppFadeCollapse.vue';
 import AppAudioPlaylist from '../../../audio/playlist/AppAudioPlaylist.vue';
+import AppButton from '../../../button/AppButton.vue';
 import AppCard from '../../../card/AppCard.vue';
 import { Environment } from '../../../environment/environment.service';
 import { formatNumber } from '../../../filters/number';
+import AppJolticon from '../../../jolticon/AppJolticon.vue';
 import { Navigate } from '../../../navigate/navigate.service';
+import AppTranslate from '../../../translate/AppTranslate.vue';
 import { GameModel } from '../../game.model';
 import { GameSongModel } from '../../song/song.model';
 
@@ -42,9 +43,7 @@ function download() {
 
 	if (GJ_IS_DESKTOP_APP) {
 		// Gotta go past the first char since it's # in client.
-		Navigate.gotoExternal(
-			Environment.baseUrl + router.resolve(location).href.substr(1)
-		);
+		Navigate.gotoExternal(Environment.baseUrl + router.resolve(location).href.substr(1));
 		return;
 	}
 

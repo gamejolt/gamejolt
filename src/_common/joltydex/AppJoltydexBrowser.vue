@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { PropType, computed, ref, toRefs } from 'vue';
+import { computed, PropType, ref, toRefs } from 'vue';
+
 import { styleFlexCenter } from '../../_styles/mixins';
 import { kBorderRadiusLg, kFontFamilyDisplay } from '../../_styles/variables';
 import AppAspectRatio from '../aspect-ratio/AppAspectRatio.vue';

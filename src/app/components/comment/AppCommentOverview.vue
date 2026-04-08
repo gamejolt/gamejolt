@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs, watch } from 'vue';
 import { useRouter } from 'vue-router';
+
 import AppFadeCollapse from '../../../_common/AppFadeCollapse.vue';
 import {
 	CommentModel,

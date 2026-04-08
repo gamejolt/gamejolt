@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType, computed, toRefs } from 'vue';
+import { computed, CSSProperties, PropType, toRefs } from 'vue';
+
 import {
 	styleBorderRadiusLg,
 	styleFlexCenter,
@@ -14,12 +15,12 @@ import AppImgResponsive from '../../img/AppImgResponsive.vue';
 import { Screen } from '../../screen/screen-service';
 import { useCommonStore } from '../../store/common-store';
 import { kThemeFgMuted } from '../../theme/variables';
-import AppUserAvatarBubble from '../../user/user-avatar/AppUserAvatarBubble.vue';
 import { UserModel } from '../../user/user.model';
+import AppUserAvatarBubble from '../../user/user-avatar/AppUserAvatarBubble.vue';
 import {
+	getReadablePurchasableProductType,
 	NormalizedProductData,
 	PurchasableProductType,
-	getReadablePurchasableProductType,
 } from './product-owner-helpers';
 
 const props = defineProps({

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType, StyleValue, computed, onMounted, toRefs } from 'vue';
+import { computed, CSSProperties, onMounted, PropType, StyleValue, toRefs } from 'vue';
+
 import { styleBorderRadiusBase } from '../../_styles/mixins';
 import { kFontFamilyHeading, kFontSizeLarge, kLineHeightBase } from '../../_styles/variables';
 import { defineDynamicSlotProps, useDynamicSlots } from '../component-helpers';

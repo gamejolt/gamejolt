@@ -1,4 +1,5 @@
 import { RouteRecordRaw } from 'vue-router';
+
 import { routeHome } from '../home/home.route';
 import { routeQuestsView } from './view/view.route';
 

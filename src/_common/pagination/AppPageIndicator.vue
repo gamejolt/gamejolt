@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { CSSProperties, PropType } from 'vue';
+
 import { styleChangeBg, styleFlexCenter } from '../../_styles/mixins';
 
 defineProps({

@@ -1,6 +1,7 @@
 <script lang="ts">
-import { PropType, computed, toRefs } from 'vue';
+import { computed, PropType, toRefs } from 'vue';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
+
 import { formatNumber } from '../../../../../_common/filters/number';
 import AppListGroupSelector from '../../../../../_common/list-group/selector/AppListGroupSelector.vue';
 import { useProfileRouteStore } from '../../RouteProfile.vue';

@@ -1,4 +1,5 @@
 import { CSSProperties } from 'vue';
+
 import { getMediaserverUrlForBounds } from '../../utils/image';
 import { MediaItemModel } from '../media-item/media-item-model';
 import { ModelStoreModel } from '../model/model-store.service';

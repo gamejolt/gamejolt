@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
+
 import AppStickerLayerDrawerItem from '../../../../../_common/sticker/layer/AppStickerLayerDrawerItem.vue';
 import { StickerModel } from '../../../../../_common/sticker/sticker.model';
 import AppStickerCollectibleWrapper from '../../../sticker/AppStickerCollectibleWrapper.vue';

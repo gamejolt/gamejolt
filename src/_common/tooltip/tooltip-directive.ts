@@ -1,4 +1,5 @@
 import { Directive } from 'vue';
+
 import {
 	makeTooltipController,
 	TooltipController,

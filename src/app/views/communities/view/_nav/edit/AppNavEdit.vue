@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { toRef } from 'vue';
+
 import { $gettext } from '../../../../../../_common/translate/translate.service';
 import AppCommunityPerms from '../../../../../components/community/perms/AppCommunityPerms.vue';
 import { useCommunityRouteStore } from '../../view.store';

@@ -1,5 +1,6 @@
 import { Schema } from 'prosemirror-model';
 import { schema as basicSchema } from 'prosemirror-schema-basic';
+
 import { ContextCapabilities } from '../../content-context';
 import { ContentObjectType } from '../../content-object';
 import { customLink, link } from './specs/marks/link-markspec';

@@ -1,4 +1,5 @@
 import { RouteRecordRaw } from 'vue-router';
+
 import { routeDashAccount } from './account/account.route';
 import { routeDashAccountMobileNav } from './account/mobile-nav.route';
 import { routeDashAnalytics } from './analytics/analytics.route';

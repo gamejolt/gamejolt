@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, nextTick, onMounted, onUnmounted, PropType, ref, toRefs, watch } from 'vue';
+
 import AppBackground from '../../../../../_common/background/AppBackground.vue';
 import { BackgroundModel } from '../../../../../_common/background/background.model';
 import { formatDate } from '../../../../../_common/filters/date';

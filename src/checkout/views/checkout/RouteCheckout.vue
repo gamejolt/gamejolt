@@ -1,5 +1,6 @@
 <script lang="ts">
-import { CSSProperties, computed, ref } from 'vue';
+import { computed, CSSProperties, ref } from 'vue';
+
 import { Api } from '../../../_common/api/api.service';
 import AppAspectRatio from '../../../_common/aspect-ratio/AppAspectRatio.vue';
 import { Environment } from '../../../_common/environment/environment.service';

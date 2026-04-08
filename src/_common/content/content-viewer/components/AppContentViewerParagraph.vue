@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType } from 'vue';
+
 import { ContentObject } from '../../content-object';
 import { useContentOwnerController } from '../../content-owner';
 import { renderContentChildren } from './AppContentViewerBaseComponent.vue';

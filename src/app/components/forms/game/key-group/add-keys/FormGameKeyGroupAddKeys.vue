@@ -1,14 +1,21 @@
 <script lang="ts" setup>
-import { validateMinValue, validateMaxValue, validateMaxLength } from '../../../../../../_common/form-vue/validators';
-import AppFormControlTextarea from '../../../../../../_common/form-vue/controls/AppFormControlTextarea.vue';
 import { Api } from '../../../../../../_common/api/api.service';
 import AppExpand from '../../../../../../_common/expand/AppExpand.vue';
 import { formatNumber } from '../../../../../../_common/filters/number';
-import AppForm, { createForm, FormController } from '../../../../../../_common/form-vue/AppForm.vue';
+import AppForm, {
+	createForm,
+	FormController,
+} from '../../../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControl from '../../../../../../_common/form-vue/AppFormControl.vue';
 import AppFormControlErrors from '../../../../../../_common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '../../../../../../_common/form-vue/AppFormGroup.vue';
+import AppFormControlTextarea from '../../../../../../_common/form-vue/controls/AppFormControlTextarea.vue';
+import {
+	validateMaxLength,
+	validateMaxValue,
+	validateMinValue,
+} from '../../../../../../_common/form-vue/validators';
 import { KeyGroupModel, KeyGroupType } from '../../../../../../_common/key-group/key-group.model';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
 
@@ -27,8 +34,7 @@ const form: FormController<any> = createForm({
 	warnOnDiscard: false,
 	onSubmit() {
 		return Api.sendRequest(
-			`/web/dash/developer/games/key-groups/add-keys/` +
-				`${keyGroup.game_id}/${keyGroup.id}`,
+			`/web/dash/developer/games/key-groups/add-keys/` + `${keyGroup.game_id}/${keyGroup.id}`,
 			form.formModel
 		);
 	},
@@ -50,7 +56,10 @@ const form: FormController<any> = createForm({
 				step="1"
 				min="1"
 				:max="20000 - (keyGroup.key_count ?? 0)"
-				:validators="[validateMinValue(1), validateMaxValue(20000 - (keyGroup.key_count ?? 0))]"
+				:validators="[
+					validateMinValue(1),
+					validateMaxValue(20000 - (keyGroup.key_count ?? 0)),
+				]"
 			/>
 			<AppFormControlErrors />
 		</AppFormGroup>

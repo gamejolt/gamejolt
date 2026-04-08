@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType, computed, onMounted, ref, toRef, toRefs, watch } from 'vue';
+import { computed, CSSProperties, onMounted, PropType, ref, toRef, toRefs, watch } from 'vue';
+
 import {
 	styleBorderRadiusBase,
 	styleChangeBg,
@@ -32,8 +33,8 @@ import { StickerPackModel } from '../sticker/pack/pack.model';
 import { StickerModel } from '../sticker/sticker.model';
 import { kThemeFg10, kThemeFgMuted } from '../theme/variables';
 import { $gettext } from '../translate/translate.service';
-import AppCollectibleUnlockedRibbon from './AppCollectibleUnlockedRibbon.vue';
 import { AcquisitionMethod, filterAcquisitionMethods } from './acquisition.model';
+import AppCollectibleUnlockedRibbon from './AppCollectibleUnlockedRibbon.vue';
 import { CollectibleModel } from './collectible.model';
 import { CollectibleResourceItem } from './resource-details-modal/modal.service';
 

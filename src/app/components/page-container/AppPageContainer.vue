@@ -1,5 +1,6 @@
 <script lang="ts">
-import { CSSProperties, PropType, computed, toRef, toRefs, watch } from 'vue';
+import { computed, CSSProperties, PropType, toRef, toRefs, watch } from 'vue';
+
 import { ComponentProps } from '../../../_common/component-helpers';
 import { Screen } from '../../../_common/screen/screen-service';
 import AppScrollAffix from '../../../_common/scroll/AppScrollAffix.vue';

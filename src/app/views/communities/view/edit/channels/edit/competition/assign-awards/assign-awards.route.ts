@@ -1,4 +1,5 @@
 import { RouteRecordRaw } from 'vue-router';
+
 import { routeCommunitiesViewEditChannelsCompetitionAssignAwardsAward } from './award/award.route';
 
 export const routeCommunitiesViewEditChannelsCompetitionAssignAwards: RouteRecordRaw = {

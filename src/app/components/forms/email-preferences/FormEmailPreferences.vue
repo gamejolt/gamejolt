@@ -1,5 +1,6 @@
 <script lang="ts">
-import { type Ref, computed, PropType, ref, toRefs } from 'vue';
+import { computed, PropType, type Ref, ref, toRefs } from 'vue';
+
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
@@ -193,10 +194,7 @@ async function toggleEmails(state: boolean) {
 					<AppTranslate>Updates from Game Jolt</AppTranslate>
 				</legend>
 
-				<AppFormGroup
-					name="notify_gj_news"
-					:label="$gettext(`News and product changes`)"
-				>
+				<AppFormGroup name="notify_gj_news" :label="$gettext(`News and product changes`)">
 					<template #inline-control>
 						<AppFormControlToggle :disabled="emailsDisabled" />
 					</template>

@@ -1,6 +1,7 @@
 <script lang="ts">
 import { computed, PropType, toRef, toRefs } from 'vue';
 import { RouteLocationRaw } from 'vue-router';
+
 import { ComponentProps } from '../../../../_common/component-helpers';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppPill from '../../../../_common/pill/AppPill.vue';

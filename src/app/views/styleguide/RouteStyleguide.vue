@@ -1,9 +1,17 @@
 <script lang="ts">
+import { computed } from 'vue';
+
+import AppButtonStyleguide from '../../../_common/button/AppButtonStyleguide.vue';
+import AppJolticonsStyleguide from '../../../_common/jolticons/AppJolticonsStyleguide.vue';
+import AppListGroupStyleguide from '../../../_common/list-group/AppListGroupStyleguide.vue';
+import AppProgressBarStyleguide from '../../../_common/progress/AppProgressBarStyleguide.vue';
+import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
+import AppScrollAffix from '../../../_common/scroll/AppScrollAffix.vue';
+import { vAppScrollTo } from '../../../_common/scroll/to/to.directive';
+import AppThemeSvgStyleguide from '../../../_common/theme/svg/AppThemeSvgStyleguide.vue';
 import { touchUser } from '../../../_common/user/user.model';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '../../../_common/route/route-component';
+import AppAvatarFrameStyleguide from './avatar-frame/AppAvatarFrameStyleguide.vue';
+import AppStyleguideColor from './color/AppStyleguideColor.vue';
 
 export default {
 	name: 'RouteStyleguide',
@@ -15,17 +23,6 @@ export default {
 </script>
 
 <script lang="ts" setup>
-import { computed } from 'vue';
-import AppButtonStyleguide from '../../../_common/button/AppButtonStyleguide.vue';
-import AppJolticonsStyleguide from '../../../_common/jolticons/AppJolticonsStyleguide.vue';
-import AppListGroupStyleguide from '../../../_common/list-group/AppListGroupStyleguide.vue';
-import AppProgressBarStyleguide from '../../../_common/progress/AppProgressBarStyleguide.vue';
-import AppScrollAffix from '../../../_common/scroll/AppScrollAffix.vue';
-import { vAppScrollTo } from '../../../_common/scroll/to/to.directive';
-import AppThemeSvgStyleguide from '../../../_common/theme/svg/AppThemeSvgStyleguide.vue';
-import AppAvatarFrameStyleguide from './avatar-frame/AppAvatarFrameStyleguide.vue';
-import AppStyleguideColor from './color/AppStyleguideColor.vue';
-
 const nav = {
 	buttons: 'Buttons',
 	'list-groups': 'List Groups',

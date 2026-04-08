@@ -1,14 +1,19 @@
 <script lang="ts" setup>
-import AppFormControlSelect from '../../../../_common/form-vue/controls/AppFormControlSelect.vue';
 import { computed, ref, toRef } from 'vue';
+
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
 import AppFormControlErrors from '../../../../_common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
+import AppFormControlSelect from '../../../../_common/form-vue/controls/AppFormControlSelect.vue';
 import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
-import { validateUrlPath, validateMaxLength, validateAvailability } from '../../../../_common/form-vue/validators';
+import {
+	validateAvailability,
+	validateMaxLength,
+	validateUrlPath,
+} from '../../../../_common/form-vue/validators';
 import { $saveGame, GameModel } from '../../../../_common/game/game.model';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';

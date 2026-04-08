@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType } from 'vue';
+
 import { GameModel } from '../../../../_common/game/game.model';
 import { GamePackageCardModel } from '../../../../_common/game/package/card/card.model';
 import { GamePackageModel } from '../../../../_common/game/package/package.model';

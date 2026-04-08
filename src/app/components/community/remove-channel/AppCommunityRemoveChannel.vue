@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { TranslateDirective as vTranslate } from '../../../../_common/translate/translate-directive';
-import { PropType, computed, ref, toRef, toRefs } from 'vue';
+import { computed, PropType, ref, toRef, toRefs } from 'vue';
+
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppCommunityChannelSelect from '../../../../_common/community/channel/AppCommunityChannelSelect.vue';
 import {
@@ -12,6 +12,7 @@ import AppExpand from '../../../../_common/expand/AppExpand.vue';
 import { showErrorGrowl } from '../../../../_common/growls/growls.service';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
+import { TranslateDirective as vTranslate } from '../../../../_common/translate/translate-directive';
 
 const props = defineProps({
 	community: {

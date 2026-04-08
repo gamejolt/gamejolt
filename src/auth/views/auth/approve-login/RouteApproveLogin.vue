@@ -1,5 +1,19 @@
 <script lang="ts">
+import { computed, ref } from 'vue';
+import { useRoute } from 'vue-router';
+
+import {
+	authOnLogin,
+	getRedirectUrl,
+	redirectToDashboard,
+} from '../../../../_common/auth/auth.service';
+import AppButton from '../../../../_common/button/AppButton.vue';
+import { Navigate } from '../../../../_common/navigate/navigate.service';
+import AppProgressPoller from '../../../../_common/progress/poller/AppProgressPoller.vue';
 import { defineAppRouteOptions } from '../../../../_common/route/route-component';
+import { createAppRoute } from '../../../../_common/route/route-component';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import { $gettext } from '../../../../_common/translate/translate.service';
 import { RouteLocationRedirect } from '../../../../utils/router';
 
 export default {
@@ -26,20 +40,6 @@ export default {
 </script>
 
 <script lang="ts" setup>
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import { computed, ref } from 'vue';
-import { useRoute } from 'vue-router';
-import {
-	authOnLogin,
-	getRedirectUrl,
-	redirectToDashboard,
-} from '../../../../_common/auth/auth.service';
-import { Navigate } from '../../../../_common/navigate/navigate.service';
-import AppProgressPoller from '../../../../_common/progress/poller/AppProgressPoller.vue';
-import { createAppRoute } from '../../../../_common/route/route-component';
-import { $gettext } from '../../../../_common/translate/translate.service';
-
 const route = useRoute();
 
 const pollingToken = ref<string | null>(null);

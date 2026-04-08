@@ -10,6 +10,7 @@ import {
 	rgbToColorString,
 } from 'polished';
 import { RgbColor } from 'polished/lib/types/color';
+
 import { lab2rgb, rgb2lab } from '../../utils/color';
 import { Model } from '../model/model.service';
 import { ThemePresetModel } from './preset/preset.model';

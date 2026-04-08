@@ -1,5 +1,6 @@
 <script lang="ts">
-import { InjectionKey, inject, provide, shallowRef } from 'vue';
+import { inject, InjectionKey, provide, shallowRef } from 'vue';
+
 import { FormGameBuildInterface } from '../build/FormGameBuild.vue';
 
 type Controller = ReturnType<typeof createFormGameRelease>;
@@ -23,15 +24,10 @@ function createFormGameRelease() {
 }
 
 export { createFormGameRelease };
-</script>
-
-<script lang="ts" setup>
-import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
-import AppLinkHelp from '../../../../../_common/link/AppLinkHelp.vue';
-import AppFormControlSelect from '../../../../../_common/form-vue/controls/AppFormControlSelect.vue';
 import { addWeeks, startOfDay } from 'date-fns';
 import { determine } from 'jstimezonedetect';
 import { computed, ref, toRef } from 'vue';
+
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import AppCardList from '../../../../../_common/card/list/AppCardList.vue';
 import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
@@ -40,7 +36,12 @@ import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControl
 import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormLegend from '../../../../../_common/form-vue/AppFormLegend.vue';
 import AppFormControlDate from '../../../../../_common/form-vue/controls/AppFormControlDate.vue';
-import { validateSemver, validateMaxLength, validateAvailability } from '../../../../../_common/form-vue/validators';
+import AppFormControlSelect from '../../../../../_common/form-vue/controls/AppFormControlSelect.vue';
+import {
+	validateAvailability,
+	validateMaxLength,
+	validateSemver,
+} from '../../../../../_common/form-vue/validators';
 import { $removeGameBuild, GameBuildModel } from '../../../../../_common/game/build/build.model';
 import { GameBuildLaunchOptionModel } from '../../../../../_common/game/build/launch-option/launch-option.model';
 import { GameModel } from '../../../../../_common/game/game.model';
@@ -51,15 +52,19 @@ import {
 	GameReleaseStatus,
 } from '../../../../../_common/game/release/release.model';
 import { showSuccessGrowl } from '../../../../../_common/growls/growls.service';
+import AppLinkHelp from '../../../../../_common/link/AppLinkHelp.vue';
 import { showModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
 import { Screen } from '../../../../../_common/screen/screen-service';
 import { Timezone, TimezoneData } from '../../../../../_common/timezone/timezone.service';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
+import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
 import { arrayRemove } from '../../../../../utils/array';
 import FormGameBuild from '../build/FormGameBuild.vue';
 import FormGameNewBuild from '../new-build/FormGameNewBuild.vue';
+</script>
 
+<script lang="ts" setup>
 type GameReleaseFormModel = GameReleaseModel & {
 	should_publish?: boolean;
 };
@@ -136,12 +141,12 @@ function onBuildAdded(build: GameBuildModel) {
 	props.builds.push(build);
 }
 
-function updateBuildLaunchOptions(build: GameBuildModel, launchOptions: GameBuildLaunchOptionModel[]) {
+function updateBuildLaunchOptions(
+	build: GameBuildModel,
+	launchOptions: GameBuildLaunchOptionModel[]
+) {
 	if (props.launchOptions && props.launchOptions.length) {
-		arrayRemove(
-			props.launchOptions,
-			launchOption => launchOption.game_build_id === build.id
-		);
+		arrayRemove(props.launchOptions, launchOption => launchOption.game_build_id === build.id);
 	}
 
 	if (!launchOptions || !launchOptions.length) {
@@ -159,9 +164,7 @@ function onBuildEdited(build: GameBuildModel, response: any) {
 }
 
 async function removeBuild(build: GameBuildModel) {
-	const result = await showModalConfirm(
-		$gettext('Are you sure you want to remove this build?')
-	);
+	const result = await showModalConfirm($gettext('Are you sure you want to remove this build?'));
 
 	if (!result) {
 		return;

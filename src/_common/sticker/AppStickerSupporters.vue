@@ -1,11 +1,12 @@
 <script lang="ts" setup>
 import { computed, PropType, toRefs } from 'vue';
+
 import { FiresidePostModel } from '../fireside/post/post-model';
 import { showSupportersModal } from '../supporters/modal.service';
 import { vAppTooltip } from '../tooltip/tooltip-directive';
 import { $gettext } from '../translate/translate.service';
-import AppUserAvatarImg from '../user/user-avatar/AppUserAvatarImg.vue';
 import { UserModel } from '../user/user.model';
+import AppUserAvatarImg from '../user/user-avatar/AppUserAvatarImg.vue';
 
 const props = defineProps({
 	model: {

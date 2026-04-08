@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
+
 import AppButton from '../../../../../../_common/button/AppButton.vue';
 import { CommunityModel } from '../../../../../../_common/community/community.model';
 import AppModal from '../../../../../../_common/modal/AppModal.vue';
@@ -17,12 +18,11 @@ const modal = useModal()!;
 
 // We don't want to close the modal after they've uploaded a thumbnail since they can set a crop
 // after. We want to auto-close it after they've saved the crop, though.
-const previousThumbnailId = ref<number | null>(
-	community.thumbnail ? community.thumbnail.id : null
-);
+const previousThumbnailId = ref<number | null>(community.thumbnail ? community.thumbnail.id : null);
 
 function onSubmit(submittedCommunity: CommunityModel) {
-	const newThumbnailId = (submittedCommunity.thumbnail && submittedCommunity.thumbnail.id) || null;
+	const newThumbnailId =
+		(submittedCommunity.thumbnail && submittedCommunity.thumbnail.id) || null;
 	if (previousThumbnailId.value === newThumbnailId) {
 		modal.resolve(community);
 	}

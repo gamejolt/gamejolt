@@ -1,5 +1,6 @@
 <script lang="ts">
 import { toRef } from 'vue';
+
 import {
 	createAppRoute,
 	defineAppRouteOptions,

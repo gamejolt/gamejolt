@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import { PropType, computed, toRefs } from 'vue';
+import { computed, PropType, toRefs } from 'vue';
 import { RouteLocationRaw, RouterLink } from 'vue-router';
+
 import { styleBorderRadiusLg, styleWhen } from '../../_styles/mixins';
 import { kFontSizeLarge } from '../../_styles/variables';
 import AppJolticon, { Jolticon } from '../jolticon/AppJolticon.vue';

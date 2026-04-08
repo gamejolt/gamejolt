@@ -1,4 +1,5 @@
 import { defineAsyncComponent } from 'vue';
+
 import { GameModel } from '../../../../../_common/game/game.model';
 import { GameScreenshotModel } from '../../../../../_common/game/screenshot/screenshot.model';
 import { GameSketchfabModel } from '../../../../../_common/game/sketchfab/sketchfab.model';

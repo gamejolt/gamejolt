@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { createTextMaskInputElement } from 'text-mask-core/dist/textMaskCore';
-import { PropType, ref, Ref } from 'vue';
+import { PropType, Ref, ref } from 'vue';
+
 import { provideFormControlHooks } from './form-control-hooks';
 
 const props = defineProps({

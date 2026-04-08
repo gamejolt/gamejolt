@@ -1,5 +1,6 @@
 <script lang="ts">
 import { computed } from 'vue';
+
 import { Api } from '../../../../_common/api/api.service';
 import AppAuthJoin from '../../../../_common/auth/join/AppAuthJoin.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';

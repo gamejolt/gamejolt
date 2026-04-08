@@ -1,16 +1,17 @@
 <script lang="ts" setup>
-import AppModal from '../../../../../_common/modal/AppModal.vue';
-import AppButton from '../../../../../_common/button/AppButton.vue';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import AppLinkHelp from '../../../../../_common/link/AppLinkHelp.vue';
-import AppLinkExternal from '../../../../../_common/link/AppLinkExternal.vue';
 import { ref } from 'vue';
+
+import AppButton from '../../../../../_common/button/AppButton.vue';
 import { GameModel } from '../../../../../_common/game/game.model';
 import { GameScreenshotModel } from '../../../../../_common/game/screenshot/screenshot.model';
 import { GameSketchfabModel } from '../../../../../_common/game/sketchfab/sketchfab.model';
 import { GameVideoModel } from '../../../../../_common/game/video/video.model';
+import AppLinkExternal from '../../../../../_common/link/AppLinkExternal.vue';
+import AppLinkHelp from '../../../../../_common/link/AppLinkHelp.vue';
+import AppModal from '../../../../../_common/modal/AppModal.vue';
 import { useModal } from '../../../../../_common/modal/modal.service';
 import AppNavTabList from '../../../../../_common/nav/tab-list/AppNavTabList.vue';
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import FormGameImage from '../../../forms/game/image/FormGameImage.vue';
 import FormGameSketchfab from '../../../forms/game/sketchfab/FormGameSketchfab.vue';
 import FormGameVideo from '../../../forms/game/video/FormGameVideo.vue';
@@ -50,17 +51,17 @@ function onSketchfabAdd(sketchfab: GameSketchfabModel) {
 			<AppNavTabList>
 				<ul>
 					<li>
-						<a @click="tab = 'image'" :class="{ active: tab === 'image' }">
+						<a :class="{ active: tab === 'image' }" @click="tab = 'image'">
 							<AppTranslate>Images</AppTranslate>
 						</a>
 					</li>
 					<li>
-						<a @click="tab = 'video'" :class="{ active: tab === 'video' }">
+						<a :class="{ active: tab === 'video' }" @click="tab = 'video'">
 							<AppTranslate>Videos</AppTranslate>
 						</a>
 					</li>
 					<li>
-						<a @click="tab = 'sketchfab'" :class="{ active: tab === 'sketchfab' }">
+						<a :class="{ active: tab === 'sketchfab' }" @click="tab = 'sketchfab'">
 							Sketchfab
 						</a>
 					</li>

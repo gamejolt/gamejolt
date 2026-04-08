@@ -12,6 +12,7 @@ import {
 	toRefs,
 	useSlots,
 } from 'vue';
+
 import { CancelToken } from '../../utils/cancel-token';
 import { titleCase } from '../../utils/string';
 import { Jolticon } from '../jolticon/AppJolticon.vue';

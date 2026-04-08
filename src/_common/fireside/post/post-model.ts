@@ -1,4 +1,5 @@
 import { RouteLocationNormalized } from 'vue-router';
+
 import { RouteLocationDefinition } from '../../../utils/router';
 import { Api } from '../../api/api.service';
 import { BackgroundModel } from '../../background/background.model';
@@ -15,12 +16,12 @@ import { HistoryTick } from '../../history-tick/history-tick-service';
 import { KeyGroupModel } from '../../key-group/key-group.model';
 import { MediaItemModel } from '../../media-item/media-item-model';
 import { showModalConfirm } from '../../modal/confirm/confirm-service';
-import { storeModel } from '../../model/model-store.service';
 import { Model, ModelSaveRequestOptions } from '../../model/model.service';
+import { storeModel } from '../../model/model-store.service';
 import { PollModel } from '../../poll/poll.model';
 import { Registry } from '../../registry/registry.service';
 import { StickerPlacementModel } from '../../sticker/placement/placement.model';
-import { StickerCount, constructStickerCounts } from '../../sticker/sticker-count';
+import { constructStickerCounts,StickerCount } from '../../sticker/sticker-count';
 import { $gettext } from '../../translate/translate.service';
 import { UserModel } from '../../user/user.model';
 import { FiresidePostCommunityModel } from './community/community.model';

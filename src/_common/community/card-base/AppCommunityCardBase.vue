@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { TranslateDirective as vTranslate } from '../../translate/translate-directive';
 import { computed, PropType, toRef, toRefs } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
+
 import { trackGotoCommunity } from '../../analytics/analytics.service';
 import AppButton from '../../button/AppButton.vue';
 import { Environment } from '../../environment/environment.service';
@@ -9,6 +9,7 @@ import { formatNumber } from '../../filters/number';
 import { useCommonStore } from '../../store/common-store';
 import AppTheme from '../../theme/AppTheme.vue';
 import { $gettext } from '../../translate/translate.service';
+import { TranslateDirective as vTranslate } from '../../translate/translate-directive';
 import { CommunityModel, isEditingCommunity } from '../community.model';
 import AppCommunityJoinWidget from '../join-widget/AppCommunityJoinWidget.vue';
 import AppCommunityVerifiedTick from '../verified-tick/AppCommunityVerifiedTick.vue';

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType, ref, toRefs, watchEffect } from 'vue';
+
 import AppButton from '../../../../../../_common/button/AppButton.vue';
 import {
 	$clearCommunityPresetChannelBackground,

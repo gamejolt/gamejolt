@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { PropType, onMounted, ref } from 'vue';
+import { onMounted, PropType, ref } from 'vue';
+
 import { styleAbsoluteFill, styleChangeBg } from '../../../../_styles/mixins';
 import { sleep } from '../../../../utils/utils';
 import AppAspectRatio from '../../../aspect-ratio/AppAspectRatio.vue';

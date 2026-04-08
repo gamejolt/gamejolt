@@ -1,9 +1,10 @@
 <script lang="ts" setup>
-import { PropType, computed, onMounted, ref, toRefs } from 'vue';
+import { computed, onMounted, PropType, ref, toRefs } from 'vue';
+
 import { arrayRemove } from '../../../utils/array';
 import { Api } from '../../api/api.service';
 import { FiresidePostModel } from '../../fireside/post/post-model';
-import AppForm, { FormController, createForm } from '../../form-vue/AppForm.vue';
+import AppForm, { createForm, FormController } from '../../form-vue/AppForm.vue';
 import AppFormButton from '../../form-vue/AppFormButton.vue';
 import AppFormControl from '../../form-vue/AppFormControl.vue';
 import AppFormControlErrors from '../../form-vue/AppFormControlErrors.vue';

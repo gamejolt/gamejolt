@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { Player as ShakaPlayer, polyfill } from 'shaka-player';
 import { markRaw, onBeforeUnmount, PropType, toRefs } from 'vue';
+
 import AppVideo from '../AppVideo.vue';
 import { trackVideoPlayerEvent, VideoPlayerController } from './controller';
 

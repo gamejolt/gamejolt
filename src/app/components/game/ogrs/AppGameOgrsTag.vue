@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
+
 import { GameModel } from '../../../../_common/game/game.model';
 import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
 
@@ -33,7 +34,6 @@ const imgUrl = computed(() => {
 const imgTagUrl = computed(() => {
 	return assetPaths[`./${imgTag.value}-tag.svg`];
 });
-
 </script>
 
 <template>

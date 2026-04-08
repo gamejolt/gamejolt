@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { PropType, computed, onMounted, onUnmounted, ref, toRefs, watch } from 'vue';
+import { computed, onMounted, onUnmounted, PropType, ref, toRefs, watch } from 'vue';
+
 import { ImgSlideshow } from './slideshow/sheets';
 
 const props = defineProps({

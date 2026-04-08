@@ -1,5 +1,5 @@
-import { ContentDocument } from './content-document';
 import { ContentContext } from './content-context';
+import { ContentDocument } from './content-document';
 import { ContentObject } from './content-object';
 import { ContentWriter } from './content-writer';
 
@@ -34,7 +34,7 @@ export class ContentFormatAdapter {
 	 * Converts from the editor format to the GJ Content format
 	 */
 	public static adaptOut(inObj: ProsemirrorEditorFormat, context: ContentContext) {
-		let outDoc = new ContentDocument(
+		const outDoc = new ContentDocument(
 			context,
 			inObj.content.map(i => ContentObject.fromJsonObj(i))
 		);

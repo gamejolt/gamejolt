@@ -1,6 +1,8 @@
 <script lang="ts" setup>
-import { onMounted, watch } from 'vue';
 import '../../social.styl';
+
+import { onMounted, watch } from 'vue';
+
 import { FacebookSdk } from '../sdk/sdk.service';
 
 type Props = {
@@ -13,7 +15,10 @@ function init() {
 }
 
 onMounted(() => init());
-watch(() => url, () => init());
+watch(
+	() => url,
+	() => init()
+);
 </script>
 
 <template>

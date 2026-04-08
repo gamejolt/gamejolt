@@ -1,6 +1,7 @@
 <script lang="ts">
 import { computed, ref, toRef } from 'vue';
 import { RouterLink } from 'vue-router';
+
 import { formatCurrency } from '../../filters/currency';
 import { Screen } from '../../screen/screen-service';
 import AppScrollInview, { ScrollInviewConfig } from '../../scroll/inview/AppScrollInview.vue';

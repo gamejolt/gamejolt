@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType, computed, toRefs } from 'vue';
+import { computed, CSSProperties, PropType, toRefs } from 'vue';
+
 import { styleFlexCenter, styleWhen } from '../../_styles/mixins';
 import AppPageIndicatorCompactItem from './AppPageIndicatorCompactItem.vue';
 

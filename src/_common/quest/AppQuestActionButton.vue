@@ -1,5 +1,6 @@
 <script lang="ts">
 import { computed, PropType, ref, toRefs, watch } from 'vue';
+
 import { getMediaserverUrlForBounds } from '../../utils/image';
 import { Api } from '../api/api.service';
 import AppButton from '../button/AppButton.vue';

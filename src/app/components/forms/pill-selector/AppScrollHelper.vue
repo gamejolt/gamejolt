@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { toRefs, watch } from 'vue';
+
 import { useScroller } from '../../../../_common/scroll/AppScrollScroller.vue';
 
 const props = defineProps({

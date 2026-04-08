@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+
 import { AvatarFrameModel } from '../../../../../_common/avatar/frame.model';
 import { BackgroundModel } from '../../../../../_common/background/background.model';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
@@ -14,8 +15,8 @@ import { StickerPackModel } from '../../../../../_common/sticker/pack/pack.model
 import { StickerModel } from '../../../../../_common/sticker/sticker.model';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import {
-	ShopDashProductResourceParam,
 	getShopDashProductResourceFromParam,
+	ShopDashProductResourceParam,
 	useShopDashStore,
 } from '../shop.store';
 import FormShopProductAvatarFrame from './_forms/FormShopProductAvatarFrame.vue';

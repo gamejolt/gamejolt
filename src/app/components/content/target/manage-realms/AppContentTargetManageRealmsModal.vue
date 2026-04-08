@@ -1,5 +1,6 @@
 <script lang="ts">
 import { computed, nextTick, onMounted, PropType, ref, shallowRef, toRefs } from 'vue';
+
 import { Api, RequestOptions } from '../../../../../_common/api/api.service';
 import AppAspectRatio from '../../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppButton from '../../../../../_common/button/AppButton.vue';

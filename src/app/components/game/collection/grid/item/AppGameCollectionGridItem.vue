@@ -1,7 +1,8 @@
 <script lang="ts" setup>
+import { computed } from 'vue';
+
 import AppTranslate from '../../../../../../_common/translate/AppTranslate.vue';
 import { TranslateDirective as vTranslate } from '../../../../../../_common/translate/translate-directive';
-import { computed } from 'vue';
 import { GameCollectionModel } from '../../collection.model';
 import AppGameCollectionThumbnail from '../../thumbnail/AppGameCollectionThumbnail.vue';
 

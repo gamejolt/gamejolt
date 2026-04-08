@@ -1,9 +1,36 @@
 <script lang="ts">
+import { computed, ref } from 'vue';
+import { useRouter } from 'vue-router';
+
 import { Api } from '../../../../../../../../_common/api/api.service';
+import AppButton from '../../../../../../../../_common/button/AppButton.vue';
+import AppCardList from '../../../../../../../../_common/card/list/AppCardList.vue';
+import AppCardListDraggable from '../../../../../../../../_common/card/list/AppCardListDraggable.vue';
+import AppCardListItem from '../../../../../../../../_common/card/list/AppCardListItem.vue';
+import { formatCurrency } from '../../../../../../../../_common/filters/currency';
+import {
+	$removeGamePackage,
+	$saveGamePackageSort,
+	GamePackageModel,
+	GamePackageVisibility,
+} from '../../../../../../../../_common/game/package/package.model';
+import { showSuccessGrowl } from '../../../../../../../../_common/growls/growls.service';
+import AppJolticon from '../../../../../../../../_common/jolticon/AppJolticon.vue';
+import AppLinkHelp from '../../../../../../../../_common/link/AppLinkHelp.vue';
+import { showModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
 } from '../../../../../../../../_common/route/route-component';
+import { SellableModel } from '../../../../../../../../_common/sellable/sellable.model';
+import { vAppTooltip } from '../../../../../../../../_common/tooltip/tooltip-directive';
+import AppTranslate from '../../../../../../../../_common/translate/AppTranslate.vue';
+import { $gettext } from '../../../../../../../../_common/translate/translate.service';
+import { arrayIndexBy } from '../../../../../../../../utils/array';
+import AppDashGameWizardControls from '../../../../../../../components/forms/game/wizard-controls/AppDashGameWizardControls.vue';
+import { showGamePackageEditModal } from '../../../../../../../components/game/package/edit-modal/edit-modal.service';
+import AppGamePerms from '../../../../../../../components/game/perms/AppGamePerms.vue';
+import { useGameDashRouteController } from '../../../manage.store';
 
 export default {
 	name: 'RouteDashGamesManageGamePackagesList',
@@ -16,33 +43,6 @@ export default {
 </script>
 
 <script lang="ts" setup>
-import AppTranslate from '../../../../../../../../_common/translate/AppTranslate.vue';
-import AppLinkHelp from '../../../../../../../../_common/link/AppLinkHelp.vue';
-import AppJolticon from '../../../../../../../../_common/jolticon/AppJolticon.vue';
-import AppButton from '../../../../../../../../_common/button/AppButton.vue';
-import { computed, ref } from 'vue';
-import { useRouter } from 'vue-router';
-import AppCardList from '../../../../../../../../_common/card/list/AppCardList.vue';
-import AppCardListDraggable from '../../../../../../../../_common/card/list/AppCardListDraggable.vue';
-import AppCardListItem from '../../../../../../../../_common/card/list/AppCardListItem.vue';
-import { formatCurrency } from '../../../../../../../../_common/filters/currency';
-import {
-	$removeGamePackage,
-	$saveGamePackageSort,
-	GamePackageModel,
-	GamePackageVisibility,
-} from '../../../../../../../../_common/game/package/package.model';
-import { showSuccessGrowl } from '../../../../../../../../_common/growls/growls.service';
-import { showModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
-import { SellableModel } from '../../../../../../../../_common/sellable/sellable.model';
-import { vAppTooltip } from '../../../../../../../../_common/tooltip/tooltip-directive';
-import { $gettext } from '../../../../../../../../_common/translate/translate.service';
-import { arrayIndexBy } from '../../../../../../../../utils/array';
-import AppDashGameWizardControls from '../../../../../../../components/forms/game/wizard-controls/AppDashGameWizardControls.vue';
-import { showGamePackageEditModal } from '../../../../../../../components/game/package/edit-modal/edit-modal.service';
-import AppGamePerms from '../../../../../../../components/game/perms/AppGamePerms.vue';
-import { useGameDashRouteController } from '../../../manage.store';
-
 const router = useRouter();
 const routeStore = useGameDashRouteController()!;
 const { game } = routeStore;
@@ -81,10 +81,7 @@ async function removePackage(pkg: GamePackageModel) {
 
 	await $removeGamePackage(pkg, game.value);
 
-	showSuccessGrowl(
-		$gettext('The game package has been removed.'),
-		$gettext('Package Removed')
-	);
+	showSuccessGrowl($gettext('The game package has been removed.'), $gettext('Package Removed'));
 
 	appRoute.reload();
 }

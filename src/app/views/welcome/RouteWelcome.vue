@@ -1,6 +1,7 @@
 <script lang="ts">
 import { computed, markRaw, ref } from 'vue';
 import { useRouter } from 'vue-router';
+
 import { Api } from '../../../_common/api/api.service';
 import AppFormButton from '../../../_common/form-vue/AppFormButton.vue';
 import Onboarding from '../../../_common/onboarding/onboarding.service';

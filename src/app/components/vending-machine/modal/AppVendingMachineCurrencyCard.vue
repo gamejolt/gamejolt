@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { CSSProperties, PropType, toRefs } from 'vue';
+
 import { trackShopView } from '../../../../_common/analytics/analytics.service';
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import { vAppAuthRequired } from '../../../../_common/auth/auth-required-directive';

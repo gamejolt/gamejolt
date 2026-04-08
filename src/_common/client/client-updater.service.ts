@@ -1,9 +1,10 @@
 import type { MsgProgress, SelfUpdaterInstance } from 'client-voodoo';
 import { markRaw, reactive } from 'vue';
+
 import { Environment } from '../environment/environment.service';
 import { Navigate } from '../navigate/navigate.service';
-import { Logger, PatcherState, SelfUpdater } from './client-voodoo-imports';
 import { Client } from './client.service';
+import { Logger, PatcherState, SelfUpdater } from './client-voodoo-imports';
 
 const path = require('path') as typeof import('path');
 

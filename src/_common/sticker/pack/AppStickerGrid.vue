@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
+
 import AppAspectRatio from '../../aspect-ratio/AppAspectRatio.vue';
 import AppSpacer from '../../spacer/AppSpacer.vue';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';

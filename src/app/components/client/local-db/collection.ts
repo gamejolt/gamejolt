@@ -1,4 +1,5 @@
 import { reactive } from 'vue';
+
 import { Primitives, Properties } from '../../../../utils/utils';
 import { LocalDbModel } from './model.service';
 

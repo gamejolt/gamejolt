@@ -1,6 +1,7 @@
 <script lang="ts">
 import { computed, CSSProperties, PropType, reactive, ref, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
+
 import { ContentOwnerParentBounds } from '../../../../../_common/content/content-owner';
 import { ContentRules } from '../../../../../_common/content/content-rules';
 import AppContentViewer from '../../../../../_common/content/content-viewer/AppContentViewer.vue';

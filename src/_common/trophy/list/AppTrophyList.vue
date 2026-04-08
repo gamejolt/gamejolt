@@ -1,13 +1,14 @@
 <script lang="ts" setup>
-import { PropType, computed, toRefs } from 'vue';
+import { computed, PropType, toRefs } from 'vue';
+
 import { formatNumber } from '../../filters/number';
 import { GameTrophyModel } from '../../game/trophy/trophy.model';
 import AppJolticon from '../../jolticon/AppJolticon.vue';
 import AppTimeAgo from '../../time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import {
-	UserGameTrophyModel,
 	indexAchievedGameTrophies,
+	UserGameTrophyModel,
 } from '../../user/trophy/game-trophy.model';
 import AppTrophyThumbnail from '../thumbnail/AppTrophyThumbnail.vue';
 

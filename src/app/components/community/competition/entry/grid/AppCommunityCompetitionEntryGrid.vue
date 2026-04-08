@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { PropType, computed, toRef, toRefs } from 'vue';
+import { computed, PropType, toRef, toRefs } from 'vue';
+
 import {
 	CommunityCompetitionModel,
 	CompetitionPeriodVoting,

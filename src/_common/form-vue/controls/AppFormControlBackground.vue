@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computed, PropType, toRef, toRefs } from 'vue';
+
 import AppBackgroundSelector from '../../background/AppBackgroundSelector.vue';
 import { BackgroundModel } from '../../background/background.model';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';

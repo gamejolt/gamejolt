@@ -1,5 +1,6 @@
 <script lang="ts">
 import { computed, Ref, ref } from 'vue';
+
 import { Api } from '../../../../_common/api/api.service';
 import AppPostCard from '../../../../_common/fireside/post/card/AppPostCard.vue';
 import { FiresidePostModel } from '../../../../_common/fireside/post/post-model';

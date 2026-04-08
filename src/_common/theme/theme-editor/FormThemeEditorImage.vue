@@ -1,10 +1,11 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
+
 import { Api, ApiProgressEvent } from '../../api/api.service';
 import AppForm, { createForm, FormController } from '../../form-vue/AppForm.vue';
 import AppFormControlErrors from '../../form-vue/AppFormControlErrors.vue';
-import AppFormControlUpload from '../../form-vue/controls/upload/AppFormControlUpload.vue';
 import AppFormGroup from '../../form-vue/AppFormGroup.vue';
+import AppFormControlUpload from '../../form-vue/controls/upload/AppFormControlUpload.vue';
 import { validateFilesize, validateImageMaxDimensions } from '../../form-vue/validators';
 
 type Props = {

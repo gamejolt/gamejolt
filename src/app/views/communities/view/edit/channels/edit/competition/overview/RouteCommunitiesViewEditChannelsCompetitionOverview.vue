@@ -1,5 +1,6 @@
 <script lang="ts">
 import { computed, ref, toRef } from 'vue';
+
 import { Api } from '../../../../../../../../../_common/api/api.service';
 import AppButton from '../../../../../../../../../_common/button/AppButton.vue';
 import { $publishCommunityChannel } from '../../../../../../../../../_common/community/channel/channel.model';
@@ -16,6 +17,7 @@ import {
 import AppTimeAgo from '../../../../../../../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../../../../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../../../../../../_common/translate/translate.service';
+import { TranslateDirective as vTranslate } from '../../../../../../../../../_common/translate/translate-directive';
 import AppCommunityCompetitionDate from '../../../../../../../../components/community/competition/date/AppCommunityCompetitionDate.vue';
 import { useCommunityRouteStore } from '../../../../../view.store';
 
@@ -31,7 +33,6 @@ export default {
 </script>
 
 <script lang="ts" setup>
-import { TranslateDirective as vTranslate } from '../../../../../../../../../_common/translate/translate-directive';
 const routeStore = useCommunityRouteStore()!;
 
 const votingCategories = ref<CommunityCompetitionVotingCategoryModel[]>([]);

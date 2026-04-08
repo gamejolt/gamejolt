@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { AnchorHTMLAttributes, PropType, computed } from 'vue';
+import { AnchorHTMLAttributes, computed, PropType } from 'vue';
 
 const props = defineProps({
 	targetSelf: {

@@ -1,20 +1,15 @@
 <script lang="ts" setup>
 // We want to make sure it doesn't actually have to import all these models to
 // display.
-import type { CommentModel } from '../../../../../_common/comment/comment-model';
-import type { CommunityModel } from '../../../../../_common/community/community.model';
-import type { FiresidePostCommunityModel } from '../../../../../_common/fireside/post/community/community.model';
-import type { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
-import type { MentionModel } from '../../../../../_common/mention/mention.model';
-import type { QuestNotificationModel } from '../../../../../_common/quest/quest-notification-model';
-import type { UserGameTrophyModel } from '../../../../../_common/user/trophy/game-trophy.model';
-import type { UserSiteTrophyModel } from '../../../../../_common/user/trophy/site-trophy.model';
+import '../../../../../_common/comment/comment.styl';
 
 import { computed, PropType, ref, toRefs } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
+
 import AppFadeCollapse from '../../../../../_common/AppFadeCollapse.vue';
 import { AvatarFrameModel } from '../../../../../_common/avatar/frame.model';
-import '../../../../../_common/comment/comment.styl';
+import type { CommentModel } from '../../../../../_common/comment/comment-model';
+import type { CommunityModel } from '../../../../../_common/community/community.model';
 import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import {
 	CommunityUserNotificationModel,
@@ -22,15 +17,19 @@ import {
 } from '../../../../../_common/community/user-notification/user-notification.model';
 import AppContentViewer from '../../../../../_common/content/content-viewer/AppContentViewer.vue';
 import { CreatorExperienceLevelModel } from '../../../../../_common/creator/experience/level.model';
+import type { FiresidePostCommunityModel } from '../../../../../_common/fireside/post/community/community.model';
+import type { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
 import { InventoryShopGiftModel } from '../../../../../_common/inventory/shop/inventory-shop-gift.model';
 import { getReadablePurchasableProductType } from '../../../../../_common/inventory/shop/product-owner-helpers';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
+import type { MentionModel } from '../../../../../_common/mention/mention.model';
 import {
 	$readNotification,
 	NotificationModel,
 	NotificationType,
 } from '../../../../../_common/notification/notification-model';
 import { NotificationText } from '../../../../../_common/notification/notification-text.service';
+import type { QuestNotificationModel } from '../../../../../_common/quest/quest-notification-model';
 import { SupporterActionModel } from '../../../../../_common/supporters/action.model';
 import { kThemeFgMuted } from '../../../../../_common/theme/variables';
 import AppTimeAgo from '../../../../../_common/time/AppTimeAgo.vue';
@@ -39,10 +38,12 @@ import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import { BaseTrophyModel } from '../../../../../_common/trophy/base-trophy.model';
 import { getTrophyImg } from '../../../../../_common/trophy/thumbnail/AppTrophyThumbnail.vue';
 import AppUserCardHover from '../../../../../_common/user/card/AppUserCardHover.vue';
+import type { UserGameTrophyModel } from '../../../../../_common/user/trophy/game-trophy.model';
+import type { UserSiteTrophyModel } from '../../../../../_common/user/trophy/site-trophy.model';
 import { UserBaseTrophyModel } from '../../../../../_common/user/trophy/user-base-trophy.model';
+import { UserModel } from '../../../../../_common/user/user.model';
 import AppUserAvatar from '../../../../../_common/user/user-avatar/AppUserAvatar.vue';
 import { UserAvatarFrameModel } from '../../../../../_common/user/user-avatar/frame/frame.model';
-import { UserModel } from '../../../../../_common/user/user.model';
 import { isInstance } from '../../../../../utils/utils';
 import { useAppStore } from '../../../../store/index';
 import { ActivityFeedItem } from '../item-service';

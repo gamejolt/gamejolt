@@ -1,12 +1,13 @@
 <script lang="ts" setup>
 import { PropType } from 'vue';
+
 import AppButton from '../../../../../../_common/button/AppButton.vue';
 import AppModal from '../../../../../../_common/modal/AppModal.vue';
 import { useModal } from '../../../../../../_common/modal/modal.service';
 import AppSpacer from '../../../../../../_common/spacer/AppSpacer.vue';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
-import AppUserAvatarBubble from '../../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import { UserModel } from '../../../../../../_common/user/user.model';
+import AppUserAvatarBubble from '../../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import {
 	styleBorderRadiusLg,
 	styleChangeBg,
