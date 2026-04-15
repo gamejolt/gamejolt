@@ -150,7 +150,6 @@ const bannerMediaItem = computed(() => {
 										v-if="shouldShowFollowGame"
 										:game="item.game"
 										solid
-										primary
 										location="homeBanner"
 									/>
 								</template>

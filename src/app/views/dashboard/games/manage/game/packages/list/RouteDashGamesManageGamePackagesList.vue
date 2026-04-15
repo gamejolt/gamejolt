@@ -45,7 +45,7 @@ export default {
 <script lang="ts" setup>
 const router = useRouter();
 const routeStore = useGameDashRouteController()!;
-const { game } = routeStore;
+const game = computed(() => routeStore.game.value!);
 
 const packages = ref<GamePackageModel[]>([]);
 const sellables = ref<{ [x: number]: SellableModel }>({});

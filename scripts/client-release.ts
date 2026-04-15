@@ -46,16 +46,16 @@ async function main() {
 	console.log(`Version has been bumped to: ${newVersion}`);
 }
 
-function bump(version, operation) {
+function bump(version: string, operation: string) {
 	const match = version.match(/^(?<major>\d+)\.(?<minor>\d+)\.(?<patch>\d+)(?<tag>-.*)?$/);
 	if (!match || !match.groups) {
 		throw new Error('Invalid looking semver.');
 	}
 
 	const groups = match.groups;
-	let major = groups.major;
-	let minor = groups.minor;
-	let patch = groups.patch;
+	let major = Number(groups.major);
+	let minor = Number(groups.minor);
+	let patch = Number(groups.patch);
 	let tag = groups.tag || '';
 
 	switch (operation) {

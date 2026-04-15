@@ -1,8 +1,9 @@
 import vue, { Options as VueOptions } from '@vitejs/plugin-vue';
 // import { visualizer } from 'rollup-plugin-visualizer';
 import { copyFileSync, readFileSync } from 'fs-extra';
-import { UserConfig as ViteUserConfig, defineConfig } from 'vite';
+import { ConfigEnv, defineConfig, UserConfig as ViteUserConfig } from 'vite';
 import md, { Mode as MarkdownMode } from 'vite-plugin-markdown';
+
 import { acquirePrebuiltFFmpeg } from './scripts/build/desktop-app/ffmpeg-prebuilt';
 import {
 	activateJsonProperty,
@@ -17,7 +18,7 @@ const path = require('path') as typeof import('path');
 type RollupOptions = Required<Required<ViteUserConfig>['build']>['rollupOptions'];
 
 // https://vitejs.dev/config/
-export default defineConfig(async () => {
+export default defineConfig(async (_configEnv: ConfigEnv): Promise<ViteUserConfig> => {
 	const gjOpts = readFromViteEnv(process.env);
 
 	// package.json has to have specific main/node-remote values depending on if
@@ -128,7 +129,7 @@ export default defineConfig(async () => {
 				enforce: 'pre',
 				transformIndexHtml: {
 					enforce: 'pre',
-					transform: html => {
+					transform: (html: string) => {
 						// Patch our entrypoint depending on our section.
 						html = html.replace(
 							'<!-- gj:section-entrypoint -->',

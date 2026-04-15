@@ -24,7 +24,7 @@ import { vAppTooltip } from '../../../../../../../../../../_common/tooltip/toolt
 import { $gettext } from '../../../../../../../../../../_common/translate/translate.service';
 import { TranslateDirective as vTranslate } from '../../../../../../../../../../_common/translate/translate-directive';
 import { showEntryFromCommunityCompetitionEntryModal } from '../../../../../../../../../components/community/competition/entry/modal/modal.service';
-import { useAssignAwardsRoute } from '../RouteCommunitiesViewEditChannelsCompetitionAssignAwards.vue';
+import { useAssignAwardsRoute } from '../assign-awards.store';
 
 export default {
 	...defineAppRouteOptions({

@@ -19,7 +19,7 @@ const { user } = useCommonStore();
 		</div>
 
 		<div class="modal-body">
-			<FormAvatar :model="user" />
+			<FormAvatar :model="user ?? undefined" />
 
 			<label class="control-label">
 				{{ $gettext(`Avatar frames`) }}

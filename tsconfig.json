@@ -4,6 +4,7 @@
 		"module": "esnext",
 		"moduleResolution": "node",
 		"isolatedModules": true,
+		"skipLibCheck": true,
 		"strict": true,
 		"experimentalDecorators": true,
 		"strictFunctionTypes": false,

@@ -118,7 +118,7 @@ const description = computed(() => {
 });
 
 const shouldShowEmbedContent = toRef(() => isInview.value || !hideOutview.value);
-const imageAlt = toRef(() => embed.value.metadata?.image_alt);
+const imageAlt = toRef(() => embed.value.metadata?.image_alt ?? undefined);
 
 const playIcon = computed(() => {
 	switch (embed.value.type) {

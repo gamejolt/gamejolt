@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, inject, InjectionKey, provide, ref, toRef } from 'vue';
+import { computed, provide, ref, toRef } from 'vue';
 import { RouterView, useRoute } from 'vue-router';
 
 import { Api } from '../../../../../../../../../_common/api/api.service';
@@ -11,6 +11,7 @@ import {
 	defineAppRouteOptions,
 } from '../../../../../../../../../_common/route/route-component';
 import { $gettext } from '../../../../../../../../../_common/translate/translate.service';
+import { AssignAwardsRouteControllerKey } from './assign-awards.store';
 
 export default {
 	...defineAppRouteOptions({
@@ -21,17 +22,6 @@ export default {
 			),
 	}),
 };
-
-type AssignAwardsRouteController = {
-	onAssignAward: (awardId: number) => void;
-	onUnassignAward: (awardId: number) => void;
-};
-
-const Key: InjectionKey<AssignAwardsRouteController> = Symbol('assign-awards-route');
-
-export function useAssignAwardsRoute() {
-	return inject(Key)!;
-}
 </script>
 
 <script lang="ts" setup>
@@ -73,7 +63,7 @@ function onUnassignAward(awardId: number) {
 	}
 }
 
-provide(Key, {
+provide(AssignAwardsRouteControllerKey, {
 	onAssignAward,
 	onUnassignAward,
 });

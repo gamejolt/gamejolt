@@ -41,8 +41,12 @@ function onDraggableSort() {
 	<VueDraggable
 		:list="modifiableItems"
 		:item-key="itemKey"
-		v-bind="{ handle: '.card-drag-handle', delay: 100, delayOnTouchOnly: true }"
-		@sort="onDraggableSort"
+		v-bind="{
+			handle: '.card-drag-handle',
+			delay: 100,
+			delayOnTouchOnly: true,
+			onSort: onDraggableSort,
+		}"
 	>
 		<template #item="{ element, index }: any">
 			<div>

@@ -74,7 +74,7 @@ function onNextStep() {
 	<div class="-welcome fill-darkest">
 		<component
 			:is="stepComponent"
-			:user="user"
+			:user="user ?? undefined"
 			:is-social-registration="isSocialRegistration"
 			@next="onNextStep"
 		>

@@ -23,7 +23,6 @@ type Props = {
 	block?: boolean;
 	lg?: boolean;
 	solid?: boolean;
-	primary?: boolean;
 	showUserFollow?: boolean;
 	hideCount?: boolean;
 };
@@ -36,7 +35,6 @@ const {
 	block = false,
 	lg = false,
 	solid = false,
-	primary = false,
 	showUserFollow = false,
 	hideCount = false,
 } = defineProps<Props>();

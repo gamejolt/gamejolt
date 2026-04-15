@@ -50,7 +50,7 @@ const canJoin = computed(
 );
 
 const isDisabled = computed(() => {
-	if (isProcessing.value) {
+	if (disabled || isProcessing.value) {
 		return true;
 	}
 

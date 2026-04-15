@@ -1,6 +1,6 @@
 <script lang="ts">
 import { parseToRgb, transparentize } from 'polished';
-import { computed, inject, InjectionKey, MaybeRefOrGetter, PropType, provide, toRef } from 'vue';
+import { computed, inject, InjectionKey, MaybeRefOrGetter, provide, toRef } from 'vue';
 
 import AppStyle from '../AppStyle.vue';
 import { DefaultTheme, ThemeModel } from './theme.model';

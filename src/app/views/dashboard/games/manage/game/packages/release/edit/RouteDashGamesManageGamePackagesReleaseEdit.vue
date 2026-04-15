@@ -42,7 +42,8 @@ export default {
 
 <script lang="ts" setup>
 const router = useRouter();
-const { game } = useGameDashRouteController()!;
+const routeStore = useGameDashRouteController()!;
+const game = computed(() => routeStore.game.value!);
 
 const pkg = ref<GamePackageModel>(null as any);
 const release = ref<GameReleaseModel>(null as any);

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { darken, lighten, parseToHsl } from 'polished';
-import { computed, HTMLAttributes, ref, watch } from 'vue';
+import { computed, ImgHTMLAttributes, ref, watch } from 'vue';
 
 import { arrayUnique } from '../../../utils/array';
 import { Api } from '../../api/api.service';
@@ -14,7 +14,7 @@ type Props = {
 	src?: string;
 	theme?: ThemeModel | null;
 	strictColors?: boolean;
-} & /* @vue-ignore */ Pick<HTMLAttributes, 'alt' | 'width' | 'height'>;
+} & /* @vue-ignore */ Pick<ImgHTMLAttributes, 'alt' | 'width' | 'height'>;
 
 const { src = '', theme = null, strictColors } = defineProps<Props>();
 
