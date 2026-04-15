@@ -1,14 +1,19 @@
 <script lang="ts" setup>
-import { toRef } from 'vue';
+import { PropType, toRef } from 'vue';
 
+import { MaybePromise } from '../../../utils/utils';
 import {
 	createFormControl,
 	defineFormControlEmits,
 	defineFormControlProps,
 } from '../AppFormControl.vue';
 
-const props = defineProps({
+const { validators, disabled, beforeChange } = defineProps({
 	...defineFormControlProps(),
+	beforeChange: {
+		type: Function as PropType<(next: boolean) => MaybePromise<boolean>>,
+		default: undefined,
+	},
 });
 
 const emit = defineEmits({
@@ -17,17 +22,22 @@ const emit = defineEmits({
 
 const { id, controlVal, applyValue } = createFormControl({
 	initialValue: false,
-	validators: toRef(props, 'validators'),
+	validators: toRef(() => validators),
 	onChange: val => emit('changed', val),
 	alwaysOptional: true,
 });
 
-function toggle() {
-	if (props.disabled) {
+async function toggle() {
+	if (disabled) {
 		return;
 	}
 
-	applyValue(!controlVal.value);
+	const next = !controlVal.value;
+	if (beforeChange && !(await beforeChange(next))) {
+		return;
+	}
+
+	applyValue(next);
 }
 </script>
 

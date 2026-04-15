@@ -235,21 +235,10 @@ const validateEmojiAvailabilityPath = computed(() => {
 	return `/web/dash/creators/stickers/check-field-availability/0/emojiName`;
 });
 
-async function onClickIsActive() {
-	if (!model?.value) {
-		return;
-	}
-
-	if (!model.value.is_active) {
-		return;
-	}
-
-	if (!warnDeactivate.value) {
-		return;
-	}
-
-	if (form.formModel.is_active) {
-		return;
+async function beforeChangeIsActive(next: boolean) {
+	// Only warn when deactivating a currently-active sticker.
+	if (next || !model?.value || !model.value.is_active || !warnDeactivate.value) {
+		return true;
 	}
 
 	const response = await showModalConfirm(
@@ -259,10 +248,7 @@ async function onClickIsActive() {
 		$gettext(`Deactivate Sticker`),
 		'yes'
 	);
-	// If "no" is selected, turn is_active toggle back on.
-	if (!response) {
-		form.formModel.is_active = true;
-	}
+	return !!response;
 }
 </script>
 
@@ -270,7 +256,10 @@ async function onClickIsActive() {
 	<!-- FormSticker -->
 	<AppForm :controller="form">
 		<AppFormGroup name="is_active" :label="$gettext(`Enable sticker`)" tiny-label-margin>
-			<AppFormControlToggle :disabled="!canToggleActive" @click="onClickIsActive" />
+			<AppFormControlToggle
+				:disabled="!canToggleActive"
+				:before-change="beforeChangeIsActive"
+			/>
 		</AppFormGroup>
 
 		<AppFormGroup
