@@ -24,12 +24,14 @@ import {
 	validateMaxLength,
 } from '../../../../../_common/form-vue/validators';
 
+type FormModel = CollaboratorModel;
+
 const props = defineProps({
 	community: {
 		type: Object as PropType<CommunityModel>,
 		required: true,
 	},
-	...defineFormProps<CollaboratorModel>(),
+	...defineFormProps<FormModel>(),
 });
 
 const emit = defineEmits({
@@ -38,7 +40,7 @@ const emit = defineEmits({
 
 const { community, model } = toRefs(props);
 
-const form: FormController<CollaboratorModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	model,
 	modelClass: CollaboratorModel,
 	modelSaveHandler: $inviteCollaborator,

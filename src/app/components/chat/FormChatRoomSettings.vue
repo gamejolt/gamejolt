@@ -78,7 +78,9 @@ watch(
 	}
 );
 
-const form: FormController<ChatRoomModel> = createForm({
+type RoomTitleFormModel = ChatRoomModel;
+
+const form: FormController<RoomTitleFormModel> = createForm<RoomTitleFormModel>({
 	model: room,
 	loadUrl: `/web/chat/rooms/room-edit`,
 	onLoad(payload) {
@@ -88,11 +90,11 @@ const form: FormController<ChatRoomModel> = createForm({
 	onSubmit: () => editChatRoomTitle(chat.value, room.value, form.formModel.title),
 });
 
-type FormBackground = {
+type BackgroundFormModel = {
 	background_id: number | null;
 };
 
-const backgroundForm: FormController<FormBackground> = createForm({
+const backgroundForm: FormController<BackgroundFormModel> = createForm({
 	loadUrl: `/web/chat/rooms/backgrounds/${room.value.id}`,
 	onLoad(payload) {
 		backgrounds.value = storeModelList(BackgroundModel, payload.backgrounds);
@@ -107,11 +109,11 @@ const backgroundForm: FormController<FormBackground> = createForm({
 		),
 });
 
-type FormNotificationLevel = {
+type NotificationLevelFormModel = {
 	level: string;
 };
 
-const notificationLevelForm: FormController<FormNotificationLevel> = createForm({
+const notificationLevelForm: FormController<NotificationLevelFormModel> = createForm({
 	loadUrl: `/web/chat/rooms/get-notification-settings/${room.value.id}`,
 	onLoad(payload) {
 		notificationLevel.value = payload.level;

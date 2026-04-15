@@ -10,10 +10,10 @@ import AppFormControlRadio from '../../../../../_common/form-vue/controls/AppFor
 import { GameModel } from '../../../../../_common/game/game.model';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 
-interface FormModel {
+type FormModel = {
 	color: string;
 	size: Record<'width' | 'height', string>;
-}
+};
 
 type Props = {
 	game: GameModel;
@@ -21,7 +21,7 @@ type Props = {
 
 const { game } = defineProps<Props>();
 
-const form: FormController<FormModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	warnOnDiscard: false,
 	onInit() {
 		form.formModel.color = colorOptions[0].key;

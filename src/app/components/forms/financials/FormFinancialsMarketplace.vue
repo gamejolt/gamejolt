@@ -28,12 +28,12 @@ import AppDeveloperTerms from './AppDeveloperTerms.vue';
 import AppFinancialsCheckmark from './AppFinancialsCheckmark.vue';
 import FormFinancialsManagedAccount from './managed-account/FormFinancialsManagedAccount.vue';
 
-interface FormModel {
+type FormModel = {
 	tos_type?: 'developer';
 	wallet_maximum: number;
 	payout_minimum: number;
 	percentage_split: number;
-}
+};
 
 const { user: maybeUser } = useCommonStore();
 const user = bangRef(maybeUser);
@@ -54,7 +54,7 @@ const hasMarketplaceAccount = computed(
 	() => account.value && account.value.tos_signed_developer > 0
 );
 
-const form: FormController<FormModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	reloadOnSubmit: true,
 	loadUrl: `/web/dash/financials/save`,
 	onLoad(payload) {

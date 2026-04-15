@@ -14,9 +14,9 @@ import { validateMaxValue, validateMinValue } from '../../../../_common/form-vue
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 
-interface FormModel {
+type FormModel = {
 	amount: number;
-}
+};
 
 const props = defineProps({
 	minAmount: {

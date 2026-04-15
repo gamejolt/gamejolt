@@ -10,9 +10,9 @@ import AppLinkHelp from '../../link/AppLinkHelp.vue';
 import { $gettext } from '../../translate/translate.service';
 import { UserModel } from '../../user/user.model';
 
-interface BlockFormModel {
+type FormModel = {
 	removeComments: boolean;
-}
+};
 
 const props = defineProps({
 	user: {
@@ -27,7 +27,7 @@ const emit = defineEmits({
 
 const { user } = toRefs(props);
 
-const form: FormController<BlockFormModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	onSubmit() {
 		const data = {
 			username: user.value.username,

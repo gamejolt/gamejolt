@@ -14,12 +14,12 @@ import AppFormGroup from '../../AppFormGroup.vue';
 import { validateFilesize, validateImageMaxDimensions } from '../../validators';
 import AppFormControlUpload from '../upload/AppFormControlUpload.vue';
 
-interface FormModel {
+type FormModel = {
 	type: string;
 	parent_id: number;
 	image: File | null;
 	_progress: ApiProgressEvent | null;
-}
+};
 
 const props = defineProps({
 	...defineFormProps<FormModel>(),
@@ -41,7 +41,7 @@ const maxFilesize = ref(0);
 const maxWidth = ref(0);
 const maxHeight = ref(0);
 
-const form: FormController<FormModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	model: toRef(props, 'model'),
 	loadUrl: `/web/dash/media-items`,
 	loadData: computed(() => form.formModel),

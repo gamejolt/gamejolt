@@ -13,13 +13,13 @@ import { useClientLibraryStore } from '../../../store/client-library/index';
 import { LocalDbGame } from '../local-db/game/game.model';
 import { LocalDbPackage } from '../local-db/package/package.model';
 
-interface FormModel {
+type FormModel = {
 	description: string;
 	log_lines: string;
 	os_info: IClientOSInfo;
 	localdb_games: { [id: number]: LocalDbGame };
 	localdb_packages: { [id: number]: LocalDbPackage };
-}
+};
 
 const emit = defineEmits({
 	submit: () => true,
@@ -27,7 +27,7 @@ const emit = defineEmits({
 
 const { games, packages } = useClientLibraryStore();
 
-const form: FormController<FormModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	onSubmit() {
 		const log = ClientLogger.getLogInfo();
 

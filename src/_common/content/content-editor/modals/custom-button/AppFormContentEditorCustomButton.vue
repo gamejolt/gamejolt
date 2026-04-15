@@ -12,15 +12,17 @@ import AppFormGroup from '../../../../form-vue/AppFormGroup.vue';
 import { validateMinLength } from '../../../../form-vue/validators.js';
 import { CustomButtonData } from './custom-button-modal.service';
 
+type FormModel = CustomButtonData;
+
 const props = defineProps({
-	...defineFormProps<CustomButtonData>(true),
+	...defineFormProps<FormModel>(true),
 });
 
 const emit = defineEmits({
-	submit: (_model: CustomButtonData) => true,
+	submit: (_model: FormModel) => true,
 });
 
-const form: FormController<CustomButtonData> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	model: toRef(props, 'model'),
 	onInit() {
 		form.formModel.customButtonId ??= '';

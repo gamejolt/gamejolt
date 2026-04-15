@@ -13,6 +13,8 @@ import AppFormGroup from '../../../../../../../_common/form-vue/AppFormGroup.vue
 import AppFormControlToggle from '../../../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
 import { TranslateDirective as vTranslate } from '../../../../../../../_common/translate/translate-directive';
 
+type FormModel = CommunityCompetitionModel;
+
 const props = defineProps({
 	model: {
 		type: Object as () => CommunityCompetitionModel,
@@ -24,7 +26,7 @@ const emit = defineEmits<{
 	'toggle-not-set-up': [];
 }>();
 
-const form: FormController<CommunityCompetitionModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	modelClass: CommunityCompetitionModel,
 	modelSaveHandler: $setVotingEnabledOnCommunityCompetition,
 	model: toRef(props, 'model'),

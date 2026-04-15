@@ -17,6 +17,8 @@ type MaturityField = {
 	description?: string;
 };
 
+type FormModel = GameModel;
+
 type Props = {
 	model?: GameModel;
 };
@@ -193,7 +195,7 @@ const gambling: MaturityField[] = [
 	},
 ];
 
-const form: FormController<GameModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	model: toRef(props, 'model'),
 	modelClass: GameModel,
 	modelSaveHandler: $saveGameMaturity,

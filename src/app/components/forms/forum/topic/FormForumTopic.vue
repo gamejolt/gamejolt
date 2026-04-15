@@ -18,6 +18,10 @@ import { ForumChannelModel } from '../../../../../_common/forum/channel/channel.
 import { $saveForumTopic, ForumTopicModel } from '../../../../../_common/forum/topic/topic.model';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 
+type FormModel = ForumTopicModel & {
+	text_content?: string;
+};
+
 type Props = {
 	model?: ForumTopicModel;
 	channel: ForumChannelModel;
@@ -32,7 +36,7 @@ const emit = defineEmits<{
 
 const capabilities = ContextCapabilities.fromPayloadList([]);
 
-const form: FormController<ForumTopicModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	model: toRef(() => model),
 	modelClass: ForumTopicModel,
 	modelSaveHandler: $saveForumTopic,

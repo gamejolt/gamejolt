@@ -22,8 +22,10 @@ import {
 } from '../../../../../../_common/form-vue/validators';
 import AppTranslate from '../../../../../../_common/translate/AppTranslate.vue';
 
+type FormModel = CommunityChannelModel;
+
 const props = defineProps({
-	...defineFormProps<CommunityChannelModel>(true),
+	...defineFormProps<FormModel>(true),
 });
 
 const { model } = toRefs(props);
@@ -31,7 +33,7 @@ const { model } = toRefs(props);
 const lengthLimit = ref(5_000);
 const descriptionContentCapabilities = ref(ContextCapabilities.getPlaceholder());
 
-const form: FormController<CommunityChannelModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	loadUrl: `/web/dash/communities/description/save-channel/${model.value.id}`,
 	model,
 	modelClass: CommunityChannelModel,

@@ -31,12 +31,13 @@ import { $gettext } from '../../translate/translate.service';
 type CheckoutType = 'cc-stripe' | 'paypal' | 'wallet';
 type CheckoutStep = 'primary' | 'address';
 
-interface FormModel {
+type FormModel = {
 	country: string;
 	region: string;
 	street1: string;
 	postcode: string;
-}
+	email_address?: string;
+};
 
 const props = defineProps({
 	sellable: {
@@ -92,7 +93,7 @@ const hasSufficientWalletFunds = computed(() => {
 	return true;
 });
 
-const form: FormController<FormModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	warnOnDiscard: false,
 	model: ref({
 		country: '',

@@ -12,15 +12,17 @@ import AppFormGroup from '../../../../form-vue/AppFormGroup.vue';
 import { validateBasicLink } from '../../../../form-vue/validators';
 import { LinkData } from './link-modal.service';
 
+type FormModel = LinkData;
+
 const props = defineProps({
-	...defineFormProps<LinkData>(true),
+	...defineFormProps<FormModel>(true),
 });
 
 const emit = defineEmits({
-	submit: (_model: LinkData) => true,
+	submit: (_model: FormModel) => true,
 });
 
-const form: FormController<LinkData> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	model: toRef(props, 'model'),
 	onInit() {
 		form.formModel.href ??= form.formModel.href || '';

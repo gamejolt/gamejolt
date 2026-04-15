@@ -14,6 +14,8 @@ import { $saveGameSong, GameSongModel } from '../../../../../_common/game/song/s
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 
+type FormModel = GameSongModel;
+
 type Props = {
 	game: GameModel;
 	model?: GameSongModel;
@@ -28,7 +30,7 @@ const emit = defineEmits<{
 
 const maxFilesize = ref(0);
 
-const form: FormController<GameSongModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	model: toRef(props, 'model'),
 	modelClass: GameSongModel,
 	modelSaveHandler: $saveGameSong,

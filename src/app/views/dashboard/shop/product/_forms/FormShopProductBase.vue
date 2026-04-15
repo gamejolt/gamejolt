@@ -243,7 +243,9 @@ export function createShopProductBaseForm<
 		return result + `?is_premium=${productType.value === ShopDashProductType.Premium ? 1 : 0}`;
 	});
 
-	const form: FormController<typeof initialFormModel.value> = createForm({
+	type FormModel = typeof initialFormModel.value;
+
+	const form: FormController<FormModel> = createForm<FormModel>({
 		// Clone the initial model. Forms are overwriting non-model data passed into here.
 		model: initialFormModel,
 		loadUrl,

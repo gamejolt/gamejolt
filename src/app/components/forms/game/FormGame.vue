@@ -20,6 +20,8 @@ import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import AppGameDevStageSelector from './dev-stage-selector/AppGameDevStageSelector.vue';
 import AppDashGameWizardControls from './wizard-controls/AppDashGameWizardControls.vue';
 
+type FormModel = GameModel;
+
 type Props = {
 	model?: GameModel;
 };
@@ -34,7 +36,7 @@ const account = ref<any>(null);
 const categories = ref<any>(null);
 const engines = ref<any>(null);
 
-const form: FormController<GameModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	model: toRef(props, 'model'),
 	modelClass: GameModel,
 	modelSaveHandler: $saveGame,

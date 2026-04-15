@@ -27,13 +27,13 @@ import {
 } from '../../../../../_common/user/action-reasons';
 import { UserModel } from '../../../../../_common/user/user.model';
 
-interface FormModel {
+type FormModel = {
 	username: string;
 	reasonType: string;
 	reason: string;
 	expiry: string;
 	ejectPosts: boolean;
-}
+};
 
 const expiryOptions = {
 	hour: $gettext('1 Hour'),
@@ -68,7 +68,7 @@ const defaultReasons = computed(() => getCommunityBlockReasons());
 
 const showReasonOther = toRef(() => form.formModel.reasonType === REASON_OTHER);
 
-const form: FormController<FormModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	resetOnSubmit: true,
 	onInit() {
 		form.formModel.reasonType = REASON_SPAM;

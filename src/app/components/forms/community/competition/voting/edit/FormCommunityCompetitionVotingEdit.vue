@@ -26,6 +26,8 @@ import AppTranslate from '../../../../../../../_common/translate/AppTranslate.vu
 import { $gettext } from '../../../../../../../_common/translate/translate.service';
 import { TranslateDirective as vTranslate } from '../../../../../../../_common/translate/translate-directive';
 
+type FormModel = CommunityCompetitionModel;
+
 type RadioOption<T> = {
 	radioValue: T;
 	text: string;
@@ -87,7 +89,7 @@ const isValid = computed(() => {
 
 const canEditDetails = computed(() => props.model!.periodNum < CompetitionPeriodVoting);
 
-const form: FormController<CommunityCompetitionModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	modelClass: CommunityCompetitionModel,
 	modelSaveHandler: $saveCommunityCompetitionVoting,
 	model: toRef(props, 'model'),

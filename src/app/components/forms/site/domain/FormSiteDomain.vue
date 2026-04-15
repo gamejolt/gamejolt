@@ -20,9 +20,9 @@ import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import { UserModel } from '../../../../../_common/user/user.model';
 
-interface FormModel extends SiteModel {
+type FormModel = SiteModel & {
 	type?: string;
-}
+};
 
 type Props = {
 	model?: SiteModel;
@@ -32,7 +32,7 @@ type Props = {
 
 const { model, user, game } = defineProps<Props>();
 
-const form: FormController<FormModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	model: toRef(() => model),
 	modelClass: SiteModel,
 	modelSaveHandler: $saveDomainSite,

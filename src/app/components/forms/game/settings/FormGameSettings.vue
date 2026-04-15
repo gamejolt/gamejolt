@@ -9,6 +9,8 @@ import { $saveGameSettings, GameModel } from '../../../../../_common/game/game.m
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import AppDashGameWizardControls from '../wizard-controls/AppDashGameWizardControls.vue';
 
+type FormModel = GameModel;
+
 type Props = {
 	model?: GameModel;
 };
@@ -21,7 +23,7 @@ const emit = defineEmits<{
 
 const hasPackagesForSale = ref(false);
 
-const form: FormController<GameModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	model: toRef(props, 'model'),
 	modelClass: GameModel,
 	modelSaveHandler: $saveGameSettings,

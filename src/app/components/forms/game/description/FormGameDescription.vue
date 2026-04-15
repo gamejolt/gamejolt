@@ -27,7 +27,7 @@ import AppGamePerms from '../../../game/perms/AppGamePerms.vue';
 import AppDashGameWizardControls from '../wizard-controls/AppDashGameWizardControls.vue';
 import AppFormGameDescriptionTags from './tags/AppFormGameDescriptionTags.vue';
 
-type DescriptionFormModel = GameModel & {
+type FormModel = GameModel & {
 	autotag?: string;
 	autotag_skip?: boolean;
 };
@@ -51,7 +51,7 @@ const isDisabled = ref(false);
 const lengthLimit = ref(50_000);
 const descriptionContentCapabilities = ref(ContextCapabilities.getPlaceholder());
 
-const form: FormController<DescriptionFormModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	loadUrl: `/web/dash/developer/games/description/save/${model.value.id}`,
 	model,
 	modelClass: GameModel,

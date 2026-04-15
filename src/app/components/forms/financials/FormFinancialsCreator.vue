@@ -14,9 +14,9 @@ import { bangRef } from '../../../../utils/vue';
 import AppCreatorTerms from './AppCreatorTerms.vue';
 import AppFinancialsCheckmark from './AppFinancialsCheckmark.vue';
 
-interface FormModel {
+type FormModel = {
 	tos_type?: 'creator';
-}
+};
 
 const { user: maybeUser } = useCommonStore();
 const user = bangRef(maybeUser);
@@ -52,7 +52,7 @@ onUnmounted(() => {
 	window.removeEventListener('message', tipaltiHandler);
 });
 
-const form: FormController<FormModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	reloadOnSubmit: true,
 	loadUrl: `/web/dash/financials/save`,
 	onLoad(payload) {

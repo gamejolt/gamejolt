@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 
-import { Api } from '../../../../../_common/api/api.service';
+import { Api, ApiProgressEvent } from '../../../../../_common/api/api.service';
 import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
 import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
@@ -10,6 +10,10 @@ import { validateFilesize } from '../../../../../_common/form-vue/validators';
 import { SiteBuildModel } from '../../../../../_common/site/build/build-model';
 import { SiteModel } from '../../../../../_common/site/site-model';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
+
+type FormModel = SiteBuildModel & {
+	_progress?: ApiProgressEvent | null;
+};
 
 type Props = {
 	site: SiteModel;
@@ -23,7 +27,7 @@ const emit = defineEmits<{
 
 const maxFilesize = ref(0);
 
-const form: FormController<SiteBuildModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	modelClass: SiteBuildModel,
 	warnOnDiscard: false,
 	resetOnSubmit: true,

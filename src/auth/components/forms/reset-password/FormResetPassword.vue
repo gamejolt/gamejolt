@@ -9,6 +9,10 @@ import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
 import { validateMaxLength, validateMinLength } from '../../../../_common/form-vue/validators';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 
+type FormModel = {
+	password: string;
+};
+
 type Props = {
 	userId: number;
 	token: string;
@@ -19,7 +23,7 @@ const emit = defineEmits<{
 	submit: [];
 }>();
 
-const form: FormController = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	warnOnDiscard: false,
 	onInit() {
 		form.formModel.password = '';

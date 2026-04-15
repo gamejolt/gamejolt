@@ -21,12 +21,14 @@ import {
 	validateMaxLength,
 } from '../../../../../../_common/form-vue/validators';
 
+type FormModel = CommunityCompetitionAwardModel;
+
 const props = defineProps({
 	competition: {
 		type: Object as PropType<CommunityCompetitionModel>,
 		required: true,
 	},
-	...defineFormProps<CommunityCompetitionAwardModel>(),
+	...defineFormProps<FormModel>(),
 });
 
 const emit = defineEmits({
@@ -47,7 +49,7 @@ const nameAvailabilityUrl = computed(() => {
 	return endpoint;
 });
 
-const form: FormController<CommunityCompetitionAwardModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	model,
 	modelClass: CommunityCompetitionAwardModel,
 	modelSaveHandler: $saveCommunityCompetitionAward,

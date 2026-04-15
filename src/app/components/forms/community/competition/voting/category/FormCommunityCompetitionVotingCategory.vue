@@ -22,6 +22,8 @@ import {
 import AppTranslate from '../../../../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../../../../_common/translate/translate.service';
 
+type FormModel = CommunityCompetitionVotingCategoryModel;
+
 type Props = {
 	competition: CommunityCompetitionModel;
 	model?: CommunityCompetitionVotingCategoryModel;
@@ -45,7 +47,7 @@ const nameAvailabilityUrl = computed(() => {
 	return endpoint;
 });
 
-const form: FormController<CommunityCompetitionVotingCategoryModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	modelClass: CommunityCompetitionVotingCategoryModel,
 	modelSaveHandler: $saveCommunityCompetitionVotingCategory,
 	model: toRef(props, 'model'),

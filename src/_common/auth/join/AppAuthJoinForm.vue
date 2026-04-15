@@ -44,7 +44,7 @@ const emit = defineEmits({
 const { overlay, blocked } = toRefs(props);
 const router = useRouter();
 
-const form: FormController<JoinFormModel> = createForm({
+const form: FormController<JoinFormModel> = createForm<JoinFormModel>({
 	warnOnDiscard: false,
 	onSubmit() {
 		return Api.sendRequest('/web/auth/join', form.formModel);

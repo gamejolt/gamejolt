@@ -29,6 +29,12 @@ import {
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 
+type FormModel = KeyGroupModel & {
+	amount?: number;
+	emails?: string;
+	users?: string;
+};
+
 type Props = {
 	game: GameModel;
 	packages: GamePackageModel[];
@@ -48,7 +54,7 @@ const KeyGroupTypeAnonymousClaim = KeyGroupType.AnonymousClaim;
 const KeyGroupTypeEmail = KeyGroupType.Email;
 const KeyGroupTypeUser = KeyGroupType.User;
 
-const form: FormController<KeyGroupModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	model: toRef(props, 'model'),
 	modelClass: KeyGroupModel,
 	modelSaveHandler: $saveKeyGroup,

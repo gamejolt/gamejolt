@@ -43,10 +43,10 @@ export const enum VideoStatus {
 </script>
 
 <script lang="ts" setup>
-interface FormModel {
+type FormModel = {
 	video: File | null;
 	_progress: ApiProgressEvent | null;
-}
+};
 
 type Props = {
 	post: FiresidePostModel;
@@ -135,7 +135,7 @@ watch(videoStatus, () => {
 	emit('video-status-change', videoStatus.value);
 });
 
-const form: FormController<FormModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	loadUrl: `/web/posts/manage/add-video/${post.id}`,
 	onLoad(payload: any) {
 		maxFilesize.value = payload.maxFilesize;

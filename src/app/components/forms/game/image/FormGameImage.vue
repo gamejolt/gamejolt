@@ -20,6 +20,8 @@ import {
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
 
+type FormModel = GameScreenshotModel;
+
 type Props = {
 	game: GameModel;
 	model?: GameScreenshotModel;
@@ -36,7 +38,7 @@ const maxFilesize = ref(0);
 const maxWidth = ref(0);
 const maxHeight = ref(0);
 
-const form: FormController<GameScreenshotModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	model: toRef(props, 'model'),
 	modelClass: GameScreenshotModel,
 	modelSaveHandler: $saveGameScreenshot,

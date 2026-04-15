@@ -21,10 +21,10 @@ import AppScrollScroller from '../../../../../_common/scroll/AppScrollScroller.v
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import AppFormPostMediaItem from './item/FormPostMediaItem.vue';
 
-interface FormModel {
+type FormModel = {
 	image: File[] | null;
 	_progress: ApiProgressEvent | null;
-}
+};
 
 type Props = {
 	post: FiresidePostModel;
@@ -55,7 +55,7 @@ const internalItems = computed({
 	set: (val: MediaItemModel[]) => emit('sort', val),
 });
 
-const form: FormController<FormModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	resetOnSubmit: true,
 	onInit() {
 		form.formModel.image = null;

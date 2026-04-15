@@ -42,6 +42,10 @@ import {
 import { kFontSizeBase, kFontSizeLarge, kStrongEaseOut } from '../../../../../../_styles/variables';
 import { debounceWithCancel } from '../../../../../../utils/utils';
 
+type FormModel = {
+	input: string;
+};
+
 const props = defineProps({
 	sale: {
 		type: Object as PropType<InventoryShopProductSaleModel>,
@@ -156,7 +160,7 @@ function handlePayload(payload: any) {
 	giftableUsers.value = newUsers;
 }
 
-const form: FormController<{ input: string }> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	loadUrl,
 	loadData: computed(() => {
 		return { _fields: getRequestBody(true) };

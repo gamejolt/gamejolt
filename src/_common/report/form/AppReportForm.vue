@@ -16,12 +16,12 @@ import { validateMaxLength } from '../../form-vue/validators';
 import { GameModel } from '../../game/game.model';
 import { $gettext } from '../../translate/translate.service';
 
-interface FormModel {
+type FormModel = {
 	reason: string;
 	context: string[];
 	description: string;
 	source: string;
-}
+};
 
 const props = defineProps({
 	type: {
@@ -40,7 +40,7 @@ const emit = defineEmits({
 
 const { type, resource } = toRefs(props);
 
-const form: FormController<FormModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	warnOnDiscard: false,
 	loadUrl: '/web/report',
 	onSubmit() {

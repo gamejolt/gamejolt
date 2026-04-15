@@ -16,10 +16,10 @@ import { PaymentData, useWidgetPackageStore } from '../../store/index';
 import AppWidgetModal from '../AppWidgetModal.vue';
 import FormAddress from './FormAddress.vue';
 
-interface FormModel {
+type FormModel = {
 	email: string;
 	amount: string;
-}
+};
 
 const { payment, checkout, ...store } = useWidgetPackageStore();
 const { user } = useCommonStore();
@@ -57,7 +57,7 @@ const formError = computed(() => {
 	return undefined;
 });
 
-const form: FormController<FormModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	onInit: () => {
 		form.formModel.amount = (price.value! / 100).toFixed(2);
 	},

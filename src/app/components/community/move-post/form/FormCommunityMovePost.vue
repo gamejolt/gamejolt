@@ -36,7 +36,7 @@ const emit = defineEmits<{
 
 const otherOptions = ref<string[]>([]);
 
-const form: FormController<MovePostFormModel> = createForm({
+const form: FormController<MovePostFormModel> = createForm<MovePostFormModel>({
 	warnOnDiscard: false,
 	onInit() {
 		form.formModel.notifyUser = 'no';

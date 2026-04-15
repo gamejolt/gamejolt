@@ -229,7 +229,7 @@ const IndividualAccountType = UserStripeManagedAccountType.Individual;
 const CompanyAccountType = UserStripeManagedAccountType.Company;
 const UnverifiedStatus = UserStripeManagedAccountStatus.Unverified;
 
-const form: FormController<ManagedAccountFormModel> = createForm({
+const form: FormController<ManagedAccountFormModel> = createForm<ManagedAccountFormModel>({
 	resetOnSubmit: true,
 	async onInit() {
 		if (!scriptLoaded) {

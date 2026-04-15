@@ -16,6 +16,8 @@ import { $saveForumPost, ForumPostModel } from '../../../../../_common/forum/pos
 import { ForumTopicModel } from '../../../../../_common/forum/topic/topic.model';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 
+type FormModel = ForumPostModel;
+
 type Props = {
 	model?: ForumPostModel;
 	topic: ForumTopicModel;
@@ -31,7 +33,7 @@ const emit = defineEmits<{
 
 const capabilities = ContextCapabilities.fromPayloadList([]);
 
-const form: FormController<ForumPostModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	model: toRef(() => model),
 	modelClass: ForumPostModel,
 	modelSaveHandler: $saveForumPost,

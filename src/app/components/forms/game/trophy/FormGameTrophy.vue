@@ -29,6 +29,8 @@ import { $gettext } from '../../../../../_common/translate/translate.service';
 import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
 import { BaseTrophyDifficulty } from '../../../../../_common/trophy/base-trophy.model';
 
+type FormModel = GameTrophyModel;
+
 type Props = {
 	game: GameModel;
 	difficulty: number;
@@ -46,7 +48,7 @@ const maxFilesize = ref(0);
 const maxWidth = ref(0);
 const maxHeight = ref(0);
 
-const form: FormController<GameTrophyModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	model: toRef(props, 'model'),
 	modelClass: GameTrophyModel,
 	modelSaveHandler: $saveGameTrophy,

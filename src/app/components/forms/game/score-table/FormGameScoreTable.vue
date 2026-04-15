@@ -18,6 +18,8 @@ import {
 } from '../../../../../_common/game/score-table/score-table.model';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 
+type FormModel = GameScoreTableModel;
+
 type Props = {
 	game: GameModel;
 	model?: GameScoreTableModel;
@@ -33,7 +35,7 @@ const emit = defineEmits<{
 const DirectionAscend = GameScoreTableSorting.DirectionAsc;
 const DirectionDescend = GameScoreTableSorting.DirectionDesc;
 
-const form: FormController<GameScoreTableModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	model: toRef(props, 'model'),
 	modelClass: GameScoreTableModel,
 	modelSaveHandler: $saveGameScoreTable,

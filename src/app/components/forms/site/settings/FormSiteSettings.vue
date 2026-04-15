@@ -15,6 +15,8 @@ import AppLinkExternal from '../../../../../_common/link/AppLinkExternal.vue';
 import { $saveSite, SiteModel } from '../../../../../_common/site/site-model';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 
+type FormModel = SiteModel;
+
 type Props = {
 	model?: SiteModel;
 };
@@ -25,7 +27,7 @@ const emit = defineEmits<{
 	submit: [site: SiteModel];
 }>();
 
-const form: FormController<SiteModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	model: toRef(() => model),
 	modelClass: SiteModel,
 	modelSaveHandler: $saveSite,

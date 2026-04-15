@@ -20,9 +20,9 @@ import { stringSort } from '../../../../utils/array';
 import { routeNotifications } from '../notifications.route';
 import { NOTIFICATION_FILTER_QUERY } from '../RouteNotifications.vue';
 
-interface FormModel {
+type FormModel = {
 	[k: string]: boolean;
-}
+};
 
 const props = defineProps({
 	filters: {
@@ -42,7 +42,7 @@ const { user } = useCommonStore();
 
 const notificationLabels = computed(() => getNotificationFeedTypeLabels(user.value!));
 
-const form: FormController<FormModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	onInit() {
 		NotificationFeedTypes.sort((a, b) => stringSort(a, b)).forEach(i => {
 			form.formModel[i] = filters.value.includes(i);

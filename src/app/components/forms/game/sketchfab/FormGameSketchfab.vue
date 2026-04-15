@@ -18,6 +18,8 @@ import AppSketchfabEmbed, {
 } from '../../../../../_common/sketchfab/embed/AppSketchfabEmbed.vue';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 
+type FormModel = GameSketchfabModel;
+
 type Props = {
 	game: GameModel;
 	model?: GameSketchfabModel;
@@ -32,7 +34,7 @@ const emit = defineEmits<{
 
 const SKETCHFAB_FIELD_REGEX = SKETCHFAB_FIELD_VALIDATION_REGEX;
 
-const form: FormController<GameSketchfabModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	model: toRef(props, 'model'),
 	modelClass: GameSketchfabModel,
 	modelSaveHandler: $saveGameSketchfab,

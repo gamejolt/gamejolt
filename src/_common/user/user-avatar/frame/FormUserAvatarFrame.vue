@@ -17,15 +17,15 @@ import { $gettext } from '../../../translate/translate.service';
 import AppUserAvatarFrameSelector from './_selector/AppUserAvatarFrameSelector.vue';
 import { UserAvatarFrameModel } from './frame.model';
 
-interface FormModel {
+type FormModel = {
 	avatar_frame: number | undefined;
-}
+};
 
 const { user } = useCommonStore();
 
 const availableFrames = ref<UserAvatarFrameModel[]>([]);
 
-const form: FormController<FormModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	loadUrl: '/web/dash/profile/save',
 	onLoad(payload) {
 		availableFrames.value = storeModelList(UserAvatarFrameModel, payload.userAvatarFrames);

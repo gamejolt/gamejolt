@@ -65,7 +65,7 @@ import FormGameNewBuild from '../new-build/FormGameNewBuild.vue';
 </script>
 
 <script lang="ts" setup>
-type GameReleaseFormModel = GameReleaseModel & {
+type FormModel = GameReleaseModel & {
 	should_publish?: boolean;
 };
 
@@ -83,9 +83,9 @@ const props = defineProps<Props>();
 const { game } = props;
 
 const emit = defineEmits<{
-	'unpublish-release': [release: GameReleaseFormModel];
-	'remove-release': [release: GameReleaseFormModel];
-	submit: [formModel: GameReleaseFormModel];
+	'unpublish-release': [release: FormModel];
+	'remove-release': [release: FormModel];
+	submit: [formModel: FormModel];
 }>();
 
 const controller = (() => {
@@ -99,7 +99,7 @@ const now = ref(0);
 
 const GameReleaseStatusPublished = GameReleaseStatus.Published;
 
-const form: FormController<GameReleaseFormModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	model: toRef(props, 'model'),
 	modelClass: GameReleaseModel,
 	modelSaveHandler: $saveGameRelease,

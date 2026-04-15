@@ -31,11 +31,11 @@ const emit = defineEmits({
 	submit: () => true,
 });
 
-interface FormModel {
+type FormModel = {
 	email: string;
-}
+};
 
-const form: FormController<FormModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	warnOnDiscard: false,
 	onSubmit: () => {
 		let url = '/claim/retrieve';

@@ -10,9 +10,9 @@ import AppFormControlErrors from '../../../../_common/form-vue/AppFormControlErr
 import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
 
-interface RetrieveLoginFormModel {
+type FormModel = {
 	email: string;
-}
+};
 
 const emit = defineEmits({
 	submit: () => true,
@@ -20,7 +20,7 @@ const emit = defineEmits({
 
 const invalidEmail = ref(false);
 
-const form: FormController<RetrieveLoginFormModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	warnOnDiscard: false,
 	onInit() {
 		invalidEmail.value = false;

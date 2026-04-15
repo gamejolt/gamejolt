@@ -26,16 +26,16 @@ import { showCommunityChannelBackgroundModal } from '../../../../community/chann
 import AppCommunityChannelCardEdit from '../../../../community/channel/card/edit/AppCommunityChannelCardEdit.vue';
 import AppFormCommunityChannelPermissions from '../_permissions/FormCommunityChannelPermissions.vue';
 
-interface FormModel extends CommunityChannelModel {
+type FormModel = CommunityChannelModel & {
 	permission_posting?: string;
-}
+};
 
 const props = defineProps({
 	community: {
 		type: Object as PropType<CommunityModel>,
 		required: true,
 	},
-	...defineFormProps<CommunityChannelModel>(true),
+	...defineFormProps<FormModel>(true),
 });
 
 const emit = defineEmits({
@@ -57,7 +57,7 @@ const loadUrl = toRef(
 
 const shouldShowPermissions = toRef(() => model.value && !model.value.is_archived);
 
-const form: FormController<FormModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	model,
 	modelClass: CommunityChannelModel,
 	loadUrl,

@@ -19,6 +19,11 @@ import AppLoading from '../../loading/AppLoading.vue';
 import AppTranslate from '../../translate/AppTranslate.vue';
 import googleImage from '../google-icon.svg';
 
+type FormModel = {
+	username: string;
+	password: string;
+};
+
 type Props = {
 	overlay?: boolean;
 };
@@ -26,7 +31,7 @@ const { overlay } = defineProps<Props>();
 
 const emit = defineEmits<{
 	'needs-approved-login': [token: string];
-	submit: [formModel: any, response: any];
+	submit: [formModel: FormModel, response: any];
 }>();
 
 const router = useRouter();
@@ -45,7 +50,7 @@ const tryAgain = ref(false);
 
 const showForm = computed(() => captchaToken.value === null);
 
-const form: FormController = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	warnOnDiscard: false,
 	loadUrl: `/web/auth/login`,
 	onLoad($payload: any) {

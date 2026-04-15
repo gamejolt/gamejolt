@@ -23,6 +23,8 @@ import { $gettext } from '../../../../../../_common/translate/translate.service'
 import { TranslateDirective as vTranslate } from '../../../../../../_common/translate/translate-directive';
 import AppCommunityCompetitionDate from '../../../../community/competition/date/AppCommunityCompetitionDate.vue';
 
+type FormModel = CommunityCompetitionModel;
+
 const props = defineProps({
 	model: {
 		type: Object as () => CommunityCompetitionModel,
@@ -34,7 +36,7 @@ const timezoneService = ref<FormTimezoneService<CommunityCompetitionModel> | nul
 
 const shouldShowSaveButton = computed(() => props.model!.periodNum < CompetitionPeriodVoting);
 
-const form: FormController<CommunityCompetitionModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	modelClass: CommunityCompetitionModel,
 	modelSaveHandler: $saveCommunityCompetition,
 	model: toRef(props, 'model'),

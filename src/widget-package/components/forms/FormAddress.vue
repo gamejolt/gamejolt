@@ -10,19 +10,19 @@ import { Geo, GeoCountry, GeoRegion } from '../../../_common/geo/geo.service';
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
 import { AddressData, useWidgetPackageStore } from '../../store/index';
 
-interface FormModel {
+type FormModel = {
 	country: string;
 	region: string;
 	street1: string;
 	postcode: string;
-}
+};
 
 const { address, checkout } = useWidgetPackageStore();
 
 const countries = shallowRef<GeoCountry[]>(Geo.getCountries());
 const regions = shallowRef<GeoRegion[] | undefined>([]);
 
-const form: FormController<FormModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	onInit: () => {
 		form.formModel.country = 'us';
 		countryChanged();

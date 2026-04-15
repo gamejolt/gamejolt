@@ -15,6 +15,8 @@ import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { showGameThumbnailModal } from '../../../game/thumbnail-modal/thumbnail-modal.service';
 import AppDashGameWizardControls from '../wizard-controls/AppDashGameWizardControls.vue';
 
+type FormModel = GameModel;
+
 type Props = {
 	model?: GameModel;
 };
@@ -26,7 +28,7 @@ const emit = defineEmits<{
 	submit: [];
 }>();
 
-const form: FormController<GameModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	model: toRef(props, 'model'),
 	modelClass: GameModel,
 	modelSaveHandler: $saveGameDesign,

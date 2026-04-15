@@ -13,6 +13,8 @@ import {
 } from '../../../../_common/game-playlist/game-playlist.model';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 
+type FormModel = GamePlaylistModel;
+
 const props = defineProps({
 	model: {
 		type: Object as PropType<GamePlaylistModel>,
@@ -24,7 +26,7 @@ const emit = defineEmits<{
 	submit: [model: GamePlaylistModel, response: any];
 }>();
 
-const form: FormController<GamePlaylistModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	modelClass: GamePlaylistModel,
 	modelSaveHandler: $saveGamePlaylist,
 	model: toRef(props, 'model'),

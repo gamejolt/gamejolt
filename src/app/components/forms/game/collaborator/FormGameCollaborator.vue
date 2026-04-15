@@ -21,6 +21,8 @@ import {
 import { GameModel } from '../../../../../_common/game/game.model';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 
+type FormModel = CollaboratorModel;
+
 type Props = {
 	game: GameModel;
 	model?: CollaboratorModel;
@@ -36,7 +38,7 @@ const emit = defineEmits<{
 const CollaboratorRoleEqualCollaborator = CollaboratorRole.EqualCollaborator;
 const CollaboratorRoleCommunityManager = CollaboratorRole.CommunityManager;
 
-const form: FormController<CollaboratorModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	model: toRef(props, 'model'),
 	modelClass: CollaboratorModel,
 	modelSaveHandler: $inviteCollaborator,

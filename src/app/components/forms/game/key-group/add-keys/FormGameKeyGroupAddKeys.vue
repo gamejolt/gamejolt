@@ -34,7 +34,13 @@ const KeyGroupTypeAnonymousClaim = KeyGroupType.AnonymousClaim;
 const KeyGroupTypeEmail = KeyGroupType.Email;
 const KeyGroupTypeUser = KeyGroupType.User;
 
-const form: FormController<any> = createForm({
+type FormModel = {
+	amount?: number;
+	emails?: string;
+	users?: string;
+};
+
+const form: FormController<FormModel> = createForm<FormModel>({
 	warnOnDiscard: false,
 	onSubmit() {
 		return Api.sendRequest(

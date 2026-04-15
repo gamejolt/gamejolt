@@ -27,10 +27,10 @@ import { useCommonStore } from '../../../../../../_common/store/common-store';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
 import AppFormCommunityChannelPermissions from '../_permissions/FormCommunityChannelPermissions.vue';
 
-interface FormModel extends CommunityChannelModel {
+type FormModel = CommunityChannelModel & {
 	permission_posting?: string;
 	timezone?: string;
-}
+};
 
 const types = [
 	{
@@ -88,7 +88,7 @@ const isValid = computed(() => {
 	);
 });
 
-const form: FormController<FormModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	modelClass: CommunityChannelModel,
 	modelSaveHandler: $saveCommunityChannel,
 	resetOnSubmit: true,

@@ -24,12 +24,14 @@ import AppUserAvatarImg from '../../../user/user-avatar/AppUserAvatarImg.vue';
 import { SupporterActionModel } from '../../action.model';
 import { $saveSupporterMessageTemplate, SupporterMessageModel } from '../../message.model';
 
+type FormModel = SupporterMessageModel;
+
 const props = defineProps({
 	action: {
 		type: Object as PropType<SupporterActionModel>,
 		default: undefined,
 	},
-	...defineFormProps<SupporterMessageModel>(),
+	...defineFormProps<FormModel>(),
 });
 
 const { action, model } = toRefs(props);
@@ -44,7 +46,7 @@ const isTemplate = computed(() => !action?.value);
 const loadUrl = computed(() => `/web/dash/creators/supporters/save-template`);
 const sendUrl = computed(() => `/web/dash/creators/supporters/send-message/${action?.value?.id}`);
 
-const form: FormController<SupporterMessageModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	model,
 	modelClass: SupporterMessageModel,
 	loadUrl,
