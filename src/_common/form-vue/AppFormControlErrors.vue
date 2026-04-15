@@ -40,6 +40,9 @@ const props = defineProps({
 	hideCaret: {
 		type: Boolean,
 	},
+	ignoreDirty: {
+		type: Boolean,
+	},
 });
 
 const c = createFormControlErrors();

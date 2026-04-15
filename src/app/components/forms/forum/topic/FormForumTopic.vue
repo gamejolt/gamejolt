@@ -27,6 +27,7 @@ const { model, channel } = defineProps<Props>();
 
 const emit = defineEmits<{
 	cancel: [];
+	submit: [topic: ForumTopicModel];
 }>();
 
 const capabilities = ContextCapabilities.fromPayloadList([]);
@@ -43,6 +44,9 @@ const form: FormController<ForumTopicModel> = createForm({
 		} else {
 			form.formModel.text_content = '';
 		}
+	},
+	onSubmitSuccess() {
+		emit('submit', form.formModel);
 	},
 });
 

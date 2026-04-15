@@ -5,7 +5,6 @@ import { RouterView, useRoute } from 'vue-router';
 import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
 import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
-// @ts-ignore
 import nav from '../../../../lib/doc-game-api/v1.x/nav.json';
 import { imageJolt } from '../../../img/images';
 
@@ -18,6 +17,8 @@ export default {
 
 <script lang="ts" setup>
 const route = useRoute();
+
+console.log('nav', nav);
 
 function inPath(url: string, exact = false) {
 	if (exact) {

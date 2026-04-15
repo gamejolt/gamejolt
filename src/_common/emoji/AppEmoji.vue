@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, PropType, toRefs } from 'vue';
+import { computed, toRefs } from 'vue';
 
 import { styleWhen } from '../../_styles/mixins';
 import { buildCSSPixelValue } from '../../_styles/variables';
@@ -34,13 +34,13 @@ const assetPaths = import.meta.glob('./*.png', { eager: true, as: 'url' });
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	emoji: {
-		type: [String, Object] as PropType<(typeof GJ_EMOJIS)[number] | EmojiModel>,
-		required: true,
-		validator: (val: any) => val instanceof EmojiModel || GJ_EMOJIS.includes(val),
-	},
-});
+import { HTMLAttributes } from 'vue';
+
+type Props = {
+	emoji: (typeof GJ_EMOJIS)[number] | EmojiModel;
+} & /* @vue-ignore */ Pick<HTMLAttributes, 'onClick' | 'onMouseenter'>;
+
+const props = defineProps<Props>();
 
 const { emoji } = toRefs(props);
 

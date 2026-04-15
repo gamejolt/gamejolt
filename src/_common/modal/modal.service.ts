@@ -44,7 +44,11 @@ export class Modal<T = any> {
 		// avert your eyes
 		this.size = ref(options.size) as unknown as Modal['size'];
 		this.component = markRaw(options.component);
-		this.props = options.props;
+		// Mark props raw so Vue's reactive proxy over `Modals` doesn't deep-wrap
+		// the props object — otherwise nested refs (e.g. on a controller/store
+		// passed in as a prop) get auto-unwrapped and callers hit `undefined`
+		// when they try to read `.value` off them.
+		this.props = options.props ? markRaw(options.props) : options.props;
 		this.noBackdrop = options.noBackdrop;
 		this.noBackdropClose = options.noBackdropClose;
 		this.noEscClose = options.noEscClose;

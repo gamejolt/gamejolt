@@ -188,7 +188,7 @@ async function onClickClear() {
 				:key="votingCategory.id"
 				class="row"
 			>
-				<label class="col-sm-4 -category-label" control-label>
+				<label class="col-sm-4 -category-label control-label">
 					{{ votingCategory.name }}
 					<AppJolticon
 						v-if="votingCategory.description"
@@ -242,7 +242,7 @@ async function onClickClear() {
 				</div>
 			</div>
 			<div class="row">
-				<label class="col-sm-4 -overall-label" control-label>
+				<label class="col-sm-4 -overall-label control-label">
 					<AppTranslate>Your Overall</AppTranslate>
 					<div class="text-muted">
 						<i><AppTranslate>(calculated)</AppTranslate></i>

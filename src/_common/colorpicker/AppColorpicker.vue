@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-// @ts-ignore
+// @ts-expect-error no types for @ckpack/vue-color
 import { Sketch as VuePicker } from '@ckpack/vue-color';
 import { ref, toRefs, watch } from 'vue';
 

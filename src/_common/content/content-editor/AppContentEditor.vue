@@ -3,15 +3,14 @@ import 'prosemirror-view/style/prosemirror.css';
 
 import {
 	computed,
+	type HTMLAttributes,
 	nextTick,
 	onBeforeUnmount,
 	onMounted,
-	PropType,
 	provide,
-	Ref,
+	type Ref,
 	ref,
 	shallowRef,
-	toRefs,
 	watch,
 } from 'vue';
 
@@ -51,109 +50,64 @@ export interface AppContentEditorInterface {
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	contentContext: {
-		type: String as PropType<ContentContext>,
-		required: true,
-	},
-	capabilities: {
-		type: Object as PropType<ContextCapabilities>,
-		required: true,
-	},
-	controller: {
-		type: Object as PropType<ContentEditorController>,
-		default: undefined,
-	},
-	value: {
-		type: String,
-		required: true,
-	},
-	placeholder: {
-		type: String,
-		default: '',
-	},
-	autofocus: {
-		type: Boolean,
-	},
-	disabled: {
-		type: Boolean,
-	},
-	modelData: {
-		type: [Object, null] as PropType<ContentEditorModelData | null>,
-		required: true,
-	},
-	modelId: {
-		type: Number,
-		default: undefined,
-	},
-	minHeight: {
-		type: Number,
-		default: 0,
-	},
+type Props = {
+	contentContext: ContentContext;
+	capabilities: ContextCapabilities;
+	controller?: ContentEditorController;
+	value: string;
+	placeholder?: string;
+	autofocus?: boolean;
+	disabled?: boolean;
+	modelData: ContentEditorModelData | null;
+	modelId?: number;
+	minHeight?: number;
 	// Do not remove. Seems to be used somewhere in vee-validate and AppForms.
 	// Forms break without it.
-	name: {
-		type: String,
-		default: '',
-	},
+	name?: string;
 	/**
 	 * Used to send more information with the create temp resource request.
 	 * Passed in object is directly handed to the Api. By default `undefined`,
 	 * resulting in a GET request.
 	 */
-	tempResourceContextData: {
-		type: Object as PropType<Record<string, any>>,
-		default: undefined,
-	},
+	tempResourceContextData?: Record<string, any>;
 	/**
 	 * In single line mode the editor emits an event on enter and does not
 	 * insert a new paragraph. Mod + Enter inserts a new paragraph instead.
 	 */
-	singleLineMode: {
-		type: Boolean,
-	},
+	singleLineMode?: boolean;
 	/**
 	 * Sets the max height of the editor before it starts scrolling. Passing 0
 	 * or a negative value will unrestrict the height.
 	 */
-	maxHeight: {
-		type: Number,
-		default: 200,
-	},
-	displayRules: {
-		type: Object as PropType<ContentRules>,
-		default: undefined,
-	},
-	focusEnd: {
-		type: Boolean,
-	},
-	focusToken: {
-		type: Object as PropType<FocusToken>,
-		default: undefined,
-	},
-});
+	maxHeight?: number;
+	displayRules?: ContentRules;
+	focusEnd?: boolean;
+	focusToken?: FocusToken;
+} & /* @vue-ignore */ Pick<HTMLAttributes, 'onPaste'>;
 
 const {
 	contentContext,
 	capabilities,
 	modelData,
-	controller: inheritedController,
+	controller: inheritedController = undefined,
 	value,
-	placeholder,
-	autofocus,
-	disabled,
-	modelId,
-	minHeight,
+	placeholder = '',
+	autofocus = false,
+	disabled = false,
+	modelId = undefined,
+	minHeight = 0,
 	// Do not remove.
-	name,
-	tempResourceContextData,
-	singleLineMode,
-	maxHeight,
-	displayRules,
-	focusEnd,
-	focusToken,
-} = toRefs(props);
-void name.value;
+	name = '',
+	tempResourceContextData = undefined,
+	singleLineMode = false,
+	maxHeight = 200,
+	displayRules = undefined,
+	focusEnd = false,
+	focusToken = undefined,
+} = defineProps<Props>();
+
+// To get rid of the unused prop warning.
+void name;
 
 const emit = defineEmits({
 	submit: () => true,
@@ -163,12 +117,12 @@ const emit = defineEmits({
 });
 
 const controller_ = shallowRef(
-	inheritedController?.value ||
+	inheritedController ||
 		createContentEditor({
-			contentContext: contentContext.value,
-			contextCapabilities: capabilities.value,
-			disabled: computed(() => disabled.value),
-			singleLineMode: computed(() => singleLineMode.value),
+			contentContext: contentContext,
+			contextCapabilities: capabilities,
+			disabled: computed(() => disabled),
+			singleLineMode: computed(() => singleLineMode),
 		})
 );
 provide(ContentEditorControllerKey, controller_.value);
@@ -177,20 +131,20 @@ const ownerController = ref<ContentOwnerController>(
 	createContentOwnerController({
 		context: controller_.value.contentContext,
 		capabilities: computed(() => controller_.value.contextCapabilities),
-		contentRules: computed(() => displayRules?.value),
-		getModelData: () => modelData?.value || undefined,
+		contentRules: computed(() => displayRules),
+		getModelData: () => modelData || undefined,
 		getModelId: async () => {
-			if (modelId?.value === undefined || modelId.value === null) {
+			if (modelId === undefined || modelId === null) {
 				if (!tempModelId_) {
 					tempModelId_ = await ContentTempResource.getTempModelId(
-						contentContext.value,
-						tempResourceContextData?.value
+						contentContext,
+						tempResourceContextData
 					);
 				}
 				return tempModelId_;
 			}
 
-			return modelId.value;
+			return modelId;
 		},
 	})
 );
@@ -206,7 +160,7 @@ controller_.value._editor = {
 };
 
 // Set us up to be able to be focused with any token passed in.
-focusToken?.value?.register({
+focusToken?.register({
 	focus: () => focus(),
 });
 
@@ -220,10 +174,13 @@ let tempModelId_: number | null = null;
 const editor = ref() as Ref<HTMLElement>;
 const doc = ref() as Ref<HTMLElement>;
 
-watch(capabilities, newCapabilities => {
-	// Update our controller capabilities when our capabilities prop changes.
-	controller_.value.contextCapabilities = newCapabilities;
-});
+watch(
+	() => capabilities,
+	newCapabilities => {
+		// Update our controller capabilities when our capabilities prop changes.
+		controller_.value.contextCapabilities = newCapabilities;
+	}
+);
 
 const canShowMention = computed(() => {
 	return controller_.value.canShowMentionSuggestions > 0;
@@ -259,7 +216,7 @@ const shouldShowEmojiPanel = computed(() => {
 		!controller_.value.disabled &&
 		contextCapabilities.value.emoji &&
 		controller_.value.isFocused &&
-		!!modelData.value
+		!!modelData
 	);
 });
 
@@ -285,7 +242,7 @@ const editorGutterSize = computed(() => {
 
 const shouldShowPlaceholder = computed(() => {
 	return (
-		placeholder.value.length > 0 &&
+		placeholder.length > 0 &&
 		controller_.value.isEmpty &&
 		(!shouldShowControls.value || controller_.value.controlsCollapsed)
 	);
@@ -295,10 +252,10 @@ const editorStyleClass = computed(() => {
 });
 
 const containerMinHeight = computed(() => {
-	if (!minHeight.value) {
+	if (!minHeight) {
 		return 'auto';
 	}
-	return minHeight.value + 'px';
+	return minHeight + 'px';
 });
 
 const shouldShowGifButton = computed(() => {
@@ -315,33 +272,36 @@ const shouldShowCustomButtonControl = computed(() => {
 	);
 });
 
-watch(value, () => {
-	if (controller_.value.sourceContent === value.value) {
-		return;
-	}
+watch(
+	() => value,
+	() => {
+		if (controller_.value.sourceContent === value) {
+			return;
+		}
 
-	controller_.value.sourceContent = value.value;
+		controller_.value.sourceContent = value;
 
-	// When we receive an empty string as the document json, the caller
-	// probably wants to clear the document.
-	if (!value.value) {
-		reset();
-	} else {
-		const wasFocused = controller_.value.isFocused;
-		const doc = ContentDocument.fromJson(value.value);
+		// When we receive an empty string as the document json, the caller
+		// probably wants to clear the document.
+		if (!value) {
+			reset();
+		} else {
+			const wasFocused = controller_.value.isFocused;
+			const doc = ContentDocument.fromJson(value);
 
-		// Don't await this since we want to make sure we focus within the
-		// same tick if they were focused previously.
-		setContent(doc);
+			// Don't await this since we want to make sure we focus within the
+			// same tick if they were focused previously.
+			setContent(doc);
 
-		if (wasFocused) {
-			editorFocus(controller_.value);
+			if (wasFocused) {
+				editorFocus(controller_.value);
+			}
 		}
 	}
-});
+);
 
 onMounted(async () => {
-	if (!GJ_IS_MOBILE_APP && !modelData.value) {
+	if (!GJ_IS_MOBILE_APP && !modelData) {
 		console.warn('Model data is required for content editors.');
 	}
 
@@ -354,8 +314,8 @@ onMounted(async () => {
 
 	// Since we're mounting for the first time, set us not to scroll after
 	// setting up the content.
-	if (value.value) {
-		await setContent(ContentDocument.fromJson(value.value), false);
+	if (value) {
+		await setContent(ContentDocument.fromJson(value), false);
 	} else {
 		await reset(false);
 	}
@@ -365,7 +325,7 @@ onMounted(async () => {
 	focusWatcher = new FocusWatcher(editor.value, onFocusIn, onFocusOut);
 	focusWatcher.start();
 
-	if (view.value && autofocus.value) {
+	if (view.value && autofocus) {
 		focus();
 	}
 });
@@ -374,14 +334,14 @@ onBeforeUnmount(() => {
 	focusWatcher?.destroy();
 });
 
-async function reset(shouldFocus = focusEnd.value) {
+async function reset(shouldFocus = focusEnd) {
 	tempModelId_ = null;
 	const doc = new ContentDocument(controller_.value.contentContext);
 	await setContent(doc, shouldFocus);
 	controller_.value.isEmpty = true;
 }
 
-async function setContent(newDoc: ContentDocument, shouldFocus = focusEnd.value) {
+async function setContent(newDoc: ContentDocument, shouldFocus = focusEnd) {
 	await editorCreateView(controller_.value, doc.value, newDoc, {
 		shouldFocus,
 	});

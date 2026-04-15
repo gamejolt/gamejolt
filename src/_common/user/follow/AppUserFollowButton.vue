@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRefs } from 'vue';
+import { computed, HTMLAttributes, ref } from 'vue';
 
 import { UserFollowLocation } from '../../analytics/analytics.service';
 import { vAppAuthRequired } from '../../auth/auth-required-directive';
@@ -12,45 +12,35 @@ import AppTranslate from '../../translate/AppTranslate.vue';
 import { $gettext } from '../../translate/translate.service';
 import { $toggleUserFollow, UserModel } from '../user.model';
 
-const props = defineProps({
-	user: {
-		type: Object as PropType<UserModel>,
-		required: true,
-	},
-	location: {
-		type: String as PropType<UserFollowLocation>,
-		required: true,
-	},
-	overlay: {
-		type: Boolean,
-	},
-	block: {
-		type: Boolean,
-	},
-	sm: {
-		type: Boolean,
-	},
-	hideCount: {
-		type: Boolean,
-	},
-	disabled: {
-		type: Boolean,
-	},
-	forceHover: {
-		type: Boolean,
-	},
-	icon: {
-		type: String as PropType<Jolticon>,
-		default: undefined,
-	},
-});
+type Props = {
+	user: UserModel;
+	location: UserFollowLocation;
+	overlay?: boolean;
+	block?: boolean;
+	sm?: boolean;
+	hideCount?: boolean;
+	disabled?: boolean;
+	forceHover?: boolean;
+	icon?: Jolticon;
+} & /* @vue-ignore */ Pick<HTMLAttributes, 'onClick'>;
+
+const {
+	user,
+	location,
+	overlay = false,
+	block = false,
+	sm = false,
+	hideCount = false,
+	disabled = false,
+	forceHover = false,
+	icon = undefined,
+} = defineProps<Props>();
 
 const emit = defineEmits({
 	follow: () => true,
 	unfollow: () => true,
 });
 
-const { user, hideCount, location, disabled } = toRefs(props);
 const { user: sessionUser } = useCommonStore();
 
 const isProcessing = ref(false);
@@ -59,33 +49,33 @@ const shouldShow = computed(() => {
 	if (!sessionUser.value) {
 		return true;
 	}
-	if (sessionUser.value.id !== user.value.id && !user.value.hasAnyBlock) {
+	if (sessionUser.value.id !== user.id && !user.hasAnyBlock) {
 		return true;
 	}
 	return false;
 });
 
 const badge = computed(() => {
-	return !hideCount.value && user.value.follower_count
-		? formatNumber(user.value.follower_count)
+	return !hideCount && user.follower_count
+		? formatNumber(user.follower_count)
 		: '';
 });
 
 const tooltip = computed(() => {
-	return !user.value.is_following
+	return !user.is_following
 		? $gettext(`Follow this user to get their posts in your feed!`)
 		: undefined;
 });
 
-const isDisabled = computed(() => disabled.value || isProcessing.value);
+const isDisabled = computed(() => disabled || isProcessing.value);
 
 async function onClick() {
 	if (!sessionUser.value || isDisabled.value) {
 		return;
 	}
 
-	const isFollowing = user.value.is_following !== true;
-	const success = await $toggleUserFollow(user.value, location.value);
+	const isFollowing = user.is_following !== true;
+	const success = await $toggleUserFollow(user, location);
 	// Either failed or didn't confirm the action.
 	if (!success) {
 		return;

@@ -1,25 +1,22 @@
 <script lang="ts" setup>
+import type { HTMLAttributes } from 'vue';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 
-defineProps({
-	isHeader: {
-		type: Boolean,
-	},
-	hasHeaderBack: {
-		type: Boolean,
-	},
-	noImg: {
-		type: Boolean,
-	},
-	imgWidth: {
-		type: Number,
-		default: 32,
-	},
-	imgHeight: {
-		type: Number,
-		default: 32,
-	},
-});
+type Props = {
+	isHeader?: boolean;
+	hasHeaderBack?: boolean;
+	noImg?: boolean;
+	imgWidth?: number;
+	imgHeight?: number;
+} & /* @vue-ignore */ Pick<HTMLAttributes, 'onClick'>;
+
+const {
+	isHeader = false,
+	hasHeaderBack = false,
+	noImg = false,
+	imgWidth = 32,
+	imgHeight = 32,
+} = defineProps<Props>();
 </script>
 
 <template>

@@ -12,6 +12,10 @@ defineProps({
 		type: String,
 		required: true,
 	},
+	countryCode: {
+		type: String,
+		default: undefined,
+	},
 });
 
 const { requiresField, getStripeField, account } = useFormManagedAccount()!;

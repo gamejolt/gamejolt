@@ -1,18 +1,14 @@
 <script lang="ts" setup>
-import { nextTick, PropType, ref } from 'vue';
+import { type HTMLAttributes, nextTick, ref } from 'vue';
 
 import { FocusToken } from '../../../utils/focus-token';
 
-const props = defineProps({
-	modelValue: {
-		type: String,
-		required: true,
-	},
-	focusToken: {
-		type: Object as PropType<FocusToken>,
-		required: true,
-	},
-});
+type Props = {
+	modelValue: string;
+	focusToken: FocusToken;
+} & /* @vue-ignore */ Pick<HTMLAttributes, 'onFocus' | 'onBlur' | 'onKeydown'>;
+
+const props = defineProps<Props>();
 
 const root = ref<HTMLInputElement>();
 

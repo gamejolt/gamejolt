@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, ref, toRef } from 'vue';
+import { computed, inject, InjectionKey, provide, ref, toRef } from 'vue';
 import { RouterView, useRoute } from 'vue-router';
 
 import { Api } from '../../../../../../../../../_common/api/api.service';
@@ -21,6 +21,17 @@ export default {
 			),
 	}),
 };
+
+type AssignAwardsRouteController = {
+	onAssignAward: (awardId: number) => void;
+	onUnassignAward: (awardId: number) => void;
+};
+
+const Key: InjectionKey<AssignAwardsRouteController> = Symbol('assign-awards-route');
+
+export function useAssignAwardsRoute() {
+	return inject(Key)!;
+}
 </script>
 
 <script lang="ts" setup>
@@ -61,6 +72,11 @@ function onUnassignAward(awardId: number) {
 		currAward.entry_count--;
 	}
 }
+
+provide(Key, {
+	onAssignAward,
+	onUnassignAward,
+});
 
 createAppRoute({
 	onResolved({ payload }) {
@@ -124,7 +140,7 @@ createAppRoute({
 					{{ award.name }}
 				</AppButton>
 			</div>
-			<RouterView @assign="onAssignAward($event)" @unassign="onUnassignAward($event)" />
+			<RouterView />
 		</template>
 	</div>
 </template>

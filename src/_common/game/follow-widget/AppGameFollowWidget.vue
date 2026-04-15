@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRef, toRefs } from 'vue';
+import { computed, ref, toRef } from 'vue';
 
 import { GameFollowLocation, trackGameFollow } from '../../analytics/analytics.service';
 import { vAppAuthRequired } from '../../auth/auth-required-directive';
@@ -15,51 +15,43 @@ import AppUserFollowButton from '../../user/follow/AppUserFollowButton.vue';
 import { UserFollowSuggestion } from '../../user/follow/suggestion.service';
 import { followGame, GameModel, unfollowGame } from '../game.model';
 
-const props = defineProps({
-	game: {
-		type: Object as PropType<GameModel>,
-		required: true,
-	},
-	location: {
-		type: String as PropType<GameFollowLocation>,
-		required: true,
-	},
-	overlay: {
-		type: Boolean,
-	},
-	circle: {
-		type: Boolean,
-	},
-	block: {
-		type: Boolean,
-	},
-	lg: {
-		type: Boolean,
-	},
-	solid: {
-		type: Boolean,
-	},
-	showUserFollow: {
-		type: Boolean,
-	},
-	hideCount: {
-		type: Boolean,
-	},
-});
+type Props = {
+	game: GameModel;
+	location: GameFollowLocation;
+	overlay?: boolean;
+	circle?: boolean;
+	block?: boolean;
+	lg?: boolean;
+	solid?: boolean;
+	primary?: boolean;
+	showUserFollow?: boolean;
+	hideCount?: boolean;
+};
 
-const { game, hideCount, location, circle, showUserFollow } = toRefs(props);
+const {
+	game,
+	location,
+	overlay = false,
+	circle = false,
+	block = false,
+	lg = false,
+	solid = false,
+	primary = false,
+	showUserFollow = false,
+	hideCount = false,
+} = defineProps<Props>();
 const { user } = useCommonStore();
 
 const isShowingFollowPopover = ref(false);
 
 const shouldShowFollow = computed(() => {
-	if (!showUserFollow.value) {
+	if (!showUserFollow) {
 		return false;
 	}
 
 	if (
-		(user.value && user.value.id === game.value.developer.id) ||
-		game.value.developer.is_following
+		(user.value && user.value.id === game.developer.id) ||
+		game.developer.is_following
 	) {
 		return false;
 	}
@@ -67,16 +59,16 @@ const shouldShowFollow = computed(() => {
 	return true;
 });
 
-const widgetId = toRef(() => `game-follow-widget-${game.value.id}`);
+const widgetId = toRef(() => `game-follow-widget-${game.id}`);
 
 const badge = computed(() =>
-	!circle.value && !hideCount.value && game.value.follower_count
-		? formatNumber(game.value.follower_count)
+	!circle && !hideCount && game.follower_count
+		? formatNumber(game.follower_count)
 		: ''
 );
 
 const tooltip = computed(() =>
-	!game.value.is_following
+	!game.is_following
 		? $gettext(
 				`Follow this game to add it to your Library and be notified when new posts are added.`
 				// eslint-disable-next-line no-mixed-spaces-and-tabs
@@ -85,11 +77,11 @@ const tooltip = computed(() =>
 );
 
 const icon = toRef(() => {
-	if (!circle.value) {
+	if (!circle) {
 		return undefined;
 	}
 
-	return !game.value.is_following ? 'subscribe' : 'subscribed';
+	return !game.is_following ? 'subscribe' : 'subscribed';
 });
 
 async function onClick() {
@@ -98,23 +90,23 @@ async function onClick() {
 	}
 
 	let failed = false;
-	if (!game.value.is_following) {
+	if (!game.is_following) {
 		// Do this before attempting to follow.
 		// We don't want to wait till the follow is confirmed to show the dialog,
 		// and even if the follow fails it's not like we'll close it.
 		// The user follow suggestion is not reactive, so we call it on impulse like this
 		// instead of putting it in the shouldShowFollow getter.
-		if (shouldShowFollow.value && UserFollowSuggestion.canSuggest(game.value.developer.id)) {
+		if (shouldShowFollow.value && UserFollowSuggestion.canSuggest(game.developer.id)) {
 			isShowingFollowPopover.value = true;
 		}
 
 		try {
-			await followGame(game.value);
+			await followGame(game);
 		} catch (e) {
 			failed = true;
 			showErrorGrowl($gettext('Something has prevented you from following this game.'));
 		} finally {
-			trackGameFollow(true, { failed, location: location.value });
+			trackGameFollow(true, { failed, location: location });
 		}
 	} else {
 		if (isShowingFollowPopover.value) {
@@ -131,7 +123,7 @@ async function onClick() {
 		}
 
 		try {
-			await unfollowGame(game.value);
+			await unfollowGame(game);
 		} catch (e) {
 			failed = true;
 			showErrorGrowl(
@@ -139,7 +131,7 @@ async function onClick() {
 				$gettext('Oh no!')
 			);
 		} finally {
-			trackGameFollow(false, { failed, location: location.value });
+			trackGameFollow(false, { failed, location: location });
 		}
 	}
 }
@@ -147,8 +139,8 @@ async function onClick() {
 function onFollowPopoverDismissed() {
 	isShowingFollowPopover.value = false;
 
-	if (!game.value.developer.is_following) {
-		UserFollowSuggestion.doNotSuggest(game.value.developer.id);
+	if (!game.developer.is_following) {
+		UserFollowSuggestion.doNotSuggest(game.developer.id);
 	}
 }
 </script>

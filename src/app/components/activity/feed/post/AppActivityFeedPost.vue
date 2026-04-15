@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, ref, toRef } from 'vue';
+import { computed, HTMLAttributes, ref, toRef } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import { trackPostOpen } from '../../../../../_common/analytics/analytics.service';
@@ -47,7 +47,7 @@ import AppActivityFeedPostWrapper from './AppActivityFeedPostWrapper.vue';
 
 type Props = {
 	item: ActivityFeedItem;
-};
+} & /* @vue-ignore */ Pick<HTMLAttributes, 'onClick'>;
 
 const { item } = defineProps<Props>();
 

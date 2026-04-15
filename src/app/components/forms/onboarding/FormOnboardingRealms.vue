@@ -11,6 +11,17 @@ type FormModel = {
 	// nothing
 };
 
+defineProps({
+	user: {
+		type: Object,
+		default: undefined,
+	},
+	isSocialRegistration: {
+		type: Boolean,
+		default: false,
+	},
+});
+
 const emit = defineEmits({
 	next: () => true,
 });

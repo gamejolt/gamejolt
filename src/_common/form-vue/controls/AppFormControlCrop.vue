@@ -51,7 +51,6 @@ const emit = defineEmits({
 const { id, controlVal, applyValue } = createFormControl({
 	initialValue: null as any,
 	validators: toRef(props, 'validators'),
-	// eslint-disable-next-line vue/require-explicit-emits
 	onChange: val => emit('changed', val),
 	alwaysOptional: true,
 });

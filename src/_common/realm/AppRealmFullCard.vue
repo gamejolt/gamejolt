@@ -1,6 +1,6 @@
 <script lang="ts">
 export const REALM_CARD_RATIO = 0.75;
-import { computed, CSSProperties, PropType, ref, toRefs } from 'vue';
+import { computed, CSSProperties, HTMLAttributes, ref } from 'vue';
 import { RouteLocationRaw, RouterLink } from 'vue-router';
 
 import AppImgResponsive from '../img/AppImgResponsive.vue';
@@ -12,51 +12,37 @@ import { $toggleRealmFollow, RealmModel } from './realm-model';
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	realm: {
-		type: Object as PropType<RealmModel>,
-		required: true,
-	},
-	overlayContent: {
-		type: Boolean,
-	},
-	noSheet: {
-		type: Boolean,
-	},
-	to: {
-		type: Object as PropType<RouteLocationRaw>,
-		default: undefined,
-	},
-	linkTarget: {
-		type: String as PropType<'whole-card' | 'image'>,
-		default: 'whole-card',
-	},
-	labelPosition: {
-		type: String as PropType<'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'>,
-		default: 'top-left',
-	},
-	noFollow: {
-		type: Boolean,
-	},
-	followOnClick: {
-		type: Boolean,
-	},
-	labelSize: {
-		type: String as PropType<'small' | 'tiny'>,
-		default: undefined,
-	},
-});
+type Props = {
+	realm: RealmModel;
+	overlayContent?: boolean;
+	noSheet?: boolean;
+	to?: RouteLocationRaw;
+	linkTarget?: 'whole-card' | 'image';
+	labelPosition?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+	noFollow?: boolean;
+	followOnClick?: boolean;
+	labelSize?: 'small' | 'tiny';
+} & /* @vue-ignore */ Pick<HTMLAttributes, 'onClick' | 'onDragstart'>;
 
-const { realm, overlayContent, noSheet, to, linkTarget, labelPosition, noFollow, followOnClick } =
-	toRefs(props);
+const {
+	realm,
+	overlayContent = false,
+	noSheet = false,
+	to = undefined,
+	linkTarget = 'whole-card',
+	labelPosition = 'top-left',
+	noFollow = false,
+	followOnClick = false,
+	labelSize = undefined,
+} = defineProps<Props>();
 
 const isHovered = ref(false);
 const isProcessing = ref(false);
 
-const mediaItem = computed(() => realm.value.cover);
+const mediaItem = computed(() => realm.cover);
 
 const labelStyling = computed(() => {
-	const pos = labelPosition.value;
+	const pos = labelPosition;
 
 	const dash = pos.indexOf('-');
 	const vPos = pos.slice(0, dash);
@@ -78,7 +64,7 @@ const labelStyling = computed(() => {
 });
 
 async function onClick(event: Event) {
-	if (!followOnClick.value) {
+	if (!followOnClick) {
 		return;
 	}
 
@@ -90,7 +76,7 @@ async function onClick(event: Event) {
 	}
 
 	isProcessing.value = true;
-	await $toggleRealmFollow(realm.value, 'fullCard');
+	await $toggleRealmFollow(realm, 'fullCard');
 	isProcessing.value = false;
 }
 </script>

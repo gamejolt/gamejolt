@@ -14,6 +14,10 @@ type Props = {
 };
 const { type, parentId } = defineProps<Props>();
 
+const emit = defineEmits<{
+	submit: [model: FormModel, response: any];
+}>();
+
 interface FormModel {
 	type: string;
 	parent_id: number;
@@ -43,6 +47,9 @@ const form: FormController<FormModel> = createForm<FormModel>({
 			file: form.formModel.file,
 			progress: event => (form.formModel._progress = event),
 		});
+	},
+	onSubmitSuccess(response) {
+		emit('submit', form.formModel, response);
 	},
 });
 

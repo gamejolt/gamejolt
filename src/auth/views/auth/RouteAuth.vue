@@ -38,7 +38,7 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const { bootstrap, shouldShowCoverImage, coverMediaItem, coverGame } = useAuthStore();
+const { bootstrap, shouldShowCoverImage, coverMediaItem } = useAuthStore();
 
 createAppRoute({
 	onResolved({ payload }) {
@@ -101,7 +101,7 @@ createAppRoute({
 				v-if="!GJ_IS_DESKTOP_APP && shouldShowCoverImage && Screen.isDesktop"
 				class="-game-credits anim-fade-in-up"
 			>
-				<AppGameCoverCredits :game="coverGame" />
+				<AppGameCoverCredits />
 			</div>
 
 			<div class="auth-shell-bottom-links">

@@ -24,6 +24,7 @@ import { vAppTooltip } from '../../../../../../../../../../_common/tooltip/toolt
 import { $gettext } from '../../../../../../../../../../_common/translate/translate.service';
 import { TranslateDirective as vTranslate } from '../../../../../../../../../../_common/translate/translate-directive';
 import { showEntryFromCommunityCompetitionEntryModal } from '../../../../../../../../../components/community/competition/entry/modal/modal.service';
+import { useAssignAwardsRoute } from '../RouteCommunitiesViewEditChannelsCompetitionAssignAwards.vue';
 
 export default {
 	...defineAppRouteOptions({
@@ -59,10 +60,7 @@ function makeRequest(route: RouteLocationNormalized, page = 1, filterValue = '')
 </script>
 
 <script lang="ts" setup>
-const emit = defineEmits({
-	assign: (_awardId: number) => true,
-	unassign: (_awardId: number) => true,
-});
+const { onAssignAward, onUnassignAward } = useAssignAwardsRoute();
 
 const route = useRoute();
 
@@ -127,7 +125,7 @@ async function executeFilter() {
 async function onClickAssign(entry: CommunityCompetitionEntryModel) {
 	await $assignCommunityCompetitionEntryAward(entry.id, award.value!.id);
 
-	emit('assign', award.value!.id);
+	onAssignAward(award.value!.id);
 
 	isLoading.value = true;
 	const payload = await makeRequest(route, page.value, filterValue.value);
@@ -137,7 +135,7 @@ async function onClickAssign(entry: CommunityCompetitionEntryModel) {
 async function onClickUnassign(entry: CommunityCompetitionEntryModel) {
 	await $unassignCommunityCompetitionEntryAward(entry.id, award.value!.id);
 
-	emit('unassign', award.value!.id);
+	onUnassignAward(award.value!.id);
 
 	isLoading.value = true;
 	const payload = await makeRequest(route, page.value, filterValue.value);

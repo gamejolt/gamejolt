@@ -20,10 +20,17 @@ const props = defineProps({
 	},
 });
 
+const emit = defineEmits<{
+	submit: [model: GamePlaylistModel, response: any];
+}>();
+
 const form: FormController<GamePlaylistModel> = createForm({
 	modelClass: GamePlaylistModel,
 	modelSaveHandler: $saveGamePlaylist,
 	model: toRef(props, 'model'),
+	onSubmitSuccess(response) {
+		emit('submit', form.formModel, response);
+	},
 });
 </script>
 

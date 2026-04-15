@@ -6,7 +6,6 @@ const { url, embedWidth, embedHeight } = useGameserverStore();
 
 <template>
 	<iframe
-		type="text/html"
 		style="overflow: none"
 		:width="embedWidth"
 		:height="embedHeight"

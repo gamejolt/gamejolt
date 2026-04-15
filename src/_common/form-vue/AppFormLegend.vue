@@ -1,19 +1,20 @@
 <script lang="ts" setup>
+import type { HTMLAttributes } from 'vue';
 import AppButton from '../button/AppButton.vue';
-defineProps({
-	compact: {
-		type: Boolean,
-	},
-	expandable: {
-		type: Boolean,
-	},
-	expanded: {
-		type: Boolean,
-	},
-	deletable: {
-		type: Boolean,
-	},
-});
+
+type Props = {
+	compact?: boolean;
+	expandable?: boolean;
+	expanded?: boolean;
+	deletable?: boolean;
+} & /* @vue-ignore */ Pick<HTMLAttributes, 'onClick'>;
+
+const {
+	compact = false,
+	expandable = false,
+	expanded = false,
+	deletable = false,
+} = defineProps<Props>();
 
 const emit = defineEmits({
 	delete: () => true,

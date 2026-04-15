@@ -13,9 +13,7 @@ import {
 	onBeforeUnmount,
 	onMounted,
 	onUnmounted,
-	PropType,
 	ref,
-	toRefs,
 	useSlots,
 	watch,
 } from 'vue';
@@ -87,138 +85,114 @@ function makeModifiers(fallbackPlacements: PopperPlacementType[]) {
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
+import { HTMLAttributes } from 'vue';
+
+type Props = {
 	/**
 	 * Used to force show the popover unconditionally. Useful when developing
 	 * functionality inside the popover.
 	 *
 	 * It is basically equivalent to trigger = manual + manual-show = true
 	 */
-	debug: {
-		type: Boolean,
-		default: false,
-	},
-	placement: {
-		type: String as PropType<PopperPlacementType>,
-		default: 'bottom',
-	},
+	debug?: boolean;
+	placement?: PopperPlacementType;
 	/**
 	 * Allows us to customize the fallback placements allowed for poppers so we
 	 * can force poppers to use a specific placement.
 	 *
 	 * See {@link defaultFallbackPlacements} for the defaults.
 	 */
-	fallbackPlacements: {
-		type: Array as PropType<PopperPlacementType[]>,
-		default: defaultFallbackPlacements,
-	},
-	trigger: {
-		type: String as PropType<PopperTriggerType>,
-		default: 'click',
-	},
+	fallbackPlacements?: PopperPlacementType[];
+	trigger?: PopperTriggerType;
 	/**
 	 * Normally we allow the cursor to move over the actual popover element that
 	 * shows. Setting this to true will disable this functionality and the
 	 * popover will hide immediately when you hover away from the trigger
 	 * element.
 	 */
-	noHoverPopover: {
-		type: Boolean,
-	},
+	noHoverPopover?: boolean;
 	/**
 	 * We want the popper to be 'display: fixed' if we use it on a fixed parent.
 	 * This should prevent stuttering on scroll if the popper is attached to the nav.
 	 */
-	fixed: {
-		type: Boolean,
-	},
+	fixed?: boolean;
 	/**
 	 * By default the popper will stay on the page until the user clicks outside
 	 * of the popper. This tells the popper to close anytime the state changes.
 	 * Useful for poppers in the shell that link to other pages on the site.
 	 */
-	hideOnStateChange: {
-		type: Boolean,
-	},
+	hideOnStateChange?: boolean;
 	/**
 	 * Whether or not the popper should size itself to the same width as the
 	 * trigger. Useful for poppers that work like "select" type controls.
 	 */
-	trackTriggerWidth: {
-		type: Boolean,
-	},
+	trackTriggerWidth?: boolean;
 	/**
 	 * Allows you to force a width. Will still size smaller on mobile to fit the
 	 * screen size.
 	 */
-	width: {
-		type: String,
-		default: undefined,
-	},
+	width?: string;
 	/**
 	 * For popovers that need a specific max-height, header and footer included.
 	 * Should be set as a string, so include the unit (px, %, etc).
 	 */
-	maxHeight: {
-		type: String,
-		default: undefined,
-	},
+	maxHeight?: string;
 	/**
 	 * If the trigger is `manual` you can control whether or not this popper is
 	 * showing through this prop.
 	 */
-	manualShow: {
-		type: Boolean,
-	},
+	manualShow?: boolean;
 	/**
 	 * Anytime this value changes, we'll hide the popper. Useful if we want to
 	 * force a hide when the popper goes out of view.
 	 */
-	hideTrigger: {
-		type: Number,
-		default: 0,
-	},
+	hideTrigger?: number;
 	/**
 	 * Will force a block-level display type on the trigger element.
 	 */
-	block: {
-		type: Boolean,
-	},
+	block?: boolean;
 	/**
 	 * Will hide the arrow pointing to the trigger element.
 	 */
-	sansArrow: {
-		type: Boolean,
-	},
+	sansArrow?: boolean;
 	/**
 	 * Delay for showing a hover-based popper.
 	 */
-	showDelay: {
-		type: Number,
-		default: 0,
-	},
+	showDelay?: number;
 	/**
 	 * Allows setting a css class on the popper content.
 	 */
-	popoverClass: {
-		type: String,
-		default: undefined,
-	},
+	popoverClass?: string;
 	/**
 	 * Query selector that the popper will teleport to. Defaults to `body`.
 	 */
-	to: {
-		type: String,
-		default: 'body',
-	},
+	to?: string;
 	/**
 	 * Whether or not this popper will register itself with the EscapeStack.
 	 */
-	useEscapeStack: {
-		type: Boolean,
-		default: true,
-	},
-});
+	useEscapeStack?: boolean;
+} & /* @vue-ignore */ Pick<HTMLAttributes, 'onClick'>;
+
+const {
+	debug = false,
+	placement = 'bottom',
+	fallbackPlacements = defaultFallbackPlacements,
+	trigger = 'click',
+	noHoverPopover,
+	fixed,
+	hideOnStateChange,
+	trackTriggerWidth,
+	width = undefined,
+	maxHeight = undefined,
+	manualShow,
+	hideTrigger = 0,
+	block,
+	sansArrow,
+	showDelay = 0,
+	popoverClass = undefined,
+	to = 'body',
+	useEscapeStack: wantsEscapeStack = true,
+} = defineProps<Props>();
 
 const emit = defineEmits({
 	triggerClicked: (_event: MouseEvent) => true,
@@ -230,30 +204,10 @@ const emit = defineEmits({
 	hide: () => true,
 });
 
-const {
-	debug,
-	placement,
-	fallbackPlacements,
-	trigger,
-	noHoverPopover,
-	fixed,
-	hideOnStateChange,
-	trackTriggerWidth,
-	width,
-	maxHeight,
-	manualShow,
-	hideTrigger,
-	block,
-	sansArrow,
-	showDelay,
-	popoverClass,
-	useEscapeStack: wantsEscapeStack,
-} = toRefs(props);
-
 const slots = useSlots();
 const router = GJ_HAS_ROUTER ? useRouter() : undefined;
 
-const debugActual = computed(() => GJ_BUILD_TYPE !== 'build' && debug.value);
+const debugActual = computed(() => GJ_BUILD_TYPE !== 'build' && debug);
 
 const isHiding = ref(false);
 const isVisible = ref(false);
@@ -271,17 +225,17 @@ let _hideTimeout: NodeJS.Timer | undefined;
 let _showDelayTimer: NodeJS.Timer | undefined;
 
 const computedMaxHeight = computed(() => {
-	if (maxHeight?.value) {
-		return maxHeight.value;
+	if (maxHeight) {
+		return maxHeight;
 	}
 
 	return Screen.height - 100 + 'px';
 });
 
 const contentClass = computed(() => {
-	const classes = [popoverClass?.value];
+	const classes = [popoverClass];
 
-	if (trackTriggerWidth.value) {
+	if (trackTriggerWidth) {
 		classes.push('-track-trigger-width');
 	}
 
@@ -290,9 +244,9 @@ const contentClass = computed(() => {
 
 const popperOptions = computed((): PopperOptions => {
 	return {
-		placement: placement.value,
-		modifiers: [...makeModifiers(fallbackPlacements?.value)],
-		strategy: fixed.value ? 'fixed' : 'absolute',
+		placement: placement,
+		modifiers: [...makeModifiers(fallbackPlacements)],
+		strategy: fixed ? 'fixed' : 'absolute',
 	};
 });
 
@@ -312,7 +266,7 @@ onMounted(() => {
 
 	Popper.registerPopper(popperIndex, {
 		onHideAll: () => {
-			if (trigger.value === 'manual' || debugActual.value) {
+			if (trigger === 'manual' || debugActual.value) {
 				return;
 			}
 
@@ -338,11 +292,11 @@ onUnmounted(() => {
 	Popper.deregisterPopper(popperIndex);
 });
 
-watch([manualShow, debugActual], onManualShow);
-watch(hideTrigger, _hide);
+watch([() => manualShow, debugActual], onManualShow);
+watch(() => hideTrigger, _hide);
 
 function _stateChangeHide() {
-	if (isVisible.value && hideOnStateChange.value) {
+	if (isVisible.value && hideOnStateChange) {
 		_hide();
 	}
 }
@@ -358,7 +312,7 @@ function onTriggerClicked(event: MouseEvent) {
 
 	// We want to prevent right-click, hover, and manual triggers from showing poppers on left-click.
 	// clickAway() listener will hide poppers when needed, so we only need to show poppers here.
-	if (trigger.value !== 'click') {
+	if (trigger !== 'click') {
 		return;
 	}
 
@@ -372,7 +326,7 @@ function onTriggerClicked(event: MouseEvent) {
 function onContextMenu(event: MouseEvent) {
 	emit('contextmenu', event);
 
-	if (trigger.value !== 'right-click') {
+	if (trigger !== 'right-click') {
 		return;
 	}
 
@@ -387,14 +341,14 @@ function onContextMenu(event: MouseEvent) {
 }
 
 function onPopoverEnter(event: PointerEvent) {
-	if (noHoverPopover.value) {
+	if (noHoverPopover) {
 		return;
 	}
 	onMouseEnter(event);
 }
 
 function onPopoverLeave(event: PointerEvent) {
-	if (noHoverPopover.value) {
+	if (noHoverPopover) {
 		return;
 	}
 	onMouseLeave(event);
@@ -408,7 +362,7 @@ function onMouseEnter(event: PointerEvent) {
 
 	emit('mouseenter', event);
 
-	if (trigger.value !== 'hover') {
+	if (trigger !== 'hover') {
 		return;
 	}
 
@@ -426,7 +380,7 @@ function onMouseEnter(event: PointerEvent) {
 		return;
 	}
 
-	_showDelayTimer = setTimeout(() => _show(), showDelay.value);
+	_showDelayTimer = setTimeout(() => _show(), showDelay);
 }
 
 function onMouseLeave(event: PointerEvent) {
@@ -437,7 +391,7 @@ function onMouseLeave(event: PointerEvent) {
 
 	emit('mouseleave', event);
 
-	if (trigger.value !== 'hover') {
+	if (trigger !== 'hover') {
 		return;
 	}
 
@@ -463,7 +417,7 @@ function _onClickAway(event: MouseEvent) {
 
 	emit('clickAway', event);
 
-	if (trigger.value === 'click' || trigger.value === 'right-click') {
+	if (trigger === 'click' || trigger === 'right-click') {
 		_hide();
 		document.removeEventListener('click', _onClickAway, true);
 	}
@@ -509,7 +463,7 @@ function _calcWidth() {
 	// If we are tracking a particular element's width, then we set this popover
 	// to be the same width as the element. We don't track width when it's an XS
 	// screen since we do a full width popover in those cases.
-	if (trackTriggerWidth.value && !Screen.isXs) {
+	if (trackTriggerWidth && !Screen.isXs) {
 		if (triggerElem.value) {
 			calculatedWidth.value = triggerElem.value.offsetWidth + 'px';
 			maxWidth.value = 'none';
@@ -517,8 +471,8 @@ function _calcWidth() {
 		}
 	}
 
-	if (width?.value) {
-		maxWidth.value = width.value;
+	if (width) {
+		maxWidth.value = width;
 		// This makes sure that smaller screen sizes won't actually allow it to
 		// be too large.
 		calculatedWidth.value = 'calc(100vw - 10px)';
@@ -561,10 +515,10 @@ function onManualShow() {
 		return _show();
 	}
 
-	if (trigger.value !== 'manual') {
+	if (trigger !== 'manual') {
 		return;
 	}
-	if (manualShow.value) {
+	if (manualShow) {
 		return _show();
 	}
 	return _hide();

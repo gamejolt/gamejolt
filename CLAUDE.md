@@ -24,6 +24,7 @@ const { myProp, optional = false } = defineProps<Props>();
 - Use `type Props = { ... }` (not `interface`)
 - Destructure immediately with defaults inline
 - Never access `props.x` — always use the destructured name
+- Do **not** use `withDefaults(defineProps<Props>(), { ... })` — defaults belong in the destructure
 
 ---
 

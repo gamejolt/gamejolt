@@ -1,50 +1,40 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
+import { computed, HTMLAttributes } from 'vue';
 
 import { styleBorderRadiusBase } from '../../../_styles/mixins';
 import { kBorderWidthLg, kFontSizeTiny } from '../../../_styles/variables';
 import { kThemeBacklight, kThemeBgActual, kThemeBgOffset } from '../../theme/variables';
 import { ReactionCount } from '../reaction-count';
 
-const props = defineProps({
-	reaction: {
-		type: Object as PropType<ReactionCount>,
-		required: true,
-	},
-	focusedId: {
-		type: Number,
-		default: undefined,
-	},
-	size: {
-		type: Number,
-		default: 20,
-		validator: val => typeof val === 'number' && val > 0,
-	},
-});
+type Props = {
+	reaction: ReactionCount;
+	focusedId?: number;
+	size?: number;
+} & /* @vue-ignore */ Pick<HTMLAttributes, 'onClick' | 'onContextmenu'>;
 
-const { reaction, focusedId, size } = toRefs(props);
+const { reaction, focusedId, size = 20 } = defineProps<Props>();
 
-const emojiId = computed(() => reaction.value.id);
-const imgUrl = computed(() => reaction.value.img_url);
-const didReact = computed(() => reaction.value.did_react === true);
-const displayText = computed(() => reaction.value.count);
+const emojiId = computed(() => reaction.id);
+const imgUrl = computed(() => reaction.img_url);
+const didReact = computed(() => reaction.did_react === true);
+const displayText = computed(() => reaction.count);
 
 const shouldHighlight = computed(() => {
-	if (focusedId?.value) {
-		return focusedId.value === emojiId.value;
+	if (focusedId) {
+		return focusedId === emojiId.value;
 	}
 	return didReact.value;
 });
 
 const borderColor = computed(() => {
-	if (focusedId?.value || !shouldHighlight.value) {
+	if (focusedId || !shouldHighlight.value) {
 		return 'transparent';
 	}
 	return kThemeBacklight;
 });
 
 const bgColor = computed(() => {
-	const nonHighlightBg = focusedId?.value ? kThemeBgActual : kThemeBgOffset;
+	const nonHighlightBg = focusedId ? kThemeBgActual : kThemeBgOffset;
 	if (shouldHighlight.value) {
 		return kThemeBgOffset;
 	}

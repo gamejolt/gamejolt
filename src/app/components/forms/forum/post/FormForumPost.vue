@@ -26,6 +26,7 @@ const { model, topic, replyTo } = defineProps<Props>();
 
 const emit = defineEmits<{
 	cancel: [];
+	submit: [post: ForumPostModel];
 }>();
 
 const capabilities = ContextCapabilities.fromPayloadList([]);

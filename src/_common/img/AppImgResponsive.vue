@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { nextTick, onMounted, ref, toRefs, watch } from 'vue';
+import { ImgHTMLAttributes, nextTick, onMounted, ref, watch } from 'vue';
 
 import { getMediaserverUrlForBounds } from '../../utils/image';
 import { sleep } from '../../utils/utils';
@@ -8,28 +8,22 @@ import { onScreenResize } from '../screen/screen-service';
 import { useEventSubscription } from '../system/event/event-topic';
 import { ImgHelper } from './helper/helper-service';
 
-const props = defineProps({
-	src: {
-		type: String,
-		required: true,
-	},
-	alt: {
-		type: String,
-		default: '',
-	},
-});
+type Props = {
+	src: string;
+	alt?: string;
+} & /* @vue-ignore */ Pick<ImgHTMLAttributes, 'onLoad' | 'onClick' | 'width' | 'height'>;
+
+const { src, alt = '' } = defineProps<Props>();
 
 const emit = defineEmits({
 	imgloadchange: (_isLoaded: boolean) => true,
 });
 
-const { src } = toRefs(props);
-
 const root = ref<HTMLElement>();
 const initialized = ref(false);
-const processedSrc = ref(import.meta.env.SSR ? src.value : '');
+const processedSrc = ref(import.meta.env.SSR ? src : '');
 
-watch(src, _updateSrc);
+watch(() => src, _updateSrc);
 
 useEventSubscription(onScreenResize, () => _updateSrc());
 
@@ -59,7 +53,7 @@ async function _updateSrc() {
 	}
 
 	const newSrc = getMediaserverUrlForBounds({
-		src: src.value,
+		src: src,
 		maxWidth: containerWidth,
 		maxHeight: containerHeight,
 	});

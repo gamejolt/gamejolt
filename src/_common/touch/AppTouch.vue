@@ -59,18 +59,21 @@ export function isTouchEvent(event: FlexibleTouchEvent): event is TouchEvent {
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	panOptions: {
-		required: false,
-		type: Object,
-		default: <PanOptions>{
-			direction: 'all',
-			threshold: 10,
-		},
+import { HTMLAttributes } from 'vue';
+
+type Props = {
+	panOptions?: Record<string, any>;
+} & /* @vue-ignore */ Pick<HTMLAttributes, 'onClick'>;
+
+const {
+	panOptions = <PanOptions>{
+		direction: 'all',
+		threshold: 10,
 	},
-});
+} = defineProps<Props>();
 
 const emit = defineEmits({
+	tap: (_event: AppTouchInput) => true,
 	panstart: (_event: AppTouchInput) => true,
 	panmove: (_event: AppTouchInput) => true,
 	panend: (_event: AppTouchInput) => true,
@@ -178,14 +181,14 @@ onUnmounted(() => {
 });
 
 const direction = computed<HorizontalOption | VerticalOption>(() => {
-	if (props.panOptions.direction) {
-		return props.panOptions.direction;
+	if (panOptions.direction) {
+		return panOptions.direction;
 	}
 	return 'all';
 });
 
 const threshold = computed<number>(() => {
-	const t = props.panOptions.threshold;
+	const t = panOptions.threshold;
 	if (typeof t === 'number' && t >= 0) {
 		return t;
 	}

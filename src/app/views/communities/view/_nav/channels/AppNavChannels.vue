@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, ref, toRef } from 'vue';
+import { computed, HTMLAttributes, ref, toRef } from 'vue';
 
 import { CommunityChannelModel } from '../../../../../../_common/community/channel/channel.model';
 import { CommunityModel } from '../../../../../../_common/community/community.model';
@@ -10,6 +10,8 @@ import { $gettext } from '../../../../../../_common/translate/translate.service'
 import AppCommunityChannelCard from '../../../../../components/community/channel/card/AppCommunityChannelCard.vue';
 import { useAppStore } from '../../../../../store';
 import { loadArchivedChannels, useCommunityRouteStore } from '../../view.store';
+
+defineProps</* @vue-ignore */ Pick<HTMLAttributes, 'onClick' | 'onScroll'>>();
 
 const { user } = useCommonStore();
 const { toggleLeftPane, communities, communityStates } = useAppStore();

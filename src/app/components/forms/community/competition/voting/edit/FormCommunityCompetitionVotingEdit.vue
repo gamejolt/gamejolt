@@ -41,6 +41,7 @@ const props = defineProps({
 
 const emit = defineEmits<{
 	cancel: [];
+	submit: [competition: CommunityCompetitionModel];
 }>();
 
 const timezoneService = ref<FormTimezoneService<CommunityCompetitionModel> | null>(null);
@@ -100,6 +101,9 @@ const form: FormController<CommunityCompetitionModel> = createForm({
 
 		timezoneService.value = new FormTimezoneService(form);
 		await timezoneService.value.load(true);
+	},
+	onSubmitSuccess() {
+		emit('submit', form.formModel);
 	},
 });
 

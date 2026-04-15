@@ -17,6 +17,10 @@ type Props = {
 
 const { site } = defineProps<Props>();
 
+const emit = defineEmits<{
+	submit: [model: SiteBuildModel, response: any];
+}>();
+
 const maxFilesize = ref(0);
 
 const form: FormController<SiteBuildModel> = createForm({
@@ -42,6 +46,9 @@ const form: FormController<SiteBuildModel> = createForm({
 				},
 			}
 		);
+	},
+	onSubmitSuccess(response) {
+		emit('submit', form.formModel, response);
 	},
 });
 

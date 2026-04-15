@@ -25,6 +25,7 @@ const props = defineProps<Props>();
 
 const emit = defineEmits<{
 	changed: [game: GameModel];
+	submit: [];
 }>();
 
 const age: MaturityField[] = [
@@ -217,6 +218,9 @@ const form: FormController<GameModel> = createForm({
 		for (const field of fields) {
 			(form.formModel as any)[field] = form.formModel[field] || 0;
 		}
+	},
+	onSubmitSuccess() {
+		emit('submit');
 	},
 });
 </script>

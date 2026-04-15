@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-// @ts-ignore
+// @ts-expect-error no types for @ckpack/vue-color
 import { Sketch as VuePicker } from '@ckpack/vue-color';
 import { computed, ref, toRef } from 'vue';
 
@@ -38,7 +38,6 @@ interface VueColor {
 const { controlVal, applyValue } = createFormControl({
 	initialValue: null as ThemeModel | null,
 	validators: toRef(props, 'validators'),
-	// eslint-disable-next-line vue/require-explicit-emits
 	onChange: val => emit('changed', val),
 	alwaysOptional: true,
 });

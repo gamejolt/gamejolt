@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, toRaw, useSlots } from 'vue';
+import { computed, HTMLAttributes, toRaw, useSlots } from 'vue';
 
 import AppExpand from '../../expand/AppExpand.vue';
 import AppJolticon from '../../jolticon/AppJolticon.vue';
@@ -7,27 +7,22 @@ import { Screen } from '../../screen/screen-service';
 import AppCard from '../AppCard.vue';
 import { useCardList } from './AppCardList.vue';
 
-const props = defineProps({
-	item: {
-		type: Object,
-		required: true,
-	},
-	forceActive: {
-		type: Boolean,
-	},
+type Props = {
+	item: object;
+	forceActive?: boolean;
 	/**
 	 * Takes up the padding that would show as if this card was expandable.
 	 */
-	forceExpandablePadding: {
-		type: Boolean,
-	},
-});
+	forceExpandablePadding?: boolean;
+} & /* @vue-ignore */ Pick<HTMLAttributes, 'onClick' | 'onMouseenter' | 'onMouseleave'>;
+
+const { item, forceActive = false, forceExpandablePadding = false } = defineProps<Props>();
 
 const slots = useSlots();
 const { isDraggable, activeItem, activate } = useCardList()!;
 
 const isActive = computed(() => {
-	return props.forceActive || toRaw(activeItem.value) === toRaw(props.item);
+	return forceActive || toRaw(activeItem.value) === toRaw(item);
 });
 
 const isExpandable = computed(() => !!slots.body);
@@ -37,7 +32,7 @@ function onClick() {
 		return;
 	}
 
-	activate(isActive.value ? null : props.item);
+	activate(isActive.value ? null : item);
 }
 </script>
 

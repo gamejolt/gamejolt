@@ -32,7 +32,6 @@ const { name } = useFormGroup()!;
 const { controlVal, applyValue } = createFormControl<any>({
 	initialValue: null,
 	validators: toRef(props, 'validators'),
-	// eslint-disable-next-line vue/require-explicit-emits
 	onChange: val => emit('changed', val),
 	multi: true,
 	alwaysOptional: true,

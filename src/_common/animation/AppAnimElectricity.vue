@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, CSSProperties, PropType, ref, toRefs } from 'vue';
+import { computed, CSSProperties, HTMLAttributes, ref } from 'vue';
 
 import { useResizeObserver } from '../../utils/resize-observer';
 import { Ruler } from '../ruler/ruler-service';
@@ -14,20 +14,13 @@ import {
 
 type ShockAnimation = 'square' | 'wide-rect' | 'adaptive';
 
-const props = defineProps({
-	shockAnim: {
-		type: String as PropType<ShockAnimation>,
-		default: 'adaptive',
-	},
-	disabled: {
-		type: Boolean,
-	},
-	ignoreAssetPadding: {
-		type: Boolean,
-	},
-});
+type Props = {
+	shockAnim?: ShockAnimation;
+	disabled?: boolean;
+	ignoreAssetPadding?: boolean;
+} & /* @vue-ignore */ Pick<HTMLAttributes, 'onMousedown' | 'onTouchstart'>;
 
-const { shockAnim, disabled, ignoreAssetPadding } = toRefs(props);
+const { shockAnim = 'adaptive', disabled, ignoreAssetPadding } = defineProps<Props>();
 
 const _squareSheet = sheetShockSquare;
 const _rectSheets = [sheetShockRectBL, sheetShockRectTR];
@@ -36,14 +29,14 @@ const root = ref<HTMLDivElement>();
 const size = ref({ width: 200, height: 200 });
 
 const chosenAsset = computed(() => {
-	if (disabled.value) {
+	if (disabled) {
 		return null;
 	}
 
 	const square = [_squareSheet];
 	const wideRect = _rectSheets;
 
-	switch (shockAnim.value) {
+	switch (shockAnim) {
 		case 'adaptive': {
 			const { width, height } = size.value;
 			if (width / 2 < height) {
@@ -84,7 +77,7 @@ function getStyleForAsset(sheet: ImgSlideshow): CSSProperties {
 	if (!isBL && !isTR) {
 		// Square asset has roughly 25% padding between the asset and the visual
 		// "edge" of the electricity.
-		const inset = ignoreAssetPadding.value ? 0 : '-25%';
+		const inset = ignoreAssetPadding ? 0 : '-25%';
 		return {
 			left: inset,
 			top: inset,
@@ -95,8 +88,8 @@ function getStyleForAsset(sheet: ImgSlideshow): CSSProperties {
 
 	// Trying to offset the animation asset so it aligns with the edge of the
 	// actual widget we're overlaying.
-	const extraVertical = ignoreAssetPadding.value ? 0 : 0.4;
-	const extraHorizontal = ignoreAssetPadding.value ? 0 : 0.115;
+	const extraVertical = ignoreAssetPadding ? 0 : 0.4;
+	const extraHorizontal = ignoreAssetPadding ? 0 : 0.115;
 
 	let offsetY = `${extraVertical * 100}%`;
 	let offsetX = `${extraHorizontal * 100}%`;
@@ -110,7 +103,7 @@ function getStyleForAsset(sheet: ImgSlideshow): CSSProperties {
 		pos = { top: 0, right: 0 };
 	}
 
-	const offset: CSSProperties = ignoreAssetPadding.value
+	const offset: CSSProperties = ignoreAssetPadding
 		? {}
 		: {
 				transform: `translate3d(${offsetX}, ${offsetY}, 0)`,

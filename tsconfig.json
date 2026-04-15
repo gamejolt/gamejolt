@@ -16,6 +16,7 @@
 		"resolveJsonModule": true,
 		"useDefineForClassFields": false,
 		"esModuleInterop": false,
+		"allowSyntheticDefaultImports": true,
 		"jsx": "preserve",
 		"lib": ["esnext", "dom", "dom.iterable", "scripthost"]
 	},

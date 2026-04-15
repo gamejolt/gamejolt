@@ -15,6 +15,10 @@ type Props = {
 };
 const { userId, token } = defineProps<Props>();
 
+const emit = defineEmits<{
+	submit: [];
+}>();
+
 const form: FormController = createForm({
 	warnOnDiscard: false,
 	onInit() {
@@ -25,6 +29,9 @@ const form: FormController = createForm({
 			key: token,
 			password: form.formModel.password,
 		});
+	},
+	onSubmitSuccess() {
+		emit('submit');
 	},
 });
 </script>

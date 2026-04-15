@@ -190,7 +190,7 @@ function onInviewChanged(isInviewNew: boolean) {
 		</template>
 
 		<template v-else>
-			<div v-if="!isOpen" class="-thumb" :alt="imageAlt">
+			<div v-if="!isOpen" class="-thumb" :aria-label="imageAlt">
 				<div class="-thumb-img-container">
 					<img v-if="thumbUrl" :src="thumbUrl" class="-thumb-img" />
 				</div>

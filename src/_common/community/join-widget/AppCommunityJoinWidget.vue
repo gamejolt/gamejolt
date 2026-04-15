@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRefs } from 'vue';
+import { computed, ref } from 'vue';
 
 import { useGridStore } from '../../../app/components/grid/grid-store';
 import { useAppStore } from '../../../app/store/index';
@@ -13,43 +13,40 @@ import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import { $gettext } from '../../translate/translate.service';
 import { CommunityModel } from '../community.model';
 
-const props = defineProps({
-	community: {
-		type: Object as PropType<CommunityModel>,
-		required: true,
-	},
-	location: {
-		type: String as PropType<CommunityJoinLocation>,
-		required: true,
-	},
-	block: {
-		type: Boolean,
-	},
-	hideCount: {
-		type: Boolean,
-	},
-	solid: {
-		type: Boolean,
-	},
-});
+type Props = {
+	community: CommunityModel;
+	location: CommunityJoinLocation;
+	block?: boolean;
+	hideCount?: boolean;
+	solid?: boolean;
+	disabled?: boolean;
+};
+
+const {
+	community,
+	location,
+	block = false,
+	hideCount = false,
+	solid = false,
+	disabled = false,
+} = defineProps<Props>();
 
 const { joinCommunity, leaveCommunity } = useAppStore();
 const { user } = useCommonStore();
 const { grid } = useGridStore();
 
-const { community, location, hideCount } = toRefs(props);
 const isProcessing = ref(false);
 
 const badge = computed(() =>
-	!hideCount.value && community.value.member_count
-		? formatNumber(community.value.member_count)
+	!hideCount && community.member_count
+		? formatNumber(community.member_count)
 		: ''
 );
 
 // Guests should always be allowed to attempt to join stuff.
 // When they log in, we can check if they are actually allowed.
 const canJoin = computed(
-	() => !user.value || (!!user.value.can_join_communities && !community.value.user_block)
+	() => !user.value || (!!user.value.can_join_communities && !community.user_block)
 );
 
 const isDisabled = computed(() => {
@@ -58,7 +55,7 @@ const isDisabled = computed(() => {
 	}
 
 	// Always allow users to leave a community
-	if (community.value.is_member) {
+	if (community.is_member) {
 		return false;
 	}
 
@@ -72,11 +69,11 @@ async function onClick() {
 
 	isProcessing.value = true;
 
-	if (!community.value.is_member) {
+	if (!community.is_member) {
 		try {
-			await joinCommunity(community.value, {
+			await joinCommunity(community, {
 				grid: grid.value,
-				location: location.value,
+				location: location,
 			});
 		} catch (e: any) {
 			console.log(e);
@@ -89,9 +86,9 @@ async function onClick() {
 		}
 	} else {
 		try {
-			await leaveCommunity(community.value, {
+			await leaveCommunity(community, {
 				grid: grid.value,
-				location: location.value,
+				location: location,
 				shouldConfirm: true,
 			});
 		} catch (e) {

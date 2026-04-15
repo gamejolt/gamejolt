@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, onBeforeUnmount, onMounted, PropType, Ref, ref, toRefs, watch } from 'vue';
+import { computed, onBeforeUnmount, onMounted, Ref, ref, watch } from 'vue';
 
 import { styleWhen } from '../../../_styles/mixins';
 import { formatNumber } from '../../filters/number';
@@ -84,48 +84,24 @@ export function createReadableTimestamp(time: number) {
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	context: {
-		type: String as PropType<VideoPlayerControllerContext>,
-		required: true,
-	},
-	mediaItem: {
-		type: Object as PropType<MediaItemModel>,
-		required: true,
-	},
-	manifests: {
-		type: Array as PropType<VideoSourceArray>,
-		required: true,
-	},
+import { HTMLAttributes } from 'vue';
+
+type Props = {
+	context: VideoPlayerControllerContext;
+	mediaItem: MediaItemModel;
+	manifests: VideoSourceArray;
 	/**
 	 * Indicates that we should use {@link props.parentPlayer} instead of our
 	 * locally defined player.
 	 */
-	useParentPlayer: {
-		type: Boolean,
-	},
-	parentPlayer: {
-		type: Object as PropType<VideoPlayerController>,
-		default: undefined,
-	},
-	autoplay: {
-		type: Boolean,
-	},
-	allowDegradedAutoplay: {
-		type: Boolean,
-	},
-	startTime: {
-		type: Number,
-		default: 0,
-	},
-	viewCount: {
-		type: Number,
-		default: 0,
-	},
-	showVideoStats: {
-		type: Boolean,
-	},
-});
+	useParentPlayer?: boolean;
+	parentPlayer?: VideoPlayerController;
+	autoplay?: boolean;
+	allowDegradedAutoplay?: boolean;
+	startTime?: number;
+	viewCount?: number;
+	showVideoStats?: boolean;
+} & /* @vue-ignore */ Pick<HTMLAttributes, 'onClick'>;
 
 const {
 	context,
@@ -134,10 +110,11 @@ const {
 	useParentPlayer,
 	parentPlayer,
 	autoplay,
-	startTime,
-	viewCount,
+	allowDegradedAutoplay,
+	startTime = 0,
+	viewCount = 0,
 	showVideoStats,
-} = toRefs(props);
+} = defineProps<Props>();
 
 const emit = defineEmits({
 	play: () => true,
@@ -150,19 +127,19 @@ const root = ref() as Ref<HTMLDivElement>;
 const localPlayer = ref(null) as Ref<VideoPlayerController | null>;
 
 const player = computed(() => {
-	if (useParentPlayer.value) {
-		return parentPlayer?.value || null;
+	if (useParentPlayer) {
+		return parentPlayer || null;
 	}
 	return localPlayer.value;
 });
 
 watch(
-	useParentPlayer,
+	() => useParentPlayer,
 	useParent => {
 		if (useParent) {
 			localPlayer.value = null;
 		} else {
-			localPlayer.value = createVideoPlayerController(manifests.value, context.value);
+			localPlayer.value = createVideoPlayerController(manifests, context);
 		}
 	},
 	{ immediate: true }
@@ -182,10 +159,10 @@ function isContext(value: VideoPlayerControllerContext) {
 	if (player.value) {
 		return player.value.context === value;
 	}
-	if (useParentPlayer.value) {
-		return (parentPlayer?.value?.context || context.value) === value;
+	if (useParentPlayer) {
+		return (parentPlayer?.context || context) === value;
 	}
-	return context.value === value;
+	return context === value;
 }
 
 const height = computed(() => {
@@ -244,7 +221,7 @@ const readableTime = computed(() => {
 
 const shouldShowLoading = computed(() => {
 	if (player.value) {
-		return player.value.isLoading && (autoplay.value || player.value.state === 'playing');
+		return player.value.isLoading && (autoplay || player.value.state === 'playing');
 	}
 	return true;
 });
@@ -256,7 +233,7 @@ const maxWidth = computed(() => {
 	if (player.value.isFullscreen) {
 		return Screen.width;
 	}
-	return mediaItem.value.width;
+	return mediaItem.width;
 });
 
 const maxHeight = computed(() => {
@@ -281,7 +258,7 @@ const maxHeight = computed(() => {
 });
 
 const shouldShowVideoStats = computed(
-	() => showVideoStats.value && player.value && !player.value.isFullscreen
+	() => showVideoStats && player.value && !player.value.isFullscreen
 );
 
 const currentTime = computed(() => {
@@ -332,8 +309,8 @@ watch(
 );
 
 onMounted(() => {
-	if (startTime.value && player.value) {
-		queueVideoTimeChange(player.value, startTime.value);
+	if (startTime && player.value) {
+		queueVideoTimeChange(player.value, startTime);
 	}
 
 	if (isPageVideo.value) {

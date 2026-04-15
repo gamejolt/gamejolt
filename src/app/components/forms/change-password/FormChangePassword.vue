@@ -18,6 +18,10 @@ type Props = {
 };
 const { requiresOld = true } = defineProps<Props>();
 
+const emit = defineEmits<{
+	submit: [];
+}>();
+
 type FormModel = {
 	old_password: string;
 	password: string;
@@ -37,6 +41,9 @@ const form: FormController<FormModel> = createForm<FormModel>({
 			old_password: form.formModel.old_password,
 			password: form.formModel.password,
 		});
+	},
+	onSubmitSuccess() {
+		emit('submit');
 	},
 });
 </script>

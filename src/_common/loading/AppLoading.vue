@@ -1,40 +1,34 @@
 <script lang="ts" setup>
-import { computed, toRefs } from 'vue';
+import { computed, HTMLAttributes } from 'vue';
 
 import { $gettext } from '../translate/translate.service';
 
 const images = import.meta.glob('./*.gif', { eager: true, as: 'url' });
 
-const props = defineProps({
-	label: {
-		type: String,
-		default: () => $gettext(`Loading...`),
-	},
-	hideLabel: {
-		type: Boolean,
-	},
-	big: {
-		type: Boolean,
-	},
-	noColor: {
-		type: Boolean,
-	},
-	stationary: {
-		type: Boolean,
-	},
-	centered: {
-		type: Boolean,
-	},
-});
+type Props = {
+	label?: string;
+	hideLabel?: boolean;
+	big?: boolean;
+	noColor?: boolean;
+	stationary?: boolean;
+	centered?: boolean;
+} & /* @vue-ignore */ Pick<HTMLAttributes, 'onClick'>;
 
-const { stationary, noColor, big } = toRefs(props);
+const {
+	label = $gettext(`Loading...`),
+	hideLabel = false,
+	big = false,
+	noColor = false,
+	stationary = false,
+	centered = false,
+} = defineProps<Props>();
 
 const img = computed(() => {
 	const img =
 		'loading' +
-		(stationary.value ? '-stationary' : '') +
-		(noColor.value ? '-bw' : '') +
-		(big.value ? '-2x' : '');
+		(stationary ? '-stationary' : '') +
+		(noColor ? '-bw' : '') +
+		(big ? '-2x' : '');
 
 	return images[`./${img}.gif`];
 });

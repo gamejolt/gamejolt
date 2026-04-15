@@ -63,7 +63,6 @@ const { name } = useFormGroup()!;
 const { id, controlVal, applyValue } = createFormControl({
 	initialValue: null as File | File[] | null,
 	validators,
-	// eslint-disable-next-line vue/require-explicit-emits
 	onChange: val => emit('changed', val),
 });
 
@@ -179,7 +178,12 @@ function setFiles(files: File[] | File | null | undefined) {
 }
 
 function isAscii(str: string) {
-	return /^[\x00-\x7f]*$/.test(str);
+	for (let i = 0; i < str.length; ++i) {
+		if (str.charCodeAt(i) > 0x7f) {
+			return false;
+		}
+	}
+	return true;
 }
 
 /**

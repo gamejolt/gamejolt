@@ -64,31 +64,31 @@ function createThemeData(options: {
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	isRoot: {
-		type: Boolean,
-	},
-	theme: {
-		type: Object as PropType<ThemeModel>,
-		default: null,
-	},
-	forceDark: {
-		type: Boolean,
-	},
-	forceLight: {
-		type: Boolean,
-	},
-});
+import { HTMLAttributes } from 'vue';
+
+type AppThemeProps = {
+	isRoot?: boolean;
+	theme?: ThemeModel | null;
+	forceDark?: boolean;
+	forceLight?: boolean;
+} & /* @vue-ignore */ Pick<HTMLAttributes, 'onMouseover' | 'onMouseout'>;
+
+const {
+	isRoot,
+	theme: propTheme = null,
+	forceDark,
+	forceLight,
+} = defineProps<AppThemeProps>();
 
 const { theme: storeTheme, isDark: storeIsDark } = useThemeStore();
 
 // Not reactive on purpose.
 const scopeId = ++_inc;
 const id = 'theme-' + scopeId;
-const selector = props.isRoot ? ':root' : '#' + id;
+const selector = isRoot ? ':root' : '#' + id;
 
-const theme = computed(() => props.theme ?? storeTheme.value ?? DefaultTheme);
-const isDark = computed(() => (storeIsDark.value && !props.forceLight) || props.forceDark);
+const theme = computed(() => propTheme ?? storeTheme.value ?? DefaultTheme);
+const isDark = computed(() => (storeIsDark.value && !forceLight) || forceDark);
 
 provide(
 	ThemeDataKey,

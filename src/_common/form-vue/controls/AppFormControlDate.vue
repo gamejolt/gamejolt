@@ -44,7 +44,6 @@ const { id, controlVal, applyValue } = createFormControl({
 
 		return validators;
 	}),
-	// eslint-disable-next-line vue/require-explicit-emits
 	onChange: val => emit('changed', val),
 });
 

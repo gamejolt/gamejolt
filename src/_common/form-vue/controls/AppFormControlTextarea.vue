@@ -1,18 +1,23 @@
 <script lang="ts" setup>
-import { ref, toRef } from 'vue';
+import { ref, TextareaHTMLAttributes, toRef } from 'vue';
 
-import {
-	createFormControl,
-	defineFormControlEmits,
-	defineFormControlProps,
-	defineFormControlValidateProps,
-} from '../AppFormControl.vue';
+import { createFormControl, defineFormControlEmits } from '../AppFormControl.vue';
 import { useFormGroup } from '../AppFormGroup.vue';
+import { FormValidator } from '../validators';
 
-const props = defineProps({
-	...defineFormControlProps(),
-	...defineFormControlValidateProps(),
-});
+type Props = {
+	disabled?: boolean;
+	validators?: FormValidator[];
+	validateDelay?: number;
+	validateOnBlur?: boolean;
+} & /* @vue-ignore */ Pick<TextareaHTMLAttributes, 'rows' | 'maxlength'>;
+
+const {
+	disabled,
+	validators = [],
+	validateDelay = 0,
+	validateOnBlur = false,
+} = defineProps<Props>();
 
 const emit = defineEmits({
 	...defineFormControlEmits(),
@@ -23,8 +28,7 @@ const { name } = useFormGroup()!;
 
 const { id, controlVal, applyValue, applyBlur } = createFormControl({
 	initialValue: '',
-	validators: toRef(props, 'validators'),
-	// eslint-disable-next-line vue/require-explicit-emits
+	validators: toRef(() => validators),
 	onChange: val => emit('changed', val),
 });
 
@@ -32,15 +36,15 @@ const root = ref<HTMLTextAreaElement>();
 
 function onChange() {
 	applyValue(root.value?.value || '', {
-		validateDelay: props.validateDelay,
-		validateOnBlur: props.validateOnBlur,
+		validateDelay: validateDelay,
+		validateOnBlur: validateOnBlur,
 	});
 }
 
 function onBlur() {
-	if (props.validateOnBlur) {
+	if (validateOnBlur) {
 		applyBlur({
-			validateDelay: props.validateDelay,
+			validateDelay: validateDelay,
 		});
 	}
 }

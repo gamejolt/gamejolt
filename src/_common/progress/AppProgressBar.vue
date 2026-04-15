@@ -1,35 +1,29 @@
 <script lang="ts" setup>
-defineProps({
-	percent: {
-		type: Number,
-		required: true,
-	},
-	thin: {
-		type: Boolean,
-	},
-	active: {
-		type: Boolean,
-	},
-	glow: {
-		type: Boolean,
-	},
-	indeterminate: {
-		type: Boolean,
-	},
-	animate: {
-		type: Boolean,
-		default: true,
-	},
-	hideZero: {
-		type: Boolean,
-	},
-	bgSubtle: {
-		type: Boolean,
-	},
-	primary: {
-		type: Boolean,
-	},
-});
+import type { HTMLAttributes } from 'vue';
+
+type Props = {
+	percent: number;
+	thin?: boolean;
+	active?: boolean;
+	glow?: boolean;
+	indeterminate?: boolean;
+	animate?: boolean;
+	hideZero?: boolean;
+	bgSubtle?: boolean;
+	primary?: boolean;
+} & /* @vue-ignore */ Pick<HTMLAttributes, 'role' | 'aria-valuenow' | 'aria-valuemin' | 'aria-valuemax'>;
+
+const {
+	percent,
+	thin = false,
+	active = false,
+	glow = false,
+	indeterminate = false,
+	animate = true,
+	hideZero = false,
+	bgSubtle = false,
+	primary = false,
+} = defineProps<Props>();
 </script>
 
 <template>

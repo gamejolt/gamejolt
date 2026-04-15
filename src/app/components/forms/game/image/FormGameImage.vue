@@ -28,6 +28,10 @@ type Props = {
 const props = defineProps<Props>();
 const { game } = props;
 
+const emit = defineEmits<{
+	submit: [model: GameScreenshotModel, response: any];
+}>();
+
 const maxFilesize = ref(0);
 const maxWidth = ref(0);
 const maxHeight = ref(0);
@@ -45,6 +49,9 @@ const form: FormController<GameScreenshotModel> = createForm({
 		maxFilesize.value = payload.maxFilesize;
 		maxWidth.value = payload.maxWidth;
 		maxHeight.value = payload.maxHeight;
+	},
+	onSubmitSuccess(response) {
+		emit('submit', form.formModel, response);
 	},
 });
 

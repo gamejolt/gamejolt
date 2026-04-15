@@ -29,6 +29,10 @@ type Props = {
 
 const props = defineProps<Props>();
 
+const emit = defineEmits<{
+	submit: [payload: any];
+}>();
+
 const nameAvailabilityUrl = computed(() => {
 	let endpoint =
 		'/web/dash/communities/competitions/voting-categories/check-field-availability/' +
@@ -50,6 +54,9 @@ const form: FormController<CommunityCompetitionVotingCategoryModel> = createForm
 		if (!form.formModel.community_competition_id) {
 			form.formModel.community_competition_id = props.competition.id;
 		}
+	},
+	onSubmitSuccess(response) {
+		emit('submit', response);
 	},
 });
 </script>

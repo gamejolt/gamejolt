@@ -33,6 +33,7 @@ const emit = defineEmits({
 	selectCommunity: (_community: CommunityModel) => true,
 	selectChannel: (_channel: CommunityChannelModel) => true,
 	select: (_community: CommunityModel, _channel: CommunityChannelModel) => true,
+	show: () => true,
 });
 
 const selectedCommunity = ref<CommunityModel | null>(null);
@@ -79,7 +80,7 @@ function _closeAndReset() {
 </script>
 
 <template>
-	<AppFormsPillSelector>
+	<AppFormsPillSelector @show="emit('show')">
 		<slot />
 
 		<template #header>

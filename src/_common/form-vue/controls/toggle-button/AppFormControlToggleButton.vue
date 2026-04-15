@@ -37,7 +37,6 @@ const { multi, direction } = useFormControlToggleButtonGroup()!;
 const { applyValue } = createFormControl<any>({
 	initialValue: multi ? [] : null,
 	validators,
-	// eslint-disable-next-line vue/require-explicit-emits
 	onChange: val => emit('changed', val),
 	multi,
 });

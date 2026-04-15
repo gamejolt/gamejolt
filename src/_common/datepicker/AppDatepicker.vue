@@ -126,6 +126,10 @@ const props = defineProps({
 		type: Date,
 		default: null,
 	},
+	required: {
+		type: Boolean,
+		default: false,
+	},
 });
 
 const emit = defineEmits({

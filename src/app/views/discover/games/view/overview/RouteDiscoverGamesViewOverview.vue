@@ -477,7 +477,7 @@ async function reloadPreviewComments() {
 									<hr />
 									<div class="row">
 										<div class="col-sm-6">
-											<AppGameDetails :game="game" />
+											<AppGameDetails />
 										</div>
 										<div class="col-sm-6">
 											<AppLazyPlaceholder :when="isOverviewLoaded">

@@ -61,7 +61,7 @@ function onTokenChanged(formModel: { token: string }) {
 					support high scores and achievements.
 				</AppTranslate>
 				[
-				<AppLinkHelp page="tokens" target="_blank">
+				<AppLinkHelp page="tokens">
 					<AppTranslate>more info</AppTranslate>
 				</AppLinkHelp>
 				]

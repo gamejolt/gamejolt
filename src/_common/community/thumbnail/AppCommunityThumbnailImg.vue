@@ -1,17 +1,16 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
+import type { HTMLAttributes } from 'vue';
 
 import AppAspectRatio from '../../aspect-ratio/AppAspectRatio.vue';
 import AppImgResponsive from '../../img/AppImgResponsive.vue';
 import AppMediaItemBackdrop from '../../media-item/backdrop/AppMediaItemBackdrop.vue';
 import { CommunityModel } from '../community.model';
 
-defineProps({
-	community: {
-		type: Object as PropType<CommunityModel>,
-		required: true,
-	},
-});
+type Props = {
+	community: CommunityModel;
+} & /* @vue-ignore */ Pick<HTMLAttributes, 'onClick'>;
+
+const { community } = defineProps<Props>();
 </script>
 
 <template>

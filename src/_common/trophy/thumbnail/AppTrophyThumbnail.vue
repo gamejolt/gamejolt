@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, onMounted, PropType, ref, toRefs } from 'vue';
+import { computed, type HTMLAttributes, onMounted, ref } from 'vue';
 
 import AppImgResponsive from '../../img/AppImgResponsive.vue';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
@@ -54,37 +54,33 @@ const BaseHeight = 35;
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	trophy: {
-		type: Object as PropType<BaseTrophyModel>,
-		required: true,
-	},
-	noTooltip: {
-		type: Boolean,
-	},
-	noDifficulty: {
-		type: Boolean,
-	},
-	noHighlight: {
-		type: Boolean,
-	},
-});
+type Props = {
+	trophy: BaseTrophyModel;
+	noTooltip?: boolean;
+	noDifficulty?: boolean;
+	noHighlight?: boolean;
+} & /* @vue-ignore */ Pick<HTMLAttributes, 'onClick'>;
 
-const { trophy, noTooltip, noDifficulty, noHighlight } = toRefs(props);
+const {
+	trophy,
+	noTooltip = false,
+	noDifficulty = false,
+	noHighlight = false,
+} = defineProps<Props>();
 
 const thumbElem = ref<HTMLElement | null>(null);
 const thumbWidth = ref(BaseWidth);
 
 const tooltip = computed(() => {
-	if (noTooltip.value) {
+	if (noTooltip) {
 		return '';
 	}
-	return trophy.value.title;
+	return trophy.title;
 });
 
-const hasThumbnailImg = computed(() => trophy.value.has_thumbnail && trophy.value.isInfoRevealed);
+const hasThumbnailImg = computed(() => trophy.has_thumbnail && trophy.isInfoRevealed);
 
-const imgSrc = computed(() => getTrophyImg(trophy.value));
+const imgSrc = computed(() => getTrophyImg(trophy));
 
 const imgMultiplier = computed(() => {
 	const val = Math.floor(thumbWidth.value / 34);

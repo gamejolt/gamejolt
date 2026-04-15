@@ -134,8 +134,7 @@ const form: FormController<FormModel> = createForm({
 			};
 
 			const response = await new Promise<any>((resolve, reject) => {
-				// @ts-ignore
-				window.Stripe.card.createToken(formData, (_status: any, stripeResponse: any) => {
+				(window as any).Stripe.card.createToken(formData, (_status: any, stripeResponse: any) => {
 					if (stripeResponse.error) {
 						stripeError.value = stripeResponse.error.message;
 						reject(stripeResponse);

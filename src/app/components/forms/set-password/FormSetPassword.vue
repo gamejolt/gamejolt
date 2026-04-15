@@ -8,6 +8,10 @@ import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
 import { validateMaxLength, validateMinLength } from '../../../../_common/form-vue/validators';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 
+const emit = defineEmits<{
+	submit: [];
+}>();
+
 const form: FormController<any> = createForm<any>({
 	warnOnDiscard: false,
 	onInit() {
@@ -17,6 +21,9 @@ const form: FormController<any> = createForm<any>({
 		return Api.sendRequest('/web/dash/account/set-password', {
 			password: form.formModel.password,
 		});
+	},
+	onSubmitSuccess() {
+		emit('submit');
 	},
 });
 </script>

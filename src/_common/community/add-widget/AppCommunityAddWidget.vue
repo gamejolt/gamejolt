@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
+import { computed, type HTMLAttributes } from 'vue';
 import { RouterLink } from 'vue-router';
 
 import { vAppAuthRequired } from '../../auth/auth-required-directive';
@@ -10,14 +10,11 @@ import { TooltipPlacement } from '../../tooltip/tooltip-controller';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import { $gettext } from '../../translate/translate.service';
 
-const props = defineProps({
-	tooltipPlacement: {
-		type: String as PropType<TooltipPlacement>,
-		default: 'bottom',
-	},
-});
+type Props = {
+	tooltipPlacement?: TooltipPlacement;
+} & /* @vue-ignore */ Pick<HTMLAttributes, 'onContextmenu' | 'onClick'>;
 
-const { tooltipPlacement } = toRefs(props);
+const { tooltipPlacement = 'bottom' } = defineProps<Props>();
 
 const { user } = useCommonStore();
 
@@ -33,7 +30,7 @@ const tooltip = computed(() => {
 
 	return {
 		content,
-		placement: tooltipPlacement.value,
+		placement: tooltipPlacement,
 	};
 });
 

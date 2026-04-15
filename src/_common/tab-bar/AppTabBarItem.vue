@@ -1,9 +1,11 @@
 <script lang="ts" setup>
-defineProps({
-	active: {
-		type: Boolean,
-	},
-});
+import type { HTMLAttributes } from 'vue';
+
+type Props = {
+	active?: boolean;
+} & /* @vue-ignore */ Pick<HTMLAttributes, 'onClick'>;
+
+const { active = false } = defineProps<Props>();
 </script>
 
 <template>

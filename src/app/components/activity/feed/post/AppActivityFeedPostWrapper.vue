@@ -1,7 +1,9 @@
 <script lang="ts" setup>
-import { computed } from 'vue';
+import { computed, HTMLAttributes } from 'vue';
 
 import { useOnHover } from '../../../../../_common/on/useOnHover';
+
+defineProps</* @vue-ignore */ Pick<HTMLAttributes, 'onClick'>>();
 import { stylePostFeedItem } from '../../../post/post-styles';
 
 /**

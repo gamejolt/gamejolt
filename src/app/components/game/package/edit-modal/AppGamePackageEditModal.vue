@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import { GamePackageModel } from '../../../../../_common/game/package/package.model';
 import AppModal from '../../../../../_common/modal/AppModal.vue';
@@ -13,22 +11,16 @@ import {
 } from '../../../../views/dashboard/games/manage/manage.store';
 import FormGamePackage from '../../../forms/game/package/FormGamePackage.vue';
 
-const props = defineProps({
-	routeController: {
-		type: Object as PropType<GameDashRouteController>,
-		required: true,
-	},
-	gamePackage: {
-		type: Object as PropType<GamePackageModel>,
-		default: undefined,
-	},
-	sellable: {
-		type: Object as PropType<SellableModel>,
-		default: undefined,
-	},
-});
+type Props = {
+	routeController: GameDashRouteController;
+	gamePackage?: GamePackageModel;
+	sellable?: SellableModel;
+};
+const { routeController, gamePackage, sellable } = defineProps<Props>();
 
-provideGameDashRouteController(props.routeController);
+const { game } = routeController;
+
+provideGameDashRouteController(routeController);
 
 const modal = useModal<GamePackageModel>()!;
 
@@ -48,7 +40,7 @@ function onSubmitted(gamePackage: GamePackageModel) {
 		<div class="modal-body">
 			<FormGamePackage
 				:model="gamePackage"
-				:game="routeController.game.value!"
+				:game="game!"
 				:sellable="sellable"
 				@submit="onSubmitted"
 			/>

@@ -39,6 +39,7 @@ type Props = {
 	isReply?: boolean;
 	showReplies?: boolean;
 	isLastInThread?: boolean;
+	userPostCount?: number;
 };
 
 const { topic, post, isReply, isLastInThread } = defineProps<Props>();
@@ -139,6 +140,7 @@ function report() {
 function onInviewChange(isInView: boolean) {
 	if (isInView && post.notification) {
 		$readNotification(post.notification);
+		// eslint-disable-next-line vue/no-mutating-props
 		post.notification = undefined;
 	}
 }
@@ -282,12 +284,7 @@ function copyPermalink() {
 		</template>
 
 		<template v-if="!isReply" #controls>
-			<AppButton
-				v-if="post.replies_count && !isEditing"
-				type="a"
-				trans
-				@click="toggleReplies"
-			>
+			<AppButton v-if="post.replies_count && !isEditing" tag="a" trans @click="toggleReplies">
 				<AppTranslate
 					:translate-n="post.replies_count"
 					:translate-params="{ count: post.replies_count }"

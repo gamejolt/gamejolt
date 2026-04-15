@@ -22,10 +22,17 @@ type Props = {
 const props = defineProps<Props>();
 const themeStore = useThemeStore();
 
+const emit = defineEmits<{
+	submit: [];
+}>();
+
 const form: FormController<GameModel> = createForm({
 	model: toRef(props, 'model'),
 	modelClass: GameModel,
 	modelSaveHandler: $saveGameDesign,
+	onSubmitSuccess() {
+		emit('submit');
+	},
 });
 
 const hasThumbnailError = computed(() => form.hasCustomError('thumbnail'));

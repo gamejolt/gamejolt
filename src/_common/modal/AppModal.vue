@@ -30,6 +30,10 @@ const _modalBackdropChecks: (() => boolean)[] = [];
 
 <script lang="ts" setup>
 defineProps({
+	modal: {
+		type: Object,
+		default: undefined,
+	},
 	theme: {
 		type: Object as PropType<ThemeModel>,
 		default: undefined,

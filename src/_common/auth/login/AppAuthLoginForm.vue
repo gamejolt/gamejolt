@@ -26,6 +26,7 @@ const { overlay } = defineProps<Props>();
 
 const emit = defineEmits<{
 	'needs-approved-login': [token: string];
+	submit: [formModel: any, response: any];
 }>();
 
 const router = useRouter();
@@ -109,6 +110,9 @@ const form: FormController = createForm({
 	},
 	onSubmitError() {
 		captchaToken.value = null;
+	},
+	onSubmitSuccess(response) {
+		emit('submit', form.formModel, response);
 	},
 });
 

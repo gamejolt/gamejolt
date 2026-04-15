@@ -1,4 +1,4 @@
-// @ts-ignore
+// @ts-expect-error no types for humanize-duration
 import humanizeDuration from 'humanize-duration';
 
 import { getCurrentServerTime } from '../../utils/server-time';

@@ -64,7 +64,7 @@ function onSubmit(data: LinkData) {
 		</div>
 
 		<div class="modal-body">
-			<AppFormContentEditorLink :link-data="linkData" @submit="onSubmit" />
+			<AppFormContentEditorLink :model="linkData" @submit="onSubmit" />
 		</div>
 	</AppModal>
 </template>

@@ -15,6 +15,10 @@ type Props = {
 
 const props = defineProps<Props>();
 
+const emit = defineEmits<{
+	submit: [];
+}>();
+
 const hasPackagesForSale = ref(false);
 
 const form: FormController<GameModel> = createForm({
@@ -24,6 +28,9 @@ const form: FormController<GameModel> = createForm({
 	loadUrl: computed(() => `/web/dash/developer/games/settings/save/${props.model!.id}`),
 	onLoad(payload: any) {
 		hasPackagesForSale.value = payload.hasPackagesForSale;
+	},
+	onSubmitSuccess() {
+		emit('submit');
 	},
 });
 </script>

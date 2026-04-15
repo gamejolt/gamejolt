@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { HTMLAttributes } from 'vue';
 import { RouterLink } from 'vue-router';
 
 import { trackAppPromotionClick } from '../../../../_common/analytics/analytics.service';
@@ -10,6 +11,8 @@ import AppUserCreatorBadge from '../../../../_common/user/creator/AppUserCreator
 import { routeLandingHelpRedirect } from '../../../views/landing/help/help.route';
 import AppShellAltMenuDevelopers from '../AppShellAltMenuDevelopers.vue';
 import AppShellAltMenuExtra from '../AppShellAltMenuExtra.vue';
+
+defineProps</* @vue-ignore */ Pick<HTMLAttributes, 'onClick'>>();
 </script>
 
 <template>

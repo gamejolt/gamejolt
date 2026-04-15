@@ -21,12 +21,17 @@ type FormModel = {
 	removeComments: boolean;
 };
 
+const emit = defineEmits<{
+	submit: [];
+}>();
+
 const form: FormController<FormModel> = createForm({
 	resetOnSubmit: true,
 	onSubmit() {
 		return Api.sendRequest(`/web/dash/blocks/add`, form.formModel);
 	},
 	onSubmitSuccess(response: any) {
+		emit('submit');
 		if (response.success) {
 			if (form.formModel.removeComments) {
 				showInfoGrowl({

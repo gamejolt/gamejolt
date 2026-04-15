@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed } from 'vue';
+import { computed, HTMLAttributes } from 'vue';
 
 import { trackCbarControlClick } from '../../../../_common/analytics/analytics.service';
 import AppCommunityAddWidget from '../../../../_common/community/add-widget/AppCommunityAddWidget.vue';
@@ -9,6 +9,8 @@ import { CBAR_WIDTH } from '../AppShell.vue';
 import AppShellCbarCommunity from './AppShellCbarCommunity.vue';
 import AppShellCbarControls from './AppShellCbarControls.vue';
 import AppShellCbarItem from './AppShellCbarItem.vue';
+
+defineProps</* @vue-ignore */ Pick<HTMLAttributes, 'onClick' | 'onContextmenu'>>();
 
 const { hasCbar, activeCommunity, communities, visibleLeftPane } = useAppStore();
 

@@ -40,6 +40,10 @@ const props = defineProps({
 	...defineFormProps<GameModel>(true),
 });
 
+const emit = defineEmits<{
+	submit: [];
+}>();
+
 const { tags, model } = toRefs(props);
 
 const isFnafDetected = ref(false);
@@ -61,6 +65,7 @@ const form: FormController<DescriptionFormModel> = createForm({
 	},
 	onSubmitSuccess() {
 		form.formModel.autotag = undefined;
+		emit('submit');
 	},
 });
 

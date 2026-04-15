@@ -1,89 +1,54 @@
 <script lang="ts" setup>
-import { PropType, ref, toRef, toRefs, watch } from 'vue';
+import { HTMLAttributes, ref, toRef, watch } from 'vue';
 
 import { FocusToken } from '../../../utils/focus-token';
 import { ContentContext, ContextCapabilities } from '../../content/content-context';
 import AppContentEditor from '../../content/content-editor/AppContentEditor.vue';
 import { ContentEditorModelData } from '../../content/content-owner';
 import { ContentRules } from '../../content/content-rules';
-import {
-	createFormControl,
-	defineFormControlEmits,
-	defineFormControlProps,
-} from '../AppFormControl.vue';
+import { createFormControl, defineFormControlEmits } from '../AppFormControl.vue';
 import { useFormGroup } from '../AppFormGroup.vue';
+import { FormValidator } from '../validators';
 
-const props = defineProps({
-	...defineFormControlProps(),
-	contentContext: {
-		type: String as PropType<ContentContext>,
-		required: true,
-	},
-	capabilities: {
-		type: Object as PropType<ContextCapabilities>,
-		required: true,
-	},
-	placeholder: {
-		type: String,
-		default: '',
-	},
-	autofocus: {
-		type: Boolean,
-	},
-	modelData: {
-		type: [Object, null] as PropType<ContentEditorModelData | null>,
-		required: true,
-	},
-	modelId: {
-		type: Number,
-		default: null,
-	},
-	minHeight: {
-		type: Number,
-		default: null,
-	},
-	tempResourceContextData: {
-		type: null,
-		default: null,
-	},
-	compact: {
-		type: Boolean,
-	},
-	singleLineMode: {
-		type: Boolean,
-	},
-	maxHeight: {
-		type: Number,
-		default: 200,
-	},
-	displayRules: {
-		type: Object as PropType<ContentRules>,
-		default: null,
-	},
-	focusEnd: {
-		type: Boolean,
-	},
-	focusToken: {
-		type: Object as PropType<FocusToken>,
-		default: undefined,
-	},
-});
+type Props = {
+	// From defineFormControlProps
+	disabled?: boolean;
+	validators?: FormValidator[];
+	// Own props
+	contentContext: ContentContext;
+	capabilities: ContextCapabilities;
+	placeholder?: string;
+	autofocus?: boolean;
+	modelData: ContentEditorModelData | null;
+	modelId?: number | null;
+	minHeight?: number | null;
+	tempResourceContextData?: any;
+	compact?: boolean;
+	singleLineMode?: boolean;
+	maxHeight?: number;
+	displayRules?: ContentRules | null;
+	focusEnd?: boolean;
+	focusToken?: FocusToken;
+} & /* @vue-ignore */ Pick<HTMLAttributes, 'onKeydown' | 'onPaste'>;
 
 const {
+	disabled = false,
+	validators = [],
 	contentContext,
 	capabilities,
-	placeholder,
-	autofocus,
+	placeholder = '',
+	autofocus = false,
 	modelData,
-	modelId,
-	minHeight,
-	tempResourceContextData,
-	compact,
-	singleLineMode,
-	maxHeight,
-	displayRules,
-	focusEnd,
-} = toRefs(props);
+	modelId = null,
+	minHeight = null,
+	tempResourceContextData = null,
+	compact = false,
+	singleLineMode = false,
+	maxHeight = 200,
+	displayRules = null,
+	focusEnd = false,
+	focusToken = undefined,
+} = defineProps<Props>();
 
 const emit = defineEmits({
 	...defineFormControlEmits(),
@@ -96,13 +61,12 @@ const { name } = useFormGroup()!;
 
 const { id, controlVal, applyValue } = createFormControl({
 	initialValue: '',
-	validators: toRef(props, 'validators'),
-	// eslint-disable-next-line vue/require-explicit-emits
+	validators: toRef(() => validators),
 	onChange: val => emit('changed', val),
 });
 
 const contextCapabilities = ref({
-	capabilities: capabilities.value,
+	capabilities: capabilities,
 	key: -1,
 });
 
@@ -137,7 +101,7 @@ function onCapabilitiesOverrideChanged(newCapabilities: ContextCapabilities) {
 	}
 }
 
-watch(() => capabilities?.value, onCapabilitiesOverrideChanged);
+watch(() => capabilities, onCapabilitiesOverrideChanged);
 
 function onChange(value: string) {
 	applyValue(value);
