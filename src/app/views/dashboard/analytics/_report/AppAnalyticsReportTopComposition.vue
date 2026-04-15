@@ -45,7 +45,7 @@ function isScalarLabel(val: any) {
 				</thead>
 				<tbody>
 					<tr v-for="(val, i) of reportData.data" :key="i">
-						<td>{{ formatNumber(i + 1) }}.</td>
+						<td>{{ formatNumber(Number(i) + 1) }}.</td>
 						<th>
 							<template v-if="isScalarLabel(val)">
 								{{ val.label }}

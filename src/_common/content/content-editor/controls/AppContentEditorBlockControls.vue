@@ -20,7 +20,6 @@ import {
 } from '../content-editor-controller';
 
 const controller = useContentEditorController()!;
-const container = ref<HTMLElement>();
 const top = ref(0);
 
 const contextCapabilities = computed(() => controller.contextCapabilities);
@@ -133,7 +132,6 @@ function onClickOrderedList() {
 
 <template>
 	<div
-		ref="container"
 		class="content-editor-controls"
 		:style="{
 			top: top + 'px',

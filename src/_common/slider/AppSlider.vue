@@ -52,7 +52,6 @@ const _sliderOffset = ref(0);
 const _percentFull = ref(0);
 
 const slider = ref<HTMLElement>();
-const thumb = ref<HTMLDivElement>();
 
 const sliderFilledStyling = computed(() => {
 	if (vertical.value) {
@@ -235,7 +234,6 @@ watch(percent, () => {
 			<div class="-inner-filled" :style="sliderFilledStyling" />
 
 			<div
-				ref="thumb"
 				v-app-tooltip="readableSliderPercentage"
 				class="-inner-thumb"
 				:style="thumbStyling"

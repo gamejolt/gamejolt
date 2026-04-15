@@ -99,13 +99,6 @@ provide(
 
 const isNewButtonInview = ref(false);
 
-/**
- * We save the scroll position every time it changes. When clicking back to
- * the same feed we can scroll to the previous position that way. We don't
- * set a default so that vue doesn't watch it.
- */
-const container = ref<HTMLDivElement>();
-
 const shouldShowLoadMore = computed(
 	() => !feed.value.reachedEnd && !feed.value.isLoadingMore && feed.value.hasItems
 );
@@ -209,7 +202,7 @@ function shouldShowAd(index: number) {
 	Basically anytime the feed state's items are replaced so that the references
 	to them get picked up again.
 	-->
-	<div :key="feed.id" ref="container" class="activity-feed">
+	<div :key="feed.id" class="activity-feed">
 		<template v-if="newCount > 0 || feed.isLoadingNew">
 			<AppScrollInview :config="InviewConfigShowNew" @inview="onNewButtonInview">
 				<AppExpand v-if="!feed.isLoadingNew" :when="isNewButtonInview">

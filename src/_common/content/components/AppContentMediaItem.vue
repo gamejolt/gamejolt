@@ -63,7 +63,6 @@ const {
 	onUpdateAttrs,
 } = toRefs(props);
 
-const container = ref<InstanceType<typeof AppResponsiveDimensions>>();
 const mediaItem = ref<MediaItemModel>();
 const hasError = ref(false);
 const imageLoaded = ref(false);
@@ -219,7 +218,6 @@ function onItemFullscreen() {
 			}"
 		>
 			<AppResponsiveDimensions
-				ref="container"
 				class="media-item-container"
 				:class="{ '-zoomable': canFullscreenItem }"
 				:ratio="mediaItem ? mediaItem.width / mediaItem.height : 16 / 9"

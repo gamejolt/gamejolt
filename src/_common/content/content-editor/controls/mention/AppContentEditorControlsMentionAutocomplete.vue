@@ -28,7 +28,6 @@ const isListening = ref(false); // If we are listening to the document keydown e
 const remoteSuggestionDebounceTimeout = ref<NodeJS.Timer | null>(null); // Timeout between requests to search backend
 const isLoading = ref(false); // Loading more users from backend
 const users = ref<UserModel[]>([]);
-const container = ref<HTMLElement>();
 const list = ref<HTMLDivElement>();
 
 const emit = defineEmits<{
@@ -193,7 +192,7 @@ function insertUser(user: UserModel) {
 </script>
 
 <template>
-	<div ref="container" :style="styles" class="-container">
+	<div :style="styles" class="-container">
 		<transition name="fade">
 			<div v-if="visible" ref="list" class="-autocomplete">
 				<AppLoading

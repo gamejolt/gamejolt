@@ -16,5 +16,5 @@ const emit = defineEmits<{
 </script>
 
 <template>
-	<Component :is="growl.component" v-bind="growl.props" @close="emit('close')" />
+	<component :is="growl.component" v-bind="growl.props" @close="emit('close')" />
 </template>

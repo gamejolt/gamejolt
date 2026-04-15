@@ -77,7 +77,6 @@ useSlots();
 
 const root = ref<HTMLElement>();
 const message = ref<HTMLElement | undefined>();
-const cardElem = ref<HTMLElement>();
 
 const videoController = ref<VideoPlayerController>();
 
@@ -261,7 +260,6 @@ function _initVideoController() {
 				</div>
 
 				<AppBackground
-					ref="cardElem"
 					class="-background"
 					:class="{ '-blur': blur }"
 					:background="background"

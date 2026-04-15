@@ -86,7 +86,6 @@ const avatarSizeStyles: CSSProperties = {
 let canClearFocus = false;
 let isFocused = false;
 
-const root = ref<HTMLElement>();
 const itemWrapper = ref<HTMLElement>();
 const isShowingAvatarPopper = ref(false);
 const popperHideTrigger = ref(0);
@@ -275,7 +274,6 @@ async function onMessageClick() {
 
 <template>
 	<div
-		ref="root"
 		class="chat-window-output-item"
 		:class="{
 			'-message-queued': showAsQueued,
