@@ -6,7 +6,6 @@ import { Screen } from '../../../../_common/screen/screen-service';
 import AppTimeAgo from '../../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { TranslateDirective as vTranslate } from '../../../../_common/translate/translate-directive';
 import AppUserVerifiedTick from '../../../../_common/user/AppUserVerifiedTick.vue';
 import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
@@ -98,24 +97,22 @@ function getPostPage(topic: ForumTopicModel) {
 						class="col-sm-3 col-md-2 text-muted small"
 						:class="{ 'text-right': !Screen.isXs }"
 					>
-						<span
-							v-translate="{ count: formatNumber(topic.replies_count || 0) }"
+						<AppTranslate
 							:translate-n="topic.replies_count || 0"
-							translate-plural="<b>%{ count }</b> Replies"
+							translate-plural="%{ count } Replies"
+							:translate-params="{ count: formatNumber(topic.replies_count || 0) }"
 						>
-							<b>%{ count }</b>
-							Reply
-						</span>
+							%{ count } Reply
+						</AppTranslate>
 						<br class="hidden-xs" />
 						<span class="hidden-sm hidden-md hidden-lg dot-separator" />
-						<span
-							v-translate="{ count: formatNumber(topic.followers_count || 0) }"
+						<AppTranslate
 							:translate-n="topic.followers_count || 0"
-							translate-plural="<b>%{ count }</b> Followers"
+							translate-plural="%{ count } Followers"
+							:translate-params="{ count: formatNumber(topic.followers_count || 0) }"
 						>
-							<b>%{ count }</b>
-							Follower
-						</span>
+							%{ count } Follower
+						</AppTranslate>
 					</div>
 					<div
 						v-if="Screen.isDesktop && topic.latest_post"

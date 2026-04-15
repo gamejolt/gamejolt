@@ -8,8 +8,8 @@ import { Environment } from '../../environment/environment.service';
 import { formatNumber } from '../../filters/number';
 import { useCommonStore } from '../../store/common-store';
 import AppTheme from '../../theme/AppTheme.vue';
+import AppTranslate from '../../translate/AppTranslate.vue';
 import { $gettext } from '../../translate/translate.service';
-import { TranslateDirective as vTranslate } from '../../translate/translate-directive';
 import { CommunityModel, isEditingCommunity } from '../community.model';
 import AppCommunityJoinWidget from '../join-widget/AppCommunityJoinWidget.vue';
 import AppCommunityVerifiedTick from '../verified-tick/AppCommunityVerifiedTick.vue';
@@ -89,16 +89,18 @@ function doTrackGotoCommunity() {
 
 				<div class="-member-counts small">
 					<RouterLink
-						v-translate="{ count: formatNumber(memberCount) }"
-						:translate-n="memberCount"
-						translate-plural="<b>%{count}</b> members"
 						:to="{
 							name: 'communities.view.members',
 							params: { path: community.path },
 						}"
 					>
-						<b>1</b>
-						member
+						<AppTranslate
+							:translate-n="memberCount"
+							translate-plural="%{count} members"
+							:translate-params="{ count: formatNumber(memberCount) }"
+						>
+							%{count} member
+						</AppTranslate>
 					</RouterLink>
 				</div>
 

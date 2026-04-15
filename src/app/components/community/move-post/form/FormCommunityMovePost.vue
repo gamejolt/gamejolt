@@ -10,8 +10,8 @@ import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormControlRadio from '../../../../../_common/form-vue/controls/AppFormControlRadio.vue';
 import { validateMaxLength } from '../../../../../_common/form-vue/validators';
 import { getDatalistOptions } from '../../../../../_common/settings/datalist-options.service';
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
-import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
 import {
 	getCommunityMovePostReasons,
 	REASON_OTHER,
@@ -105,10 +105,9 @@ watch(
 
 		<AppFormGroup v-if="showReasonOther" name="reason" hide-label>
 			<div class="help-inline">
-				<span v-translate>
-					Enter other move reason.
-					<b>This is shown to the post author.</b>
-				</span>
+				<AppTranslate>
+					Enter other move reason. This is shown to the post author.
+				</AppTranslate>
 			</div>
 			<AppFormControl
 				type="text"

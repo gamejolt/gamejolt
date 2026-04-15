@@ -344,12 +344,10 @@ async function cancelSale() {
 						/>
 						<AppTranslate>Private</AppTranslate>
 						&mdash;
-						<span v-translate class="help-inline">
-							Only you can access this package, as well as any keys you assign. You
-							can assign keys in your
-							<b>Keys/Access</b>
-							page.
-						</span>
+						<AppTranslate class="help-inline">
+							Only you can access this package, as well as any keys you
+							assign. You can assign keys in your Keys/Access page.
+						</AppTranslate>
 					</label>
 				</div>
 

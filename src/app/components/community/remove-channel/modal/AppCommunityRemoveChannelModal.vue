@@ -6,8 +6,8 @@ import { CommunityChannelModel } from '../../../../../_common/community/channel/
 import { CommunityModel } from '../../../../../_common/community/community.model';
 import AppModal from '../../../../../_common/modal/AppModal.vue';
 import { useModal } from '../../../../../_common/modal/modal.service';
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
-import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
 import AppCommunityRemoveChannel from '../AppCommunityRemoveChannel.vue';
 
 defineProps({
@@ -49,11 +49,11 @@ function onRemoved(postsMovedTo?: CommunityChannelModel) {
 						{{ $gettext(`Removing a Jam Channel`) }}
 					</h4>
 					<p>
-						<span v-translate>
-							This channel contains a <b>Jam</b>, which gets removed when this channel
-							gets removed. That includes all entries, votes, awards and results that
-							belong to the jam.
-						</span>
+						<AppTranslate>
+							This channel contains a Jam, which gets removed when this
+							channel gets removed. That includes all entries, votes, awards
+							and results that belong to the jam.
+						</AppTranslate>
 					</p>
 					<p>
 						<span class="-jam-warning">

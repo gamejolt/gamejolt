@@ -16,6 +16,7 @@ import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import { useCommonStore } from '../../../../../_common/store/common-store';
 import AppTimeAgo from '../../../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
 import { numberSort } from '../../../../../utils/array';
@@ -162,26 +163,26 @@ function getVotingCategoryDescription(votingCategoryId: number | null) {
 			</template>
 			<template v-else-if="isBlocked">
 				<div class="alert alert-notice">
-					<p v-translate>
-						<b>You have been blocked</b> from this community and cannot vote on jam
+					<AppTranslate tag="p">
+						You have been blocked from this community and cannot vote on jam
 						entries.
-					</p>
+					</AppTranslate>
 				</div>
 			</template>
 			<template v-else-if="isArchived">
 				<div class="alert">
-					<p v-translate>
-						The channel for <b>this jam is archived</b> and voting is therefore
+					<AppTranslate tag="p">
+						The channel for this jam is archived and voting is therefore
 						disabled.
-					</p>
+					</AppTranslate>
 				</div>
 			</template>
 			<template v-else-if="votingCategoryError">
 				<div class="alert">
-					<p v-translate>
-						<b>Oops!</b> The Jam organizers wanted you to vote on multiple categories,
+					<AppTranslate tag="p">
+						Oops! The Jam organizers wanted you to vote on multiple categories,
 						but they did not add any categories to vote on.
-					</p>
+					</AppTranslate>
 				</div>
 			</template>
 			<template v-else-if="isOwner">
@@ -274,24 +275,24 @@ function getVotingCategoryDescription(votingCategoryId: number | null) {
 			</template>
 			<template v-else>
 				<p>
-					<span
-						v-translate="{
+					<AppTranslate
+						:translate-n="entry.vote_count"
+						translate-plural="This entry was voted on by %{ voteCount } people and its final ranking is #%{ rank } out of %{ entryCount } entries."
+						:translate-params="{
 							voteCount: entry.vote_count,
 							rank: overallRank,
 							entryCount: competition.entry_count,
 						}"
-						:translate-n="entry.vote_count"
-						translate-plural="This entry was voted on by <b>%{ voteCount }</b> people and its final ranking is <b>#%{ rank }</b> out of <b>%{ entryCount }</b> entries."
 					>
-						This entry was voted on by <b>%{ voteCount }</b> person and its final
-						ranking is <b>#%{ rank }</b> out of <b>%{ entryCount }</b> entries.
-					</span>
+						This entry was voted on by %{ voteCount } person and its final
+						ranking is #%{ rank } out of %{ entryCount } entries.
+					</AppTranslate>
 				</p>
 				<p>
-					<i v-translate>
-						Overall rank is based on the weighted average, which takes into account all
-						ratings for all entries.
-					</i>
+					<AppTranslate>
+						Overall rank is based on the weighted average, which takes into
+						account all ratings for all entries.
+					</AppTranslate>
 					<small v-if="!moreVoteResultInfoVisible">
 						[
 						<a @click="onClickMoreInfo"> {{ $gettext(`more info`) }}</a>

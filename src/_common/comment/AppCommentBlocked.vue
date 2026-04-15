@@ -3,7 +3,6 @@ import { PropType } from 'vue';
 
 import AppButton from '../button/AppButton.vue';
 import AppTranslate from '../translate/AppTranslate.vue';
-import { TranslateDirective as vTranslate } from '../translate/translate-directive';
 import { CommentBlockReason, CommentModel } from './comment-model';
 
 defineProps({
@@ -25,9 +24,9 @@ const emit = defineEmits({
 <template>
 	<div class="alert">
 		<template v-if="reason === 'commenter-blocked'">
-			<span v-translate="{ username: comment.user.username }">
-				Hidden comment by blocked user <b>@%{ username }</b>.
-			</span>
+			<AppTranslate :translate-params="{ username: comment.user.username }">
+				Hidden comment by blocked user @%{ username }.
+			</AppTranslate>
 		</template>
 		<template v-else-if="reason === 'mentioned-blocked-user'">
 			<span>

@@ -12,6 +12,7 @@ import { SiteTrophyModel } from '../../site/trophy/trophy.model';
 import { useCommonStore } from '../../store/common-store';
 import AppTimeAgo from '../../time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
+import AppTranslate from '../../translate/AppTranslate.vue';
 import { $gettext } from '../../translate/translate.service';
 import { TranslateDirective as vTranslate } from '../../translate/translate-directive';
 import AppUserCardHover from '../../user/card/AppUserCardHover.vue';
@@ -140,10 +141,9 @@ async function populateFriends() {
 								class="-subtitle-link link-unstyled"
 							>
 								<AppJolticon icon="gamepad" />
-								<span v-translate="{ title: game.title }">
-									Game Trophy of
-									<b>%{ title }</b>
-								</span>
+								<AppTranslate :translate-params="{ title: game.title }">
+									Game Trophy of %{ title }
+								</AppTranslate>
 							</RouterLink>
 						</template>
 						<template v-else>
@@ -156,10 +156,9 @@ async function populateFriends() {
 							>
 								<span class="dot-separator" />
 								<AppUserCardHover :user="artist">
-									<span v-translate="{ username: artist.username }">
-										Art by
-										<b>@%{ username }</b>
-									</span>
+									<AppTranslate :translate-params="{ username: artist.username }">
+										Art by @%{ username }
+									</AppTranslate>
 									<span class="-subtitle-avatar">
 										<AppUserAvatarImg :user="artist" />
 									</span>

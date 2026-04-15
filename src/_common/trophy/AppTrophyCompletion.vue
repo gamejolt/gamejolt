@@ -5,7 +5,7 @@ import AppCard from '../card/AppCard.vue';
 import { formatNumber } from '../filters/number';
 import AppJolticon from '../jolticon/AppJolticon.vue';
 import AppProgressBar from '../progress/AppProgressBar.vue';
-import { TranslateDirective as vTranslate } from '../translate/translate-directive';
+import AppTranslate from '../translate/AppTranslate.vue';
 
 const props = defineProps({
 	total: {
@@ -35,32 +35,24 @@ const completionRate = computed(() => Math.ceil((achieved.value / total.value) *
 	<AppCard class="trophy-completion">
 		<template v-if="achieved > 0">
 			<p>
-				<span
+				<AppTranslate
 					v-if="isLoggedInUser"
-					v-translate="{
+					:translate-params="{
 						achieved: formatNumber(achieved),
 						total: formatNumber(total),
 					}"
 				>
-					You've achieved
-					<b>%{ achieved }</b>
-					trophies out of a possible
-					<b>%{ total }</b>
-					.
-				</span>
-				<span
+					You've achieved %{ achieved } trophies out of a possible %{ total }.
+				</AppTranslate>
+				<AppTranslate
 					v-else
-					v-translate="{
+					:translate-params="{
 						achieved: formatNumber(achieved),
 						total: formatNumber(total),
 					}"
 				>
-					They've achieved
-					<b>%{ achieved }</b>
-					trophies out of a possible
-					<b>%{ total }</b>
-					.
-				</span>
+					They've achieved %{ achieved } trophies out of a possible %{ total }.
+				</AppTranslate>
 			</p>
 			<br />
 

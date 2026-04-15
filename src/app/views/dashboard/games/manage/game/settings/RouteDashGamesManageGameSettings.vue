@@ -13,7 +13,6 @@ import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
 import { useCommonStore } from '../../../../../../../_common/store/common-store';
 import AppTranslate from '../../../../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../../../../_common/translate/translate.service';
-import { TranslateDirective as vTranslate } from '../../../../../../../_common/translate/translate-directive';
 import FormGameSettings from '../../../../../../components/forms/game/settings/FormGameSettings.vue';
 import { useGameDashRouteController } from '../../manage.store';
 
@@ -103,11 +102,10 @@ createAppRoute({
 									able to view it.
 								</AppTranslate>
 							</p>
-							<p v-if="hasCompetitionEntries" v-translate>
-								<b>Warning:</b>
-								This will remove your game from any jams that you have entered it
-								into.
-							</p>
+							<AppTranslate v-if="hasCompetitionEntries" tag="p">
+								Warning: This will remove your game from any jams that you
+								have entered it into.
+							</AppTranslate>
 						</div>
 
 						<AppButton @click="routeStore.hide()">
@@ -147,15 +145,14 @@ createAppRoute({
 					</h4>
 
 					<div class="page-help">
-						<p v-translate>
+						<AppTranslate tag="p">
 							Removing your game page will remove it from the site completely.
-							<b>This is permanent!</b>
-						</p>
-						<p v-if="hasCompetitionEntries" v-translate>
-							<b>Warning:</b>
-							This will also remove your game from any jams that you have entered it
-							into.
-						</p>
+							This is permanent!
+						</AppTranslate>
+						<AppTranslate v-if="hasCompetitionEntries" tag="p">
+							Warning: This will also remove your game from any jams that you
+							have entered it into.
+						</AppTranslate>
 					</div>
 
 					<div v-if="game.has_sales" class="alert">

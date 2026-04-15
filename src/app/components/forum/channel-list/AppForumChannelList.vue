@@ -8,7 +8,6 @@ import { ForumPostModel } from '../../../../_common/forum/post/post.model';
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppTimeAgo from '../../../../_common/time/AppTimeAgo.vue';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { TranslateDirective as vTranslate } from '../../../../_common/translate/translate-directive';
 import AppUserVerifiedTick from '../../../../_common/user/AppUserVerifiedTick.vue';
 import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
 import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
@@ -64,26 +63,24 @@ function getPostPage(post: ForumPostModel) {
 				</div>
 			</div>
 			<div class="col-sm-3 col-md-2 text-muted small" :class="{ 'text-right': !Screen.isXs }">
-				<span
-					v-translate="{ count: formatNumber(channel.topics_count || 0) }"
+				<AppTranslate
 					:translate-n="channel.topics_count || 0"
-					translate-plural="<b>%{ count }</b> Topics"
+					translate-plural="%{ count } Topics"
+					:translate-params="{ count: formatNumber(channel.topics_count || 0) }"
 				>
-					<b>%{ count }</b>
-					Topic
-				</span>
+					%{ count } Topic
+				</AppTranslate>
 
 				<br class="hidden-xs" />
 				<span class="hidden-sm hidden-md hidden-lg dot-separator" />
 
-				<span
-					v-translate="{ count: formatNumber(channel.replies_count || 0) }"
+				<AppTranslate
 					:translate-n="channel.replies_count || 0"
-					translate-plural="<b>%{ count }</b> Replies"
+					translate-plural="%{ count } Replies"
+					:translate-params="{ count: formatNumber(channel.replies_count || 0) }"
 				>
-					<b>%{ count }</b>
-					Reply
-				</span>
+					%{ count } Reply
+				</AppTranslate>
 			</div>
 			<div v-if="Screen.isDesktop" class="col-md-3">
 				<template v-if="indexedPosts[channel.id]">

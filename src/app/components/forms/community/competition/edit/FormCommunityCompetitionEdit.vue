@@ -20,7 +20,6 @@ import { FormTimezoneService } from '../../../../../../_common/form-vue/form-tim
 import AppLoading from '../../../../../../_common/loading/AppLoading.vue';
 import AppTranslate from '../../../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
-import { TranslateDirective as vTranslate } from '../../../../../../_common/translate/translate-directive';
 import AppCommunityCompetitionDate from '../../../../community/competition/date/AppCommunityCompetitionDate.vue';
 
 type FormModel = CommunityCompetitionModel;
@@ -58,13 +57,11 @@ const form: FormController<FormModel> = createForm<FormModel>({
 				<template v-if="!model.hasStarted">
 					<AppFormGroup name="timezone" :label="$gettext(`Select a Timezone`)">
 						<p class="help-block">
-							<span v-translate>
-								All time selection below will use this timezone.
-								<i>
-									You can't change this once the jam starts, so make sure you've
-									set it correctly.
-								</i>
-							</span>
+							<AppTranslate>
+								All time selection below will use this timezone. You can't
+								change this once the jam starts, so make sure you've set it
+								correctly.
+							</AppTranslate>
 						</p>
 
 						<p class="help-block">
@@ -108,10 +105,10 @@ const form: FormController<FormModel> = createForm<FormModel>({
 				<AppFormGroup name="starts_on" :label="$gettext(`Start Date and Time`)">
 					<template v-if="!model.hasStarted">
 						<p class="help-block">
-							<span v-translate>
-								Your jam begins on this date and time.
-								<i>You can change this anytime before the jam starts.</i>
-							</span>
+							<AppTranslate>
+								Your jam begins on this date and time. You can change this
+								anytime before the jam starts.
+							</AppTranslate>
 						</p>
 
 						<AppFormControlDate
@@ -137,10 +134,10 @@ const form: FormController<FormModel> = createForm<FormModel>({
 				<AppFormGroup name="ends_on" :label="$gettext(`End Date and Time`)">
 					<template v-if="!model.hasEnded">
 						<p class="help-block">
-							<span v-translate>
-								Your jam ends on this date and time.
-								<i>You can change this anytime before the jam ends.</i>
-							</span>
+							<AppTranslate>
+								Your jam ends on this date and time. You can change this
+								anytime before the jam ends.
+							</AppTranslate>
 						</p>
 
 						<AppFormControlDate

@@ -30,7 +30,6 @@ import AppTimeAgo from '../../../../../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../../../../_common/translate/translate.service';
-import { TranslateDirective as vTranslate } from '../../../../../../../_common/translate/translate-directive';
 import { arrayRemove } from '../../../../../../../utils/array';
 import FormGameKeyGroupAddKeys from '../../../../../../components/forms/game/key-group/add-keys/FormGameKeyGroupAddKeys.vue';
 import FormGameKeyGroup from '../../../../../../components/forms/game/key-group/FormGameKeyGroup.vue';
@@ -179,14 +178,13 @@ const appRoute = createAppRoute({
 						</a>
 					</div>
 					<div v-else-if="keyGroup.type === KeyGroupTypeUser" class="alert">
-						<p v-translate>
-							<b>Not so fast!</b>
-							In order for the users in this key group to gain access, you'll need to
-							email or message their keys to them. Copy each key page individually
-							below, or export the full set to a CSV. Once they've received and
-							claimed the key into their library, their claim date will appear in the
-							table below.
-						</p>
+						<AppTranslate tag="p">
+							Not so fast! In order for the users in this key group to gain
+							access, you'll need to email or message their keys to them. Copy
+							each key page individually below, or export the full set to a
+							CSV. Once they've received and claimed the key into their
+							library, their claim date will appear in the table below.
+						</AppTranslate>
 					</div>
 
 					<h5>

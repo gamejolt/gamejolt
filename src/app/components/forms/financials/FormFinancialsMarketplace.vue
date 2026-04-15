@@ -21,7 +21,6 @@ import { Navigate } from '../../../../_common/navigate/navigate.service';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
-import { TranslateDirective as vTranslate } from '../../../../_common/translate/translate-directive';
 import { UserStripeManagedAccountModel } from '../../../../_common/user/stripe-managed-account/stripe-managed-account';
 import { bangRef } from '../../../../utils/vue';
 import AppDeveloperTerms from './AppDeveloperTerms.vue';
@@ -195,12 +194,11 @@ async function linkPayPal() {
 							<AppTranslate>Percentage Split</AppTranslate>
 						</legend>
 
-						<p v-translate class="small">
-							You decide what percentage of your sale revenue to give to Game Jolt.
-							<b>We won't let you give us more than 10%</b>
-							because we'd rather have you support other developers by buying their
-							games.
-						</p>
+						<AppTranslate tag="p" class="small">
+							You decide what percentage of your sale revenue to give to Game
+							Jolt. We won't let you give us more than 10% because we'd rather
+							have you support other developers by buying their games.
+						</AppTranslate>
 
 						<AppFormGroup name="percentage_split" hide-label optional>
 							<AppFormControl

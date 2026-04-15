@@ -18,7 +18,6 @@ import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
-import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
 import { UserWalletModel } from '../../../../../_common/user/wallet/wallet.model';
 import { showWalletWithdrawModal } from '../../../../components/wallet/withdraw/withdraw-modal.service';
 import { useAccountRouteController } from '../RouteDashAccount.vue';
@@ -343,10 +342,12 @@ async function withdraw() {
 			</template>
 
 			<AppAlertBox v-if="marketplaceRevenuePendingWithdraw > 0" color="primary">
-				<div v-translate="{ amount: formatCurrency(marketplaceRevenuePendingWithdraw) }">
-					You have pending withdrawals amounting to
-					<b>%{ amount }</b>.
-				</div>
+				<AppTranslate
+					tag="div"
+					:translate-params="{ amount: formatCurrency(marketplaceRevenuePendingWithdraw) }"
+				>
+					You have pending withdrawals amounting to %{ amount }.
+				</AppTranslate>
 			</AppAlertBox>
 		</div>
 	</div>

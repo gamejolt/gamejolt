@@ -28,7 +28,6 @@ import { useCommonStore } from '../../../../../_common/store/common-store';
 import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
-import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
 import FormForumPost from '../../../forms/forum/post/FormForumPost.vue';
 
 const InviewConfig = new ScrollInviewConfig();
@@ -176,10 +175,9 @@ function copyPermalink() {
 					class="middle"
 					:icon="('chevron-' + (!showingParent ? 'right' : 'down') as any)"
 				/>
-				<span v-translate="{ user: post.replied_to.display_name }">
-					In response to
-					<b>%{ user }</b>
-				</span>
+				<AppTranslate :translate-params="{ user: post.replied_to.display_name }">
+					In response to %{ user }
+				</AppTranslate>
 				<small>@{{ post.replied_to.username }}</small>
 			</a>
 

@@ -9,8 +9,8 @@ import {
 	CommunityUserNotificationType,
 } from '../../../../_common/community/user-notification/user-notification.model';
 import AppTimeAgo from '../../../../_common/time/AppTimeAgo.vue';
+import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
-import { TranslateDirective as vTranslate } from '../../../../_common/translate/translate-directive';
 import {
 	getCommunityEjectPostReasons,
 	getCommunityMovePostReasons,
@@ -82,20 +82,20 @@ function onDismiss() {
 		<div class="-message">
 			<div>
 				<template v-if="notification.type === CommunityUserNotificationType.POSTS_MOVE">
-					<span
-						v-translate="{
+					<AppTranslate
+						:translate-params="{
 							fromChannel: notification.extra_data['from-channel'],
 							toChannel: notification.extra_data['to-channel'],
 						}"
 					>
-						Your post has been <b>moved</b> from the <i>%{ fromChannel }</i> channel to
-						the <i>%{ toChannel }</i> channel.
-					</span>
+						Your post has been moved from the %{ fromChannel } channel to the %{
+						toChannel } channel.
+					</AppTranslate>
 				</template>
 				<template
 					v-else-if="notification.type === CommunityUserNotificationType.POSTS_EJECT"
 				>
-					<span v-translate>Your post has been <b>ejected</b> from the community.</span>
+					<AppTranslate>Your post has been ejected from the community.</AppTranslate>
 				</template>
 			</div>
 

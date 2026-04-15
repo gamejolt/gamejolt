@@ -6,8 +6,8 @@ import { Api } from '../../../_common/api/api.service';
 import { GameModel } from '../../../_common/game/game.model';
 import { GameBundleModel } from '../../../_common/game-bundle/game-bundle.model';
 import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
+import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../_common/translate/translate.service';
-import { TranslateDirective as vTranslate } from '../../../_common/translate/translate-directive';
 import AppInvalidKey from '../../components/AppInvalidKey.vue';
 import FormRetrieve from '../../components/forms/FormRetrieve.vue';
 
@@ -136,11 +136,10 @@ function onSubmit() {
 					{{ $gettext(`Please enter your email address to retrieve your keys.`) }}
 				</template>
 				<template v-if="resourceTitle">
-					<span v-translate="{ resource: resourceTitle }">
+					<AppTranslate :translate-params="{ resource: resourceTitle }">
 						Please enter your email address to retrieve your keys for
-						<b>%{ resource }</b>
-						.
-					</span>
+						%{ resource }.
+					</AppTranslate>
 				</template>
 				{{ ' ' }}
 				{{ $gettext(`We will email you a link to your download(s).`) }}

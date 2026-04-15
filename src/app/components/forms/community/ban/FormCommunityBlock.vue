@@ -18,8 +18,8 @@ import {
 } from '../../../../../_common/form-vue/validators';
 import { showErrorGrowl, showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import { getDatalistOptions } from '../../../../../_common/settings/datalist-options.service';
+import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
-import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
 import {
 	getCommunityBlockReasons,
 	REASON_OTHER,
@@ -178,10 +178,9 @@ const form: FormController<FormModel> = createForm<FormModel>({
 
 		<AppFormGroup v-if="showReasonOther" name="reason" hide-label>
 			<div class="help-inline">
-				<span v-translate>
-					Enter other block reason.
-					<b>This is shown to the blocked user.</b>
-				</span>
+				<AppTranslate>
+					Enter other block reason. This is shown to the blocked user.
+				</AppTranslate>
 			</div>
 			<AppFormControl
 				html-list-id="block-user-reasons-list"

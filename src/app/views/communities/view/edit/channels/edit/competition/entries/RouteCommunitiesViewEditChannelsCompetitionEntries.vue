@@ -27,6 +27,7 @@ import {
 import { vAppNoAutoscroll } from '../../../../../../../../../_common/scroll/auto-scroll/no-autoscroll.directive';
 import AppTimeAgo from '../../../../../../../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../../../../../../../_common/tooltip/tooltip-directive';
+import AppTranslate from '../../../../../../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../../../../../../_common/translate/translate.service';
 import AppUserVerifiedTick from '../../../../../../../../../_common/user/AppUserVerifiedTick.vue';
 import AppUserCardHover from '../../../../../../../../../_common/user/card/AppUserCardHover.vue';
@@ -40,8 +41,6 @@ type Payload = {
 	entries: any[];
 	perPage: number;
 };
-
-import { TranslateDirective as vTranslate } from '../../../../../../../../../_common/translate/translate-directive';
 
 export default {
 	...defineAppRouteOptions({
@@ -262,20 +261,20 @@ createAppRoute({
 
 			<template v-else>
 				<p class="help-block">
-					<span v-translate="{ count: entryCount }">
-						<b>%{ count }</b> total entries have been submitted.
-					</span>
+					<AppTranslate :translate-params="{ count: entryCount }">
+						%{ count } total entries have been submitted.
+					</AppTranslate>
 					<br />
 					<template v-if="entryCount > competition.entry_count">
-						<span
-							v-translate="{
+						<AppTranslate
+							:translate-params="{
 								count: entryCount - competition.entry_count,
 								visibleCount: competition.entry_count,
 							}"
 						>
-							<b>%{ count }</b> have been hidden, resulting in
-							<b>%{ visibleCount }</b> visible entries.
-						</span>
+							%{ count } have been hidden, resulting in %{ visibleCount } visible
+							entries.
+						</AppTranslate>
 					</template>
 					<template v-else>
 						{{ $gettext(`No entries have been hidden.`) }}

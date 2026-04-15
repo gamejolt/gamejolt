@@ -10,8 +10,8 @@ import { showErrorGrowl } from '../../../../growls/growls.service';
 import AppLoading from '../../../../loading/AppLoading.vue';
 import AppModal from '../../../../modal/AppModal.vue';
 import { useModal } from '../../../../modal/modal.service';
+import AppTranslate from '../../../../translate/AppTranslate.vue';
 import { $gettext } from '../../../../translate/translate.service';
-import { TranslateDirective as vTranslate } from '../../../../translate/translate-directive';
 import { CommunityCompetitionModel } from '../../competition.model';
 import { CommunityCompetitionEntryModel } from '../entry.model';
 
@@ -132,10 +132,10 @@ async function onClickSubmit() {
 			</template>
 			<div v-else class="alert">
 				<p>{{ $gettext(`You have no games available to be submitted.`) }}</p>
-				<p v-translate>
-					To enter a game into the jam, upload it to Game Jolt first,
-					<b>make sure it is published</b>, then return to this page.
-				</p>
+				<AppTranslate tag="p">
+					To enter a game into the jam, upload it to Game Jolt first, make
+					sure it is published, then return to this page.
+				</AppTranslate>
 				<AppButton :to="{ name: 'dash.games.add' }">
 					{{ $gettext(`Add Game`) }}
 				</AppButton>

@@ -24,7 +24,6 @@ import { FormTimezoneService } from '../../../../../../../_common/form-vue/form-
 import AppLoading from '../../../../../../../_common/loading/AppLoading.vue';
 import AppTranslate from '../../../../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../../../../_common/translate/translate.service';
-import { TranslateDirective as vTranslate } from '../../../../../../../_common/translate/translate-directive';
 
 type FormModel = CommunityCompetitionModel;
 
@@ -126,11 +125,11 @@ function onClickCancel() {
 			<template v-if="timezoneService && timezoneService.loaded">
 				<AppFormGroup name="voting_ends_on" :label="$gettext(`Voting End Date and Time`)">
 					<p class="help-block">
-						<span v-translate>
-							Voting starts when the jam ends and continues until the date and time
-							you choose below.
-							<i>You can change this anytime before voting ends.</i>
-						</span>
+						<AppTranslate>
+							Voting starts when the jam ends and continues until the date
+							and time you choose below. You can change this anytime before
+							voting ends.
+						</AppTranslate>
 					</p>
 
 					<AppFormControlDate

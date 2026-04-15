@@ -16,8 +16,8 @@ import {
 } from '../../../../../../../../../_common/route/route-component';
 import AppTimeAgo from '../../../../../../../../../_common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '../../../../../../../../../_common/tooltip/tooltip-directive';
+import AppTranslate from '../../../../../../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../../../../../../_common/translate/translate.service';
-import { TranslateDirective as vTranslate } from '../../../../../../../../../_common/translate/translate-directive';
 import AppCommunityCompetitionDate from '../../../../../../../../components/community/competition/date/AppCommunityCompetitionDate.vue';
 import { useCommunityRouteStore } from '../../../../../view.store';
 
@@ -171,7 +171,7 @@ createAppRoute({
 
 		<div v-if="channel.visibility === 'draft'" class="alert alert-notice">
 			<p>
-				<span v-translate><b>This jam is a draft</b> and only moderators can view it.</span>
+				<AppTranslate>This jam is a draft and only moderators can view it.</AppTranslate>
 			</p>
 			<p>
 				{{
