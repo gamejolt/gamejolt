@@ -38,10 +38,10 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	'before-submit': (_e: Event) => true,
-	'after-submit': (_e: Event, _result: boolean) => true,
-});
+const emit = defineEmits<{
+	'before-submit': [e: Event];
+	'after-submit': [e: Event, result: boolean];
+}>();
 
 const form = useForm()!;
 

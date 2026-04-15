@@ -14,9 +14,9 @@ defineProps({
 	},
 });
 
-const emit = defineEmits({
-	click: (_build: GameBuildModel) => true,
-});
+const emit = defineEmits<{
+	click: [build: GameBuildModel];
+}>();
 
 function click(build: GameBuildModel) {
 	emit('click', build);

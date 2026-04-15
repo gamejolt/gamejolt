@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref, TextareaHTMLAttributes, toRef } from 'vue';
 
-import { createFormControl, defineFormControlEmits } from '../AppFormControl.vue';
+import { createFormControl, FormControlEmits } from '../AppFormControl.vue';
 import { useFormGroup } from '../AppFormGroup.vue';
 import { FormValidator } from '../validators';
 
@@ -19,10 +19,11 @@ const {
 	validateOnBlur = false,
 } = defineProps<Props>();
 
-const emit = defineEmits({
-	...defineFormControlEmits(),
-	paste: (_event: ClipboardEvent) => true,
-});
+const emit = defineEmits<
+	FormControlEmits & {
+		paste: [event: ClipboardEvent];
+	}
+>();
 
 const { name } = useFormGroup()!;
 

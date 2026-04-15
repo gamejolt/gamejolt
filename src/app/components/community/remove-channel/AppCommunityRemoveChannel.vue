@@ -25,9 +25,9 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	removed: (_postsMovedTo?: CommunityChannelModel) => true,
-});
+const emit = defineEmits<{
+	removed: [postsMovedTo?: CommunityChannelModel];
+}>();
 
 const { community, channel } = toRefs(props);
 

@@ -51,10 +51,10 @@ type Props = {
 
 const { item } = defineProps<Props>();
 
-const emit = defineEmits({
-	resize: (_height: number) => true,
-	clicked: () => true,
-});
+const emit = defineEmits<{
+	resize: [height: number];
+	clicked: [];
+}>();
 
 const feed = useActivityFeed()!;
 const feedInterface = useActivityFeedInterface()!;

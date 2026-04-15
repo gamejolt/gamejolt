@@ -132,9 +132,9 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	change: (_date: Date) => true,
-});
+const emit = defineEmits<{
+	change: [date: Date];
+}>();
 
 const c = createDatepicker({
 	modelValue: toRef(props, 'value'),

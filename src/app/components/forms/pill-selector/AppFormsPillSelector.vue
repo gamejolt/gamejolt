@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import AppPopper from '../../../../_common/popper/AppPopper.vue';
 
-const emit = defineEmits({
-	show: () => true,
-	hide: () => true,
-});
+const emit = defineEmits<{
+	show: [];
+	hide: [];
+}>();
 </script>
 
 <template>

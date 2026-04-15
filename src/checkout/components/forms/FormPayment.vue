@@ -82,9 +82,9 @@ type FormModel = {
 	postcode: string;
 };
 
-const emit = defineEmits({
-	submit: (_response: any) => true,
-});
+const emit = defineEmits<{
+	submit: [response: any];
+}>();
 
 const form: FormController<FormModel> = createForm({
 	// modelClass: Game,

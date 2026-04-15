@@ -19,9 +19,9 @@ defineProps({
 	},
 });
 
-const emit = defineEmits({
-	'update:modelValue': (_modelValue?: any) => true,
-});
+const emit = defineEmits<{
+	'update:modelValue': [modelValue?: any];
+}>();
 
 function onImageAdded(_model: any, response: any) {
 	emit('update:modelValue', response.mediaItem);

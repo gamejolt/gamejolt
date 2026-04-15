@@ -31,10 +31,10 @@ const props = defineProps({
 
 const { quest, show, isAccept } = toRefs(props);
 
-const emit = defineEmits({
-	newQuest: (_quest: QuestModel) => true,
-	payloadError: () => true,
-});
+const emit = defineEmits<{
+	newQuest: [quest: QuestModel];
+	payloadError: [];
+}>();
 
 const { setChargeData, currentCharge, chargeLimit } = useStickerStore();
 const { coinBalance } = useCommonStore();

@@ -72,12 +72,12 @@ const {
 	},
 } = defineProps<Props>();
 
-const emit = defineEmits({
-	tap: (_event: AppTouchInput) => true,
-	panstart: (_event: AppTouchInput) => true,
-	panmove: (_event: AppTouchInput) => true,
-	panend: (_event: AppTouchInput) => true,
-});
+const emit = defineEmits<{
+	tap: [event: AppTouchInput];
+	panstart: [event: AppTouchInput];
+	panmove: [event: AppTouchInput];
+	panend: [event: AppTouchInput];
+}>();
 
 const listenerEvents = new Map<
 	keyof HTMLElementEventMap,

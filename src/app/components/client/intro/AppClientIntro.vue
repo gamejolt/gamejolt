@@ -13,9 +13,9 @@ import { run, sleep } from '../../../../utils/utils';
 import introGif from './intro.gif';
 import introOgg from './intro.ogg';
 
-const emit = defineEmits({
-	finish: () => true,
-});
+const emit = defineEmits<{
+	finish: [];
+}>();
 
 const { user } = useCommonStore();
 

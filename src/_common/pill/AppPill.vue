@@ -19,9 +19,9 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	click: (_e: MouseEvent) => true,
-});
+const emit = defineEmits<{
+	click: [e: MouseEvent];
+}>();
 
 const slots = useSlots();
 

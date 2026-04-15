@@ -36,9 +36,9 @@ const props = defineProps({
 
 const { shopProduct, disablePurchases } = toRefs(props);
 
-const emit = defineEmits({
-	purchase: (_shopProduct: InventoryShopProductSaleModel) => true,
-});
+const emit = defineEmits<{
+	purchase: [shopProduct: InventoryShopProductSaleModel];
+}>();
 
 const { user: myUser } = useCommonStore();
 

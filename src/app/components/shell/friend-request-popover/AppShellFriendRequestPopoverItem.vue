@@ -25,11 +25,11 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	cancel: () => true,
-	accept: () => true,
-	reject: () => true,
-});
+const emit = defineEmits<{
+	cancel: [];
+	accept: [];
+	reject: [];
+}>();
 
 const { request } = toRefs(props);
 const { user } = useCommonStore();

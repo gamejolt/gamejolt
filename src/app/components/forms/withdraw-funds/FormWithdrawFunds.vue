@@ -37,9 +37,9 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	submit: (_model: FormModel) => true,
-});
+const emit = defineEmits<{
+	submit: [model: FormModel];
+}>();
 
 const { minAmount, withdrawableAmount, paypalId, paypalEmail } = toRefs(props);
 

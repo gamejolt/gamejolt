@@ -20,10 +20,10 @@ const props = defineProps({
 
 const { trigger, disabled, inline } = toRefs(props);
 
-const emit = defineEmits({
-	show: () => true,
-	hide: () => true,
-});
+const emit = defineEmits<{
+	show: [];
+	hide: [];
+}>();
 
 const root = ref<HTMLDivElement>();
 

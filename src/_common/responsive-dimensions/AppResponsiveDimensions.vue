@@ -32,9 +32,9 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	change: (_event: AppResponsiveDimensionsChangeEvent) => true,
-});
+const emit = defineEmits<{
+	change: [event: AppResponsiveDimensionsChangeEvent];
+}>();
 
 const { ratio, maxWidth, maxHeight, parentWidth } = toRefs(props);
 

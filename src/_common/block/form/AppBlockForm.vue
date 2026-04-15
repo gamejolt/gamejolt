@@ -21,9 +21,9 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	submit: () => true,
-});
+const emit = defineEmits<{
+	submit: [];
+}>();
 
 const { user } = toRefs(props);
 

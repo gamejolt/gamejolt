@@ -19,9 +19,9 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	'update:modelValue': (_font?: FontDefinition) => true,
-});
+const emit = defineEmits<{
+	'update:modelValue': [font?: FontDefinition];
+}>();
 
 const { modelValue } = toRefs(props);
 

@@ -40,10 +40,10 @@ const props = defineProps({
 
 const { mediaItem, manifests } = toRefs(props);
 
-const emit = defineEmits({
-	play: () => true,
-	time: (_timestamp: number) => true,
-});
+const emit = defineEmits<{
+	play: [];
+	time: [timestamp: number];
+}>();
 
 const autoplay = ref(SettingVideoPlayerFeedAutoplay.get());
 const player = ref() as Ref<VideoPlayerController | undefined>;

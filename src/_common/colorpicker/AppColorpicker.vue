@@ -19,9 +19,9 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	'update:modelValue': (_modelValue: string) => true,
-});
+const emit = defineEmits<{
+	'update:modelValue': [modelValue: string];
+}>();
 
 const { modelValue } = toRefs(props);
 const colors = ref<VueTouch>({

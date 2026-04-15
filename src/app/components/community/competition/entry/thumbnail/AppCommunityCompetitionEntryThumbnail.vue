@@ -39,9 +39,9 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	remove: () => true,
-});
+const emit = defineEmits<{
+	remove: [];
+}>();
 
 const { entry, showRemove, showRank, votingCategory, showAwards } = toRefs(props);
 const { user } = useCommonStore();

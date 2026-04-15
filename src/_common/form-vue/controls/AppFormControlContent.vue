@@ -6,7 +6,7 @@ import { ContentContext, ContextCapabilities } from '../../content/content-conte
 import AppContentEditor from '../../content/content-editor/AppContentEditor.vue';
 import { ContentEditorModelData } from '../../content/content-owner';
 import { ContentRules } from '../../content/content-rules';
-import { createFormControl, defineFormControlEmits } from '../AppFormControl.vue';
+import { createFormControl, FormControlEmits } from '../AppFormControl.vue';
 import { useFormGroup } from '../AppFormGroup.vue';
 import { FormValidator } from '../validators';
 
@@ -50,12 +50,13 @@ const {
 	focusToken = undefined,
 } = defineProps<Props>();
 
-const emit = defineEmits({
-	...defineFormControlEmits(),
-	focus: () => true,
-	blur: () => true,
-	submit: () => true,
-});
+const emit = defineEmits<
+	FormControlEmits & {
+		focus: [];
+		blur: [];
+		submit: [];
+	}
+>();
 
 const { name } = useFormGroup()!;
 

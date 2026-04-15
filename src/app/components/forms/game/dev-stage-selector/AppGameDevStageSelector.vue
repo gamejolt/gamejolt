@@ -19,9 +19,9 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	select: (_stage: number) => true,
-});
+const emit = defineEmits<{
+	select: [stage: number];
+}>();
 
 const { game } = toRefs(props);
 

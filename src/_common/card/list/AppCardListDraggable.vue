@@ -11,9 +11,9 @@ defineProps({
 	},
 });
 
-const emit = defineEmits({
-	change: (_items: any[]) => true,
-});
+const emit = defineEmits<{
+	change: [items: any[]];
+}>();
 
 const { items } = useCardList()!;
 

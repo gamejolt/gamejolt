@@ -30,11 +30,11 @@ const { groupData } = toRefs(props);
 
 const inview = ref(false);
 
-const emit = defineEmits({
-	inview: () => true,
-	outview: () => true,
-	'select-emoji': (_emoji: EmojiModel) => true,
-});
+const emit = defineEmits<{
+	inview: [];
+	outview: [];
+	'select-emoji': [emoji: EmojiModel];
+}>();
 
 const itemCount = computed(() => {
 	return Math.max(groupData.value.group.emojis.length, groupData.value.group.num_emojis);

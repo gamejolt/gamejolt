@@ -7,7 +7,7 @@ import AppTranslate from '../../../translate/AppTranslate.vue';
 import { useForm } from '../../AppForm.vue';
 import {
 	createFormControl,
-	defineFormControlEmits,
+	FormControlEmits,
 	defineFormControlProps,
 } from '../../AppFormControl.vue';
 import { useFormGroup } from '../../AppFormGroup.vue';
@@ -33,9 +33,7 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	...defineFormControlEmits(),
-});
+const emit = defineEmits<FormControlEmits>();
 
 const form = useForm()!;
 const { name } = useFormGroup()!;

@@ -31,10 +31,10 @@ const users = ref<UserModel[]>([]);
 const container = ref<HTMLElement>();
 const list = ref<HTMLDivElement>();
 
-const emit = defineEmits({
-	insert: () => true,
-	'user-change': (_count: number) => true,
-});
+const emit = defineEmits<{
+	insert: [];
+	'user-change': [count: number];
+}>();
 
 const displayUsers = computed(() =>
 	isInverted.value ? users.value.slice().reverse() : users.value

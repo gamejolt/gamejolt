@@ -15,9 +15,9 @@ defineProps({
 	},
 });
 
-const emit = defineEmits({
-	toggle: () => true,
-});
+const emit = defineEmits<{
+	toggle: [];
+}>();
 
 const { isAdding } = useCardList()!;
 </script>

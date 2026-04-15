@@ -37,9 +37,9 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	submit: (_model: JoinFormModel) => true,
-});
+const emit = defineEmits<{
+	submit: [model: JoinFormModel];
+}>();
 
 const { overlay, blocked } = toRefs(props);
 const router = useRouter();

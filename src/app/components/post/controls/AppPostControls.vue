@@ -79,18 +79,18 @@ const props = defineProps({
 const { post, feed, item, location, shouldShowFollow, showComments, overlay, eventLabel } =
 	toRefs(props);
 
-const emit = defineEmits({
-	postEdit: () => true,
-	postPublish: () => true,
-	postRemove: () => true,
-	postFeature: (_community: CommunityModel) => true,
-	postUnfeature: (_community: CommunityModel) => true,
-	postMoveChannel: (_movedTo: CommunityChannelModel) => true,
-	postReject: (_community: CommunityModel) => true,
-	postPin: () => true,
-	postUnpin: () => true,
-	sticker: () => true,
-});
+const emit = defineEmits<{
+	postEdit: [];
+	postPublish: [];
+	postRemove: [];
+	postFeature: [community: CommunityModel];
+	postUnfeature: [community: CommunityModel];
+	postMoveChannel: [movedTo: CommunityChannelModel];
+	postReject: [community: CommunityModel];
+	postPin: [];
+	postUnpin: [];
+	sticker: [];
+}>();
 
 const commentManager = useCommentStoreManager()!;
 const stickerLayer = useStickerLayer();

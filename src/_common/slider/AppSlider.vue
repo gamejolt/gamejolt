@@ -37,9 +37,9 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	scrub: (_: ScrubberCallback) => true,
-});
+const emit = defineEmits<{
+	scrub: [_: ScrubberCallback];
+}>();
 
 const { percent, vertical, sliderValueTooltip } = toRefs(props);
 

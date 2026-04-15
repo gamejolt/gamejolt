@@ -53,9 +53,9 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	'focus-change': (_focused: boolean) => true,
-});
+const emit = defineEmits<{
+	'focus-change': [focused: boolean];
+}>();
 
 const { room, slowmodeDuration, maxContentLength, capabilities } = toRefs(props);
 

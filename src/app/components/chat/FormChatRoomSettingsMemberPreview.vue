@@ -14,9 +14,9 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	viewMembers: () => true,
-});
+const emit = defineEmits<{
+	viewMembers: [];
+}>();
 
 const { room } = toRefs(props);
 const { memberCollection } = useChatRoomMembers(room);

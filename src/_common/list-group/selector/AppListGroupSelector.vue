@@ -17,9 +17,9 @@ defineProps({
 	},
 });
 
-const emit = defineEmits({
-	change: (_item: any) => true,
-});
+const emit = defineEmits<{
+	change: [item: any];
+}>();
 
 function select(item: any) {
 	emit('change', item);

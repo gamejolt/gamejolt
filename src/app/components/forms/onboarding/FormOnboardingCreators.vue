@@ -12,9 +12,9 @@ type FormModel = {
 	// nothing
 };
 
-const emit = defineEmits({
-	next: () => true,
-});
+const emit = defineEmits<{
+	next: [];
+}>();
 
 const creatorPosts = ref<FiresidePostModel[]>([]);
 

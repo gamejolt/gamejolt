@@ -62,9 +62,9 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	submit: (_model: CommunityChannelModel) => true,
-});
+const emit = defineEmits<{
+	submit: [model: CommunityChannelModel];
+}>();
 
 const { community, channels, archivedChannels } = toRefs(props);
 

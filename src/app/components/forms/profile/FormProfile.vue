@@ -44,9 +44,9 @@ const props = defineProps({
 
 const { user } = toRefs(props);
 
-const emit = defineEmits({
-	submit: (_model: UserModel) => true,
-});
+const emit = defineEmits<{
+	submit: [model: UserModel];
+}>();
 
 const { setFormTheme } = useThemeStore();
 

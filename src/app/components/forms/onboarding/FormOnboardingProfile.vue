@@ -37,9 +37,9 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	next: () => true,
-});
+const emit = defineEmits<{
+	next: [];
+}>();
 
 const { user, isSocialRegistration } = toRefs(props);
 

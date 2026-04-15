@@ -56,15 +56,15 @@ const route = useRoute();
 const { user: sessionUser } = useCommonStore();
 const { grid } = useGridStore();
 
-const emit = defineEmits({
-	remove: () => true,
-	feature: (_community: CommunityModel) => true,
-	unfeature: (_community: CommunityModel) => true,
-	'move-channel': (_movedTo: CommunityChannelModel) => true,
-	reject: (_community: CommunityModel) => true,
-	pin: () => true,
-	unpin: () => true,
-});
+const emit = defineEmits<{
+	remove: [];
+	feature: [community: CommunityModel];
+	unfeature: [community: CommunityModel];
+	'move-channel': [movedTo: CommunityChannelModel];
+	reject: [community: CommunityModel];
+	pin: [];
+	unpin: [];
+}>();
 
 const canEdit = toRef(() => post.value.isEditableByUser(sessionUser.value));
 const shouldShowManageCommunities = toRef(

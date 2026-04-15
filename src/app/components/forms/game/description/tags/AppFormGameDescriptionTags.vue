@@ -21,9 +21,9 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	tag: (_tag: string) => true,
-});
+const emit = defineEmits<{
+	tag: [tag: string];
+}>();
 
 const { content } = toRefs(props);
 

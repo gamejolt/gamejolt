@@ -4,7 +4,7 @@ import { toRef } from 'vue';
 import AppImgCrop from '../../img/crop/AppImgCrop.vue';
 import {
 	createFormControl,
-	defineFormControlEmits,
+	FormControlEmits,
 	defineFormControlProps,
 } from '../AppFormControl.vue';
 
@@ -44,9 +44,7 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	...defineFormControlEmits(),
-});
+const emit = defineEmits<FormControlEmits>();
 
 const { id, controlVal, applyValue } = createFormControl({
 	initialValue: null as any,

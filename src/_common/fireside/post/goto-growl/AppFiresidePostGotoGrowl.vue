@@ -22,9 +22,9 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	close: () => true,
-});
+const emit = defineEmits<{
+	close: [];
+}>();
 
 const { post } = toRefs(props);
 const route = useRoute();

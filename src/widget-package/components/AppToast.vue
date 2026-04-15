@@ -10,9 +10,9 @@ defineProps({
 	},
 });
 
-const emit = defineEmits({
-	dismiss: () => true,
-});
+const emit = defineEmits<{
+	dismiss: [];
+}>();
 
 let _timeout: number | undefined;
 

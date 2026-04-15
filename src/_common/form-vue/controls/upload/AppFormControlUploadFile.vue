@@ -29,9 +29,9 @@ defineProps({
 	},
 });
 
-const emit = defineEmits({
-	input: (_files: null | File[]) => true,
-});
+const emit = defineEmits<{
+	input: [files: null | File[]];
+}>();
 
 const root = ref<HTMLInputElement>();
 

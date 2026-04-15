@@ -23,9 +23,9 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	claim: (_bundle: GameBundleModel) => true,
-});
+const emit = defineEmits<{
+	claim: [bundle: GameBundleModel];
+}>();
 
 const { payload } = toRefs(props);
 const { user } = useCommonStore();

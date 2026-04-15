@@ -57,9 +57,9 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	clicked: () => true,
-});
+const emit = defineEmits<{
+	clicked: [];
+}>();
 
 const { item } = toRefs(props);
 const feed = useActivityFeed()!;

@@ -16,9 +16,9 @@ const {
 	deletable = false,
 } = defineProps<Props>();
 
-const emit = defineEmits({
-	delete: () => true,
-});
+const emit = defineEmits<{
+	delete: [];
+}>();
 </script>
 
 <template>

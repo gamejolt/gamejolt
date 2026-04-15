@@ -58,10 +58,10 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	changed: (_payloadSticker: UnknownModelData | ModelData<StickerModel>) => true,
-	pack: (_payloadPack: StickerPackModel | undefined) => true,
-});
+const emit = defineEmits<{
+	changed: [payloadSticker: UnknownModelData | ModelData<StickerModel>];
+	pack: [payloadPack: StickerPackModel | undefined];
+}>();
 
 const { model, canActivate, warnDeactivate } = toRefs(props);
 

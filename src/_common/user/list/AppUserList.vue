@@ -18,10 +18,10 @@ defineProps({
 	},
 });
 
-const emit = defineEmits({
-	follow: (_user: UserModel) => true,
-	unfollow: (_user: UserModel) => true,
-});
+const emit = defineEmits<{
+	follow: [user: UserModel];
+	unfollow: [user: UserModel];
+}>();
 </script>
 
 <template>

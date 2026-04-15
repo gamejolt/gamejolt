@@ -13,10 +13,10 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	removed: () => true,
-	edit: () => true,
-});
+const emit = defineEmits<{
+	removed: [];
+	edit: [];
+}>();
 
 function onRemovedClicked() {
 	if (!props.isDisabled) {

@@ -60,10 +60,10 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	bought: () => true,
-	skip: () => true,
-});
+const emit = defineEmits<{
+	bought: [];
+	skip: [];
+}>();
 
 const { game, gamePackage, build, sellable, operation } = toRefs(props);
 const { user } = useCommonStore();

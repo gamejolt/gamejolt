@@ -44,9 +44,9 @@ defineProps({
 	},
 });
 
-const emit = defineEmits({
-	close: () => true,
-});
+const emit = defineEmits<{
+	close: [];
+}>();
 
 defineExpose<AppModalInterface>({
 	scrollTo,

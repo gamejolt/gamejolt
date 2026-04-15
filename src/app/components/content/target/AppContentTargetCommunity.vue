@@ -33,9 +33,9 @@ const props = defineProps({
 
 const { community, channel, canRemove, hasLinks, noRight } = toRefs(props);
 
-const emit = defineEmits({
-	remove: (_community: CommunityModel) => true,
-});
+const emit = defineEmits<{
+	remove: [community: CommunityModel];
+}>();
 
 const leftTo = computed(() => (hasLinks.value ? community.value.routeLocation : undefined));
 const rightTo = computed(() =>

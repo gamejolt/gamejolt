@@ -38,10 +38,10 @@ const props = defineProps({
 	...defineFormProps<FormModel>(true),
 });
 
-const emit = defineEmits({
-	backgroundChange: (_model: CommunityChannelModel) => true,
-	submit: (_model: CommunityChannelModel) => true,
-});
+const emit = defineEmits<{
+	backgroundChange: [model: CommunityChannelModel];
+	submit: [model: CommunityChannelModel];
+}>();
 
 const { community, model } = toRefs(props);
 

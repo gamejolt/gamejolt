@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import AppButton from '../../../../../_common/button/AppButton.vue';
 
-const emit = defineEmits({
-	click: (_e: Event) => true,
-});
+const emit = defineEmits<{
+	click: [e: Event];
+}>();
 </script>
 
 <template>

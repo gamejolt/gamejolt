@@ -17,9 +17,9 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	change: (_id: number) => true,
-});
+const emit = defineEmits<{
+	change: [id: number];
+}>();
 
 const { templates, currentTemplate } = toRefs(props);
 

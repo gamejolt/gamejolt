@@ -4,7 +4,7 @@ import { PropType, toRef } from 'vue';
 import { MaybePromise } from '../../../utils/utils';
 import {
 	createFormControl,
-	defineFormControlEmits,
+	FormControlEmits,
 	defineFormControlProps,
 } from '../AppFormControl.vue';
 
@@ -16,9 +16,7 @@ const { validators, disabled, beforeChange } = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	...defineFormControlEmits(),
-});
+const emit = defineEmits<FormControlEmits>();
 
 const { id, controlVal, applyValue } = createFormControl({
 	initialValue: false,

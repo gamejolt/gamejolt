@@ -22,10 +22,10 @@ defineProps({
 	},
 });
 
-const emit = defineEmits({
-	follow: () => true,
-	unfollow: () => true,
-});
+const emit = defineEmits<{
+	follow: [];
+	unfollow: [];
+}>();
 
 const { user: sessionUser } = useCommonStore();
 </script>

@@ -194,15 +194,15 @@ const {
 	useEscapeStack: wantsEscapeStack = true,
 } = defineProps<Props>();
 
-const emit = defineEmits({
-	triggerClicked: (_event: MouseEvent) => true,
-	contextmenu: (_event: MouseEvent) => true,
-	mouseenter: (_event: MouseEvent) => true,
-	mouseleave: (_event: MouseEvent) => true,
-	clickAway: (_event: MouseEvent) => true,
-	show: () => true,
-	hide: () => true,
-});
+const emit = defineEmits<{
+	triggerClicked: [event: MouseEvent];
+	contextmenu: [event: MouseEvent];
+	mouseenter: [event: MouseEvent];
+	mouseleave: [event: MouseEvent];
+	clickAway: [event: MouseEvent];
+	show: [];
+	hide: [];
+}>();
 
 const slots = useSlots();
 const router = GJ_HAS_ROUTER ? useRouter() : undefined;

@@ -23,9 +23,9 @@ props.focusToken?.register({
 	},
 });
 
-const emit = defineEmits({
-	'update:modelValue': (_modelValue: string) => true,
-});
+const emit = defineEmits<{
+	'update:modelValue': [modelValue: string];
+}>();
 
 function onChange(event: InputEvent) {
 	const target = event.target as HTMLInputElement | null;

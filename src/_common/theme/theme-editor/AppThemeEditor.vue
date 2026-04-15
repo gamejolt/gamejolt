@@ -37,9 +37,9 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	change: (_theme: any) => true,
-});
+const emit = defineEmits<{
+	change: [theme: any];
+}>();
 
 const { windowId, template, theme, resourceId } = toRefs(props);
 

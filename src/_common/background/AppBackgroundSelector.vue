@@ -33,9 +33,9 @@ const props = defineProps({
 
 const { backgrounds, background, tileSize, disabled } = toRefs(props);
 
-const emit = defineEmits({
-	backgroundChange: (_item?: BackgroundModel) => true,
-});
+const emit = defineEmits<{
+	backgroundChange: [item?: BackgroundModel];
+}>();
 
 function onSelect(item: BackgroundModel | undefined) {
 	if (disabled.value) {

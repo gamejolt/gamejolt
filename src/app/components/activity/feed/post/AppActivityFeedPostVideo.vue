@@ -27,9 +27,9 @@ const props = defineProps({
 
 const { post } = toRefs(props);
 
-const emit = defineEmits({
-	'query-param': (_params: Record<string, string>) => true,
-});
+const emit = defineEmits<{
+	'query-param': [params: Record<string, string>];
+}>();
 
 const hasVideoProcessingError = ref(false);
 const videoProcessingErrorMsg = ref('');

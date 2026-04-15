@@ -7,7 +7,7 @@ import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import { useForm } from '../AppForm.vue';
 import {
 	createFormControl,
-	defineFormControlEmits,
+	FormControlEmits,
 	defineFormControlProps,
 } from '../AppFormControl.vue';
 import { useFormGroup } from '../AppFormGroup.vue';
@@ -64,10 +64,11 @@ const currentBackground = computed(() => {
 	return backgrounds.value.find(i => i.id === selectedBackgroundId.value);
 });
 
-const emit = defineEmits({
-	backgroundChange: (_item?: BackgroundModel) => true,
-	...defineFormControlEmits(),
-});
+const emit = defineEmits<
+	FormControlEmits & {
+		backgroundChange: [item?: BackgroundModel];
+	}
+>();
 
 function onSelect(item?: BackgroundModel) {
 	applyValue(item?.id);

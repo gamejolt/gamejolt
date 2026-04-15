@@ -67,10 +67,10 @@ const walletBalance = ref(0);
 const walletTax = ref(0);
 const minOrderAmount = ref(50);
 
-const emit = defineEmits({
-	bought: () => true,
-	'processing-changed': (_isProcessing: boolean) => true,
-});
+const emit = defineEmits<{
+	bought: [];
+	'processing-changed': [isProcessing: boolean];
+}>();
 
 const pricing = computed(() => sellable.value.pricings[0]);
 const formattedAmount = computed(() => formatCurrency(pricing.value.amount));

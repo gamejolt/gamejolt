@@ -9,7 +9,7 @@ import AppTranslate from '../../../translate/AppTranslate.vue';
 import { useForm } from '../../AppForm.vue';
 import {
 	createFormControl,
-	defineFormControlEmits,
+	FormControlEmits,
 	defineFormControlProps,
 } from '../../AppFormControl.vue';
 import { useFormGroup } from '../../AppFormGroup.vue';
@@ -40,9 +40,7 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	...defineFormControlEmits<File | File[] | null>(),
-});
+const emit = defineEmits<FormControlEmits<File | File[] | null>>();
 
 const validators = computed(() => {
 	let _validators: FormValidator[] = [];

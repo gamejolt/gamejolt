@@ -109,12 +109,12 @@ const {
 // To get rid of the unused prop warning.
 void name;
 
-const emit = defineEmits({
-	submit: () => true,
-	input: (_source: string) => true,
-	'editor-focus': () => true,
-	'editor-blur': () => true,
-});
+const emit = defineEmits<{
+	submit: [];
+	input: [source: string];
+	'editor-focus': [];
+	'editor-blur': [];
+}>();
 
 const controller_ = shallowRef(
 	inheritedController ||

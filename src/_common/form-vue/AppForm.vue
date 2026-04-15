@@ -479,10 +479,10 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
+const emit = defineEmits<{
 	/** @deprecated This is only here for old forms, use the controller's onChange callback instead */
-	changed: (_formModel: any) => true,
-});
+	changed: [formModel: any];
+}>();
 
 const { controller, forcedIsLoading } = toRefs(props);
 

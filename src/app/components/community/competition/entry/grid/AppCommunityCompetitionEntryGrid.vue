@@ -40,9 +40,9 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	remove: (_entry: CommunityCompetitionEntryModel) => true,
-});
+const emit = defineEmits<{
+	remove: [entry: CommunityCompetitionEntryModel];
+}>();
 
 const { competition, numPlaceholders } = toRefs(props);
 

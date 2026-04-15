@@ -28,9 +28,9 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	submit: (_game: GameModel) => true,
-});
+const emit = defineEmits<{
+	submit: [game: GameModel];
+}>();
 
 const maxFilesize = ref(0);
 const minWidth = ref(0);

@@ -51,9 +51,9 @@ const props = defineProps({
 
 const { item } = toRefs(props);
 
-const emit = defineEmits({
-	'update:packs': (_packs: StickerPackModel[]) => true,
-});
+const emit = defineEmits<{
+	'update:packs': [packs: StickerPackModel[]];
+}>();
 
 const isLoading = ref(true);
 const collectible = ref<CollectibleModel>();

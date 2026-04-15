@@ -423,12 +423,12 @@ const props = defineProps({
 
 const { displayMode } = toRefs(props);
 
-const emit = defineEmits({
-	error: (_e: any) => true,
-	add: (_comment: CommentModel) => true,
-	edit: (_comment: CommentModel) => true,
-	remove: (_comment: CommentModel) => true,
-});
+const emit = defineEmits<{
+	error: [e: any];
+	add: [comment: CommentModel];
+	edit: [comment: CommentModel];
+	remove: [comment: CommentModel];
+}>();
 
 const c = createCommentWidget({
 	...toRefs(props),

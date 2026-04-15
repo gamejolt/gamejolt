@@ -70,10 +70,10 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	showPopper: () => true,
-	hidePopper: () => true,
-});
+const emit = defineEmits<{
+	showPopper: [];
+	hidePopper: [];
+}>();
 
 const { message, room, maxContentWidth } = toRefs(props);
 const { chatUnsafe: chat } = useGridStore();

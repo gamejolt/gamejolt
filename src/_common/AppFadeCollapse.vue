@@ -36,10 +36,10 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	requireChange: (_isRequired: boolean) => true,
-	expand: (_e: Event) => true,
-});
+const emit = defineEmits<{
+	requireChange: [isRequired: boolean];
+	expand: [e: Event];
+}>();
 
 const { collapseHeight, isOpen, animate, size, ignoreThreshold, asMask } = toRefs(props);
 const isCollapsed = ref(false);

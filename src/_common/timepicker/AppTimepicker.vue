@@ -11,9 +11,9 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	change: (_date: Date) => true,
-});
+const emit = defineEmits<{
+	change: [date: Date];
+}>();
 
 const { value: modelValue } = toRefs(props);
 const hours = ref('');

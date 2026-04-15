@@ -15,9 +15,9 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	'update:modelValue': (_modelValue: CommunityChannelModel) => true,
-});
+const emit = defineEmits<{
+	'update:modelValue': [modelValue: CommunityChannelModel];
+}>();
 
 const validChannels = computed(() => props.channels.filter(i => i.canPost));
 </script>

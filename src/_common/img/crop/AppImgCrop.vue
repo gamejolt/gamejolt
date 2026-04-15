@@ -53,9 +53,9 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	input: (_cop: CropData) => true,
-});
+const emit = defineEmits<{
+	input: [cop: CropData];
+}>();
 
 const {
 	src,

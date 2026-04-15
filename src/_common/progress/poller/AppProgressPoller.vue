@@ -14,11 +14,11 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	progress: (_response: unknown, _progress: number, _indeterminate: boolean) => true,
-	complete: (_response: unknown) => true,
-	error: (_response: unknown) => true,
-});
+const emit = defineEmits<{
+	progress: [response: unknown, progress: number, indeterminate: boolean];
+	complete: [response: unknown];
+	error: [response: unknown];
+}>();
 
 const { url, interval } = toRefs(props);
 

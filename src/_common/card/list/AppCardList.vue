@@ -4,9 +4,9 @@ const props = defineProps({
 	...defineCardListProps(),
 });
 
-const emit = defineEmits({
-	activate: (_item: any) => true,
-});
+const emit = defineEmits<{
+	activate: [item: any];
+}>();
 
 const items = ref(props.items);
 

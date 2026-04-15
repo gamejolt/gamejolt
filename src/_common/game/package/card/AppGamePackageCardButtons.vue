@@ -22,9 +22,9 @@ defineProps({
 	},
 });
 
-const emit = defineEmits({
-	click: (_data: { build: GameBuildModel; fromExtraSection: boolean }) => true,
-});
+const emit = defineEmits<{
+	click: [data: { build: GameBuildModel; fromExtraSection: boolean }];
+}>();
 
 function click(build: GameBuildModel, fromExtraSection = false) {
 	emit('click', { build, fromExtraSection });

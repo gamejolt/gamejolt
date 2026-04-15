@@ -42,10 +42,10 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	bootstrap: () => true,
-	fullscreen: (_mediaItem: MediaItemModel) => true,
-});
+const emit = defineEmits<{
+	bootstrap: [];
+	fullscreen: [mediaItem: MediaItemModel];
+}>();
 
 const { mediaItem, isActive, restrictDeviceMaxHeight, inline, canPlaceSticker } = toRefs(props);
 

@@ -39,9 +39,9 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	'select-tile': (id: number) => id >= 0,
-});
+const emit = defineEmits<{
+	'select-tile': [id: number];
+}>();
 
 const { frame, isPlaceholder, isSelected } = toRefs(props);
 

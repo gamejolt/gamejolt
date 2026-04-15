@@ -39,9 +39,9 @@ const props = defineProps({
 
 const { comments, model, displayMode } = toRefs(props);
 
-const emit = defineEmits({
-	'reload-comments': () => true,
-});
+const emit = defineEmits<{
+	'reload-comments': [];
+}>();
 
 const commentManager = useCommentStoreManager()!;
 const router = useRouter();

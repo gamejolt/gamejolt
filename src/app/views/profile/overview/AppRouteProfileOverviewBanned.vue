@@ -15,10 +15,10 @@ defineProps({
 	},
 });
 
-const emit = defineEmits({
-	removefriend: () => true,
-	unfollow: () => true,
-});
+const emit = defineEmits<{
+	removefriend: [];
+	unfollow: [];
+}>();
 </script>
 
 <template>

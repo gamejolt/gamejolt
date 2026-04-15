@@ -43,10 +43,10 @@ const props = defineProps({
 
 const { game, package: pkg, card } = toRefs(props);
 
-const emit = defineEmits({
-	click: (_data: { build: GameBuildModel; fromExtraSection?: boolean }) => true,
-	'show-build-payment': (_build: GameBuildModel) => true,
-});
+const emit = defineEmits<{
+	click: [data: { build: GameBuildModel; fromExtraSection?: boolean }];
+	'show-build-payment': [build: GameBuildModel];
+}>();
 
 const {
 	packagesById,

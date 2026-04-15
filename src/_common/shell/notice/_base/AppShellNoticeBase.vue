@@ -57,9 +57,9 @@ const { noticeId, message, autoCloseMs, animDurationMs } = toRefs(props);
 
 const { hovered, hoverBinding } = useOnHover();
 
-const emit = defineEmits({
-	'show-transition-end': () => true,
-});
+const emit = defineEmits<{
+	'show-transition-end': [];
+}>();
 
 const leadingSize = 48;
 let autoCloseTimeout: NodeJS.Timer | undefined;

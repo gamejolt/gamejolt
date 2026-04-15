@@ -6,9 +6,9 @@ import { useEscapeStack } from '../escape-stack/escape-stack.service';
  * this code when showing.
  */
 
-const emit = defineEmits({
-	trigger: () => true,
-});
+const emit = defineEmits<{
+	trigger: [];
+}>();
 
 useEscapeStack(() => emit('trigger'));
 </script>

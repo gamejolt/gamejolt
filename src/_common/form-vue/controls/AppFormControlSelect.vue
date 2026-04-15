@@ -3,7 +3,7 @@ import { ref, toRef } from 'vue';
 
 import {
 	createFormControl,
-	defineFormControlEmits,
+	FormControlEmits,
 	defineFormControlProps,
 } from '../AppFormControl.vue';
 import { useFormGroup } from '../AppFormGroup.vue';
@@ -12,9 +12,7 @@ const props = defineProps({
 	...defineFormControlProps(),
 });
 
-const emit = defineEmits({
-	...defineFormControlEmits(),
-});
+const emit = defineEmits<FormControlEmits>();
 
 const { name } = useFormGroup()!;
 

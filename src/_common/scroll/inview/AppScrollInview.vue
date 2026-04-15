@@ -94,10 +94,10 @@ const props = defineProps({
 });
 
 // These will get called by [ScrollInviewContainer].
-const emit = defineEmits({
-	inview: () => true,
-	outview: () => true,
-});
+const emit = defineEmits<{
+	inview: [];
+	outview: [];
+}>();
 
 const parent = useScrollInviewParent()!;
 

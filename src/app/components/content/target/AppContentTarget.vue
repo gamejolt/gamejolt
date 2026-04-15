@@ -43,10 +43,10 @@ const props = defineProps({
 
 const { to, leftTo, rightTo, hasRemove, hasRight, bleedImg, noHover } = toRefs(props);
 
-const emit = defineEmits({
-	remove: () => true,
-	click: (_e: MouseEvent) => true,
-});
+const emit = defineEmits<{
+	remove: [];
+	click: [e: MouseEvent];
+}>();
 
 const component = toRef(() => {
 	if (hasRight.value) {

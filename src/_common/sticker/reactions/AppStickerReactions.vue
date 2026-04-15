@@ -13,9 +13,9 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	show: () => true,
-});
+const emit = defineEmits<{
+	show: [];
+}>();
 
 const { controller } = toRefs(props);
 

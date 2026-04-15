@@ -40,9 +40,9 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	change: (_value: boolean) => true,
-});
+const emit = defineEmits<{
+	change: [value: boolean];
+}>();
 
 const { post, location } = toRefs(props);
 const showLikeAnim = ref(false);

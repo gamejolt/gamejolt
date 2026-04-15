@@ -27,9 +27,9 @@ const props = defineProps({
 
 const { groupData, isInview, emoji } = toRefs(props);
 
-const emit = defineEmits({
-	select: (_emoji: EmojiModel) => true,
-});
+const emit = defineEmits<{
+	select: [emoji: EmojiModel];
+}>();
 </script>
 
 <!--

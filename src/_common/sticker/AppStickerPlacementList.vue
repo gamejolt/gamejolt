@@ -24,9 +24,9 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	show: () => true,
-});
+const emit = defineEmits<{
+	show: [];
+}>();
 
 const { stickerTargetController } = toRefs(props);
 

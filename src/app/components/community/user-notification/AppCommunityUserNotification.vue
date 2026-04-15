@@ -23,9 +23,9 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	dismiss: () => true,
-});
+const emit = defineEmits<{
+	dismiss: [];
+}>();
 
 const { notification } = toRefs(props);
 

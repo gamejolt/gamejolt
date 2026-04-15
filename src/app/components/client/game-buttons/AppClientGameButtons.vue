@@ -50,12 +50,12 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	'show-launch-options': () => true,
-	'hide-launch-options': () => true,
-	'show-options': () => true,
-	'hide-options': () => true,
-});
+const emit = defineEmits<{
+	'show-launch-options': [];
+	'hide-launch-options': [];
+	'show-options': [];
+	'hide-options': [];
+}>();
 
 const { game, canInstall } = toRefs(props);
 

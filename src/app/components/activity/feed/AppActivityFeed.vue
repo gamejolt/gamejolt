@@ -65,17 +65,17 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	'edit-post': (_eventItem: EventItemModel) => true,
-	'publish-post': (_eventItem: EventItemModel) => true,
-	'remove-post': (_eventItem: EventItemModel) => true,
-	'feature-post': (_eventItem: EventItemModel, _community: CommunityModel) => true,
-	'unfeature-post': (_eventItem: EventItemModel, _community: CommunityModel) => true,
-	'move-channel-post': (_eventItem: EventItemModel, _: any) => true,
-	'reject-post': (_eventItem: EventItemModel, _community: CommunityModel) => true,
-	'load-new': () => true,
-	'load-more': () => true,
-});
+const emit = defineEmits<{
+	'edit-post': [eventItem: EventItemModel];
+	'publish-post': [eventItem: EventItemModel];
+	'remove-post': [eventItem: EventItemModel];
+	'feature-post': [eventItem: EventItemModel, community: CommunityModel];
+	'unfeature-post': [eventItem: EventItemModel, community: CommunityModel];
+	'move-channel-post': [eventItem: EventItemModel, _: any];
+	'reject-post': [eventItem: EventItemModel, community: CommunityModel];
+	'load-new': [];
+	'load-more': [];
+}>();
 
 const { feed, showAds } = toRefs(props);
 const { shouldShow: globalShouldShowAds } = useAdStore();

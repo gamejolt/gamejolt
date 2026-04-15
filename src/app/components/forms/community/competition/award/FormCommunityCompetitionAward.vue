@@ -31,9 +31,9 @@ const props = defineProps({
 	...defineFormProps<FormModel>(),
 });
 
-const emit = defineEmits({
-	submit: (_model: CommunityCompetitionAwardModel) => true,
-});
+const emit = defineEmits<{
+	submit: [model: CommunityCompetitionAwardModel];
+}>();
 
 const { competition, model } = toRefs(props);
 

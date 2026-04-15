@@ -41,9 +41,9 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	add: (_comment: CommentModel) => true,
-});
+const emit = defineEmits<{
+	add: [comment: CommentModel];
+}>();
 
 const { commentId, model, autofocus } = toRefs(props);
 

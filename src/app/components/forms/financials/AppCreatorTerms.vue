@@ -17,9 +17,9 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	accepted: () => true,
-});
+const emit = defineEmits<{
+	accepted: [];
+}>();
 
 const { account } = toRefs(props);
 

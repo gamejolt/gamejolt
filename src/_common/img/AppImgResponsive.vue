@@ -15,9 +15,9 @@ type Props = {
 
 const { src, alt = '' } = defineProps<Props>();
 
-const emit = defineEmits({
-	imgloadchange: (_isLoaded: boolean) => true,
-});
+const emit = defineEmits<{
+	imgloadchange: [isLoaded: boolean];
+}>();
 
 const root = ref<HTMLElement>();
 const initialized = ref(false);

@@ -39,9 +39,9 @@ const props = defineProps({
 	...defineFormProps<CommunityModel>(true),
 });
 
-const emit = defineEmits({
-	submit: (_model: CommunityModel) => true,
-});
+const emit = defineEmits<{
+	submit: [model: CommunityModel];
+}>();
 
 const { model, presetType } = toRefs(props);
 

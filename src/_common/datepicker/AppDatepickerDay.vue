@@ -19,10 +19,10 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	'update:modelValue': (_modelValue: Date) => true,
-	selected: (_date: Date) => true,
-});
+const emit = defineEmits<{
+	'update:modelValue': [modelValue: Date];
+	selected: [date: Date];
+}>();
 
 const { modelValue } = toRefs(props);
 const { createDate, toggleMode } = useDatepicker();

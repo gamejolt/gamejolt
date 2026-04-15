@@ -54,9 +54,9 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	'focus-change': (_focused: boolean) => true,
-});
+const emit = defineEmits<{
+	'focus-change': [focused: boolean];
+}>();
 
 const { roomId } = toRefs(props);
 const { closeChatPane } = useAppStore();

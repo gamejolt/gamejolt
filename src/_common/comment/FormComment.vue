@@ -60,12 +60,12 @@ const props = defineProps({
 
 const { comment, model, parentId, autofocus, placeholder } = toRefs(props);
 
-const emit = defineEmits({
-	submit: (_model: CommentModel) => true,
-	'editor-focus': () => true,
-	'editor-blur': () => true,
-	cancel: () => true,
-});
+const emit = defineEmits<{
+	submit: [model: CommentModel];
+	'editor-focus': [];
+	'editor-blur': [];
+	cancel: [];
+}>();
 
 const lengthLimit = ref(5_000);
 const contentCapabilities = ref(ContextCapabilities.getPlaceholder());

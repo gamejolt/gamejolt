@@ -16,9 +16,9 @@ defineProps({
 	},
 });
 
-const emit = defineEmits({
-	show: () => true,
-});
+const emit = defineEmits<{
+	show: [];
+}>();
 </script>
 
 <template>

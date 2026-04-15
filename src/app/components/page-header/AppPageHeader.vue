@@ -83,9 +83,9 @@ const {
 	overrideSlots,
 } = toRefs(props);
 
-const emit = defineEmits({
-	'edit-cover': () => true,
-});
+const emit = defineEmits<{
+	'edit-cover': [];
+}>();
 
 const slots = useSlots();
 

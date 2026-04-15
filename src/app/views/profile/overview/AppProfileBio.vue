@@ -20,7 +20,10 @@ defineProps({
 	},
 });
 
-const emit = defineEmits(['update:canToggleDescription', 'update:showFullDescription']);
+const emit = defineEmits<{
+	'update:canToggleDescription': [value: boolean];
+	'update:showFullDescription': [value: boolean];
+}>();
 
 const { user: routeUser, isOverviewLoaded } = useProfileRouteStore()!;
 </script>

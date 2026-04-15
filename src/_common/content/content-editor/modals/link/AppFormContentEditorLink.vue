@@ -18,9 +18,9 @@ const props = defineProps({
 	...defineFormProps<FormModel>(true),
 });
 
-const emit = defineEmits({
-	submit: (_model: FormModel) => true,
-});
+const emit = defineEmits<{
+	submit: [model: FormModel];
+}>();
 
 const form: FormController<FormModel> = createForm<FormModel>({
 	model: toRef(props, 'model'),

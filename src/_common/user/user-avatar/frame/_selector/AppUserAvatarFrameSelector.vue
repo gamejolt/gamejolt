@@ -4,7 +4,7 @@ import { onUnmounted, PropType, ref, toRefs } from 'vue';
 import { useForm } from '../../../../form-vue/AppForm.vue';
 import {
 	createFormControl,
-	defineFormControlEmits,
+	FormControlEmits,
 	defineFormControlProps,
 } from '../../../../form-vue/AppFormControl.vue';
 import { useCommonStore } from '../../../../store/common-store';
@@ -21,9 +21,7 @@ const props = defineProps({
 	...defineFormControlProps(),
 });
 
-const emit = defineEmits({
-	...defineFormControlEmits(),
-});
+const emit = defineEmits<FormControlEmits>();
 
 const { frames, validators } = toRefs(props);
 

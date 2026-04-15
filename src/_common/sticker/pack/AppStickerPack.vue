@@ -45,9 +45,9 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	clickPack: () => true,
-});
+const emit = defineEmits<{
+	clickPack: [];
+}>();
 
 const { pack, canClickPack, forceElevate } = toRefs(props);
 

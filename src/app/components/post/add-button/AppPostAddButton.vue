@@ -42,9 +42,9 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	add: (_post: FiresidePostModel) => true,
-});
+const emit = defineEmits<{
+	add: [post: FiresidePostModel];
+}>();
 
 const { placeholder, previewOnly, game, community, channel, realm } = toRefs(props);
 const { user } = useCommonStore();

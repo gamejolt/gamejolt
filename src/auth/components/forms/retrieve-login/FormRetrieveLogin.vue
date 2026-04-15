@@ -14,9 +14,9 @@ type FormModel = {
 	email: string;
 };
 
-const emit = defineEmits({
-	submit: () => true,
-});
+const emit = defineEmits<{
+	submit: [];
+}>();
 
 const invalidEmail = ref(false);
 

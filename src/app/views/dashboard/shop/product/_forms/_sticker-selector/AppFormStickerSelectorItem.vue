@@ -36,9 +36,9 @@ const props = defineProps({
 
 const { sticker, selected, disabled } = toRefs(props);
 
-const emit = defineEmits({
-	click: (_event: Event) => true,
-});
+const emit = defineEmits<{
+	click: [event: Event];
+}>();
 
 const baseStyles = computed(() => {
 	const result: CSSProperties = {

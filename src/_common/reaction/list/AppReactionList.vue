@@ -62,10 +62,10 @@ const {
 	hoverScrollWidth,
 } = toRefs(props);
 
-const emit = defineEmits({
-	'item-click': (_reaction: ReactionCount) => true,
-	'item-context': (_reaction: ReactionCount) => true,
-});
+const emit = defineEmits<{
+	'item-click': [reaction: ReactionCount];
+	'item-context': [reaction: ReactionCount];
+}>();
 
 const scrollController = createScroller();
 

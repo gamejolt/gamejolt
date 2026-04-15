@@ -22,9 +22,9 @@ const props = defineProps({
 
 const { realm, canRemove, hasLinks } = toRefs(props);
 
-const emit = defineEmits({
-	remove: (_realm: RealmModel) => true,
-});
+const emit = defineEmits<{
+	remove: [realm: RealmModel];
+}>();
 
 const to = computed(() => (hasLinks.value ? realm.value.routeLocation : undefined));
 </script>

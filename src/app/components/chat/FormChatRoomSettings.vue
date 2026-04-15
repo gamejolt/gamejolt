@@ -35,10 +35,10 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	submit: (_model: ChatRoomModel) => true,
-	viewMembers: () => true,
-});
+const emit = defineEmits<{
+	submit: [model: ChatRoomModel];
+	viewMembers: [];
+}>();
 
 const { room, showMembersPreview } = toRefs(props);
 const { chatUnsafe: chat } = useGridStore();

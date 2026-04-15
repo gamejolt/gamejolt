@@ -6,9 +6,9 @@ defineProps({
 	},
 });
 
-const emit = defineEmits({
-	toggle: () => true,
-});
+const emit = defineEmits<{
+	toggle: [];
+}>();
 </script>
 
 <template>

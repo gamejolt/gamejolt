@@ -22,9 +22,9 @@ defineProps({
 	},
 });
 
-const emit = defineEmits({
-	next: () => true,
-});
+const emit = defineEmits<{
+	next: [];
+}>();
 
 const realms = ref<RealmModel[]>([]);
 

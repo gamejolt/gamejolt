@@ -10,9 +10,9 @@ defineProps({
 	},
 });
 
-const emit = defineEmits({
-	close: () => true,
-});
+const emit = defineEmits<{
+	close: [];
+}>();
 </script>
 
 <template>

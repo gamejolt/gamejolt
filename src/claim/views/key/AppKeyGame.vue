@@ -33,9 +33,9 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	claim: (_game: GameModel) => true,
-});
+const emit = defineEmits<{
+	claim: [game: GameModel];
+}>();
 
 const { payload, loginUrl, accessKey } = toRefs(props);
 

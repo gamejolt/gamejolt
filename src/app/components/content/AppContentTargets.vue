@@ -86,15 +86,14 @@ const {
 	hasLinks,
 } = toRefs(props);
 
-const emit = defineEmits({
-	showCommunities: () => true,
-	selectCommunity: (_community: CommunityModel, _channel?: CommunityChannelModel) => true,
-	selectIncompleteCommunity: (_community: CommunityModel, _channel?: CommunityChannelModel) =>
-		true,
-	selectRealm: (_realm: RealmModel) => true,
-	removeCommunity: (_community: CommunityModel) => true,
-	removeRealm: (_realm: RealmModel) => true,
-});
+const emit = defineEmits<{
+	showCommunities: [];
+	selectCommunity: [community: CommunityModel, channel?: CommunityChannelModel];
+	selectIncompleteCommunity: [community: CommunityModel, channel?: CommunityChannelModel];
+	selectRealm: [realm: RealmModel];
+	removeCommunity: [community: CommunityModel];
+	removeRealm: [realm: RealmModel];
+}>();
 
 const scrollingKey = ref(0);
 

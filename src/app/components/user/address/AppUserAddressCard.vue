@@ -25,9 +25,9 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	remove: () => true,
-});
+const emit = defineEmits<{
+	remove: [];
+}>();
 
 function edit() {
 	showUserAddressEditModal(props.address);

@@ -8,9 +8,9 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	press: (_e: KeyboardEvent) => true,
-});
+const emit = defineEmits<{
+	press: [e: KeyboardEvent];
+}>();
 
 useShortkey(props.shortkey, e => emit('press', e));
 </script>

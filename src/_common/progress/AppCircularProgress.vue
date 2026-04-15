@@ -29,9 +29,9 @@ const props = defineProps({
 
 const { percent, strokeWidth } = toRefs(props);
 
-const emit = defineEmits({
-	'after-transition': () => true,
-});
+const emit = defineEmits<{
+	'after-transition': [];
+}>();
 
 const root = ref() as Ref<HTMLDivElement>;
 const parentSize = ref({ width: 0, height: 0 });

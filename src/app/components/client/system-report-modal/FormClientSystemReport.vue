@@ -21,9 +21,9 @@ type FormModel = {
 	localdb_packages: { [id: number]: LocalDbPackage };
 };
 
-const emit = defineEmits({
-	submit: () => true,
-});
+const emit = defineEmits<{
+	submit: [];
+}>();
 
 const { games, packages } = useClientLibraryStore();
 

@@ -27,9 +27,9 @@ const props = defineProps({
 
 const { totalItems, itemsPerPage } = toRefs(props);
 
-const emit = defineEmits({
-	pagechange: (..._args: any[]) => true,
-});
+const emit = defineEmits<{
+	pagechange: [...args: any[]];
+}>();
 
 const hasPages = toRef(() => totalItems.value > itemsPerPage.value);
 

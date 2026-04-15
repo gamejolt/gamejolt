@@ -15,9 +15,9 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	seek: (_pos: number) => true,
-});
+const emit = defineEmits<{
+	seek: [pos: number];
+}>();
 
 const { currentTime, duration } = toRefs(props);
 

@@ -57,9 +57,9 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	sort: (_games: GameModel[]) => true,
-});
+const emit = defineEmits<{
+	sort: [games: GameModel[]];
+}>();
 
 const { canReorder, showAds, truncateToFit, scrollable, forceScrollable, games } = toRefs(props);
 const { shouldShow: globalShouldShowAds } = useAdStore();

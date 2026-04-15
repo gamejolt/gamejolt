@@ -36,12 +36,12 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	show: () => true,
-	hide: () => true,
-	hovered: () => true,
-	unhovered: () => true,
-});
+const emit = defineEmits<{
+	show: [];
+	hide: [];
+	hovered: [];
+	unhovered: [];
+}>();
 
 const { user, disabled, hoverDelay, noStats, to } = toRefs(props);
 

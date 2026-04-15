@@ -21,9 +21,9 @@ const props = defineProps({
 
 const { emoji, inviewConfig } = toRefs(props);
 
-const emit = defineEmits({
-	select: (_emoji: EmojiModel) => true,
-});
+const emit = defineEmits<{
+	select: [emoji: EmojiModel];
+}>();
 
 const isHydrated = ref(import.meta.env.SSR);
 

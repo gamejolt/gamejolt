@@ -116,11 +116,11 @@ const {
 	showVideoStats,
 } = defineProps<Props>();
 
-const emit = defineEmits({
-	play: () => true,
-	pause: () => true,
-	time: (_timestamp: number) => true,
-});
+const emit = defineEmits<{
+	play: [];
+	pause: [];
+	time: [timestamp: number];
+}>();
 
 const root = ref() as Ref<HTMLDivElement>;
 

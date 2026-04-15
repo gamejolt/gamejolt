@@ -23,9 +23,9 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	change: (_date: number) => true,
-});
+const emit = defineEmits<{
+	change: [date: number];
+}>();
 
 const { value: modelValue, timezoneOffset, minDate, maxDate } = toRefs(props);
 

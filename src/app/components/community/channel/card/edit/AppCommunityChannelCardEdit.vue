@@ -17,9 +17,9 @@ defineProps({
 	},
 });
 
-const emit = defineEmits({
-	click: () => true,
-});
+const emit = defineEmits<{
+	click: [];
+}>();
 
 function onClickEdit() {
 	emit('click');

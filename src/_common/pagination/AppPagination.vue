@@ -45,9 +45,9 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	pagechange: (_page: number, _event: Event) => true,
-});
+const emit = defineEmits<{
+	pagechange: [page: number, event: Event];
+}>();
 
 const {
 	totalItems,

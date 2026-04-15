@@ -41,10 +41,10 @@ const cssFilter = computed(() => {
 	);
 });
 
-const emit = defineEmits({
-	complete: (_payload: any) => true,
-	error: (_err: string | Error) => true,
-});
+const emit = defineEmits<{
+	complete: [payload: any];
+	error: [err: string | Error];
+}>();
 
 function onProgress(
 	{ videoPosterImgUrl: newVideoPosterImgUrl }: any,

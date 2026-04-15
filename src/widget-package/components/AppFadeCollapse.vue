@@ -3,9 +3,9 @@ import { nextTick, onMounted, ref } from 'vue';
 
 import { Ruler } from '../../_common/ruler/ruler-service';
 
-const emit = defineEmits({
-	required: () => true,
-});
+const emit = defineEmits<{
+	required: [];
+}>();
 
 const root = ref<HTMLElement>();
 const inner = ref<HTMLElement>();

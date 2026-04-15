@@ -32,9 +32,9 @@ const props = defineProps({
 	...defineFormProps<FormModel>(),
 });
 
-const emit = defineEmits({
-	submit: (_model: CommunityModel) => true,
-});
+const emit = defineEmits<{
+	submit: [model: CommunityModel];
+}>();
 
 const { model } = toRefs(props);
 

@@ -32,11 +32,11 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	sync: (_provider: string) => true,
-	unlink: (_provider: string) => true,
-	link: (_provider: string) => true,
-});
+const emit = defineEmits<{
+	sync: [provider: string];
+	unlink: [provider: string];
+	link: [provider: string];
+}>();
 
 const { account, provider } = toRefs(props);
 

@@ -24,9 +24,9 @@ const props = defineProps({
 
 const { mediaItem, maxHeight, blur } = toRefs(props);
 
-const emit = defineEmits({
-	loaded: () => true,
-});
+const emit = defineEmits<{
+	loaded: [];
+}>();
 
 const isLoaded = ref(false);
 const height = ref('auto');

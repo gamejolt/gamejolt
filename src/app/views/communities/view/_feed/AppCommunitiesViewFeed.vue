@@ -29,10 +29,10 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	'add-post': (_post: FiresidePostModel) => true,
-	'load-new': () => true,
-});
+const emit = defineEmits<{
+	'add-post': [post: FiresidePostModel];
+	'load-new': [];
+}>();
 
 const { feed } = toRefs(props);
 const routeStore = useCommunityRouteStore()!;

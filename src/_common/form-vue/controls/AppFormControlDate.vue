@@ -4,7 +4,7 @@ import { computed } from 'vue';
 import AppDatetimePicker from '../../datetime-picker/AppDatetimePicker.vue';
 import {
 	createFormControl,
-	defineFormControlEmits,
+	FormControlEmits,
 	defineFormControlProps,
 } from '../AppFormControl.vue';
 import { validateMaxDate, validateMinDate } from '../validators';
@@ -25,9 +25,7 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	...defineFormControlEmits(),
-});
+const emit = defineEmits<FormControlEmits>();
 
 const { id, controlVal, applyValue } = createFormControl({
 	initialValue: Date.now(),

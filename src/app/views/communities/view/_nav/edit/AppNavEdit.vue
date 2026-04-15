@@ -5,9 +5,9 @@ import { $gettext } from '../../../../../../_common/translate/translate.service'
 import AppCommunityPerms from '../../../../../components/community/perms/AppCommunityPerms.vue';
 import { useCommunityRouteStore } from '../../view.store';
 
-const emit = defineEmits({
-	changeSection: (_path: string) => true,
-});
+const emit = defineEmits<{
+	changeSection: [path: string];
+}>();
 
 const routeStore = useCommunityRouteStore()!;
 

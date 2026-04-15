@@ -17,9 +17,9 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	loaded: () => true,
-});
+const emit = defineEmits<{
+	loaded: [];
+}>();
 
 const { post } = toRefs(props);
 

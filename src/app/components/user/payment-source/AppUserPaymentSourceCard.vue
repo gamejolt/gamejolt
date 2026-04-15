@@ -23,9 +23,9 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	remove: () => true,
-});
+const emit = defineEmits<{
+	remove: [];
+}>();
 
 const expires = computed(() => {
 	return props.paymentSource.exp_month + '/' + props.paymentSource.exp_year;

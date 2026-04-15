@@ -45,9 +45,9 @@ const props = defineProps({
 
 const { gift, product } = toRefs(props);
 
-const emit = defineEmits({
-	remove: () => true,
-});
+const emit = defineEmits<{
+	remove: [];
+}>();
 
 const { user: authedUser } = useCommonStore();
 const { stickerPacks } = useStickerStore();

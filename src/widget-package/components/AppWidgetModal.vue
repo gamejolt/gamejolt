@@ -8,9 +8,9 @@ defineProps({
 	},
 });
 
-const emit = defineEmits({
-	close: () => true,
-});
+const emit = defineEmits<{
+	close: [];
+}>();
 
 function close() {
 	emit('close');

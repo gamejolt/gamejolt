@@ -27,9 +27,9 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits({
-	change: (_content: string) => true,
-});
+const emit = defineEmits<{
+	change: [content: string];
+}>();
 
 const { site, windowId, contentBlock } = toRefs(props);
 

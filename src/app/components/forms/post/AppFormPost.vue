@@ -120,11 +120,11 @@ const props = defineProps({
 	...defineFormProps<FiresidePostModel>(true),
 });
 
-const emit = defineEmits({
-	submit: (_data: FiresidePostModel) => true,
-	videoUploadStatusChange: (_status: VideoStatus) => true,
-	backgroundChange: (_background?: BackgroundModel) => true,
-});
+const emit = defineEmits<{
+	submit: [data: FiresidePostModel];
+	videoUploadStatusChange: [status: VideoStatus];
+	backgroundChange: [background?: BackgroundModel];
+}>();
 
 const { defaultCommunity, defaultChannel, defaultRealm, overlay, model } = toRefs(props);
 

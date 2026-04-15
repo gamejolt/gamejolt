@@ -43,11 +43,9 @@ export function defineFormControlValidateProps() {
 /**
  * Used to mix in common emits used in most form controls.
  */
-export function defineFormControlEmits<T = any>() {
-	return {
-		changed: (_value: T) => true,
-	};
-}
+export type FormControlEmits<T = any> = {
+	changed: [value: T];
+};
 
 export function createFormControl<T>({
 	initialValue,
@@ -207,9 +205,7 @@ const {
 	htmlListId = undefined,
 } = defineProps<Props>();
 
-const emit = defineEmits({
-	...defineFormControlEmits(),
-});
+const emit = defineEmits<FormControlEmits>();
 
 // We add some extra validators in depending on the form control type.
 const ourValidators = computed(() => {
