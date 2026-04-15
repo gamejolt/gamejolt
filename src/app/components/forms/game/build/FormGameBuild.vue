@@ -1,6 +1,6 @@
 <script lang="ts">
 import { Ref } from 'vue';
-import { computed, onBeforeUnmount, onMounted, ref, toRef, watch } from 'vue';
+import { computed, ref, toRef, watch } from 'vue';
 
 import { Api } from '../../../../../_common/api/api.service';
 import AppCardListItem from '../../../../../_common/card/list/AppCardListItem.vue';
@@ -39,16 +39,7 @@ import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
-import { arrayRemove } from '../../../../../utils/array';
-import { useFormGameRelease } from '../release/FormGameRelease.vue';
 import { showArchiveFileSelectorModal } from './archive-file-selector-modal.service';
-
-// TODO(migration): Can do do this instead through exposing functions on the game build form?
-export interface FormGameBuildInterface {
-	buildId: number;
-	isDeprecated: Ref<boolean>;
-	save: () => Promise<boolean>;
-}
 </script>
 
 <script lang="ts" setup>
@@ -80,8 +71,6 @@ const emit = defineEmits<{
 	'update-launch-options': [formModel: GameBuildFormModel, launchOptions: any];
 	submit: [response: any];
 }>();
-
-const releaseForm = useFormGameRelease()!;
 
 const maxFilesize = ref(0);
 const restrictedPlatforms = ref<string[]>([]);
@@ -228,17 +217,9 @@ const availablePlatformOptions = computed(() => {
 
 const isFitToScreen = computed(() => form.formModel && form.formModel.embed_fit_to_screen);
 
-// Register with the release form.
-onMounted(() => {
-	releaseForm.buildForms.value.push({
-		buildId: props.model!.id,
-		isDeprecated: computed(() => isDeprecated.value),
-		save: () => form.submit(),
-	});
-});
-
-onBeforeUnmount(() => {
-	arrayRemove(releaseForm.buildForms.value, i => i.buildId === props.model!.id);
+defineExpose({
+	isDeprecated,
+	save: () => form.submit(),
 });
 
 // Watch release launch options.

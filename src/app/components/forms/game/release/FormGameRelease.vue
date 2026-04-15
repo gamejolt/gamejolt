@@ -1,29 +1,4 @@
 <script lang="ts">
-import { inject, InjectionKey, provide, shallowRef } from 'vue';
-
-import { FormGameBuildInterface } from '../build/FormGameBuild.vue';
-
-type Controller = ReturnType<typeof createFormGameRelease>;
-const Key: InjectionKey<Controller> = Symbol('form-game-release');
-
-export function useFormGameRelease() {
-	return inject(Key, null);
-}
-
-function createFormGameRelease() {
-	const buildForms = shallowRef<FormGameBuildInterface[]>([]);
-
-	async function saveBuildForms() {
-		await Promise.all(buildForms.value.filter(i => i && !i.isDeprecated).map(i => i.save()));
-	}
-
-	return {
-		buildForms,
-		saveBuildForms,
-	};
-}
-
-export { createFormGameRelease };
 import { addWeeks, startOfDay } from 'date-fns';
 import { determine } from 'jstimezonedetect';
 import { computed, ref, toRef } from 'vue';
@@ -79,8 +54,15 @@ type Props = {
 	model?: GameReleaseModel;
 };
 
-const props = defineProps<Props>();
-const { game } = props;
+const {
+	game,
+	package: pkg,
+	builds,
+	launchOptions,
+	buildDownloadCounts,
+	areWebBuildsLockedBySellable,
+	model,
+} = defineProps<Props>();
 
 const emit = defineEmits<{
 	'unpublish-release': [release: FormModel];
@@ -88,11 +70,15 @@ const emit = defineEmits<{
 	submit: [formModel: FormModel];
 }>();
 
-const controller = (() => {
-	const c = createFormGameRelease();
-	provide(Key, c);
-	return c;
-})();
+const buildFormRefs: Record<number, InstanceType<typeof FormGameBuild>> = {};
+
+async function saveBuildForms() {
+	await Promise.all(
+		Object.values(buildFormRefs)
+			.filter(i => i && !i.isDeprecated)
+			.map(i => i.save())
+	);
+}
 
 const timezones = ref<{ [region: string]: (TimezoneData & { label?: string })[] }>(null as any);
 const now = ref(0);
@@ -100,17 +86,15 @@ const now = ref(0);
 const GameReleaseStatusPublished = GameReleaseStatus.Published;
 
 const form: FormController<FormModel> = createForm<FormModel>({
-	model: toRef(props, 'model'),
+	model: toRef(() => model),
 	modelClass: GameReleaseModel,
 	modelSaveHandler: $saveGameRelease,
-	loadUrl: computed(
-		() => `/web/dash/developer/games/releases/save/${game.id}/${props.package.id}`
-	),
+	loadUrl: computed(() => `/web/dash/developer/games/releases/save/${game.id}/${pkg.id}`),
 	async onInit() {
 		await fetchTimezones();
 
 		form.formModel.game_id = game.id;
-		form.formModel.game_package_id = props.package.id;
+		form.formModel.game_package_id = pkg.id;
 	},
 	onLoad(payload: any) {
 		if (form.method === 'add') {
@@ -140,24 +124,26 @@ const scheduledTimezoneOffset = computed(() => {
 const isScheduling = computed(() => form.formModel.isScheduled);
 
 function onBuildAdded(build: GameBuildModel) {
-	props.builds.push(build);
+	// eslint-disable-next-line vue/no-mutating-props
+	builds.push(build);
 }
 
 function updateBuildLaunchOptions(
 	build: GameBuildModel,
-	launchOptions: GameBuildLaunchOptionModel[]
+	responseLaunchOptions: GameBuildLaunchOptionModel[]
 ) {
-	if (props.launchOptions && props.launchOptions.length) {
-		arrayRemove(props.launchOptions, launchOption => launchOption.game_build_id === build.id);
+	if (launchOptions && launchOptions.length) {
+		arrayRemove(launchOptions, i => i.game_build_id === build.id);
 	}
 
-	if (!launchOptions || !launchOptions.length) {
+	if (!responseLaunchOptions || !responseLaunchOptions.length) {
 		return;
 	}
 
-	const newLaunchOptions = GameBuildLaunchOptionModel.populate(launchOptions);
+	const newLaunchOptions = GameBuildLaunchOptionModel.populate(responseLaunchOptions);
 	for (const launchOption of newLaunchOptions) {
-		props.launchOptions.push(launchOption);
+		// eslint-disable-next-line vue/no-mutating-props
+		launchOptions.push(launchOption);
 	}
 }
 
@@ -173,7 +159,7 @@ async function removeBuild(build: GameBuildModel) {
 	}
 
 	await $removeGameBuild(build, game);
-	arrayRemove(props.builds, _build => _build.id === build.id);
+	arrayRemove(builds, i => i.id === build.id);
 
 	showSuccessGrowl(
 		$gettext('The build has been removed from the release.'),
@@ -182,7 +168,7 @@ async function removeBuild(build: GameBuildModel) {
 }
 
 async function save() {
-	await controller.saveBuildForms();
+	await saveBuildForms();
 	form.submit();
 }
 
@@ -212,11 +198,11 @@ function saveDraft() {
 }
 
 function unpublish() {
-	emit('unpublish-release', props.model!);
+	emit('unpublish-release', model!);
 }
 
 function remove() {
-	emit('remove-release', props.model!);
+	emit('remove-release', model!);
 }
 
 async function addSchedule() {
@@ -282,7 +268,7 @@ function timezoneByName(timezone: string) {
 					validateSemver(),
 					validateMaxLength(50),
 					validateAvailability({
-						url: `/web/dash/developer/games/releases/check-field-availability/${game.id}/${props.package.id}/version_number`,
+						url: `/web/dash/developer/games/releases/check-field-availability/${game.id}/${pkg.id}/version_number`,
 						initVal: model && model.version_number,
 					}),
 				]"
@@ -307,9 +293,18 @@ function timezoneByName(timezone: string) {
 				<FormGameBuild
 					v-for="build of builds"
 					:key="build.id"
+					:ref="
+						(el: any) => {
+							if (el) {
+								buildFormRefs[build.id] = el;
+							} else {
+								delete buildFormRefs[build.id];
+							}
+						}
+					"
 					:model="build"
 					:game="game"
-					:package="props.package"
+					:package="pkg"
 					:release="model!"
 					:release-launch-options="launchOptions"
 					:builds="builds"
@@ -330,7 +325,7 @@ function timezoneByName(timezone: string) {
 					<FormGameNewBuild
 						type="downloadable"
 						:game="game"
-						:package="props.package"
+						:package="pkg"
 						:release="model!"
 						@submit="onBuildAdded"
 					/>
@@ -344,7 +339,7 @@ function timezoneByName(timezone: string) {
 						v-if="!areWebBuildsLockedBySellable"
 						type="browser"
 						:game="game"
-						:package="props.package"
+						:package="pkg"
 						:release="model!"
 						:builds="builds"
 						@submit="onBuildAdded"
