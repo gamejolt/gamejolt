@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import AppFadeCollapse from '../../../../_common/AppFadeCollapse.vue';
-import AppContentViewer from '../../../../_common/content/content-viewer/AppContentViewer.vue';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
-import { styleTextOverflow } from '../../../../_styles/mixins';
-import { ChatClient } from '../client';
-import { ChatMessageModel } from '../message';
+import { ChatClient } from '~app/components/chat/client';
+import { ChatMessageModel } from '~app/components/chat/message';
+import AppFadeCollapse from '~common/AppFadeCollapse.vue';
+import AppContentViewer from '~common/content/content-viewer/AppContentViewer.vue';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppUserAvatar from '~common/user/user-avatar/AppUserAvatar.vue';
+import { styleTextOverflow } from '~styles/mixins';
 
 type Props = {
 	chat: ChatClient;

@@ -2,23 +2,23 @@
 import { computed } from 'vue';
 import { RouteLocationRaw, useRouter } from 'vue-router';
 
-import AppButton from '../../../../_common/button/AppButton.vue';
-import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
-import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
-import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormStickySubmit from '../../../../_common/form-vue/AppFormStickySubmit.vue';
-import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
-import AppModal from '../../../../_common/modal/AppModal.vue';
-import { useModal } from '../../../../_common/modal/modal.service';
+import { routeNotifications } from '~app/views/notifications/notifications.route';
+import { NOTIFICATION_FILTER_QUERY } from '~app/views/notifications/RouteNotifications.vue';
+import AppButton from '~common/button/AppButton.vue';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormStickySubmit from '~common/form-vue/AppFormStickySubmit.vue';
+import AppFormControlToggle from '~common/form-vue/controls/AppFormControlToggle.vue';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
 import {
 	getNotificationFeedTypeLabels,
 	NotificationFeedTypes,
-} from '../../../../_common/notification/notification-model';
-import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
-import { useCommonStore } from '../../../../_common/store/common-store';
-import { stringSort } from '../../../../utils/array';
-import { routeNotifications } from '../notifications.route';
-import { NOTIFICATION_FILTER_QUERY } from '../RouteNotifications.vue';
+} from '~common/notification/notification-model';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import { useCommonStore } from '~common/store/common-store';
+import { stringSort } from '~utils/array';
 
 type FormModel = {
 	[k: string]: boolean;

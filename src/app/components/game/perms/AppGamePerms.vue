@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import { Perm } from '../../../../_common/collaborator/collaboratable';
-import { GameModel } from '../../../../_common/game/game.model';
-import { useGameDashRouteController } from '../../../views/dashboard/games/manage/manage.store';
+import { useGameDashRouteController } from '~app/views/dashboard/games/manage/manage.store';
+import { Perm } from '~common/collaborator/collaboratable';
+import { GameModel } from '~common/game/game.model';
 
 type Props = {
 	game?: GameModel;

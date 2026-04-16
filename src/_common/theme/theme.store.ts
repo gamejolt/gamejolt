@@ -1,9 +1,9 @@
 import { computed, inject, InjectionKey, ref } from 'vue';
 
-import { arrayRemove } from '../../utils/array';
-import { SettingThemeAlwaysOurs, SettingThemeDark } from '../settings/settings.service';
-import { CommonStore } from '../store/common-store';
-import { ThemeModel } from './theme.model';
+import { SettingThemeAlwaysOurs, SettingThemeDark } from '~common/settings/settings.service';
+import { CommonStore } from '~common/store/common-store';
+import { ThemeModel } from '~common/theme/theme.model';
+import { arrayRemove } from '~utils/array';
 
 export const ThemeStoreKey: InjectionKey<ThemeStore> = Symbol('theme-store');
 

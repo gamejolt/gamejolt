@@ -1,15 +1,15 @@
 <script lang="ts" setup>
-import AppButton from '../../../../../_common/button/AppButton.vue';
-import { GamePackageModel } from '../../../../../_common/game/package/package.model';
-import AppModal from '../../../../../_common/modal/AppModal.vue';
-import { useModal } from '../../../../../_common/modal/modal.service';
-import { SellableModel } from '../../../../../_common/sellable/sellable.model';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
+import FormGamePackage from '~app/components/forms/game/package/FormGamePackage.vue';
 import {
 	GameDashRouteController,
 	provideGameDashRouteController,
-} from '../../../../views/dashboard/games/manage/manage.store';
-import FormGamePackage from '../../../forms/game/package/FormGamePackage.vue';
+} from '~app/views/dashboard/games/manage/manage.store';
+import AppButton from '~common/button/AppButton.vue';
+import { GamePackageModel } from '~common/game/package/package.model';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import { SellableModel } from '~common/sellable/sellable.model';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 type Props = {
 	routeController: GameDashRouteController;

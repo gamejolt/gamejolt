@@ -1,7 +1,7 @@
 <script lang="ts">
 import { computed } from 'vue';
 
-import { DogtagData } from '../dogtag/dogtag-data';
+import { DogtagData } from '~common/dogtag/dogtag-data';
 </script>
 
 <script lang="ts" setup>

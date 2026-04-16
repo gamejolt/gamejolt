@@ -2,28 +2,28 @@
 import { computed, toRef } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-import AppButton from '../../../../../../../../_common/button/AppButton.vue';
+import FormCommunityChannelDescription from '~app/components/forms/community/channel/description/FormCommunityChannelDescription.vue';
+import FormCommunityChannelEdit from '~app/components/forms/community/channel/edit/FormCommunityChannelEdit.vue';
+import AppCommunityPageContainer from '~app/views/communities/view/_page-container/AppCommunityPageContainer.vue';
+import { useCommunityRouteStore } from '~app/views/communities/view/view.store';
+import AppButton from '~common/button/AppButton.vue';
 import {
 	$archiveCommunityChannel,
 	$unarchiveCommunityChannel,
 	CommunityChannelModel,
-} from '../../../../../../../../_common/community/channel/channel.model';
+} from '~common/community/channel/channel.model';
 import {
 	showErrorGrowl,
 	showSuccessGrowl,
-} from '../../../../../../../../_common/growls/growls.service';
-import { showModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
+} from '~common/growls/growls.service';
+import { showModalConfirm } from '~common/modal/confirm/confirm-service';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
-} from '../../../../../../../../_common/route/route-component';
-import { Scroll } from '../../../../../../../../_common/scroll/scroll.service';
-import { $gettext } from '../../../../../../../../_common/translate/translate.service';
-import { arrayRemove } from '../../../../../../../../utils/array';
-import FormCommunityChannelDescription from '../../../../../../../components/forms/community/channel/description/FormCommunityChannelDescription.vue';
-import FormCommunityChannelEdit from '../../../../../../../components/forms/community/channel/edit/FormCommunityChannelEdit.vue';
-import AppCommunityPageContainer from '../../../../_page-container/AppCommunityPageContainer.vue';
-import { useCommunityRouteStore } from '../../../../view.store';
+} from '~common/route/route-component';
+import { Scroll } from '~common/scroll/scroll.service';
+import { $gettext } from '~common/translate/translate.service';
+import { arrayRemove } from '~utils/array';
 
 export default {
 	...defineAppRouteOptions({

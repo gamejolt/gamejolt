@@ -2,7 +2,7 @@
 import { ref, watch } from 'vue';
 import VueDraggable from 'vuedraggable';
 
-import { useCardList } from './AppCardList.vue';
+import { useCardList } from '~common/card/list/AppCardList.vue';
 
 type Props = {
 	itemKey: string;

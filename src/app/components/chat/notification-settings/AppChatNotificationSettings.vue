@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref } from 'vue';
 
-import { Api } from '../../../../_common/api/api.service';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
+import { Api } from '~common/api/api.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
+import { $gettext } from '~common/translate/translate.service';
 
 type Props = {
 	roomId: number;

@@ -1,7 +1,7 @@
-import { Model } from '../model/model.service';
-import { OrderAddressModel, OrderAddressType } from './address/address.model';
-import { OrderItemModel } from './item/item.model';
-import { OrderPaymentModel } from './payment/payment.model';
+import { Model } from '~common/model/model.service';
+import { OrderAddressModel, OrderAddressType } from '~common/order/address/address.model';
+import { OrderItemModel } from '~common/order/item/item.model';
+import { OrderPaymentModel } from '~common/order/payment/payment.model';
 
 export class OrderModel extends Model {
 	declare hash: string;

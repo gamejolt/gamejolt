@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 
-import { Environment } from '../../_common/environment/environment.service';
-import AppJolticon from '../../_common/jolticon/AppJolticon.vue';
-import { SellableType } from '../../_common/sellable/sellable.model';
-import { vAppTooltip } from '../../_common/tooltip/tooltip-directive';
-import { useWidgetPackageStore } from '../store/index';
-import AppIncludedItems from './AppIncludedItems.vue';
-import AppPricingCard from './AppPricingCard.vue';
-import AppWidgetModal from './AppWidgetModal.vue';
+import { Environment } from '~common/environment/environment.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { SellableType } from '~common/sellable/sellable.model';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import AppIncludedItems from '~widget-package/components/AppIncludedItems.vue';
+import AppPricingCard from '~widget-package/components/AppPricingCard.vue';
+import AppWidgetModal from '~widget-package/components/AppWidgetModal.vue';
+import { useWidgetPackageStore } from '~widget-package/store/index';
 
 const store = useWidgetPackageStore();
 

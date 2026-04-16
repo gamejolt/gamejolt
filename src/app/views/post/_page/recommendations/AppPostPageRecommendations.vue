@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import AppPostCardPlaceholder from '../../../../../_common/fireside/post/card/AppPostCardPlaceholder.vue';
-import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
-import { Screen } from '../../../../../_common/screen/screen-service';
-import AppScrollScroller from '../../../../../_common/scroll/AppScrollScroller.vue';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import AppPostPageRecommendationsPosts from './AppPostPageRecommendationsPosts.vue';
+import AppPostPageRecommendationsPosts from '~app/views/post/_page/recommendations/AppPostPageRecommendationsPosts.vue';
+import AppPostCardPlaceholder from '~common/fireside/post/card/AppPostCardPlaceholder.vue';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import { Screen } from '~common/screen/screen-service';
+import AppScrollScroller from '~common/scroll/AppScrollScroller.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 type Props = {
 	post: FiresidePostModel;

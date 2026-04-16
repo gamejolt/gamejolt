@@ -1,6 +1,6 @@
 import { type Component,inject, InjectionKey, markRaw, provide, ref, watch } from 'vue';
 
-import { ComponentProps } from '../component-helpers';
+import { ComponentProps } from '~common/component-helpers';
 
 const PopcornKettleControllerKey: InjectionKey<PopcornKettleController> = Symbol('popcorn-kettle');
 

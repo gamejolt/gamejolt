@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { styleFlexCenter } from '../../_styles/mixins';
+import { styleFlexCenter } from '~styles/mixins';
 
 type Props = {
 	row?: boolean;

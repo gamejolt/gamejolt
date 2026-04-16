@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import { vAppAuthRequired } from '../../../../_common/auth/auth-required-directive';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import { GameModel } from '../../../../_common/game/game.model';
-import AppPopper from '../../../../_common/popper/AppPopper.vue';
-import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import AppGamePlaylistAddToPopover from '../add-to-popover/AppGamePlaylistAddToPopover.vue';
+import AppGamePlaylistAddToPopover from '~app/components/game-playlist/add-to-popover/AppGamePlaylistAddToPopover.vue';
+import { vAppAuthRequired } from '~common/auth/auth-required-directive';
+import AppButton from '~common/button/AppButton.vue';
+import { GameModel } from '~common/game/game.model';
+import AppPopper from '~common/popper/AppPopper.vue';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 
 type Props = {
 	game: GameModel;

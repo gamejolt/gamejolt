@@ -1,15 +1,15 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import AppButton from '../../../../_common/button/AppButton.vue';
-import AppCommentDisabledCheck from '../../../../_common/comment/AppCommentDisabledCheck.vue';
-import { CommentableModel, CommentSort } from '../../../../_common/comment/comment-model';
-import AppModal from '../../../../_common/modal/AppModal.vue';
-import { useModal } from '../../../../_common/modal/modal.service';
-import { Model } from '../../../../_common/model/model.service';
-import { Screen } from '../../../../_common/screen/screen-service';
-import { AppCommentWidgetLazy } from '../../lazy';
-import { DisplayMode } from './modal.service';
+import { DisplayMode } from '~app/components/comment/modal/modal.service';
+import { AppCommentWidgetLazy } from '~app/components/lazy';
+import AppButton from '~common/button/AppButton.vue';
+import AppCommentDisabledCheck from '~common/comment/AppCommentDisabledCheck.vue';
+import { CommentableModel, CommentSort } from '~common/comment/comment-model';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import { Model } from '~common/model/model.service';
+import { Screen } from '~common/screen/screen-service';
 
 type Props = {
 	displayMode: DisplayMode;

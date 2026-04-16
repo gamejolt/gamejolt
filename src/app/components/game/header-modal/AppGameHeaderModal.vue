@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import AppButton from '../../../../_common/button/AppButton.vue';
-import { GameModel } from '../../../../_common/game/game.model';
-import AppModal from '../../../../_common/modal/AppModal.vue';
-import { useModal } from '../../../../_common/modal/modal.service';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import FormGameHeader from '../../forms/game/header/FormGameHeader.vue';
+import FormGameHeader from '~app/components/forms/game/header/FormGameHeader.vue';
+import AppButton from '~common/button/AppButton.vue';
+import { GameModel } from '~common/game/game.model';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 type Props = {
 	game: GameModel;

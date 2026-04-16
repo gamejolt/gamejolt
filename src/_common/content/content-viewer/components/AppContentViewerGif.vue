@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import AppContentGif from '../../components/AppContentGif.vue';
-import { ContentObject } from '../../content-object';
+import AppContentGif from '~common/content/components/AppContentGif.vue';
+import { ContentObject } from '~common/content/content-object';
 
 type Props = {
 	contentData: ContentObject;

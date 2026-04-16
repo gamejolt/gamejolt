@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { styleChangeBg, styleWhen } from '../../_styles/mixins';
-import { kBorderRadiusBase, kButtonMdLineHeight } from '../../_styles/variables';
+import { styleChangeBg, styleWhen } from '~styles/mixins';
+import { kBorderRadiusBase, kButtonMdLineHeight } from '~styles/variables';
 
 type Props = {
 	sparse?: boolean;

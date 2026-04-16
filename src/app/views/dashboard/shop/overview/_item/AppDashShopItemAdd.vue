@@ -1,13 +1,13 @@
 <script lang="ts" setup>
-import AppAspectRatio from '../../../../../../_common/aspect-ratio/AppAspectRatio.vue';
-import AppHoverCard from '../../../../../../_common/card/AppHoverCard.vue';
-import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
-import { ShopProductResource } from '../../../../../../_common/shop/product/product-model';
-import AppSpacer from '../../../../../../_common/spacer/AppSpacer.vue';
-import { kThemeBgSubtle } from '../../../../../../_common/theme/variables';
-import { styleFlexCenter } from '../../../../../../_styles/mixins';
-import { routeDashShopProduct } from '../../product/product.route';
-import { getShopDashProductResourceParam } from '../../shop.store';
+import { routeDashShopProduct } from '~app/views/dashboard/shop/product/product.route';
+import { getShopDashProductResourceParam } from '~app/views/dashboard/shop/shop.store';
+import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
+import AppHoverCard from '~common/card/AppHoverCard.vue';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { ShopProductResource } from '~common/shop/product/product-model';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import { kThemeBgSubtle } from '~common/theme/variables';
+import { styleFlexCenter } from '~styles/mixins';
 
 type Props = {
 	resource: ShopProductResource;

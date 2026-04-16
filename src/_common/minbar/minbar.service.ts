@@ -1,6 +1,6 @@
 import { reactive } from 'vue';
 
-import { arrayRemove } from '../../utils/array';
+import { arrayRemove } from '~utils/array';
 
 export interface MinbarItem {
 	isActive?: boolean;

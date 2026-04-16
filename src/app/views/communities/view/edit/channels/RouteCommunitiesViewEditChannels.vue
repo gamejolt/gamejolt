@@ -4,7 +4,7 @@ import { RouterView } from 'vue-router';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
-} from '../../../../../../_common/route/route-component';
+} from '~common/route/route-component';
 
 export default {
 	...defineAppRouteOptions({

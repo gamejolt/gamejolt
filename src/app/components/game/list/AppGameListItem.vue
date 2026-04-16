@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import { formatNumber } from '../../../../_common/filters/number';
-import { GameModel } from '../../../../_common/game/game.model';
-import AppGameThumbnailImg from '../../../../_common/game/thumbnail/AppGameThumbnailImg.vue';
-import AppUserVerifiedTick from '../../../../_common/user/AppUserVerifiedTick.vue';
-import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
+import { formatNumber } from '~common/filters/number';
+import { GameModel } from '~common/game/game.model';
+import AppGameThumbnailImg from '~common/game/thumbnail/AppGameThumbnailImg.vue';
+import AppUserVerifiedTick from '~common/user/AppUserVerifiedTick.vue';
+import AppUserCardHover from '~common/user/card/AppUserCardHover.vue';
 
 type Props = {
 	game: GameModel;
@@ -61,4 +61,4 @@ const url = computed(() => game.getUrl());
 	</div>
 </template>
 
-<style lang="stylus" src="./list-common.styl" scoped></style>
+<style lang="stylus" src="~app/components/game/list/list-common.styl" scoped></style>

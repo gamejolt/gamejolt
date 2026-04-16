@@ -1,10 +1,10 @@
 import { computed, inject, InjectionKey, Ref, ref, shallowReadonly, watch } from 'vue';
 
-import { Api } from '../../_common/api/api.service';
-import { storeModelList } from '../../_common/model/model-store.service';
-import { QuestModel, QuestRepeatType } from '../../_common/quest/quest-model';
-import { UserModel } from '../../_common/user/user.model';
-import { GridClient } from '../components/grid/client.service';
+import { GridClient } from '~app/components/grid/client.service';
+import { Api } from '~common/api/api.service';
+import { storeModelList } from '~common/model/model-store.service';
+import { QuestModel, QuestRepeatType } from '~common/quest/quest-model';
+import { UserModel } from '~common/user/user.model';
 
 export type QuestStore = ReturnType<typeof createQuestStore>;
 type QuestIdSet = Set<number>;

@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-import AppEditableOverlay from '../../../../../../_common/editable-overlay/AppEditableOverlay.vue';
-import { MediaItemModel } from '../../../../../../_common/media-item/media-item-model';
-import { $gettext } from '../../../../../../_common/translate/translate.service';
-import { styleBorderRadiusLg } from '../../../../../../_styles/mixins';
 import {
 	CommunityChannelCardHeight,
 	CommunityChannelCardWidth,
-} from '../AppCommunityChannelCard.vue';
+} from '~app/components/community/channel/card/AppCommunityChannelCard.vue';
+import AppEditableOverlay from '~common/editable-overlay/AppEditableOverlay.vue';
+import { MediaItemModel } from '~common/media-item/media-item-model';
+import { $gettext } from '~common/translate/translate.service';
+import { styleBorderRadiusLg } from '~styles/mixins';
 
 type Props = {
 	background?: MediaItemModel | null;

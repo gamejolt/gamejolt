@@ -4,14 +4,14 @@ import { RouteRecordRaw } from 'vue-router';
 export const routeLandingHelpPage: RouteRecordRaw = {
 	name: 'landing.help.page',
 	path: ':page(.+)',
-	component: () => import('./RouteLandingHelpPage.vue'),
+	component: () => import('~app/views/landing/help/RouteLandingHelpPage.vue'),
 };
 
 // Category navigation menu parent route
 export const routeLandingHelpCategory: RouteRecordRaw = {
 	name: 'landing.help.category',
 	path: ':category(.+)',
-	component: () => import('./RouteLandingHelpCategory.vue'),
+	component: () => import('~app/views/landing/help/RouteLandingHelpCategory.vue'),
 	children: [routeLandingHelpPage],
 };
 
@@ -19,13 +19,13 @@ export const routeLandingHelpCategory: RouteRecordRaw = {
 export const routeLandingHelpIndex: RouteRecordRaw = {
 	name: 'landing.help',
 	path: '',
-	component: () => import('./RouteLandingHelpIndex.vue'),
+	component: () => import('~app/views/landing/help/RouteLandingHelpIndex.vue'),
 };
 
 // Base help route split between viewing a category/page and the index.
 export const routeLandingHelp: RouteRecordRaw = {
 	path: '/help-docs',
-	component: () => import('./RouteLandingHelp.vue'),
+	component: () => import('~app/views/landing/help/RouteLandingHelp.vue'),
 	children: [routeLandingHelpCategory, routeLandingHelpIndex],
 };
 
@@ -39,5 +39,5 @@ export const routeLandingHelpIndexRedirect: RouteRecordRaw = {
 export const routeLandingHelpRedirect: RouteRecordRaw = {
 	name: 'landing.help.redirect',
 	path: '/help/:path(.+)',
-	component: () => import('./RouteLandingHelpRedirect.vue'),
+	component: () => import('~app/views/landing/help/RouteLandingHelpRedirect.vue'),
 };

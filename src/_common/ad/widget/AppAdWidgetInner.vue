@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { onBeforeUnmount, onMounted, ref, toRef } from 'vue';
 
-import { AdSlot } from '../ad-slot-info';
-import { addAd, AdInterface, removeAd, useAdStore } from '../ad-store';
+import { AdSlot } from '~common/ad/ad-slot-info';
+import { addAd, AdInterface, removeAd, useAdStore } from '~common/ad/ad-store';
 
 type Props = {
 	adSlot: AdSlot;

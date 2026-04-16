@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import { styleChangeBg } from '../../_styles/mixins';
+import { styleChangeBg } from '~styles/mixins';
 
 type Props = {
 	count: number;

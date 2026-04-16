@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import AppJolticon from '../jolticon/AppJolticon.vue';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
 type Props = {
 	disabled?: boolean;
 };

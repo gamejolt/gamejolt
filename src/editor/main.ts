@@ -1,4 +1,4 @@
-import { createApp } from './bootstrap';
+import { createApp } from '~editor/bootstrap';
 
 async function start() {
 	const { app } = await createApp();

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import AppLoading from '../../../../../_common/loading/AppLoading.vue';
+import AppLoading from '~common/loading/AppLoading.vue';
 </script>
 
 <template>

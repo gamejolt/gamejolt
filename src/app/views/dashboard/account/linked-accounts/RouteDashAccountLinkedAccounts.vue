@@ -2,23 +2,23 @@
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { Api } from '../../../../../_common/api/api.service';
-import { showErrorGrowl, showSuccessGrowl } from '../../../../../_common/growls/growls.service';
-import AppLinkedAccount from '../../../../../_common/linked-account/AppLinkedAccount.vue';
+import { showUserSetPasswordModal } from '~app/components/user/set-password-modal/set-password-modal.service';
+import { useAccountRouteController } from '~app/views/dashboard/account/RouteDashAccount.vue';
+import { Api } from '~common/api/api.service';
+import { showErrorGrowl, showSuccessGrowl } from '~common/growls/growls.service';
+import AppLinkedAccount from '~common/linked-account/AppLinkedAccount.vue';
 import {
 	getLinkedAccountProviderDisplayName,
 	LinkedAccountModel,
 	LinkedAccountProvider,
-} from '../../../../../_common/linked-account/linked-account.model';
-import { LinkedAccounts } from '../../../../../_common/linked-account/linked-accounts.service';
+} from '~common/linked-account/linked-account.model';
+import { LinkedAccounts } from '~common/linked-account/linked-accounts.service';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
-} from '../../../../../_common/route/route-component';
-import { useCommonStore } from '../../../../../_common/store/common-store';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import { showUserSetPasswordModal } from '../../../../components/user/set-password-modal/set-password-modal.service';
-import { useAccountRouteController } from '../RouteDashAccount.vue';
+} from '~common/route/route-component';
+import { useCommonStore } from '~common/store/common-store';
+import { $gettext } from '~common/translate/translate.service';
 export default {
 	...defineAppRouteOptions({
 		reloadOn: 'never',

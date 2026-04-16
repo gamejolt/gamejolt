@@ -1,17 +1,17 @@
-import './main.styl';
+import '~checkout/main.styl';
 
-import { bootstrapCommon } from '../_common/bootstrap';
-import { router } from './views/index';
+import { router } from '~checkout/views/index';
+import { bootstrapCommon } from '~common/bootstrap';
 
 export async function createApp() {
 	const { app } = await bootstrapCommon({
-		appComponentLoader: async () => (await import('./AppMain.vue')).default,
+		appComponentLoader: async () => (await import('~checkout/AppMain.vue')).default,
 		router,
 	});
 
 	if (GJ_IS_DESKTOP_APP) {
-		const { bootstrapCommonClient } = await import('../_common/client/bootstrap');
-		const { commonStore } = await import('../_common/store/common-store');
+		const { bootstrapCommonClient } = await import('~common/client/bootstrap');
+		const { commonStore } = await import('~common/store/common-store');
 		bootstrapCommonClient({ commonStore });
 	}
 

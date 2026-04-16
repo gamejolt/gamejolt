@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { useRouter } from 'vue-router';
 
-import { Navigate } from '../../navigate/navigate.service';
-import { authOnLogin, getRedirectUrl, redirectToDashboard } from '../auth.service';
-import AppAuthLoginForm from './AppAuthLoginForm.vue';
+import { authOnLogin, getRedirectUrl, redirectToDashboard } from '~common/auth/auth.service';
+import AppAuthLoginForm from '~common/auth/login/AppAuthLoginForm.vue';
+import { Navigate } from '~common/navigate/navigate.service';
 
 type Props = {
 	overlay?: boolean;

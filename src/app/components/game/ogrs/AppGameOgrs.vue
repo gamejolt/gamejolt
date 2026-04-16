@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import { GameModel } from '../../../../_common/game/game.model';
-import AppGameOgrsTag from './AppGameOgrsTag.vue';
+import AppGameOgrsTag from '~app/components/game/ogrs/AppGameOgrsTag.vue';
+import { GameModel } from '~common/game/game.model';
 
 type Props = {
 	game: GameModel;

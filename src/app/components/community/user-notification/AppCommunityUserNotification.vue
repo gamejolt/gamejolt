@@ -1,20 +1,20 @@
 <script lang="ts" setup>
 import { computed, toRef } from 'vue';
 
-import AppAlertDismissable from '../../../../_common/alert/dismissable/AppAlertDismissable.vue';
-import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
+import AppAlertDismissable from '~common/alert/dismissable/AppAlertDismissable.vue';
+import AppCommunityThumbnailImg from '~common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import {
 	$removeCommunityUserNotification,
 	CommunityUserNotificationModel,
 	CommunityUserNotificationType,
-} from '../../../../_common/community/user-notification/user-notification.model';
-import AppTimeAgo from '../../../../_common/time/AppTimeAgo.vue';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
+} from '~common/community/user-notification/user-notification.model';
+import AppTimeAgo from '~common/time/AppTimeAgo.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
 import {
 	getCommunityEjectPostReasons,
 	getCommunityMovePostReasons,
-} from '../../../../_common/user/action-reasons';
+} from '~common/user/action-reasons';
 
 type Props = {
 	notification: CommunityUserNotificationModel;

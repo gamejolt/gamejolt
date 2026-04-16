@@ -1,25 +1,25 @@
 <script lang="ts">
 import { computed, type Ref, ref, toRef } from 'vue';
 
-import AppButton from '../../../../_common/button/AppButton.vue';
-import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
-import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
-import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
-import AppFormControlErrors from '../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormStickySubmit from '../../../../_common/form-vue/AppFormStickySubmit.vue';
-import AppFormControlCheckbox from '../../../../_common/form-vue/controls/AppFormControlCheckbox.vue';
-import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
-import { validateAvailability, validateMaxLength } from '../../../../_common/form-vue/validators';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
+import AppButton from '~common/button/AppButton.vue';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormStickySubmit from '~common/form-vue/AppFormStickySubmit.vue';
+import AppFormControlCheckbox from '~common/form-vue/controls/AppFormControlCheckbox.vue';
+import AppFormControlToggle from '~common/form-vue/controls/AppFormControlToggle.vue';
+import { validateAvailability, validateMaxLength } from '~common/form-vue/validators';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
 import {
 	$saveUserEmailPreferences,
 	$toggleUserEmails,
 	UserModel,
-} from '../../../../_common/user/user.model';
+} from '~common/user/user.model';
 
 type FormModel = UserModel & {
 	notifications: string[];

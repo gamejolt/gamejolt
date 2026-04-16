@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { computed, toRef } from 'vue';
 
-import AppGameThumbnailPlaceholder from '../../../../_common/game/thumbnail/AppGameThumbnailPlaceholder.vue';
-import { Screen } from '../../../../_common/screen/screen-service';
-import { GameGridRowSizeLg, GameGridRowSizeMd, GameGridRowSizeSm } from './AppGameGrid.vue';
+import { GameGridRowSizeLg, GameGridRowSizeMd, GameGridRowSizeSm } from '~app/components/game/grid/AppGameGrid.vue';
+import AppGameThumbnailPlaceholder from '~common/game/thumbnail/AppGameThumbnailPlaceholder.vue';
+import { Screen } from '~common/screen/screen-service';
 
 type Props = {
 	num: number;
@@ -46,5 +46,5 @@ const count = computed(() => {
 </template>
 
 <style lang="stylus" scoped>
-@import '../grid'
+@import './'
 </style>

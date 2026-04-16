@@ -1,6 +1,6 @@
-import { Environment } from '../../../../_common/environment/environment.service';
-import { Model } from '../../../../_common/model/model.service';
-import { HelpCategoryModel } from '../category/category.model';
+import { HelpCategoryModel } from '~app/components/help/category/category.model';
+import { Environment } from '~common/environment/environment.service';
+import { Model } from '~common/model/model.service';
 
 export class HelpPageModel extends Model {
 	declare title: string;

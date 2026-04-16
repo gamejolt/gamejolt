@@ -2,38 +2,38 @@
 import { computed, provide, reactive, ref, toRef, watchEffect } from 'vue';
 import { RouterView, useRoute } from 'vue-router';
 
-import {
-	AdSettingsContainer,
-	releasePageAdsSettings,
-	setPageAdsSettings,
-	useAdStore,
-} from '../../../../_common/ad/ad-store';
-import { Api } from '../../../../_common/api/api.service';
-import { CollaboratorModel } from '../../../../_common/collaborator/collaborator.model';
-import { CommunityModel, isEditingCommunity } from '../../../../_common/community/community.model';
-import AppEditableOverlay from '../../../../_common/editable-overlay/AppEditableOverlay.vue';
-import AppMediaItemCover from '../../../../_common/media-item/cover/AppMediaItemCover.vue';
-import { setAppPromotionCohort, useAppPromotionStore } from '../../../../_common/mobile-app/store';
-import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
-import { ContextPane, useSidebarStore } from '../../../../_common/sidebar/sidebar.store';
-import { useCommonStore } from '../../../../_common/store/common-store';
-import { useThemeStore } from '../../../../_common/theme/theme.store';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { enforceLocation } from '../../../../utils/router';
-import { CommunitySidebarData } from '../../../components/community/sidebar/sidebar-data';
-import { showCommunityHeaderModal } from '../../../components/forms/community/header/modal/modal.service';
-import { useGridStore } from '../../../components/grid/grid-store';
-import AppShellContentWithSidebar from '../../../components/shell/AppShellContentWithSidebar.vue';
-import { useAppStore } from '../../../store/index';
-import AppCommunitiesViewContext from './_context/AppCommunitiesViewContext.vue';
-import AppMobileHeader from './_mobile-header/AppMobileHeader.vue';
-import { routeCommunitiesViewEditDetails } from './edit/details/details.route';
+import { CommunitySidebarData } from '~app/components/community/sidebar/sidebar-data';
+import { showCommunityHeaderModal } from '~app/components/forms/community/header/modal/modal.service';
+import { useGridStore } from '~app/components/grid/grid-store';
+import AppShellContentWithSidebar from '~app/components/shell/AppShellContentWithSidebar.vue';
+import { useAppStore } from '~app/store/index';
+import AppCommunitiesViewContext from '~app/views/communities/view/_context/AppCommunitiesViewContext.vue';
+import AppMobileHeader from '~app/views/communities/view/_mobile-header/AppMobileHeader.vue';
+import { routeCommunitiesViewEditDetails } from '~app/views/communities/view/edit/details/details.route';
 import {
 	CommunityRouteStore,
 	CommunityRouteStoreKey,
 	setChannelPathFromRoute,
 	setCommunity,
-} from './view.store';
+} from '~app/views/communities/view/view.store';
+import {
+	AdSettingsContainer,
+	releasePageAdsSettings,
+	setPageAdsSettings,
+	useAdStore,
+} from '~common/ad/ad-store';
+import { Api } from '~common/api/api.service';
+import { CollaboratorModel } from '~common/collaborator/collaborator.model';
+import { CommunityModel, isEditingCommunity } from '~common/community/community.model';
+import AppEditableOverlay from '~common/editable-overlay/AppEditableOverlay.vue';
+import AppMediaItemCover from '~common/media-item/cover/AppMediaItemCover.vue';
+import { setAppPromotionCohort, useAppPromotionStore } from '~common/mobile-app/store';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { ContextPane, useSidebarStore } from '~common/sidebar/sidebar.store';
+import { useCommonStore } from '~common/store/common-store';
+import { useThemeStore } from '~common/theme/theme.store';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { enforceLocation } from '~utils/router';
 
 export const CommunityThemeKey = 'community';
 </script>

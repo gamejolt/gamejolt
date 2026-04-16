@@ -2,37 +2,37 @@
 import { computed, CSSProperties, reactive, ref, useTemplateRef } from 'vue';
 import { RouterLink } from 'vue-router';
 
-import { ContentOwnerParentBounds } from '../../../../../_common/content/content-owner';
-import { ContentRules } from '../../../../../_common/content/content-rules';
-import AppContentViewer from '../../../../../_common/content/content-viewer/AppContentViewer.vue';
-import { formatDate } from '../../../../../_common/filters/date';
-import AppJolticon, { Jolticon } from '../../../../../_common/jolticon/AppJolticon.vue';
-import { showModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
-import AppPopper, { PopperPlacementType } from '../../../../../_common/popper/AppPopper.vue';
-import { Popper } from '../../../../../_common/popper/popper.service';
-import AppReactionList from '../../../../../_common/reaction/list/AppReactionList.vue';
-import { selectReactionForResource } from '../../../../../_common/reaction/reaction-count';
-import AppScrollInview, {
-	ScrollInviewConfig,
-} from '../../../../../_common/scroll/inview/AppScrollInview.vue';
-import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import AppUserAvatarBubble from '../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
-import { styleElevate } from '../../../../../_styles/mixins';
-import { kChatRoomWindowPaddingH } from '../../../../styles/variables';
-import { useGridStore } from '../../../grid/grid-store';
 import {
 	removeMessage as chatRemoveMessage,
 	retryFailedQueuedMessage,
 	userCanModerateOtherUser,
-} from '../../client';
-import { ChatMessageModel } from '../../message';
-import { ChatRoomModel } from '../../room';
-import { getChatUserRoleData } from '../../user';
-import AppChatUserPopover from '../../user-popover/AppChatUserPopover.vue';
-import { ChatWindowAvatarSize, ChatWindowLeftGutterSize } from '../variables';
-import AppChatWindowOutputItemTime from './AppChatWindowOutputItemTime.vue';
+} from '~app/components/chat/client';
+import { ChatMessageModel } from '~app/components/chat/message';
+import { ChatRoomModel } from '~app/components/chat/room';
+import { getChatUserRoleData } from '~app/components/chat/user';
+import AppChatUserPopover from '~app/components/chat/user-popover/AppChatUserPopover.vue';
+import AppChatWindowOutputItemTime from '~app/components/chat/window/output/AppChatWindowOutputItemTime.vue';
+import { ChatWindowAvatarSize, ChatWindowLeftGutterSize } from '~app/components/chat/window/variables';
+import { useGridStore } from '~app/components/grid/grid-store';
+import { kChatRoomWindowPaddingH } from '~app/styles/variables';
+import { ContentOwnerParentBounds } from '~common/content/content-owner';
+import { ContentRules } from '~common/content/content-rules';
+import AppContentViewer from '~common/content/content-viewer/AppContentViewer.vue';
+import { formatDate } from '~common/filters/date';
+import AppJolticon, { Jolticon } from '~common/jolticon/AppJolticon.vue';
+import { showModalConfirm } from '~common/modal/confirm/confirm-service';
+import AppPopper, { PopperPlacementType } from '~common/popper/AppPopper.vue';
+import { Popper } from '~common/popper/popper.service';
+import AppReactionList from '~common/reaction/list/AppReactionList.vue';
+import { selectReactionForResource } from '~common/reaction/reaction-count';
+import AppScrollInview, {
+	ScrollInviewConfig,
+} from '~common/scroll/inview/AppScrollInview.vue';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
+import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
+import { styleElevate } from '~styles/mixins';
 
 export interface ChatMessageEditEvent {
 	message: ChatMessageModel;

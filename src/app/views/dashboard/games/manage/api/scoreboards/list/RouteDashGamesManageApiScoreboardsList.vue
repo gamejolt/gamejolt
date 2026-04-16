@@ -1,29 +1,29 @@
 <script lang="ts">
 import { computed, ref } from 'vue';
 
-import { Api } from '../../../../../../../../_common/api/api.service';
-import AppButton from '../../../../../../../../_common/button/AppButton.vue';
-import AppCardList from '../../../../../../../../_common/card/list/AppCardList.vue';
-import AppCardListAdd from '../../../../../../../../_common/card/list/AppCardListAdd.vue';
-import AppCardListDraggable from '../../../../../../../../_common/card/list/AppCardListDraggable.vue';
-import AppCardListItem from '../../../../../../../../_common/card/list/AppCardListItem.vue';
+import FormGameScoreTable from '~app/components/forms/game/score-table/FormGameScoreTable.vue';
+import { useGameDashRouteController } from '~app/views/dashboard/games/manage/manage.store';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import AppCardList from '~common/card/list/AppCardList.vue';
+import AppCardListAdd from '~common/card/list/AppCardListAdd.vue';
+import AppCardListDraggable from '~common/card/list/AppCardListDraggable.vue';
+import AppCardListItem from '~common/card/list/AppCardListItem.vue';
 import {
 	$removeGameScoreTable,
 	$saveGameScoreTableSort,
 	GameScoreTableModel,
 	GameScoreTableSorting,
-} from '../../../../../../../../_common/game/score-table/score-table.model';
-import AppJolticon from '../../../../../../../../_common/jolticon/AppJolticon.vue';
-import AppLinkHelp from '../../../../../../../../_common/link/AppLinkHelp.vue';
-import { showModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
+} from '~common/game/score-table/score-table.model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLinkHelp from '~common/link/AppLinkHelp.vue';
+import { showModalConfirm } from '~common/modal/confirm/confirm-service';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
-} from '../../../../../../../../_common/route/route-component';
-import { vAppTooltip } from '../../../../../../../../_common/tooltip/tooltip-directive';
-import { $gettext } from '../../../../../../../../_common/translate/translate.service';
-import FormGameScoreTable from '../../../../../../../components/forms/game/score-table/FormGameScoreTable.vue';
-import { useGameDashRouteController } from '../../../manage.store';
+} from '~common/route/route-component';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { $gettext } from '~common/translate/translate.service';
 
 export default {
 	...defineAppRouteOptions({

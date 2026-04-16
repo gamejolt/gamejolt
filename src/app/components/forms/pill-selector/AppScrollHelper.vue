@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { watch } from 'vue';
 
-import { useScroller } from '../../../../_common/scroll/AppScrollScroller.vue';
+import { useScroller } from '~common/scroll/AppScrollScroller.vue';
 
 type Props = {
 	when?: boolean;

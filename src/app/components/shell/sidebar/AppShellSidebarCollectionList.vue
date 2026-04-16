@@ -2,10 +2,10 @@
 import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
 
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { stringSort } from '../../../../utils/array';
-import { GameCollectionModel } from '../../game/collection/collection.model';
+import { GameCollectionModel } from '~app/components/game/collection/collection.model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { stringSort } from '~utils/array';
 
 type Props = {
 	collections: GameCollectionModel[];

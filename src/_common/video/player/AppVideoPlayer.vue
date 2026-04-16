@@ -1,24 +1,23 @@
 <script lang="ts">
 import { computed, onBeforeUnmount, onMounted, Ref, ref, watch } from 'vue';
 
-import { styleWhen } from '../../../_styles/mixins';
-import { formatNumber } from '../../filters/number';
-import AppImgResponsive from '../../img/AppImgResponsive.vue';
-import AppJolticon from '../../jolticon/AppJolticon.vue';
-import { AppVideoPlayerShakaLazy } from '../../lazy';
-import AppLoading from '../../loading/AppLoading.vue';
-import AppMediaItemBackdrop from '../../media-item/backdrop/AppMediaItemBackdrop.vue';
-import { MediaItemModel } from '../../media-item/media-item-model';
+import { formatNumber } from '~common/filters/number';
+import AppImgResponsive from '~common/img/AppImgResponsive.vue';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { AppVideoPlayerShakaLazy } from '~common/lazy';
+import AppLoading from '~common/loading/AppLoading.vue';
+import AppMediaItemBackdrop from '~common/media-item/backdrop/AppMediaItemBackdrop.vue';
+import { MediaItemModel } from '~common/media-item/media-item-model';
 import AppResponsiveDimensions, {
 	AppResponsiveDimensionsChangeEvent,
-} from '../../responsive-dimensions/AppResponsiveDimensions.vue';
-import { Screen } from '../../screen/screen-service';
-import { vAppTooltip } from '../../tooltip/tooltip-directive';
-import { VideoSourceArray } from '../AppVideo.vue';
-import AppVideoPlayerFullscreen from './AppVideoPlayerFullscreen.vue';
-import AppVideoPlayerPlayback from './AppVideoPlayerPlayback.vue';
-import AppVideoPlayerScrubber from './AppVideoPlayerScrubber.vue';
-import AppVideoPlayerVolume from './AppVideoPlayerVolume.vue';
+} from '~common/responsive-dimensions/AppResponsiveDimensions.vue';
+import { Screen } from '~common/screen/screen-service';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { VideoSourceArray } from '~common/video/AppVideo.vue';
+import AppVideoPlayerFullscreen from '~common/video/player/AppVideoPlayerFullscreen.vue';
+import AppVideoPlayerPlayback from '~common/video/player/AppVideoPlayerPlayback.vue';
+import AppVideoPlayerScrubber from '~common/video/player/AppVideoPlayerScrubber.vue';
+import AppVideoPlayerVolume from '~common/video/player/AppVideoPlayerVolume.vue';
 import {
 	createVideoPlayerController,
 	queueVideoTimeChange,
@@ -27,7 +26,8 @@ import {
 	trackVideoPlayerEvent,
 	VideoPlayerController,
 	VideoPlayerControllerContext,
-} from './controller';
+} from '~common/video/player/controller';
+import { styleWhen } from '~styles/mixins';
 
 const KeyShortcutsList = ['ArrowUp', 'ArrowRight', 'ArrowDown', 'ArrowLeft', 'm', ' '];
 type KEY_SHORTCUTS = 'ArrowUp' | 'ArrowRight' | 'ArrowDown' | 'ArrowLeft' | 'm' | ' ';

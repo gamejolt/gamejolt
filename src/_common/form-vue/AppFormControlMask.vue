@@ -2,7 +2,7 @@
 import { createTextMaskInputElement } from 'text-mask-core/dist/textMaskCore';
 import { Ref, ref } from 'vue';
 
-import { provideFormControlHooks } from './form-control-hooks';
+import { provideFormControlHooks } from '~common/form-vue/form-control-hooks';
 
 type Props = {
 	mask: (string | RegExp)[];

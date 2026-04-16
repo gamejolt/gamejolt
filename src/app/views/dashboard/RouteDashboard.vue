@@ -1,8 +1,8 @@
 <script lang="ts">
 import { RouterView } from 'vue-router';
 
-import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
-import { useCommonStore } from '../../../_common/store/common-store';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { useCommonStore } from '~common/store/common-store';
 
 export default {
 	...defineAppRouteOptions({

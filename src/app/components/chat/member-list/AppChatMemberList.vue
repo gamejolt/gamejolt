@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { toRef } from 'vue';
 
-import AppChatList from '../_list/AppChatList.vue';
-import { ChatRoomModel } from '../room';
-import { useChatRoomMembers } from '../room-channel';
-import AppChatMemberListItem from './AppChatMemberListItem.vue';
+import AppChatList from '~app/components/chat/_list/AppChatList.vue';
+import AppChatMemberListItem from '~app/components/chat/member-list/AppChatMemberListItem.vue';
+import { ChatRoomModel } from '~app/components/chat/room';
+import { useChatRoomMembers } from '~app/components/chat/room-channel';
 
 type Props = {
 	room: ChatRoomModel;

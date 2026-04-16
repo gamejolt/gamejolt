@@ -1,18 +1,18 @@
 <script lang="ts">
 import { computed, ref } from 'vue';
 
-import { Api } from '../../../../../../_common/api/api.service';
-import AppButton from '../../../../../../_common/button/AppButton.vue';
+import AppSitesLinkCard from '~app/components/sites/link-card/AppSitesLinkCard.vue';
+import AppSitesManagePage from '~app/components/sites/manage-page/AppSitesManagePage.vue';
+import { useGameDashRouteController } from '~app/views/dashboard/games/manage/manage.store';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
-} from '../../../../../../_common/route/route-component';
-import { SiteModel } from '../../../../../../_common/site/site-model';
-import AppTranslate from '../../../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../../../_common/translate/translate.service';
-import AppSitesLinkCard from '../../../../../components/sites/link-card/AppSitesLinkCard.vue';
-import AppSitesManagePage from '../../../../../components/sites/manage-page/AppSitesManagePage.vue';
-import { useGameDashRouteController } from '../manage.store';
+} from '~common/route/route-component';
+import { SiteModel } from '~common/site/site-model';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
 
 export default {
 	name: 'RouteDashGamesManageSite',

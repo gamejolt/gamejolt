@@ -1,17 +1,17 @@
-import { IllustrationAsset } from '../../illustration/AppIllustration.vue';
-import illChargeOrbEmptyBasePath from '../../illustration/img/charge-orb/base/empty.png';
-import illChargeOrbEmptyDecemberPath from '../../illustration/img/charge-orb/december/empty.png';
-import illChargeOrbEmptyOctoberPath from '../../illustration/img/charge-orb/october/empty.png';
-import assetChargeOrbBottomBase from './sheets/charge-orb/base/bottom.png';
-import assetChargeOrbTopBase from './sheets/charge-orb/base/top.png';
-import assetChargeOrbBottomDecember from './sheets/charge-orb/december/bottom.png';
-import assetChargeOrbTopDecember from './sheets/charge-orb/december/top.png';
-import assetChargeOrbBottomOctober from './sheets/charge-orb/october/bottom.png';
-import assetChargeOrbTopOctober from './sheets/charge-orb/october/top.png';
-import assetFireplace from './sheets/fireplace.png';
-import assetShockRectBL from './sheets/shock-rect-bl.png';
-import assetShockRectTR from './sheets/shock-rect-tr.png';
-import assetShockSquare from './sheets/shock-square.png';
+import assetChargeOrbBottomBase from '~common/animation/slideshow/sheets/charge-orb/base/bottom.png';
+import assetChargeOrbTopBase from '~common/animation/slideshow/sheets/charge-orb/base/top.png';
+import assetChargeOrbBottomDecember from '~common/animation/slideshow/sheets/charge-orb/december/bottom.png';
+import assetChargeOrbTopDecember from '~common/animation/slideshow/sheets/charge-orb/december/top.png';
+import assetChargeOrbBottomOctober from '~common/animation/slideshow/sheets/charge-orb/october/bottom.png';
+import assetChargeOrbTopOctober from '~common/animation/slideshow/sheets/charge-orb/october/top.png';
+import assetFireplace from '~common/animation/slideshow/sheets/fireplace.png';
+import assetShockRectBL from '~common/animation/slideshow/sheets/shock-rect-bl.png';
+import assetShockRectTR from '~common/animation/slideshow/sheets/shock-rect-tr.png';
+import assetShockSquare from '~common/animation/slideshow/sheets/shock-square.png';
+import { IllustrationAsset } from '~common/illustration/AppIllustration.vue';
+import illChargeOrbEmptyBasePath from '~common/illustration/img/charge-orb/base/empty.png';
+import illChargeOrbEmptyDecemberPath from '~common/illustration/img/charge-orb/december/empty.png';
+import illChargeOrbEmptyOctoberPath from '~common/illustration/img/charge-orb/october/empty.png';
 
 export interface ImgSlideshow {
 	readonly asset: string;

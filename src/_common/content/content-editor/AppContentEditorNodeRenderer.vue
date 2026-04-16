@@ -6,7 +6,7 @@
  * the editor.
  */
 
-import { useContentEditorController } from './content-editor-controller';
+import { useContentEditorController } from '~common/content/content-editor/content-editor-controller';
 
 const c = useContentEditorController()!;
 </script>

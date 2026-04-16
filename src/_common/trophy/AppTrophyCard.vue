@@ -1,15 +1,15 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import AppFadeCollapse from '../AppFadeCollapse.vue';
-import { GameModel } from '../game/game.model';
-import AppJolticon from '../jolticon/AppJolticon.vue';
-import { useCommonStore } from '../store/common-store';
-import { $gettext } from '../translate/translate.service';
-import { UserGameTrophyModel } from '../user/trophy/game-trophy.model';
-import { UserBaseTrophyModel } from '../user/trophy/user-base-trophy.model';
-import { showTrophyModal } from './modal/modal.service';
-import AppTrophyThumbnail from './thumbnail/AppTrophyThumbnail.vue';
+import AppFadeCollapse from '~common/AppFadeCollapse.vue';
+import { GameModel } from '~common/game/game.model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { useCommonStore } from '~common/store/common-store';
+import { $gettext } from '~common/translate/translate.service';
+import { showTrophyModal } from '~common/trophy/modal/modal.service';
+import AppTrophyThumbnail from '~common/trophy/thumbnail/AppTrophyThumbnail.vue';
+import { UserGameTrophyModel } from '~common/user/trophy/game-trophy.model';
+import { UserBaseTrophyModel } from '~common/user/trophy/user-base-trophy.model';
 
 type Props = {
 	userTrophy: UserBaseTrophyModel;

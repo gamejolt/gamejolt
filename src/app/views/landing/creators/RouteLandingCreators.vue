@@ -2,36 +2,36 @@
 import { computed, onMounted, ref } from 'vue';
 import { RouterLink } from 'vue-router';
 
-import { trackCreatorApply } from '../../../../_common/analytics/analytics.service';
-import { Api } from '../../../../_common/api/api.service';
-import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
-import AppBackground from '../../../../_common/background/AppBackground.vue';
-import { BackgroundModel } from '../../../../_common/background/background.model';
-import AppBean from '../../../../_common/bean/AppBean.vue';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import AppCreatorsList from '../../../../_common/creator/AppCreatorsList.vue';
-import { FiresidePostModel } from '../../../../_common/fireside/post/post-model';
+import { creatorApplyDesktop, creatorApplySm, creatorApplyXs } from '~app/views/landing/creators/_backgrounds/backgrounds';
+import AppCreatorMooMoo from '~app/views/landing/creators/AppCreatorMooMoo.vue';
+import socialImage from '~app/views/landing/creators/social.png';
+import { trackCreatorApply } from '~common/analytics/analytics.service';
+import { Api } from '~common/api/api.service';
+import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
+import AppBackground from '~common/background/AppBackground.vue';
+import { BackgroundModel } from '~common/background/background.model';
+import AppBean from '~common/bean/AppBean.vue';
+import AppButton from '~common/button/AppButton.vue';
+import AppCreatorsList from '~common/creator/AppCreatorsList.vue';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
 import {
 	illMobileKikkerstein,
 	illPointyThing,
 	illStreamingJelly,
-} from '../../../../_common/illustration/illustrations';
-import AppImgResponsive from '../../../../_common/img/AppImgResponsive.vue';
-import { ImgHelper } from '../../../../_common/img/helper/helper-service';
-import AppLinkExternal from '../../../../_common/link/AppLinkExternal.vue';
-import { Meta } from '../../../../_common/meta/meta-service';
-import { storeModel } from '../../../../_common/model/model-store.service';
-import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
-import { Screen } from '../../../../_common/screen/screen-service';
-import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
-import AppTheme from '../../../../_common/theme/AppTheme.vue';
-import { DefaultTheme } from '../../../../_common/theme/theme.model';
-import { UserModel } from '../../../../_common/user/user.model';
-import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
-import { arrayIndexBy, arrayShuffle } from '../../../../utils/array';
-import { creatorApplyDesktop, creatorApplySm, creatorApplyXs } from './_backgrounds/backgrounds';
-import AppCreatorMooMoo from './AppCreatorMooMoo.vue';
-import socialImage from './social.png';
+} from '~common/illustration/illustrations';
+import AppImgResponsive from '~common/img/AppImgResponsive.vue';
+import { ImgHelper } from '~common/img/helper/helper-service';
+import AppLinkExternal from '~common/link/AppLinkExternal.vue';
+import { Meta } from '~common/meta/meta-service';
+import { storeModel } from '~common/model/model-store.service';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { Screen } from '~common/screen/screen-service';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import AppTheme from '~common/theme/AppTheme.vue';
+import { DefaultTheme } from '~common/theme/theme.model';
+import { UserModel } from '~common/user/user.model';
+import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
+import { arrayIndexBy, arrayShuffle } from '~utils/array';
 
 const postImages = import.meta.glob('./_posts/*.jpg', { eager: true, as: 'url' });
 

@@ -2,12 +2,12 @@
 import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
 
-import AppButton from '../../../../_common/button/AppButton.vue';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
-import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { imageJolt } from '../../../img/images';
+import { imageJolt } from '~app/img/images';
+import AppButton from '~common/button/AppButton.vue';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import AppThemeSvg from '~common/theme/svg/AppThemeSvg.vue';
+import { $gettext } from '~common/translate/translate.service';
 
 const assetPaths = import.meta.glob('./*.svg', { eager: true, as: 'url' });
 

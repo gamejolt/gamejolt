@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 
-import { stringSort } from '../../../utils/array';
-import { Navigate } from '../../navigate/navigate.service';
-import { getTranslationLang, setTranslationLang, TranslationLangs } from '../translate.service';
+import { Navigate } from '~common/navigate/navigate.service';
+import { getTranslationLang, setTranslationLang, TranslationLangs } from '~common/translate/translate.service';
+import { stringSort } from '~utils/array';
 
 const lang = ref(getTranslationLang());
 const langs = computed(() => TranslationLangs.sort((a, b) => stringSort(a.label, b.label)));

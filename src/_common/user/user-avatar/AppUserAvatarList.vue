@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import { vAppTooltip } from '../../tooltip/tooltip-directive';
-import AppUserVerifiedTick from '../AppUserVerifiedTick.vue';
-import { UserCommonFields } from '../user.model';
-import AppUserAvatar from './AppUserAvatar.vue';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import AppUserVerifiedTick from '~common/user/AppUserVerifiedTick.vue';
+import { UserCommonFields } from '~common/user/user.model';
+import AppUserAvatar from '~common/user/user-avatar/AppUserAvatar.vue';
 
 type Props = {
 	users: UserCommonFields[];

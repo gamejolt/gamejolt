@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import AppContentEmoji from '../../components/AppContentEmoji.vue';
-import { ContentObject } from '../../content-object';
+import AppContentEmoji from '~common/content/components/AppContentEmoji.vue';
+import { ContentObject } from '~common/content/content-object';
 
 type Props = {
 	contentData: ContentObject;

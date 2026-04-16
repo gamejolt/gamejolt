@@ -2,15 +2,15 @@
 import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
 
-import AppAlertDismissable from '../../../../_common/alert/dismissable/AppAlertDismissable.vue';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import AppPageHeader from '../../../components/page-header/AppPageHeader.vue';
-import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
-import { useClientLibraryStore } from '../../../store/client-library/index';
-import AppLibraryInstalledGame from './AppLibraryInstalledGame.vue';
+import AppPageHeader from '~app/components/page-header/AppPageHeader.vue';
+import AppShellPageBackdrop from '~app/components/shell/AppShellPageBackdrop.vue';
+import { useClientLibraryStore } from '~app/store/client-library/index';
+import AppLibraryInstalledGame from '~app/views/library/installed/AppLibraryInstalledGame.vue';
+import AppAlertDismissable from '~common/alert/dismissable/AppAlertDismissable.vue';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
 
 export default {
 	...defineAppRouteOptions({

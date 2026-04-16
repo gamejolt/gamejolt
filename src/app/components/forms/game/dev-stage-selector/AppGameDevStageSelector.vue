@@ -1,14 +1,14 @@
 <script lang="ts" setup>
-import AppCard from '../../../../../_common/card/AppCard.vue';
+import { showGameDevStageSelectorConfirmModal } from '~app/components/forms/game/dev-stage-selector/confirm-service';
+import AppCard from '~common/card/AppCard.vue';
 import {
 	$setGameDevStage,
 	GameDevelopmentStatus,
 	GameModel,
-} from '../../../../../_common/game/game.model';
-import { showSuccessGrowl } from '../../../../../_common/growls/growls.service';
-import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import { showGameDevStageSelectorConfirmModal } from './confirm-service';
+} from '~common/game/game.model';
+import { showSuccessGrowl } from '~common/growls/growls.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { $gettext } from '~common/translate/translate.service';
 
 type Props = {
 	game?: GameModel;

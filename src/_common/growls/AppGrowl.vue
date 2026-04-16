@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import './growl-content.styl';
+import '~common/growls/growl-content.styl';
 
 import { computed, onMounted } from 'vue';
 
-import AppJolticon from '../jolticon/AppJolticon.vue';
-import AppGrowlDynamic from './AppGrowlDynamic.vue';
-import { Growl } from './growls.service';
+import AppGrowlDynamic from '~common/growls/AppGrowlDynamic.vue';
+import { Growl } from '~common/growls/growls.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
 
 type Props = {
 	index: number;

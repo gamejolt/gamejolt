@@ -1,16 +1,7 @@
 <script lang="ts">
 import { computed } from 'vue';
 
-import AppAspectRatio from '../../../../../_common/aspect-ratio/AppAspectRatio.vue';
-import AppButton from '../../../../../_common/button/AppButton.vue';
-import AppImgResponsive from '../../../../../_common/img/AppImgResponsive.vue';
-import { Screen } from '../../../../../_common/screen/screen-service';
-import AppScrollInview, {
-	ScrollInviewConfig,
-} from '../../../../../_common/scroll/inview/AppScrollInview.vue';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import { styleAbsoluteFill } from '../../../../../_styles/mixins';
-import { kBorderRadiusLg } from '../../../../../_styles/variables';
+import AppActivityFeedPostWrapper from '~app/components/activity/feed/post/AppActivityFeedPostWrapper.vue';
 import {
 	kPostItemPaddingVertical,
 	kPostItemPaddingXsVertical,
@@ -23,8 +14,17 @@ import {
 	PostHeaderContentStyles,
 	PostHeaderMetaStyles,
 	PostHeaderStyles,
-} from '../../../post/post-styles';
-import AppActivityFeedPostWrapper from './AppActivityFeedPostWrapper.vue';
+} from '~app/components/post/post-styles';
+import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
+import AppButton from '~common/button/AppButton.vue';
+import AppImgResponsive from '~common/img/AppImgResponsive.vue';
+import { Screen } from '~common/screen/screen-service';
+import AppScrollInview, {
+	ScrollInviewConfig,
+} from '~common/scroll/inview/AppScrollInview.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { styleAbsoluteFill } from '~styles/mixins';
+import { kBorderRadiusLg } from '~styles/variables';
 
 const inviewConfig = new ScrollInviewConfig();
 </script>

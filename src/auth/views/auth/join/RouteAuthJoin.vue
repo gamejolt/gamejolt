@@ -2,14 +2,14 @@
 import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
 
-import AppAuthJoin from '../../../../_common/auth/join/AppAuthJoin.vue';
-import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
-import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
-import { useAuthStore } from '../../../store/index';
-import { loggedUserBlock } from '../RouteAuth.vue';
+import { useAuthStore } from '~auth/store/index';
+import { loggedUserBlock } from '~auth/views/auth/RouteAuth.vue';
+import AppAuthJoin from '~common/auth/join/AppAuthJoin.vue';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
+import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
 
 export default {
 	...defineAppRouteOptions({

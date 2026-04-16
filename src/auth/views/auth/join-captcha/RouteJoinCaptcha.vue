@@ -2,14 +2,14 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { Api } from '../../../../_common/api/api.service';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import { showErrorGrowl } from '../../../../_common/growls/growls.service';
-import { defineAppRouteOptions } from '../../../../_common/route/route-component';
-import { createAppRoute } from '../../../../_common/route/route-component';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import AppGrecaptchaWidget from '../../../components/grecaptcha/widget/AppGrecaptchaWidget.vue';
+import AppGrecaptchaWidget from '~auth/components/grecaptcha/widget/AppGrecaptchaWidget.vue';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import { defineAppRouteOptions } from '~common/route/route-component';
+import { createAppRoute } from '~common/route/route-component';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
 
 export default {
 	name: 'RouteJoinCaptcha',

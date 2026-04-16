@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import type { HTMLAttributes } from 'vue';
 
-import AppAspectRatio from '../../aspect-ratio/AppAspectRatio.vue';
-import AppImgResponsive from '../../img/AppImgResponsive.vue';
-import AppMediaItemBackdrop from '../../media-item/backdrop/AppMediaItemBackdrop.vue';
-import { CommunityModel } from '../community.model';
+import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
+import { CommunityModel } from '~common/community/community.model';
+import AppImgResponsive from '~common/img/AppImgResponsive.vue';
+import AppMediaItemBackdrop from '~common/media-item/backdrop/AppMediaItemBackdrop.vue';
 
 type Props = {
 	community: CommunityModel;

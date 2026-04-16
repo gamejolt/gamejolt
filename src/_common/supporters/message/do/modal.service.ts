@@ -1,8 +1,8 @@
 import { defineAsyncComponent } from 'vue';
 
-import { showModal } from '../../../modal/modal.service';
-import { SupporterActionModel } from '../../action.model';
-import { SupporterMessageModel } from '../../message.model';
+import { showModal } from '~common/modal/modal.service';
+import { SupporterActionModel } from '~common/supporters/action.model';
+import { SupporterMessageModel } from '~common/supporters/message.model';
 
 interface DoSupporterMessageModalOptions {
 	model?: SupporterMessageModel;
@@ -23,7 +23,7 @@ export async function showDoSupporterMessageModal(options: DoSupporterMessageMod
 
 	return await showModal<SupporterMessageModel>({
 		modalId: 'DoSupporterMessage',
-		component: defineAsyncComponent(() => import('./FormSupporterMessage.vue')),
+		component: defineAsyncComponent(() => import('~common/supporters/message/do/FormSupporterMessage.vue')),
 		props: {
 			action,
 			model,

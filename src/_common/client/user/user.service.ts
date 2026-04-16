@@ -1,8 +1,8 @@
 import { unref, watch } from 'vue';
 
-import { Environment } from '../../environment/environment.service';
-import { Navigate } from '../../navigate/navigate.service';
-import type { CommonStore } from '../../store/common-store';
+import { Environment } from '~common/environment/environment.service';
+import { Navigate } from '~common/navigate/navigate.service';
+import type { CommonStore } from '~common/store/common-store';
 
 export class ClientUser {
 	static init({ commonStore: { user, setUser } }: { commonStore: CommonStore }) {

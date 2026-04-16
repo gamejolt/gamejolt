@@ -1,17 +1,17 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
 
-import { Client } from '../../../../_common/client/client.service';
-import { Connection } from '../../../../_common/connection/connection-service';
-import AppExpand from '../../../../_common/expand/AppExpand.vue';
-import AppLoading from '../../../../_common/loading/AppLoading.vue';
-import Onboarding from '../../../../_common/onboarding/onboarding.service';
-import { onRouteChangeAfter } from '../../../../_common/route/route-component';
-import { useCommonStore } from '../../../../_common/store/common-store';
-import { EventSubscription } from '../../../../_common/system/event/event-topic';
-import { run, sleep } from '../../../../utils/utils';
-import introGif from './intro.gif';
-import introOgg from './intro.ogg';
+import introGif from '~app/components/client/intro/intro.gif';
+import introOgg from '~app/components/client/intro/intro.ogg';
+import { Client } from '~common/client/client.service';
+import { Connection } from '~common/connection/connection-service';
+import AppExpand from '~common/expand/AppExpand.vue';
+import AppLoading from '~common/loading/AppLoading.vue';
+import Onboarding from '~common/onboarding/onboarding.service';
+import { onRouteChangeAfter } from '~common/route/route-component';
+import { useCommonStore } from '~common/store/common-store';
+import { EventSubscription } from '~common/system/event/event-topic';
+import { run, sleep } from '~utils/utils';
 
 const emit = defineEmits<{
 	finish: [];

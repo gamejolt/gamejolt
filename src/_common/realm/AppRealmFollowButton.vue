@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 
-import { RealmFollowSource } from '../analytics/analytics.service';
-import { vAppAuthRequired } from '../auth/auth-required-directive';
-import AppButton from '../button/AppButton.vue';
-import { useCommonStore } from '../store/common-store';
-import AppTranslate from '../translate/AppTranslate.vue';
-import { $toggleRealmFollow, RealmModel } from './realm-model';
+import { RealmFollowSource } from '~common/analytics/analytics.service';
+import { vAppAuthRequired } from '~common/auth/auth-required-directive';
+import AppButton from '~common/button/AppButton.vue';
+import { $toggleRealmFollow, RealmModel } from '~common/realm/realm-model';
+import { useCommonStore } from '~common/store/common-store';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 type Props = {
 	realm: RealmModel;

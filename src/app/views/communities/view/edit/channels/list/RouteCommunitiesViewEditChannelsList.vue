@@ -1,32 +1,32 @@
 <script lang="ts">
 import { computed, ref, toRef } from 'vue';
 
-import AppCardList from '../../../../../../../_common/card/list/AppCardList.vue';
-import AppCardListAdd from '../../../../../../../_common/card/list/AppCardListAdd.vue';
-import AppCardListDraggable from '../../../../../../../_common/card/list/AppCardListDraggable.vue';
+import AppCommunityPerms from '~app/components/community/perms/AppCommunityPerms.vue';
+import FormCommunityChannelAdd from '~app/components/forms/community/channel/add/FormCommunityChannelAdd.vue';
+import AppCommunityPageContainer from '~app/views/communities/view/_page-container/AppCommunityPageContainer.vue';
+import AppCommunitiesEditChannelListItem from '~app/views/communities/view/edit/channels/list/_item/AppCommunitiesEditChannelListItem.vue';
+import AppChannelPresetItem from '~app/views/communities/view/edit/channels/list/_preset-item/AppChannelPresetItem.vue';
+import { loadArchivedChannels, updateCommunity, useCommunityRouteStore } from '~app/views/communities/view/view.store';
+import AppCardList from '~common/card/list/AppCardList.vue';
+import AppCardListAdd from '~common/card/list/AppCardListAdd.vue';
+import AppCardListDraggable from '~common/card/list/AppCardListDraggable.vue';
 import {
 	$saveCommunityChannelSort,
 	$saveCommunityChannelSortArchived,
 	CommunityChannelModel,
-} from '../../../../../../../_common/community/channel/channel.model';
+} from '~common/community/channel/channel.model';
 import {
 	CommunityModel,
 	CommunityPresetChannelType,
-} from '../../../../../../../_common/community/community.model';
-import { showErrorGrowl } from '../../../../../../../_common/growls/growls.service';
-import AppJolticon from '../../../../../../../_common/jolticon/AppJolticon.vue';
-import AppLoading from '../../../../../../../_common/loading/AppLoading.vue';
+} from '~common/community/community.model';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLoading from '~common/loading/AppLoading.vue';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
-} from '../../../../../../../_common/route/route-component';
-import { $gettext } from '../../../../../../../_common/translate/translate.service';
-import AppCommunityPerms from '../../../../../../components/community/perms/AppCommunityPerms.vue';
-import FormCommunityChannelAdd from '../../../../../../components/forms/community/channel/add/FormCommunityChannelAdd.vue';
-import AppCommunityPageContainer from '../../../_page-container/AppCommunityPageContainer.vue';
-import { loadArchivedChannels, updateCommunity, useCommunityRouteStore } from '../../../view.store';
-import AppCommunitiesEditChannelListItem from './_item/AppCommunitiesEditChannelListItem.vue';
-import AppChannelPresetItem from './_preset-item/AppChannelPresetItem.vue';
+} from '~common/route/route-component';
+import { $gettext } from '~common/translate/translate.service';
 
 const communityPresetChannels = [
 	CommunityPresetChannelType.FEATURED,

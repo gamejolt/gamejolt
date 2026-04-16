@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import AppButton from '../../../../../../_common/button/AppButton.vue';
-import AppImgResponsive from '../../../../../../_common/img/AppImgResponsive.vue';
-import { MediaItemModel } from '../../../../../../_common/media-item/media-item-model';
+import AppButton from '~common/button/AppButton.vue';
+import AppImgResponsive from '~common/img/AppImgResponsive.vue';
+import { MediaItemModel } from '~common/media-item/media-item-model';
 
 type Props = {
 	item: MediaItemModel;

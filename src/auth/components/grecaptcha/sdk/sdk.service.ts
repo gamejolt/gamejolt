@@ -1,4 +1,4 @@
-import { isDynamicGoogleBot } from '../../../../_common/device/device.service';
+import { isDynamicGoogleBot } from '~common/device/device.service';
 
 export class GrecaptchaSdk {
 	private static bootstrapPromise: Promise<void> | null = null;

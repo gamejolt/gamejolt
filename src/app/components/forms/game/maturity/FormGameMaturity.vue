@@ -1,16 +1,16 @@
 <script lang="ts" setup>
 import { toRef } from 'vue';
 
-import AppExpand from '../../../../../_common/expand/AppExpand.vue';
-import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
-import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
-import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormControlRadio from '../../../../../_common/form-vue/controls/AppFormControlRadio.vue';
-import { $saveGameMaturity, GameModel } from '../../../../../_common/game/game.model';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import AppDashGameWizardControls from '../wizard-controls/AppDashGameWizardControls.vue';
+import AppDashGameWizardControls from '~app/components/forms/game/wizard-controls/AppDashGameWizardControls.vue';
+import AppExpand from '~common/expand/AppExpand.vue';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlRadio from '~common/form-vue/controls/AppFormControlRadio.vue';
+import { $saveGameMaturity, GameModel } from '~common/game/game.model';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
 
 type MaturityField = {
 	label?: string;

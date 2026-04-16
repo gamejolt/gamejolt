@@ -2,10 +2,10 @@
 import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
 
-import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
-import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import AppTimeAgo from '../../../../../_common/time/AppTimeAgo.vue';
-import { $gettext } from '../../../../../_common/translate/translate.service';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppTimeAgo from '~common/time/AppTimeAgo.vue';
+import { $gettext } from '~common/translate/translate.service';
 
 type Props = {
 	post: FiresidePostModel;

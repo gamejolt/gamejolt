@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 
-import AppButton from '../../../../../_common/button/AppButton.vue';
-import { CommunityChannelModel } from '../../../../../_common/community/channel/channel.model';
-import AppModal from '../../../../../_common/modal/AppModal.vue';
-import { useModal } from '../../../../../_common/modal/modal.service';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import FormCommunityChannelBackground from '../../../forms/community/channel/background/FormCommunityChannelBackground.vue';
+import FormCommunityChannelBackground from '~app/components/forms/community/channel/background/FormCommunityChannelBackground.vue';
+import AppButton from '~common/button/AppButton.vue';
+import { CommunityChannelModel } from '~common/community/channel/channel.model';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import { $gettext } from '~common/translate/translate.service';
 
 type Props = {
 	channel: CommunityChannelModel;

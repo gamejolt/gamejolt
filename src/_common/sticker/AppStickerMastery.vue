@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { kBorderRadiusBase } from '../../_styles/variables';
-import AppJolticon from '../jolticon/AppJolticon.vue';
-import { kThemeBgActual, kThemeFg10, kThemePrimary } from '../theme/variables';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { kThemeBgActual, kThemeFg10, kThemePrimary } from '~common/theme/variables';
+import { kBorderRadiusBase } from '~styles/variables';
 
 type Props = {
 	progress: number;

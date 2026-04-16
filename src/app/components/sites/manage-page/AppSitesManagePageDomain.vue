@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import { GameModel } from '../../../../_common/game/game.model';
-import { SiteModel } from '../../../../_common/site/site-model';
-import { useCommonStore } from '../../../../_common/store/common-store';
-import FormSiteDomain from '../../forms/site/domain/FormSiteDomain.vue';
+import FormSiteDomain from '~app/components/forms/site/domain/FormSiteDomain.vue';
+import { GameModel } from '~common/game/game.model';
+import { SiteModel } from '~common/site/site-model';
+import { useCommonStore } from '~common/store/common-store';
 
 type Props = {
 	site: SiteModel;

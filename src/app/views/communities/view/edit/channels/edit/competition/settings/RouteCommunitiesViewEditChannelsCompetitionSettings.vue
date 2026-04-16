@@ -1,12 +1,12 @@
 <script lang="ts">
 import { toRef } from 'vue';
 
+import FormCommunityCompetitionEdit from '~app/components/forms/community/competition/edit/FormCommunityCompetitionEdit.vue';
+import { useCommunityRouteStore } from '~app/views/communities/view/view.store';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
-} from '../../../../../../../../../_common/route/route-component';
-import FormCommunityCompetitionEdit from '../../../../../../../../components/forms/community/competition/edit/FormCommunityCompetitionEdit.vue';
-import { useCommunityRouteStore } from '../../../../../view.store';
+} from '~common/route/route-component';
 
 export default {
 	...defineAppRouteOptions({

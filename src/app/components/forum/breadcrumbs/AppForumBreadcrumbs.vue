@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { ForumChannelModel } from '../../../../_common/forum/channel/channel.model';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import { ForumChannelModel } from '~common/forum/channel/channel.model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 type Props = {
 	channel?: ForumChannelModel;

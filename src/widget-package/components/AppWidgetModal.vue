@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import AppButton from '../../_common/button/AppButton.vue';
-import AppScrollScroller from '../../_common/scroll/AppScrollScroller.vue';
+import AppButton from '~common/button/AppButton.vue';
+import AppScrollScroller from '~common/scroll/AppScrollScroller.vue';
 
 type Props = {
 	hideClose?: boolean;

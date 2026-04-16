@@ -2,24 +2,24 @@
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { Api } from '../../../../../../../../../_common/api/api.service';
-import AppButton from '../../../../../../../../../_common/button/AppButton.vue';
+import AppListScores from '~app/views/dashboard/games/manage/api/scoreboards/_list-scores/AppListScores.vue';
+import { useGameDashRouteController } from '~app/views/dashboard/games/manage/manage.store';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
 import {
 	$removeAllUserScoresFromGameScoreTable,
 	GameScoreTableModel,
-} from '../../../../../../../../../_common/game/score-table/score-table.model';
-import { showSuccessGrowl } from '../../../../../../../../../_common/growls/growls.service';
-import { showModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
+} from '~common/game/score-table/score-table.model';
+import { showSuccessGrowl } from '~common/growls/growls.service';
+import { showModalConfirm } from '~common/modal/confirm/confirm-service';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
-} from '../../../../../../../../../_common/route/route-component';
-import { vAppTooltip } from '../../../../../../../../../_common/tooltip/tooltip-directive';
-import { $gettext } from '../../../../../../../../../_common/translate/translate.service';
-import { UserGameScoreModel } from '../../../../../../../../../_common/user/game-score/game-score.model';
-import { UserModel } from '../../../../../../../../../_common/user/user.model';
-import { useGameDashRouteController } from '../../../../manage.store';
-import AppListScores from '../../_list-scores/AppListScores.vue';
+} from '~common/route/route-component';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { $gettext } from '~common/translate/translate.service';
+import { UserGameScoreModel } from '~common/user/game-score/game-score.model';
+import { UserModel } from '~common/user/user.model';
 
 export default {
 	...defineAppRouteOptions({

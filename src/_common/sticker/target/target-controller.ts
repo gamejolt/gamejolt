@@ -16,13 +16,13 @@ import {
 	WritableComputedRef,
 } from 'vue';
 
-import { CommentModel } from '../../comment/comment-model';
-import { FiresidePostModel } from '../../fireside/post/post-model';
-import { MediaItemModel } from '../../media-item/media-item-model';
-import { Model } from '../../model/model.service';
-import { StickerLayerController } from '../layer/layer-controller';
-import { StickerPlacementModel } from '../placement/placement.model';
-import { ValidStickerResource } from './AppStickerTarget.vue';
+import { CommentModel } from '~common/comment/comment-model';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import { MediaItemModel } from '~common/media-item/media-item-model';
+import { Model } from '~common/model/model.service';
+import { StickerLayerController } from '~common/sticker/layer/layer-controller';
+import { StickerPlacementModel } from '~common/sticker/placement/placement.model';
+import { ValidStickerResource } from '~common/sticker/target/AppStickerTarget.vue';
 
 const StickerTargetParentControllerKey: InjectionKey<MaybeRef<StickerTargetController>> =
 	Symbol('sticker-target-parent');

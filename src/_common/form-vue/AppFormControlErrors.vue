@@ -1,9 +1,9 @@
 <script lang="ts">
 import { computed, inject, InjectionKey, provide, ref } from 'vue';
 
-import { useForm } from './AppForm.vue';
-import { useFormGroup } from './AppFormGroup.vue';
-import { FormValidatorError, processFormValidatorErrorMessage } from './validators';
+import { useForm } from '~common/form-vue/AppForm.vue';
+import { useFormGroup } from '~common/form-vue/AppFormGroup.vue';
+import { FormValidatorError, processFormValidatorErrorMessage } from '~common/form-vue/validators';
 
 type Controller = ReturnType<typeof createFormControlErrors>;
 

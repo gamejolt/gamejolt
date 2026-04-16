@@ -1,17 +1,17 @@
 <script lang="ts">
 import { computed, ref } from 'vue';
 
-import { Api } from '../../../../../_common/api/api.service';
-import { ForumCategoryModel } from '../../../../../_common/forum/category/category.model';
-import { ForumChannelModel } from '../../../../../_common/forum/channel/channel.model';
-import { ForumPostModel } from '../../../../../_common/forum/post/post.model';
+import AppForumChannelList from '~app/components/forum/channel-list/AppForumChannelList.vue';
+import AppForumRules from '~app/components/forum/rules/AppForumRules.vue';
+import { Api } from '~common/api/api.service';
+import { ForumCategoryModel } from '~common/forum/category/category.model';
+import { ForumChannelModel } from '~common/forum/channel/channel.model';
+import { ForumPostModel } from '~common/forum/post/post.model';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
-} from '../../../../../_common/route/route-component';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import AppForumChannelList from '../../../../components/forum/channel-list/AppForumChannelList.vue';
-import AppForumRules from '../../../../components/forum/rules/AppForumRules.vue';
+} from '~common/route/route-component';
+import { $gettext } from '~common/translate/translate.service';
 
 export default {
 	...defineAppRouteOptions({

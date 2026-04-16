@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import { styleAbsoluteFill } from '../../../_styles/mixins';
-import { MediaItemModel } from '../media-item-model';
+import { MediaItemModel } from '~common/media-item/media-item-model';
+import { styleAbsoluteFill } from '~styles/mixins';
 
 type Props = {
 	mediaItem?: MediaItemModel;

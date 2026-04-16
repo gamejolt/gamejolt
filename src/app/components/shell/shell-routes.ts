@@ -1,12 +1,12 @@
 import { nextTick, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { useSidebarStore } from '../../../_common/sidebar/sidebar.store';
-import { closeStickerDrawer, useStickerStore } from '../../../_common/sticker/sticker-store';
-import { TogglableLeftPane } from '../../store';
-import { useAppStore } from '../../store/index';
-import { useQuestStore } from '../../store/quest';
-import { showVendingMachineModal } from '../vending-machine/modal/modal.service';
+import { showVendingMachineModal } from '~app/components/vending-machine/modal/modal.service';
+import { TogglableLeftPane } from '~app/store';
+import { useAppStore } from '~app/store/index';
+import { useQuestStore } from '~app/store/quest';
+import { useSidebarStore } from '~common/sidebar/sidebar.store';
+import { closeStickerDrawer, useStickerStore } from '~common/sticker/sticker-store';
 
 export type HashEventResult = false | { sidebar: TogglableLeftPane | undefined };
 

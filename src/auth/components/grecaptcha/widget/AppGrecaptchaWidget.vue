@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { nextTick, onMounted, ref, useTemplateRef, watch } from 'vue';
 
-import { Environment } from '../../../../_common/environment/environment.service';
-import AppLoading from '../../../../_common/loading/AppLoading.vue';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { GrecaptchaSdk } from '../sdk/sdk.service';
+import { GrecaptchaSdk } from '~auth/components/grecaptcha/sdk/sdk.service';
+import { Environment } from '~common/environment/environment.service';
+import AppLoading from '~common/loading/AppLoading.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 type Props = {
 	theme?: 'light' | 'dark';

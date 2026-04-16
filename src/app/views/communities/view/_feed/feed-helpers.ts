@@ -1,14 +1,14 @@
 import { RouteLocationNormalized } from 'vue-router';
 
-import { Api } from '../../../../../_common/api/api.service';
+import { ActivityFeedService } from '~app/components/activity/feed/feed-service';
+import { ActivityFeedView } from '~app/components/activity/feed/view';
+import { getChannelPathFromRoute } from '~app/views/communities/view/view.store';
+import { Api } from '~common/api/api.service';
 import {
 	CommunityModel,
 	CommunityPresetChannelType,
-} from '../../../../../_common/community/community.model';
-import { configCommunityFrontpageFeedType } from '../../../../../_common/config/config.service';
-import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
-import { ActivityFeedView } from '../../../../components/activity/feed/view';
-import { getChannelPathFromRoute } from '../view.store';
+} from '~common/community/community.model';
+import { configCommunityFrontpageFeedType } from '~common/config/config.service';
 
 /**
  * Use in the route resolvers for feed channels to do the API call.

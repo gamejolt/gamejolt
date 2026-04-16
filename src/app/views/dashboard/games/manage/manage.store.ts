@@ -1,25 +1,25 @@
 import { computed, inject, InjectionKey, provide, ref, unref } from 'vue';
 import { Router } from 'vue-router';
 
-import { Api } from '../../../../../_common/api/api.service';
+import { Api } from '~common/api/api.service';
 import {
 	$removeCollaboratorInvite,
 	CollaboratorModel,
-} from '../../../../../_common/collaborator/collaborator.model';
+} from '~common/collaborator/collaborator.model';
 import {
 	$removeGame,
 	$setGameCanceled,
 	$setGameStatus,
 	GameModel,
 	GameStatus,
-} from '../../../../../_common/game/game.model';
-import { GameScreenshotModel } from '../../../../../_common/game/screenshot/screenshot.model';
-import { GameSketchfabModel } from '../../../../../_common/game/sketchfab/sketchfab.model';
-import { GameVideoModel } from '../../../../../_common/game/video/video.model';
-import { showInfoGrowl, showSuccessGrowl } from '../../../../../_common/growls/growls.service';
-import { showModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import { arrayRemove } from '../../../../../utils/array';
+} from '~common/game/game.model';
+import { GameScreenshotModel } from '~common/game/screenshot/screenshot.model';
+import { GameSketchfabModel } from '~common/game/sketchfab/sketchfab.model';
+import { GameVideoModel } from '~common/game/video/video.model';
+import { showInfoGrowl, showSuccessGrowl } from '~common/growls/growls.service';
+import { showModalConfirm } from '~common/modal/confirm/confirm-service';
+import { $gettext } from '~common/translate/translate.service';
+import { arrayRemove } from '~utils/array';
 
 const Key: InjectionKey<GameDashRouteController> = Symbol('game-dash-route');
 const WizardKey = 'manage-game-wizard';

@@ -1,19 +1,19 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import AppJolticon, { Jolticon } from '../../../../../../_common/jolticon/AppJolticon.vue';
-import { ShopProductResource } from '../../../../../../_common/shop/product/product-model';
+import { ShopDashProductStates } from '~app/views/dashboard/shop/shop.store';
+import AppJolticon, { Jolticon } from '~common/jolticon/AppJolticon.vue';
+import { ShopProductResource } from '~common/shop/product/product-model';
 import {
 	kThemeBiBg,
 	kThemeBiFg,
 	kThemeFg,
 	kThemeFg10,
 	kThemeGjOverlayNotice,
-} from '../../../../../../_common/theme/variables';
-import { $gettext } from '../../../../../../_common/translate/translate.service';
-import { styleBorderRadiusLg, styleFlexCenter, styleWhen } from '../../../../../../_styles/mixins';
-import { kFontSizeBase } from '../../../../../../_styles/variables';
-import { ShopDashProductStates } from '../../shop.store';
+} from '~common/theme/variables';
+import { $gettext } from '~common/translate/translate.service';
+import { styleBorderRadiusLg, styleFlexCenter, styleWhen } from '~styles/mixins';
+import { kFontSizeBase } from '~styles/variables';
 
 type Props = {
 	resource: ShopProductResource;

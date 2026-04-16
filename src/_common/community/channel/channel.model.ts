@@ -1,11 +1,11 @@
-import { Api } from '../../api/api.service';
-import { MediaItemModel } from '../../media-item/media-item-model';
-import { Model } from '../../model/model.service';
-import { CommunityCompetitionModel } from '../competition/competition.model';
+import { Api } from '~common/api/api.service';
 import {
 	COMMUNITY_CHANNEL_PERMISSIONS_ACTION_POSTING,
 	CommunityChannelPermissions,
-} from './channel-permissions';
+} from '~common/community/channel/channel-permissions';
+import { CommunityCompetitionModel } from '~common/community/competition/competition.model';
+import { MediaItemModel } from '~common/media-item/media-item-model';
+import { Model } from '~common/model/model.service';
 
 export type CommunityChannelType = 'post-feed' | 'competition';
 export type CommunityChannelVisibility = 'draft' | 'published';

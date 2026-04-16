@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { vAppAuthRequired } from '../../auth/auth-required-directive';
-import AppButton from '../../button/AppButton.vue';
-import AppTranslate from '../../translate/AppTranslate.vue';
+import { vAppAuthRequired } from '~common/auth/auth-required-directive';
+import AppButton from '~common/button/AppButton.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 </script>
 
 <template>

@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import { formatFuzzynumber } from '../../../../../../../_common/filters/fuzzynumber';
-import { formatNumber } from '../../../../../../../_common/filters/number';
-import AppGameRatingWidget from '../../../../../../../_common/game/rating/AppGameRatingWidget.vue';
-import AppLazyPlaceholder from '../../../../../../../_common/lazy/placeholder/AppLazyPlaceholder.vue';
-import { showLikersModal } from '../../../../../../../_common/likers/modal.service';
-import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
-import AppTranslate from '../../../../../../../_common/translate/AppTranslate.vue';
-import { useGameRouteController } from '../../RouteDiscoverGamesView.vue';
+import { useGameRouteController } from '~app/views/discover/games/view/RouteDiscoverGamesView.vue';
+import { formatFuzzynumber } from '~common/filters/fuzzynumber';
+import { formatNumber } from '~common/filters/number';
+import AppGameRatingWidget from '~common/game/rating/AppGameRatingWidget.vue';
+import AppLazyPlaceholder from '~common/lazy/placeholder/AppLazyPlaceholder.vue';
+import { showLikersModal } from '~common/likers/modal.service';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 const { game, isOverviewLoaded, profileCount, userRating } = useGameRouteController()!;
 const likeCount = computed(() => game.value?.like_count ?? 0);

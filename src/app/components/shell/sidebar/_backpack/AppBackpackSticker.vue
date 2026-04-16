@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import AppStickerLayerDrawerItem from '../../../../../_common/sticker/layer/AppStickerLayerDrawerItem.vue';
-import { StickerModel } from '../../../../../_common/sticker/sticker.model';
-import AppStickerCollectibleWrapper from '../../../sticker/AppStickerCollectibleWrapper.vue';
+import AppStickerCollectibleWrapper from '~app/components/sticker/AppStickerCollectibleWrapper.vue';
+import AppStickerLayerDrawerItem from '~common/sticker/layer/AppStickerLayerDrawerItem.vue';
+import { StickerModel } from '~common/sticker/sticker.model';
 
 type Props = {
 	sticker: StickerModel;

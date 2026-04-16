@@ -1,11 +1,11 @@
 <script lang="ts">
 import { computed } from 'vue';
 
-import { Api } from '../../../../_common/api/api.service';
-import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { RouteLocationRedirect } from '../../../../utils/router';
-import { routeLandingHelpIndex, routeLandingHelpPage } from './help.route';
+import { routeLandingHelpIndex, routeLandingHelpPage } from '~app/views/landing/help/help.route';
+import { Api } from '~common/api/api.service';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { $gettext } from '~common/translate/translate.service';
+import { RouteLocationRedirect } from '~utils/router';
 
 export default {
 	...defineAppRouteOptions({

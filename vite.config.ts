@@ -527,6 +527,24 @@ export default defineConfig(async (_configEnv: ConfigEnv): Promise<ViteUserConfi
 				// e.g. we can use import(`~img/favicon.png`) to get the favicon
 				// asset no matter where we call it from.
 				'~img': path.resolve(__dirname, 'src/app/img'),
+
+				// Section aliases — one per top-level folder under src/.
+				// `_common` and `_styles` drop the underscore in the alias.
+				'~app': path.resolve(__dirname, 'src/app'),
+				'~auth': path.resolve(__dirname, 'src/auth'),
+				'~checkout': path.resolve(__dirname, 'src/checkout'),
+				'~claim': path.resolve(__dirname, 'src/claim'),
+				'~client': path.resolve(__dirname, 'src/client'),
+				'~common': path.resolve(__dirname, 'src/_common'),
+				'~editor': path.resolve(__dirname, 'src/editor'),
+				'~gameserver': path.resolve(__dirname, 'src/gameserver'),
+				'~lib': path.resolve(__dirname, 'src/lib'),
+				'~site-editor': path.resolve(__dirname, 'src/site-editor'),
+				'~styles': path.resolve(__dirname, 'src/_styles'),
+				'~utils': path.resolve(__dirname, 'src/utils'),
+				'~widget-package': path.resolve(__dirname, 'src/widget-package'),
+				'~z': path.resolve(__dirname, 'src/z'),
+				'~typings': path.resolve(__dirname, 'typings'),
 			},
 		},
 		css: {

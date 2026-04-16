@@ -11,9 +11,9 @@ import {
 } from 'polished';
 import { RgbColor } from 'polished/lib/types/color';
 
-import { lab2rgb, rgb2lab } from '../../utils/color';
-import { Model } from '../model/model.service';
-import { ThemePresetModel } from './preset/preset.model';
+import { Model } from '~common/model/model.service';
+import { ThemePresetModel } from '~common/theme/preset/preset.model';
+import { lab2rgb, rgb2lab } from '~utils/color';
 
 // Sync with variables in stylus.
 

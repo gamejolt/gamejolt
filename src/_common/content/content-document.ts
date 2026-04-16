@@ -1,7 +1,7 @@
-import { ContentContext, GJ_FORMAT_VERSION } from './content-context';
-import { ContentHydrationDataEntry } from './content-hydrator';
-import { ContentNode } from './content-node';
-import { ContentObject } from './content-object';
+import { ContentContext, GJ_FORMAT_VERSION } from '~common/content/content-context';
+import { ContentHydrationDataEntry } from '~common/content/content-hydrator';
+import { ContentNode } from '~common/content/content-node';
+import { ContentObject } from '~common/content/content-object';
 
 export class ContentDocument extends ContentNode {
 	public version: string;

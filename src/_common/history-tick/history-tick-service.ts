@@ -1,7 +1,7 @@
-import { getDeviceArch, getDeviceOS, isDynamicGoogleBot } from '../device/device.service';
-import { Environment } from '../environment/environment.service';
-import { PartnerReferral } from '../partner-referral/partner-referral-service';
-import { Referrer } from '../referrer/referrer.service';
+import { getDeviceArch, getDeviceOS, isDynamicGoogleBot } from '~common/device/device.service';
+import { Environment } from '~common/environment/environment.service';
+import { PartnerReferral } from '~common/partner-referral/partner-referral-service';
+import { Referrer } from '~common/referrer/referrer.service';
 
 export interface BeaconOptions {
 	sourceResource?: string;

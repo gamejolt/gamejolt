@@ -1,7 +1,7 @@
 const path = require('path') as typeof import('path');
-import { getDeviceOS } from '../../device/device.service';
-import { Client } from '../client.service';
-import { Shortcut } from '../client-voodoo-imports';
+import { Client } from '~common/client/client.service';
+import { Shortcut } from '~common/client/client-voodoo-imports';
+import { getDeviceOS } from '~common/device/device.service';
 
 export class ClientShortcut {
 	static get supportsShortcuts() {

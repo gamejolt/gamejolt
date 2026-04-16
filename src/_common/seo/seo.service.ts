@@ -1,4 +1,4 @@
-import { Meta } from '../meta/meta-service';
+import { Meta } from '~common/meta/meta-service';
 
 export type PayloadDirectives = {
 	deindex?: boolean;

@@ -1,25 +1,25 @@
 <script lang="ts" setup>
 import { computed, toRef } from 'vue';
 
-import { ShopViewType, trackShopView } from '../../../../../_common/analytics/analytics.service';
-import AppAspectRatio from '../../../../../_common/aspect-ratio/AppAspectRatio.vue';
-import AppBackground from '../../../../../_common/background/AppBackground.vue';
-import AppCollectibleUnlockedRibbon from '../../../../../_common/collectible/AppCollectibleUnlockedRibbon.vue';
-import AppCurrencyPillList from '../../../../../_common/currency/AppCurrencyPillList.vue';
-import { shorthandReadableTime } from '../../../../../_common/filters/duration';
-import { InventoryShopProductSaleModel } from '../../../../../_common/inventory/shop/inventory-shop-product-sale.model';
-import { useOnHover } from '../../../../../_common/on/useOnHover';
-import { Screen } from '../../../../../_common/screen/screen-service';
+import { ShopViewType, trackShopView } from '~common/analytics/analytics.service';
+import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
+import AppBackground from '~common/background/AppBackground.vue';
+import AppCollectibleUnlockedRibbon from '~common/collectible/AppCollectibleUnlockedRibbon.vue';
+import AppCurrencyPillList from '~common/currency/AppCurrencyPillList.vue';
+import { shorthandReadableTime } from '~common/filters/duration';
+import { InventoryShopProductSaleModel } from '~common/inventory/shop/inventory-shop-product-sale.model';
+import { useOnHover } from '~common/on/useOnHover';
+import { Screen } from '~common/screen/screen-service';
 import AppStickerPack, {
 	StickerPackExpiryStyles,
 	StickerPackRatio,
-} from '../../../../../_common/sticker/pack/AppStickerPack.vue';
-import { useCommonStore } from '../../../../../_common/store/common-store';
-import { kThemeFg, kThemeFgMuted, kThemeGray } from '../../../../../_common/theme/variables';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import AppUserAvatarBubble from '../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
-import { styleElevate, styleTyped, styleWhen } from '../../../../../_styles/mixins';
-import { kBorderRadiusLg, kFontSizeSmall, kStrongEaseOut } from '../../../../../_styles/variables';
+} from '~common/sticker/pack/AppStickerPack.vue';
+import { useCommonStore } from '~common/store/common-store';
+import { kThemeFg, kThemeFgMuted, kThemeGray } from '~common/theme/variables';
+import { $gettext } from '~common/translate/translate.service';
+import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
+import { styleElevate, styleTyped, styleWhen } from '~styles/mixins';
+import { kBorderRadiusLg, kFontSizeSmall, kStrongEaseOut } from '~styles/variables';
 
 type Props = {
 	shopProduct: InventoryShopProductSaleModel;

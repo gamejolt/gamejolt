@@ -1,31 +1,31 @@
 <script lang="ts" setup>
 import { computed, Ref, ref, watch } from 'vue';
 
-import AppAlertBox from '../../../../../../_common/alert/AppAlertBox.vue';
-import AppButton from '../../../../../../_common/button/AppButton.vue';
-import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
-import AppLinkHelp from '../../../../../../_common/link/AppLinkHelp.vue';
-import { showModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
-import { storeModelList } from '../../../../../../_common/model/model-store.service';
-import AppOnHover from '../../../../../../_common/on/AppOnHover.vue';
-import { ShopProductResource } from '../../../../../../_common/shop/product/product-model';
-import AppSpacer from '../../../../../../_common/spacer/AppSpacer.vue';
-import AppStickerImg from '../../../../../../_common/sticker/AppStickerImg.vue';
-import { StickerPackModel } from '../../../../../../_common/sticker/pack/pack.model';
-import { StickerModel } from '../../../../../../_common/sticker/sticker.model';
-import { kThemeBg, kThemeBgOffset, kThemeFg } from '../../../../../../_common/theme/variables';
-import { $gettext } from '../../../../../../_common/translate/translate.service';
+import { showFormStickerSelectorModal } from '~app/views/dashboard/shop/product/_forms/_sticker-selector/modal.service';
+import FormShopProductBase, { createShopProductBaseForm } from '~app/views/dashboard/shop/product/_forms/FormShopProductBase.vue';
+import AppDashShopProductHeader from '~app/views/dashboard/shop/product/AppDashShopProductHeader.vue';
+import { ShopDashProductType, useShopDashStore } from '~app/views/dashboard/shop/shop.store';
+import AppAlertBox from '~common/alert/AppAlertBox.vue';
+import AppButton from '~common/button/AppButton.vue';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLinkHelp from '~common/link/AppLinkHelp.vue';
+import { showModalConfirm } from '~common/modal/confirm/confirm-service';
+import { storeModelList } from '~common/model/model-store.service';
+import AppOnHover from '~common/on/AppOnHover.vue';
+import { ShopProductResource } from '~common/shop/product/product-model';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import AppStickerImg from '~common/sticker/AppStickerImg.vue';
+import { StickerPackModel } from '~common/sticker/pack/pack.model';
+import { StickerModel } from '~common/sticker/sticker.model';
+import { kThemeBg, kThemeBgOffset, kThemeFg } from '~common/theme/variables';
+import { $gettext } from '~common/translate/translate.service';
 import {
 	styleBorderRadiusLg,
 	styleFlexCenter,
 	styleTyped,
 	styleWhen,
-} from '../../../../../../_styles/mixins';
-import { kStrongEaseOut } from '../../../../../../_styles/variables';
-import { ShopDashProductType, useShopDashStore } from '../../shop.store';
-import AppDashShopProductHeader from '../AppDashShopProductHeader.vue';
-import { showFormStickerSelectorModal } from './_sticker-selector/modal.service';
-import FormShopProductBase, { createShopProductBaseForm } from './FormShopProductBase.vue';
+} from '~styles/mixins';
+import { kStrongEaseOut } from '~styles/variables';
 
 type Props = {
 	model?: StickerPackModel;

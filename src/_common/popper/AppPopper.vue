@@ -20,13 +20,13 @@ import {
 } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { styleWhen } from '../../_styles/mixins';
-import { vAppObserveDimensions } from '../observe-dimensions/observe-dimensions.directive';
-import { Screen } from '../screen/screen-service';
-import AppScrollScroller from '../scroll/AppScrollScroller.vue';
-import AppPopperBackdrop from './AppPopperBackdrop.vue';
-import AppPopperEscapeStack from './AppPopperEscapeStack.vue';
-import { Popper } from './popper.service';
+import { vAppObserveDimensions } from '~common/observe-dimensions/observe-dimensions.directive';
+import AppPopperBackdrop from '~common/popper/AppPopperBackdrop.vue';
+import AppPopperEscapeStack from '~common/popper/AppPopperEscapeStack.vue';
+import { Popper } from '~common/popper/popper.service';
+import { Screen } from '~common/screen/screen-service';
+import AppScrollScroller from '~common/scroll/AppScrollScroller.vue';
+import { styleWhen } from '~styles/mixins';
 
 type ActualTrigger = 'click' | 'hover' | 'manual';
 
@@ -585,4 +585,4 @@ function onManualShow() {
 	</div>
 </template>
 
-<style lang="stylus" src="./popper.styl" />
+<style lang="stylus" src="~common/popper/popper.styl" />

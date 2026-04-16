@@ -1,7 +1,7 @@
 import { Directive } from 'vue';
 
-import { commonStore } from '../store/common-store';
-import { showAuthModal } from './auth-modal.service';
+import { showAuthModal } from '~common/auth/auth-modal.service';
+import { commonStore } from '~common/store/common-store';
 
 export const vAppAuthRequired: Directive<unknown, void> = {
 	beforeMount(el: HTMLElement) {

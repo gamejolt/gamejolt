@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import AppButton from '../../../../_common/button/AppButton.vue';
-import AppExpand from '../../../../_common/expand/AppExpand.vue';
-import { UserModel } from '../../../../_common/user/user.model';
+import AppButton from '~common/button/AppButton.vue';
+import AppExpand from '~common/expand/AppExpand.vue';
+import { UserModel } from '~common/user/user.model';
 
 type Props = {
 	user: UserModel;

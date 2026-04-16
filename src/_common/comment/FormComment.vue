@@ -1,39 +1,39 @@
 <script lang="ts" setup>
-import './comment.styl';
+import '~common/comment/comment.styl';
 
 import { computed, nextTick, ref } from 'vue';
 
-import { kFontSizeSmall } from '../../_styles/variables';
-import AppAlertBox from '../alert/AppAlertBox.vue';
-import { trackCommentAdd } from '../analytics/analytics.service';
-import AppButton from '../button/AppButton.vue';
-import { ContentContext, ContextCapabilities } from '../content/content-context';
-import { ContentRules } from '../content/content-rules';
-import { FiresidePostAllowComments, FiresidePostModel } from '../fireside/post/post-model';
-import AppForm, { createForm, FormController } from '../form-vue/AppForm.vue';
-import AppFormButton from '../form-vue/AppFormButton.vue';
-import AppFormControlErrors from '../form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../form-vue/AppFormGroup.vue';
-import AppFormControlContent from '../form-vue/controls/AppFormControlContent.vue';
-import {
-	validateContentMaxLength,
-	validateContentNoActiveUploads,
-	validateContentRequired,
-} from '../form-vue/validators';
-import { showErrorGrowl } from '../growls/growls.service';
-import AppLinkHelp from '../link/AppLinkHelp.vue';
-import { Model } from '../model/model.service';
-import { Screen } from '../screen/screen-service';
-import AppSpacer from '../spacer/AppSpacer.vue';
-import AppTranslate from '../translate/AppTranslate.vue';
-import { $gettext } from '../translate/translate.service';
+import AppAlertBox from '~common/alert/AppAlertBox.vue';
+import { trackCommentAdd } from '~common/analytics/analytics.service';
+import AppButton from '~common/button/AppButton.vue';
 import {
 	canCommentOnModel,
 	CommentableModel,
 	CommentModel,
 	getCommentModelResourceName,
 	saveComment,
-} from './comment-model';
+} from '~common/comment/comment-model';
+import { ContentContext, ContextCapabilities } from '~common/content/content-context';
+import { ContentRules } from '~common/content/content-rules';
+import { FiresidePostAllowComments, FiresidePostModel } from '~common/fireside/post/post-model';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlContent from '~common/form-vue/controls/AppFormControlContent.vue';
+import {
+	validateContentMaxLength,
+	validateContentNoActiveUploads,
+	validateContentRequired,
+} from '~common/form-vue/validators';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import AppLinkHelp from '~common/link/AppLinkHelp.vue';
+import { Model } from '~common/model/model.service';
+import { Screen } from '~common/screen/screen-service';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { kFontSizeSmall } from '~styles/variables';
 
 type Props = {
 	comment?: CommentModel;

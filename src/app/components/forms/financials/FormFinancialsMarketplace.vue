@@ -1,31 +1,31 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 
-import AppAlertBox from '../../../../_common/alert/AppAlertBox.vue';
-import { Api } from '../../../../_common/api/api.service';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import { formatCurrency } from '../../../../_common/filters/currency';
-import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
-import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
-import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
-import AppFormControlError from '../../../../_common/form-vue/AppFormControlError.vue';
-import AppFormControlErrors from '../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
+import AppDeveloperTerms from '~app/components/forms/financials/AppDeveloperTerms.vue';
+import AppFinancialsCheckmark from '~app/components/forms/financials/AppFinancialsCheckmark.vue';
+import FormFinancialsManagedAccount from '~app/components/forms/financials/managed-account/FormFinancialsManagedAccount.vue';
+import AppAlertBox from '~common/alert/AppAlertBox.vue';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import { formatCurrency } from '~common/filters/currency';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormControlError from '~common/form-vue/AppFormControlError.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
 import {
 	validateMaxValue,
 	validateMinValue,
 	validatePattern,
-} from '../../../../_common/form-vue/validators';
-import { showErrorGrowl } from '../../../../_common/growls/growls.service';
-import { Navigate } from '../../../../_common/navigate/navigate.service';
-import { useCommonStore } from '../../../../_common/store/common-store';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { UserStripeManagedAccountModel } from '../../../../_common/user/stripe-managed-account/stripe-managed-account';
-import { bangRef } from '../../../../utils/vue';
-import AppDeveloperTerms from './AppDeveloperTerms.vue';
-import AppFinancialsCheckmark from './AppFinancialsCheckmark.vue';
-import FormFinancialsManagedAccount from './managed-account/FormFinancialsManagedAccount.vue';
+} from '~common/form-vue/validators';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import { Navigate } from '~common/navigate/navigate.service';
+import { useCommonStore } from '~common/store/common-store';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { UserStripeManagedAccountModel } from '~common/user/stripe-managed-account/stripe-managed-account';
+import { bangRef } from '~utils/vue';
 
 type FormModel = {
 	tos_type?: 'developer';

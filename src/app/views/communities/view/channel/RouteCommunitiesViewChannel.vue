@@ -1,21 +1,21 @@
 <script lang="ts">
 import { defineAsyncComponent, toRef } from 'vue';
 
-import { Api } from '../../../../../_common/api/api.service';
-import { CommunityChannelModel } from '../../../../../_common/community/channel/channel.model';
+import { router } from '~app/views';
+import { getChannelPathFromRoute, useCommunityRouteStore } from '~app/views/communities/view/view.store';
+import { Api } from '~common/api/api.service';
+import { CommunityChannelModel } from '~common/community/channel/channel.model';
 import {
 	asyncRouteLoader,
 	createAppRoute,
 	defineAppRouteOptions,
-} from '../../../../../_common/route/route-component';
-import { router } from '../../..';
-import { getChannelPathFromRoute, useCommunityRouteStore } from '../view.store';
+} from '~common/route/route-component';
 
 const RouteCommunitiesViewChannelFeed = defineAsyncComponent(() =>
-	asyncRouteLoader(router, import('./RouteCommunitiesViewChannelFeed.vue'))
+	asyncRouteLoader(router, import('~app/views/communities/view/channel/RouteCommunitiesViewChannelFeed.vue'))
 );
 const RouteCommunitiesViewChannelJam = defineAsyncComponent(() =>
-	asyncRouteLoader(router, import('./RouteCommunitiesViewChannelJam.vue'))
+	asyncRouteLoader(router, import('~app/views/communities/view/channel/RouteCommunitiesViewChannelJam.vue'))
 );
 
 /**

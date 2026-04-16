@@ -1,8 +1,8 @@
 <script lang="ts">
 import { computed, toRef } from 'vue';
 
-import { useDynamicSlots } from '../component-helpers';
-import { Screen } from '../screen/screen-service';
+import { useDynamicSlots } from '~common/component-helpers';
+import { Screen } from '~common/screen/screen-service';
 
 const validSlots = ['leading', 'title', 'actions', 'bottom'] as const;
 export type HeaderBarSlots = (typeof validSlots)[number];

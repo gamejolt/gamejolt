@@ -1,11 +1,11 @@
 <script lang="ts">
 import { computed, ComputedRef, onMounted, PropType, Ref, ref, watch } from 'vue';
 
-import { useForm } from './AppForm.vue';
-import { useFormGroup } from './AppFormGroup.vue';
-import { vAppFocusWhen } from './focus-when.directive';
-import { useFormControlHooks } from './form-control-hooks';
-import { FormValidator, validateDecimal, validateEmail, validateRequired } from './validators';
+import { useForm } from '~common/form-vue/AppForm.vue';
+import { useFormGroup } from '~common/form-vue/AppFormGroup.vue';
+import { vAppFocusWhen } from '~common/form-vue/focus-when.directive';
+import { useFormControlHooks } from '~common/form-vue/form-control-hooks';
+import { FormValidator, validateDecimal, validateEmail, validateRequired } from '~common/form-vue/validators';
 
 interface ValidationOptions {
 	validateDelay?: number;

@@ -1,22 +1,22 @@
 <script lang="ts">
+import AppAnimElectricity from '~common/animation/AppAnimElectricity.vue';
+import { formatFuzzynumberOverThreshold } from '~common/filters/fuzzynumber';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import { useCommonStore } from '~common/store/common-store';
+import AppTopSupportersHeader from '~common/supporters/AppTopSupportersHeader.vue';
+import { kThemeFg, kThemeFg10, kThemeFgMuted } from '~common/theme/variables';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import AppUserCardHover from '~common/user/card/AppUserCardHover.vue';
+import { UserModel } from '~common/user/user.model';
+import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
 import {
 	styleBorderRadiusBase,
 	styleBorderRadiusLg,
 	styleChangeBg,
 	styleFlexCenter,
 	styleTextOverflow,
-} from '../../_styles/mixins';
-import { kBorderWidthSm, kFontSizeSmall, kFontSizeTiny } from '../../_styles/variables';
-import AppAnimElectricity from '../animation/AppAnimElectricity.vue';
-import { formatFuzzynumberOverThreshold } from '../filters/fuzzynumber';
-import AppSpacer from '../spacer/AppSpacer.vue';
-import { useCommonStore } from '../store/common-store';
-import { kThemeFg, kThemeFg10, kThemeFgMuted } from '../theme/variables';
-import { vAppTooltip } from '../tooltip/tooltip-directive';
-import AppUserCardHover from '../user/card/AppUserCardHover.vue';
-import { UserModel } from '../user/user.model';
-import AppUserAvatarBubble from '../user/user-avatar/AppUserAvatarBubble.vue';
-import AppTopSupportersHeader from './AppTopSupportersHeader.vue';
+} from '~styles/mixins';
+import { kBorderWidthSm, kFontSizeSmall, kFontSizeTiny } from '~styles/variables';
 
 export interface TopSupporter {
 	user: UserModel;

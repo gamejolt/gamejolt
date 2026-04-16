@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { CSSProperties } from 'vue';
 
-import { styleWhen } from '../../_styles/mixins';
-import { ThemeColor } from '../theme/variables';
-import AppCurrencyPill from './AppCurrencyPill.vue';
-import { CurrencyCostData } from './currency-type';
+import AppCurrencyPill from '~common/currency/AppCurrencyPill.vue';
+import { CurrencyCostData } from '~common/currency/currency-type';
+import { ThemeColor } from '~common/theme/variables';
+import { styleWhen } from '~styles/mixins';
 
 type Props = {
 	currencies: CurrencyCostData;

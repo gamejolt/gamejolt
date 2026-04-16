@@ -3,9 +3,9 @@ import { EditorView, NodeView } from 'prosemirror-view';
 import type { Component, PropType } from 'vue';
 import { markRaw, nextTick, reactive } from 'vue';
 
-import { arrayRemove } from '../../../../utils/array';
-import { ContentEditorController } from '../content-editor-controller';
-import { ContentEditorSchema } from '../schemas/content-editor-schema';
+import { ContentEditorController } from '~common/content/content-editor/content-editor-controller';
+import { ContentEditorSchema } from '~common/content/content-editor/schemas/content-editor-schema';
+import { arrayRemove } from '~utils/array';
 
 /**
  * Can be mixed into content components that want to act as an editable node

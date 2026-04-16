@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { GameModel } from '../../../../_common/game/game.model';
-import AppGameListItem from './AppGameListItem.vue';
+import AppGameListItem from '~app/components/game/list/AppGameListItem.vue';
+import { GameModel } from '~common/game/game.model';
 
 type Props = {
 	games: GameModel[];

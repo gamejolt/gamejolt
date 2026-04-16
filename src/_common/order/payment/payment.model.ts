@@ -1,5 +1,5 @@
-import { Model } from '../../model/model.service';
-import { OrderPaymentRefundModel } from './refund/refund.model';
+import { Model } from '~common/model/model.service';
+import { OrderPaymentRefundModel } from '~common/order/payment/refund/refund.model';
 
 export const enum OrderPaymentMethod {
 	CCStripe = 'cc-stripe',

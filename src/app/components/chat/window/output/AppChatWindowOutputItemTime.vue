@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import { formatDate } from '../../../../../_common/filters/date';
-import { kThemeFgMuted } from '../../../../../_common/theme/variables';
-import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-import { kFontSizeTiny } from '../../../../../_styles/variables';
-import { ChatMessageModel } from '../../message';
-import { ChatRoomModel } from '../../room';
+import { ChatMessageModel } from '~app/components/chat/message';
+import { ChatRoomModel } from '~app/components/chat/room';
+import { formatDate } from '~common/filters/date';
+import { kThemeFgMuted } from '~common/theme/variables';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { kFontSizeTiny } from '~styles/variables';
 
 type Props = {
 	message: ChatMessageModel;

@@ -1,23 +1,23 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref, watch } from 'vue';
 
-import { trackJoltydex } from '../../../../_common/analytics/analytics.service';
-import { Api } from '../../../../_common/api/api.service';
-import { useEscapeStack } from '../../../../_common/escape-stack/escape-stack.service';
-import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
-import { illJoltydexBrowse } from '../../../../_common/illustration/illustrations';
-import AppLoading from '../../../../_common/loading/AppLoading.vue';
-import { Screen } from '../../../../_common/screen/screen-service';
-import { useCommonStore } from '../../../../_common/store/common-store';
-import { kThemeBgActual } from '../../../../_common/theme/variables';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { UserModel } from '../../../../_common/user/user.model';
-import { kFontSizeLarge } from '../../../../_styles/variables';
-import { fuzzysearch } from '../../../../utils/string';
-import { useAppStore } from '../../../store';
-import { useJoltydexStore } from '../../../store/joltydex';
-import { showVendingMachineModal } from '../../vending-machine/modal/modal.service';
-import AppJoltydexUser from './_joltydex/AppJoltydexUser.vue';
+import AppJoltydexUser from '~app/components/shell/sidebar/_joltydex/AppJoltydexUser.vue';
+import { showVendingMachineModal } from '~app/components/vending-machine/modal/modal.service';
+import { useAppStore } from '~app/store';
+import { useJoltydexStore } from '~app/store/joltydex';
+import { trackJoltydex } from '~common/analytics/analytics.service';
+import { Api } from '~common/api/api.service';
+import { useEscapeStack } from '~common/escape-stack/escape-stack.service';
+import AppIllustration from '~common/illustration/AppIllustration.vue';
+import { illJoltydexBrowse } from '~common/illustration/illustrations';
+import AppLoading from '~common/loading/AppLoading.vue';
+import { Screen } from '~common/screen/screen-service';
+import { useCommonStore } from '~common/store/common-store';
+import { kThemeBgActual } from '~common/theme/variables';
+import { $gettext } from '~common/translate/translate.service';
+import { UserModel } from '~common/user/user.model';
+import { kFontSizeLarge } from '~styles/variables';
+import { fuzzysearch } from '~utils/string';
 
 const { user: loggedInUser } = useCommonStore();
 const { toggleLeftPane } = useAppStore();

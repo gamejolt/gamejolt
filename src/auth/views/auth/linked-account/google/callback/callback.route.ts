@@ -3,5 +3,5 @@ import { RouteRecordRaw } from 'vue-router';
 export const routeAuthLinkedAccountGoogleCallback: RouteRecordRaw = {
 	name: 'auth.linked-account.google.callback',
 	path: 'google/callback',
-	component: () => import('./RouteAuthLinkedAccountGoogleCallback.vue'),
+	component: () => import('~auth/views/auth/linked-account/google/callback/RouteAuthLinkedAccountGoogleCallback.vue'),
 };

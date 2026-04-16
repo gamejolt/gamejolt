@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
-import { TagInfo, TagsInfo } from '../tags-info.service';
-import AppTagThumbnail from '../thumbnail/AppTagThumbnail.vue';
+import { TagInfo, TagsInfo } from '~app/components/tag/tags-info.service';
+import AppTagThumbnail from '~app/components/tag/thumbnail/AppTagThumbnail.vue';
+import AppScrollScroller from '~common/scroll/AppScrollScroller.vue';
 
 const FeaturedTags = [
 	'action',

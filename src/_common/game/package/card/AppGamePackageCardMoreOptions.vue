@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import { formatFilesize } from '../../../filters/filesize';
-import AppJolticon from '../../../jolticon/AppJolticon.vue';
-import AppTranslate from '../../../translate/AppTranslate.vue';
-import { GameBuildEmulatorInfo, GameBuildModel } from '../../build/build.model';
-import { GamePackageCardModel } from './card.model';
+import { formatFilesize } from '~common/filters/filesize';
+import { GameBuildEmulatorInfo, GameBuildModel } from '~common/game/build/build.model';
+import { GamePackageCardModel } from '~common/game/package/card/card.model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 type Props = {
 	card: GamePackageCardModel;

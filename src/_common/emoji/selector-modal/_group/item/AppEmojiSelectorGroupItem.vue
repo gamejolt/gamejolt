@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 
-import { ComponentProps } from '../../../../component-helpers';
-import AppScrollInview, { ScrollInviewConfig } from '../../../../scroll/inview/AppScrollInview.vue';
-import { EmojiModel } from '../../../emoji.model';
+import { ComponentProps } from '~common/component-helpers';
+import { EmojiModel } from '~common/emoji/emoji.model';
+import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
 
 type Props = {
 	emoji: EmojiModel;

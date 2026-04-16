@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { onUnmounted, unref, watch } from 'vue';
 
-import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
-import { Scroll } from '../../../_common/scroll/scroll.service';
-import { useBannerStore } from '../../store/banner';
+import { useBannerStore } from '~app/store/banner';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { Scroll } from '~common/scroll/scroll.service';
 
 const { hasBanner, currentBanner, clickBanner, closeBanner } = useBannerStore();
 

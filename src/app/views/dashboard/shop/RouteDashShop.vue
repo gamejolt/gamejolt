@@ -1,20 +1,20 @@
 <script lang="ts">
 import { computed } from 'vue';
 
-import { Api } from '../../../../_common/api/api.service';
-import { AvatarFrameModel } from '../../../../_common/avatar/frame.model';
-import { BackgroundModel } from '../../../../_common/background/background.model';
-import { CreatorChangeRequestModel } from '../../../../_common/creator/change-request/creator-change-request.model';
-import { storeModelList } from '../../../../_common/model/model-store.service';
-import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
-import { ShopProductResource } from '../../../../_common/shop/product/product-model';
-import { StickerPackModel } from '../../../../_common/sticker/pack/pack.model';
-import { StickerModel } from '../../../../_common/sticker/sticker.model';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { RouteLocationRedirect } from '../../../../utils/router';
-import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
-import RouteLandingCreators from '../../landing/creators/RouteLandingCreators.vue';
-import { createShopDashStore, populateShopDashStoreGroup } from './shop.store';
+import AppShellPageBackdrop from '~app/components/shell/AppShellPageBackdrop.vue';
+import { createShopDashStore, populateShopDashStoreGroup } from '~app/views/dashboard/shop/shop.store';
+import RouteLandingCreators from '~app/views/landing/creators/RouteLandingCreators.vue';
+import { Api } from '~common/api/api.service';
+import { AvatarFrameModel } from '~common/avatar/frame.model';
+import { BackgroundModel } from '~common/background/background.model';
+import { CreatorChangeRequestModel } from '~common/creator/change-request/creator-change-request.model';
+import { storeModelList } from '~common/model/model-store.service';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { ShopProductResource } from '~common/shop/product/product-model';
+import { StickerPackModel } from '~common/sticker/pack/pack.model';
+import { StickerModel } from '~common/sticker/sticker.model';
+import { $gettext } from '~common/translate/translate.service';
+import { RouteLocationRedirect } from '~utils/router';
 
 async function _makeSectionPromise(
 	resource: Exclude<ShopProductResource, ShopProductResource.StickerPack> | 'packs'

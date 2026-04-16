@@ -1,8 +1,8 @@
 import { h } from 'vue';
 
-import { WidgetCompilerWidget } from '../widget';
-import { WidgetCompilerContext } from '../widget-compiler.service';
-import AppWidgetCompilerWidgetGameMedia from './AppWidgetCompilerWidgetGameMedia.vue';
+import { WidgetCompilerWidget } from '~common/widget-compiler/widget';
+import { WidgetCompilerContext } from '~common/widget-compiler/widget-compiler.service';
+import AppWidgetCompilerWidgetGameMedia from '~common/widget-compiler/widget-game-media/AppWidgetCompilerWidgetGameMedia.vue';
 
 export class WidgetCompilerWidgetGameMedia extends WidgetCompilerWidget {
 	readonly name = 'game-media';

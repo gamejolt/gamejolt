@@ -9,23 +9,23 @@ import {
 	ref,
 } from 'vue';
 
-import { styleChangeBg } from '../../../_styles/mixins';
-import { arrayRemove } from '../../../utils/array';
-import { debounceWithMaxTimeout } from '../../../utils/utils';
-import { Api } from '../../api/api.service';
-import AppAspectRatio from '../../aspect-ratio/AppAspectRatio.vue';
-import AppButton from '../../button/AppButton.vue';
-import { ContentEditorModelData } from '../../content/content-owner';
-import { showErrorGrowl } from '../../growls/growls.service';
-import AppModal from '../../modal/AppModal.vue';
-import { useModal } from '../../modal/modal.service';
-import { ModelData } from '../../model/model.service';
-import { storeModelList } from '../../model/model-store.service';
-import { EmojiGroupData, useCommonStore } from '../../store/common-store';
-import { $gettext } from '../../translate/translate.service';
-import { EmojiModel } from '../emoji.model';
-import { EmojiGroupModel, EmojiGroupType } from '../emoji-group.model';
-import AppEmojiSelectorGroup from './_group/AppEmojiSelectorGroup.vue';
+import { Api } from '~common/api/api.service';
+import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
+import AppButton from '~common/button/AppButton.vue';
+import { ContentEditorModelData } from '~common/content/content-owner';
+import { EmojiModel } from '~common/emoji/emoji.model';
+import { EmojiGroupModel, EmojiGroupType } from '~common/emoji/emoji-group.model';
+import AppEmojiSelectorGroup from '~common/emoji/selector-modal/_group/AppEmojiSelectorGroup.vue';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import { ModelData } from '~common/model/model.service';
+import { storeModelList } from '~common/model/model-store.service';
+import { EmojiGroupData, useCommonStore } from '~common/store/common-store';
+import { $gettext } from '~common/translate/translate.service';
+import { styleChangeBg } from '~styles/mixins';
+import { arrayRemove } from '~utils/array';
+import { debounceWithMaxTimeout } from '~utils/utils';
 
 type Props = {
 	type: 'emojis' | 'reactions';

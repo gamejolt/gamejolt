@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { ref, toRef } from 'vue';
 
-import AppButton from '../../../../../_common/button/AppButton.vue';
-import { useForm } from '../../../../../_common/form-vue/AppForm.vue';
-import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import { useGameDashRouteController } from '../../../../views/dashboard/games/manage/manage.store';
+import { useGameDashRouteController } from '~app/views/dashboard/games/manage/manage.store';
+import AppButton from '~common/button/AppButton.vue';
+import { useForm } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import { $gettext } from '~common/translate/translate.service';
 
 type Props = {
 	disabled?: boolean;

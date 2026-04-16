@@ -2,14 +2,14 @@
 import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
 
-import AppContactLink from '../../../../_common/contact-link/AppContactLink.vue';
-import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
-import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
-import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { arrayShuffle } from '../../../../utils/array';
-import { imageJolt } from '../../../img/images';
-import { routeLandingCreators } from '../creators/creators.route';
+import { imageJolt } from '~app/img/images';
+import { routeLandingCreators } from '~app/views/landing/creators/creators.route';
+import AppContactLink from '~common/contact-link/AppContactLink.vue';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import AppThemeSvg from '~common/theme/svg/AppThemeSvg.vue';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { $gettext } from '~common/translate/translate.service';
+import { arrayShuffle } from '~utils/array';
 
 const assetUrls = import.meta.glob('./*.(png|jpg)', { eager: true, as: 'url' });
 
@@ -132,7 +132,7 @@ createAppRoute({
 								<div v-for="username of staff" :key="username" class="-staff-item">
 									<a :href="`https://gamejolt.com/@${username}`">
 										<img
-											:src="assetUrls[`./profile-${username}.jpg`]"
+											:src="assetUrls[`./profile-/${username}.jpg`]"
 											:alt="`@${username}`"
 											class="-avatar"
 										/>

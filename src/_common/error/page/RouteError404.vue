@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useCommonStore } from '../../store/common-store';
+import { useCommonStore } from '~common/store/common-store';
 
 /**
  * Just a placeholder that sets the 404 error state.

@@ -1,17 +1,17 @@
 <script lang="ts">
 import { computed } from 'vue';
 
-import { Api } from '../../../../_common/api/api.service';
-import AppAuthJoin from '../../../../_common/auth/join/AppAuthJoin.vue';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import AppContactLink from '../../../../_common/contact-link/AppContactLink.vue';
-import { Meta } from '../../../../_common/meta/meta-service';
-import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
-import { useCommonStore } from '../../../../_common/store/common-store';
-import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { imageJolt } from '../../../img/images';
-import socialImage from './social.png';
+import { imageJolt } from '~app/img/images';
+import socialImage from '~app/views/landing/marketplace/social.png';
+import { Api } from '~common/api/api.service';
+import AppAuthJoin from '~common/auth/join/AppAuthJoin.vue';
+import AppButton from '~common/button/AppButton.vue';
+import AppContactLink from '~common/contact-link/AppContactLink.vue';
+import { Meta } from '~common/meta/meta-service';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { useCommonStore } from '~common/store/common-store';
+import AppThemeSvg from '~common/theme/svg/AppThemeSvg.vue';
+import { $gettext } from '~common/translate/translate.service';
 
 const assetPaths = import.meta.glob('./*.svg', { eager: true, as: 'url' });
 

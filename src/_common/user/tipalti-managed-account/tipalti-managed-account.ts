@@ -1,4 +1,4 @@
-import { Model } from '../../model/model.service';
+import { Model } from '~common/model/model.service';
 
 export class UserTipaltiManagedAccountModel extends Model {
 	onboarding_status!: 'temp' | 'in-progress' | 'active' | 'error' | 'rejected' | 'inactive';

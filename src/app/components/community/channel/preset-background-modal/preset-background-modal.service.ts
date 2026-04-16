@@ -3,8 +3,8 @@ import { defineAsyncComponent } from 'vue';
 import {
 	CommunityModel,
 	CommunityPresetChannelType,
-} from '../../../../../_common/community/community.model';
-import { showModal } from '../../../../../_common/modal/modal.service';
+} from '~common/community/community.model';
+import { showModal } from '~common/modal/modal.service';
 
 export async function showCommunityChannelPresetBackgroundModal(
 	community: CommunityModel,
@@ -13,7 +13,7 @@ export async function showCommunityChannelPresetBackgroundModal(
 	return await showModal<CommunityModel>({
 		modalId: 'CommunityChannelPresetBackground',
 		component: defineAsyncComponent(
-			() => import('./AppCommunityChannelPresetBackgroundModal.vue')
+			() => import('~app/components/community/channel/preset-background-modal/AppCommunityChannelPresetBackgroundModal.vue')
 		),
 		props: {
 			community,

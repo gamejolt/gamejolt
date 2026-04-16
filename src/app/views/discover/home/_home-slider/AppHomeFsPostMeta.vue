@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
-import AppUserAvatarImg from '../../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
-import AppCommunityOverlayPill from './AppCommunityOverlayPill.vue';
+import AppCommunityOverlayPill from '~app/views/discover/home/_home-slider/AppCommunityOverlayPill.vue';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
 
 type Props = {
 	post: FiresidePostModel;

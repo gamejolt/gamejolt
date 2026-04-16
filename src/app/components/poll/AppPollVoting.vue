@@ -1,16 +1,16 @@
 <script lang="ts" setup>
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 
-import { vAppAuthRequired } from '../../../_common/auth/auth-required-directive';
-import AppButton from '../../../_common/button/AppButton.vue';
-import { formatNumber } from '../../../_common/filters/number';
-import { FiresidePostModel } from '../../../_common/fireside/post/post-model';
-import { PollItemModel } from '../../../_common/poll/item/item.model';
-import { $refreshPoll, $voteOnPoll, PollModel } from '../../../_common/poll/poll.model';
-import AppProgressBar from '../../../_common/progress/AppProgressBar.vue';
-import { useCommonStore } from '../../../_common/store/common-store';
-import AppTimeAgo from '../../../_common/time/AppTimeAgo.vue';
-import { $ngettext } from '../../../_common/translate/translate.service';
+import { vAppAuthRequired } from '~common/auth/auth-required-directive';
+import AppButton from '~common/button/AppButton.vue';
+import { formatNumber } from '~common/filters/number';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import { PollItemModel } from '~common/poll/item/item.model';
+import { $refreshPoll, $voteOnPoll, PollModel } from '~common/poll/poll.model';
+import AppProgressBar from '~common/progress/AppProgressBar.vue';
+import { useCommonStore } from '~common/store/common-store';
+import AppTimeAgo from '~common/time/AppTimeAgo.vue';
+import { $ngettext } from '~common/translate/translate.service';
 
 type Props = {
 	poll: PollModel;

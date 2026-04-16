@@ -1,29 +1,29 @@
 <script lang="ts">
 import { computed, ref } from 'vue';
 
-import { Api } from '../../../../../_common/api/api.service';
-import AppButton from '../../../../../_common/button/AppButton.vue';
-import { GameModel } from '../../../../../_common/game/game.model';
-import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import AppLinkHelp from '../../../../../_common/link/AppLinkHelp.vue';
+import { useProfileRouteStore } from '~app/views/profile/RouteProfile.vue';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import { GameModel } from '~common/game/game.model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLinkHelp from '~common/link/AppLinkHelp.vue';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
-} from '../../../../../_common/route/route-component';
-import { useCommonStore } from '../../../../../_common/store/common-store';
-import AppTimeAgo from '../../../../../_common/time/AppTimeAgo.vue';
-import AppTimelineList from '../../../../../_common/timeline-list/AppTimelineList.vue';
-import AppTimelineListItem from '../../../../../_common/timeline-list/item/AppTimelineListItem.vue';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import { showTrophyModal } from '../../../../../_common/trophy/modal/modal.service';
-import AppTrophyThumbnail from '../../../../../_common/trophy/thumbnail/AppTrophyThumbnail.vue';
-import { UserGameTrophyModel } from '../../../../../_common/user/trophy/game-trophy.model';
-import { UserSiteTrophyModel } from '../../../../../_common/user/trophy/site-trophy.model';
-import { populateTrophies } from '../../../../../_common/user/trophy/trophy-utils';
-import { UserBaseTrophyModel } from '../../../../../_common/user/trophy/user-base-trophy.model';
-import { numberSort } from '../../../../../utils/array';
-import { useProfileRouteStore } from '../../RouteProfile.vue';
+} from '~common/route/route-component';
+import { useCommonStore } from '~common/store/common-store';
+import AppTimeAgo from '~common/time/AppTimeAgo.vue';
+import AppTimelineList from '~common/timeline-list/AppTimelineList.vue';
+import AppTimelineListItem from '~common/timeline-list/item/AppTimelineListItem.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { showTrophyModal } from '~common/trophy/modal/modal.service';
+import AppTrophyThumbnail from '~common/trophy/thumbnail/AppTrophyThumbnail.vue';
+import { UserGameTrophyModel } from '~common/user/trophy/game-trophy.model';
+import { UserSiteTrophyModel } from '~common/user/trophy/site-trophy.model';
+import { populateTrophies } from '~common/user/trophy/trophy-utils';
+import { UserBaseTrophyModel } from '~common/user/trophy/user-base-trophy.model';
+import { numberSort } from '~utils/array';
 
 export default {
 	name: 'RouteProfileTrophiesOverview',

@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-import AppButton from '../../../../_common/button/AppButton.vue';
-import { showSuccessGrowl } from '../../../../_common/growls/growls.service';
-import AppModal from '../../../../_common/modal/AppModal.vue';
-import { useModal } from '../../../../_common/modal/modal.service';
-import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import FormClientSystemReport from './FormClientSystemReport.vue';
+import FormClientSystemReport from '~app/components/client/system-report-modal/FormClientSystemReport.vue';
+import AppButton from '~common/button/AppButton.vue';
+import { showSuccessGrowl } from '~common/growls/growls.service';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
 
 const modal = useModal()!;
 

@@ -1,8 +1,8 @@
 import { Ref } from 'vue';
 
-import { IllustrationAsset } from '../illustration/AppIllustration.vue';
-import { illJoltbux } from '../img/ill/illustrations';
-import { imageCoins, imageCoinsSmall, imageGems } from '../img/images';
+import { IllustrationAsset } from '~common/illustration/AppIllustration.vue';
+import { illJoltbux } from '~common/img/ill/illustrations';
+import { imageCoins, imageCoinsSmall, imageGems } from '~common/img/images';
 
 class CurrencyData {
 	public smallAsset: IllustrationAsset | string;

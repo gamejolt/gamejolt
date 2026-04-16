@@ -1,7 +1,7 @@
 <script lang="ts">
-import { Jolticon } from '../../../../../_common/jolticon/AppJolticon.vue';
-import { ProfileTileAction } from '../RouteProfileOverview.vue';
-import AppProfileShortcut from './AppProfileShortcut.vue';
+import { ProfileTileAction } from '~app/views/profile/overview/RouteProfileOverview.vue';
+import AppProfileShortcut from '~app/views/profile/overview/shortcut/AppProfileShortcut.vue';
+import { Jolticon } from '~common/jolticon/AppJolticon.vue';
 
 export type ProfileQuickLink = {
 	label: string;

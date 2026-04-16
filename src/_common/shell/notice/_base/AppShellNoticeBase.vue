@@ -1,6 +1,18 @@
 <script lang="ts" setup>
 import { onMounted, watch } from 'vue';
 
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { useOnHover } from '~common/on/useOnHover';
+import { Screen } from '~common/screen/screen-service';
+import { getShellNotice } from '~common/shell/notice/notice.service';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import {
+	kThemeBgOffset,
+	kThemeFg10,
+	kThemeFgMuted,
+	kThemeGjOverlayNotice,
+} from '~common/theme/variables';
+import { $gettext } from '~common/translate/translate.service';
 import {
 	styleAbsoluteFill,
 	styleBorderRadiusBase,
@@ -9,21 +21,9 @@ import {
 	styleFlexCenter,
 	styleTyped,
 	styleWhen,
-} from '../../../../_styles/mixins';
-import { kBorderWidthBase, kFontSizeLarge, kFontSizeSmall } from '../../../../_styles/variables';
-import { sleep } from '../../../../utils/utils';
-import AppJolticon from '../../../jolticon/AppJolticon.vue';
-import { useOnHover } from '../../../on/useOnHover';
-import { Screen } from '../../../screen/screen-service';
-import AppSpacer from '../../../spacer/AppSpacer.vue';
-import {
-	kThemeBgOffset,
-	kThemeFg10,
-	kThemeFgMuted,
-	kThemeGjOverlayNotice,
-} from '../../../theme/variables';
-import { $gettext } from '../../../translate/translate.service';
-import { getShellNotice } from '../notice.service';
+} from '~styles/mixins';
+import { kBorderWidthBase, kFontSizeLarge, kFontSizeSmall } from '~styles/variables';
+import { sleep } from '~utils/utils';
 
 const { remove: removeShellNoticeItem } = getShellNotice();
 

@@ -5,18 +5,18 @@ import {
 	FiresidePostEmbedModel,
 	TYPE_SKETCHFAB,
 	TYPE_YOUTUBE,
-} from '../../../../../_common/fireside/post/embed/embed.model';
-import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import { Navigate } from '../../../../../_common/navigate/navigate.service';
-import AppResponsiveDimensions from '../../../../../_common/responsive-dimensions/AppResponsiveDimensions.vue';
-import { Screen } from '../../../../../_common/screen/screen-service';
+} from '~common/fireside/post/embed/embed.model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { Navigate } from '~common/navigate/navigate.service';
+import AppResponsiveDimensions from '~common/responsive-dimensions/AppResponsiveDimensions.vue';
+import { Screen } from '~common/screen/screen-service';
 import AppScrollInview, {
 	ScrollInviewConfig,
-} from '../../../../../_common/scroll/inview/AppScrollInview.vue';
-import AppSketchfabEmbed from '../../../../../_common/sketchfab/embed/AppSketchfabEmbed.vue';
-import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import AppVideoEmbed from '../../../../../_common/video/embed/AppVideoEmbed.vue';
+} from '~common/scroll/inview/AppScrollInview.vue';
+import AppSketchfabEmbed from '~common/sketchfab/embed/AppSketchfabEmbed.vue';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { $gettext } from '~common/translate/translate.service';
+import AppVideoEmbed from '~common/video/embed/AppVideoEmbed.vue';
 
 const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height * 0.5}px` });
 </script>

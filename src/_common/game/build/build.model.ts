@@ -1,13 +1,13 @@
-import { Api } from '../../api/api.service';
-import type { DeviceArch, DeviceOs } from '../../device/device.service';
-import { Jolticon } from '../../jolticon/AppJolticon.vue';
-import { Model } from '../../model/model.service';
-import { GameModel } from '../game.model';
-import { GamePackageModel } from '../package/package.model';
-import { GameReleaseModel } from '../release/release.model';
-import { GameBuildFileModel } from './file/file.model';
-import { GameBuildLaunchOptionModel } from './launch-option/launch-option.model';
-import { GameBuildParamModel } from './param/param.model';
+import { Api } from '~common/api/api.service';
+import type { DeviceArch, DeviceOs } from '~common/device/device.service';
+import { GameBuildFileModel } from '~common/game/build/file/file.model';
+import { GameBuildLaunchOptionModel } from '~common/game/build/launch-option/launch-option.model';
+import { GameBuildParamModel } from '~common/game/build/param/param.model';
+import { GameModel } from '~common/game/game.model';
+import { GamePackageModel } from '~common/game/package/package.model';
+import { GameReleaseModel } from '~common/game/release/release.model';
+import { Jolticon } from '~common/jolticon/AppJolticon.vue';
+import { Model } from '~common/model/model.service';
 
 export const enum GameBuildType {
 	Downloadable = 'downloadable',

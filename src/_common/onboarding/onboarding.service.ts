@@ -1,4 +1,4 @@
-import { Analytics } from '../analytics/analytics.service';
+import { Analytics } from '~common/analytics/analytics.service';
 export type OnboardingStep = 'profile' | 'follows';
 
 export default abstract class Onboarding {

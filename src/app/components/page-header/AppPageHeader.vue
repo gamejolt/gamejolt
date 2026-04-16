@@ -1,14 +1,14 @@
 <script lang="ts" setup>
-import './page-header-content.styl';
+import '~app/components/page-header/page-header-content.styl';
 
 import { computed, CSSProperties, useSlots } from 'vue';
 
-import AppEditableOverlay from '../../../_common/editable-overlay/AppEditableOverlay.vue';
-import AppMediaItemCover from '../../../_common/media-item/cover/AppMediaItemCover.vue';
-import { MediaItemModel } from '../../../_common/media-item/media-item-model';
-import { Screen } from '../../../_common/screen/screen-service';
-import AppScrollAffix from '../../../_common/scroll/AppScrollAffix.vue';
-import AppAutoscrollAnchor from '../../../_common/scroll/auto-scroll/AppAutoscrollAnchor.vue';
+import AppEditableOverlay from '~common/editable-overlay/AppEditableOverlay.vue';
+import AppMediaItemCover from '~common/media-item/cover/AppMediaItemCover.vue';
+import { MediaItemModel } from '~common/media-item/media-item-model';
+import { Screen } from '~common/screen/screen-service';
+import AppScrollAffix from '~common/scroll/AppScrollAffix.vue';
+import AppAutoscrollAnchor from '~common/scroll/auto-scroll/AppAutoscrollAnchor.vue';
 
 interface PageHeaderSlots {
 	spotlight?: boolean;
@@ -222,4 +222,4 @@ const hasControls = computed(() => {
 	</header>
 </template>
 
-<style lang="stylus" src="./page-header.styl" scoped></style>
+<style lang="stylus" src="~app/components/page-header/page-header.styl" scoped></style>

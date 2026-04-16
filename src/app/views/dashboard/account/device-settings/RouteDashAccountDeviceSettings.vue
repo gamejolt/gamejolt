@@ -1,18 +1,18 @@
 <script lang="ts">
 import { computed, defineAsyncComponent } from 'vue';
 
+import FormSettings from '~app/components/forms/settings/FormSettings.vue';
+import { useAccountRouteController } from '~app/views/dashboard/account/RouteDashAccount.vue';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
-} from '../../../../../_common/route/route-component';
-import { useCommonStore } from '../../../../../_common/store/common-store';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import { touchUser } from '../../../../../_common/user/user.model';
-import FormSettings from '../../../../components/forms/settings/FormSettings.vue';
-import { useAccountRouteController } from '../RouteDashAccount.vue';
+} from '~common/route/route-component';
+import { useCommonStore } from '~common/store/common-store';
+import { $gettext } from '~common/translate/translate.service';
+import { touchUser } from '~common/user/user.model';
 
 const FormSettingsDev = defineAsyncComponent(
-	() => import('../../../../components/forms/settings/FormSettingsDev.vue')
+	() => import('~app/components/forms/settings/FormSettingsDev.vue')
 );
 
 export default {

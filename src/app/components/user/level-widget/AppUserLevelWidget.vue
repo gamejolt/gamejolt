@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import { formatNumber } from '../../../../_common/filters/number';
-import AppProgressBar from '../../../../_common/progress/AppProgressBar.vue';
-import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { UserModel } from '../../../../_common/user/user.model';
+import { formatNumber } from '~common/filters/number';
+import AppProgressBar from '~common/progress/AppProgressBar.vue';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { $gettext } from '~common/translate/translate.service';
+import { UserModel } from '~common/user/user.model';
 
 type Props = {
 	user: UserModel;

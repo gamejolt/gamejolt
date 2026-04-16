@@ -1,31 +1,31 @@
 <script lang="ts" setup>
 import { computed, nextTick, onUnmounted, ref, watch } from 'vue';
 
-import AppButton from '../../../../../_common/button/AppButton.vue';
-import { ContextCapabilities } from '../../../../../_common/content/content-context';
-import { ContentDocument } from '../../../../../_common/content/content-document';
-import { ContentRules } from '../../../../../_common/content/content-rules';
+import { editMessage as chatEditMessage, queueChatMessage, tryGetRoomRole } from '~app/components/chat/client';
+import { ChatMessageModel } from '~app/components/chat/message';
+import { ChatRoomModel } from '~app/components/chat/room';
+import { ChatWindowLeftGutterSize } from '~app/components/chat/window/variables';
+import { useGridStore } from '~app/components/grid/grid-store';
+import AppButton from '~common/button/AppButton.vue';
+import { ContextCapabilities } from '~common/content/content-context';
+import { ContentDocument } from '~common/content/content-document';
+import { ContentRules } from '~common/content/content-rules';
 import {
 	EscapeStack,
 	EscapeStackCallback,
-} from '../../../../../_common/escape-stack/escape-stack.service';
-import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
-import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormControlContent from '../../../../../_common/form-vue/controls/AppFormControlContent.vue';
-import { validateContentMaxLength } from '../../../../../_common/form-vue/validators';
-import { FormValidatorContentNoMediaUpload } from '../../../../../_common/form-vue/validators/content_no_media_upload';
-import { Screen } from '../../../../../_common/screen/screen-service';
-import AppShortkey from '../../../../../_common/shortkey/AppShortkey.vue';
-import { useThemeStore } from '../../../../../_common/theme/theme.store';
-import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import { createFocusToken } from '../../../../../utils/focus-token';
-import { useGridStore } from '../../../grid/grid-store';
-import { editMessage as chatEditMessage, queueChatMessage, tryGetRoomRole } from '../../client';
-import { ChatMessageModel } from '../../message';
-import { ChatRoomModel } from '../../room';
-import { ChatWindowLeftGutterSize } from '../variables';
+} from '~common/escape-stack/escape-stack.service';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlContent from '~common/form-vue/controls/AppFormControlContent.vue';
+import { validateContentMaxLength } from '~common/form-vue/validators';
+import { FormValidatorContentNoMediaUpload } from '~common/form-vue/validators/content_no_media_upload';
+import { Screen } from '~common/screen/screen-service';
+import AppShortkey from '~common/shortkey/AppShortkey.vue';
+import { useThemeStore } from '~common/theme/theme.store';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { $gettext } from '~common/translate/translate.service';
+import { createFocusToken } from '~utils/focus-token';
 
 const TYPING_TIMEOUT_INTERVAL = 3000;
 

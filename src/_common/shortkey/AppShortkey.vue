@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useShortkey } from './shortkey-service';
+import { useShortkey } from '~common/shortkey/shortkey-service';
 
 type Props = {
 	shortkey: string;

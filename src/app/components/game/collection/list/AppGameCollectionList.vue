@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import { GameCollectionModel } from '../collection.model';
-import AppGameCollectionThumbnail from '../thumbnail/AppGameCollectionThumbnail.vue';
+import { GameCollectionModel } from '~app/components/game/collection/collection.model';
+import AppGameCollectionThumbnail from '~app/components/game/collection/thumbnail/AppGameCollectionThumbnail.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 type Props = {
 	collections: GameCollectionModel[];

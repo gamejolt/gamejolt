@@ -1,25 +1,25 @@
 <script lang="ts">
 import { RouterLink, useRoute, useRouter } from 'vue-router';
 
-import { Api } from '../../../../../_common/api/api.service';
-import AppButton from '../../../../../_common/button/AppButton.vue';
-import AppExpand from '../../../../../_common/expand/AppExpand.vue';
-import { GameLockedStatus } from '../../../../../_common/game/game.model';
-import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
+import AppGamePerms from '~app/components/game/perms/AppGamePerms.vue';
+import { IntentService } from '~app/components/intent/intent.service';
+import AppPageHeader from '~app/components/page-header/AppPageHeader.vue';
+import AppShellPageBackdrop from '~app/components/shell/AppShellPageBackdrop.vue';
+import { createGameDashRouteController, ManageGameThemeKey } from '~app/views/dashboard/games/manage/manage.store';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import AppExpand from '~common/expand/AppExpand.vue';
+import { GameLockedStatus } from '~common/game/game.model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
-} from '../../../../../_common/route/route-component';
-import { useCommonStore } from '../../../../../_common/store/common-store';
-import { useThemeStore } from '../../../../../_common/theme/theme.store';
-import AppTimeAgo from '../../../../../_common/time/AppTimeAgo.vue';
-import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import AppGamePerms from '../../../../components/game/perms/AppGamePerms.vue';
-import { IntentService } from '../../../../components/intent/intent.service';
-import AppPageHeader from '../../../../components/page-header/AppPageHeader.vue';
-import AppShellPageBackdrop from '../../../../components/shell/AppShellPageBackdrop.vue';
-import { createGameDashRouteController, ManageGameThemeKey } from './manage.store';
+} from '~common/route/route-component';
+import { useCommonStore } from '~common/store/common-store';
+import { useThemeStore } from '~common/theme/theme.store';
+import AppTimeAgo from '~common/time/AppTimeAgo.vue';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { $gettext } from '~common/translate/translate.service';
 
 export default {
 	...defineAppRouteOptions({

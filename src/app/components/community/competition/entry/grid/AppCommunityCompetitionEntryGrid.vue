@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 import { computed, toRef } from 'vue';
 
+import AppCommunityCompetitionEntryThumbnail from '~app/components/community/competition/entry/thumbnail/AppCommunityCompetitionEntryThumbnail.vue';
 import {
 	CommunityCompetitionModel,
 	CompetitionPeriodVoting,
-} from '../../../../../../_common/community/competition/competition.model';
-import { CommunityCompetitionEntryModel } from '../../../../../../_common/community/competition/entry/entry.model';
-import { CommunityCompetitionVotingCategoryModel } from '../../../../../../_common/community/competition/voting-category/voting-category.model';
-import { formatNumber } from '../../../../../../_common/filters/number';
-import AppCommunityCompetitionEntryThumbnail from '../thumbnail/AppCommunityCompetitionEntryThumbnail.vue';
+} from '~common/community/competition/competition.model';
+import { CommunityCompetitionEntryModel } from '~common/community/competition/entry/entry.model';
+import { CommunityCompetitionVotingCategoryModel } from '~common/community/competition/voting-category/voting-category.model';
+import { formatNumber } from '~common/filters/number';
 
 type Props = {
 	competition: CommunityCompetitionModel;
@@ -96,4 +96,4 @@ function emitRemove(entry: CommunityCompetitionEntryModel) {
 	</div>
 </template>
 
-<style lang="stylus" src="./grid.styl" scoped></style>
+<style lang="stylus" src="~app/components/community/competition/entry/grid/grid.styl" scoped></style>

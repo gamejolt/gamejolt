@@ -1,18 +1,18 @@
 <script lang="ts">
 import { computed, ref, useTemplateRef, watch } from 'vue';
 
-import { getMediaserverUrlForBounds } from '../../utils/image';
-import { Api } from '../api/api.service';
-import AppButton from '../button/AppButton.vue';
-import { Jolticon } from '../jolticon/AppJolticon.vue';
-import AppLoading from '../loading/AppLoading.vue';
-import { storeModel } from '../model/model-store.service';
-import { useStickerStore } from '../sticker/sticker-store';
-import { useCommonStore } from '../store/common-store';
-import { QuestModel } from './quest-model';
-import { QuestObjectiveRewardModel } from './quest-objective-reward-model';
-import { QuestRewardData } from './reward/AppQuestRewardModal.vue';
-import { showQuestRewardModal } from './reward/modal.service';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import { Jolticon } from '~common/jolticon/AppJolticon.vue';
+import AppLoading from '~common/loading/AppLoading.vue';
+import { storeModel } from '~common/model/model-store.service';
+import { QuestModel } from '~common/quest/quest-model';
+import { QuestObjectiveRewardModel } from '~common/quest/quest-objective-reward-model';
+import { QuestRewardData } from '~common/quest/reward/AppQuestRewardModal.vue';
+import { showQuestRewardModal } from '~common/quest/reward/modal.service';
+import { useStickerStore } from '~common/sticker/sticker-store';
+import { useCommonStore } from '~common/store/common-store';
+import { getMediaserverUrlForBounds } from '~utils/image';
 </script>
 
 <script lang="ts" setup>

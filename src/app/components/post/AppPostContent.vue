@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 
-import AppFadeCollapse from '../../../_common/AppFadeCollapse.vue';
-import { ComponentProps } from '../../../_common/component-helpers';
-import { ContentRules } from '../../../_common/content/content-rules';
-import AppContentViewer from '../../../_common/content/content-viewer/AppContentViewer.vue';
-import { FiresidePostModel } from '../../../_common/fireside/post/post-model';
-import AppStickerTarget from '../../../_common/sticker/target/AppStickerTarget.vue';
-import { StickerTargetController } from '../../../_common/sticker/target/target-controller';
-import { PostContentContainerStyles, PostContentLeadStyles } from './post-styles';
+import { PostContentContainerStyles, PostContentLeadStyles } from '~app/components/post/post-styles';
+import AppFadeCollapse from '~common/AppFadeCollapse.vue';
+import { ComponentProps } from '~common/component-helpers';
+import { ContentRules } from '~common/content/content-rules';
+import AppContentViewer from '~common/content/content-viewer/AppContentViewer.vue';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import AppStickerTarget from '~common/sticker/target/AppStickerTarget.vue';
+import { StickerTargetController } from '~common/sticker/target/target-controller';
 
 type Props = {
 	post: FiresidePostModel;

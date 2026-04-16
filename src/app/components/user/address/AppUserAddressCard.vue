@@ -1,17 +1,17 @@
 <script lang="ts" setup>
-import AppButton from '../../../../_common/button/AppButton.vue';
-import AppCard from '../../../../_common/card/AppCard.vue';
-import { showSuccessGrowl } from '../../../../_common/growls/growls.service';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
+import AppUserAddressDetails from '~app/components/user/address/AppUserAddressDetails.vue';
+import { showUserAddressEditModal } from '~app/components/user/address/edit-modal/edit-modal.service';
+import AppButton from '~common/button/AppButton.vue';
+import AppCard from '~common/card/AppCard.vue';
+import { showSuccessGrowl } from '~common/growls/growls.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { showModalConfirm } from '~common/modal/confirm/confirm-service';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
 import {
 	$removeUserAddress,
 	UserAddressModel,
-} from '../../../../_common/user/address/address.model';
-import AppUserAddressDetails from './AppUserAddressDetails.vue';
-import { showUserAddressEditModal } from './edit-modal/edit-modal.service';
+} from '~common/user/address/address.model';
 
 type Props = {
 	address: UserAddressModel;

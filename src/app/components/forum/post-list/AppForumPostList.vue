@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import { ForumPostModel } from '../../../../_common/forum/post/post.model';
-import { ForumTopicModel } from '../../../../_common/forum/topic/topic.model';
-import AppMessageThread from '../../../../_common/message-thread/AppMessageThread.vue';
-import AppForumPostListItem from './item/AppForumPostListItem.vue';
+import AppForumPostListItem from '~app/components/forum/post-list/item/AppForumPostListItem.vue';
+import { ForumPostModel } from '~common/forum/post/post.model';
+import { ForumTopicModel } from '~common/forum/topic/topic.model';
+import AppMessageThread from '~common/message-thread/AppMessageThread.vue';
 
 type Props = {
 	topic: ForumTopicModel;

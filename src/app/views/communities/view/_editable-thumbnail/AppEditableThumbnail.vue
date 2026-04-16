@@ -2,13 +2,13 @@
 import { computed, toRef } from 'vue';
 import { useRoute } from 'vue-router';
 
-import { isEditingCommunity } from '../../../../../_common/community/community.model';
-import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
-import AppEditableOverlay from '../../../../../_common/editable-overlay/AppEditableOverlay.vue';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import { showCommunityThumbnailModal } from '../../../../components/forms/community/thumbnail/modal/modal.service';
-import { routeCommunitiesViewEditDetails } from '../edit/details/details.route';
-import { useCommunityRouteStore } from '../view.store';
+import { showCommunityThumbnailModal } from '~app/components/forms/community/thumbnail/modal/modal.service';
+import { routeCommunitiesViewEditDetails } from '~app/views/communities/view/edit/details/details.route';
+import { useCommunityRouteStore } from '~app/views/communities/view/view.store';
+import { isEditingCommunity } from '~common/community/community.model';
+import AppCommunityThumbnailImg from '~common/community/thumbnail/AppCommunityThumbnailImg.vue';
+import AppEditableOverlay from '~common/editable-overlay/AppEditableOverlay.vue';
+import { $gettext } from '~common/translate/translate.service';
 
 const routeStore = useCommunityRouteStore()!;
 const route = useRoute();

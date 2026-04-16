@@ -1,15 +1,15 @@
 <script lang="ts">
 import { ref } from 'vue';
 
-import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
+import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
 import AppPopper, {
 	PopperPlacementType,
 	PopperTriggerType,
-} from '../../../../_common/popper/AppPopper.vue';
-import { Screen } from '../../../../_common/screen/screen-service';
+} from '~common/popper/AppPopper.vue';
+import { Screen } from '~common/screen/screen-service';
 import AppScrollInview, {
 	ScrollInviewConfig,
-} from '../../../../_common/scroll/inview/AppScrollInview.vue';
+} from '~common/scroll/inview/AppScrollInview.vue';
 
 const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height / 2}px` });
 </script>

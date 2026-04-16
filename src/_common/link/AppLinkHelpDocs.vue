@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import { Environment } from '../environment/environment.service';
-import { Navigate } from '../navigate/navigate.service';
+import { Environment } from '~common/environment/environment.service';
+import { Navigate } from '~common/navigate/navigate.service';
 
 type Props = {
 	category: string;

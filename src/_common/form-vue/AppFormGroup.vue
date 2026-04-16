@@ -12,13 +12,13 @@ import {
 	useSlots,
 } from 'vue';
 
-import { CancelToken } from '../../utils/cancel-token';
-import { titleCase } from '../../utils/string';
-import { Jolticon } from '../jolticon/AppJolticon.vue';
-import { useForm } from './AppForm.vue';
-import { FormControlController } from './AppFormControl.vue';
-import AppFormControlLabel from './AppFormControlLabel.vue';
-import { FormValidatorError } from './validators';
+import { useForm } from '~common/form-vue/AppForm.vue';
+import { FormControlController } from '~common/form-vue/AppFormControl.vue';
+import AppFormControlLabel from '~common/form-vue/AppFormControlLabel.vue';
+import { FormValidatorError } from '~common/form-vue/validators';
+import { Jolticon } from '~common/jolticon/AppJolticon.vue';
+import { CancelToken } from '~utils/cancel-token';
+import { titleCase } from '~utils/string';
 
 export type FormGroupController = ReturnType<typeof createFormGroup>;
 

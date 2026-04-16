@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import './card.styl';
+import '~common/card/card.styl';
 
 import { HTMLAttributes } from 'vue';
 
-import AppJolticon from '../jolticon/AppJolticon.vue';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
 
 type Props = {
 	isDraggable?: boolean;

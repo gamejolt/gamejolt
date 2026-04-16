@@ -1,13 +1,13 @@
 import { reactive } from 'vue';
 
-import { Api } from '../../../_common/api/api.service';
-import { CommunityModel } from '../../../_common/community/community.model';
-import { FiresidePostModel } from '../../../_common/fireside/post/post-model';
-import { GameModel } from '../../../_common/game/game.model';
-import { RealmModel } from '../../../_common/realm/realm-model';
-import { UserModel } from '../../../_common/user/user.model';
-import type { ClientLibraryStore } from '../../store/client-library';
-import type { LocalDbGame } from '../client/local-db/game/game.model';
+import type { LocalDbGame } from '~app/components/client/local-db/game/game.model';
+import type { ClientLibraryStore } from '~app/store/client-library';
+import { Api } from '~common/api/api.service';
+import { CommunityModel } from '~common/community/community.model';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import { GameModel } from '~common/game/game.model';
+import { RealmModel } from '~common/realm/realm-model';
+import { UserModel } from '~common/user/user.model';
 
 export interface SearchOptions {
 	type: 'all' | 'user' | 'game' | 'community' | 'realms' | 'typeahead';

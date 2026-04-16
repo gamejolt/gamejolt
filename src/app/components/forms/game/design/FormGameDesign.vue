@@ -1,19 +1,19 @@
 <script lang="ts" setup>
 import { computed, onUnmounted, toRef, watch } from 'vue';
 
-import AppEditableOverlay from '../../../../../_common/editable-overlay/AppEditableOverlay.vue';
-import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
-import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
-import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormControlTheme from '../../../../../_common/form-vue/controls/AppFormControlTheme.vue';
-import { $saveGameDesign, GameModel } from '../../../../../_common/game/game.model';
-import AppGameThumbnailImg from '../../../../../_common/game/thumbnail/AppGameThumbnailImg.vue';
-import AppLinkHelp from '../../../../../_common/link/AppLinkHelp.vue';
-import { DefaultTheme } from '../../../../../_common/theme/theme.model';
-import { useThemeStore } from '../../../../../_common/theme/theme.store';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import { showGameThumbnailModal } from '../../../game/thumbnail-modal/thumbnail-modal.service';
-import AppDashGameWizardControls from '../wizard-controls/AppDashGameWizardControls.vue';
+import AppDashGameWizardControls from '~app/components/forms/game/wizard-controls/AppDashGameWizardControls.vue';
+import { showGameThumbnailModal } from '~app/components/game/thumbnail-modal/thumbnail-modal.service';
+import AppEditableOverlay from '~common/editable-overlay/AppEditableOverlay.vue';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlTheme from '~common/form-vue/controls/AppFormControlTheme.vue';
+import { $saveGameDesign, GameModel } from '~common/game/game.model';
+import AppGameThumbnailImg from '~common/game/thumbnail/AppGameThumbnailImg.vue';
+import AppLinkHelp from '~common/link/AppLinkHelp.vue';
+import { DefaultTheme } from '~common/theme/theme.model';
+import { useThemeStore } from '~common/theme/theme.store';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 type FormModel = GameModel;
 

@@ -1,23 +1,23 @@
 <script lang="ts">
-import './auth-content.styl';
+import '~auth/views/auth/auth-content.styl';
 
 import { RouterView } from 'vue-router';
 
-import { Api } from '../../../_common/api/api.service';
-import { redirectToDashboard } from '../../../_common/auth/auth.service';
-import { Connection } from '../../../_common/connection/connection-service';
-import { Environment } from '../../../_common/environment/environment.service';
-import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
-import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
-import { Screen } from '../../../_common/screen/screen-service';
-import { commonStore } from '../../../_common/store/common-store';
-import AppThemeSvg from '../../../_common/theme/svg/AppThemeSvg.vue';
-import AppTranslate from '../../../_common/translate/AppTranslate.vue';
-import AppTranslateLangSelector from '../../../_common/translate/lang-selector/AppTranslateLangSelector.vue';
-import { imageGameJoltLogo } from '../../../app/img/images';
-import AppCoverImg from '../../components/AppCoverImg.vue';
-import AppGameCoverCredits from '../../components/AppGameCoverCredits.vue';
-import { useAuthStore } from '../../store/index';
+import { imageGameJoltLogo } from '~app/img/images';
+import AppCoverImg from '~auth/components/AppCoverImg.vue';
+import AppGameCoverCredits from '~auth/components/AppGameCoverCredits.vue';
+import { useAuthStore } from '~auth/store/index';
+import { Api } from '~common/api/api.service';
+import { redirectToDashboard } from '~common/auth/auth.service';
+import { Connection } from '~common/connection/connection-service';
+import { Environment } from '~common/environment/environment.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { Screen } from '~common/screen/screen-service';
+import { commonStore } from '~common/store/common-store';
+import AppThemeSvg from '~common/theme/svg/AppThemeSvg.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import AppTranslateLangSelector from '~common/translate/lang-selector/AppTranslateLangSelector.vue';
 
 export function loggedUserBlock() {
 	// Redirect right away if they are logged in.

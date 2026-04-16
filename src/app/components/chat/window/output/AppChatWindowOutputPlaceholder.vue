@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import { kThemeBg, kThemeBgSubtle } from '../../../../../_common/theme/variables';
-import { styleBorderRadiusLg } from '../../../../../_styles/mixins';
-import { kChatRoomWindowPadding } from '../../../../styles/variables';
-import { ChatWindowAvatarSize, ChatWindowLeftGutterSize } from '../variables';
+import { ChatWindowAvatarSize, ChatWindowLeftGutterSize } from '~app/components/chat/window/variables';
+import { kChatRoomWindowPadding } from '~app/styles/variables';
+import { kThemeBg, kThemeBgSubtle } from '~common/theme/variables';
+import { styleBorderRadiusLg } from '~styles/mixins';
 </script>
 
 <template>

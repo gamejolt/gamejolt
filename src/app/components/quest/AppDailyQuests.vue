@@ -1,24 +1,24 @@
 <script lang="ts" setup>
 import { computed, CSSProperties, ref, toRef, useTemplateRef, watch } from 'vue';
 
-import AppAnimChargeOrb from '../../../_common/animation/AppAnimChargeOrb.vue';
-import AppAnimElectricity from '../../../_common/animation/AppAnimElectricity.vue';
-import { illChargeOrbEmpty } from '../../../_common/animation/slideshow/sheets';
-import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
-import AppLoadingFade from '../../../_common/loading/AppLoadingFade.vue';
-import { QuestPriority } from '../../../_common/quest/quest-model.js';
-import { Screen } from '../../../_common/screen/screen-service';
-import AppStickerChargeTooltip from '../../../_common/sticker/charge/AppStickerChargeTooltip.vue';
-import AppStickerChargeTooltipCaret from '../../../_common/sticker/charge/AppStickerChargeTooltipCaret.vue';
-import AppStickerChargeTooltipHandler from '../../../_common/sticker/charge/AppStickerChargeTooltipHandler.vue';
-import { useStickerStore } from '../../../_common/sticker/sticker-store';
-import { kThemeFg } from '../../../_common/theme/variables';
-import { $gettext } from '../../../_common/translate/translate.service';
-import { styleWhen } from '../../../_styles/mixins';
-import { fetchDailyQuests, useQuestStore } from '../../store/quest';
-import { useGridStore } from '../grid/grid-store';
-import AppQuestLogItem from '../shell/sidebar/_quests/AppQuestLogItem.vue';
-import AppQuestTimer from './AppQuestTimer.vue';
+import { useGridStore } from '~app/components/grid/grid-store';
+import AppQuestTimer from '~app/components/quest/AppQuestTimer.vue';
+import AppQuestLogItem from '~app/components/shell/sidebar/_quests/AppQuestLogItem.vue';
+import { fetchDailyQuests, useQuestStore } from '~app/store/quest';
+import AppAnimChargeOrb from '~common/animation/AppAnimChargeOrb.vue';
+import AppAnimElectricity from '~common/animation/AppAnimElectricity.vue';
+import { illChargeOrbEmpty } from '~common/animation/slideshow/sheets';
+import AppIllustration from '~common/illustration/AppIllustration.vue';
+import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
+import { QuestPriority } from '~common/quest/quest-model.js';
+import { Screen } from '~common/screen/screen-service';
+import AppStickerChargeTooltip from '~common/sticker/charge/AppStickerChargeTooltip.vue';
+import AppStickerChargeTooltipCaret from '~common/sticker/charge/AppStickerChargeTooltipCaret.vue';
+import AppStickerChargeTooltipHandler from '~common/sticker/charge/AppStickerChargeTooltipHandler.vue';
+import { useStickerStore } from '~common/sticker/sticker-store';
+import { kThemeFg } from '~common/theme/variables';
+import { $gettext } from '~common/translate/translate.service';
+import { styleWhen } from '~styles/mixins';
 
 type Props = {
 	/**

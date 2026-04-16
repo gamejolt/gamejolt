@@ -1,20 +1,20 @@
 <script lang="ts" setup>
 import { computed, CSSProperties } from 'vue';
 
-import AppJolticon from '../../../../../../../_common/jolticon/AppJolticon.vue';
-import AppStickerImg from '../../../../../../../_common/sticker/AppStickerImg.vue';
-import { StickerModel } from '../../../../../../../_common/sticker/sticker.model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppStickerImg from '~common/sticker/AppStickerImg.vue';
+import { StickerModel } from '~common/sticker/sticker.model';
 import {
 	kThemeBgOffset,
 	kThemePrimary,
 	kThemePrimaryFg,
-} from '../../../../../../../_common/theme/variables';
+} from '~common/theme/variables';
 import {
 	styleBorderRadiusLg,
 	styleFlexCenter,
 	styleWhen,
-} from '../../../../../../../_styles/mixins';
-import { kBorderWidthBase, kStrongEaseOut } from '../../../../../../../_styles/variables';
+} from '~styles/mixins';
+import { kBorderWidthBase, kStrongEaseOut } from '~styles/variables';
 
 type Props = {
 	sticker: StickerModel;

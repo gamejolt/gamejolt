@@ -1,22 +1,22 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
 
-import { CommunityModel } from '../../../../../_common/community/community.model';
-import AppForm from '../../../../../_common/form-vue/AppForm.vue';
-import { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
-import AppFormControl from '../../../../../_common/form-vue/AppFormControl.vue';
-import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormControlRadio from '../../../../../_common/form-vue/controls/AppFormControlRadio.vue';
-import { validateMaxLength } from '../../../../../_common/form-vue/validators';
-import { getDatalistOptions } from '../../../../../_common/settings/datalist-options.service';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../../_common/translate/translate.service';
+import { CommunityModel } from '~common/community/community.model';
+import AppForm from '~common/form-vue/AppForm.vue';
+import { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlRadio from '~common/form-vue/controls/AppFormControlRadio.vue';
+import { validateMaxLength } from '~common/form-vue/validators';
+import { getDatalistOptions } from '~common/settings/datalist-options.service';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
 import {
 	getCommunityMovePostReasons,
 	REASON_OTHER,
 	REASON_SPAM,
-} from '../../../../../_common/user/action-reasons';
+} from '~common/user/action-reasons';
 
 export type MovePostFormModel = {
 	notifyUser: string;

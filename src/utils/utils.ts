@@ -1,4 +1,4 @@
-import { getCurrentServerTime } from './server-time';
+import { getCurrentServerTime } from '~utils/server-time';
 export type RequireContextMap = { [k: string]: string };
 
 export function loadScript(src: string, { crossOrigin }: { crossOrigin?: string } = {}) {

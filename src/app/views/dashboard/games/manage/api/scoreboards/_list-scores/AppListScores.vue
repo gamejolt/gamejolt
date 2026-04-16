@@ -1,16 +1,16 @@
 <script lang="ts" setup>
-import { formatDate } from '../../../../../../../../_common/filters/date';
-import { formatNumber } from '../../../../../../../../_common/filters/number';
-import { GameScoreTableModel } from '../../../../../../../../_common/game/score-table/score-table.model';
-import AppJolticon from '../../../../../../../../_common/jolticon/AppJolticon.vue';
-import { showModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
-import AppPopper from '../../../../../../../../_common/popper/AppPopper.vue';
-import AppTranslate from '../../../../../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../../../../../_common/translate/translate.service';
+import { formatDate } from '~common/filters/date';
+import { formatNumber } from '~common/filters/number';
+import { GameScoreTableModel } from '~common/game/score-table/score-table.model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { showModalConfirm } from '~common/modal/confirm/confirm-service';
+import AppPopper from '~common/popper/AppPopper.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
 import {
 	$removeUserGameScore,
 	UserGameScoreModel,
-} from '../../../../../../../../_common/user/game-score/game-score.model';
+} from '~common/user/game-score/game-score.model';
 
 type Props = {
 	scoreTable: GameScoreTableModel;

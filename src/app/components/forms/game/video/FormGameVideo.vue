@@ -1,23 +1,23 @@
 <script lang="ts" setup>
 import { computed, toRef, watch } from 'vue';
 
-import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
-import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
-import AppFormControl from '../../../../../_common/form-vue/AppFormControl.vue';
-import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormControlTextarea from '../../../../../_common/form-vue/controls/AppFormControlTextarea.vue';
-import { validateMaxLength, validatePattern } from '../../../../../_common/form-vue/validators';
-import { GameModel } from '../../../../../_common/game/game.model';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlTextarea from '~common/form-vue/controls/AppFormControlTextarea.vue';
+import { validateMaxLength, validatePattern } from '~common/form-vue/validators';
+import { GameModel } from '~common/game/game.model';
 import {
 	$saveGameVideo,
 	GameVideoModel,
 	GameVideoType,
-} from '../../../../../_common/game/video/video.model';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
-import AppVideoEmbed from '../../../../../_common/video/embed/AppVideoEmbed.vue';
-import { REGEX_VIDEO, REGEX_VIMEO, REGEX_YOUTUBE } from '../../../../../utils/regex';
+} from '~common/game/video/video.model';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { TranslateDirective as vTranslate } from '~common/translate/translate-directive';
+import AppVideoEmbed from '~common/video/embed/AppVideoEmbed.vue';
+import { REGEX_VIDEO, REGEX_VIMEO, REGEX_YOUTUBE } from '~utils/regex';
 
 type FormModel = GameVideoModel & {
 	_url?: string;

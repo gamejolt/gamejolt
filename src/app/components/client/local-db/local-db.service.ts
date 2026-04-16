@@ -1,6 +1,6 @@
-import { Collection } from './collection';
-import { LocalDbGame } from './game/game.model';
-import { LocalDbPackage } from './package/package.model';
+import { Collection } from '~app/components/client/local-db/collection';
+import { LocalDbGame } from '~app/components/client/local-db/game/game.model';
+import { LocalDbPackage } from '~app/components/client/local-db/package/package.model';
 
 const path = require('path') as typeof import('path');
 

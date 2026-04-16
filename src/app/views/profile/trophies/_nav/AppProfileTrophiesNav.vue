@@ -2,9 +2,9 @@
 import { computed } from 'vue';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
 
-import { formatNumber } from '../../../../../_common/filters/number';
-import AppListGroupSelector from '../../../../../_common/list-group/selector/AppListGroupSelector.vue';
-import { useProfileRouteStore } from '../../RouteProfile.vue';
+import { useProfileRouteStore } from '~app/views/profile/RouteProfile.vue';
+import { formatNumber } from '~common/filters/number';
+import AppListGroupSelector from '~common/list-group/selector/AppListGroupSelector.vue';
 
 export interface TrophyNavGame {
 	id: number;

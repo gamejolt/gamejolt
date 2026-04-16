@@ -3,5 +3,5 @@ import { RouteRecordRaw } from 'vue-router';
 export const routeContent: RouteRecordRaw = {
 	name: 'content',
 	path: '/z/content/:resource/:resourceId',
-	component: () => import('./RouteContent.vue'),
+	component: () => import('~z/views/content/RouteContent.vue'),
 };

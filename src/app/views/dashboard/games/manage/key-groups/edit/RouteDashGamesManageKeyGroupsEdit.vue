@@ -2,38 +2,38 @@
 import { computed, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-import { Api } from '../../../../../../../_common/api/api.service';
-import AppButton from '../../../../../../../_common/button/AppButton.vue';
-import { Clipboard } from '../../../../../../../_common/clipboard/clipboard-service';
-import { Environment } from '../../../../../../../_common/environment/environment.service';
-import AppExpand from '../../../../../../../_common/expand/AppExpand.vue';
-import { formatNumber } from '../../../../../../../_common/filters/number';
-import { GamePackageModel } from '../../../../../../../_common/game/package/package.model';
+import FormGameKeyGroupAddKeys from '~app/components/forms/game/key-group/add-keys/FormGameKeyGroupAddKeys.vue';
+import FormGameKeyGroup from '~app/components/forms/game/key-group/FormGameKeyGroup.vue';
+import { useGameDashRouteController } from '~app/views/dashboard/games/manage/manage.store';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import { Clipboard } from '~common/clipboard/clipboard-service';
+import { Environment } from '~common/environment/environment.service';
+import AppExpand from '~common/expand/AppExpand.vue';
+import { formatNumber } from '~common/filters/number';
+import { GamePackageModel } from '~common/game/package/package.model';
 import {
 	showErrorGrowl,
 	showSuccessGrowl,
-} from '../../../../../../../_common/growls/growls.service';
-import AppJolticon from '../../../../../../../_common/jolticon/AppJolticon.vue';
-import { $removeKey, KeyModel } from '../../../../../../../_common/key/key-model';
+} from '~common/growls/growls.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { $removeKey, KeyModel } from '~common/key/key-model';
 import {
 	$removeKeyGroup,
 	KeyGroupModel,
 	KeyGroupType,
-} from '../../../../../../../_common/key-group/key-group.model';
-import { showModalConfirm } from '../../../../../../../_common/modal/confirm/confirm-service';
-import AppProgressBar from '../../../../../../../_common/progress/AppProgressBar.vue';
+} from '~common/key-group/key-group.model';
+import { showModalConfirm } from '~common/modal/confirm/confirm-service';
+import AppProgressBar from '~common/progress/AppProgressBar.vue';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
-} from '../../../../../../../_common/route/route-component';
-import AppTimeAgo from '../../../../../../../_common/time/AppTimeAgo.vue';
-import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
-import AppTranslate from '../../../../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../../../../_common/translate/translate.service';
-import { arrayRemove } from '../../../../../../../utils/array';
-import FormGameKeyGroupAddKeys from '../../../../../../components/forms/game/key-group/add-keys/FormGameKeyGroupAddKeys.vue';
-import FormGameKeyGroup from '../../../../../../components/forms/game/key-group/FormGameKeyGroup.vue';
-import { useGameDashRouteController } from '../../manage.store';
+} from '~common/route/route-component';
+import AppTimeAgo from '~common/time/AppTimeAgo.vue';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { arrayRemove } from '~utils/array';
 
 export default {
 	name: 'RouteDashGamesManageKeyGroupsEdit',

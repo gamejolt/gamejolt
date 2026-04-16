@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import { GameModel } from '../../../../_common/game/game.model';
-import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
+import { GameModel } from '~common/game/game.model';
+import AppThemeSvg from '~common/theme/svg/AppThemeSvg.vue';
 
 type Props = {
 	game: GameModel;

@@ -1,8 +1,8 @@
 <script lang="ts">
 import { nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue';
 
-import AppLoading from '../loading/AppLoading.vue';
-import { setVideoMuted, trackVideoPlayerEvent, VideoPlayerController } from './player/controller';
+import AppLoading from '~common/loading/AppLoading.vue';
+import { setVideoMuted, trackVideoPlayerEvent, VideoPlayerController } from '~common/video/player/controller';
 
 export type VideoSourceArray = Array<VideoSourceObject>;
 type VideoSourceObject = {

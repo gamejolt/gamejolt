@@ -1,18 +1,18 @@
 <script lang="ts" setup>
 import { computed, CSSProperties, ref } from 'vue';
 
-import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
-import { $viewPostVideo } from '../../../../../_common/fireside/post/video/video-model';
-import { Screen } from '../../../../../_common/screen/screen-service';
-import AppVideoProcessingProgress from '../../../../../_common/video/processing-progress/AppVideoProcessingProgress.vue';
+import AppActivityFeedVideoPlayer from '~app/components/activity/feed/_video-player/AppActivityFeedVideoPlayer.vue';
+import { ActivityFeedItem } from '~app/components/activity/feed/item-service';
+import { kPostItemPaddingVertical, kPostItemPaddingXsVertical } from '~app/components/post/post-styles';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import { $viewPostVideo } from '~common/fireside/post/video/video-model';
+import { Screen } from '~common/screen/screen-service';
+import AppVideoProcessingProgress from '~common/video/processing-progress/AppVideoProcessingProgress.vue';
 import {
 	kBorderWidthBase,
 	kGridGutterWidth,
 	kGridGutterWidthXs,
-} from '../../../../../_styles/variables';
-import { kPostItemPaddingVertical, kPostItemPaddingXsVertical } from '../../../post/post-styles';
-import AppActivityFeedVideoPlayer from '../_video-player/AppActivityFeedVideoPlayer.vue';
-import { ActivityFeedItem } from '../item-service';
+} from '~styles/variables';
 
 type Props = {
 	item: ActivityFeedItem;

@@ -1,18 +1,18 @@
 <script lang="ts" setup>
 import { toRef } from 'vue';
 
-import AppAdTakeoverFloat from '../../../../_common/ad/AppAdTakeoverFloat.vue';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import AppButtonGroup from '../../../../_common/button/AppButtonGroup.vue';
-import { Screen } from '../../../../_common/screen/screen-service';
-import AppUserFollowButton from '../../../../_common/user/follow/AppUserFollowButton.vue';
-import { openChatRoom } from '../../../components/chat/client';
-import { useGridStore } from '../../../components/grid/grid-store';
-import { useAppStore } from '../../../store';
-import { showProfileAboutModal } from '../about/modal.service';
-import { useProfileRouteStore } from '../RouteProfile.vue';
-import AppProfileShortcutExtras from './shortcut/AppProfileShortcutExtras.vue';
-import { ProfileQuickLink } from './shortcut/AppProfileShortcuts.vue';
+import { openChatRoom } from '~app/components/chat/client';
+import { useGridStore } from '~app/components/grid/grid-store';
+import { useAppStore } from '~app/store';
+import { showProfileAboutModal } from '~app/views/profile/about/modal.service';
+import AppProfileShortcutExtras from '~app/views/profile/overview/shortcut/AppProfileShortcutExtras.vue';
+import { ProfileQuickLink } from '~app/views/profile/overview/shortcut/AppProfileShortcuts.vue';
+import { useProfileRouteStore } from '~app/views/profile/RouteProfile.vue';
+import AppAdTakeoverFloat from '~common/ad/AppAdTakeoverFloat.vue';
+import AppButton from '~common/button/AppButton.vue';
+import AppButtonGroup from '~common/button/AppButtonGroup.vue';
+import { Screen } from '~common/screen/screen-service';
+import AppUserFollowButton from '~common/user/follow/AppUserFollowButton.vue';
 
 type Props = {
 	collapse?: boolean;

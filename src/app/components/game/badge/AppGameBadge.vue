@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { RouterLink } from 'vue-router';
 
-import AppGameFollowWidget from '../../../../_common/game/follow-widget/AppGameFollowWidget.vue';
-import { GameModel } from '../../../../_common/game/game.model';
-import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
-import AppTheme from '../../../../_common/theme/AppTheme.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
+import AppGameFollowWidget from '~common/game/follow-widget/AppGameFollowWidget.vue';
+import { GameModel } from '~common/game/game.model';
+import AppMediaItemBackdrop from '~common/media-item/backdrop/AppMediaItemBackdrop.vue';
+import AppTheme from '~common/theme/AppTheme.vue';
+import { $gettext } from '~common/translate/translate.service';
 
 type Props = {
 	game: GameModel;

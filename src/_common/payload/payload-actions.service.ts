@@ -1,11 +1,11 @@
-import { clampNumber } from '../../utils/number';
-import { CreatorExperienceModel } from '../creator/experience/experience.model';
-import { UnknownModelData } from '../model/model.service';
-import { storeModel } from '../model/model-store.service';
-import { getShellNotice } from '../shell/notice/notice.service';
-import { showStickerPackOpenModal } from '../sticker/pack/open-modal/modal.service';
-import { UserStickerPackModel } from '../sticker/pack/user-pack.model';
-import { StickerModel } from '../sticker/sticker.model';
+import { CreatorExperienceModel } from '~common/creator/experience/experience.model';
+import { UnknownModelData } from '~common/model/model.service';
+import { storeModel } from '~common/model/model-store.service';
+import { getShellNotice } from '~common/shell/notice/notice.service';
+import { showStickerPackOpenModal } from '~common/sticker/pack/open-modal/modal.service';
+import { UserStickerPackModel } from '~common/sticker/pack/user-pack.model';
+import { StickerModel } from '~common/sticker/sticker.model';
+import { clampNumber } from '~utils/number';
 
 interface PayloadData {
 	actions?: (PackAction | CreatorExperienceAction | StickerMasteryProgressAction)[];

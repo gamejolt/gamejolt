@@ -2,18 +2,18 @@
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
-import { Api } from '../../../_common/api/api.service';
-import AppButton from '../../../_common/button/AppButton.vue';
-import { ContextCapabilities } from '../../../_common/content/content-context';
-import { ContentDocument } from '../../../_common/content/content-document';
-import AppContentEditor from '../../../_common/content/content-editor/AppContentEditor.vue';
-import AppLoading from '../../../_common/loading/AppLoading.vue';
-import { Navigate } from '../../../_common/navigate/navigate.service';
-import { defineAppRouteOptions } from '../../../_common/route/route-component';
-import { createAppRoute } from '../../../_common/route/route-component';
-import AppTimeAgo from '../../../_common/time/AppTimeAgo.vue';
-import AppTranslate from '../../../_common/translate/AppTranslate.vue';
-import { touchUser } from '../../../_common/user/user.model';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import { ContextCapabilities } from '~common/content/content-context';
+import { ContentDocument } from '~common/content/content-document';
+import AppContentEditor from '~common/content/content-editor/AppContentEditor.vue';
+import AppLoading from '~common/loading/AppLoading.vue';
+import { Navigate } from '~common/navigate/navigate.service';
+import { defineAppRouteOptions } from '~common/route/route-component';
+import { createAppRoute } from '~common/route/route-component';
+import AppTimeAgo from '~common/time/AppTimeAgo.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { touchUser } from '~common/user/user.model';
 
 export default {
 	...defineAppRouteOptions({
@@ -209,4 +209,4 @@ async function submit() {
 	</div>
 </template>
 
-<style lang="stylus" src="./content.styl" scoped></style>
+<style lang="stylus" src="~z/views/content/content.styl" scoped></style>

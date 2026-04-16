@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import { ref, useTemplateRef, watch } from 'vue';
 
-import { useResizeObserver } from '../../../utils/resize-observer';
-import AppImgResponsive from '../../img/AppImgResponsive.vue';
-import { Ruler } from '../../ruler/ruler-service';
-import { Screen } from '../../screen/screen-service';
-import AppMediaItemBackdrop from '../backdrop/AppMediaItemBackdrop.vue';
-import { MediaItemModel } from '../media-item-model';
+import AppImgResponsive from '~common/img/AppImgResponsive.vue';
+import AppMediaItemBackdrop from '~common/media-item/backdrop/AppMediaItemBackdrop.vue';
+import { MediaItemModel } from '~common/media-item/media-item-model';
+import { Ruler } from '~common/ruler/ruler-service';
+import { Screen } from '~common/screen/screen-service';
+import { useResizeObserver } from '~utils/resize-observer';
 
 type Props = {
 	mediaItem: MediaItemModel;

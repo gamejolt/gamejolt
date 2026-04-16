@@ -2,22 +2,22 @@
 import { computed, toRef } from 'vue';
 import { RouteLocationRaw } from 'vue-router';
 
-import { formatDate } from '../../filters/date';
-import { FiresidePostModel } from '../../fireside/post/post-model';
-import { GameModel } from '../../game/game.model';
-import AppJolticon from '../../jolticon/AppJolticon.vue';
-import { Screen } from '../../screen/screen-service';
-import { vAppTooltip } from '../../tooltip/tooltip-directive';
-import { $gettext } from '../../translate/translate.service';
-import { TranslateDirective as vTranslate } from '../../translate/translate-directive';
-import { getSingleReasonText } from '../../user/action-reasons';
-import { UserBlockModel } from '../../user/block/block.model';
-import { UserModel } from '../../user/user.model';
-import AppUserAvatar from '../../user/user-avatar/AppUserAvatar.vue';
-import { CommunityChannelModel } from '../channel/channel.model';
-import { CommunityCompetitionModel } from '../competition/competition.model';
-import { CommunityCompetitionEntryModel } from '../competition/entry/entry.model';
-import { CommunityActivityItemModel, CommunityActivityItemType } from './activity-item.model';
+import { CommunityActivityItemModel, CommunityActivityItemType } from '~common/community/activity-item/activity-item.model';
+import { CommunityChannelModel } from '~common/community/channel/channel.model';
+import { CommunityCompetitionModel } from '~common/community/competition/competition.model';
+import { CommunityCompetitionEntryModel } from '~common/community/competition/entry/entry.model';
+import { formatDate } from '~common/filters/date';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import { GameModel } from '~common/game/game.model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { Screen } from '~common/screen/screen-service';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { $gettext } from '~common/translate/translate.service';
+import { TranslateDirective as vTranslate } from '~common/translate/translate-directive';
+import { getSingleReasonText } from '~common/user/action-reasons';
+import { UserBlockModel } from '~common/user/block/block.model';
+import { UserModel } from '~common/user/user.model';
+import AppUserAvatar from '~common/user/user-avatar/AppUserAvatar.vue';
 
 type Props = {
 	item: CommunityActivityItemModel;

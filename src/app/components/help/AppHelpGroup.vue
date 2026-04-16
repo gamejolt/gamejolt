@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { RouterLink } from 'vue-router';
 
-import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
-import { routeLandingHelpPage } from '../../views/landing/help/help.route';
-import { HelpCategoryModel } from './category/category.model';
-import { HelpPageModel } from './page/page.model';
+import { HelpCategoryModel } from '~app/components/help/category/category.model';
+import { HelpPageModel } from '~app/components/help/page/page.model';
+import { routeLandingHelpPage } from '~app/views/landing/help/help.route';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
 
 type Props = {
 	category: HelpCategoryModel;

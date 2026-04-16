@@ -14,35 +14,35 @@ import {
 	watch,
 } from 'vue';
 
-import { FocusToken } from '../../../utils/focus-token';
-import { vAppObserveDimensions } from '../../observe-dimensions/observe-dimensions.directive';
-import AppScrollScroller from '../../scroll/AppScrollScroller.vue';
-import { ContentContext, ContextCapabilities } from '../content-context';
-import { ContentDocument } from '../content-document';
-import {
-	ContentEditorModelData,
-	ContentOwnerController,
-	ContentOwnerControllerKey,
-	createContentOwnerController,
-} from '../content-owner';
-import { ContentRules } from '../content-rules';
-import AppContentEditorNodeRenderer from './AppContentEditorNodeRenderer.vue';
+import { ContentContext, ContextCapabilities } from '~common/content/content-context';
+import { ContentDocument } from '~common/content/content-document';
+import AppContentEditorNodeRenderer from '~common/content/content-editor/AppContentEditorNodeRenderer.vue';
 import {
 	ContentEditorController,
 	ContentEditorControllerKey,
 	createContentEditor,
 	editorCreateView,
 	editorFocus,
-} from './content-editor-controller';
-import { ContentTempResource } from './content-temp-resource.service';
-import AppContentEditorBlockControls from './controls/AppContentEditorBlockControls.vue';
-import AppContentEditorInsetControls from './controls/AppContentEditorInsetControls.vue';
-import AppContentEditorTextControls from './controls/AppContentEditorTextControls.vue';
-import AppContentEditorControlsCustomButton from './controls/custom-button/AppContentEditorControlsCustomButton.vue';
-import AppContentEditorControlsEmoji from './controls/emoji/AppContentEditorControlsEmoji.vue';
-import AppContentEditorControlsGif from './controls/gif/AppContentEditorControlsGif.vue';
-import AppContentEditorControlsMentionAutocomplete from './controls/mention/AppContentEditorControlsMentionAutocomplete.vue';
-import { FocusWatcher } from './focus-watcher';
+} from '~common/content/content-editor/content-editor-controller';
+import { ContentTempResource } from '~common/content/content-editor/content-temp-resource.service';
+import AppContentEditorBlockControls from '~common/content/content-editor/controls/AppContentEditorBlockControls.vue';
+import AppContentEditorInsetControls from '~common/content/content-editor/controls/AppContentEditorInsetControls.vue';
+import AppContentEditorTextControls from '~common/content/content-editor/controls/AppContentEditorTextControls.vue';
+import AppContentEditorControlsCustomButton from '~common/content/content-editor/controls/custom-button/AppContentEditorControlsCustomButton.vue';
+import AppContentEditorControlsEmoji from '~common/content/content-editor/controls/emoji/AppContentEditorControlsEmoji.vue';
+import AppContentEditorControlsGif from '~common/content/content-editor/controls/gif/AppContentEditorControlsGif.vue';
+import AppContentEditorControlsMentionAutocomplete from '~common/content/content-editor/controls/mention/AppContentEditorControlsMentionAutocomplete.vue';
+import { FocusWatcher } from '~common/content/content-editor/focus-watcher';
+import {
+	ContentEditorModelData,
+	ContentOwnerController,
+	ContentOwnerControllerKey,
+	createContentOwnerController,
+} from '~common/content/content-owner';
+import { ContentRules } from '~common/content/content-rules';
+import { vAppObserveDimensions } from '~common/observe-dimensions/observe-dimensions.directive';
+import AppScrollScroller from '~common/scroll/AppScrollScroller.vue';
+import { FocusToken } from '~utils/focus-token';
 
 export interface AppContentEditorInterface {
 	focus: () => void;

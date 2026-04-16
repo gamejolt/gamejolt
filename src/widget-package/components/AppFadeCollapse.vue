@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { nextTick, onMounted, ref, useTemplateRef } from 'vue';
 
-import { Ruler } from '../../_common/ruler/ruler-service';
+import { Ruler } from '~common/ruler/ruler-service';
 
 const emit = defineEmits<{
 	required: [];

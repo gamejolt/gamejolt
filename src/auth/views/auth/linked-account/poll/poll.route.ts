@@ -3,5 +3,5 @@ import { RouteRecordRaw } from 'vue-router';
 export const routeAuthLinkedAccountPoll: RouteRecordRaw = {
 	name: 'auth.linked-account.poll',
 	path: 'linked-account/poll/:token',
-	component: () => import('./RouteAuthLinkedAccountPoll.vue'),
+	component: () => import('~auth/views/auth/linked-account/poll/RouteAuthLinkedAccountPoll.vue'),
 };

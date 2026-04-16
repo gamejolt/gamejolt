@@ -1,13 +1,13 @@
-import { AvatarFrameModel } from '../../../_common/avatar/frame.model';
-import { Jolticon } from '../../../_common/jolticon/AppJolticon.vue';
-import { ModelStoreModel, storeModel } from '../../../_common/model/model-store.service';
-import { $gettext } from '../../../_common/translate/translate.service';
-import { UserCommonFields } from '../../../_common/user/user.model';
-import { objectOmit } from '../../../utils/object';
-import { tryGetRoomRole } from './client';
-import { ChatMessageModel } from './message';
-import { CHAT_ROLES } from './role';
-import { ChatRoomModel } from './room';
+import { tryGetRoomRole } from '~app/components/chat/client';
+import { ChatMessageModel } from '~app/components/chat/message';
+import { CHAT_ROLES } from '~app/components/chat/role';
+import { ChatRoomModel } from '~app/components/chat/room';
+import { AvatarFrameModel } from '~common/avatar/frame.model';
+import { Jolticon } from '~common/jolticon/AppJolticon.vue';
+import { ModelStoreModel, storeModel } from '~common/model/model-store.service';
+import { $gettext } from '~common/translate/translate.service';
+import { UserCommonFields } from '~common/user/user.model';
+import { objectOmit } from '~utils/object';
 
 export class ChatUser implements UserCommonFields, ModelStoreModel {
 	declare id: number;

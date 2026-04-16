@@ -4,7 +4,6 @@ import { Slice } from 'prosemirror-model';
 import { sinkListItem, splitListItem } from 'prosemirror-schema-list';
 import { EditorState, Selection, Transaction } from 'prosemirror-state';
 
-import { isMac } from '../../../../utils/utils';
 import {
 	ContentEditorController,
 	editorGetParentNode,
@@ -17,10 +16,11 @@ import {
 	editorShowEmojiPanel,
 	editorSubmit,
 	editorUnlink,
-} from '../content-editor-controller';
-import { ContentListService } from '../content-list.service';
-import { showContentEditorLinkModal } from '../modals/link/link-modal.service';
-import { ContentEditorSchema } from '../schemas/content-editor-schema';
+} from '~common/content/content-editor/content-editor-controller';
+import { ContentListService } from '~common/content/content-editor/content-list.service';
+import { showContentEditorLinkModal } from '~common/content/content-editor/modals/link/link-modal.service';
+import { ContentEditorSchema } from '~common/content/content-editor/schemas/content-editor-schema';
+import { isMac } from '~utils/utils';
 
 export type PMDispatch = (tr: Transaction<ContentEditorSchema>) => void;
 export type PMKeymapCommand = (

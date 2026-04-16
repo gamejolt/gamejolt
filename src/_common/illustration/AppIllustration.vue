@@ -1,7 +1,7 @@
 <script lang="ts">
 import { computed, CSSProperties, useSlots } from 'vue';
 
-import AppThemeSvg from '../theme/svg/AppThemeSvg.vue';
+import AppThemeSvg from '~common/theme/svg/AppThemeSvg.vue';
 
 /**
  * Run all the assets through https://squoosh.app/

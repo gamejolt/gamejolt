@@ -1,16 +1,16 @@
 <script lang="ts">
 import { computed, ref } from 'vue';
 
-import { Api } from '../../../../../../../_common/api/api.service';
-import { showSuccessGrowl } from '../../../../../../../_common/growls/growls.service';
+import FormGameDescription from '~app/components/forms/game/description/FormGameDescription.vue';
+import { useGameDashRouteController } from '~app/views/dashboard/games/manage/manage.store';
+import { Api } from '~common/api/api.service';
+import { showSuccessGrowl } from '~common/growls/growls.service';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
-} from '../../../../../../../_common/route/route-component';
-import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
-import { $gettext } from '../../../../../../../_common/translate/translate.service';
-import FormGameDescription from '../../../../../../components/forms/game/description/FormGameDescription.vue';
-import { useGameDashRouteController } from '../../manage.store';
+} from '~common/route/route-component';
+import { Scroll } from '~common/scroll/scroll.service';
+import { $gettext } from '~common/translate/translate.service';
 
 export default {
 	...defineAppRouteOptions({

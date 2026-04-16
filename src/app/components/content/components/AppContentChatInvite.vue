@@ -1,26 +1,26 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 
-import AppAlertBox from '../../../../_common/alert/AppAlertBox.vue';
-import AppButton from '../../../../_common/button/AppButton.vue';
+import { openChatRoom } from '~app/components/chat/client';
+import { useGridStore } from '~app/components/grid/grid-store';
+import AppAlertBox from '~common/alert/AppAlertBox.vue';
+import AppButton from '~common/button/AppButton.vue';
 import {
 	ChatInviteModel,
 	ChatInviteStatusAccepted,
 	ChatInviteStatusCanceled,
 	ChatInviteStatusDeclined,
 	ChatInviteStatusOpen,
-} from '../../../../_common/chat/invite/invite.model';
-import { useContentOwnerController } from '../../../../_common/content/content-owner';
-import { showErrorGrowl } from '../../../../_common/growls/growls.service';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
-import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
-import { useCommonStore } from '../../../../_common/store/common-store';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { styleBorderRadiusBase, styleChangeBg } from '../../../../_styles/mixins';
-import { kFontSizeLarge } from '../../../../_styles/variables';
-import { openChatRoom } from '../../chat/client';
-import { useGridStore } from '../../grid/grid-store';
+} from '~common/chat/invite/invite.model';
+import { useContentOwnerController } from '~common/content/content-owner';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import { useCommonStore } from '~common/store/common-store';
+import { $gettext } from '~common/translate/translate.service';
+import { styleBorderRadiusBase, styleChangeBg } from '~styles/mixins';
+import { kFontSizeLarge } from '~styles/variables';
 
 type Props = {
 	inviteId: number;

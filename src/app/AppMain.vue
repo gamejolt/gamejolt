@@ -2,19 +2,19 @@
 import { onMounted, provide, reactive, watch } from 'vue';
 import { RouterView } from 'vue-router';
 
-import { createAdStore } from '../_common/ad/ad-store';
-import { CommentStoreManager, CommentStoreManagerKey } from '../_common/comment/comment-store';
-import AppErrorPage from '../_common/error/page/AppErrorPage.vue';
-import { createAppPromotionStore } from '../_common/mobile-app/store';
-import Onboarding from '../_common/onboarding/onboarding.service';
-import { Payload } from '../_common/payload/payload-service';
-import handlePayloadTargetingTags from '../_common/payload/payload-targeting-tags';
-import AppCommonShell from '../_common/shell/AppCommonShell.vue';
-import { useCommonStore } from '../_common/store/common-store';
-import { loadCurrentLanguage } from '../_common/translate/translate.service';
-import { useGridStore } from './components/grid/grid-store';
-import AppShell from './components/shell/AppShell.vue';
-import { useAppStore } from './store';
+import { useGridStore } from '~app/components/grid/grid-store';
+import AppShell from '~app/components/shell/AppShell.vue';
+import { useAppStore } from '~app/store';
+import { createAdStore } from '~common/ad/ad-store';
+import { CommentStoreManager, CommentStoreManagerKey } from '~common/comment/comment-store';
+import AppErrorPage from '~common/error/page/AppErrorPage.vue';
+import { createAppPromotionStore } from '~common/mobile-app/store';
+import Onboarding from '~common/onboarding/onboarding.service';
+import { Payload } from '~common/payload/payload-service';
+import handlePayloadTargetingTags from '~common/payload/payload-targeting-tags';
+import AppCommonShell from '~common/shell/AppCommonShell.vue';
+import { useCommonStore } from '~common/store/common-store';
+import { loadCurrentLanguage } from '~common/translate/translate.service';
 
 const appStore = useAppStore();
 const { bootstrap, loadNotificationState, clear, clearNotificationState } = appStore;

@@ -1,8 +1,8 @@
 import { onUnmounted, ref, shallowReadonly, toRef } from 'vue';
 
-import { arrayRemove } from '../../utils/array';
-import { sleep } from '../../utils/utils';
-import { Ruler } from '../ruler/ruler-service';
+import { Ruler } from '~common/ruler/ruler-service';
+import { arrayRemove } from '~utils/array';
+import { sleep } from '~utils/utils';
 
 export type ScrollContext = HTMLElement | HTMLDocument;
 

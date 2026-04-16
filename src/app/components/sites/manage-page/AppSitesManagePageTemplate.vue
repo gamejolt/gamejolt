@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import AppButton from '../../../../_common/button/AppButton.vue';
-import { Environment } from '../../../../_common/environment/environment.service';
-import { showErrorGrowl, showSuccessGrowl } from '../../../../_common/growls/growls.service';
-import { $activateSite, SiteModel } from '../../../../_common/site/site-model';
-import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import FormSiteSettings from '../../forms/site/settings/FormSiteSettings.vue';
+import FormSiteSettings from '~app/components/forms/site/settings/FormSiteSettings.vue';
+import AppButton from '~common/button/AppButton.vue';
+import { Environment } from '~common/environment/environment.service';
+import { showErrorGrowl, showSuccessGrowl } from '~common/growls/growls.service';
+import { $activateSite, SiteModel } from '~common/site/site-model';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
 
 type Props = {
 	site?: SiteModel;

@@ -1,6 +1,6 @@
 import { inject, InjectionKey, ref } from 'vue';
 
-import { UserModel } from '../../_common/user/user.model';
+import { UserModel } from '~common/user/user.model';
 
 export type JoltydexStore = ReturnType<typeof createJoltydexStore>;
 

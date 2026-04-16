@@ -1,23 +1,23 @@
 <script lang="ts" setup>
 import { computed, CSSProperties, ref, toValue } from 'vue';
 
-import AppButton from '../../button/AppButton.vue';
-import { useContentFocusService } from '../../content-focus/content-focus.service';
-import AppImgResponsive from '../../img/AppImgResponsive.vue';
+import AppButton from '~common/button/AppButton.vue';
+import { useContentFocusService } from '~common/content-focus/content-focus.service';
+import AppImgResponsive from '~common/img/AppImgResponsive.vue';
+import AppMediaItemBackdrop from '~common/media-item/backdrop/AppMediaItemBackdrop.vue';
+import { MediaItemModel } from '~common/media-item/media-item-model';
 import AppResponsiveDimensions, {
 	AppResponsiveDimensionsChangeEvent,
-} from '../../responsive-dimensions/AppResponsiveDimensions.vue';
-import { Screen } from '../../screen/screen-service';
-import AppStickerTarget from '../../sticker/target/AppStickerTarget.vue';
+} from '~common/responsive-dimensions/AppResponsiveDimensions.vue';
+import { Screen } from '~common/screen/screen-service';
+import AppStickerTarget from '~common/sticker/target/AppStickerTarget.vue';
 import {
 	createStickerTargetController,
 	useStickerTargetController,
-} from '../../sticker/target/target-controller';
-import { vAppTooltip } from '../../tooltip/tooltip-directive';
-import AppVideo from '../../video/AppVideo.vue';
-import { getVideoPlayerFromSources } from '../../video/player/controller';
-import AppMediaItemBackdrop from '../backdrop/AppMediaItemBackdrop.vue';
-import { MediaItemModel } from '../media-item-model';
+} from '~common/sticker/target/target-controller';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import AppVideo from '~common/video/AppVideo.vue';
+import { getVideoPlayerFromSources } from '~common/video/player/controller';
 
 type Props = {
 	mediaItem: MediaItemModel;

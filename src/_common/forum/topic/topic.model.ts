@@ -1,6 +1,6 @@
-import { Model } from '../../model/model.service';
-import { UserModel } from '../../user/user.model';
-import { ForumPostModel } from '../post/post.model';
+import { ForumPostModel } from '~common/forum/post/post.model';
+import { Model } from '~common/model/model.service';
+import { UserModel } from '~common/user/user.model';
 
 export const enum ForumTopicStatus {
 	Active = 'active',

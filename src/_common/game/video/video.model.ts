@@ -1,6 +1,6 @@
-import { LightboxMediaModel, LightboxMediaType } from '../../lightbox/lightbox-helpers';
-import { Model } from '../../model/model.service';
-import { GameModel } from '../game.model';
+import { GameModel } from '~common/game/game.model';
+import { LightboxMediaModel, LightboxMediaType } from '~common/lightbox/lightbox-helpers';
+import { Model } from '~common/model/model.service';
 
 export const enum GameVideoType {
 	Youtube = 'youtube',

@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 
-import AppButton from '../../../_common/button/AppButton.vue';
-import { GameModel } from '../../../_common/game/game.model';
-import AppGameThumbnail from '../../../_common/game/thumbnail/AppGameThumbnail.vue';
-import { GameBundleModel } from '../../../_common/game-bundle/game-bundle.model';
-import { useCommonStore } from '../../../_common/store/common-store';
-import { $gettext } from '../../../_common/translate/translate.service';
+import AppButton from '~common/button/AppButton.vue';
+import { GameModel } from '~common/game/game.model';
+import AppGameThumbnail from '~common/game/thumbnail/AppGameThumbnail.vue';
+import { GameBundleModel } from '~common/game-bundle/game-bundle.model';
+import { useCommonStore } from '~common/store/common-store';
+import { $gettext } from '~common/translate/translate.service';
 
 type Props = {
 	payload: any;

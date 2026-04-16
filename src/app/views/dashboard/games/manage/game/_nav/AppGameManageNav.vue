@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import AppButton from '../../../../../../../_common/button/AppButton.vue';
-import AppTranslate from '../../../../../../../_common/translate/AppTranslate.vue';
-import AppGamePerms from '../../../../../../components/game/perms/AppGamePerms.vue';
-import { useGameDashRouteController } from '../../manage.store';
-import AppGameManageNavRequired from './AppGameManageNavRequired.vue';
+import AppGamePerms from '~app/components/game/perms/AppGamePerms.vue';
+import AppGameManageNavRequired from '~app/views/dashboard/games/manage/game/_nav/AppGameManageNavRequired.vue';
+import { useGameDashRouteController } from '~app/views/dashboard/games/manage/manage.store';
+import AppButton from '~common/button/AppButton.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 const routeStore = useGameDashRouteController()!;
 

@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import AppHoverCard from '../../../../../../_common/card/AppHoverCard.vue';
-import { ShopProductModel } from '../../../../../../_common/shop/product/product-model';
-import { kThemeFgRgb } from '../../../../../../_common/theme/variables';
-import { routeDashShopProduct } from '../../product/product.route';
-import { getShopDashProductResourceParam, useShopDashStore } from '../../shop.store';
-import AppDashShopItemImpl from './AppDashShopItemImpl.vue';
+import AppDashShopItemImpl from '~app/views/dashboard/shop/overview/_item/AppDashShopItemImpl.vue';
+import { routeDashShopProduct } from '~app/views/dashboard/shop/product/product.route';
+import { getShopDashProductResourceParam, useShopDashStore } from '~app/views/dashboard/shop/shop.store';
+import AppHoverCard from '~common/card/AppHoverCard.vue';
+import { ShopProductModel } from '~common/shop/product/product-model';
+import { kThemeFgRgb } from '~common/theme/variables';
 
 type Props = {
 	item: ShopProductModel;

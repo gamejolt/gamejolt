@@ -1,16 +1,16 @@
 <script lang="ts" setup>
 import { computed, CSSProperties, HTMLAttributes, ref, useTemplateRef } from 'vue';
 
-import { useResizeObserver } from '../../utils/resize-observer';
-import { Ruler } from '../ruler/ruler-service';
-import AppAnimSlideshow from './AppAnimSlideshow.vue';
+import AppAnimSlideshow from '~common/animation/AppAnimSlideshow.vue';
 import {
 	getImgSlideshowData,
 	ImgSlideshow,
 	sheetShockRectBL,
 	sheetShockRectTR,
 	sheetShockSquare,
-} from './slideshow/sheets';
+} from '~common/animation/slideshow/sheets';
+import { Ruler } from '~common/ruler/ruler-service';
+import { useResizeObserver } from '~utils/resize-observer';
 
 type ShockAnimation = 'square' | 'wide-rect' | 'adaptive';
 

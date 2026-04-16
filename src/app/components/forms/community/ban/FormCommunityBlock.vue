@@ -1,31 +1,31 @@
 <script lang="ts" setup>
 import { computed, ref, toRef } from 'vue';
 
-import { Api } from '../../../../../_common/api/api.service';
-import { CommunityModel } from '../../../../../_common/community/community.model';
-import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
-import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
-import AppFormControl from '../../../../../_common/form-vue/AppFormControl.vue';
-import AppFormControlError from '../../../../../_common/form-vue/AppFormControlError.vue';
-import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormControlPrefix from '../../../../../_common/form-vue/AppFormControlPrefix.vue';
-import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormControlRadio from '../../../../../_common/form-vue/controls/AppFormControlRadio.vue';
-import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
+import { Api } from '~common/api/api.service';
+import { CommunityModel } from '~common/community/community.model';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormControlError from '~common/form-vue/AppFormControlError.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormControlPrefix from '~common/form-vue/AppFormControlPrefix.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlRadio from '~common/form-vue/controls/AppFormControlRadio.vue';
+import AppFormControlToggle from '~common/form-vue/controls/AppFormControlToggle.vue';
 import {
 	validateAvailability,
 	validateMaxLength,
-} from '../../../../../_common/form-vue/validators';
-import { showErrorGrowl, showSuccessGrowl } from '../../../../../_common/growls/growls.service';
-import { getDatalistOptions } from '../../../../../_common/settings/datalist-options.service';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../../_common/translate/translate.service';
+} from '~common/form-vue/validators';
+import { showErrorGrowl, showSuccessGrowl } from '~common/growls/growls.service';
+import { getDatalistOptions } from '~common/settings/datalist-options.service';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
 import {
 	getCommunityBlockReasons,
 	REASON_OTHER,
 	REASON_SPAM,
-} from '../../../../../_common/user/action-reasons';
-import { UserModel } from '../../../../../_common/user/user.model';
+} from '~common/user/action-reasons';
+import { UserModel } from '~common/user/user.model';
 
 type FormModel = {
 	username: string;

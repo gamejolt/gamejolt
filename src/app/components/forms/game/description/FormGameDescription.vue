@@ -1,30 +1,30 @@
 <script lang="ts" setup>
 import { computed, ref, toRef, watch } from 'vue';
 
-import { ContextCapabilities } from '../../../../../_common/content/content-context';
-import { ContentDocument } from '../../../../../_common/content/content-document';
-import { ContentWriter } from '../../../../../_common/content/content-writer';
-import AppExpand from '../../../../../_common/expand/AppExpand.vue';
+import AppFormGameDescriptionTags from '~app/components/forms/game/description/tags/AppFormGameDescriptionTags.vue';
+import AppDashGameWizardControls from '~app/components/forms/game/wizard-controls/AppDashGameWizardControls.vue';
+import AppGamePerms from '~app/components/game/perms/AppGamePerms.vue';
+import { ContextCapabilities } from '~common/content/content-context';
+import { ContentDocument } from '~common/content/content-document';
+import { ContentWriter } from '~common/content/content-writer';
+import AppExpand from '~common/expand/AppExpand.vue';
 import AppForm, {
 	createForm,
 	FormController,
-} from '../../../../../_common/form-vue/AppForm.vue';
-import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
-import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormControlContent from '../../../../../_common/form-vue/controls/AppFormControlContent.vue';
+} from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlContent from '~common/form-vue/controls/AppFormControlContent.vue';
 import {
 	validateContentMaxLength,
 	validateContentNoActiveUploads,
 	validateContentRequired,
-} from '../../../../../_common/form-vue/validators';
-import { $saveGameDescription, GameModel } from '../../../../../_common/game/game.model';
-import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
-import AppGamePerms from '../../../game/perms/AppGamePerms.vue';
-import AppDashGameWizardControls from '../wizard-controls/AppDashGameWizardControls.vue';
-import AppFormGameDescriptionTags from './tags/AppFormGameDescriptionTags.vue';
+} from '~common/form-vue/validators';
+import { $saveGameDescription, GameModel } from '~common/game/game.model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { TranslateDirective as vTranslate } from '~common/translate/translate-directive';
 
 type FormModel = GameModel & {
 	autotag?: string;

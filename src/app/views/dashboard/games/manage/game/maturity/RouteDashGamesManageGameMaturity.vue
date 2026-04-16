@@ -1,20 +1,20 @@
 <script lang="ts">
 import { computed, ref } from 'vue';
 
-import { GameModel } from '../../../../../../../_common/game/game.model';
-import { showSuccessGrowl } from '../../../../../../../_common/growls/growls.service';
-import AppLinkHelp from '../../../../../../../_common/link/AppLinkHelp.vue';
+import FormGameMaturity from '~app/components/forms/game/maturity/FormGameMaturity.vue';
+import AppGameOgrs from '~app/components/game/ogrs/AppGameOgrs.vue';
+import { useGameDashRouteController } from '~app/views/dashboard/games/manage/manage.store';
+import { GameModel } from '~common/game/game.model';
+import { showSuccessGrowl } from '~common/growls/growls.service';
+import AppLinkHelp from '~common/link/AppLinkHelp.vue';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
-} from '../../../../../../../_common/route/route-component';
-import { Screen } from '../../../../../../../_common/screen/screen-service';
-import AppScrollAffix from '../../../../../../../_common/scroll/AppScrollAffix.vue';
-import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
-import { $gettext } from '../../../../../../../_common/translate/translate.service';
-import FormGameMaturity from '../../../../../../components/forms/game/maturity/FormGameMaturity.vue';
-import AppGameOgrs from '../../../../../../components/game/ogrs/AppGameOgrs.vue';
-import { useGameDashRouteController } from '../../manage.store';
+} from '~common/route/route-component';
+import { Screen } from '~common/screen/screen-service';
+import AppScrollAffix from '~common/scroll/AppScrollAffix.vue';
+import { Scroll } from '~common/scroll/scroll.service';
+import { $gettext } from '~common/translate/translate.service';
 
 export default {
 	...defineAppRouteOptions({

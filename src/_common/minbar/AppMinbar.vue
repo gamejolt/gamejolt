@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { vAppTooltip } from '../tooltip/tooltip-directive';
-import { Minbar, MinbarItem } from './minbar.service';
+import { Minbar, MinbarItem } from '~common/minbar/minbar.service';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 
 function onItemClick(item: MinbarItem) {
 	if (item.onClick) {

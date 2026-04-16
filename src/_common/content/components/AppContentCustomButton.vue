@@ -2,17 +2,17 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { CustomButtonModel } from '../../custom-button/custom-button-model.js';
-import { Environment } from '../../environment/environment.service.js';
-import { showErrorGrowl } from '../../growls/growls.service';
-import AppLoading from '../../loading/AppLoading.vue';
-import { Navigate } from '../../navigate/navigate.service.js';
-import AppConfetti from '../../particle-effects/AppConfetti.vue';
-import AppTranslate from '../../translate/AppTranslate.vue';
-import { $gettext } from '../../translate/translate.service.js';
-import { showContentEditorCustomButtonModal } from '../content-editor/modals/custom-button/custom-button-modal.service.js';
-import { useContentOwnerController } from '../content-owner';
-import AppBaseContentComponent from './AppBaseContentComponent.vue';
+import AppBaseContentComponent from '~common/content/components/AppBaseContentComponent.vue';
+import { showContentEditorCustomButtonModal } from '~common/content/content-editor/modals/custom-button/custom-button-modal.service.js';
+import { useContentOwnerController } from '~common/content/content-owner';
+import { CustomButtonModel } from '~common/custom-button/custom-button-model.js';
+import { Environment } from '~common/environment/environment.service.js';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import AppLoading from '~common/loading/AppLoading.vue';
+import { Navigate } from '~common/navigate/navigate.service.js';
+import AppConfetti from '~common/particle-effects/AppConfetti.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service.js';
 
 type Props = {
 	customButtonId: string;

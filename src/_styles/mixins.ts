@@ -1,7 +1,7 @@
 import { CSSProperties, StyleValue } from 'vue';
 
-import { ThemeColor } from '../_common/theme/variables';
-import { kBorderRadiusBase, kBorderRadiusLg, kBorderRadiusSm } from './variables';
+import { ThemeColor } from '~common/theme/variables';
+import { kBorderRadiusBase, kBorderRadiusLg, kBorderRadiusSm } from '~styles/variables';
 
 /**
  * Helper to make it easier to mix certain styles into a style binding depending

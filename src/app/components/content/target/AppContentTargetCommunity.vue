@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import { CommunityChannelModel } from '../../../../_common/community/channel/channel.model';
-import { CommunityModel } from '../../../../_common/community/community.model';
-import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
-import AppCommunityVerifiedTick from '../../../../_common/community/verified-tick/AppCommunityVerifiedTick.vue';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import AppContentTarget from './AppContentTarget.vue';
+import AppContentTarget from '~app/components/content/target/AppContentTarget.vue';
+import { CommunityChannelModel } from '~common/community/channel/channel.model';
+import { CommunityModel } from '~common/community/community.model';
+import AppCommunityThumbnailImg from '~common/community/thumbnail/AppCommunityThumbnailImg.vue';
+import AppCommunityVerifiedTick from '~common/community/verified-tick/AppCommunityVerifiedTick.vue';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
 
 type Props = {
 	community: CommunityModel;

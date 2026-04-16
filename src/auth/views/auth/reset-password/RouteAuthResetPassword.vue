@@ -2,13 +2,13 @@
 import { computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-import { Api } from '../../../../_common/api/api.service';
-import { showSuccessGrowl } from '../../../../_common/growls/growls.service';
-import { defineAppRouteOptions } from '../../../../_common/route/route-component';
-import { createAppRoute } from '../../../../_common/route/route-component';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import FormResetPassword from '../../../components/forms/reset-password/FormResetPassword.vue';
+import FormResetPassword from '~auth/components/forms/reset-password/FormResetPassword.vue';
+import { Api } from '~common/api/api.service';
+import { showSuccessGrowl } from '~common/growls/growls.service';
+import { defineAppRouteOptions } from '~common/route/route-component';
+import { createAppRoute } from '~common/route/route-component';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
 
 export default {
 	name: 'RouteAuthResetPassword',

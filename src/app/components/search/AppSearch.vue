@@ -12,15 +12,15 @@ import {
 } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { trackSearch } from '../../../_common/analytics/analytics.service';
-import AppPopper from '../../../_common/popper/AppPopper.vue';
-import AppTranslate from '../../../_common/translate/AppTranslate.vue';
-import { arrayRemove } from '../../../utils/array';
-import { createFocusToken } from '../../../utils/focus-token';
-import AppSearchInput from './AppSearchInput.vue';
-import { Search } from './search-service';
+import AppSearchInput from '~app/components/search/AppSearchInput.vue';
+import { Search } from '~app/components/search/search-service';
+import { trackSearch } from '~common/analytics/analytics.service';
+import AppPopper from '~common/popper/AppPopper.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { arrayRemove } from '~utils/array';
+import { createFocusToken } from '~utils/focus-token';
 
-const AppSearchAutocomplete = defineAsyncComponent(() => import('./AppSearchAutocomplete.vue'));
+const AppSearchAutocomplete = defineAsyncComponent(() => import('~app/components/search/AppSearchAutocomplete.vue'));
 
 const KEYCODE_UP = 38;
 const KEYCODE_DOWN = 40;

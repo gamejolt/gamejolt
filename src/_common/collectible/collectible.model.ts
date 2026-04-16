@@ -1,13 +1,13 @@
-import { isInstance } from '../../utils/utils';
-import { AvatarFrameModel } from '../avatar/frame.model';
-import { BackgroundModel } from '../background/background.model';
-import { getModel, ModelStoreModel, storeModelList } from '../model/model-store.service';
-import { StickerPackModel } from '../sticker/pack/pack.model';
-import { UserStickerPackModel } from '../sticker/pack/user-pack.model';
-import { StickerModel } from '../sticker/sticker.model';
-import { UserModel } from '../user/user.model';
-import { UserAvatarFrameModel } from '../user/user-avatar/frame/frame.model';
-import { AcquisitionModel } from './acquisition.model';
+import { AvatarFrameModel } from '~common/avatar/frame.model';
+import { BackgroundModel } from '~common/background/background.model';
+import { AcquisitionModel } from '~common/collectible/acquisition.model';
+import { getModel, ModelStoreModel, storeModelList } from '~common/model/model-store.service';
+import { StickerPackModel } from '~common/sticker/pack/pack.model';
+import { UserStickerPackModel } from '~common/sticker/pack/user-pack.model';
+import { StickerModel } from '~common/sticker/sticker.model';
+import { UserModel } from '~common/user/user.model';
+import { UserAvatarFrameModel } from '~common/user/user-avatar/frame/frame.model';
+import { isInstance } from '~utils/utils';
 
 export const enum CollectibleType {
 	Sticker = 'Sticker',

@@ -1,5 +1,5 @@
-import { Environment } from '../_common/environment/environment.service';
-import { Screen } from '../_common/screen/screen-service';
+import { Environment } from '~common/environment/environment.service';
+import { Screen } from '~common/screen/screen-service';
 
 export const imageMimeTypes = [
 	'image/jpg',

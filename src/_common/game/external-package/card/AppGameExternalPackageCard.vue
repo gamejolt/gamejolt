@@ -1,16 +1,16 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 
-import { Analytics } from '../../../analytics/analytics.service';
-import AppFadeCollapse from '../../../AppFadeCollapse.vue';
-import AppButton from '../../../button/AppButton.vue';
-import AppCard from '../../../card/AppCard.vue';
-import AppJolticon from '../../../jolticon/AppJolticon.vue';
-import { Navigate } from '../../../navigate/navigate.service';
-import { vAppTooltip } from '../../../tooltip/tooltip-directive';
-import { $gettext } from '../../../translate/translate.service';
-import { GameBuildPlatformSupportInfo } from '../../build/build.model';
-import { GameExternalPackageModel } from '../external-package.model';
+import { Analytics } from '~common/analytics/analytics.service';
+import AppFadeCollapse from '~common/AppFadeCollapse.vue';
+import AppButton from '~common/button/AppButton.vue';
+import AppCard from '~common/card/AppCard.vue';
+import { GameBuildPlatformSupportInfo } from '~common/game/build/build.model';
+import { GameExternalPackageModel } from '~common/game/external-package/external-package.model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { Navigate } from '~common/navigate/navigate.service';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { $gettext } from '~common/translate/translate.service';
 
 type Props = {
 	package: GameExternalPackageModel;

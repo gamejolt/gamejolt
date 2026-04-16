@@ -2,10 +2,10 @@
 import { computed, toRef } from 'vue';
 import { RouteLocationRaw } from 'vue-router';
 
-import { ComponentProps } from '../../../../_common/component-helpers';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import AppPill from '../../../../_common/pill/AppPill.vue';
-import AppPillBi from '../../../../_common/pill/AppPillBi.vue';
+import { ComponentProps } from '~common/component-helpers';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppPill from '~common/pill/AppPill.vue';
+import AppPillBi from '~common/pill/AppPillBi.vue';
 
 export const CONTENT_TARGET_HEIGHT = 30;
 </script>

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
-import AppDashShopProductType from '../AppDashShopProductType.vue';
-import { ShopDashProductType } from '../shop.store';
+import AppDashShopProductType from '~app/views/dashboard/shop/AppDashShopProductType.vue';
+import { ShopDashProductType } from '~app/views/dashboard/shop/shop.store';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
 
 type Props = {
 	productType?: ShopDashProductType;

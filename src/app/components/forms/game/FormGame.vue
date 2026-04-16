@@ -1,24 +1,24 @@
 <script lang="ts" setup>
 import { computed, ref, toRef } from 'vue';
 
-import AppExpand from '../../../../_common/expand/AppExpand.vue';
-import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
-import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
-import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
-import AppFormControlErrors from '../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormControlSelect from '../../../../_common/form-vue/controls/AppFormControlSelect.vue';
-import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
+import AppGameDevStageSelector from '~app/components/forms/game/dev-stage-selector/AppGameDevStageSelector.vue';
+import AppDashGameWizardControls from '~app/components/forms/game/wizard-controls/AppDashGameWizardControls.vue';
+import AppExpand from '~common/expand/AppExpand.vue';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlSelect from '~common/form-vue/controls/AppFormControlSelect.vue';
+import AppFormControlToggle from '~common/form-vue/controls/AppFormControlToggle.vue';
 import {
 	validateAvailability,
 	validateMaxLength,
 	validateUrlPath,
-} from '../../../../_common/form-vue/validators';
-import { $saveGame, GameModel } from '../../../../_common/game/game.model';
-import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import AppGameDevStageSelector from './dev-stage-selector/AppGameDevStageSelector.vue';
-import AppDashGameWizardControls from './wizard-controls/AppDashGameWizardControls.vue';
+} from '~common/form-vue/validators';
+import { $saveGame, GameModel } from '~common/game/game.model';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 type FormModel = GameModel;
 

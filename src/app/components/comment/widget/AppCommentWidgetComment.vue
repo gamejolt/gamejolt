@@ -1,10 +1,12 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref, toRef, useTemplateRef } from 'vue';
 
-import { Clipboard } from '../../../../_common/clipboard/clipboard-service';
-import { CollaboratorModel } from '../../../../_common/collaborator/collaborator.model';
-import AppCommentBlocked from '../../../../_common/comment/AppCommentBlocked.vue';
-import AppCommentContent from '../../../../_common/comment/AppCommentContent.vue';
+import AppCommentControls from '~app/components/comment/controls/AppCommentControls.vue';
+import { useCommentWidget } from '~app/components/comment/widget/AppCommentWidget.vue';
+import { Clipboard } from '~common/clipboard/clipboard-service';
+import { CollaboratorModel } from '~common/collaborator/collaborator.model';
+import AppCommentBlocked from '~common/comment/AppCommentBlocked.vue';
+import AppCommentContent from '~common/comment/AppCommentContent.vue';
 import {
 	$followComment,
 	$unfollowComment,
@@ -13,22 +15,20 @@ import {
 	CommentModel,
 	getCommentBlockReason,
 	removeComment,
-} from '../../../../_common/comment/comment-model';
-import { Environment } from '../../../../_common/environment/environment.service';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import { FormCommentLazy } from '../../../../_common/lazy';
-import AppMessageThreadItem from '../../../../_common/message-thread/AppMessageThreadItem.vue';
-import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
-import { Model } from '../../../../_common/model/model.service';
-import AppPopper from '../../../../_common/popper/AppPopper.vue';
-import { Popper } from '../../../../_common/popper/popper.service';
-import { showReportModal } from '../../../../_common/report/modal/modal.service';
-import { useCommonStore } from '../../../../_common/store/common-store';
-import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import AppCommentControls from '../controls/AppCommentControls.vue';
-import { useCommentWidget } from './AppCommentWidget.vue';
+} from '~common/comment/comment-model';
+import { Environment } from '~common/environment/environment.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { FormCommentLazy } from '~common/lazy';
+import AppMessageThreadItem from '~common/message-thread/AppMessageThreadItem.vue';
+import { showModalConfirm } from '~common/modal/confirm/confirm-service';
+import { Model } from '~common/model/model.service';
+import AppPopper from '~common/popper/AppPopper.vue';
+import { Popper } from '~common/popper/popper.service';
+import { showReportModal } from '~common/report/modal/modal.service';
+import { useCommonStore } from '~common/store/common-store';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
 
 type Props = {
 	model: Model & CommentableModel;

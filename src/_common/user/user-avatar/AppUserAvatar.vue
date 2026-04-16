@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import { Environment } from '../../environment/environment.service';
-import { UserCommonFields } from '../user.model';
-import AppUserAvatarImg from './AppUserAvatarImg.vue';
+import { Environment } from '~common/environment/environment.service';
+import { UserCommonFields } from '~common/user/user.model';
+import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
 
 type Props = {
 	user?: UserCommonFields | null;

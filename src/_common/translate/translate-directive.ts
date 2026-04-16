@@ -5,7 +5,7 @@ import {
 	getTranslationLang,
 	interpolateTranslation,
 	TranslationContext,
-} from './translate.service';
+} from '~common/translate/translate.service';
 
 // TODO(vue3): I think we should get rid of this since there's no way the
 // translations will work with the way vue does the scope stuff.

@@ -1,16 +1,16 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import AppCardListItem from '../../../../../../../../_common/card/list/AppCardListItem.vue';
+import AppCommunityChannelCardEdit from '~app/components/community/channel/card/edit/AppCommunityChannelCardEdit.vue';
+import { showCommunityChannelPresetBackgroundModal } from '~app/components/community/channel/preset-background-modal/preset-background-modal.service';
+import AppCardListItem from '~common/card/list/AppCardListItem.vue';
 import {
 	CommunityModel,
 	CommunityPresetChannelType,
 	getCommunityChannelBackground,
-} from '../../../../../../../../_common/community/community.model';
-import { $gettext } from '../../../../../../../../_common/translate/translate.service';
-import { assertNever } from '../../../../../../../../utils/utils';
-import AppCommunityChannelCardEdit from '../../../../../../../components/community/channel/card/edit/AppCommunityChannelCardEdit.vue';
-import { showCommunityChannelPresetBackgroundModal } from '../../../../../../../components/community/channel/preset-background-modal/preset-background-modal.service';
+} from '~common/community/community.model';
+import { $gettext } from '~common/translate/translate.service';
+import { assertNever } from '~utils/utils';
 
 type Props = {
 	community: CommunityModel;

@@ -2,18 +2,18 @@
 import { computed, toRef } from 'vue';
 import draggable from 'vuedraggable';
 
-import { useAdStore } from '../../../../_common/ad/ad-store';
-import AppAdFeedParent from '../../../../_common/ad/AppAdFeedParent.vue';
-import AppAdTakeoverFloat from '../../../../_common/ad/AppAdTakeoverFloat.vue';
-import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
-import { formatNumber } from '../../../../_common/filters/number';
-import { GameModel } from '../../../../_common/game/game.model';
-import AppGameThumbnail from '../../../../_common/game/thumbnail/AppGameThumbnail.vue';
-import { Screen } from '../../../../_common/screen/screen-service';
-import AppScrollAffix from '../../../../_common/scroll/AppScrollAffix.vue';
-import { styleWhen } from '../../../../_styles/mixins';
-import { kLayerAds } from '../../../../_styles/variables';
-import AppGameThumbnailControls from '../thumbnail/AppGameThumbnailControls.vue';
+import AppGameThumbnailControls from '~app/components/game/thumbnail/AppGameThumbnailControls.vue';
+import { useAdStore } from '~common/ad/ad-store';
+import AppAdFeedParent from '~common/ad/AppAdFeedParent.vue';
+import AppAdTakeoverFloat from '~common/ad/AppAdTakeoverFloat.vue';
+import AppAdWidget from '~common/ad/widget/AppAdWidget.vue';
+import { formatNumber } from '~common/filters/number';
+import { GameModel } from '~common/game/game.model';
+import AppGameThumbnail from '~common/game/thumbnail/AppGameThumbnail.vue';
+import { Screen } from '~common/screen/screen-service';
+import AppScrollAffix from '~common/scroll/AppScrollAffix.vue';
+import { styleWhen } from '~styles/mixins';
+import { kLayerAds } from '~styles/variables';
 
 export const GameGridRowSizeSm = 2;
 export const GameGridRowSizeMd = 3;
@@ -217,4 +217,4 @@ function shouldShowAd(index: number) {
 	</div>
 </template>
 
-<style lang="stylus" src="./grid.styl"></style>
+<style lang="stylus" src="~app/components/game/grid/grid.styl"></style>

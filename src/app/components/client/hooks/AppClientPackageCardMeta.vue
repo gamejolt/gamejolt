@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import { GameModel } from '../../../../_common/game/game.model';
-import { GamePackageCardModel } from '../../../../_common/game/package/card/card.model';
-import { GamePackageModel } from '../../../../_common/game/package/package.model';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { useClientLibraryStore } from '../../../store/client-library';
+import { useClientLibraryStore } from '~app/store/client-library';
+import { GameModel } from '~common/game/game.model';
+import { GamePackageCardModel } from '~common/game/package/card/card.model';
+import { GamePackageModel } from '~common/game/package/package.model';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 type Props = {
 	game: GameModel;

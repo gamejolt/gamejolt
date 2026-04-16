@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import './item-content.styl';
+import '~common/timeline-list/item/item-content.styl';
 
 import { toRef, useSlots } from 'vue';
 

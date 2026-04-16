@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { onMounted, onUnmounted } from 'vue';
 
-import { Api } from '../../api/api.service';
+import { Api } from '~common/api/api.service';
 
 type Props = {
 	url: string;

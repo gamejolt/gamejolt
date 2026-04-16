@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import AppPill from '../../pill/AppPill.vue';
-import { CommunityChannelModel } from './channel.model';
+import { CommunityChannelModel } from '~common/community/channel/channel.model';
+import AppPill from '~common/pill/AppPill.vue';
 
 type Props = {
 	channels: CommunityChannelModel[];

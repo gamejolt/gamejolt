@@ -2,11 +2,11 @@
 import { darken, lighten, parseToHsl } from 'polished';
 import { computed, ImgHTMLAttributes, ref, watch } from 'vue';
 
-import { arrayUnique } from '../../../utils/array';
-import { Api } from '../../api/api.service';
-import { isDynamicGoogleBot } from '../../device/device.service';
-import { DefaultTheme, ThemeModel } from '../theme.model';
-import { useThemeStore } from '../theme.store';
+import { Api } from '~common/api/api.service';
+import { isDynamicGoogleBot } from '~common/device/device.service';
+import { DefaultTheme, ThemeModel } from '~common/theme/theme.model';
+import { useThemeStore } from '~common/theme/theme.store';
+import { arrayUnique } from '~utils/array';
 
 const SvgGraysRegex = /#([a-f\d]{1,2})\1{2}\b/gi;
 

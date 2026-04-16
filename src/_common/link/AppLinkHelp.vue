@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import { Environment } from '../environment/environment.service';
-import { Navigate } from '../navigate/navigate.service';
-import AppLinkHelpDocs from './AppLinkHelpDocs.vue';
+import { Environment } from '~common/environment/environment.service';
+import AppLinkHelpDocs from '~common/link/AppLinkHelpDocs.vue';
+import { Navigate } from '~common/navigate/navigate.service';
 
 /**
  * This component is older, and is used to handle redirects to the real

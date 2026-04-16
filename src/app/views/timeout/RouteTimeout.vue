@@ -1,23 +1,23 @@
 <script lang="ts">
 import { computed, onMounted, ref } from 'vue';
 
-import { Api } from '../../../_common/api/api.service';
-import AppButton from '../../../_common/button/AppButton.vue';
-import AppContactLink from '../../../_common/contact-link/AppContactLink.vue';
-import { showErrorGrowl, showInfoGrowl } from '../../../_common/growls/growls.service';
-import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
-import { illTimeOut } from '../../../_common/illustration/illustrations';
-import AppLinkHelp from '../../../_common/link/AppLinkHelp.vue';
-import { Navigate } from '../../../_common/navigate/navigate.service';
-import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
-import { commonStore, useCommonStore } from '../../../_common/store/common-store';
-import AppThemeSvg from '../../../_common/theme/svg/AppThemeSvg.vue';
-import AppTranslate from '../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../_common/translate/translate.service';
-import { UserTimeoutModel } from '../../../_common/user/timeout/timeout.model';
-import { RouteLocationRedirect } from '../../../utils/router';
-import AppTimeoutCountdown from '../../components/timeout/AppTimeoutCountdown.vue';
-import { imageGameJoltLogo } from '../../img/images';
+import AppTimeoutCountdown from '~app/components/timeout/AppTimeoutCountdown.vue';
+import { imageGameJoltLogo } from '~app/img/images';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import AppContactLink from '~common/contact-link/AppContactLink.vue';
+import { showErrorGrowl, showInfoGrowl } from '~common/growls/growls.service';
+import AppIllustration from '~common/illustration/AppIllustration.vue';
+import { illTimeOut } from '~common/illustration/illustrations';
+import AppLinkHelp from '~common/link/AppLinkHelp.vue';
+import { Navigate } from '~common/navigate/navigate.service';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { commonStore, useCommonStore } from '~common/store/common-store';
+import AppThemeSvg from '~common/theme/svg/AppThemeSvg.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { UserTimeoutModel } from '~common/user/timeout/timeout.model';
+import { RouteLocationRedirect } from '~utils/router';
 
 export default {
 	...defineAppRouteOptions({

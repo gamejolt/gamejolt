@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 
-import AppButton from '../../../../../_common/button/AppButton.vue';
-import { CommunityCompetitionModel } from '../../../../../_common/community/competition/competition.model';
-import AppModal from '../../../../../_common/modal/AppModal.vue';
-import { useModal } from '../../../../../_common/modal/modal.service';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import FormCommunityCompetitionHeader from '../../../forms/community/competition/header/FormCommunityCompetitionHeader.vue';
+import FormCommunityCompetitionHeader from '~app/components/forms/community/competition/header/FormCommunityCompetitionHeader.vue';
+import AppButton from '~common/button/AppButton.vue';
+import { CommunityCompetitionModel } from '~common/community/competition/competition.model';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import { $gettext } from '~common/translate/translate.service';
 
 type Props = {
 	competition: CommunityCompetitionModel;

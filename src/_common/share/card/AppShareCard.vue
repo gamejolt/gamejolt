@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import AppJolticon from '../../jolticon/AppJolticon.vue';
-import AppTranslate from '../../translate/AppTranslate.vue';
-import AppShareControl from '../AppShareControl.vue';
-import { ShareProvider, ShareResource } from '../share.service';
-import { showShareModal } from './_modal/modal.service';
-import AppShareCardTile from './AppShareCardTile.vue';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppShareControl from '~common/share/AppShareControl.vue';
+import { showShareModal } from '~common/share/card/_modal/modal.service';
+import AppShareCardTile from '~common/share/card/AppShareCardTile.vue';
+import { ShareProvider, ShareResource } from '~common/share/share.service';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 type Props = {
 	resource: ShareResource;

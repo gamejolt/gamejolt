@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import '../../social.styl';
+import '~common/social/social.styl';
 
 import { onMounted, watch } from 'vue';
 
-import { YoutubeSdk } from '../sdk/sdk.service';
+import { YoutubeSdk } from '~common/social/youtube/sdk/sdk.service';
 
 type Props = {
 	channel: string;

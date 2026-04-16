@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { CSSProperties } from 'vue';
 
-import { styleChangeBg, styleFlexCenter } from '../../_styles/mixins';
+import { styleChangeBg, styleFlexCenter } from '~styles/mixins';
 
 type Props = {
 	count: number;

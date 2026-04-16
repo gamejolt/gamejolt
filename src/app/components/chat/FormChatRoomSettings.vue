@@ -1,29 +1,29 @@
 <script lang="ts" setup>
 import { computed, ref, toRef, watch } from 'vue';
 
-import { Api } from '../../../_common/api/api.service';
-import { BackgroundModel } from '../../../_common/background/background.model';
-import AppForm, { createForm, FormController } from '../../../_common/form-vue/AppForm.vue';
-import AppFormButton from '../../../_common/form-vue/AppFormButton.vue';
-import AppFormControl from '../../../_common/form-vue/AppFormControl.vue';
-import AppFormControlErrors from '../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../../../_common/form-vue/AppFormGroup.vue';
-import AppFormStickySubmit from '../../../_common/form-vue/AppFormStickySubmit.vue';
-import AppFormControlBackground from '../../../_common/form-vue/controls/AppFormControlBackground.vue';
-import AppFormControlToggleButton from '../../../_common/form-vue/controls/toggle-button/AppFormControlToggleButton.vue';
-import AppFormControlToggleButtonGroup from '../../../_common/form-vue/controls/toggle-button/AppFormControlToggleButtonGroup.vue';
-import { validateMaxLength, validateMinLength } from '../../../_common/form-vue/validators';
-import AppLoading from '../../../_common/loading/AppLoading.vue';
-import { showModalConfirm } from '../../../_common/modal/confirm/confirm-service';
-import { storeModelList } from '../../../_common/model/model-store.service';
-import { Screen } from '../../../_common/screen/screen-service';
-import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
-import AppTranslate from '../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../_common/translate/translate.service';
-import { useGridStore } from '../grid/grid-store';
-import { editChatRoomBackground, editChatRoomTitle, leaveGroupRoom } from './client';
-import FormChatRoomSettingsMemberPreview from './FormChatRoomSettingsMemberPreview.vue';
-import { ChatRoomModel } from './room';
+import { editChatRoomBackground, editChatRoomTitle, leaveGroupRoom } from '~app/components/chat/client';
+import FormChatRoomSettingsMemberPreview from '~app/components/chat/FormChatRoomSettingsMemberPreview.vue';
+import { ChatRoomModel } from '~app/components/chat/room';
+import { useGridStore } from '~app/components/grid/grid-store';
+import { Api } from '~common/api/api.service';
+import { BackgroundModel } from '~common/background/background.model';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormStickySubmit from '~common/form-vue/AppFormStickySubmit.vue';
+import AppFormControlBackground from '~common/form-vue/controls/AppFormControlBackground.vue';
+import AppFormControlToggleButton from '~common/form-vue/controls/toggle-button/AppFormControlToggleButton.vue';
+import AppFormControlToggleButtonGroup from '~common/form-vue/controls/toggle-button/AppFormControlToggleButtonGroup.vue';
+import { validateMaxLength, validateMinLength } from '~common/form-vue/validators';
+import AppLoading from '~common/loading/AppLoading.vue';
+import { showModalConfirm } from '~common/modal/confirm/confirm-service';
+import { storeModelList } from '~common/model/model-store.service';
+import { Screen } from '~common/screen/screen-service';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
 
 type Props = {
 	room: ChatRoomModel;

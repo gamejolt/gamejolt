@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 
-import AppAnimElectricity from '../../animation/AppAnimElectricity.vue';
-import AppLoading from '../../loading/AppLoading.vue';
-import { storeModel } from '../../model/model-store.service';
-import { StickerModel } from '../../sticker/sticker.model';
-import AppTranslate from '../../translate/AppTranslate.vue';
-import { useContentOwnerController } from '../content-owner';
+import AppAnimElectricity from '~common/animation/AppAnimElectricity.vue';
+import { useContentOwnerController } from '~common/content/content-owner';
+import AppLoading from '~common/loading/AppLoading.vue';
+import { storeModel } from '~common/model/model-store.service';
+import { StickerModel } from '~common/sticker/sticker.model';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 type Props = {
 	stickerId: number;

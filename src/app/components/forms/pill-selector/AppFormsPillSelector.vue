@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import AppPopper from '../../../../_common/popper/AppPopper.vue';
+import AppPopper from '~common/popper/AppPopper.vue';
 
 const emit = defineEmits<{
 	show: [];

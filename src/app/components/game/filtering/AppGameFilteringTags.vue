@@ -2,10 +2,10 @@
 import { computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { TagsInfo } from '../../tag/tags-info.service';
-import { GameFilteringContainer } from './container';
+import { GameFilteringContainer } from '~app/components/game/filtering/container';
+import { TagsInfo } from '~app/components/tag/tags-info.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 type Props = {
 	filtering: GameFilteringContainer;

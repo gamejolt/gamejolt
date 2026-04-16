@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 import { ref, toRef, watch } from 'vue';
 
-import { Api } from '../../../../_common/api/api.service';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import AppLoading from '../../../../_common/loading/AppLoading.vue';
-import { Screen } from '../../../../_common/screen/screen-service';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import AppUserCard from '../../../../_common/user/card/AppUserCard.vue';
-import AppUserCardPlaceholder from '../../../../_common/user/card/AppUserCardPlaceholder.vue';
-import { UserModel } from '../../../../_common/user/user.model';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import AppLoading from '~common/loading/AppLoading.vue';
+import { Screen } from '~common/screen/screen-service';
+import { $gettext } from '~common/translate/translate.service';
+import AppUserCard from '~common/user/card/AppUserCard.vue';
+import AppUserCardPlaceholder from '~common/user/card/AppUserCardPlaceholder.vue';
+import { UserModel } from '~common/user/user.model';
 
 type Props = {
 	url: string;

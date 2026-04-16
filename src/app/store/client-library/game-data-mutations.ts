@@ -1,4 +1,4 @@
-import type { LocalDbGame } from '../../components/client/local-db/game/game.model';
+import type { LocalDbGame } from '~app/components/client/local-db/game/game.model';
 
 export default class ClientLibraryGameDataMutations {
 	constructor(

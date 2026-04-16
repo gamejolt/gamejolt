@@ -1,26 +1,26 @@
 <script lang="ts" setup>
 import { computed, toRef } from 'vue';
 
-import { CommunityCompetitionModel } from '../../../../../../../_common/community/competition/competition.model';
+import { CommunityCompetitionModel } from '~common/community/competition/competition.model';
 import {
 	$saveCommunityCompetitionVotingCategory,
 	CommunityCompetitionVotingCategoryModel,
-} from '../../../../../../../_common/community/competition/voting-category/voting-category.model';
+} from '~common/community/competition/voting-category/voting-category.model';
 import AppForm, {
 	createForm,
 	FormController,
-} from '../../../../../../../_common/form-vue/AppForm.vue';
-import AppFormButton from '../../../../../../../_common/form-vue/AppFormButton.vue';
-import AppFormControl from '../../../../../../../_common/form-vue/AppFormControl.vue';
-import AppFormControlErrors from '../../../../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../../../../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormControlTextarea from '../../../../../../../_common/form-vue/controls/AppFormControlTextarea.vue';
+} from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlTextarea from '~common/form-vue/controls/AppFormControlTextarea.vue';
 import {
 	validateAvailability,
 	validateMaxLength,
-} from '../../../../../../../_common/form-vue/validators';
-import AppTranslate from '../../../../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../../../../_common/translate/translate.service';
+} from '~common/form-vue/validators';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
 
 type FormModel = CommunityCompetitionVotingCategoryModel;
 

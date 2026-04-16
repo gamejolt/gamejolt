@@ -2,16 +2,16 @@
 import { computed } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
 
-import { GamePackageModel } from '../../../../../../../../_common/game/package/package.model';
-import AppJolticon from '../../../../../../../../_common/jolticon/AppJolticon.vue';
-import AppLinkHelp from '../../../../../../../../_common/link/AppLinkHelp.vue';
+import FormGamePackage from '~app/components/forms/game/package/FormGamePackage.vue';
+import { useGameDashRouteController } from '~app/views/dashboard/games/manage/manage.store';
+import { GamePackageModel } from '~common/game/package/package.model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLinkHelp from '~common/link/AppLinkHelp.vue';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
-} from '../../../../../../../../_common/route/route-component';
-import { $gettext } from '../../../../../../../../_common/translate/translate.service';
-import FormGamePackage from '../../../../../../../components/forms/game/package/FormGamePackage.vue';
-import { useGameDashRouteController } from '../../../manage.store';
+} from '~common/route/route-component';
+import { $gettext } from '~common/translate/translate.service';
 
 export default {
 	...defineAppRouteOptions({

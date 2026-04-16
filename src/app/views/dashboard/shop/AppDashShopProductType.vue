@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import { kThemeGjBlue, kThemeGray } from '../../../../_common/theme/variables';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { styleBorderRadiusLg, styleWhen } from '../../../../_styles/mixins';
-import { ShopDashProductType } from './shop.store';
+import { ShopDashProductType } from '~app/views/dashboard/shop/shop.store';
+import { kThemeGjBlue, kThemeGray } from '~common/theme/variables';
+import { $gettext } from '~common/translate/translate.service';
+import { styleBorderRadiusLg, styleWhen } from '~styles/mixins';
 
 const ShopProductPremiumColor = '#ffbe00';
 

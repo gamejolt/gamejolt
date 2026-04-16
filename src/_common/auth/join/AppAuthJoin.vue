@@ -2,10 +2,10 @@
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { Api } from '../../api/api.service';
-import { Environment } from '../../environment/environment.service';
-import { Navigate } from '../../navigate/navigate.service';
-import AppAuthJoinForm, { JoinFormModel } from './AppAuthJoinForm.vue';
+import { Api } from '~common/api/api.service';
+import AppAuthJoinForm, { JoinFormModel } from '~common/auth/join/AppAuthJoinForm.vue';
+import { Environment } from '~common/environment/environment.service';
+import { Navigate } from '~common/navigate/navigate.service';
 
 type Props = {
 	overlay?: boolean;

@@ -1,22 +1,22 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref } from 'vue';
 
-import { Analytics } from '../../../../_common/analytics/analytics.service';
-import { vAppFocusWhen } from '../../../../_common/form-vue/focus-when.directive';
-import { GameModel } from '../../../../_common/game/game.model';
-import { GamePlaylistModel } from '../../../../_common/game-playlist/game-playlist.model';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import AppLoading from '../../../../_common/loading/AppLoading.vue';
-import { Popper } from '../../../../_common/popper/popper.service';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { stringSort } from '../../../../utils/array';
-import { fuzzysearch } from '../../../../utils/string';
 import {
 	libraryAddGameToPlaylist,
 	libraryNewPlaylist,
 	libraryRemoveGameFromPlaylist,
 	useLibraryStore,
-} from '../../../store/library';
+} from '~app/store/library';
+import { Analytics } from '~common/analytics/analytics.service';
+import { vAppFocusWhen } from '~common/form-vue/focus-when.directive';
+import { GameModel } from '~common/game/game.model';
+import { GamePlaylistModel } from '~common/game-playlist/game-playlist.model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLoading from '~common/loading/AppLoading.vue';
+import { Popper } from '~common/popper/popper.service';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { stringSort } from '~utils/array';
+import { fuzzysearch } from '~utils/string';
 
 type Props = {
 	game: GameModel;

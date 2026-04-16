@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
 
-import { Api } from '../../api/api.service';
-import AppPopper from '../../popper/AppPopper.vue';
-import { Screen } from '../../screen/screen-service';
-import { UserModel } from '../user.model';
-import AppUserCard from './AppUserCard.vue';
+import { Api } from '~common/api/api.service';
+import AppPopper from '~common/popper/AppPopper.vue';
+import { Screen } from '~common/screen/screen-service';
+import AppUserCard from '~common/user/card/AppUserCard.vue';
+import { UserModel } from '~common/user/user.model';
 
 type Props = {
 	user?: UserModel | null;

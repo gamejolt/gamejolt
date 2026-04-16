@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { computed, CSSProperties } from 'vue';
 
-import { styleFlexCenter, styleWhen } from '../../_styles/mixins';
-import AppPageIndicatorCompactItem from './AppPageIndicatorCompactItem.vue';
+import AppPageIndicatorCompactItem from '~common/pagination/AppPageIndicatorCompactItem.vue';
+import { styleFlexCenter, styleWhen } from '~styles/mixins';
 
 type Props = {
 	count: number;

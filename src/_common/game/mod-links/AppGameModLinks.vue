@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import { Api } from '../../api/api.service';
-import { Environment } from '../../environment/environment.service';
-import { showSuccessGrowl } from '../../growls/growls.service';
-import AppJolticon from '../../jolticon/AppJolticon.vue';
-import { GameModel } from '../game.model';
+import { Api } from '~common/api/api.service';
+import { Environment } from '~common/environment/environment.service';
+import { GameModel } from '~common/game/game.model';
+import { showSuccessGrowl } from '~common/growls/growls.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
 
 type Props = {
 	game: GameModel;

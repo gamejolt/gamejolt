@@ -1,5 +1,5 @@
-import { Model } from '../../../model/model.service';
-import { UserModel } from '../../../user/user.model';
+import { Model } from '~common/model/model.service';
+import { UserModel } from '~common/user/user.model';
 
 export class GameDataStoreItemModel extends Model {
 	declare user_id: number;

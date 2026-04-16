@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import AppButton from '../../../../../_common/button/AppButton.vue';
-import AppModal from '../../../../../_common/modal/AppModal.vue';
-import { useModal } from '../../../../../_common/modal/modal.service';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import { UserAddressModel } from '../../../../../_common/user/address/address.model';
-import FormAddress from '../../../forms/address/FormAddress.vue';
+import FormAddress from '~app/components/forms/address/FormAddress.vue';
+import AppButton from '~common/button/AppButton.vue';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { UserAddressModel } from '~common/user/address/address.model';
 
 type Props = {
 	address: UserAddressModel;

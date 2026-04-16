@@ -1,10 +1,10 @@
-import { ContentDocument } from '../../../../_common/content/content-document';
-import { showInfoGrowl } from '../../../../_common/growls/growls.service';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { ChatClient, isChatFocusedOnRoom, openChatRoom } from '../client';
-import { ChatMessageModel } from '../message';
-import { ChatRoomModel, getChatRoomTitle } from '../room';
-import AppChatNotificationGrowl from './AppChatNotificationGrowl.vue';
+import { ChatClient, isChatFocusedOnRoom, openChatRoom } from '~app/components/chat/client';
+import { ChatMessageModel } from '~app/components/chat/message';
+import AppChatNotificationGrowl from '~app/components/chat/notification-growl/AppChatNotificationGrowl.vue';
+import { ChatRoomModel, getChatRoomTitle } from '~app/components/chat/room';
+import { ContentDocument } from '~common/content/content-document';
+import { showInfoGrowl } from '~common/growls/growls.service';
+import { $gettext } from '~common/translate/translate.service';
 
 export class ChatNotificationGrowl {
 	static async show(

@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 
-import AppButton from '../../button/AppButton.vue';
-import AppModal from '../../modal/AppModal.vue';
-import AppModalFloatingHeader from '../../modal/AppModalFloatingHeader.vue';
-import { useModal } from '../../modal/modal.service';
-import { StickerPackModel } from '../../sticker/pack/pack.model';
-import { $gettext } from '../../translate/translate.service';
-import AppCollectibleResourceThumbDetails from '../AppCollectibleResourceDetails.vue';
-import { CollectibleResourceItem } from './modal.service';
+import AppButton from '~common/button/AppButton.vue';
+import AppCollectibleResourceThumbDetails from '~common/collectible/AppCollectibleResourceDetails.vue';
+import { CollectibleResourceItem } from '~common/collectible/resource-details-modal/modal.service';
+import AppModal from '~common/modal/AppModal.vue';
+import AppModalFloatingHeader from '~common/modal/AppModalFloatingHeader.vue';
+import { useModal } from '~common/modal/modal.service';
+import { StickerPackModel } from '~common/sticker/pack/pack.model';
+import { $gettext } from '~common/translate/translate.service';
 
 type Props = {
 	item: CollectibleResourceItem;

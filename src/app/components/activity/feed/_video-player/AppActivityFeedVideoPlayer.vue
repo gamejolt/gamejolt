@@ -1,24 +1,24 @@
 <script lang="ts" setup>
 import { computed, onBeforeUnmount, Ref, ref, watch } from 'vue';
 
-import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import { MediaItemModel } from '../../../../../_common/media-item/media-item-model';
+import { InviewConfigFocused } from '~app/components/activity/feed/view';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { MediaItemModel } from '~common/media-item/media-item-model';
 import AppScrollInview, {
 	createScrollInview,
-} from '../../../../../_common/scroll/inview/AppScrollInview.vue';
-import { SettingVideoPlayerFeedAutoplay } from '../../../../../_common/settings/settings.service';
-import { VideoSourceArray } from '../../../../../_common/video/AppVideo.vue';
+} from '~common/scroll/inview/AppScrollInview.vue';
+import { SettingVideoPlayerFeedAutoplay } from '~common/settings/settings.service';
+import { VideoSourceArray } from '~common/video/AppVideo.vue';
 import AppVideoPlayer, {
 	createDenseReadableTimestamp,
-} from '../../../../../_common/video/player/AppVideoPlayer.vue';
+} from '~common/video/player/AppVideoPlayer.vue';
 import {
 	createVideoPlayerController,
 	queueVideoTimeChange,
 	VideoPlayerController,
-} from '../../../../../_common/video/player/controller';
-import { styleBorderRadiusBase, styleOverlayTextShadow } from '../../../../../_styles/mixins';
-import { kFontSizeLarge, kFontSizeSmall } from '../../../../../_styles/variables';
-import { InviewConfigFocused } from '../view';
+} from '~common/video/player/controller';
+import { styleBorderRadiusBase, styleOverlayTextShadow } from '~styles/mixins';
+import { kFontSizeLarge, kFontSizeSmall } from '~styles/variables';
 
 /**
  * How much time in ms to wait before loading the video player in once this item

@@ -1,5 +1,5 @@
-import { arrayRemove, stringSort } from '../../utils/array';
-import { MediaItemType } from '../media-item/media-item-model';
+import { MediaItemType } from '~common/media-item/media-item-model';
+import { arrayRemove, stringSort } from '~utils/array';
 
 export const GJ_FORMAT_VERSION = '1';
 

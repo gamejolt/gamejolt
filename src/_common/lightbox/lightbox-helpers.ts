@@ -1,6 +1,6 @@
 import { computed, ComputedRef, onUnmounted, reactive, readonly, Ref,ref } from 'vue';
 
-import { MediaItemModel } from '../media-item/media-item-model';
+import { MediaItemModel } from '~common/media-item/media-item-model';
 
 export const LightboxConfig = {
 	// This should match the $-controls-height variable in lightbox.styl

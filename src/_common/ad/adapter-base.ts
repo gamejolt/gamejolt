@@ -1,7 +1,7 @@
 import type { PropType } from 'vue';
 
-import { isDynamicGoogleBot } from '../device/device.service';
-import { AdSlot } from './ad-slot-info';
+import { AdSlot } from '~common/ad/ad-slot-info';
+import { isDynamicGoogleBot } from '~common/device/device.service';
 
 export interface AdAdapter {
 	onBeforeRouteChange(): void;

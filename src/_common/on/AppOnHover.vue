@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { toRef } from 'vue';
 
-import { useOnHover } from './useOnHover';
+import { useOnHover } from '~common/on/useOnHover';
 
 type Props = {
 	/**

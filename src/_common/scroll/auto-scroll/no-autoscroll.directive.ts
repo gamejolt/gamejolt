@@ -1,6 +1,6 @@
 import { Directive } from 'vue';
 
-import { Scroll } from '../scroll.service';
+import { Scroll } from '~common/scroll/scroll.service';
 
 // I'm not sure of a better way to do this with Vue. When I tried to attach to
 // the click handler of the element the router-link click handler gets called

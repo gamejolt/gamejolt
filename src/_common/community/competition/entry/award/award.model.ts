@@ -1,6 +1,6 @@
-import { Api } from '../../../../api/api.service';
-import { Model } from '../../../../model/model.service';
-import { CommunityCompetitionAwardModel } from '../../award/award.model';
+import { Api } from '~common/api/api.service';
+import { CommunityCompetitionAwardModel } from '~common/community/competition/award/award.model';
+import { Model } from '~common/model/model.service';
 
 export class CommunityCompetitionEntryAwardModel extends Model {
 	declare community_competition_entry_id: number;

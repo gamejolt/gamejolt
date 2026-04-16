@@ -2,16 +2,16 @@
 import { computed } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { Api } from '../../../../../_common/api/api.service';
-import { GameModel, handleGameAddFailure } from '../../../../../_common/game/game.model';
+import FormGame from '~app/components/forms/game/FormGame.vue';
+import { startWizard } from '~app/views/dashboard/games/manage/manage.store';
+import { Api } from '~common/api/api.service';
+import { GameModel, handleGameAddFailure } from '~common/game/game.model';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
-} from '../../../../../_common/route/route-component';
-import { useCommonStore } from '../../../../../_common/store/common-store';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import FormGame from '../../../../components/forms/game/FormGame.vue';
-import { startWizard } from '../manage/manage.store';
+} from '~common/route/route-component';
+import { useCommonStore } from '~common/store/common-store';
+import { $gettext } from '~common/translate/translate.service';
 
 export default {
 	...defineAppRouteOptions({

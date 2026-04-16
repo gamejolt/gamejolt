@@ -1,11 +1,11 @@
 <script lang="ts">
 import { onMounted, ref, useTemplateRef, watch } from 'vue';
 
-import { useResizeObserver } from '../../utils/resize-observer';
-import { debounce } from '../../utils/utils';
-import { Ruler } from '../ruler/ruler-service';
-import { onScreenResize } from '../screen/screen-service';
-import { useEventSubscription } from '../system/event/event-topic';
+import { Ruler } from '~common/ruler/ruler-service';
+import { onScreenResize } from '~common/screen/screen-service';
+import { useEventSubscription } from '~common/system/event/event-topic';
+import { useResizeObserver } from '~utils/resize-observer';
+import { debounce } from '~utils/utils';
 
 export class AppResponsiveDimensionsChangeEvent {
 	constructor(public containerWidth: number, public height: number, public isFilled: boolean) {}

@@ -1,16 +1,16 @@
 <script lang="ts" setup>
 import { computed, HTMLAttributes, ref } from 'vue';
 
-import { UserFollowLocation } from '../../analytics/analytics.service';
-import { vAppAuthRequired } from '../../auth/auth-required-directive';
-import AppButton from '../../button/AppButton.vue';
-import { formatNumber } from '../../filters/number';
-import { Jolticon } from '../../jolticon/AppJolticon.vue';
-import { useCommonStore } from '../../store/common-store';
-import { vAppTooltip } from '../../tooltip/tooltip-directive';
-import AppTranslate from '../../translate/AppTranslate.vue';
-import { $gettext } from '../../translate/translate.service';
-import { $toggleUserFollow, UserModel } from '../user.model';
+import { UserFollowLocation } from '~common/analytics/analytics.service';
+import { vAppAuthRequired } from '~common/auth/auth-required-directive';
+import AppButton from '~common/button/AppButton.vue';
+import { formatNumber } from '~common/filters/number';
+import { Jolticon } from '~common/jolticon/AppJolticon.vue';
+import { useCommonStore } from '~common/store/common-store';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { $toggleUserFollow, UserModel } from '~common/user/user.model';
 
 type Props = {
 	user: UserModel;

@@ -3,25 +3,25 @@
 import { Sketch as VuePicker } from '@ckpack/vue-color';
 import { computed, ref, toRef } from 'vue';
 
-import { Api } from '../../api/api.service';
-import AppButton from '../../button/AppButton.vue';
-import AppLoading from '../../loading/AppLoading.vue';
-import AppPopper from '../../popper/AppPopper.vue';
-import AppThemeBubble from '../../theme/bubble/AppThemeBubble.vue';
-import { ThemePresetModel } from '../../theme/preset/preset.model';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import {
+	createFormControl,
+	FormControlEmits,
+} from '~common/form-vue/AppFormControl.vue';
+import { FormValidator } from '~common/form-vue/validators';
+import AppLoading from '~common/loading/AppLoading.vue';
+import AppPopper from '~common/popper/AppPopper.vue';
+import AppThemeBubble from '~common/theme/bubble/AppThemeBubble.vue';
+import { ThemePresetModel } from '~common/theme/preset/preset.model';
 import {
 	DefaultTheme,
 	makeThemeFromColor,
 	makeThemeFromPreset,
 	ThemeModel,
-} from '../../theme/theme.model';
-import { vAppTooltip } from '../../tooltip/tooltip-directive';
-import { $gettext } from '../../translate/translate.service';
-import {
-	createFormControl,
-	FormControlEmits,
-} from '../AppFormControl.vue';
-import { FormValidator } from '../validators';
+} from '~common/theme/theme.model';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { $gettext } from '~common/translate/translate.service';
 
 type Props = {
 	disabled?: boolean;

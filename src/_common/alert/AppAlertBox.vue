@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import { styleBorderRadiusBase, styleWhen } from '../../_styles/mixins';
-import { kFontSizeSmall } from '../../_styles/variables';
-import AppJolticon, { Jolticon } from '../jolticon/AppJolticon.vue';
-import { kThemeFgMuted, kThemePrimary } from '../theme/variables';
+import AppJolticon, { Jolticon } from '~common/jolticon/AppJolticon.vue';
+import { kThemeFgMuted, kThemePrimary } from '~common/theme/variables';
+import { styleBorderRadiusBase, styleWhen } from '~styles/mixins';
+import { kFontSizeSmall } from '~styles/variables';
 
 type Props = {
 	icon?: Jolticon;

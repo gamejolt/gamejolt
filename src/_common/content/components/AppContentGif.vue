@@ -1,14 +1,14 @@
 <script lang="ts">
 import { computed, ref, unref } from 'vue';
 
-import { useContentFocusService } from '../../content-focus/content-focus.service';
-import AppResponsiveDimensions from '../../responsive-dimensions/AppResponsiveDimensions.vue';
-import { Screen } from '../../screen/screen-service';
-import AppScrollInview, { ScrollInviewConfig } from '../../scroll/inview/AppScrollInview.vue';
-import AppVideo from '../../video/AppVideo.vue';
-import { getVideoPlayerFromSources } from '../../video/player/controller';
-import { useContentOwnerController } from '../content-owner';
-import AppBaseContentComponent from './AppBaseContentComponent.vue';
+import AppBaseContentComponent from '~common/content/components/AppBaseContentComponent.vue';
+import { useContentOwnerController } from '~common/content/content-owner';
+import { useContentFocusService } from '~common/content-focus/content-focus.service';
+import AppResponsiveDimensions from '~common/responsive-dimensions/AppResponsiveDimensions.vue';
+import { Screen } from '~common/screen/screen-service';
+import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
+import AppVideo from '~common/video/AppVideo.vue';
+import { getVideoPlayerFromSources } from '~common/video/player/controller';
 
 const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height * 0.25}px` });
 </script>

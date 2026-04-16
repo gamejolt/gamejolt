@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { DeepReadonly } from 'vue';
 
-import { formatNumber } from '../../../../../_common/filters/number';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import { ReportComponent } from '../../../../components/site-analytics/site-analytics-service';
+import { ReportComponent } from '~app/components/site-analytics/site-analytics-service';
+import { formatNumber } from '~common/filters/number';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 type Props = {
 	reportData: DeepReadonly<ReportComponent>;
@@ -59,4 +59,4 @@ defineProps<Props>();
 	</div>
 </template>
 
-<style lang="stylus" src="./report-percentage.styl" scoped></style>
+<style lang="stylus" src="~app/views/dashboard/analytics/_report/report-percentage.styl" scoped></style>

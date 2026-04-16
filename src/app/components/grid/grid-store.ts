@@ -1,16 +1,16 @@
 import { computed, inject, InjectionKey, ref, watch } from 'vue';
 
-import { useContentFocusService } from '../../../_common/content-focus/content-focus.service';
-import { arrayRemove } from '../../../utils/array';
-import { bangRef } from '../../../utils/vue';
-import { AppStore } from '../../store';
-import { setChatFocused } from '../chat/client';
-import { GridClientLazy } from '../lazy';
+import { setChatFocused } from '~app/components/chat/client';
 import type {
 	DeregisterOnConnected,
 	GridClient,
 	OnConnectedHandler as GridOnConnectedHandler,
-} from './client.service';
+} from '~app/components/grid/client.service';
+import { GridClientLazy } from '~app/components/lazy';
+import { AppStore } from '~app/store';
+import { useContentFocusService } from '~common/content-focus/content-focus.service';
+import { arrayRemove } from '~utils/array';
+import { bangRef } from '~utils/vue';
 
 export type GridStore = ReturnType<typeof createGridStore>;
 export const GridStoreKey: InjectionKey<GridStore> = Symbol('grid-store');

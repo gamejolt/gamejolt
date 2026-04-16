@@ -1,16 +1,16 @@
 <script lang="ts" setup>
 import { computed, CSSProperties, nextTick, onMounted, onUnmounted, ref, useTemplateRef, watch } from 'vue';
 
-import { Api } from '../../../../api/api.service';
-import AppJolticon from '../../../../jolticon/AppJolticon.vue';
-import AppLoading from '../../../../loading/AppLoading.vue';
-import { Screen } from '../../../../screen/screen-service';
-import { $gettext } from '../../../../translate/translate.service';
-import AppUserVerifiedTick from '../../../../user/AppUserVerifiedTick.vue';
-import { UserModel } from '../../../../user/user.model';
-import AppUserAvatarImg from '../../../../user/user-avatar/AppUserAvatarImg.vue';
-import { editorInsertMention, useContentEditorController } from '../../content-editor-controller';
-import ContentEditorMentionCache from './cache.service';
+import { Api } from '~common/api/api.service';
+import { editorInsertMention, useContentEditorController } from '~common/content/content-editor/content-editor-controller';
+import ContentEditorMentionCache from '~common/content/content-editor/controls/mention/cache.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLoading from '~common/loading/AppLoading.vue';
+import { Screen } from '~common/screen/screen-service';
+import { $gettext } from '~common/translate/translate.service';
+import AppUserVerifiedTick from '~common/user/AppUserVerifiedTick.vue';
+import { UserModel } from '~common/user/user.model';
+import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
 
 type Props = {
 	canShow: boolean;

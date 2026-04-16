@@ -1,7 +1,7 @@
-import { MediaItemModel } from '../../media-item/media-item-model';
-import { ModelData, UnknownModelData } from '../../model/model.service';
-import { ModelStoreModel } from '../../model/model-store.service';
-import { ShopProductCommonFields } from '../../shop/product/product-model';
+import { MediaItemModel } from '~common/media-item/media-item-model';
+import { ModelData, UnknownModelData } from '~common/model/model.service';
+import { ModelStoreModel } from '~common/model/model-store.service';
+import { ShopProductCommonFields } from '~common/shop/product/product-model';
 
 export class StickerPackModel implements ModelStoreModel, ShopProductCommonFields {
 	declare id: number;

@@ -1,42 +1,42 @@
 <script lang="ts" setup>
 import { Ref, ref } from 'vue';
 
-import { Api } from '../../../../_common/api/api.service';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import AppCurrencyPillList from '../../../../_common/currency/AppCurrencyPillList.vue';
-import { CurrencyType } from '../../../../_common/currency/currency-type';
-import { shorthandReadableTime } from '../../../../_common/filters/duration';
-import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
-import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
-import { illPointyThing } from '../../../../_common/illustration/illustrations';
-import { InventoryShopGiftModel } from '../../../../_common/inventory/shop/inventory-shop-gift.model';
-import { InventoryShopProduct } from '../../../../_common/inventory/shop/product-owner-helpers';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import { storeModelList } from '../../../../_common/model/model-store.service';
-import AppPopper from '../../../../_common/popper/AppPopper.vue';
-import { Popper } from '../../../../_common/popper/popper.service';
-import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
+import AppBackpackGift from '~app/components/shell/sidebar/_backpack/AppBackpackGift.vue';
+import AppBackpackSticker from '~app/components/shell/sidebar/_backpack/AppBackpackSticker.vue';
+import { showVendingMachineModal } from '~app/components/vending-machine/modal/modal.service';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import AppCurrencyPillList from '~common/currency/AppCurrencyPillList.vue';
+import { CurrencyType } from '~common/currency/currency-type';
+import { shorthandReadableTime } from '~common/filters/duration';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppIllustration from '~common/illustration/AppIllustration.vue';
+import { illPointyThing } from '~common/illustration/illustrations';
+import { InventoryShopGiftModel } from '~common/inventory/shop/inventory-shop-gift.model';
+import { InventoryShopProduct } from '~common/inventory/shop/product-owner-helpers';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { storeModelList } from '~common/model/model-store.service';
+import AppPopper from '~common/popper/AppPopper.vue';
+import { Popper } from '~common/popper/popper.service';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
 import AppStickerPack, {
 	StickerPackExpiryStyles,
-} from '../../../../_common/sticker/pack/AppStickerPack.vue';
-import { showStickerPackOpenModal } from '../../../../_common/sticker/pack/open-modal/modal.service';
-import { UserStickerPackModel } from '../../../../_common/sticker/pack/user-pack.model';
+} from '~common/sticker/pack/AppStickerPack.vue';
+import { showStickerPackOpenModal } from '~common/sticker/pack/open-modal/modal.service';
+import { UserStickerPackModel } from '~common/sticker/pack/user-pack.model';
 import {
 	getStickerStacksFromPayloadData,
 	sortStickerStacks,
 	StickerSortMethod,
 	useStickerStore,
-} from '../../../../_common/sticker/sticker-store';
-import { useCommonStore } from '../../../../_common/store/common-store';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
-import { styleTextOverflow } from '../../../../_styles/mixins';
-import { kFontSizeLarge } from '../../../../_styles/variables';
-import { arrayRemove } from '../../../../utils/array';
-import { run } from '../../../../utils/utils';
-import { showVendingMachineModal } from '../../vending-machine/modal/modal.service';
-import AppBackpackGift from './_backpack/AppBackpackGift.vue';
-import AppBackpackSticker from './_backpack/AppBackpackSticker.vue';
+} from '~common/sticker/sticker-store';
+import { useCommonStore } from '~common/store/common-store';
+import { $gettext } from '~common/translate/translate.service';
+import AppUserAvatar from '~common/user/user-avatar/AppUserAvatar.vue';
+import { styleTextOverflow } from '~styles/mixins';
+import { kFontSizeLarge } from '~styles/variables';
+import { arrayRemove } from '~utils/array';
+import { run } from '~utils/utils';
 
 type FormModel = {
 	// nothing

@@ -2,17 +2,17 @@
 import { computed, markRaw, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { Api } from '../../../_common/api/api.service';
-import AppFormButton from '../../../_common/form-vue/AppFormButton.vue';
-import Onboarding from '../../../_common/onboarding/onboarding.service';
-import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
-import AppScrollAffix from '../../../_common/scroll/AppScrollAffix.vue';
-import { useCommonStore } from '../../../_common/store/common-store';
-import { $gettext } from '../../../_common/translate/translate.service';
-import { showUserInviteFollowGrowl } from '../../../_common/user/invite/modal/modal.service';
-import { UserModel } from '../../../_common/user/user.model';
-import FormOnboardingProfile from '../../components/forms/onboarding/FormOnboardingProfile.vue';
-import FormOnboardingRealms from '../../components/forms/onboarding/FormOnboardingRealms.vue';
+import FormOnboardingProfile from '~app/components/forms/onboarding/FormOnboardingProfile.vue';
+import FormOnboardingRealms from '~app/components/forms/onboarding/FormOnboardingRealms.vue';
+import { Api } from '~common/api/api.service';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import Onboarding from '~common/onboarding/onboarding.service';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import AppScrollAffix from '~common/scroll/AppScrollAffix.vue';
+import { useCommonStore } from '~common/store/common-store';
+import { $gettext } from '~common/translate/translate.service';
+import { showUserInviteFollowGrowl } from '~common/user/invite/modal/modal.service';
+import { UserModel } from '~common/user/user.model';
 
 export default {
 	...defineAppRouteOptions({

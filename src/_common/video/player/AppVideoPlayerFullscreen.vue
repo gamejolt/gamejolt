@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import AppJolticon from '../../jolticon/AppJolticon.vue';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import {
 	queueVideoFullscreenChange,
 	trackVideoPlayerEvent,
 	VideoPlayerController,
-} from './controller';
+} from '~common/video/player/controller';
 
 type Props = {
 	player: VideoPlayerController;

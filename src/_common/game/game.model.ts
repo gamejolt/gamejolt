@@ -1,25 +1,25 @@
 import { Router } from 'vue-router';
 
-import type { RouteLocationDefinition } from '../../utils/router';
-import { Api } from '../api/api.service';
-import { Collaboratable } from '../collaborator/collaboratable';
-import { CommentableModel } from '../comment/comment-model';
-import { CommunityModel } from '../community/community.model';
-import { ContentContainerModel } from '../content/content-container-model';
-import { ContentContext } from '../content/content-context';
-import { ContentSetCache } from '../content/content-set-cache';
-import { DeviceArch, DeviceOs } from '../device/device.service';
-import { showErrorGrowl } from '../growls/growls.service';
-import { MediaItemModel } from '../media-item/media-item-model';
-import { Model } from '../model/model.service';
-import { Registry } from '../registry/registry.service';
-import { SellableModel } from '../sellable/sellable.model';
-import { SiteModel } from '../site/site-model';
-import { ThemeModel } from '../theme/theme.model';
-import { $gettext } from '../translate/translate.service';
-import { UserModel } from '../user/user.model';
-import { canInstallGameBuild,GameBuildModel, GameBuildType } from './build/build.model';
-import { GamePackageModel } from './package/package.model';
+import { Api } from '~common/api/api.service';
+import { Collaboratable } from '~common/collaborator/collaboratable';
+import { CommentableModel } from '~common/comment/comment-model';
+import { CommunityModel } from '~common/community/community.model';
+import { ContentContainerModel } from '~common/content/content-container-model';
+import { ContentContext } from '~common/content/content-context';
+import { ContentSetCache } from '~common/content/content-set-cache';
+import { DeviceArch, DeviceOs } from '~common/device/device.service';
+import { canInstallGameBuild,GameBuildModel, GameBuildType } from '~common/game/build/build.model';
+import { GamePackageModel } from '~common/game/package/package.model';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import { MediaItemModel } from '~common/media-item/media-item-model';
+import { Model } from '~common/model/model.service';
+import { Registry } from '~common/registry/registry.service';
+import { SellableModel } from '~common/sellable/sellable.model';
+import { SiteModel } from '~common/site/site-model';
+import { ThemeModel } from '~common/theme/theme.model';
+import { $gettext } from '~common/translate/translate.service';
+import { UserModel } from '~common/user/user.model';
+import type { RouteLocationDefinition } from '~utils/router';
 
 export interface CustomGameMessage {
 	type: 'info' | 'alert';

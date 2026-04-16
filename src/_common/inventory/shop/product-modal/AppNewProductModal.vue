@@ -1,27 +1,27 @@
 <script lang="ts" setup>
 import { CSSProperties, ref, toRaw } from 'vue';
 
+import { Api } from '~common/api/api.service';
+import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
+import AppBackground from '~common/background/AppBackground.vue';
+import { BackgroundModel } from '~common/background/background.model';
+import AppButton from '~common/button/AppButton.vue';
+import AppExpand from '~common/expand/AppExpand.vue';
+import AppIllustration from '~common/illustration/AppIllustration.vue';
+import { illPointyThing } from '~common/illustration/illustrations';
+import AppMediaItemBackdrop from '~common/media-item/backdrop/AppMediaItemBackdrop.vue';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import { Screen } from '~common/screen/screen-service';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import { useCommonStore } from '~common/store/common-store';
+import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
+import { UserAvatarFrameModel } from '~common/user/user-avatar/frame/frame.model';
 import {
 	styleAbsoluteFill,
 	styleFlexCenter,
 	styleMaxWidthForOptions,
-} from '../../../../_styles/mixins';
-import { Api } from '../../../api/api.service';
-import AppAspectRatio from '../../../aspect-ratio/AppAspectRatio.vue';
-import AppBackground from '../../../background/AppBackground.vue';
-import { BackgroundModel } from '../../../background/background.model';
-import AppButton from '../../../button/AppButton.vue';
-import AppExpand from '../../../expand/AppExpand.vue';
-import AppIllustration from '../../../illustration/AppIllustration.vue';
-import { illPointyThing } from '../../../illustration/illustrations';
-import AppMediaItemBackdrop from '../../../media-item/backdrop/AppMediaItemBackdrop.vue';
-import AppModal from '../../../modal/AppModal.vue';
-import { useModal } from '../../../modal/modal.service';
-import { Screen } from '../../../screen/screen-service';
-import AppSpacer from '../../../spacer/AppSpacer.vue';
-import { useCommonStore } from '../../../store/common-store';
-import AppUserAvatarBubble from '../../../user/user-avatar/AppUserAvatarBubble.vue';
-import { UserAvatarFrameModel } from '../../../user/user-avatar/frame/frame.model';
+} from '~styles/mixins';
 
 type ProductModel = UserAvatarFrameModel | BackgroundModel;
 type Props = {

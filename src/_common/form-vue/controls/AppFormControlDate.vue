@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import AppDatetimePicker from '../../datetime-picker/AppDatetimePicker.vue';
+import AppDatetimePicker from '~common/datetime-picker/AppDatetimePicker.vue';
 import {
 	createFormControl,
 	FormControlEmits,
-} from '../AppFormControl.vue';
-import { FormValidator, validateMaxDate, validateMinDate } from '../validators';
+} from '~common/form-vue/AppFormControl.vue';
+import { FormValidator, validateMaxDate, validateMinDate } from '~common/form-vue/validators';
 
 type Props = {
 	disabled?: boolean;

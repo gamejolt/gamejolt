@@ -1,6 +1,6 @@
-import { InventoryShopProductSaleModel } from '../inventory/shop/inventory-shop-product-sale.model';
-import { ModelStoreModel, storeModel } from '../model/model-store.service';
-import { UserModel } from '../user/user.model';
+import { InventoryShopProductSaleModel } from '~common/inventory/shop/inventory-shop-product-sale.model';
+import { ModelStoreModel, storeModel } from '~common/model/model-store.service';
+import { UserModel } from '~common/user/user.model';
 
 export const enum AcquisitionMethod {
 	/** Opening a sticker pack. */

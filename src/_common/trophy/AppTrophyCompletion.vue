@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import AppCard from '../card/AppCard.vue';
-import { formatNumber } from '../filters/number';
-import AppJolticon from '../jolticon/AppJolticon.vue';
-import AppProgressBar from '../progress/AppProgressBar.vue';
-import AppTranslate from '../translate/AppTranslate.vue';
+import AppCard from '~common/card/AppCard.vue';
+import { formatNumber } from '~common/filters/number';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppProgressBar from '~common/progress/AppProgressBar.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 type Props = {
 	total: number;

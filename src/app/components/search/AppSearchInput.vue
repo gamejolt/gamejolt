@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { type HTMLAttributes, nextTick, useTemplateRef } from 'vue';
 
-import { FocusToken } from '../../../utils/focus-token';
+import { FocusToken } from '~utils/focus-token';
 
 type Props = {
 	focusToken: FocusToken;

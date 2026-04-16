@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref } from 'vue';
 
-import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
-import AppImgResponsive from '../../../../../_common/img/AppImgResponsive.vue';
-import AppVideo from '../../../../../_common/video/AppVideo.vue';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import AppImgResponsive from '~common/img/AppImgResponsive.vue';
+import AppVideo from '~common/video/AppVideo.vue';
 import {
 	createVideoPlayerController,
 	getVideoPlayerFromSources,
 	VideoPlayerController,
-} from '../../../../../_common/video/player/controller';
+} from '~common/video/player/controller';
 
 type Props = {
 	post: FiresidePostModel;

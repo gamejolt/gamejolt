@@ -1,8 +1,8 @@
-import { AvatarFrameModel } from '../../avatar/frame.model';
-import { BackgroundModel, getBackgroundImgUrl } from '../../background/background.model';
-import { getModel, storeModel } from '../../model/model-store.service';
-import { StickerPackRatio } from '../../sticker/pack/AppStickerPack.vue';
-import { StickerPackModel } from '../../sticker/pack/pack.model';
+import { AvatarFrameModel } from '~common/avatar/frame.model';
+import { BackgroundModel, getBackgroundImgUrl } from '~common/background/background.model';
+import { getModel, storeModel } from '~common/model/model-store.service';
+import { StickerPackRatio } from '~common/sticker/pack/AppStickerPack.vue';
+import { StickerPackModel } from '~common/sticker/pack/pack.model';
 
 export type InventoryShopProduct = StickerPackModel | AvatarFrameModel | BackgroundModel;
 

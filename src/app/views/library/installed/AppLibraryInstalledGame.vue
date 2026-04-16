@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 
-import AppGameThumbnail from '../../../../_common/game/thumbnail/AppGameThumbnail.vue';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import AppClientGameButtons from '../../../components/client/game-buttons/AppClientGameButtons.vue';
-import { LocalDbGame } from '../../../components/client/local-db/game/game.model';
-import { useClientLibraryStore } from '../../../store/client-library/index';
+import AppClientGameButtons from '~app/components/client/game-buttons/AppClientGameButtons.vue';
+import { LocalDbGame } from '~app/components/client/local-db/game/game.model';
+import { useClientLibraryStore } from '~app/store/client-library/index';
+import AppGameThumbnail from '~common/game/thumbnail/AppGameThumbnail.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 type Props = {
 	game: LocalDbGame;

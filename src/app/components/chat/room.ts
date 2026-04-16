@@ -1,11 +1,11 @@
-import { BackgroundModel } from '../../../_common/background/background.model';
-import { ModelStoreModel, storeModel } from '../../../_common/model/model-store.service';
-import { $gettext } from '../../../_common/translate/translate.service';
-import { ChatClient } from './client';
-import { ChatMessageModel } from './message';
-import { ChatRole } from './role';
-import { ChatUser } from './user';
-import { ChatUserCollection } from './user-collection';
+import { ChatClient } from '~app/components/chat/client';
+import { ChatMessageModel } from '~app/components/chat/message';
+import { ChatRole } from '~app/components/chat/role';
+import { ChatUser } from '~app/components/chat/user';
+import { ChatUserCollection } from '~app/components/chat/user-collection';
+import { BackgroundModel } from '~common/background/background.model';
+import { ModelStoreModel, storeModel } from '~common/model/model-store.service';
+import { $gettext } from '~common/translate/translate.service';
 
 const enum ChatRoomType {
 	PM = 'pm',

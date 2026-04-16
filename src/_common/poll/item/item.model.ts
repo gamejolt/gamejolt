@@ -1,5 +1,5 @@
-import { Model } from '../../model/model.service';
-import { PollModel } from '../poll.model';
+import { Model } from '~common/model/model.service';
+import { PollModel } from '~common/poll/poll.model';
 
 export class PollItemModel extends Model {
 	declare poll_id: number;

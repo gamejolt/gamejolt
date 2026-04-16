@@ -1,5 +1,5 @@
 <script lang="ts">
-import { ProfileTileAction } from '../RouteProfileOverview.vue';
+import { ProfileTileAction } from '~app/views/profile/overview/RouteProfileOverview.vue';
 
 export type ProfileStat = {
 	label: string;

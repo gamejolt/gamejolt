@@ -1,16 +1,16 @@
 <script lang="ts" setup>
 import { computed, toRef } from 'vue';
 
-import AppButton from '../button/AppButton.vue';
-import AppCard from '../card/AppCard.vue';
-import AppJolticon from '../jolticon/AppJolticon.vue';
-import { $gettext } from '../translate/translate.service';
+import AppButton from '~common/button/AppButton.vue';
+import AppCard from '~common/card/AppCard.vue';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import {
 	getLinkedAccountPlatformIcon,
 	getLinkedAccountProviderDisplayName,
 	LinkedAccountModel,
 	LinkedAccountProvider,
-} from './linked-account.model';
+} from '~common/linked-account/linked-account.model';
+import { $gettext } from '~common/translate/translate.service';
 
 type Props = {
 	provider: LinkedAccountProvider;

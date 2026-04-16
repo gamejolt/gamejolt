@@ -1,22 +1,22 @@
 <script lang="ts" setup>
 import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
 
-import { trackJoltydex } from '../../../../_common/analytics/analytics.service';
-import { Api } from '../../../../_common/api/api.service';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import AppHeaderBar from '../../../../_common/header/AppHeaderBar.vue';
-import AppJoltydexBrowser from '../../../../_common/joltydex/AppJoltydexBrowser.vue';
-import { Screen } from '../../../../_common/screen/screen-service';
-import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
-import { kThemeFgMuted } from '../../../../_common/theme/variables';
-import { UserModel } from '../../../../_common/user/user.model';
-import AppUserAvatarBubble from '../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
-import { styleTextOverflow } from '../../../../_styles/mixins';
-import { kFontSizeLarge, kFontSizeSmall } from '../../../../_styles/variables';
-import { useAppStore } from '../../../store/index';
-import { useJoltydexStore } from '../../../store/joltydex';
-import AppShellWindow from '../../shell/AppShellWindow.vue';
-import { showVendingMachineModal } from '../../vending-machine/modal/modal.service';
+import AppShellWindow from '~app/components/shell/AppShellWindow.vue';
+import { showVendingMachineModal } from '~app/components/vending-machine/modal/modal.service';
+import { useAppStore } from '~app/store/index';
+import { useJoltydexStore } from '~app/store/joltydex';
+import { trackJoltydex } from '~common/analytics/analytics.service';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import AppHeaderBar from '~common/header/AppHeaderBar.vue';
+import AppJoltydexBrowser from '~common/joltydex/AppJoltydexBrowser.vue';
+import { Screen } from '~common/screen/screen-service';
+import AppScrollScroller from '~common/scroll/AppScrollScroller.vue';
+import { kThemeFgMuted } from '~common/theme/variables';
+import { UserModel } from '~common/user/user.model';
+import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
+import { styleTextOverflow } from '~styles/mixins';
+import { kFontSizeLarge, kFontSizeSmall } from '~styles/variables';
 
 type Props = {
 	selectedUser: UserModel;

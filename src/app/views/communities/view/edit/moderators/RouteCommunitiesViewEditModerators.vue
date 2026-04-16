@@ -1,28 +1,28 @@
 <script lang="ts">
 import { ref, toRef } from 'vue';
 
-import { Api } from '../../../../../../_common/api/api.service';
-import AppCardList from '../../../../../../_common/card/list/AppCardList.vue';
-import AppCardListAdd from '../../../../../../_common/card/list/AppCardListAdd.vue';
-import AppCardListItem from '../../../../../../_common/card/list/AppCardListItem.vue';
+import FormCommunityCollaborator from '~app/components/forms/community/collaborator/FormCommunityCollaborator.vue';
+import AppCommunityPageContainer from '~app/views/communities/view/_page-container/AppCommunityPageContainer.vue';
+import { useCommunityRouteStore } from '~app/views/communities/view/view.store';
+import { Api } from '~common/api/api.service';
+import AppCardList from '~common/card/list/AppCardList.vue';
+import AppCardListAdd from '~common/card/list/AppCardListAdd.vue';
+import AppCardListItem from '~common/card/list/AppCardListItem.vue';
 import {
 	$removeCollaboratorInvite,
 	CollaboratorModel,
 	CollaboratorRole,
 	CollaboratorStatus,
-} from '../../../../../../_common/collaborator/collaborator.model';
-import { showErrorGrowl, showSuccessGrowl } from '../../../../../../_common/growls/growls.service';
-import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
-import { showModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
+} from '~common/collaborator/collaborator.model';
+import { showErrorGrowl, showSuccessGrowl } from '~common/growls/growls.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { showModalConfirm } from '~common/modal/confirm/confirm-service';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
-} from '../../../../../../_common/route/route-component';
-import { $gettext } from '../../../../../../_common/translate/translate.service';
-import { arrayRemove } from '../../../../../../utils/array';
-import FormCommunityCollaborator from '../../../../../components/forms/community/collaborator/FormCommunityCollaborator.vue';
-import AppCommunityPageContainer from '../../_page-container/AppCommunityPageContainer.vue';
-import { useCommunityRouteStore } from '../../view.store';
+} from '~common/route/route-component';
+import { $gettext } from '~common/translate/translate.service';
+import { arrayRemove } from '~utils/array';
 
 export default {
 	...defineAppRouteOptions({

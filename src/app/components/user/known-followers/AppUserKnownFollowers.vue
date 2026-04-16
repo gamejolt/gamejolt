@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import { useCommonStore } from '../../../../_common/store/common-store';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { UserModel } from '../../../../_common/user/user.model';
-import AppUserAvatarList from '../../../../_common/user/user-avatar/AppUserAvatarList.vue';
+import { useCommonStore } from '~common/store/common-store';
+import { $gettext } from '~common/translate/translate.service';
+import { UserModel } from '~common/user/user.model';
+import AppUserAvatarList from '~common/user/user-avatar/AppUserAvatarList.vue';
 
 type Props = {
 	users: UserModel[];

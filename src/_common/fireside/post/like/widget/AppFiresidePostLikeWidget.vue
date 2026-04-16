@@ -1,24 +1,24 @@
 <script lang="ts" setup>
 import { computed, ref, toRef } from 'vue';
 
-import { styleWhen } from '../../../../../_styles/mixins';
-import { PostOverlayTextStyles } from '../../../../../app/components/post/post-styles';
-import { PostControlsLocation, trackPostLike } from '../../../../analytics/analytics.service';
-import { vAppAuthRequired } from '../../../../auth/auth-required-directive';
-import AppButton from '../../../../button/AppButton.vue';
-import { formatFuzzynumber } from '../../../../filters/fuzzynumber';
-import { showErrorGrowl } from '../../../../growls/growls.service';
-import AppJolticon from '../../../../jolticon/AppJolticon.vue';
-import { showLikersModal } from '../../../../likers/modal.service';
-import { Screen } from '../../../../screen/screen-service';
-import { vAppTooltip } from '../../../../tooltip/tooltip-directive';
-import { $gettext } from '../../../../translate/translate.service';
-import { FiresidePostModel } from '../../post-model';
+import { PostOverlayTextStyles } from '~app/components/post/post-styles';
+import { PostControlsLocation, trackPostLike } from '~common/analytics/analytics.service';
+import { vAppAuthRequired } from '~common/auth/auth-required-directive';
+import AppButton from '~common/button/AppButton.vue';
+import { formatFuzzynumber } from '~common/filters/fuzzynumber';
 import {
 	$removeFiresidePostLike,
 	$saveFiresidePostLike,
 	FiresidePostLikeModel,
-} from '../like-model';
+} from '~common/fireside/post/like/like-model';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { showLikersModal } from '~common/likers/modal.service';
+import { Screen } from '~common/screen/screen-service';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { $gettext } from '~common/translate/translate.service';
+import { styleWhen } from '~styles/mixins';
 
 type Props = {
 	post: FiresidePostModel;

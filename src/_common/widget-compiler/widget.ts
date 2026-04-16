@@ -1,6 +1,6 @@
 import { VNode } from 'vue';
 
-import { WidgetCompilerContext } from './widget-compiler.service';
+import { WidgetCompilerContext } from '~common/widget-compiler/widget-compiler.service';
 
 export abstract class WidgetCompilerWidget {
 	abstract readonly name: string;

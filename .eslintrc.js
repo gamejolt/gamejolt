@@ -50,5 +50,17 @@ module.exports = {
 		'vue/return-in-computed-property': 'off',
 		'simple-import-sort/imports': 'warn',
 		'simple-import-sort/exports': 'warn',
+		'no-restricted-imports': [
+			'error',
+			{
+				patterns: [
+					{
+						group: ['../*'],
+						message:
+							'Use ~section aliases (~app, ~common, ~styles, etc.) instead of ../ relative imports.',
+					},
+				],
+			},
+		],
 	},
 };

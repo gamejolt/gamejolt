@@ -2,17 +2,8 @@
 import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
 
-import { UserFollowLocation } from '../../../_common/analytics/analytics.service';
-import { FiresidePostModel } from '../../../_common/fireside/post/post-model';
-import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
-import { Screen } from '../../../_common/screen/screen-service';
-import AppTimeAgo from '../../../_common/time/AppTimeAgo.vue';
-import AppTranslate from '../../../_common/translate/AppTranslate.vue';
-import AppUserCardHover from '../../../_common/user/card/AppUserCardHover.vue';
-import AppUserFollowButton from '../../../_common/user/follow/AppUserFollowButton.vue';
-import AppUserAvatarBubble from '../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
-import AppActivityFeedPostTime from '../activity/feed/post/AppActivityFeedPostTime.vue';
-import { ActivityFeedView } from '../activity/feed/view';
+import AppActivityFeedPostTime from '~app/components/activity/feed/post/AppActivityFeedPostTime.vue';
+import { ActivityFeedView } from '~app/components/activity/feed/view';
 import {
 	PostHeaderAvatarStyles,
 	PostHeaderBylineGameStyles,
@@ -23,7 +14,16 @@ import {
 	PostHeaderMetaStyles,
 	PostHeaderStyles,
 	PostHeaderTimeStyles,
-} from './post-styles';
+} from '~app/components/post/post-styles';
+import { UserFollowLocation } from '~common/analytics/analytics.service';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { Screen } from '~common/screen/screen-service';
+import AppTimeAgo from '~common/time/AppTimeAgo.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import AppUserCardHover from '~common/user/card/AppUserCardHover.vue';
+import AppUserFollowButton from '~common/user/follow/AppUserFollowButton.vue';
+import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
 
 type Props = {
 	post: FiresidePostModel;

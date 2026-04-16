@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import { styleWhen } from '../../../_styles/mixins';
-import { buildCSSPixelValue } from '../../../_styles/variables';
-import { ComponentProps } from '../../component-helpers';
-import { Screen } from '../../screen/screen-service';
-import AppScrollScroller, { createScroller } from '../../scroll/AppScrollScroller.vue';
-import { showReactionDetailsModal } from '../details-modal/modal.service';
-import { ReactionableModel, ReactionCount, toggleReactionOnResource } from '../reaction-count';
-import AppReactionListItem from './AppReactionListItem.vue';
+import { ComponentProps } from '~common/component-helpers';
+import { showReactionDetailsModal } from '~common/reaction/details-modal/modal.service';
+import AppReactionListItem from '~common/reaction/list/AppReactionListItem.vue';
+import { ReactionableModel, ReactionCount, toggleReactionOnResource } from '~common/reaction/reaction-count';
+import { Screen } from '~common/screen/screen-service';
+import AppScrollScroller, { createScroller } from '~common/scroll/AppScrollScroller.vue';
+import { styleWhen } from '~styles/mixins';
+import { buildCSSPixelValue } from '~styles/variables';
 
 type ClickAction = 'toggle' | 'emit-click';
 type ContextAction = 'show-details' | 'emit-context';

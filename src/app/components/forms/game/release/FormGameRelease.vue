@@ -3,40 +3,40 @@ import { addWeeks, startOfDay } from 'date-fns';
 import { determine } from 'jstimezonedetect';
 import { computed, ref, toRef } from 'vue';
 
-import AppButton from '../../../../../_common/button/AppButton.vue';
-import AppCardList from '../../../../../_common/card/list/AppCardList.vue';
-import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
-import AppFormControl from '../../../../../_common/form-vue/AppFormControl.vue';
-import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormLegend from '../../../../../_common/form-vue/AppFormLegend.vue';
-import AppFormControlDate from '../../../../../_common/form-vue/controls/AppFormControlDate.vue';
-import AppFormControlSelect from '../../../../../_common/form-vue/controls/AppFormControlSelect.vue';
+import FormGameBuild from '~app/components/forms/game/build/FormGameBuild.vue';
+import FormGameNewBuild from '~app/components/forms/game/new-build/FormGameNewBuild.vue';
+import AppButton from '~common/button/AppButton.vue';
+import AppCardList from '~common/card/list/AppCardList.vue';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormLegend from '~common/form-vue/AppFormLegend.vue';
+import AppFormControlDate from '~common/form-vue/controls/AppFormControlDate.vue';
+import AppFormControlSelect from '~common/form-vue/controls/AppFormControlSelect.vue';
 import {
 	validateAvailability,
 	validateMaxLength,
 	validateSemver,
-} from '../../../../../_common/form-vue/validators';
-import { $removeGameBuild, GameBuildModel } from '../../../../../_common/game/build/build.model';
-import { GameBuildLaunchOptionModel } from '../../../../../_common/game/build/launch-option/launch-option.model';
-import { GameModel } from '../../../../../_common/game/game.model';
-import { GamePackageModel } from '../../../../../_common/game/package/package.model';
+} from '~common/form-vue/validators';
+import { $removeGameBuild, GameBuildModel } from '~common/game/build/build.model';
+import { GameBuildLaunchOptionModel } from '~common/game/build/launch-option/launch-option.model';
+import { GameModel } from '~common/game/game.model';
+import { GamePackageModel } from '~common/game/package/package.model';
 import {
 	$saveGameRelease,
 	GameReleaseModel,
 	GameReleaseStatus,
-} from '../../../../../_common/game/release/release.model';
-import { showSuccessGrowl } from '../../../../../_common/growls/growls.service';
-import AppLinkHelp from '../../../../../_common/link/AppLinkHelp.vue';
-import { showModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
-import { Screen } from '../../../../../_common/screen/screen-service';
-import { Timezone, TimezoneData } from '../../../../../_common/timezone/timezone.service';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
-import { arrayRemove } from '../../../../../utils/array';
-import FormGameBuild from '../build/FormGameBuild.vue';
-import FormGameNewBuild from '../new-build/FormGameNewBuild.vue';
+} from '~common/game/release/release.model';
+import { showSuccessGrowl } from '~common/growls/growls.service';
+import AppLinkHelp from '~common/link/AppLinkHelp.vue';
+import { showModalConfirm } from '~common/modal/confirm/confirm-service';
+import { Screen } from '~common/screen/screen-service';
+import { Timezone, TimezoneData } from '~common/timezone/timezone.service';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { TranslateDirective as vTranslate } from '~common/translate/translate-directive';
+import { arrayRemove } from '~utils/array';
 </script>
 
 <script lang="ts" setup>

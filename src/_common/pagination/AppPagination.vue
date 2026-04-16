@@ -2,10 +2,10 @@
 import { computed, toRef } from 'vue';
 import { RouteLocationRaw, useRoute } from 'vue-router';
 
-import AppButton from '../button/AppButton.vue';
-import { Screen } from '../screen/screen-service';
-import { vAppNoAutoscroll } from '../scroll/auto-scroll/no-autoscroll.directive';
-import { $gettext } from '../translate/translate.service';
+import AppButton from '~common/button/AppButton.vue';
+import { Screen } from '~common/screen/screen-service';
+import { vAppNoAutoscroll } from '~common/scroll/auto-scroll/no-autoscroll.directive';
+import { $gettext } from '~common/translate/translate.service';
 
 type Props = {
 	totalItems: number;

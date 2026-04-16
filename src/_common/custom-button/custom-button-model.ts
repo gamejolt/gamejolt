@@ -1,4 +1,4 @@
-import { Api } from '../api/api.service';
+import { Api } from '~common/api/api.service';
 
 export class CustomButtonModel {
 	declare id: string;

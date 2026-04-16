@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { useTemplateRef } from 'vue';
 
-import { styleTextOverflow } from '../../../../_styles/mixins';
+import { styleTextOverflow } from '~styles/mixins';
 
 export interface AppFormControlUploadFileInterface {
 	showFileSelect: () => void;

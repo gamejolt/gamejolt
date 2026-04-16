@@ -1,15 +1,15 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 
-import { Api, ApiProgressEvent } from '../../../../../_common/api/api.service';
-import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
-import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
-import { validateFilesize } from '../../../../../_common/form-vue/validators';
-import { SiteBuildModel } from '../../../../../_common/site/build/build-model';
-import { SiteModel } from '../../../../../_common/site/site-model';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
+import { Api, ApiProgressEvent } from '~common/api/api.service';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlUpload from '~common/form-vue/controls/upload/AppFormControlUpload.vue';
+import { validateFilesize } from '~common/form-vue/validators';
+import { SiteBuildModel } from '~common/site/build/build-model';
+import { SiteModel } from '~common/site/site-model';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 type FormModel = SiteBuildModel & {
 	_progress?: ApiProgressEvent | null;

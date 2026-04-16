@@ -3,11 +3,11 @@
 // 	// Alphanumeric, hyphens.
 // 	urlPath: /^[\w\-]+$/,
 
-import { getImgDimensions } from '../../utils/image';
-import { MaybePromise } from '../../utils/utils';
-import { Api } from '../api/api.service';
-import { ContentDocument } from '../content/content-document';
-import { formatNumber } from '../filters/number';
+import { Api } from '~common/api/api.service';
+import { ContentDocument } from '~common/content/content-document';
+import { formatNumber } from '~common/filters/number';
+import { getImgDimensions } from '~utils/image';
+import { MaybePromise } from '~utils/utils';
 
 export interface FormValidatorError {
 	type: string;

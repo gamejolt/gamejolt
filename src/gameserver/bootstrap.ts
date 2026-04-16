@@ -1,11 +1,11 @@
-import './main.styl';
+import '~gameserver/main.styl';
 
-import { bootstrapCommon } from '../_common/bootstrap';
-import { createGameserverStore, GameserverStoreKey } from './store';
+import { bootstrapCommon } from '~common/bootstrap';
+import { createGameserverStore, GameserverStoreKey } from '~gameserver/store';
 
 export async function createApp() {
 	const { app } = await bootstrapCommon({
-		appComponentLoader: async () => (await import('./AppMain.vue')).default,
+		appComponentLoader: async () => (await import('~gameserver/AppMain.vue')).default,
 	});
 
 	app.provide(GameserverStoreKey, createGameserverStore());

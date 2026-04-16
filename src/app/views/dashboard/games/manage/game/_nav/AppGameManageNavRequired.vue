@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import AppJolticon from '../../../../../../../_common/jolticon/AppJolticon.vue';
-import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 
 type Props = {
 	isComplete?: boolean;

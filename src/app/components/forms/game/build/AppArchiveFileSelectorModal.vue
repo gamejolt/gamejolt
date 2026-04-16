@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 
-import { Api } from '../../../../../_common/api/api.service';
-import AppButton from '../../../../../_common/button/AppButton.vue';
-import AppLoading from '../../../../../_common/loading/AppLoading.vue';
-import AppModal from '../../../../../_common/modal/AppModal.vue';
-import { useModal } from '../../../../../_common/modal/modal.service';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import { run } from '../../../../../utils/utils';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import AppLoading from '~common/loading/AppLoading.vue';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import { $gettext } from '~common/translate/translate.service';
+import { run } from '~utils/utils';
 
 type Props = {
 	gameId: number;

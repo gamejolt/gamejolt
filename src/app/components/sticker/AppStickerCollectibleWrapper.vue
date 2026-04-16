@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { toRef } from 'vue';
 
-import { showCollectibleResourceDetailsModal } from '../../../_common/collectible/resource-details-modal/modal.service';
-import { EmojiModel } from '../../../_common/emoji/emoji.model';
-import { StickerModel } from '../../../_common/sticker/sticker.model';
-import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
-import { isInstance } from '../../../utils/utils';
+import { showCollectibleResourceDetailsModal } from '~common/collectible/resource-details-modal/modal.service';
+import { EmojiModel } from '~common/emoji/emoji.model';
+import { StickerModel } from '~common/sticker/sticker.model';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { isInstance } from '~utils/utils';
 
 type Props = {
 	data?: EmojiModel | StickerModel;

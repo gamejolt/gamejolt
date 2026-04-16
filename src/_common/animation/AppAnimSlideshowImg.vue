@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 
-import { ImgSlideshow } from './slideshow/sheets';
+import { ImgSlideshow } from '~common/animation/slideshow/sheets';
 
 type Props = {
 	sheet: ImgSlideshow;

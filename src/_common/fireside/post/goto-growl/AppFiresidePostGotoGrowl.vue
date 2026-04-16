@@ -2,12 +2,12 @@
 import { computed, onMounted, onUnmounted, toRef } from 'vue';
 import { RouteLocationRaw, RouterLink, useRoute, useRouter } from 'vue-router';
 
-import AppButton from '../../../button/AppButton.vue';
-import { GameModel } from '../../../game/game.model';
-import AppJolticon from '../../../jolticon/AppJolticon.vue';
-import AppTimeAgo from '../../../time/AppTimeAgo.vue';
-import { $gettext } from '../../../translate/translate.service';
-import { FiresidePostModel, FiresidePostStatus } from '../post-model';
+import AppButton from '~common/button/AppButton.vue';
+import { FiresidePostModel, FiresidePostStatus } from '~common/fireside/post/post-model';
+import { GameModel } from '~common/game/game.model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppTimeAgo from '~common/time/AppTimeAgo.vue';
+import { $gettext } from '~common/translate/translate.service';
 
 export type Action = 'add' | 'publish' | 'scheduled-publish';
 

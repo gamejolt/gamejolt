@@ -1,4 +1,4 @@
-import { Model } from '../../../model/model.service';
+import { Model } from '~common/model/model.service';
 
 export class OrderPaymentRefundModel extends Model {
 	declare order_id: number;

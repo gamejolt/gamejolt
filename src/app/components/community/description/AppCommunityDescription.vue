@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 
-import AppFadeCollapse from '../../../../_common/AppFadeCollapse.vue';
-import { CommunityModel } from '../../../../_common/community/community.model';
-import AppContentViewer from '../../../../_common/content/content-viewer/AppContentViewer.vue';
+import AppFadeCollapse from '~common/AppFadeCollapse.vue';
+import { CommunityModel } from '~common/community/community.model';
+import AppContentViewer from '~common/content/content-viewer/AppContentViewer.vue';
 
 type Props = {
 	community: CommunityModel;

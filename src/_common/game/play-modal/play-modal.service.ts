@@ -1,14 +1,14 @@
 import { defineAsyncComponent } from 'vue';
 
-import { Environment } from '../../environment/environment.service';
-import { showErrorGrowl } from '../../growls/growls.service';
-import { HistoryTick } from '../../history-tick/history-tick-service';
-import { showModal } from '../../modal/modal.service';
-import { Navigate } from '../../navigate/navigate.service';
-import { Popper } from '../../popper/popper.service';
-import { $gettext } from '../../translate/translate.service';
-import { GameBuildModel, GameBuildType } from '../build/build.model';
-import { GameModel } from '../game.model';
+import { Environment } from '~common/environment/environment.service';
+import { GameBuildModel, GameBuildType } from '~common/game/build/build.model';
+import { GameModel } from '~common/game/game.model';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import { HistoryTick } from '~common/history-tick/history-tick-service';
+import { showModal } from '~common/modal/modal.service';
+import { Navigate } from '~common/navigate/navigate.service';
+import { Popper } from '~common/popper/popper.service';
+import { $gettext } from '~common/translate/translate.service';
 
 let canMinimize = false;
 let hasModal = false;
@@ -75,7 +75,7 @@ export async function showGamePlayModal(
 
 	await showModal({
 		modalId: 'GamePlay',
-		component: defineAsyncComponent(() => import('./AppGamePlayModal.vue')),
+		component: defineAsyncComponent(() => import('~common/game/play-modal/AppGamePlayModal.vue')),
 		props: { game, build, url, canMinimize },
 		noBackdrop: true,
 		noBackdropClose: true,

@@ -244,4 +244,4 @@ defineProps<Props>();
 	/>
 </template>
 
-<style lang="stylus" src="../jolticons/jolticons.styl"></style>
+<style lang="stylus" src="~common/jolticons/jolticons.styl"></style>

@@ -1,9 +1,9 @@
 <script lang="ts">
-import './forums-content.styl';
+import '~app/views/forums/forums-content.styl';
 
 import { RouterView } from 'vue-router';
 
-import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 
 export default {
 	...defineAppRouteOptions({

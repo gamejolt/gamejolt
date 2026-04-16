@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ConfigService } from './config.service';
+import { ConfigService } from '~common/config/config.service';
 
 type Props = {
 	tag?: string;

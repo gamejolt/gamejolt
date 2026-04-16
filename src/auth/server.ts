@@ -1,7 +1,7 @@
-import { setDeviceUserAgent } from '../_common/device/device.service';
-import { Environment } from '../_common/environment/environment.service';
-import { Meta } from '../_common/meta/meta-service';
-import { createApp as bootstrapCreateApp } from './bootstrap';
+import { createApp as bootstrapCreateApp } from '~auth/bootstrap';
+import { setDeviceUserAgent } from '~common/device/device.service';
+import { Environment } from '~common/environment/environment.service';
+import { Meta } from '~common/meta/meta-service';
 
 export default async function (context: typeof Environment.ssrContext) {
 	Environment.ssrContext = context;

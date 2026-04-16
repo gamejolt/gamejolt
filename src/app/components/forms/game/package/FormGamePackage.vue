@@ -3,50 +3,50 @@ import { addWeeks, startOfDay, startOfTomorrow } from 'date-fns';
 import { determine } from 'jstimezonedetect';
 import { computed, type Ref, ref, toRef, watch } from 'vue';
 
-import { Api } from '../../../../../_common/api/api.service';
-import AppButton from '../../../../../_common/button/AppButton.vue';
-import { formatCurrency } from '../../../../../_common/filters/currency';
-import { formatDate } from '../../../../../_common/filters/date';
-import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
-import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
-import AppFormControl from '../../../../../_common/form-vue/AppFormControl.vue';
-import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormLegend from '../../../../../_common/form-vue/AppFormLegend.vue';
-import AppFormControlCheckbox from '../../../../../_common/form-vue/controls/AppFormControlCheckbox.vue';
-import AppFormControlDate from '../../../../../_common/form-vue/controls/AppFormControlDate.vue';
-import AppFormControlRadio from '../../../../../_common/form-vue/controls/AppFormControlRadio.vue';
-import AppFormControlSelect from '../../../../../_common/form-vue/controls/AppFormControlSelect.vue';
-import AppFormControlTextarea from '../../../../../_common/form-vue/controls/AppFormControlTextarea.vue';
-import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
+import AppGamePerms from '~app/components/game/perms/AppGamePerms.vue';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import { formatCurrency } from '~common/filters/currency';
+import { formatDate } from '~common/filters/date';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormLegend from '~common/form-vue/AppFormLegend.vue';
+import AppFormControlCheckbox from '~common/form-vue/controls/AppFormControlCheckbox.vue';
+import AppFormControlDate from '~common/form-vue/controls/AppFormControlDate.vue';
+import AppFormControlRadio from '~common/form-vue/controls/AppFormControlRadio.vue';
+import AppFormControlSelect from '~common/form-vue/controls/AppFormControlSelect.vue';
+import AppFormControlTextarea from '~common/form-vue/controls/AppFormControlTextarea.vue';
+import AppFormControlToggle from '~common/form-vue/controls/AppFormControlToggle.vue';
 import {
 	validateAvailability,
 	validateMaxLength,
 	validateMaxValue,
 	validateMinValue,
-} from '../../../../../_common/form-vue/validators';
-import { GameModel } from '../../../../../_common/game/game.model';
+} from '~common/form-vue/validators';
+import { GameModel } from '~common/game/game.model';
 import {
 	$saveGamePackage,
 	GamePackageModel,
 	GamePackageVisibility,
-} from '../../../../../_common/game/package/package.model';
-import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
-import { showModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
+} from '~common/game/package/package.model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
+import { showModalConfirm } from '~common/modal/confirm/confirm-service';
 import {
 	getOriginalSellablePricing,
 	getPromotionalSellablePricing,
 	SellablePricingModel,
-} from '../../../../../_common/sellable/pricing/pricing.model';
-import { SellableModel, SellableType } from '../../../../../_common/sellable/sellable.model';
-import { useCommonStore } from '../../../../../_common/store/common-store';
-import AppTimeAgo from '../../../../../_common/time/AppTimeAgo.vue';
-import { Timezone, TimezoneData } from '../../../../../_common/timezone/timezone.service';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
-import AppGamePerms from '../../../game/perms/AppGamePerms.vue';
+} from '~common/sellable/pricing/pricing.model';
+import { SellableModel, SellableType } from '~common/sellable/sellable.model';
+import { useCommonStore } from '~common/store/common-store';
+import AppTimeAgo from '~common/time/AppTimeAgo.vue';
+import { Timezone, TimezoneData } from '~common/timezone/timezone.service';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { TranslateDirective as vTranslate } from '~common/translate/translate-directive';
 
 type FormGamePackageModel = GamePackageModel & {
 	primary: boolean;

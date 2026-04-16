@@ -1,19 +1,19 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
 
-import { Api } from '../../../../_common/api/api.service';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import { Connection } from '../../../../_common/connection/connection-service';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import AppLoading from '../../../../_common/loading/AppLoading.vue';
-import AppPopper from '../../../../_common/popper/AppPopper.vue';
-import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { UserFriendshipModel } from '../../../../_common/user/friendship/friendship.model';
-import { useAppStore } from '../../../store';
-import { useGridStore } from '../../grid/grid-store';
-import { UserFriendshipHelper } from '../../user/friendships-helper/friendship-helper.service';
-import AppShellFriendRequestPopoverItem from './AppShellFriendRequestPopoverItem.vue';
+import { useGridStore } from '~app/components/grid/grid-store';
+import AppShellFriendRequestPopoverItem from '~app/components/shell/friend-request-popover/AppShellFriendRequestPopoverItem.vue';
+import { UserFriendshipHelper } from '~app/components/user/friendships-helper/friendship-helper.service';
+import { useAppStore } from '~app/store';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import { Connection } from '~common/connection/connection-service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLoading from '~common/loading/AppLoading.vue';
+import AppPopper from '~common/popper/AppPopper.vue';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { UserFriendshipModel } from '~common/user/friendship/friendship.model';
 
 type Tab = 'requests' | 'pending';
 

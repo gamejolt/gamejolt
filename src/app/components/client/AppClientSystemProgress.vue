@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { watch } from 'vue';
 
-import { Client } from '../../../_common/client/client.service';
-import { useClientLibraryStore } from '../../store/client-library/index';
+import { useClientLibraryStore } from '~app/store/client-library/index';
+import { Client } from '~common/client/client.service';
 
 const { totalPatchProgress } = useClientLibraryStore();
 

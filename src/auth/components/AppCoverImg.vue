@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
 
-import { ImgHelper } from '../../_common/img/helper/helper-service';
+import { ImgHelper } from '~common/img/helper/helper-service';
 
 type Props = {
 	imgUrl: string;

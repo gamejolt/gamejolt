@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import AppButton from '../../../../../_common/button/AppButton.vue';
-import { GameDevelopmentStatus, GameModel } from '../../../../../_common/game/game.model';
-import AppModal from '../../../../../_common/modal/AppModal.vue';
-import { useModal } from '../../../../../_common/modal/modal.service';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../../_common/translate/translate.service';
+import AppButton from '~common/button/AppButton.vue';
+import { GameDevelopmentStatus, GameModel } from '~common/game/game.model';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
 
 type Props = {
 	game: GameModel;

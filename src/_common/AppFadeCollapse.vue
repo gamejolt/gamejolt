@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { onMounted, ref, useTemplateRef, watch } from 'vue';
 
-import { sleep } from '../utils/utils';
-import { Screen } from './screen/screen-service';
-import { Scroll } from './scroll/scroll.service';
+import { Screen } from '~common/screen/screen-service';
+import { Scroll } from '~common/scroll/scroll.service';
+import { sleep } from '~utils/utils';
 
 const ExtraCollapsePadding = 200;
 

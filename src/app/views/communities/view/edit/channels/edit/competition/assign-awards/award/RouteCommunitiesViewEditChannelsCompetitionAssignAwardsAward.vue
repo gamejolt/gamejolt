@@ -3,28 +3,28 @@ import { computed, ref, toRef } from 'vue';
 import { RouteLocationNormalized, useRoute } from 'vue-router';
 import draggable from 'vuedraggable';
 
-import { Api } from '../../../../../../../../../../_common/api/api.service';
-import AppButton from '../../../../../../../../../../_common/button/AppButton.vue';
-import { CommunityCompetitionAwardModel } from '../../../../../../../../../../_common/community/competition/award/award.model';
+import { showEntryFromCommunityCompetitionEntryModal } from '~app/components/community/competition/entry/modal/modal.service';
+import { useAssignAwardsRoute } from '~app/views/communities/view/edit/channels/edit/competition/assign-awards/assign-awards.store';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import { CommunityCompetitionAwardModel } from '~common/community/competition/award/award.model';
 import {
 	$assignCommunityCompetitionEntryAward,
 	$saveSortCommunityCompetitionEntryAward,
 	$unassignCommunityCompetitionEntryAward,
-} from '../../../../../../../../../../_common/community/competition/entry/award/award.model';
-import { CommunityCompetitionEntryModel } from '../../../../../../../../../../_common/community/competition/entry/entry.model';
-import { showErrorGrowl } from '../../../../../../../../../../_common/growls/growls.service';
-import AppJolticon from '../../../../../../../../../../_common/jolticon/AppJolticon.vue';
-import AppLoadingFade from '../../../../../../../../../../_common/loading/AppLoadingFade.vue';
-import AppPagination from '../../../../../../../../../../_common/pagination/AppPagination.vue';
+} from '~common/community/competition/entry/award/award.model';
+import { CommunityCompetitionEntryModel } from '~common/community/competition/entry/entry.model';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
+import AppPagination from '~common/pagination/AppPagination.vue';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
-} from '../../../../../../../../../../_common/route/route-component';
-import { vAppTooltip } from '../../../../../../../../../../_common/tooltip/tooltip-directive';
-import { $gettext } from '../../../../../../../../../../_common/translate/translate.service';
-import { TranslateDirective as vTranslate } from '../../../../../../../../../../_common/translate/translate-directive';
-import { showEntryFromCommunityCompetitionEntryModal } from '../../../../../../../../../components/community/competition/entry/modal/modal.service';
-import { useAssignAwardsRoute } from '../assign-awards.store';
+} from '~common/route/route-component';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { $gettext } from '~common/translate/translate.service';
+import { TranslateDirective as vTranslate } from '~common/translate/translate-directive';
 
 export default {
 	...defineAppRouteOptions({

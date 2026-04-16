@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 
-import AppJolticon, { Jolticons } from '../jolticon/AppJolticon.vue';
-import { vAppTooltip } from '../tooltip/tooltip-directive';
+import AppJolticon, { Jolticons } from '~common/jolticon/AppJolticon.vue';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 
 const filter = ref('');
 

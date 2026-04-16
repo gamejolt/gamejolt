@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import AppScrollAffix from '../scroll/AppScrollAffix.vue';
+import AppScrollAffix from '~common/scroll/AppScrollAffix.vue';
 
 type Props = {
 	controlsGap?: number;

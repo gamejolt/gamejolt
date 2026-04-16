@@ -11,10 +11,10 @@ import {
 	toRaw,
 } from 'vue';
 
-import { arrayRemove } from '../../../utils/array';
-import { ScrollController } from '../../scroll/AppScrollScroller.vue';
-import { isStickerTargetMine, StickerStore } from '../sticker-store';
-import { StickerLayerItem } from './layer-item';
+import { ScrollController } from '~common/scroll/AppScrollScroller.vue';
+import { StickerLayerItem } from '~common/sticker/layer/layer-item';
+import { isStickerTargetMine, StickerStore } from '~common/sticker/sticker-store';
+import { arrayRemove } from '~utils/array';
 
 const StickerLayerKey: InjectionKey<StickerLayerController> = Symbol('sticker-layer');
 

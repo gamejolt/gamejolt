@@ -3,12 +3,12 @@ export const REALM_CARD_RATIO = 0.75;
 import { computed, CSSProperties, HTMLAttributes, ref } from 'vue';
 import { RouteLocationRaw, RouterLink } from 'vue-router';
 
-import AppImgResponsive from '../img/AppImgResponsive.vue';
-import AppMediaItemBackdrop from '../media-item/backdrop/AppMediaItemBackdrop.vue';
-import AppResponsiveDimensions from '../responsive-dimensions/AppResponsiveDimensions.vue';
-import AppRealmFollowButton from './AppRealmFollowButton.vue';
-import AppRealmLabel from './AppRealmLabel.vue';
-import { $toggleRealmFollow, RealmModel } from './realm-model';
+import AppImgResponsive from '~common/img/AppImgResponsive.vue';
+import AppMediaItemBackdrop from '~common/media-item/backdrop/AppMediaItemBackdrop.vue';
+import AppRealmFollowButton from '~common/realm/AppRealmFollowButton.vue';
+import AppRealmLabel from '~common/realm/AppRealmLabel.vue';
+import { $toggleRealmFollow, RealmModel } from '~common/realm/realm-model';
+import AppResponsiveDimensions from '~common/responsive-dimensions/AppResponsiveDimensions.vue';
 </script>
 
 <script lang="ts" setup>

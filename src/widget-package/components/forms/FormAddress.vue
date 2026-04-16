@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 import { computed, shallowRef } from 'vue';
 
-import AppForm, { createForm, FormController } from '../../../_common/form-vue/AppForm.vue';
-import AppFormButton from '../../../_common/form-vue/AppFormButton.vue';
-import AppFormControl from '../../../_common/form-vue/AppFormControl.vue';
-import AppFormGroup from '../../../_common/form-vue/AppFormGroup.vue';
-import AppFormControlSelect from '../../../_common/form-vue/controls/AppFormControlSelect.vue';
-import { Geo, GeoCountry, GeoRegion } from '../../../_common/geo/geo.service';
-import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
-import { AddressData, useWidgetPackageStore } from '../../store/index';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlSelect from '~common/form-vue/controls/AppFormControlSelect.vue';
+import { Geo, GeoCountry, GeoRegion } from '~common/geo/geo.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { AddressData, useWidgetPackageStore } from '~widget-package/store/index';
 
 type FormModel = {
 	country: string;

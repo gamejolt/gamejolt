@@ -1,19 +1,19 @@
 <script lang="ts" setup>
 import { computed, CSSProperties, ref, toRef, useTemplateRef } from 'vue';
 
-import AppButton from '../../../../../_common/button/AppButton.vue';
-import AppContentViewer from '../../../../../_common/content/content-viewer/AppContentViewer.vue';
+import { ActivityFeedItem } from '~app/components/activity/feed/item-service';
+import { useActivityFeed } from '~app/components/activity/feed/view';
+import { kPostItemPaddingContainer } from '~app/components/post/post-styles';
+import AppButton from '~common/button/AppButton.vue';
+import AppContentViewer from '~common/content/content-viewer/AppContentViewer.vue';
 import {
 	FiresidePostModel,
 	loadArticleIntoPost,
-} from '../../../../../_common/fireside/post/post-model';
-import AppLoading from '../../../../../_common/loading/AppLoading.vue';
-import { Screen } from '../../../../../_common/screen/screen-service';
-import { Scroll } from '../../../../../_common/scroll/scroll.service';
-import { styleWhen } from '../../../../../_styles/mixins';
-import { kPostItemPaddingContainer } from '../../../post/post-styles';
-import { ActivityFeedItem } from '../item-service';
-import { useActivityFeed } from '../view';
+} from '~common/fireside/post/post-model';
+import AppLoading from '~common/loading/AppLoading.vue';
+import { Screen } from '~common/screen/screen-service';
+import { Scroll } from '~common/scroll/scroll.service';
+import { styleWhen } from '~styles/mixins';
 
 type Props = {
 	item: ActivityFeedItem;

@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 
-import { Screen } from '../../screen/screen-service';
-import { AdAdapterComponentProps } from '../adapter-base';
-import AppAdMonetizeMoreNativePost, { AdNativePostProps } from './AppAdMonetizeMoreNativePost.vue';
-import AppAdMonetizeMoreTakeover, { AdTakeoverProps } from './AppAdMonetizeMoreTakeover.vue';
-import { AdMonetizeMoreAdapter } from './monetizemore-adapter';
+import { AdAdapterComponentProps } from '~common/ad/adapter-base';
+import AppAdMonetizeMoreNativePost, { AdNativePostProps } from '~common/ad/monetizemore/AppAdMonetizeMoreNativePost.vue';
+import AppAdMonetizeMoreTakeover, { AdTakeoverProps } from '~common/ad/monetizemore/AppAdMonetizeMoreTakeover.vue';
+import { AdMonetizeMoreAdapter } from '~common/ad/monetizemore/monetizemore-adapter';
+import { Screen } from '~common/screen/screen-service';
 
 type Props = AdAdapterComponentProps<AdMonetizeMoreAdapter>;
 

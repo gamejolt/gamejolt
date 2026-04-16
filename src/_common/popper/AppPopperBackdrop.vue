@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { onBeforeUnmount, onMounted } from 'vue';
 
-import { Backdrop, BackdropController } from '../backdrop/backdrop.service';
+import { Backdrop, BackdropController } from '~common/backdrop/backdrop.service';
 
 let backdrop: BackdropController | undefined;
 

@@ -2,58 +2,58 @@
 import { computed, Ref, ref } from 'vue';
 import { RouteLocationRaw, RouterView, useRoute, useRouter } from 'vue-router';
 
-import AppAdTakeoverFloat from '../../../../_common/ad/AppAdTakeoverFloat.vue';
-import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
-import { Api } from '../../../../_common/api/api.service';
-import AppButton from '../../../../_common/button/AppButton.vue';
+import {
+	CommentThreadModalPermalinkDeregister,
+	showCommentThreadModalFromPermalink,
+	watchForCommentThreadModalPermalink,
+} from '~app/components/comment/thread/modal.service';
+import AppGameList from '~app/components/game/list/AppGameList.vue';
+import AppGameListPlaceholder from '~app/components/game/list/AppGameListPlaceholder.vue';
+import { useGridStore } from '~app/components/grid/grid-store';
+import AppPageContainer from '~app/components/page-container/AppPageContainer.vue';
+import AppShellPageBackdrop from '~app/components/shell/AppShellPageBackdrop.vue';
+import AppProfileActionButtons from '~app/views/profile/overview/AppProfileActionButtons.vue';
+import AppProfileInfoCard from '~app/views/profile/overview/AppProfileInfoCard.vue';
+import AppRouteProfileOverviewBanned from '~app/views/profile/overview/AppRouteProfileOverviewBanned.vue';
+import AppProfileShopButton from '~app/views/profile/overview/shop/AppProfileShopButton.vue';
+import { useProfileRouteStore } from '~app/views/profile/RouteProfile.vue';
+import AppAdTakeoverFloat from '~common/ad/AppAdTakeoverFloat.vue';
+import AppAdWidget from '~common/ad/widget/AppAdWidget.vue';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
 import {
 	commentStoreCount,
 	CommentStoreModel,
 	lockCommentStore,
 	releaseCommentStore,
 	useCommentStoreManager,
-} from '../../../../_common/comment/comment-store';
-import { CommunityModel } from '../../../../_common/community/community.model';
-import AppExpand from '../../../../_common/expand/AppExpand.vue';
-import { formatNumber } from '../../../../_common/filters/number';
-import { GameModel } from '../../../../_common/game/game.model';
-import AppInviteCard from '../../../../_common/invite/AppInviteCard.vue';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import { LinkedAccountModel } from '../../../../_common/linked-account/linked-account.model';
-import { Meta } from '../../../../_common/meta/meta-service';
-import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
-import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
-import { Screen } from '../../../../_common/screen/screen-service';
-import AppShareCard from '../../../../_common/share/card/AppShareCard.vue';
-import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
+} from '~common/comment/comment-store';
+import { CommunityModel } from '~common/community/community.model';
+import AppExpand from '~common/expand/AppExpand.vue';
+import { formatNumber } from '~common/filters/number';
+import { GameModel } from '~common/game/game.model';
+import AppInviteCard from '~common/invite/AppInviteCard.vue';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { LinkedAccountModel } from '~common/linked-account/linked-account.model';
+import { Meta } from '~common/meta/meta-service';
+import { showModalConfirm } from '~common/modal/confirm/confirm-service';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { Screen } from '~common/screen/screen-service';
+import AppShareCard from '~common/share/card/AppShareCard.vue';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
 import AppTopSupportersCard, {
 	OwnSupport,
 	TopSupporter,
-} from '../../../../_common/supporters/AppTopSupportersCard.vue';
-import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { UserFriendshipState } from '../../../../_common/user/friendship/friendship.model';
-import { showUserInviteFollowModal } from '../../../../_common/user/invite/modal/modal.service';
-import { $unfollowUser, UserModel } from '../../../../_common/user/user.model';
-import { styleChangeBg, styleElevate, styleWhen } from '../../../../_styles/mixins';
-import { kBorderRadiusLg } from '../../../../_styles/variables';
-import { numberSort } from '../../../../utils/array';
-import { removeQuery } from '../../../../utils/router';
-import {
-	CommentThreadModalPermalinkDeregister,
-	showCommentThreadModalFromPermalink,
-	watchForCommentThreadModalPermalink,
-} from '../../../components/comment/thread/modal.service';
-import AppGameList from '../../../components/game/list/AppGameList.vue';
-import AppGameListPlaceholder from '../../../components/game/list/AppGameListPlaceholder.vue';
-import { useGridStore } from '../../../components/grid/grid-store';
-import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
-import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
-import { useProfileRouteStore } from '../RouteProfile.vue';
-import AppProfileActionButtons from './AppProfileActionButtons.vue';
-import AppProfileInfoCard from './AppProfileInfoCard.vue';
-import AppRouteProfileOverviewBanned from './AppRouteProfileOverviewBanned.vue';
-import AppProfileShopButton from './shop/AppProfileShopButton.vue';
+} from '~common/supporters/AppTopSupportersCard.vue';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { $gettext } from '~common/translate/translate.service';
+import { UserFriendshipState } from '~common/user/friendship/friendship.model';
+import { showUserInviteFollowModal } from '~common/user/invite/modal/modal.service';
+import { $unfollowUser, UserModel } from '~common/user/user.model';
+import { styleChangeBg, styleElevate, styleWhen } from '~styles/mixins';
+import { kBorderRadiusLg } from '~styles/variables';
+import { numberSort } from '~utils/array';
+import { removeQuery } from '~utils/router';
 
 export type ProfileTileAction =
 	| { location: RouteLocationRaw; action?: never }

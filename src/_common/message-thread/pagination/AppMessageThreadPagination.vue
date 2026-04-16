@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { toRef } from 'vue';
 
-import AppPagination from '../../pagination/AppPagination.vue';
-import AppTimelineListItem from '../../timeline-list/item/AppTimelineListItem.vue';
+import AppPagination from '~common/pagination/AppPagination.vue';
+import AppTimelineListItem from '~common/timeline-list/item/AppTimelineListItem.vue';
 
 type Props = {
 	itemsPerPage: number;

@@ -1,21 +1,21 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
 
-import { Api } from '../../../../_common/api/api.service';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import { formatNumber } from '../../../../_common/filters/number';
-import { GameModel } from '../../../../_common/game/game.model';
-import { GameScoreTableModel } from '../../../../_common/game/score-table/score-table.model';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import { Popper } from '../../../../_common/popper/popper.service';
-import { Screen } from '../../../../_common/screen/screen-service';
-import { useCommonStore } from '../../../../_common/store/common-store';
-import AppTimeAgo from '../../../../_common/time/AppTimeAgo.vue';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { UserGameScoreModel } from '../../../../_common/user/game-score/game-score.model';
-import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
-import AppScoreList from '../list/AppScoreList.vue';
-import AppScoreboardSelector from '../scoreboard-selector/AppScoreboardSelector.vue';
+import AppScoreList from '~app/components/score/list/AppScoreList.vue';
+import AppScoreboardSelector from '~app/components/score/scoreboard-selector/AppScoreboardSelector.vue';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import { formatNumber } from '~common/filters/number';
+import { GameModel } from '~common/game/game.model';
+import { GameScoreTableModel } from '~common/game/score-table/score-table.model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { Popper } from '~common/popper/popper.service';
+import { Screen } from '~common/screen/screen-service';
+import { useCommonStore } from '~common/store/common-store';
+import AppTimeAgo from '~common/time/AppTimeAgo.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { UserGameScoreModel } from '~common/user/game-score/game-score.model';
+import AppUserAvatar from '~common/user/user-avatar/AppUserAvatar.vue';
 
 type Props = {
 	game: GameModel;

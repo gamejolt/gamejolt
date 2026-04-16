@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { RouterLink } from 'vue-router';
 
-import { trackGotoCommunity } from '../../analytics/analytics.service';
-import { CommunityModel } from '../community.model';
-import AppCommunityThumbnailImg from './AppCommunityThumbnailImg.vue';
+import { trackGotoCommunity } from '~common/analytics/analytics.service';
+import { CommunityModel } from '~common/community/community.model';
+import AppCommunityThumbnailImg from '~common/community/thumbnail/AppCommunityThumbnailImg.vue';
 
 type Props = {
 	community: CommunityModel;

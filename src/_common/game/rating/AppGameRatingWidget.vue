@@ -1,23 +1,23 @@
 <script lang="ts">
 import { computed, onMounted } from 'vue';
 
-import { trackExperimentEngagement } from '../../analytics/analytics.service';
-import { vAppAuthRequired } from '../../auth/auth-required-directive';
-import AppButton from '../../button/AppButton.vue';
-import { configGuestNoAuthRequired } from '../../config/config.service';
-import { formatFuzzynumber } from '../../filters/fuzzynumber';
-import { showErrorGrowl } from '../../growls/growls.service';
-import { showLikersModal } from '../../likers/modal.service';
-import { EventTopic } from '../../system/event/event-topic';
-import { vAppTooltip } from '../../tooltip/tooltip-directive';
-import { $gettext } from '../../translate/translate.service';
-import { GameModel } from '../game.model';
+import { trackExperimentEngagement } from '~common/analytics/analytics.service';
+import { vAppAuthRequired } from '~common/auth/auth-required-directive';
+import AppButton from '~common/button/AppButton.vue';
+import { configGuestNoAuthRequired } from '~common/config/config.service';
+import { formatFuzzynumber } from '~common/filters/fuzzynumber';
+import { GameModel } from '~common/game/game.model';
 import {
 	$removeGameRating,
 	$saveGameRating,
 	GameRatingModel,
 	GameRatingValue,
-} from './rating.model';
+} from '~common/game/rating/rating.model';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import { showLikersModal } from '~common/likers/modal.service';
+import { EventTopic } from '~common/system/event/event-topic';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { $gettext } from '~common/translate/translate.service';
 
 export const RatingWidgetOnChange = 'GameRating.changed';
 export interface RatingWidgetOnChangePayload {

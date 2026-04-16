@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, HTMLAttributes } from 'vue';
 
-import { $gettext } from '../translate/translate.service';
+import { $gettext } from '~common/translate/translate.service';
 
 const images = import.meta.glob('./*.gif', { eager: true, as: 'url' });
 

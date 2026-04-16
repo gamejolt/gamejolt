@@ -23,8 +23,8 @@ import {
 	watch,
 } from 'vue';
 
-import { formatDate } from '../filters/date';
-import { useThemeStore } from '../theme/theme.store';
+import { formatDate } from '~common/filters/date';
+import { useThemeStore } from '~common/theme/theme.store';
 
 // Try to match site styling.
 const fontFamily = `Nunito, 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif`;

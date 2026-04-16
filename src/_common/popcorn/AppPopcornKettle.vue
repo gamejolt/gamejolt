@@ -1,12 +1,12 @@
 <script lang="ts">
 import { computed, useSlots } from 'vue';
 
-import AppPopcornKernel from './AppPopcornKernel.vue';
+import AppPopcornKernel from '~common/popcorn/AppPopcornKernel.vue';
 import {
 	createPopcornKettleController,
 	PopcornKettleController,
 	providePopcornKettleController,
-} from './popcorn-kettle-controller';
+} from '~common/popcorn/popcorn-kettle-controller';
 </script>
 
 <script lang="ts" setup>

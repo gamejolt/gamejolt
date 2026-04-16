@@ -1,18 +1,18 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import { showInviteModal } from '../invite/modal/modal.service';
-import AppJolticon, { Jolticon } from '../jolticon/AppJolticon.vue';
-import AppSpacer from '../spacer/AppSpacer.vue';
-import { useCommonStore } from '../store/common-store';
-import { $gettext } from '../translate/translate.service';
-import AppQuestProgress from './AppQuestProgress.vue';
-import { QuestModel, QuestStatus } from './quest-model';
+import { showInviteModal } from '~common/invite/modal/modal.service';
+import AppJolticon, { Jolticon } from '~common/jolticon/AppJolticon.vue';
+import AppQuestProgress from '~common/quest/AppQuestProgress.vue';
+import { QuestModel, QuestStatus } from '~common/quest/quest-model';
 import {
 	QuestObjectiveModel,
 	QuestObjectiveStatus,
 	QuestObjectiveType,
-} from './quest-objective-model';
+} from '~common/quest/quest-objective-model';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import { useCommonStore } from '~common/store/common-store';
+import { $gettext } from '~common/translate/translate.service';
 
 type Props = {
 	quest: QuestModel;

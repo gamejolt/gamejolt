@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { Environment } from '../../environment/environment.service';
-import { SellableModel } from '../../sellable/sellable.model';
+import { Environment } from '~common/environment/environment.service';
+import { SellableModel } from '~common/sellable/sellable.model';
 
 type Props = {
 	sellables?: SellableModel[];

@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import AppJolticon, { Jolticon } from '../../jolticon/AppJolticon.vue';
-import { kThemeBgSubtle } from '../../theme/variables';
-import { GameModel } from '../game.model';
+import { GameModel } from '~common/game/game.model';
+import AppJolticon, { Jolticon } from '~common/jolticon/AppJolticon.vue';
+import { kThemeBgSubtle } from '~common/theme/variables';
 
 type Props = {
 	game: GameModel;

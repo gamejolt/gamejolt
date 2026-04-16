@@ -1,24 +1,24 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import AppButton from '../../../../../_common/button/AppButton.vue';
-import { Clipboard } from '../../../../../_common/clipboard/clipboard-service';
-import { Environment } from '../../../../../_common/environment/environment.service';
-import { GameModel } from '../../../../../_common/game/game.model';
-import { $removeGameScreenshot } from '../../../../../_common/game/screenshot/screenshot.model';
-import { $removeGameSketchfab } from '../../../../../_common/game/sketchfab/sketchfab.model';
-import { $removeGameVideo } from '../../../../../_common/game/video/video.model';
-import AppModal from '../../../../../_common/modal/AppModal.vue';
-import { showModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
-import { useModal } from '../../../../../_common/modal/modal.service';
-import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import { Media } from '../../../../views/dashboard/games/manage/manage.store';
-import FormGameImage from '../../../forms/game/image/FormGameImage.vue';
-import FormGameSketchfab from '../../../forms/game/sketchfab/FormGameSketchfab.vue';
-import FormGameVideo from '../../../forms/game/video/FormGameVideo.vue';
-import { GameMediaItemEditModalRemoveCallback } from './edit-modal.service';
+import FormGameImage from '~app/components/forms/game/image/FormGameImage.vue';
+import FormGameSketchfab from '~app/components/forms/game/sketchfab/FormGameSketchfab.vue';
+import FormGameVideo from '~app/components/forms/game/video/FormGameVideo.vue';
+import { GameMediaItemEditModalRemoveCallback } from '~app/components/game/media-item/edit-modal/edit-modal.service';
+import { Media } from '~app/views/dashboard/games/manage/manage.store';
+import AppButton from '~common/button/AppButton.vue';
+import { Clipboard } from '~common/clipboard/clipboard-service';
+import { Environment } from '~common/environment/environment.service';
+import { GameModel } from '~common/game/game.model';
+import { $removeGameScreenshot } from '~common/game/screenshot/screenshot.model';
+import { $removeGameSketchfab } from '~common/game/sketchfab/sketchfab.model';
+import { $removeGameVideo } from '~common/game/video/video.model';
+import AppModal from '~common/modal/AppModal.vue';
+import { showModalConfirm } from '~common/modal/confirm/confirm-service';
+import { useModal } from '~common/modal/modal.service';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
 
 type Props = {
 	game: GameModel;

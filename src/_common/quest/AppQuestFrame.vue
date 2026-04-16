@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { uuidv4 } from '../../utils/uuid';
-import AppAspectRatio from '../aspect-ratio/AppAspectRatio.vue';
+import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
+import { uuidv4 } from '~utils/uuid';
 
 const path = `M53.3957 2.95826L96.8717 34.5455C98.4282 35.6763 99.0795 37.6808 98.485 39.5106L81.8786 90.6198C81.2841 92.4496 79.579 93.6884 77.655 93.6884H23.9157C21.9917 93.6884 20.2866 92.4496 19.692 90.6198L3.08566 39.5106C2.49112 37.6808 3.14243 35.6763 4.69894 34.5455L48.175 2.95826C49.7315 1.82739 51.8392 1.82739 53.3957 2.95826Z`;
 const viewboxWidth = 101;

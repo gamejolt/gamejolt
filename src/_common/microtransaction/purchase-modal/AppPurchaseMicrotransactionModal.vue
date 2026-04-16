@@ -1,27 +1,27 @@
 <script lang="ts" setup>
 import { CSSProperties, onMounted, Ref, ref } from 'vue';
 
-import { styleWhen } from '../../../_styles/mixins';
-import { kBorderWidthBase } from '../../../_styles/variables';
-import { Api } from '../../api/api.service';
-import AppButton from '../../button/AppButton.vue';
-import { formatCurrency } from '../../filters/currency';
-import { formatNumber } from '../../filters/number';
-import { showSuccessGrowl } from '../../growls/growls.service';
-import AppIllustration from '../../illustration/AppIllustration.vue';
-import { illExtremeSadness } from '../../illustration/illustrations';
-import AppLoadingFade from '../../loading/AppLoadingFade.vue';
-import AppModal from '../../modal/AppModal.vue';
-import { useModal } from '../../modal/modal.service';
-import { storeModelList } from '../../model/model-store.service';
-import { Screen } from '../../screen/screen-service';
-import AppSpacer from '../../spacer/AppSpacer.vue';
-import { useCommonStore } from '../../store/common-store';
-import { kThemeFg10 } from '../../theme/variables';
-import { $gettext } from '../../translate/translate.service';
-import AppMicrotransactionItem from '../AppMicrotransactionItem.vue';
-import AppMicrotransactionPaymentForm from '../payment-form/AppMicrotransactionPaymentForm.vue';
-import { MicrotransactionProductModel } from '../product.model';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import { formatCurrency } from '~common/filters/currency';
+import { formatNumber } from '~common/filters/number';
+import { showSuccessGrowl } from '~common/growls/growls.service';
+import AppIllustration from '~common/illustration/AppIllustration.vue';
+import { illExtremeSadness } from '~common/illustration/illustrations';
+import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
+import AppMicrotransactionItem from '~common/microtransaction/AppMicrotransactionItem.vue';
+import AppMicrotransactionPaymentForm from '~common/microtransaction/payment-form/AppMicrotransactionPaymentForm.vue';
+import { MicrotransactionProductModel } from '~common/microtransaction/product.model';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import { storeModelList } from '~common/model/model-store.service';
+import { Screen } from '~common/screen/screen-service';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import { useCommonStore } from '~common/store/common-store';
+import { kThemeFg10 } from '~common/theme/variables';
+import { $gettext } from '~common/translate/translate.service';
+import { styleWhen } from '~styles/mixins';
+import { kBorderWidthBase } from '~styles/variables';
 
 const { joltbuxBalance } = useCommonStore();
 

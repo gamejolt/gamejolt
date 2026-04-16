@@ -2,26 +2,26 @@
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { Api } from '../../../../../../../../../_common/api/api.service';
-import { GameBuildModel } from '../../../../../../../../../_common/game/build/build.model';
-import { GameBuildLaunchOptionModel } from '../../../../../../../../../_common/game/build/launch-option/launch-option.model';
-import { GamePackageModel } from '../../../../../../../../../_common/game/package/package.model';
+import FormGameRelease from '~app/components/forms/game/release/FormGameRelease.vue';
+import { useGameDashRouteController } from '~app/views/dashboard/games/manage/manage.store';
+import { Api } from '~common/api/api.service';
+import { GameBuildModel } from '~common/game/build/build.model';
+import { GameBuildLaunchOptionModel } from '~common/game/build/launch-option/launch-option.model';
+import { GamePackageModel } from '~common/game/package/package.model';
 import {
 	$removeGameRelease,
 	$unpublishGameRelease,
 	GameReleaseModel,
-} from '../../../../../../../../../_common/game/release/release.model';
-import { showSuccessGrowl } from '../../../../../../../../../_common/growls/growls.service';
-import AppJolticon from '../../../../../../../../../_common/jolticon/AppJolticon.vue';
-import { showModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
+} from '~common/game/release/release.model';
+import { showSuccessGrowl } from '~common/growls/growls.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { showModalConfirm } from '~common/modal/confirm/confirm-service';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
-} from '../../../../../../../../../_common/route/route-component';
-import AppTranslate from '../../../../../../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../../../../../../_common/translate/translate.service';
-import FormGameRelease from '../../../../../../../../components/forms/game/release/FormGameRelease.vue';
-import { useGameDashRouteController } from '../../../../manage.store';
+} from '~common/route/route-component';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
 
 export default {
 	name: 'RouteDashGamesManageGamePackageReleaseEdit',

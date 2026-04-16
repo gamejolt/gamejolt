@@ -2,12 +2,12 @@
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
-import { Api } from '../../../../../_common/api/api.service';
-import AppPostCard from '../../../../../_common/fireside/post/card/AppPostCard.vue';
-import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
-import { HistoryCache } from '../../../../../_common/history/cache/cache.service';
-import { Screen } from '../../../../../_common/screen/screen-service';
-import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
+import { Api } from '~common/api/api.service';
+import AppPostCard from '~common/fireside/post/card/AppPostCard.vue';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import { HistoryCache } from '~common/history/cache/cache.service';
+import { Screen } from '~common/screen/screen-service';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
 
 type Props = {
 	post: FiresidePostModel;

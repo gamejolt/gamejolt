@@ -2,19 +2,19 @@
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
-import { Api } from '../../../_common/api/api.service';
-import { Environment } from '../../../_common/environment/environment.service';
-import { GameModel } from '../../../_common/game/game.model';
-import { GameBundleModel } from '../../../_common/game-bundle/game-bundle.model';
-import { showErrorGrowl } from '../../../_common/growls/growls.service';
-import { showModalConfirm } from '../../../_common/modal/confirm/confirm-service';
-import { Navigate } from '../../../_common/navigate/navigate.service';
-import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
-import { useCommonStore } from '../../../_common/store/common-store';
-import { $gettext } from '../../../_common/translate/translate.service';
-import AppInvalidKey from '../../components/AppInvalidKey.vue';
-import AppKeyBundle from './AppKeyBundle.vue';
-import AppKeyGame from './AppKeyGame.vue';
+import AppInvalidKey from '~claim/components/AppInvalidKey.vue';
+import AppKeyBundle from '~claim/views/key/AppKeyBundle.vue';
+import AppKeyGame from '~claim/views/key/AppKeyGame.vue';
+import { Api } from '~common/api/api.service';
+import { Environment } from '~common/environment/environment.service';
+import { GameModel } from '~common/game/game.model';
+import { GameBundleModel } from '~common/game-bundle/game-bundle.model';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import { showModalConfirm } from '~common/modal/confirm/confirm-service';
+import { Navigate } from '~common/navigate/navigate.service';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { useCommonStore } from '~common/store/common-store';
+import { $gettext } from '~common/translate/translate.service';
 
 defineOptions(
 	defineAppRouteOptions({

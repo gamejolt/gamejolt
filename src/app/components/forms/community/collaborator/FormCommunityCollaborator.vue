@@ -5,23 +5,23 @@ import {
 	$inviteCollaborator,
 	CollaboratorModel,
 	CollaboratorRole,
-} from '../../../../../_common/collaborator/collaborator.model';
-import { CommunityModel } from '../../../../../_common/community/community.model';
+} from '~common/collaborator/collaborator.model';
+import { CommunityModel } from '~common/community/community.model';
 import AppForm, {
 	createForm,
 	FormController,
-} from '../../../../../_common/form-vue/AppForm.vue';
-import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
-import AppFormControl from '../../../../../_common/form-vue/AppFormControl.vue';
-import AppFormControlError from '../../../../../_common/form-vue/AppFormControlError.vue';
-import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormControlPrefix from '../../../../../_common/form-vue/AppFormControlPrefix.vue';
-import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormControlRadio from '../../../../../_common/form-vue/controls/AppFormControlRadio.vue';
+} from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormControlError from '~common/form-vue/AppFormControlError.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormControlPrefix from '~common/form-vue/AppFormControlPrefix.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlRadio from '~common/form-vue/controls/AppFormControlRadio.vue';
 import {
 	validateAvailability,
 	validateMaxLength,
-} from '../../../../../_common/form-vue/validators';
+} from '~common/form-vue/validators';
 
 type FormModel = CollaboratorModel;
 

@@ -1,7 +1,7 @@
 <script lang="ts">
 import type { Component } from 'vue';
 
-import { ContentObject } from '../../content-object';
+import { ContentObject } from '~common/content/content-object';
 
 // App bootstrap will assign the component we should render.
 let chatInviteComponent: any = 'span';

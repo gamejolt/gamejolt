@@ -1,17 +1,17 @@
 import { computed, ref, shallowReadonly } from 'vue';
 
-import { arrayUnique } from '../../utils/array';
-import { isInstance } from '../../utils/utils';
-import { Api } from '../api/api.service';
+import { Api } from '~common/api/api.service';
 import {
 	AcquisitionMethod,
 	AcquisitionModel,
 	filterAcquisitionMethods,
-} from '../collectible/acquisition.model';
-import { CollectibleModel, CollectibleType } from '../collectible/collectible.model';
-import { storeModelList } from '../model/model-store.service';
-import { StickerPackModel } from '../sticker/pack/pack.model';
-import { UserModel } from '../user/user.model';
+} from '~common/collectible/acquisition.model';
+import { CollectibleModel, CollectibleType } from '~common/collectible/collectible.model';
+import { storeModelList } from '~common/model/model-store.service';
+import { StickerPackModel } from '~common/sticker/pack/pack.model';
+import { UserModel } from '~common/user/user.model';
+import { arrayUnique } from '~utils/array';
+import { isInstance } from '~utils/utils';
 
 export type JoltydexFeed = ReturnType<typeof makeJoltydexFeed>;
 

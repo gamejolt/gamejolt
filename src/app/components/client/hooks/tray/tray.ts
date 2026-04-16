@@ -1,11 +1,11 @@
 import type { Router } from 'vue-router';
 
-import { Client } from '../../../../../_common/client/client.service';
-import { commonStore } from '../../../../../_common/store/common-store';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import type { RouteLocationDefinition } from '../../../../../utils/router';
-import { AppStore } from '../../../../store';
-import { showUserTokenModal } from '../../../user/token-modal/token-modal.service';
+import { showUserTokenModal } from '~app/components/user/token-modal/token-modal.service';
+import { AppStore } from '~app/store';
+import { Client } from '~common/client/client.service';
+import { commonStore } from '~common/store/common-store';
+import { $gettext } from '~common/translate/translate.service';
+import type { RouteLocationDefinition } from '~utils/router';
 
 export function createClientTrayMenuBuilder(router: Router, appStore: AppStore) {
 	function go(location: RouteLocationDefinition) {

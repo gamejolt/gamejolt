@@ -1,14 +1,14 @@
 <script lang="ts" setup>
-import { useEscapeStack } from '../../../../_common/escape-stack/escape-stack.service';
-import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
-import { illMaintenance } from '../../../../_common/illustration/illustrations';
-import AppLoading from '../../../../_common/loading/AppLoading.vue';
-import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { styleChangeBg } from '../../../../_styles/mixins';
-import { useAppStore } from '../../../store';
-import { useGridStore } from '../../grid/grid-store';
-import AppShellSidebarChatConnected from './_chat/AppShellSidebarChatConnected.vue';
+import { useGridStore } from '~app/components/grid/grid-store';
+import AppShellSidebarChatConnected from '~app/components/shell/sidebar/_chat/AppShellSidebarChatConnected.vue';
+import { useAppStore } from '~app/store';
+import { useEscapeStack } from '~common/escape-stack/escape-stack.service';
+import AppIllustration from '~common/illustration/AppIllustration.vue';
+import { illMaintenance } from '~common/illustration/illustrations';
+import AppLoading from '~common/loading/AppLoading.vue';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { styleChangeBg } from '~styles/mixins';
 
 const { closeChatPane } = useAppStore();
 const { chat } = useGridStore();

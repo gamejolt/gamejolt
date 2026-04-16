@@ -1,27 +1,27 @@
 <script lang="ts" setup>
 import { computed, nextTick, onMounted, onUnmounted, ref, useTemplateRef, watch } from 'vue';
 
-import AppBackground from '../../../../../_common/background/AppBackground.vue';
-import { BackgroundModel } from '../../../../../_common/background/background.model';
-import { formatDate } from '../../../../../_common/filters/date';
-import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
-import { illNoChat } from '../../../../../_common/illustration/illustrations';
-import AppLoading from '../../../../../_common/loading/AppLoading.vue';
-import { vAppObserveDimensions } from '../../../../../_common/observe-dimensions/observe-dimensions.directive';
-import { PopperPlacementType } from '../../../../../_common/popper/AppPopper.vue';
+import { loadOlderChatMessages, onNewChatMessage } from '~app/components/chat/client';
+import { TIMEOUT_CONSIDER_QUEUED } from '~app/components/chat/message';
+import { ChatRoomModel } from '~app/components/chat/room';
+import AppChatWindowOutputItem from '~app/components/chat/window/output/AppChatWindowOutputItem.vue';
+import { ChatWindowAvatarSize } from '~app/components/chat/window/variables';
+import { useGridStore } from '~app/components/grid/grid-store';
+import AppBackground from '~common/background/AppBackground.vue';
+import { BackgroundModel } from '~common/background/background.model';
+import { formatDate } from '~common/filters/date';
+import AppIllustration from '~common/illustration/AppIllustration.vue';
+import { illNoChat } from '~common/illustration/illustrations';
+import AppLoading from '~common/loading/AppLoading.vue';
+import { vAppObserveDimensions } from '~common/observe-dimensions/observe-dimensions.directive';
+import { PopperPlacementType } from '~common/popper/AppPopper.vue';
 import AppScrollScroller, {
 	createScroller,
-} from '../../../../../_common/scroll/AppScrollScroller.vue';
-import { useCommonStore } from '../../../../../_common/store/common-store';
-import { useEventSubscription } from '../../../../../_common/system/event/event-topic';
-import { useResizeObserver } from '../../../../../utils/resize-observer';
-import { debounce } from '../../../../../utils/utils';
-import { useGridStore } from '../../../grid/grid-store';
-import { loadOlderChatMessages, onNewChatMessage } from '../../client';
-import { TIMEOUT_CONSIDER_QUEUED } from '../../message';
-import { ChatRoomModel } from '../../room';
-import { ChatWindowAvatarSize } from '../variables';
-import AppChatWindowOutputItem from './AppChatWindowOutputItem.vue';
+} from '~common/scroll/AppScrollScroller.vue';
+import { useCommonStore } from '~common/store/common-store';
+import { useEventSubscription } from '~common/system/event/event-topic';
+import { useResizeObserver } from '~utils/resize-observer';
+import { debounce } from '~utils/utils';
 
 const AUTOSCROLL_THRESHOLD = 10;
 const MESSAGE_PADDING = 12;

@@ -1,15 +1,15 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import AppJolticon from '../../jolticon/AppJolticon.vue';
-import { SettingVideoPlayerMuted } from '../../settings/settings.service';
-import AppSlider, { ScrubberCallback } from '../../slider/AppSlider.vue';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { SettingVideoPlayerMuted } from '~common/settings/settings.service';
+import AppSlider, { ScrubberCallback } from '~common/slider/AppSlider.vue';
 import {
 	scrubVideoVolume,
 	setVideoMuted,
 	trackVideoPlayerEvent,
 	VideoPlayerController,
-} from './controller';
+} from '~common/video/player/controller';
 
 type Props = {
 	player: VideoPlayerController;

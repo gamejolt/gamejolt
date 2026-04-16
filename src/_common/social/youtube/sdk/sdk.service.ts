@@ -1,4 +1,4 @@
-import { isDynamicGoogleBot } from '../../../device/device.service';
+import { isDynamicGoogleBot } from '~common/device/device.service';
 
 export class YoutubeSdk {
 	private static isBootstrapped = false;

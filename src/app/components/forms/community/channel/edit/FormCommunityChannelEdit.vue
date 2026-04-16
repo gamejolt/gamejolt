@@ -1,29 +1,29 @@
 <script lang="ts" setup>
 import { toRef } from 'vue';
 
+import { showCommunityChannelBackgroundModal } from '~app/components/community/channel/background-modal/background-modal.service';
+import AppCommunityChannelCardEdit from '~app/components/community/channel/card/edit/AppCommunityChannelCardEdit.vue';
+import AppFormCommunityChannelPermissions from '~app/components/forms/community/channel/_permissions/FormCommunityChannelPermissions.vue';
 import {
 	$saveCommunityChannel,
 	CommunityChannelModel,
-} from '../../../../../../_common/community/channel/channel.model';
-import { CommunityModel } from '../../../../../../_common/community/community.model';
+} from '~common/community/channel/channel.model';
+import { CommunityModel } from '~common/community/community.model';
 import AppForm, {
 	createForm,
 	FormController,
-} from '../../../../../../_common/form-vue/AppForm.vue';
-import AppFormButton from '../../../../../../_common/form-vue/AppFormButton.vue';
-import AppFormControl from '../../../../../../_common/form-vue/AppFormControl.vue';
-import AppFormControlError from '../../../../../../_common/form-vue/AppFormControlError.vue';
-import AppFormControlErrors from '../../../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../../../../../../_common/form-vue/AppFormGroup.vue';
+} from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormControlError from '~common/form-vue/AppFormControlError.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
 import {
 	validateAvailability,
 	validateMaxLength,
 	validateMinLength,
 	validatePattern,
-} from '../../../../../../_common/form-vue/validators';
-import { showCommunityChannelBackgroundModal } from '../../../../community/channel/background-modal/background-modal.service';
-import AppCommunityChannelCardEdit from '../../../../community/channel/card/edit/AppCommunityChannelCardEdit.vue';
-import AppFormCommunityChannelPermissions from '../_permissions/FormCommunityChannelPermissions.vue';
+} from '~common/form-vue/validators';
 
 type FormModel = CommunityChannelModel & {
 	permission_posting?: string;

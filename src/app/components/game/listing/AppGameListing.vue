@@ -1,25 +1,25 @@
 <script lang="ts">
 import { RouterLink } from 'vue-router';
 
-import { useAdStore } from '../../../../_common/ad/ad-store';
-import AppAdStickyRail from '../../../../_common/ad/AppAdStickyRail.vue';
-import AppAdTakeoverFloat from '../../../../_common/ad/AppAdTakeoverFloat.vue';
-import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
-import AppLoading from '../../../../_common/loading/AppLoading.vue';
-import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
-import AppNavTabList from '../../../../_common/nav/tab-list/AppNavTabList.vue';
-import AppPagination from '../../../../_common/pagination/AppPagination.vue';
-import { vAppNoAutoscroll } from '../../../../_common/scroll/auto-scroll/no-autoscroll.directive';
+import AppGameFilteringTags from '~app/components/game/filtering/AppGameFilteringTags.vue';
+import AppGameFilteringWidget from '~app/components/game/filtering/AppGameFilteringWidget.vue';
+import { GameFilteringContainer } from '~app/components/game/filtering/container';
+import AppGameGridPlaceholder from '~app/components/game/grid/AppGameGridPlaceholder.vue';
+import { GameListingContainer } from '~app/components/game/listing/listing-container-service';
+import { useAdStore } from '~common/ad/ad-store';
+import AppAdStickyRail from '~common/ad/AppAdStickyRail.vue';
+import AppAdTakeoverFloat from '~common/ad/AppAdTakeoverFloat.vue';
+import AppAdWidget from '~common/ad/widget/AppAdWidget.vue';
+import AppLoading from '~common/loading/AppLoading.vue';
+import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
+import AppNavTabList from '~common/nav/tab-list/AppNavTabList.vue';
+import AppPagination from '~common/pagination/AppPagination.vue';
+import { vAppNoAutoscroll } from '~common/scroll/auto-scroll/no-autoscroll.directive';
 import AppScrollInview, {
 	ScrollInviewConfig,
-} from '../../../../_common/scroll/inview/AppScrollInview.vue';
-import { Scroll } from '../../../../_common/scroll/scroll.service';
-import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
-import AppGameFilteringTags from '../filtering/AppGameFilteringTags.vue';
-import AppGameFilteringWidget from '../filtering/AppGameFilteringWidget.vue';
-import { GameFilteringContainer } from '../filtering/container';
-import AppGameGridPlaceholder from '../grid/AppGameGridPlaceholder.vue';
-import { GameListingContainer } from './listing-container-service';
+} from '~common/scroll/inview/AppScrollInview.vue';
+import { Scroll } from '~common/scroll/scroll.service';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
 
 const InviewConfig = new ScrollInviewConfig();
 </script>

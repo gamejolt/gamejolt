@@ -1,9 +1,9 @@
 <script lang="ts">
 import { computed, inject, InjectionKey, markRaw, provide, Ref, ref, toRef } from 'vue';
 
-import { formatDate } from '../filters/date';
-import AppDatepickerDay from './AppDatepickerDay.vue';
-import AppDatepickerMonth from './AppDatepickerMonth.vue';
+import AppDatepickerDay from '~common/datepicker/AppDatepickerDay.vue';
+import AppDatepickerMonth from '~common/datepicker/AppDatepickerMonth.vue';
+import { formatDate } from '~common/filters/date';
 
 type DateMode = 'day' | 'month';
 

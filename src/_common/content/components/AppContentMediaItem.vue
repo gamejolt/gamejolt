@@ -1,18 +1,18 @@
 <script lang="ts" setup>
 import { computed, ref, unref } from 'vue';
 
-import AppImgResponsive from '../../img/AppImgResponsive.vue';
-import AppJolticon from '../../jolticon/AppJolticon.vue';
-import { createLightbox } from '../../lightbox/lightbox-helpers';
-import AppLinkExternal from '../../link/AppLinkExternal.vue';
-import AppLoading from '../../loading/AppLoading.vue';
-import AppMediaItemBackdrop from '../../media-item/backdrop/AppMediaItemBackdrop.vue';
-import { MediaItemModel } from '../../media-item/media-item-model';
-import AppResponsiveDimensions from '../../responsive-dimensions/AppResponsiveDimensions.vue';
-import AppTranslate from '../../translate/AppTranslate.vue';
-import { showContentEditorLinkModal } from '../content-editor/modals/link/link-modal.service';
-import { useContentOwnerController } from '../content-owner';
-import AppBaseContentComponent from './AppBaseContentComponent.vue';
+import AppBaseContentComponent from '~common/content/components/AppBaseContentComponent.vue';
+import { showContentEditorLinkModal } from '~common/content/content-editor/modals/link/link-modal.service';
+import { useContentOwnerController } from '~common/content/content-owner';
+import AppImgResponsive from '~common/img/AppImgResponsive.vue';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { createLightbox } from '~common/lightbox/lightbox-helpers';
+import AppLinkExternal from '~common/link/AppLinkExternal.vue';
+import AppLoading from '~common/loading/AppLoading.vue';
+import AppMediaItemBackdrop from '~common/media-item/backdrop/AppMediaItemBackdrop.vue';
+import { MediaItemModel } from '~common/media-item/media-item-model';
+import AppResponsiveDimensions from '~common/responsive-dimensions/AppResponsiveDimensions.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 type Props = {
 	mediaItemId: number;

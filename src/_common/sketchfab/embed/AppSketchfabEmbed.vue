@@ -1,9 +1,9 @@
 <script lang="ts">
 import { nextTick, onMounted, ref, useTemplateRef, watch } from 'vue';
 
-import { Ruler } from '../../ruler/ruler-service';
-import { onScreenResize } from '../../screen/screen-service';
-import { useEventSubscription } from '../../system/event/event-topic';
+import { Ruler } from '~common/ruler/ruler-service';
+import { onScreenResize } from '~common/screen/screen-service';
+import { useEventSubscription } from '~common/system/event/event-topic';
 
 const RATIO = 0.5625; // 16:9
 

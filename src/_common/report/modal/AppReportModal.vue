@@ -1,20 +1,20 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 
-import AppBlockForm from '../../block/form/AppBlockForm.vue';
-import AppButton from '../../button/AppButton.vue';
-import { CommentModel } from '../../comment/comment-model';
-import { CommunityModel } from '../../community/community.model';
-import { FiresidePostModel } from '../../fireside/post/post-model';
-import { ForumPostModel } from '../../forum/post/post.model';
-import { ForumTopicModel } from '../../forum/topic/topic.model';
-import { GameModel } from '../../game/game.model';
-import { showInfoGrowl } from '../../growls/growls.service';
-import AppModal from '../../modal/AppModal.vue';
-import { useModal } from '../../modal/modal.service';
-import { $gettext } from '../../translate/translate.service';
-import { UserModel } from '../../user/user.model';
-import AppReportForm from '../form/AppReportForm.vue';
+import AppBlockForm from '~common/block/form/AppBlockForm.vue';
+import AppButton from '~common/button/AppButton.vue';
+import { CommentModel } from '~common/comment/comment-model';
+import { CommunityModel } from '~common/community/community.model';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import { ForumPostModel } from '~common/forum/post/post.model';
+import { ForumTopicModel } from '~common/forum/topic/topic.model';
+import { GameModel } from '~common/game/game.model';
+import { showInfoGrowl } from '~common/growls/growls.service';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import AppReportForm from '~common/report/form/AppReportForm.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { UserModel } from '~common/user/user.model';
 
 type Props = {
 	resource:

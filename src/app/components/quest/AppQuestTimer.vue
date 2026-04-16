@@ -1,10 +1,10 @@
 <script lang="ts">
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 
-import { shorthandReadableTime } from '../../../_common/filters/duration';
-import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
-import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
-import { getCurrentServerTime } from '../../../utils/server-time';
+import { shorthandReadableTime } from '~common/filters/duration';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { getCurrentServerTime } from '~utils/server-time';
 </script>
 
 <script lang="ts" setup>

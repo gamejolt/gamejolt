@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import AppContentSticker from '../../components/AppContentSticker.vue';
-import { ContentObject } from '../../content-object';
+import AppContentSticker from '~common/content/components/AppContentSticker.vue';
+import { ContentObject } from '~common/content/content-object';
 
 type Props = {
 	contentData: ContentObject;

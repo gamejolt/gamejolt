@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { CSSProperties, ref, toRef, useTemplateRef } from 'vue';
 
-import { styleWhen } from '../../_styles/mixins';
-import { useResizeObserver } from '../../utils/resize-observer';
-import { Ruler } from '../ruler/ruler-service';
-import AppScrollInview, { ScrollInviewConfig } from './inview/AppScrollInview.vue';
-import { Scroll } from './scroll.service';
+import { Ruler } from '~common/ruler/ruler-service';
+import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
+import { Scroll } from '~common/scroll/scroll.service';
+import { styleWhen } from '~styles/mixins';
+import { useResizeObserver } from '~utils/resize-observer';
 
 type Props = {
 	disabled?: boolean;

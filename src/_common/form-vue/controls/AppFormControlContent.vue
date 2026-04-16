@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 import { HTMLAttributes, ref, toRef, watch } from 'vue';
 
-import { FocusToken } from '../../../utils/focus-token';
-import { ContentContext, ContextCapabilities } from '../../content/content-context';
-import AppContentEditor from '../../content/content-editor/AppContentEditor.vue';
-import { ContentEditorModelData } from '../../content/content-owner';
-import { ContentRules } from '../../content/content-rules';
-import { createFormControl, FormControlEmits } from '../AppFormControl.vue';
-import { useFormGroup } from '../AppFormGroup.vue';
-import { FormValidator } from '../validators';
+import { ContentContext, ContextCapabilities } from '~common/content/content-context';
+import AppContentEditor from '~common/content/content-editor/AppContentEditor.vue';
+import { ContentEditorModelData } from '~common/content/content-owner';
+import { ContentRules } from '~common/content/content-rules';
+import { createFormControl, FormControlEmits } from '~common/form-vue/AppFormControl.vue';
+import { useFormGroup } from '~common/form-vue/AppFormGroup.vue';
+import { FormValidator } from '~common/form-vue/validators';
+import { FocusToken } from '~utils/focus-token';
 
 type Props = {
 	// From defineFormControlProps

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
 
-import { useContentEditorController } from '../content-editor-controller';
+import { useContentEditorController } from '~common/content/content-editor/content-editor-controller';
 
 const controller = useContentEditorController()!;
 const top = ref(0);

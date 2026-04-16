@@ -3,10 +3,10 @@
 import { Sketch as VuePicker } from '@ckpack/vue-color';
 import { ref, watch } from 'vue';
 
-import AppButton from '../button/AppButton.vue';
-import AppPopper from '../popper/AppPopper.vue';
-import { Popper } from '../popper/popper.service';
-import { $gettext } from '../translate/translate.service';
+import AppButton from '~common/button/AppButton.vue';
+import AppPopper from '~common/popper/AppPopper.vue';
+import { Popper } from '~common/popper/popper.service';
+import { $gettext } from '~common/translate/translate.service';
 
 type VueTouch = {
 	hex: string | null;

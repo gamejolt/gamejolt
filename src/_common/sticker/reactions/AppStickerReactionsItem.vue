@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref, watch } from 'vue';
 
-import { formatFuzzynumber } from '../../filters/fuzzynumber';
+import { formatFuzzynumber } from '~common/filters/fuzzynumber';
 
 type Props = {
 	count: number;

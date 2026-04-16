@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { computed, CSSProperties } from 'vue';
 
-import { styleChangeBg } from '../../_styles/mixins';
-import { kThemeFg } from '../theme/variables';
-import AppUserVerifiedTick from './AppUserVerifiedTick.vue';
-import { UserCommonFields } from './user.model';
+import { kThemeFg } from '~common/theme/variables';
+import AppUserVerifiedTick from '~common/user/AppUserVerifiedTick.vue';
+import { UserCommonFields } from '~common/user/user.model';
+import { styleChangeBg } from '~styles/mixins';
 
 interface PositionData {
 	vPos: 'top' | 'bottom';

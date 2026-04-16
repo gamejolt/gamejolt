@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 import { RouterLink } from 'vue-router';
 
-import { formatDate } from '../filters/date';
-import AppJolticon from '../jolticon/AppJolticon.vue';
-import AppTimeAgo from '../time/AppTimeAgo.vue';
-import AppTimelineListItem from '../timeline-list/item/AppTimelineListItem.vue';
-import AppUserCardHover from '../user/card/AppUserCardHover.vue';
-import { UserModel } from '../user/user.model';
-import AppUserAvatarBubble from '../user/user-avatar/AppUserAvatarBubble.vue';
+import { formatDate } from '~common/filters/date';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppTimeAgo from '~common/time/AppTimeAgo.vue';
+import AppTimelineListItem from '~common/timeline-list/item/AppTimelineListItem.vue';
+import AppUserCardHover from '~common/user/card/AppUserCardHover.vue';
+import { UserModel } from '~common/user/user.model';
+import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
 
 type Props = {
 	user: UserModel | null;

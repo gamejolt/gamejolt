@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import { ImgHTMLAttributes, nextTick, onMounted, ref, useTemplateRef, watch } from 'vue';
 
-import { getMediaserverUrlForBounds } from '../../utils/image';
-import { sleep } from '../../utils/utils';
-import { Ruler } from '../ruler/ruler-service';
-import { onScreenResize } from '../screen/screen-service';
-import { useEventSubscription } from '../system/event/event-topic';
-import { ImgHelper } from './helper/helper-service';
+import { ImgHelper } from '~common/img/helper/helper-service';
+import { Ruler } from '~common/ruler/ruler-service';
+import { onScreenResize } from '~common/screen/screen-service';
+import { useEventSubscription } from '~common/system/event/event-topic';
+import { getMediaserverUrlForBounds } from '~utils/image';
+import { sleep } from '~utils/utils';
 
 type Props = {
 	src: string;

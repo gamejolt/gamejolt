@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import AppButton from '../../button/AppButton.vue';
-import AppModal from '../../modal/AppModal.vue';
-import { useModal } from '../../modal/modal.service';
-import AppSpacer from '../../spacer/AppSpacer.vue';
-import AppTranslate from '../AppTranslate.vue';
-import AppTranslateLangSelector from './AppTranslateLangSelector.vue';
+import AppButton from '~common/button/AppButton.vue';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import AppTranslateLangSelector from '~common/translate/lang-selector/AppTranslateLangSelector.vue';
 
 const modal = useModal()!;
 </script>

@@ -1,5 +1,5 @@
-import { BaseTrophyModel } from '../../trophy/base-trophy.model';
-import { UserModel } from '../../user/user.model';
+import { BaseTrophyModel } from '~common/trophy/base-trophy.model';
+import { UserModel } from '~common/user/user.model';
 
 export class SiteTrophyModel extends BaseTrophyModel {
 	declare artist?: UserModel;

@@ -2,17 +2,17 @@
 import { computed, ref } from 'vue';
 import { RouterLink } from 'vue-router';
 
-import AppButton from '../../../../_common/button/AppButton.vue';
-import AppCard from '../../../../_common/card/AppCard.vue';
-import { Screen } from '../../../../_common/screen/screen-service';
+import AppButton from '~common/button/AppButton.vue';
+import AppCard from '~common/card/AppCard.vue';
+import { Screen } from '~common/screen/screen-service';
 import AppScrollInview, {
 	ScrollInviewConfig,
-} from '../../../../_common/scroll/inview/AppScrollInview.vue';
-import { useCommonStore } from '../../../../_common/store/common-store';
-import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import AppUserVerifiedTick from '../../../../_common/user/AppUserVerifiedTick.vue';
-import { UserFriendshipModel } from '../../../../_common/user/friendship/friendship.model';
-import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
+} from '~common/scroll/inview/AppScrollInview.vue';
+import { useCommonStore } from '~common/store/common-store';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import AppUserVerifiedTick from '~common/user/AppUserVerifiedTick.vue';
+import { UserFriendshipModel } from '~common/user/friendship/friendship.model';
+import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
 
 const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height / 2}px` });
 </script>

@@ -7,9 +7,9 @@ import {
 	watchEffect,
 } from 'vue';
 
-import { PageScrollSubscriptionTimeout, usePageScrollSubscription } from '../scroll/scroll.service';
-import { SettingParallaxBackgrounds } from '../settings/settings.service';
-import { BackgroundModel, getBackgroundCSSProperties } from './background.model';
+import { BackgroundModel, getBackgroundCSSProperties } from '~common/background/background.model';
+import { PageScrollSubscriptionTimeout, usePageScrollSubscription } from '~common/scroll/scroll.service';
+import { SettingParallaxBackgrounds } from '~common/settings/settings.service';
 
 type Props = {
 	background: BackgroundModel;

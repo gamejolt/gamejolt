@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { $gettext } from '../../_common/translate/translate.service';
+import { $gettext } from '~common/translate/translate.service';
 </script>
 
 <template>

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, useSlots } from 'vue';
 
-import { Screen } from '../../../../../_common/screen/screen-service';
+import { Screen } from '~common/screen/screen-service';
 
 type Props = {
 	full?: boolean;

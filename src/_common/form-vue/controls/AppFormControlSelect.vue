@@ -4,9 +4,9 @@ import { toRef, useTemplateRef } from 'vue';
 import {
 	createFormControl,
 	FormControlEmits,
-} from '../AppFormControl.vue';
-import { useFormGroup } from '../AppFormGroup.vue';
-import { FormValidator } from '../validators';
+} from '~common/form-vue/AppFormControl.vue';
+import { useFormGroup } from '~common/form-vue/AppFormGroup.vue';
+import { FormValidator } from '~common/form-vue/validators';
 
 type Props = {
 	disabled?: boolean;

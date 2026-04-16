@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { onMounted, ref, useTemplateRef } from 'vue';
 
-import AppLinkExternal from '../../_common/link/AppLinkExternal.vue';
-import AppTranslate from '../../_common/translate/AppTranslate.vue';
-import { loadScript } from '../../utils/utils';
-import { useGameserverStore } from '../store';
+import AppLinkExternal from '~common/link/AppLinkExternal.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { useGameserverStore } from '~gameserver/store';
+import { loadScript } from '~utils/utils';
 
 declare const UnityObject2: any;
 

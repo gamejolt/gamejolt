@@ -1,17 +1,17 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
 
-import { imageGameJoltClientLogo, imageGameJoltLogo, imageJolt } from '../../../app/img/images';
-import AppForm, { createForm } from '../../form-vue/AppForm.vue';
-import AppFormGroup from '../../form-vue/AppFormGroup.vue';
-import AppFormControlSelect from '../../form-vue/controls/AppFormControlSelect.vue';
-import AppFormControlTextarea from '../../form-vue/controls/AppFormControlTextarea.vue';
-import AppFormControlTheme from '../../form-vue/controls/AppFormControlTheme.vue';
-import AppFormControlToggle from '../../form-vue/controls/AppFormControlToggle.vue';
-import AppTheme from '../AppTheme.vue';
-import { ThemeModel } from '../theme.model';
-import { useThemeStore } from '../theme.store';
-import AppThemeSvg from './AppThemeSvg.vue';
+import { imageGameJoltClientLogo, imageGameJoltLogo, imageJolt } from '~app/img/images';
+import AppForm, { createForm } from '~common/form-vue/AppForm.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlSelect from '~common/form-vue/controls/AppFormControlSelect.vue';
+import AppFormControlTextarea from '~common/form-vue/controls/AppFormControlTextarea.vue';
+import AppFormControlTheme from '~common/form-vue/controls/AppFormControlTheme.vue';
+import AppFormControlToggle from '~common/form-vue/controls/AppFormControlToggle.vue';
+import AppTheme from '~common/theme/AppTheme.vue';
+import AppThemeSvg from '~common/theme/svg/AppThemeSvg.vue';
+import { ThemeModel } from '~common/theme/theme.model';
+import { useThemeStore } from '~common/theme/theme.store';
 
 interface FormModel {
 	file?: string;

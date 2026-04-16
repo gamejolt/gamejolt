@@ -1,21 +1,21 @@
 <script lang="ts" setup>
 import { computed, type Ref, ref, toRef, watch } from 'vue';
 
-import AppExpand from '../../../../../_common/expand/AppExpand.vue';
-import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
-import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
-import { validateFilesize } from '../../../../../_common/form-vue/validators';
+import AppExpand from '~common/expand/AppExpand.vue';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlUpload from '~common/form-vue/controls/upload/AppFormControlUpload.vue';
+import { validateFilesize } from '~common/form-vue/validators';
 import {
 	$saveGameBuild,
 	GameBuildModel,
 	GameBuildType,
-} from '../../../../../_common/game/build/build.model';
-import { GameModel } from '../../../../../_common/game/game.model';
-import { GamePackageModel } from '../../../../../_common/game/package/package.model';
-import { GameReleaseModel } from '../../../../../_common/game/release/release.model';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
+} from '~common/game/build/build.model';
+import { GameModel } from '~common/game/game.model';
+import { GamePackageModel } from '~common/game/package/package.model';
+import { GameReleaseModel } from '~common/game/release/release.model';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 type NewGameBuildFormModel = GameBuildModel & {
 	file: File;

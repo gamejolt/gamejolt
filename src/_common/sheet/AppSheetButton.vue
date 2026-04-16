@@ -2,11 +2,11 @@
 import { computed } from 'vue';
 import { RouteLocationRaw, RouterLink } from 'vue-router';
 
-import { styleBorderRadiusLg, styleWhen } from '../../_styles/mixins';
-import { kFontSizeLarge } from '../../_styles/variables';
-import AppJolticon, { Jolticon } from '../jolticon/AppJolticon.vue';
-import AppOnHover from '../on/AppOnHover.vue';
-import { kThemeBg, kThemeBiBg, kThemeBiFg, kThemeFg } from '../theme/variables';
+import AppJolticon, { Jolticon } from '~common/jolticon/AppJolticon.vue';
+import AppOnHover from '~common/on/AppOnHover.vue';
+import { kThemeBg, kThemeBiBg, kThemeBiFg, kThemeFg } from '~common/theme/variables';
+import { styleBorderRadiusLg, styleWhen } from '~styles/mixins';
+import { kFontSizeLarge } from '~styles/variables';
 
 type Props = {
 	icon: Jolticon;

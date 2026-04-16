@@ -1,4 +1,4 @@
-import { createApp } from './bootstrap';
+import { createApp } from '~checkout/bootstrap';
 
 async function start() {
 	const { app, router } = await createApp();

@@ -1,22 +1,22 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
 
-import AppBackground from '../../../../_common/background/AppBackground.vue';
-import { BackgroundModel } from '../../../../_common/background/background.model';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import { CommunityChannelModel } from '../../../../_common/community/channel/channel.model';
-import { CommunityModel } from '../../../../_common/community/community.model';
-import { FiresidePostModel } from '../../../../_common/fireside/post/post-model';
-import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
-import AppModal from '../../../../_common/modal/AppModal.vue';
-import { useModal } from '../../../../_common/modal/modal.service';
-import { RealmModel } from '../../../../_common/realm/realm-model';
-import { Screen } from '../../../../_common/screen/screen-service';
-import AppTheme from '../../../../_common/theme/AppTheme.vue';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { VideoStatus } from '../../forms/post/_video/FormPostVideo.vue';
-import AppFormPost from '../../forms/post/AppFormPost.vue';
-import AppPostAddPlaceholder from '../add-placeholder/AppPostAddPlaceholder.vue';
+import { VideoStatus } from '~app/components/forms/post/_video/FormPostVideo.vue';
+import AppFormPost from '~app/components/forms/post/AppFormPost.vue';
+import AppPostAddPlaceholder from '~app/components/post/add-placeholder/AppPostAddPlaceholder.vue';
+import AppBackground from '~common/background/AppBackground.vue';
+import { BackgroundModel } from '~common/background/background.model';
+import AppButton from '~common/button/AppButton.vue';
+import { CommunityChannelModel } from '~common/community/channel/channel.model';
+import { CommunityModel } from '~common/community/community.model';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import { RealmModel } from '~common/realm/realm-model';
+import { Screen } from '~common/screen/screen-service';
+import AppTheme from '~common/theme/AppTheme.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 type Props = {
 	postProvider: FiresidePostModel | Promise<FiresidePostModel>;

@@ -1,8 +1,8 @@
-import { trackJoin, trackLogin } from '../analytics/analytics.service';
-import { configSaveJoinOptions } from '../config/config.service';
-import { Environment } from '../environment/environment.service';
-import { Navigate } from '../navigate/navigate.service';
-import Onboarding from '../onboarding/onboarding.service';
+import { trackJoin, trackLogin } from '~common/analytics/analytics.service';
+import { configSaveJoinOptions } from '~common/config/config.service';
+import { Environment } from '~common/environment/environment.service';
+import { Navigate } from '~common/navigate/navigate.service';
+import Onboarding from '~common/onboarding/onboarding.service';
 
 export type AuthMethod = 'email' | 'google' | 'facebook' | 'twitch' | 'apple';
 

@@ -1,8 +1,6 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import AppButtonPlaceholder from '../../../../../_common/button/AppButtonPlaceholder.vue';
-import { kThemeBgSubtle } from '../../../../../_common/theme/variables';
 import {
 	PostContentContainerStyles,
 	PostContentLeadStyles,
@@ -14,7 +12,9 @@ import {
 	PostHeaderMetaStyles,
 	PostHeaderStyles,
 	stylePostFeedItem,
-} from '../../../post/post-styles';
+} from '~app/components/post/post-styles';
+import AppButtonPlaceholder from '~common/button/AppButtonPlaceholder.vue';
+import { kThemeBgSubtle } from '~common/theme/variables';
 
 const itemStyles = computed(() => stylePostFeedItem({ isHovered: false }));
 </script>

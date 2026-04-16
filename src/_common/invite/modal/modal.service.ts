@@ -1,7 +1,7 @@
 import { defineAsyncComponent } from 'vue';
 
-import { showModal } from '../../modal/modal.service';
-import { UserModel } from '../../user/user.model';
+import { showModal } from '~common/modal/modal.service';
+import { UserModel } from '~common/user/user.model';
 
 interface ModalOptions {
 	user: UserModel;
@@ -10,7 +10,7 @@ interface ModalOptions {
 export async function showInviteModal(options: ModalOptions) {
 	return await showModal<void>({
 		modalId: 'Invite',
-		component: defineAsyncComponent(() => import('./AppInviteModal.vue')),
+		component: defineAsyncComponent(() => import('~common/invite/modal/AppInviteModal.vue')),
 		props: options,
 		size: 'sm',
 	});

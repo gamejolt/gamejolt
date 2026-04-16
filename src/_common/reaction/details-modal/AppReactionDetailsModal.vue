@@ -1,20 +1,20 @@
 <script lang="ts" setup>
 import { computed, Ref, ref, shallowRef, useTemplateRef } from 'vue';
 
-import { kFontSizeBase, kGridGutterWidth } from '../../../_styles/variables';
-import { Api } from '../../api/api.service';
-import AppButton from '../../button/AppButton.vue';
-import AppLoadingFade from '../../loading/AppLoadingFade.vue';
-import AppModal from '../../modal/AppModal.vue';
-import AppModalFloatingHeader from '../../modal/AppModalFloatingHeader.vue';
-import { useModal } from '../../modal/modal.service';
-import AppScrollAutoload from '../../scroll/AppScrollAutoload.vue';
-import { kThemeFgMuted } from '../../theme/variables';
-import { $gettext } from '../../translate/translate.service';
-import AppUserList from '../../user/list/AppUserList.vue';
-import { UserModel } from '../../user/user.model';
-import AppReactionList from '../list/AppReactionList.vue';
-import { ReactionableModel, ReactionCount } from '../reaction-count';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
+import AppModal from '~common/modal/AppModal.vue';
+import AppModalFloatingHeader from '~common/modal/AppModalFloatingHeader.vue';
+import { useModal } from '~common/modal/modal.service';
+import AppReactionList from '~common/reaction/list/AppReactionList.vue';
+import { ReactionableModel, ReactionCount } from '~common/reaction/reaction-count';
+import AppScrollAutoload from '~common/scroll/AppScrollAutoload.vue';
+import { kThemeFgMuted } from '~common/theme/variables';
+import { $gettext } from '~common/translate/translate.service';
+import AppUserList from '~common/user/list/AppUserList.vue';
+import { UserModel } from '~common/user/user.model';
+import { kFontSizeBase, kGridGutterWidth } from '~styles/variables';
 
 const perPage = 30;
 

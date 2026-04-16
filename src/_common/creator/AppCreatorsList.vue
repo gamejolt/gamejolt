@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import AppPostCardPlaceholder from '../fireside/post/card/AppPostCardPlaceholder.vue';
-import { FiresidePostModel } from '../fireside/post/post-model';
-import { Screen } from '../screen/screen-service';
-import AppScrollScroller from '../scroll/AppScrollScroller.vue';
-import AppCreatorCard, { AppCreatorCardAspectRatio } from './AppCreatorCard.vue';
+import AppCreatorCard, { AppCreatorCardAspectRatio } from '~common/creator/AppCreatorCard.vue';
+import AppPostCardPlaceholder from '~common/fireside/post/card/AppPostCardPlaceholder.vue';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import { Screen } from '~common/screen/screen-service';
+import AppScrollScroller from '~common/scroll/AppScrollScroller.vue';
 
 type Props = {
 	isLoading?: boolean;

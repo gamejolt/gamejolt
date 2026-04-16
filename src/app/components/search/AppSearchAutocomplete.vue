@@ -2,21 +2,21 @@
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
 
-import { trackSearch, trackSearchAutocomplete } from '../../../_common/analytics/analytics.service';
-import { CommunityModel } from '../../../_common/community/community.model';
-import AppCommunityThumbnailImg from '../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
-import { GameModel } from '../../../_common/game/game.model';
-import AppGameThumbnailImg from '../../../_common/game/thumbnail/AppGameThumbnailImg.vue';
-import AppRealmThumbnail from '../../../_common/realm/AppRealmThumbnail.vue';
-import { RealmModel } from '../../../_common/realm/realm-model';
-import AppUserVerifiedTick from '../../../_common/user/AppUserVerifiedTick.vue';
-import { UserModel } from '../../../_common/user/user.model';
-import AppUserAvatarImg from '../../../_common/user/user-avatar/AppUserAvatarImg.vue';
-import { debounce } from '../../../utils/utils';
-import type { LocalDbGame as LocalDbGameType } from '../client/local-db/game/game.model';
-import { LocalDbGame } from '../client/safe-exports';
-import { SearchKeydownSpy, useSearchController } from './AppSearch.vue';
-import { sendSearch } from './search-service';
+import type { LocalDbGame as LocalDbGameType } from '~app/components/client/local-db/game/game.model';
+import { LocalDbGame } from '~app/components/client/safe-exports';
+import { SearchKeydownSpy, useSearchController } from '~app/components/search/AppSearch.vue';
+import { sendSearch } from '~app/components/search/search-service';
+import { trackSearch, trackSearchAutocomplete } from '~common/analytics/analytics.service';
+import { CommunityModel } from '~common/community/community.model';
+import AppCommunityThumbnailImg from '~common/community/thumbnail/AppCommunityThumbnailImg.vue';
+import { GameModel } from '~common/game/game.model';
+import AppGameThumbnailImg from '~common/game/thumbnail/AppGameThumbnailImg.vue';
+import AppRealmThumbnail from '~common/realm/AppRealmThumbnail.vue';
+import { RealmModel } from '~common/realm/realm-model';
+import AppUserVerifiedTick from '~common/user/AppUserVerifiedTick.vue';
+import { UserModel } from '~common/user/user.model';
+import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
+import { debounce } from '~utils/utils';
 
 const KEYCODE_UP = 38;
 const KEYCODE_DOWN = 40;

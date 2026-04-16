@@ -1,30 +1,30 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
 
-import { Api } from '../../../_common/api/api.service';
-import AppExpand from '../../../_common/expand/AppExpand.vue';
-import { formatCurrency } from '../../../_common/filters/currency';
-import AppForm, { createForm, FormController } from '../../../_common/form-vue/AppForm.vue';
-import AppFormButton from '../../../_common/form-vue/AppFormButton.vue';
-import AppFormControl from '../../../_common/form-vue/AppFormControl.vue';
-import AppFormControlError from '../../../_common/form-vue/AppFormControlError.vue';
-import AppFormControlErrors from '../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormControlMask from '../../../_common/form-vue/AppFormControlMask.vue';
-import AppFormGroup from '../../../_common/form-vue/AppFormGroup.vue';
-import AppFormControlCheckbox from '../../../_common/form-vue/controls/AppFormControlCheckbox.vue';
-import AppFormControlSelect from '../../../_common/form-vue/controls/AppFormControlSelect.vue';
+import { Api } from '~common/api/api.service';
+import AppExpand from '~common/expand/AppExpand.vue';
+import { formatCurrency } from '~common/filters/currency';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormControlError from '~common/form-vue/AppFormControlError.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormControlMask from '~common/form-vue/AppFormControlMask.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlCheckbox from '~common/form-vue/controls/AppFormControlCheckbox.vue';
+import AppFormControlSelect from '~common/form-vue/controls/AppFormControlSelect.vue';
 import {
 	validateCreditCard,
 	validateCreditCardExpiration,
 	validateMaxLength,
 	validatePattern,
-} from '../../../_common/form-vue/validators';
-import { Geo, GeoRegion } from '../../../_common/geo/geo.service';
-import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
-import AppLoading from '../../../_common/loading/AppLoading.vue';
-import { OrderModel } from '../../../_common/order/order.model';
-import { useCommonStore } from '../../../_common/store/common-store';
-import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
+} from '~common/form-vue/validators';
+import { Geo, GeoRegion } from '~common/geo/geo.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLoading from '~common/loading/AppLoading.vue';
+import { OrderModel } from '~common/order/order.model';
+import { useCommonStore } from '~common/store/common-store';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 
 type Props = {
 	cards: any[];

@@ -1,12 +1,12 @@
 import { defineAsyncComponent } from 'vue';
 
-import { CommunityChannelModel } from '../../../../../_common/community/channel/channel.model';
-import { FiresidePostCommunityModel } from '../../../../../_common/fireside/post/community/community.model';
+import { CommunityChannelModel } from '~common/community/channel/channel.model';
+import { FiresidePostCommunityModel } from '~common/fireside/post/community/community.model';
 import {
 	CommunityNotifyOptions,
 	FiresidePostModel,
-} from '../../../../../_common/fireside/post/post-model';
-import { showModal } from '../../../../../_common/modal/modal.service';
+} from '~common/fireside/post/post-model';
+import { showModal } from '~common/modal/modal.service';
 
 export type CommunityMovePostModalResult = CommunityNotifyOptions & {
 	channel: CommunityChannelModel;
@@ -19,7 +19,7 @@ export async function showCommunityMovePostModal(
 ) {
 	return await showModal<CommunityMovePostModalResult>({
 		modalId: 'CommunityMovePost',
-		component: defineAsyncComponent(() => import('./AppCommunityMovePostModal.vue')),
+		component: defineAsyncComponent(() => import('~app/components/community/move-post/modal/AppCommunityMovePostModal.vue')),
 		props: { firesidePostCommunity, channels, post },
 		size: 'sm',
 	});

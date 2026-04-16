@@ -1,25 +1,25 @@
 <script lang="ts">
 import { computed, nextTick, onBeforeUnmount, toRaw, useTemplateRef, watch } from 'vue';
 
-import { sleep } from '../../../utils/utils';
-import { Api } from '../../api/api.service';
-import AppScrollInview, { ScrollInviewConfig } from '../../scroll/inview/AppScrollInview.vue';
-import AppSticker from '../AppSticker.vue';
+import { Api } from '~common/api/api.service';
+import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
+import AppSticker from '~common/sticker/AppSticker.vue';
 import {
 	getRectForStickerTarget,
 	registerStickerTarget,
 	unregisterStickerTarget,
 	useStickerLayer,
-} from '../layer/layer-controller';
-import { StickerLayerItem } from '../layer/layer-item';
-import { StickerPlacementModel } from '../placement/placement.model';
+} from '~common/sticker/layer/layer-controller';
+import { StickerLayerItem } from '~common/sticker/layer/layer-item';
+import { StickerPlacementModel } from '~common/sticker/placement/placement.model';
 import {
 	assignStickerStoreItem,
 	closeStickerDrawer,
 	PointerPosition,
 	useStickerStore,
-} from '../sticker-store';
-import { getStickerModelResourceName, StickerTargetController } from './target-controller';
+} from '~common/sticker/sticker-store';
+import { getStickerModelResourceName, StickerTargetController } from '~common/sticker/target/target-controller';
+import { sleep } from '~utils/utils';
 
 export type ValidStickerResource = 'Comment' | 'Fireside_Post' | 'MediaItem' | 'Fireside';
 

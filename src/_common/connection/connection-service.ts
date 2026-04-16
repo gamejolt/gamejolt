@@ -1,7 +1,7 @@
 import { reactive, unref, watch } from 'vue';
 
-import { CommonStore } from '../store/common-store';
-import { ConnectionReconnect } from './reconnect-service';
+import { ConnectionReconnect } from '~common/connection/reconnect-service';
+import { CommonStore } from '~common/store/common-store';
 
 class ConnectionService {
 	isDeviceOffline = false;

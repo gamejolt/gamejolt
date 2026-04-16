@@ -1,5 +1,5 @@
-import { showErrorGrowl, showSuccessGrowl } from '../growls/growls.service';
-import { $gettext } from '../translate/translate.service';
+import { showErrorGrowl, showSuccessGrowl } from '~common/growls/growls.service';
+import { $gettext } from '~common/translate/translate.service';
 
 export class Clipboard {
 	static copy(url: string, message?: string) {

@@ -1,18 +1,18 @@
 <script lang="ts" setup>
 import { computed, ref, toRef } from 'vue';
 
-import { Api, ApiProgressEvent } from '../../../api/api.service';
-import AppButton from '../../../button/AppButton.vue';
-import { Clipboard } from '../../../clipboard/clipboard-service';
-import { MediaItemModel } from '../../../media-item/media-item-model';
-import { vAppTooltip } from '../../../tooltip/tooltip-directive';
-import AppTranslate from '../../../translate/AppTranslate.vue';
-import { $gettext } from '../../../translate/translate.service';
-import AppForm, { createForm, FormController } from '../../AppForm.vue';
-import AppFormControlErrors from '../../AppFormControlErrors.vue';
-import AppFormGroup from '../../AppFormGroup.vue';
-import { validateFilesize, validateImageMaxDimensions } from '../../validators';
-import AppFormControlUpload from '../upload/AppFormControlUpload.vue';
+import { Api, ApiProgressEvent } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import { Clipboard } from '~common/clipboard/clipboard-service';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlUpload from '~common/form-vue/controls/upload/AppFormControlUpload.vue';
+import { validateFilesize, validateImageMaxDimensions } from '~common/form-vue/validators';
+import { MediaItemModel } from '~common/media-item/media-item-model';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
 
 type FormModel = {
 	type: string;

@@ -1,31 +1,31 @@
 import { Presence } from 'phoenix';
 import { computed, markRaw, onMounted, onUnmounted, Ref, ref, shallowReadonly, watch } from 'vue';
 
-import { BackgroundModel } from '../../../_common/background/background.model';
-import { ContentDocument } from '../../../_common/content/content-document';
-import { ContentObject } from '../../../_common/content/content-object';
-import { MarkObject } from '../../../_common/content/mark-object';
-import { UnknownModelData } from '../../../_common/model/model.service';
-import { getModel, storeModel, storeModelList } from '../../../_common/model/model-store.service';
-import {
-	RealtimeReactionsPayload,
-	updateReactionCount,
-} from '../../../_common/reaction/reaction-count';
-import { createSocketChannelController } from '../../../_common/socket/socket-controller';
-import { StickerPlacementModel } from '../../../_common/sticker/placement/placement.model';
-import { arrayRemove } from '../../../utils/array';
-import { CancelToken } from '../../../utils/cancel-token';
-import { run } from '../../../utils/utils';
 import {
 	ChatClient,
 	isInChatRoom,
 	processNewChatOutput,
 	setTimeSplit,
 	updateChatRoomLastMessageOn,
-} from './client';
-import { ChatMessageModel } from './message';
-import { ChatRoomModel } from './room';
-import { ChatUser } from './user';
+} from '~app/components/chat/client';
+import { ChatMessageModel } from '~app/components/chat/message';
+import { ChatRoomModel } from '~app/components/chat/room';
+import { ChatUser } from '~app/components/chat/user';
+import { BackgroundModel } from '~common/background/background.model';
+import { ContentDocument } from '~common/content/content-document';
+import { ContentObject } from '~common/content/content-object';
+import { MarkObject } from '~common/content/mark-object';
+import { UnknownModelData } from '~common/model/model.service';
+import { getModel, storeModel, storeModelList } from '~common/model/model-store.service';
+import {
+	RealtimeReactionsPayload,
+	updateReactionCount,
+} from '~common/reaction/reaction-count';
+import { createSocketChannelController } from '~common/socket/socket-controller';
+import { StickerPlacementModel } from '~common/sticker/placement/placement.model';
+import { arrayRemove } from '~utils/array';
+import { CancelToken } from '~utils/cancel-token';
+import { run } from '~utils/utils';
 
 export type ChatRoomChannel = ReturnType<typeof createChatRoomChannel>;
 

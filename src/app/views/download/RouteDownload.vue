@@ -2,35 +2,35 @@
 import { computed, ref, toRef } from 'vue';
 import { useRoute } from 'vue-router';
 
+import AppPageContainer from '~app/components/page-container/AppPageContainer.vue';
+import AppShellPageBackdrop from '~app/components/shell/AppShellPageBackdrop.vue';
 import {
 	AdSettingsContainer,
 	releasePageAdsSettings,
 	setPageAdsSettings,
 	useAdStore,
-} from '../../../_common/ad/ad-store';
-import AppAdTakeoverBackground from '../../../_common/ad/AppAdTakeoverBackground.vue';
-import AppAdTakeoverFloat from '../../../_common/ad/AppAdTakeoverFloat.vue';
-import AppAdGptVideo from '../../../_common/ad/gpt/AppAdGptVideo.vue';
-import AppAdWidget from '../../../_common/ad/widget/AppAdWidget.vue';
-import { Api } from '../../../_common/api/api.service';
-import { isDynamicGoogleBot } from '../../../_common/device/device.service';
-import { GameBuildModel } from '../../../_common/game/build/build.model';
-import { GameModel } from '../../../_common/game/game.model';
-import { GameSongModel } from '../../../_common/game/song/song.model';
-import AppGameThumbnail from '../../../_common/game/thumbnail/AppGameThumbnail.vue';
-import { HistoryTick } from '../../../_common/history-tick/history-tick-service';
-import { setAppPromotionCohort, useAppPromotionStore } from '../../../_common/mobile-app/store';
-import { Navigate } from '../../../_common/navigate/navigate.service';
-import { buildPayloadErrorForStatusCode } from '../../../_common/payload/payload-service';
-import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
-import { Screen } from '../../../_common/screen/screen-service';
-import AppScrollAffix from '../../../_common/scroll/AppScrollAffix.vue';
-import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
-import { $gettext } from '../../../_common/translate/translate.service';
-import { kLineHeightComputed } from '../../../_styles/variables';
-import { sleep } from '../../../utils/utils';
-import AppPageContainer from '../../components/page-container/AppPageContainer.vue';
-import AppShellPageBackdrop from '../../components/shell/AppShellPageBackdrop.vue';
+} from '~common/ad/ad-store';
+import AppAdTakeoverBackground from '~common/ad/AppAdTakeoverBackground.vue';
+import AppAdTakeoverFloat from '~common/ad/AppAdTakeoverFloat.vue';
+import AppAdGptVideo from '~common/ad/gpt/AppAdGptVideo.vue';
+import AppAdWidget from '~common/ad/widget/AppAdWidget.vue';
+import { Api } from '~common/api/api.service';
+import { isDynamicGoogleBot } from '~common/device/device.service';
+import { GameBuildModel } from '~common/game/build/build.model';
+import { GameModel } from '~common/game/game.model';
+import { GameSongModel } from '~common/game/song/song.model';
+import AppGameThumbnail from '~common/game/thumbnail/AppGameThumbnail.vue';
+import { HistoryTick } from '~common/history-tick/history-tick-service';
+import { setAppPromotionCohort, useAppPromotionStore } from '~common/mobile-app/store';
+import { Navigate } from '~common/navigate/navigate.service';
+import { buildPayloadErrorForStatusCode } from '~common/payload/payload-service';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { Screen } from '~common/screen/screen-service';
+import AppScrollAffix from '~common/scroll/AppScrollAffix.vue';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { kLineHeightComputed } from '~styles/variables';
+import { sleep } from '~utils/utils';
 
 defineOptions({
 	...defineAppRouteOptions({

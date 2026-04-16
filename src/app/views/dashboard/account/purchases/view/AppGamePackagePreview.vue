@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { GameModel } from '../../../../../../_common/game/game.model';
-import { GamePackageModel } from '../../../../../../_common/game/package/package.model';
-import AppGameThumbnailImg from '../../../../../../_common/game/thumbnail/AppGameThumbnailImg.vue';
+import { GameModel } from '~common/game/game.model';
+import { GamePackageModel } from '~common/game/package/package.model';
+import AppGameThumbnailImg from '~common/game/thumbnail/AppGameThumbnailImg.vue';
 
 type Props = {
 	gamePackage: GamePackageModel;

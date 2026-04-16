@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import AppButton from '../../button/AppButton.vue';
+import AppButton from '~common/button/AppButton.vue';
 
 type Props = {
 	isEditing?: boolean;

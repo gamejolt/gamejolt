@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { toRef, watch } from 'vue';
 
-import AppForm, { createForm } from '../../form-vue/AppForm.vue';
-import AppFormControlErrors from '../../form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../../form-vue/AppFormGroup.vue';
-import AppFormControlMarkdown from '../../form-vue/controls/markdown/AppFormControlMarkdown.vue';
-import { SiteContentBlockModel } from '../../site/content-block/content-block-model';
+import AppForm, { createForm } from '~common/form-vue/AppForm.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlMarkdown from '~common/form-vue/controls/markdown/AppFormControlMarkdown.vue';
+import { SiteContentBlockModel } from '~common/site/content-block/content-block-model';
 
 type Props = {
 	model?: SiteContentBlockModel;

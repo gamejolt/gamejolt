@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { computed, ref, useTemplateRef, watch } from 'vue';
 
-import { Ruler } from '../../ruler/ruler-service';
-import AppTouch, { AppTouchInput } from '../../touch/AppTouch.vue';
+import { Ruler } from '~common/ruler/ruler-service';
+import AppTouch, { AppTouchInput } from '~common/touch/AppTouch.vue';
 
 type Props = {
 	currentTime: number;
@@ -111,4 +111,4 @@ function calcScrubPos(event: AppTouchInput) {
 	</AppTouch>
 </template>
 
-<style lang="stylus" src="./scrubber.styl" scoped></style>
+<style lang="stylus" src="~common/audio/scrubber/scrubber.styl" scoped></style>

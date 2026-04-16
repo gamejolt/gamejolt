@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { nextTick, onMounted, ref, useTemplateRef, watch } from 'vue';
 
-import { useResizeObserver } from '../../utils/resize-observer.js';
-import { debounce } from '../../utils/utils.js';
+import { useResizeObserver } from '~utils/resize-observer.js';
+import { debounce } from '~utils/utils.js';
 
 type Props = {
 	density?: number;

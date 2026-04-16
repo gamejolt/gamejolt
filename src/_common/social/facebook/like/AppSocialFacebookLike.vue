@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import '../../social.styl';
+import '~common/social/social.styl';
 
 import { onMounted, watch } from 'vue';
 
-import { FacebookSdk } from '../sdk/sdk.service';
+import { FacebookSdk } from '~common/social/facebook/sdk/sdk.service';
 
 type Props = {
 	url: string;

@@ -2,19 +2,19 @@
 import { computed, toRef } from 'vue';
 import { RouterLink, RouterView } from 'vue-router';
 
-import { Api } from '../../../../../../../_common/api/api.service';
-import AppButton from '../../../../../../../_common/button/AppButton.vue';
-import { CommunityChannelModel } from '../../../../../../../_common/community/channel/channel.model';
+import { showCommunityCompetitionHeaderModal } from '~app/components/community/competition/header-modal/header-modal.service';
+import AppPageHeader from '~app/components/page-header/AppPageHeader.vue';
+import AppPageHeaderControls from '~app/components/page-header/controls/AppPageHeaderControls.vue';
+import { useCommunityRouteStore } from '~app/views/communities/view/view.store';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import { CommunityChannelModel } from '~common/community/channel/channel.model';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
-} from '../../../../../../../_common/route/route-component';
-import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
-import { $gettext } from '../../../../../../../_common/translate/translate.service';
-import { showCommunityCompetitionHeaderModal } from '../../../../../../components/community/competition/header-modal/header-modal.service';
-import AppPageHeader from '../../../../../../components/page-header/AppPageHeader.vue';
-import AppPageHeaderControls from '../../../../../../components/page-header/controls/AppPageHeaderControls.vue';
-import { useCommunityRouteStore } from '../../../view.store';
+} from '~common/route/route-component';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { $gettext } from '~common/translate/translate.service';
 
 export default {
 	...defineAppRouteOptions({

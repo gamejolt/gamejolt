@@ -2,16 +2,16 @@
 import { nextTick, onUpdated, ref, toRef, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { Analytics } from '../../analytics/analytics.service';
-import { showErrorGrowl } from '../../growls/growls.service';
-import { createLightbox } from '../../lightbox/lightbox-helpers';
-import AppLoading from '../../loading/AppLoading.vue';
-import AppScrollScroller from '../../scroll/AppScrollScroller.vue';
-import { $gettext } from '../../translate/translate.service';
-import { GameScreenshotModel } from '../screenshot/screenshot.model';
-import { GameSketchfabModel } from '../sketchfab/sketchfab.model';
-import { GameVideoModel } from '../video/video.model';
-import AppGameMediaBarItem, { MediaBarItemMaxHeight } from './item/AppGameMediaBarItem.vue';
+import { Analytics } from '~common/analytics/analytics.service';
+import AppGameMediaBarItem, { MediaBarItemMaxHeight } from '~common/game/media-bar/item/AppGameMediaBarItem.vue';
+import { GameScreenshotModel } from '~common/game/screenshot/screenshot.model';
+import { GameSketchfabModel } from '~common/game/sketchfab/sketchfab.model';
+import { GameVideoModel } from '~common/game/video/video.model';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import { createLightbox } from '~common/lightbox/lightbox-helpers';
+import AppLoading from '~common/loading/AppLoading.vue';
+import AppScrollScroller from '~common/scroll/AppScrollScroller.vue';
+import { $gettext } from '~common/translate/translate.service';
 
 type Props = {
 	mediaItems: (GameScreenshotModel | GameVideoModel | GameSketchfabModel)[];

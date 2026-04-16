@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { Growl } from './growls.service';
+import { Growl } from '~common/growls/growls.service';
 
 type Props = {
 	growl: Growl;

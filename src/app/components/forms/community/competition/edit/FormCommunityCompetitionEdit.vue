@@ -1,26 +1,26 @@
 <script lang="ts" setup>
 import { computed, ref, toRef } from 'vue';
 
+import AppCommunityCompetitionDate from '~app/components/community/competition/date/AppCommunityCompetitionDate.vue';
 import {
 	$saveCommunityCompetition,
 	CommunityCompetitionModel,
 	CompetitionPeriodVoting,
-} from '../../../../../../_common/community/competition/competition.model';
+} from '~common/community/competition/competition.model';
 import AppForm, {
 	createForm,
 	FormController,
-} from '../../../../../../_common/form-vue/AppForm.vue';
-import AppFormButton from '../../../../../../_common/form-vue/AppFormButton.vue';
-import AppFormControlErrors from '../../../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../../../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormLegend from '../../../../../../_common/form-vue/AppFormLegend.vue';
-import AppFormControlDate from '../../../../../../_common/form-vue/controls/AppFormControlDate.vue';
-import AppFormControlSelect from '../../../../../../_common/form-vue/controls/AppFormControlSelect.vue';
-import { FormTimezoneService } from '../../../../../../_common/form-vue/form-timezone.service';
-import AppLoading from '../../../../../../_common/loading/AppLoading.vue';
-import AppTranslate from '../../../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../../../_common/translate/translate.service';
-import AppCommunityCompetitionDate from '../../../../community/competition/date/AppCommunityCompetitionDate.vue';
+} from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormLegend from '~common/form-vue/AppFormLegend.vue';
+import AppFormControlDate from '~common/form-vue/controls/AppFormControlDate.vue';
+import AppFormControlSelect from '~common/form-vue/controls/AppFormControlSelect.vue';
+import { FormTimezoneService } from '~common/form-vue/form-timezone.service';
+import AppLoading from '~common/loading/AppLoading.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
 
 type FormModel = CommunityCompetitionModel;
 

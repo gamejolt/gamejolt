@@ -1,6 +1,6 @@
 <script lang="ts">
-import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
-import { touchUser } from '../../../_common/user/user.model';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { touchUser } from '~common/user/user.model';
 
 export default {
 	name: 'RouteLibrary',

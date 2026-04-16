@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { computed, ref, useSlots } from 'vue';
 
-import { uuidv4 } from '../../utils/uuid';
-import { getTranslation, interpolateTranslation, TranslationContext } from './translate.service';
+import { getTranslation, interpolateTranslation, TranslationContext } from '~common/translate/translate.service';
+import { uuidv4 } from '~utils/uuid';
 
 type Props = {
 	tag?: string;

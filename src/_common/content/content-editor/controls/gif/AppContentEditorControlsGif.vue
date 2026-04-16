@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import AppJolticon from '../../../../jolticon/AppJolticon.vue';
-import { vAppTooltip } from '../../../../tooltip/tooltip-directive';
-import { editorInsertGif, useContentEditorController } from '../../content-editor-controller';
-import { showContentEditorGifModal } from '../../modals/gif/gif-modal.service';
+import { editorInsertGif, useContentEditorController } from '~common/content/content-editor/content-editor-controller';
+import { showContentEditorGifModal } from '~common/content/content-editor/modals/gif/gif-modal.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 
 const controller = useContentEditorController()!;
 const visible = computed(() => controller.scope.isFocused && controller.capabilities.gif);

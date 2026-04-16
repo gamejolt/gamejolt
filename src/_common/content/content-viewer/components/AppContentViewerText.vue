@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import { computed, h } from 'vue';
 
-import { Environment } from '../../../environment/environment.service';
-import AppLinkExternal from '../../../link/AppLinkExternal.vue';
-import { ContentObject } from '../../content-object';
-import { useContentOwnerController } from '../../content-owner';
-import AppContentViewerMention from './AppContentViewerMention.vue';
-import AppContentViewerTag from './AppContentViewerTag.vue';
+import { ContentObject } from '~common/content/content-object';
+import { useContentOwnerController } from '~common/content/content-owner';
+import AppContentViewerMention from '~common/content/content-viewer/components/AppContentViewerMention.vue';
+import AppContentViewerTag from '~common/content/content-viewer/components/AppContentViewerTag.vue';
+import { Environment } from '~common/environment/environment.service';
+import AppLinkExternal from '~common/link/AppLinkExternal.vue';
 
 type Props = {
 	contentData: ContentObject;

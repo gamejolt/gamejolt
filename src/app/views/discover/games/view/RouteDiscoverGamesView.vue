@@ -1,34 +1,41 @@
 <script lang="ts">
-import './view-content.styl';
+import '~app/views/discover/games/view/view-content.styl';
 
 import { computed, inject, InjectionKey, provide, ref, toRef } from 'vue';
 import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router';
 
+import AppGameMaturityBlock from '~app/components/game/maturity-block/AppGameMaturityBlock.vue';
+import AppGamePerms from '~app/components/game/perms/AppGamePerms.vue';
+import { IntentService } from '~app/components/intent/intent.service';
+import AppPageHeader from '~app/components/page-header/AppPageHeader.vue';
+import AppPageHeaderAvatar from '~app/components/page-header/AppPageHeaderAvatar.vue';
+import AppDiscoverGamesViewControls from '~app/views/discover/games/view/AppDiscoverGamesViewControls.vue';
+import AppDiscoverGamesViewNav from '~app/views/discover/games/view/AppDiscoverGamesViewNav.vue';
 import {
 	AdSettingsContainer,
 	releasePageAdsSettings,
 	setPageAdsSettings,
 	useAdStore,
-} from '../../../../../_common/ad/ad-store';
-import { trackExperimentEngagement } from '../../../../../_common/analytics/analytics.service';
-import { Api } from '../../../../../_common/api/api.service';
-import AppButton from '../../../../../_common/button/AppButton.vue';
+} from '~common/ad/ad-store';
+import { trackExperimentEngagement } from '~common/analytics/analytics.service';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
 import {
 	$acceptCollaboratorInvite,
 	$removeCollaboratorInvite,
 	CollaboratorModel,
-} from '../../../../../_common/collaborator/collaborator.model';
-import { CommentModel } from '../../../../../_common/comment/comment-model';
+} from '~common/collaborator/collaborator.model';
+import { CommentModel } from '~common/comment/comment-model';
 import {
 	commentStoreCount,
 	CommentStoreModel,
 	lockCommentStore,
 	releaseCommentStore,
 	useCommentStoreManager,
-} from '../../../../../_common/comment/comment-store';
-import { configGuestNoAuthRequired } from '../../../../../_common/config/config.service';
-import { getDeviceArch, getDeviceOS } from '../../../../../_common/device/device.service';
-import { GameBuildType } from '../../../../../_common/game/build/build.model';
+} from '~common/comment/comment-store';
+import { configGuestNoAuthRequired } from '~common/config/config.service';
+import { getDeviceArch, getDeviceOS } from '~common/device/device.service';
+import { GameBuildType } from '~common/game/build/build.model';
 import {
 	CustomGameMessage,
 	GameModel,
@@ -37,39 +44,32 @@ import {
 	pluckDownloadableGameBuilds,
 	pluckInstallableGameBuilds,
 	pluckRomGameBuilds,
-} from '../../../../../_common/game/game.model';
-import { GamePackagePayloadModel } from '../../../../../_common/game/package/package-payload.model';
-import { onRatingWidgetChange } from '../../../../../_common/game/rating/AppGameRatingWidget.vue';
-import { GameRatingModel } from '../../../../../_common/game/rating/rating.model';
-import { GameScoreTableModel } from '../../../../../_common/game/score-table/score-table.model';
-import { GameScreenshotModel } from '../../../../../_common/game/screenshot/screenshot.model';
-import { GameSketchfabModel } from '../../../../../_common/game/sketchfab/sketchfab.model';
-import { GameSongModel } from '../../../../../_common/game/song/song.model';
-import { GameVideoModel } from '../../../../../_common/game/video/video.model';
-import { HistoryTick } from '../../../../../_common/history-tick/history-tick-service';
-import { LinkedAccountModel } from '../../../../../_common/linked-account/linked-account.model';
-import { storeModelList } from '../../../../../_common/model/model-store.service';
-import { Registry } from '../../../../../_common/registry/registry.service';
+} from '~common/game/game.model';
+import { GamePackagePayloadModel } from '~common/game/package/package-payload.model';
+import { onRatingWidgetChange } from '~common/game/rating/AppGameRatingWidget.vue';
+import { GameRatingModel } from '~common/game/rating/rating.model';
+import { GameScoreTableModel } from '~common/game/score-table/score-table.model';
+import { GameScreenshotModel } from '~common/game/screenshot/screenshot.model';
+import { GameSketchfabModel } from '~common/game/sketchfab/sketchfab.model';
+import { GameSongModel } from '~common/game/song/song.model';
+import { GameVideoModel } from '~common/game/video/video.model';
+import { HistoryTick } from '~common/history-tick/history-tick-service';
+import { LinkedAccountModel } from '~common/linked-account/linked-account.model';
+import { storeModelList } from '~common/model/model-store.service';
+import { Registry } from '~common/registry/registry.service';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
-} from '../../../../../_common/route/route-component';
-import { Screen } from '../../../../../_common/screen/screen-service';
-import { useCommonStore } from '../../../../../_common/store/common-store';
-import { EventSubscription } from '../../../../../_common/system/event/event-topic';
-import { useThemeStore } from '../../../../../_common/theme/theme.store';
-import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import AppUserVerifiedTick from '../../../../../_common/user/AppUserVerifiedTick.vue';
-import { UserModel } from '../../../../../_common/user/user.model';
-import { enforceLocation } from '../../../../../utils/router';
-import AppGameMaturityBlock from '../../../../components/game/maturity-block/AppGameMaturityBlock.vue';
-import AppGamePerms from '../../../../components/game/perms/AppGamePerms.vue';
-import { IntentService } from '../../../../components/intent/intent.service';
-import AppPageHeader from '../../../../components/page-header/AppPageHeader.vue';
-import AppPageHeaderAvatar from '../../../../components/page-header/AppPageHeaderAvatar.vue';
-import AppDiscoverGamesViewControls from './AppDiscoverGamesViewControls.vue';
-import AppDiscoverGamesViewNav from './AppDiscoverGamesViewNav.vue';
+} from '~common/route/route-component';
+import { Screen } from '~common/screen/screen-service';
+import { useCommonStore } from '~common/store/common-store';
+import { EventSubscription } from '~common/system/event/event-topic';
+import { useThemeStore } from '~common/theme/theme.store';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { $gettext } from '~common/translate/translate.service';
+import AppUserVerifiedTick from '~common/user/AppUserVerifiedTick.vue';
+import { UserModel } from '~common/user/user.model';
+import { enforceLocation } from '~utils/router';
 
 type Controller = ReturnType<typeof createController>;
 

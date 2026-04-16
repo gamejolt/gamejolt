@@ -1,29 +1,29 @@
 <script lang="ts" setup>
 import { computed, ref, toRef, watchEffect } from 'vue';
 
-import AppButton from '../../../../../../_common/button/AppButton.vue';
+import AppButton from '~common/button/AppButton.vue';
 import {
 	$clearCommunityPresetChannelBackground,
 	$saveCommunityPresetChannelBackground,
 	CommunityModel,
 	CommunityPresetChannelType,
 	getCommunityChannelBackground,
-} from '../../../../../../_common/community/community.model';
+} from '~common/community/community.model';
 import AppForm, {
 	createForm,
 	FormController,
-} from '../../../../../../_common/form-vue/AppForm.vue';
-import AppFormButton from '../../../../../../_common/form-vue/AppFormButton.vue';
-import AppFormControlErrors from '../../../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../../../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormControlCrop from '../../../../../../_common/form-vue/controls/AppFormControlCrop.vue';
-import AppFormControlUpload from '../../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
+} from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlCrop from '~common/form-vue/controls/AppFormControlCrop.vue';
+import AppFormControlUpload from '~common/form-vue/controls/upload/AppFormControlUpload.vue';
 import {
 	validateFilesize,
 	validateImageMaxDimensions,
-} from '../../../../../../_common/form-vue/validators';
-import { showModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
-import { $gettext } from '../../../../../../_common/translate/translate.service';
+} from '~common/form-vue/validators';
+import { showModalConfirm } from '~common/modal/confirm/confirm-service';
+import { $gettext } from '~common/translate/translate.service';
 
 type FormModel = CommunityModel & {
 	background_crop?: any;

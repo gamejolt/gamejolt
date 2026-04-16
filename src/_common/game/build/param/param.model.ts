@@ -1,4 +1,4 @@
-import { Model } from '../../../model/model.service';
+import { Model } from '~common/model/model.service';
 
 export class GameBuildParamModel extends Model {
 	declare game_build_id: number;

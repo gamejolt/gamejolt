@@ -1,15 +1,15 @@
 <script lang="ts" setup>
 import { RouterLink } from 'vue-router';
 
-import AppButton from '../../../../../../_common/button/AppButton.vue';
-import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
-import { showSupportersModal } from '../../../../../../_common/supporters/modal.service';
-import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
-import AppTranslate from '../../../../../../_common/translate/AppTranslate.vue';
-import AppUserCardHover from '../../../../../../_common/user/card/AppUserCardHover.vue';
-import { UserModel } from '../../../../../../_common/user/user.model';
-import AppUserAvatarImg from '../../../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
-import { useGameRouteController } from '../RouteDiscoverGamesView.vue';
+import { useGameRouteController } from '~app/views/discover/games/view/RouteDiscoverGamesView.vue';
+import AppButton from '~common/button/AppButton.vue';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { showSupportersModal } from '~common/supporters/modal.service';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import AppUserCardHover from '~common/user/card/AppUserCardHover.vue';
+import { UserModel } from '~common/user/user.model';
+import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
 
 type Props = {
 	supporters: UserModel[];

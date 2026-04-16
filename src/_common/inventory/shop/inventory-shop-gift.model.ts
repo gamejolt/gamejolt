@@ -1,10 +1,10 @@
-import { ModelStoreModel } from '../../model/model-store.service';
-import { UserModel } from '../../user/user.model';
 import {
 	assignShopProductOwnerData,
 	InventoryShopProduct,
 	PurchasableProductType,
-} from './product-owner-helpers';
+} from '~common/inventory/shop/product-owner-helpers';
+import { ModelStoreModel } from '~common/model/model-store.service';
+import { UserModel } from '~common/user/user.model';
 
 export class InventoryShopGiftModel implements ModelStoreModel {
 	declare id: number;

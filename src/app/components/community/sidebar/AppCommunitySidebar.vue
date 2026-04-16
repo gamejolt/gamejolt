@@ -2,24 +2,24 @@
 import { computed, ref, toRef, watch } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
 
-import { Api } from '../../../../_common/api/api.service';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import { CommunityModel } from '../../../../_common/community/community.model';
-import { formatNumber } from '../../../../_common/filters/number';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import { showReportModal } from '../../../../_common/report/modal/modal.service';
-import AppShareCard from '../../../../_common/share/card/AppShareCard.vue';
-import { useCommonStore } from '../../../../_common/store/common-store';
-import AppTimeAgo from '../../../../_common/time/AppTimeAgo.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
-import AppUserCreatorBadge from '../../../../_common/user/creator/AppUserCreatorBadge.vue';
-import { UserModel } from '../../../../_common/user/user.model';
-import AppUserAvatarList from '../../../../_common/user/user-avatar/AppUserAvatarList.vue';
-import { getAbsoluteLink } from '../../../../utils/router';
-import AppGameList from '../../game/list/AppGameList.vue';
-import AppCommunityDescription from '../description/AppCommunityDescription.vue';
-import { CommunitySidebarData } from './sidebar-data';
+import AppCommunityDescription from '~app/components/community/description/AppCommunityDescription.vue';
+import { CommunitySidebarData } from '~app/components/community/sidebar/sidebar-data';
+import AppGameList from '~app/components/game/list/AppGameList.vue';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import { CommunityModel } from '~common/community/community.model';
+import { formatNumber } from '~common/filters/number';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { showReportModal } from '~common/report/modal/modal.service';
+import AppShareCard from '~common/share/card/AppShareCard.vue';
+import { useCommonStore } from '~common/store/common-store';
+import AppTimeAgo from '~common/time/AppTimeAgo.vue';
+import { $gettext } from '~common/translate/translate.service';
+import AppUserCardHover from '~common/user/card/AppUserCardHover.vue';
+import AppUserCreatorBadge from '~common/user/creator/AppUserCreatorBadge.vue';
+import { UserModel } from '~common/user/user.model';
+import AppUserAvatarList from '~common/user/user-avatar/AppUserAvatarList.vue';
+import { getAbsoluteLink } from '~utils/router';
 
 type Props = {
 	community: CommunityModel;

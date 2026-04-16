@@ -1,8 +1,8 @@
 import { defineAsyncComponent } from 'vue';
 
-import { BackgroundModel } from '../../../background/background.model';
-import { showModal } from '../../../modal/modal.service';
-import { UserAvatarFrameModel } from '../../../user/user-avatar/frame/frame.model';
+import { BackgroundModel } from '~common/background/background.model';
+import { showModal } from '~common/modal/modal.service';
+import { UserAvatarFrameModel } from '~common/user/user-avatar/frame/frame.model';
 
 interface NewProductOptions {
 	product: UserAvatarFrameModel | BackgroundModel;
@@ -11,7 +11,7 @@ interface NewProductOptions {
 export async function showNewProductModal(options: NewProductOptions) {
 	return await showModal<void>({
 		modalId: 'NewProductModal',
-		component: defineAsyncComponent(() => import('./AppNewProductModal.vue')),
+		component: defineAsyncComponent(() => import('~common/inventory/shop/product-modal/AppNewProductModal.vue')),
 		props: options,
 		noBackdrop: true,
 		noBackdropClose: true,

@@ -1,6 +1,6 @@
-import { ContentNode } from './content-node';
-import { LINK_LENGTH } from './content-rules';
-import { MarkObject } from './mark-object';
+import { ContentNode } from '~common/content/content-node';
+import { LINK_LENGTH } from '~common/content/content-rules';
+import { MarkObject } from '~common/content/mark-object';
 
 export type ContentObjectType =
 	| 'text'

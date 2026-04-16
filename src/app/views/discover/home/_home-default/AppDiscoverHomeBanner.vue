@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import AppButton from '../../../../../_common/button/AppButton.vue';
-import AppCommunityJoinWidget from '../../../../../_common/community/join-widget/AppCommunityJoinWidget.vue';
-import AppGameFollowWidget from '../../../../../_common/game/follow-widget/AppGameFollowWidget.vue';
-import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
-import { useCommonStore } from '../../../../../_common/store/common-store';
-import AppTheme from '../../../../../_common/theme/AppTheme.vue';
-import { RouteLocationDefinition } from '../../../../../utils/router';
-import { FeaturedItemModel } from '../../../../components/featured-item/featured-item.model';
+import { FeaturedItemModel } from '~app/components/featured-item/featured-item.model';
+import AppButton from '~common/button/AppButton.vue';
+import AppCommunityJoinWidget from '~common/community/join-widget/AppCommunityJoinWidget.vue';
+import AppGameFollowWidget from '~common/game/follow-widget/AppGameFollowWidget.vue';
+import AppMediaItemBackdrop from '~common/media-item/backdrop/AppMediaItemBackdrop.vue';
+import { useCommonStore } from '~common/store/common-store';
+import AppTheme from '~common/theme/AppTheme.vue';
+import { RouteLocationDefinition } from '~utils/router';
 
 type Props = {
 	item?: FeaturedItemModel;

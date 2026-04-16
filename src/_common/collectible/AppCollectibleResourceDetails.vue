@@ -1,42 +1,42 @@
 <script lang="ts" setup>
 import { computed, CSSProperties, onMounted, ref, toRef, watch } from 'vue';
 
+import { showPurchaseShopProductModal } from '~app/components/vending-machine/modal/_purchase-modal/modal.service';
+import AppAlertBox from '~common/alert/AppAlertBox.vue';
+import { trackResourceInfoView } from '~common/analytics/analytics.service';
+import { Api } from '~common/api/api.service';
+import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
+import { AvatarFrameModel } from '~common/avatar/frame.model';
+import { BackgroundModel } from '~common/background/background.model';
+import AppButton from '~common/button/AppButton.vue';
+import { AcquisitionMethod, filterAcquisitionMethods } from '~common/collectible/acquisition.model';
+import AppCollectibleUnlockedRibbon from '~common/collectible/AppCollectibleUnlockedRibbon.vue';
+import { CollectibleModel } from '~common/collectible/collectible.model';
+import { CollectibleResourceItem } from '~common/collectible/resource-details-modal/modal.service';
+import { EmojiModel } from '~common/emoji/emoji.model';
+import AppImgResponsive from '~common/img/AppImgResponsive.vue';
+import { PurchasableProductType } from '~common/inventory/shop/product-owner-helpers';
+import AppLoading from '~common/loading/AppLoading.vue';
+import { getMediaItemImageSrc } from '~common/media-item/media-item-model';
+import { storeModel, storeModelList } from '~common/model/model-store.service';
+import AppCircularProgress from '~common/progress/AppCircularProgress.vue';
+import { Screen } from '~common/screen/screen-service';
+import AppStickerMastery from '~common/sticker/AppStickerMastery.vue';
+import AppStickerPack, { StickerPackRatio } from '~common/sticker/pack/AppStickerPack.vue';
+import { StickerPackModel } from '~common/sticker/pack/pack.model';
+import { StickerModel } from '~common/sticker/sticker.model';
+import { kThemeFg10, kThemeFgMuted } from '~common/theme/variables';
+import { $gettext } from '~common/translate/translate.service';
 import {
 	styleBorderRadiusBase,
 	styleChangeBg,
 	styleFlexCenter,
 	styleMaxWidthForOptions,
 	styleWhen,
-} from '../../_styles/mixins';
-import { kBorderRadiusLg, kFontSizeLarge, kFontSizeSmall } from '../../_styles/variables';
-import { showPurchaseShopProductModal } from '../../app/components/vending-machine/modal/_purchase-modal/modal.service';
-import { arrayAssignAll } from '../../utils/array';
-import { isInstance } from '../../utils/utils';
-import AppAlertBox from '../alert/AppAlertBox.vue';
-import { trackResourceInfoView } from '../analytics/analytics.service';
-import { Api } from '../api/api.service';
-import AppAspectRatio from '../aspect-ratio/AppAspectRatio.vue';
-import { AvatarFrameModel } from '../avatar/frame.model';
-import { BackgroundModel } from '../background/background.model';
-import AppButton from '../button/AppButton.vue';
-import { EmojiModel } from '../emoji/emoji.model';
-import AppImgResponsive from '../img/AppImgResponsive.vue';
-import { PurchasableProductType } from '../inventory/shop/product-owner-helpers';
-import AppLoading from '../loading/AppLoading.vue';
-import { getMediaItemImageSrc } from '../media-item/media-item-model';
-import { storeModel, storeModelList } from '../model/model-store.service';
-import AppCircularProgress from '../progress/AppCircularProgress.vue';
-import { Screen } from '../screen/screen-service';
-import AppStickerMastery from '../sticker/AppStickerMastery.vue';
-import AppStickerPack, { StickerPackRatio } from '../sticker/pack/AppStickerPack.vue';
-import { StickerPackModel } from '../sticker/pack/pack.model';
-import { StickerModel } from '../sticker/sticker.model';
-import { kThemeFg10, kThemeFgMuted } from '../theme/variables';
-import { $gettext } from '../translate/translate.service';
-import { AcquisitionMethod, filterAcquisitionMethods } from './acquisition.model';
-import AppCollectibleUnlockedRibbon from './AppCollectibleUnlockedRibbon.vue';
-import { CollectibleModel } from './collectible.model';
-import { CollectibleResourceItem } from './resource-details-modal/modal.service';
+} from '~styles/mixins';
+import { kBorderRadiusLg, kFontSizeLarge, kFontSizeSmall } from '~styles/variables';
+import { arrayAssignAll } from '~utils/array';
+import { isInstance } from '~utils/utils';
 
 type Props = {
 	item: CollectibleResourceItem;

@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import { computed, CSSProperties, onMounted, StyleValue, toRef } from 'vue';
 
-import { styleBorderRadiusBase } from '../../_styles/mixins';
-import { kFontFamilyHeading, kFontSizeLarge, kLineHeightBase } from '../../_styles/variables';
-import { useDynamicSlots } from '../component-helpers';
-import AppImgResponsive from '../img/AppImgResponsive.vue';
-import { kThemeFg10 } from '../theme/variables';
-import { MicrotransactionProductModel } from './product.model';
+import { useDynamicSlots } from '~common/component-helpers';
+import AppImgResponsive from '~common/img/AppImgResponsive.vue';
+import { MicrotransactionProductModel } from '~common/microtransaction/product.model';
+import { kThemeFg10 } from '~common/theme/variables';
+import { styleBorderRadiusBase } from '~styles/mixins';
+import { kFontFamilyHeading, kFontSizeLarge, kLineHeightBase } from '~styles/variables';
 
 type DynamicSlotsProp = 'trailing'[] | Record<'trailing', boolean> | boolean;
 

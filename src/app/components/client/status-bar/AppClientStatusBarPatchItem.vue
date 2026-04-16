@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import AppProgressBar from '../../../../_common/progress/AppProgressBar.vue';
-import { useClientLibraryStore } from '../../../store/client-library/index';
+import { useClientLibraryStore } from '~app/store/client-library/index';
+import AppProgressBar from '~common/progress/AppProgressBar.vue';
 
 type Props = {
 	packageId: number;

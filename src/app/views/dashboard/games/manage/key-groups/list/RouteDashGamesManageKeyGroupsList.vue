@@ -2,27 +2,27 @@
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { Api } from '../../../../../../../_common/api/api.service';
-import AppButton from '../../../../../../../_common/button/AppButton.vue';
-import AppCardList from '../../../../../../../_common/card/list/AppCardList.vue';
-import AppCardListAdd from '../../../../../../../_common/card/list/AppCardListAdd.vue';
-import AppCardListItem from '../../../../../../../_common/card/list/AppCardListItem.vue';
-import { formatNumber } from '../../../../../../../_common/filters/number';
-import { GamePackageModel } from '../../../../../../../_common/game/package/package.model';
+import FormGameKeyGroup from '~app/components/forms/game/key-group/FormGameKeyGroup.vue';
+import { useGameDashRouteController } from '~app/views/dashboard/games/manage/manage.store';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import AppCardList from '~common/card/list/AppCardList.vue';
+import AppCardListAdd from '~common/card/list/AppCardListAdd.vue';
+import AppCardListItem from '~common/card/list/AppCardListItem.vue';
+import { formatNumber } from '~common/filters/number';
+import { GamePackageModel } from '~common/game/package/package.model';
 import {
 	KeyGroupModel,
 	KeyGroupType,
-} from '../../../../../../../_common/key-group/key-group.model';
-import AppProgressBar from '../../../../../../../_common/progress/AppProgressBar.vue';
+} from '~common/key-group/key-group.model';
+import AppProgressBar from '~common/progress/AppProgressBar.vue';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
-} from '../../../../../../../_common/route/route-component';
-import AppTranslate from '../../../../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../../../../_common/translate/translate.service';
-import { TranslateDirective as vTranslate } from '../../../../../../../_common/translate/translate-directive';
-import FormGameKeyGroup from '../../../../../../components/forms/game/key-group/FormGameKeyGroup.vue';
-import { useGameDashRouteController } from '../../manage.store';
+} from '~common/route/route-component';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { TranslateDirective as vTranslate } from '~common/translate/translate-directive';
 
 export default {
 	name: 'RouteDashGamesManageKeyGroupsList',

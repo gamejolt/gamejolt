@@ -1,24 +1,24 @@
 import type { PatchInstance } from 'client-voodoo';
 import { computed, ComputedRef, inject, InjectionKey, Ref, ref } from 'vue';
 
-import { ClientUpdater } from '../../../_common/client/client-updater.service';
-import { Config, Queue } from '../../../_common/client/client-voodoo-imports';
+import { LocalDbGame } from '~app/components/client/local-db/game/game.model';
+import { LocalDb } from '~app/components/client/local-db/local-db.service';
+import { LocalDbPackage } from '~app/components/client/local-db/package/package.model';
+import ClientLibraryGameDataMutations from '~app/store/client-library/game-data-mutations';
+import ClientLibraryPackageDataMutations from '~app/store/client-library/package-data-mutations';
+import ClientLibraryPackageInstallOperations from '~app/store/client-library/package-install-operations';
+import ClientLibraryPackageLaunchOperations from '~app/store/client-library/package-launch-operations';
+import ClientLibrarySyncOperations from '~app/store/client-library/sync-operations';
+import { ClientUpdater } from '~common/client/client-updater.service';
+import { Config, Queue } from '~common/client/client-voodoo-imports';
 import {
 	SettingMaxDownloadCount,
 	SettingMaxExtractCount,
 	SettingQueueWhenPlaying,
-} from '../../../_common/settings/settings.service';
-import { arrayGroupBy, arrayIndexBy, arrayRemove } from '../../../utils/array';
-import { fuzzysearch } from '../../../utils/string';
-import { HidePrivateKeys } from '../../../utils/utils';
-import { LocalDbGame } from '../../components/client/local-db/game/game.model';
-import { LocalDb } from '../../components/client/local-db/local-db.service';
-import { LocalDbPackage } from '../../components/client/local-db/package/package.model';
-import ClientLibraryGameDataMutations from './game-data-mutations';
-import ClientLibraryPackageDataMutations from './package-data-mutations';
-import ClientLibraryPackageInstallOperations from './package-install-operations';
-import ClientLibraryPackageLaunchOperations from './package-launch-operations';
-import ClientLibrarySyncOperations from './sync-operations';
+} from '~common/settings/settings.service';
+import { arrayGroupBy, arrayIndexBy, arrayRemove } from '~utils/array';
+import { fuzzysearch } from '~utils/string';
+import { HidePrivateKeys } from '~utils/utils';
 
 const path = require('path') as typeof import('path');
 const fs = require('fs') as typeof import('fs');

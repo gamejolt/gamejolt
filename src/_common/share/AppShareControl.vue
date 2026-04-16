@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import AppButton from '../button/AppButton.vue';
-import { copyShareLink, ShareResource } from './share.service';
+import AppButton from '~common/button/AppButton.vue';
+import { copyShareLink, ShareResource } from '~common/share/share.service';
 
 type Props = {
 	resource: ShareResource;

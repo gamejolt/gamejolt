@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import { computed, ref, useTemplateRef } from 'vue';
 
-import { styleWhen } from '../../_styles/mixins';
-import { useResizeObserver } from '../../utils/resize-observer';
-import AppAspectRatio from '../aspect-ratio/AppAspectRatio.vue';
-import { Ruler } from '../ruler/ruler-service';
-import AppAnimSlideshowImg from './AppAnimSlideshowImg.vue';
-import { getImgSlideshowData, ImgSlideshow } from './slideshow/sheets';
+import AppAnimSlideshowImg from '~common/animation/AppAnimSlideshowImg.vue';
+import { getImgSlideshowData, ImgSlideshow } from '~common/animation/slideshow/sheets';
+import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
+import { Ruler } from '~common/ruler/ruler-service';
+import { styleWhen } from '~styles/mixins';
+import { useResizeObserver } from '~utils/resize-observer';
 
 type Props = {
 	sheet: ImgSlideshow;

@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { computed, CSSProperties } from 'vue';
 
-import { styleAbsoluteFill, styleWhen } from '../../_styles/mixins';
-import { kStrongEaseOut } from '../../_styles/variables';
+import { styleAbsoluteFill, styleWhen } from '~styles/mixins';
+import { kStrongEaseOut } from '~styles/variables';
 
 type Props = {
 	noEdges?: boolean;

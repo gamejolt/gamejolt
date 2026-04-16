@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { styleChangeBg } from '../../../../_styles/mixins';
+import { styleChangeBg } from '~styles/mixins';
 </script>
 
 <template>

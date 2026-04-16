@@ -1,23 +1,23 @@
 <script lang="ts" setup>
 import { computed, CSSProperties, toRef } from 'vue';
 
-import {
-	styleBorderRadiusBase,
-	styleBorderRadiusLg,
-	styleLineClamp,
-} from '../../../../../_styles/mixins';
-import { kBorderWidthLg, kFontSizeSmall, kStrongEaseOut } from '../../../../../_styles/variables';
-import AppAspectRatio from '../../../../aspect-ratio/AppAspectRatio.vue';
-import AppAvatarFrame from '../../../../avatar/AppAvatarFrame.vue';
-import { shorthandReadableTime } from '../../../../filters/duration';
+import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
+import AppAvatarFrame from '~common/avatar/AppAvatarFrame.vue';
+import { shorthandReadableTime } from '~common/filters/duration';
 import {
 	kThemeBgOffset,
 	kThemeBgSubtle,
 	kThemeFg10,
 	kThemeGjOverlayNotice,
-} from '../../../../theme/variables';
-import { vAppTooltip } from '../../../../tooltip/tooltip-directive';
-import { UserAvatarFrameModel } from '../frame.model';
+} from '~common/theme/variables';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { UserAvatarFrameModel } from '~common/user/user-avatar/frame/frame.model';
+import {
+	styleBorderRadiusBase,
+	styleBorderRadiusLg,
+	styleLineClamp,
+} from '~styles/mixins';
+import { kBorderWidthLg, kFontSizeSmall, kStrongEaseOut } from '~styles/variables';
 
 type Props = {
 	frame?: UserAvatarFrameModel;

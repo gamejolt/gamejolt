@@ -1,5 +1,5 @@
-import { trackShareLink } from '../analytics/analytics.service';
-import { Clipboard } from '../clipboard/clipboard-service';
+import { trackShareLink } from '~common/analytics/analytics.service';
+import { Clipboard } from '~common/clipboard/clipboard-service';
 
 export type ShareProvider =
 	| 'facebook'

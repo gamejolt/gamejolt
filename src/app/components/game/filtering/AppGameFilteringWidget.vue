@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { reactive } from 'vue';
 
-import { Analytics } from '../../../../_common/analytics/analytics.service';
-import { formatNumber } from '../../../../_common/filters/number';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import AppPopper from '../../../../_common/popper/AppPopper.vue';
-import { GameFilteringContainer } from './container';
+import { GameFilteringContainer } from '~app/components/game/filtering/container';
+import { Analytics } from '~common/analytics/analytics.service';
+import { formatNumber } from '~common/filters/number';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppPopper from '~common/popper/AppPopper.vue';
 
 type Props = {
 	filtering: GameFilteringContainer;

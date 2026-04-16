@@ -1,7 +1,7 @@
 import { reactive } from 'vue';
 
-import { Primitives, Properties } from '../../../../utils/utils';
-import { LocalDbModel } from './model.service';
+import { LocalDbModel } from '~app/components/client/local-db/model.service';
+import { Primitives, Properties } from '~utils/utils';
 
 const writeFileAtomic = require('write-file-atomic') as typeof import('write-file-atomic');
 const fs = require('fs-extra') as typeof import('fs-extra');

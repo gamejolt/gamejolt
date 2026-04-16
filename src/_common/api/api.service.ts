@@ -1,9 +1,9 @@
 import Axios, { AxiosRequestConfig } from 'axios';
 import { ref } from 'vue';
 
-import { setTimezoneOffsetCookie } from '../cookie/cookie.service';
-import { Environment } from '../environment/environment.service';
-import { Payload } from '../payload/payload-service';
+import { setTimezoneOffsetCookie } from '~common/cookie/cookie.service';
+import { Environment } from '~common/environment/environment.service';
+import { Payload } from '~common/payload/payload-service';
 
 export interface ApiProgressEvent {
 	loaded: number;

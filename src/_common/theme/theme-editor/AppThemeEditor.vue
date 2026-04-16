@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 import { nextTick, ref, toRaw, watch } from 'vue';
 
-import { run } from '../../../utils/utils';
-import { Api } from '../../api/api.service';
-import AppColorpicker from '../../colorpicker/AppColorpicker.vue';
-import AppLoading from '../../loading/AppLoading.vue';
-import { SiteTemplateModel } from '../../site/template/template-model';
-import { $gettext } from '../../translate/translate.service';
-import AppThemeEditorFontSelector from './AppThemeEditorFontSelector.vue';
-import AppThemeEditorImage from './AppThemeEditorImage.vue';
+import { Api } from '~common/api/api.service';
+import AppColorpicker from '~common/colorpicker/AppColorpicker.vue';
+import AppLoading from '~common/loading/AppLoading.vue';
+import { SiteTemplateModel } from '~common/site/template/template-model';
+import AppThemeEditorFontSelector from '~common/theme/theme-editor/AppThemeEditorFontSelector.vue';
+import AppThemeEditorImage from '~common/theme/theme-editor/AppThemeEditorImage.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { run } from '~utils/utils';
 
 interface StyleGroup {
 	name: string;
@@ -283,4 +283,4 @@ function updateField(field: string, content?: string) {
 	</div>
 </template>
 
-<style lang="stylus" src="./theme-editor.styl" scoped></style>
+<style lang="stylus" src="~common/theme/theme-editor/theme-editor.styl" scoped></style>

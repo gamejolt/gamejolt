@@ -1,22 +1,22 @@
 import { computed, reactive, shallowReadonly } from 'vue';
 import { Router } from 'vue-router';
 
-import { importNoSSR } from '../../../_common/code-splitting';
-import { CurrencyType } from '../../../_common/currency/currency-type';
-import { FiresidePostGotoGrowl } from '../../../_common/fireside/post/goto-growl/goto-growl.service';
-import { FiresidePostModel } from '../../../_common/fireside/post/post-model';
+import { GridClient } from '~app/components/grid/client.service';
+import { addNewQuestIds, addQuestActivityIds } from '~app/store/quest';
+import { shouldUseFYPDefault } from '~app/views/home/home-feed.service';
+import { importNoSSR } from '~common/code-splitting';
+import { CurrencyType } from '~common/currency/currency-type';
+import { FiresidePostGotoGrowl } from '~common/fireside/post/goto-growl/goto-growl.service';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
 import {
 	NotificationModel,
 	NotificationType,
-} from '../../../_common/notification/notification-model';
-import { QuestNotificationModel } from '../../../_common/quest/quest-notification-model';
-import { createSocketChannelController } from '../../../_common/socket/socket-controller';
-import { commonStore } from '../../../_common/store/common-store';
-import { TabLeaderInterface } from '../../../utils/tab-leader';
-import { addNewQuestIds, addQuestActivityIds } from '../../store/quest';
-import { shouldUseFYPDefault } from '../../views/home/home-feed.service';
-import { GridClient } from './client.service';
-const TabLeaderLazy = importNoSSR(async () => await import('../../../utils/tab-leader'));
+} from '~common/notification/notification-model';
+import { QuestNotificationModel } from '~common/quest/quest-notification-model';
+import { createSocketChannelController } from '~common/socket/socket-controller';
+import { commonStore } from '~common/store/common-store';
+import { TabLeaderInterface } from '~utils/tab-leader';
+const TabLeaderLazy = importNoSSR(async () => await import('~utils/tab-leader'));
 
 export type GridNotificationChannel = ReturnType<typeof createGridNotificationChannel>;
 

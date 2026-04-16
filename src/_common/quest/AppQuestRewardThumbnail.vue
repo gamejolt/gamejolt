@@ -1,20 +1,20 @@
 <script lang="ts" setup>
 import { computed, CSSProperties } from 'vue';
 
-import { styleBorderRadiusLg, styleFlexCenter, styleWhen } from '../../_styles/mixins';
-import AppAnimChargeOrb from '../animation/AppAnimChargeOrb.vue';
-import AppAspectRatio from '../aspect-ratio/AppAspectRatio.vue';
-import { DefaultAvatarFrameScale } from '../avatar/frame.model';
-import { CurrencyType } from '../currency/currency-type';
-import AppIllustration, { IllustrationAsset } from '../illustration/AppIllustration.vue';
-import AppJolticon, { Jolticon } from '../jolticon/AppJolticon.vue';
-import AppMediaItemImg from '../media-item/AppMediaItemImg.vue';
-import { getMediaItemImageSrc } from '../media-item/media-item-model';
-import { StickerPackRatio } from '../sticker/pack/AppStickerPack.vue';
-import { useCommonStore } from '../store/common-store';
-import AppUserAvatarBubble from '../user/user-avatar/AppUserAvatarBubble.vue';
-import { QuestRewardTypes } from './quest-objective-reward-model';
-import { QuestRewardModel } from './quest-reward-model';
+import AppAnimChargeOrb from '~common/animation/AppAnimChargeOrb.vue';
+import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
+import { DefaultAvatarFrameScale } from '~common/avatar/frame.model';
+import { CurrencyType } from '~common/currency/currency-type';
+import AppIllustration, { IllustrationAsset } from '~common/illustration/AppIllustration.vue';
+import AppJolticon, { Jolticon } from '~common/jolticon/AppJolticon.vue';
+import AppMediaItemImg from '~common/media-item/AppMediaItemImg.vue';
+import { getMediaItemImageSrc } from '~common/media-item/media-item-model';
+import { QuestRewardTypes } from '~common/quest/quest-objective-reward-model';
+import { QuestRewardModel } from '~common/quest/quest-reward-model';
+import { StickerPackRatio } from '~common/sticker/pack/AppStickerPack.vue';
+import { useCommonStore } from '~common/store/common-store';
+import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
+import { styleBorderRadiusLg, styleFlexCenter, styleWhen } from '~styles/mixins';
 
 type Props = {
 	reward: QuestRewardModel;

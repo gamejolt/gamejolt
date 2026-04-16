@@ -5,12 +5,12 @@ import { RouterLink } from 'vue-router';
 import {
 	CommunityModel,
 	CommunityPresetChannelType,
-} from '../../../../../_common/community/community.model';
-import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
-import { MediaItemModel } from '../../../../../_common/media-item/media-item-model';
-import { vAppObserveDimensions } from '../../../../../_common/observe-dimensions/observe-dimensions.directive';
-import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+} from '~common/community/community.model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppMediaItemBackdrop from '~common/media-item/backdrop/AppMediaItemBackdrop.vue';
+import { MediaItemModel } from '~common/media-item/media-item-model';
+import { vAppObserveDimensions } from '~common/observe-dimensions/observe-dimensions.directive';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 
 export const CommunityChannelCardWidth = 270;
 export const CommunityChannelCardHeight = 70;

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import AppTranslate from '../../../../../../_common/translate/AppTranslate.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 </script>
 
 <template>

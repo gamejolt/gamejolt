@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import AppGameFollowWidget from '../../../../../_common/game/follow-widget/AppGameFollowWidget.vue';
-import AppGamePlaylistAddToWidget from '../../../../components/game-playlist/add-to-widget/add-to-widget.vue';
-import AppPageHeaderControls from '../../../../components/page-header/controls/AppPageHeaderControls.vue';
-import { useGameRouteController } from './RouteDiscoverGamesView.vue';
+import AppGamePlaylistAddToWidget from '~app/components/game-playlist/add-to-widget/add-to-widget.vue';
+import AppPageHeaderControls from '~app/components/page-header/controls/AppPageHeaderControls.vue';
+import { useGameRouteController } from '~app/views/discover/games/view/RouteDiscoverGamesView.vue';
+import AppGameFollowWidget from '~common/game/follow-widget/AppGameFollowWidget.vue';
 
 const { game } = useGameRouteController()!;
 </script>

@@ -16,17 +16,17 @@ import {
 } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { CancelToken } from '../../utils/cancel-token';
-import { MaybePromise } from '../../utils/utils';
-import { uuidv4 } from '../../utils/uuid';
-import { Api } from '../api/api.service';
-import AppLoading from '../loading/AppLoading.vue';
-import AppLoadingFade from '../loading/AppLoadingFade.vue';
-import { ModelClassType } from '../model/model.service';
-import { PayloadFormErrors } from '../payload/payload-service';
-import { $gettext } from '../translate/translate.service';
-import { FormGroupController } from './AppFormGroup.vue';
-import { FormValidatorError } from './validators';
+import { Api } from '~common/api/api.service';
+import { FormGroupController } from '~common/form-vue/AppFormGroup.vue';
+import { FormValidatorError } from '~common/form-vue/validators';
+import AppLoading from '~common/loading/AppLoading.vue';
+import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
+import { ModelClassType } from '~common/model/model.service';
+import { PayloadFormErrors } from '~common/payload/payload-service';
+import { $gettext } from '~common/translate/translate.service';
+import { CancelToken } from '~utils/cancel-token';
+import { MaybePromise } from '~utils/utils';
+import { uuidv4 } from '~utils/uuid';
 
 const Key: InjectionKey<FormController> = Symbol('form');
 

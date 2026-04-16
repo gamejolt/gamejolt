@@ -2,27 +2,27 @@
 import { computed, onMounted, ref, toRef } from 'vue';
 import { RouterLink } from 'vue-router';
 
-import { Api } from '../../../../../../_common/api/api.service';
-import AppButton from '../../../../../../_common/button/AppButton.vue';
-import { Clipboard } from '../../../../../../_common/clipboard/clipboard-service';
-import { CommunityCompetitionModel } from '../../../../../../_common/community/competition/competition.model';
-import { CommunityCompetitionEntryModel } from '../../../../../../_common/community/competition/entry/entry.model';
-import { CommunityCompetitionEntryVoteModel } from '../../../../../../_common/community/competition/entry/vote/vote.model';
-import { CommunityCompetitionVotingCategoryModel } from '../../../../../../_common/community/competition/voting-category/voting-category.model';
-import { formatDate } from '../../../../../../_common/filters/date';
-import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
-import AppLoading from '../../../../../../_common/loading/AppLoading.vue';
-import AppModal from '../../../../../../_common/modal/AppModal.vue';
-import { useModal } from '../../../../../../_common/modal/modal.service';
-import AppTimeAgo from '../../../../../../_common/time/AppTimeAgo.vue';
-import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
-import { $gettext, $ngettext } from '../../../../../../_common/translate/translate.service';
-import AppUserVerifiedTick from '../../../../../../_common/user/AppUserVerifiedTick.vue';
-import AppUserCardHover from '../../../../../../_common/user/card/AppUserCardHover.vue';
-import AppUserAvatar from '../../../../../../_common/user/user-avatar/AppUserAvatar.vue';
-import { numberSort } from '../../../../../../utils/array';
-import AppGameBadge from '../../../../game/badge/AppGameBadge.vue';
-import AppCommunityCompetitionVotingWidget from '../../voting/AppCommunityCompetitionVotingWidget.vue';
+import AppCommunityCompetitionVotingWidget from '~app/components/community/competition/voting/AppCommunityCompetitionVotingWidget.vue';
+import AppGameBadge from '~app/components/game/badge/AppGameBadge.vue';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import { Clipboard } from '~common/clipboard/clipboard-service';
+import { CommunityCompetitionModel } from '~common/community/competition/competition.model';
+import { CommunityCompetitionEntryModel } from '~common/community/competition/entry/entry.model';
+import { CommunityCompetitionEntryVoteModel } from '~common/community/competition/entry/vote/vote.model';
+import { CommunityCompetitionVotingCategoryModel } from '~common/community/competition/voting-category/voting-category.model';
+import { formatDate } from '~common/filters/date';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLoading from '~common/loading/AppLoading.vue';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import AppTimeAgo from '~common/time/AppTimeAgo.vue';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { $gettext, $ngettext } from '~common/translate/translate.service';
+import AppUserVerifiedTick from '~common/user/AppUserVerifiedTick.vue';
+import AppUserCardHover from '~common/user/card/AppUserCardHover.vue';
+import AppUserAvatar from '~common/user/user-avatar/AppUserAvatar.vue';
+import { numberSort } from '~utils/array';
 
 type Props = {
 	entry?: CommunityCompetitionEntryModel;

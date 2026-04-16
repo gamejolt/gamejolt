@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { computed, CSSProperties } from 'vue';
 
-import { Screen } from '../../../_common/screen/screen-service';
-import { buildCSSPixelValue, kBorderRadiusLg } from '../../../_styles/variables';
+import { Screen } from '~common/screen/screen-service';
+import { buildCSSPixelValue, kBorderRadiusLg } from '~styles/variables';
 
 type Props = {
 	/** Function that causes the window to close. */

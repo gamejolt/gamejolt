@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, toRef } from 'vue';
 
-import { ContentDocument } from '../../content/content-document';
+import { ContentDocument } from '~common/content/content-document';
 
 type Props = {
 	tags: string[];

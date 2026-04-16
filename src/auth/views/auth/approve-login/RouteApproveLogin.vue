@@ -6,15 +6,15 @@ import {
 	authOnLogin,
 	getRedirectUrl,
 	redirectToDashboard,
-} from '../../../../_common/auth/auth.service';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import { Navigate } from '../../../../_common/navigate/navigate.service';
-import AppProgressPoller from '../../../../_common/progress/poller/AppProgressPoller.vue';
-import { defineAppRouteOptions } from '../../../../_common/route/route-component';
-import { createAppRoute } from '../../../../_common/route/route-component';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { RouteLocationRedirect } from '../../../../utils/router';
+} from '~common/auth/auth.service';
+import AppButton from '~common/button/AppButton.vue';
+import { Navigate } from '~common/navigate/navigate.service';
+import AppProgressPoller from '~common/progress/poller/AppProgressPoller.vue';
+import { defineAppRouteOptions } from '~common/route/route-component';
+import { createAppRoute } from '~common/route/route-component';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { RouteLocationRedirect } from '~utils/router';
 
 export default {
 	name: 'RouteApproveLogin',

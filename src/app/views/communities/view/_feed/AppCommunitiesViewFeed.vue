@@ -2,23 +2,23 @@
 import { computed, toRef } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
 
-import { Api } from '../../../../../_common/api/api.service';
-import { CommunityChannelModel } from '../../../../../_common/community/channel/channel.model';
-import { CommunityModel } from '../../../../../_common/community/community.model';
-import { EventItemModel } from '../../../../../_common/event-item/event-item.model';
-import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
-import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
-import { illNoCommentsSmall } from '../../../../../_common/illustration/illustrations';
-import AppNavTabList from '../../../../../_common/nav/tab-list/AppNavTabList.vue';
-import { useCommonStore } from '../../../../../_common/store/common-store';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
-import AppActivityFeed from '../../../../components/activity/feed/AppActivityFeed.vue';
-import AppActivityFeedPlaceholder from '../../../../components/activity/feed/AppActivityFeedPlaceholder.vue';
-import { ActivityFeedView } from '../../../../components/activity/feed/view';
-import AppPostAddButton from '../../../../components/post/add-button/AppPostAddButton.vue';
-import AppBlockedNotice from '../_blocked-notice/AppBlockedNotice.vue';
-import { isVirtualChannel, useCommunityRouteStore } from '../view.store';
+import AppActivityFeed from '~app/components/activity/feed/AppActivityFeed.vue';
+import AppActivityFeedPlaceholder from '~app/components/activity/feed/AppActivityFeedPlaceholder.vue';
+import { ActivityFeedView } from '~app/components/activity/feed/view';
+import AppPostAddButton from '~app/components/post/add-button/AppPostAddButton.vue';
+import AppBlockedNotice from '~app/views/communities/view/_blocked-notice/AppBlockedNotice.vue';
+import { isVirtualChannel, useCommunityRouteStore } from '~app/views/communities/view/view.store';
+import { Api } from '~common/api/api.service';
+import { CommunityChannelModel } from '~common/community/channel/channel.model';
+import { CommunityModel } from '~common/community/community.model';
+import { EventItemModel } from '~common/event-item/event-item.model';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import AppIllustration from '~common/illustration/AppIllustration.vue';
+import { illNoCommentsSmall } from '~common/illustration/illustrations';
+import AppNavTabList from '~common/nav/tab-list/AppNavTabList.vue';
+import { useCommonStore } from '~common/store/common-store';
+import { $gettext } from '~common/translate/translate.service';
+import { TranslateDirective as vTranslate } from '~common/translate/translate-directive';
 
 // feed is optional since it may not have loaded into the page yet. In that
 // case, we show a placeholder and wait.

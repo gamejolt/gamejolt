@@ -1,6 +1,6 @@
 import { ref, shallowRef } from 'vue';
 
-import { ContentEditorController } from './content-editor-controller';
+import { ContentEditorController } from '~common/content/content-editor/content-editor-controller';
 
 /**
  * Represents a media upload within a content editor. It's mostly a state

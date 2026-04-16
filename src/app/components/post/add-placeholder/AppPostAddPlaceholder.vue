@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { CONTENT_TARGET_HEIGHT } from '../../content/target/AppContentTarget.vue';
+import { CONTENT_TARGET_HEIGHT } from '~app/components/content/target/AppContentTarget.vue';
 </script>
 
 <template>

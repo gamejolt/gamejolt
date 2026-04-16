@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 import { ref, toRaw, useTemplateRef, watch } from 'vue';
 
-import { Api } from '../../api/api.service';
-import AppButton from '../../button/AppButton.vue';
-import { Environment } from '../../environment/environment.service';
-import AppLoading from '../../loading/AppLoading.vue';
-import { SiteContentBlockModel } from '../../site/content-block/content-block-model';
-import { SiteModel } from '../../site/site-model';
-import { vAppTooltip } from '../../tooltip/tooltip-directive';
-import FormContentBlockEditor from './FormContentBlockEditor.vue';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import FormContentBlockEditor from '~common/content-block/editor/FormContentBlockEditor.vue';
+import { Environment } from '~common/environment/environment.service';
+import AppLoading from '~common/loading/AppLoading.vue';
+import { SiteContentBlockModel } from '~common/site/content-block/content-block-model';
+import { SiteModel } from '~common/site/site-model';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 
 const PreviewDebounce = 3000;
 

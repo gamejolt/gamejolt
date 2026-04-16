@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { CSSProperties } from 'vue';
 
-import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import AppUserDogtag from '../../../../_common/user/AppUserDogtag.vue';
-import { UserFriendshipState } from '../../../../_common/user/friendship/friendship.model';
-import { useProfileRouteStore } from '../RouteProfile.vue';
+import { useProfileRouteStore } from '~app/views/profile/RouteProfile.vue';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import AppUserDogtag from '~common/user/AppUserDogtag.vue';
+import { UserFriendshipState } from '~common/user/friendship/friendship.model';
 
 type Props = {
 	wrap?: CSSProperties['flexWrap'];

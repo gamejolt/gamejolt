@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import AppImgResponsive from '../img/AppImgResponsive.vue';
-import AppScrollScroller from '../scroll/AppScrollScroller.vue';
-import { BackgroundModel } from './background.model';
+import { BackgroundModel } from '~common/background/background.model';
+import AppImgResponsive from '~common/img/AppImgResponsive.vue';
+import AppScrollScroller from '~common/scroll/AppScrollScroller.vue';
 
 type Props = {
 	backgrounds: BackgroundModel[];

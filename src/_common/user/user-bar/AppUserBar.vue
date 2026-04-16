@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import { styleWhen } from '../../../_styles/mixins';
-import { Environment } from '../../environment/environment.service';
-import { Screen } from '../../screen/screen-service';
-import { UserModel } from '../user.model';
-import AppUserAvatarImg from '../user-avatar/AppUserAvatarImg.vue';
+import { Environment } from '~common/environment/environment.service';
+import { Screen } from '~common/screen/screen-service';
+import { UserModel } from '~common/user/user.model';
+import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
+import { styleWhen } from '~styles/mixins';
 
 type Props = {
 	user: UserModel | null | undefined;

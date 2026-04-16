@@ -1,16 +1,16 @@
 <script lang="ts" setup>
 import { computed, CSSProperties, ref } from 'vue';
 
-import { styleFlexCenter } from '../../../../_styles/mixins';
-import { kBorderWidthLg, kFontSizeLarge, kFontSizeTiny } from '../../../../_styles/variables';
-import { clampNumber } from '../../../../utils/number';
-import { sleep } from '../../../../utils/utils';
-import AppJolticon, { Jolticon } from '../../../jolticon/AppJolticon.vue';
-import AppCircularProgress from '../../../progress/AppCircularProgress.vue';
-import AppStickerImg from '../../../sticker/AppStickerImg.vue';
-import { $gettext } from '../../../translate/translate.service';
-import AppShellNoticeBase from '../_base/AppShellNoticeBase.vue';
-import { StickerMasteryNotice } from '../notice.service';
+import AppJolticon, { Jolticon } from '~common/jolticon/AppJolticon.vue';
+import AppCircularProgress from '~common/progress/AppCircularProgress.vue';
+import AppShellNoticeBase from '~common/shell/notice/_base/AppShellNoticeBase.vue';
+import { StickerMasteryNotice } from '~common/shell/notice/notice.service';
+import AppStickerImg from '~common/sticker/AppStickerImg.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { styleFlexCenter } from '~styles/mixins';
+import { kBorderWidthLg, kFontSizeLarge, kFontSizeTiny } from '~styles/variables';
+import { clampNumber } from '~utils/number';
+import { sleep } from '~utils/utils';
 
 interface BaseContent {
 	type: string;

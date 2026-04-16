@@ -1,8 +1,8 @@
 import { defineAsyncComponent } from 'vue';
 
-import { showModal } from '../../modal/modal.service';
-import { QuestModel } from '../quest-model';
-import { QuestRewardData } from './AppQuestRewardModal.vue';
+import { showModal } from '~common/modal/modal.service';
+import { QuestModel } from '~common/quest/quest-model';
+import { QuestRewardData } from '~common/quest/reward/AppQuestRewardModal.vue';
 
 interface QuestRewardModalOptions {
 	quest: QuestModel;
@@ -15,7 +15,7 @@ export async function showQuestRewardModal(options: QuestRewardModalOptions) {
 
 	return await showModal({
 		modalId: 'QuestRewards',
-		component: defineAsyncComponent(() => import('./AppQuestRewardModal.vue')),
+		component: defineAsyncComponent(() => import('~common/quest/reward/AppQuestRewardModal.vue')),
 		props: {
 			quest,
 			rewards,

@@ -1,16 +1,16 @@
 <script lang="ts" setup>
 import { ref, toRef } from 'vue';
 
-import { useForm } from '../../../../../_common/form-vue/AppForm.vue';
-import AppFinancialsManagedAccountAddress from './AppFinancialsManagedAccountAddress.vue';
-import AppFinancialsManagedAccountContact from './AppFinancialsManagedAccountContact.vue';
-import AppFinancialsManagedAccountDob from './AppFinancialsManagedAccountDob.vue';
+import AppFinancialsManagedAccountAddress from '~app/components/forms/financials/managed-account/AppFinancialsManagedAccountAddress.vue';
+import AppFinancialsManagedAccountContact from '~app/components/forms/financials/managed-account/AppFinancialsManagedAccountContact.vue';
+import AppFinancialsManagedAccountDob from '~app/components/forms/financials/managed-account/AppFinancialsManagedAccountDob.vue';
 import AppFinancialsManagedAccountDocument, {
 	AppFinancialsManagedAccountDocumentInterface,
-} from './AppFinancialsManagedAccountDocument.vue';
-import AppFinancialsManagedAccountName from './AppFinancialsManagedAccountName.vue';
-import AppFinancialsManagedAccountSsn from './AppFinancialsManagedAccountSsn.vue';
-import { ManagedAccountFormModel } from './FormFinancialsManagedAccount.vue';
+} from '~app/components/forms/financials/managed-account/AppFinancialsManagedAccountDocument.vue';
+import AppFinancialsManagedAccountName from '~app/components/forms/financials/managed-account/AppFinancialsManagedAccountName.vue';
+import AppFinancialsManagedAccountSsn from '~app/components/forms/financials/managed-account/AppFinancialsManagedAccountSsn.vue';
+import { ManagedAccountFormModel } from '~app/components/forms/financials/managed-account/FormFinancialsManagedAccount.vue';
+import { useForm } from '~common/form-vue/AppForm.vue';
 
 export interface AppFinancialsManagedAccountPersonInterface {
 	namePrefix: string;

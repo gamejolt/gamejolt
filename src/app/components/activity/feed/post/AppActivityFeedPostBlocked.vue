@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { computed, CSSProperties } from 'vue';
 
-import AppButton from '../../../../../_common/button/AppButton.vue';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
-import { kFontSizeSmall } from '../../../../../_styles/variables';
-import { stylePostFeedItem } from '../../../post/post-styles';
+import { stylePostFeedItem } from '~app/components/post/post-styles';
+import AppButton from '~common/button/AppButton.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { TranslateDirective as vTranslate } from '~common/translate/translate-directive';
+import { kFontSizeSmall } from '~styles/variables';
 
 defineProps<{ username: string }>();
 

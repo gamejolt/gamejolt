@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import { formatNumber } from '../../../../_common/filters/number';
-import AppTimeAgo from '../../../../_common/time/AppTimeAgo.vue';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import AppUserVerifiedTick from '../../../../_common/user/AppUserVerifiedTick.vue';
-import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
-import { UserGameScoreModel } from '../../../../_common/user/game-score/game-score.model';
-import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
+import { formatNumber } from '~common/filters/number';
+import AppTimeAgo from '~common/time/AppTimeAgo.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import AppUserVerifiedTick from '~common/user/AppUserVerifiedTick.vue';
+import AppUserCardHover from '~common/user/card/AppUserCardHover.vue';
+import { UserGameScoreModel } from '~common/user/game-score/game-score.model';
+import AppUserAvatar from '~common/user/user-avatar/AppUserAvatar.vue';
 
 type Props = {
 	scores: UserGameScoreModel[];
@@ -62,4 +62,4 @@ const { scores, startRank, step } = defineProps<Props>();
 	</ol>
 </template>
 
-<style lang="stylus" src="./list.styl" scoped></style>
+<style lang="stylus" src="~app/components/score/list/list.styl" scoped></style>

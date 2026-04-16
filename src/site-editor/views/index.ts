@@ -1,7 +1,7 @@
 import { RouteRecordRaw } from 'vue-router';
 
-import { initRouter } from '../../utils/router';
-import RouteSiteEditor from './RouteSiteEditor.vue';
+import RouteSiteEditor from '~site-editor/views/RouteSiteEditor.vue';
+import { initRouter } from '~utils/router';
 
 const routes: RouteRecordRaw[] = [
 	{

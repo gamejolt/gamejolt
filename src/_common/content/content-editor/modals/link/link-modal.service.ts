@@ -1,5 +1,5 @@
-import { showModal } from '../../../../modal/modal.service';
-import AppContentEditorLinkModal from './AppContentEditorLinkModal.vue';
+import AppContentEditorLinkModal from '~common/content/content-editor/modals/link/AppContentEditorLinkModal.vue';
+import { showModal } from '~common/modal/modal.service';
 
 export type LinkData = {
 	href: string;

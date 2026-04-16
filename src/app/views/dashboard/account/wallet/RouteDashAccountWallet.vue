@@ -1,27 +1,27 @@
 <script lang="ts">
 import { computed, ref } from 'vue';
 
-import AppAlertBox from '../../../../../_common/alert/AppAlertBox.vue';
-import { Api } from '../../../../../_common/api/api.service';
-import AppButton from '../../../../../_common/button/AppButton.vue';
-import AppCard from '../../../../../_common/card/AppCard.vue';
-import AppExpand from '../../../../../_common/expand/AppExpand.vue';
-import { formatCurrency, formatGemsCurrency } from '../../../../../_common/filters/currency';
-import { imageGems } from '../../../../../_common/img/images';
-import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import AppProgressBar from '../../../../../_common/progress/AppProgressBar.vue';
+import { showWalletWithdrawModal } from '~app/components/wallet/withdraw/withdraw-modal.service';
+import { useAccountRouteController } from '~app/views/dashboard/account/RouteDashAccount.vue';
+import marketplaceImage from '~app/views/dashboard/account/wallet/marketplace.png';
+import AppAlertBox from '~common/alert/AppAlertBox.vue';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import AppCard from '~common/card/AppCard.vue';
+import AppExpand from '~common/expand/AppExpand.vue';
+import { formatCurrency, formatGemsCurrency } from '~common/filters/currency';
+import { imageGems } from '~common/img/images';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppProgressBar from '~common/progress/AppProgressBar.vue';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
-} from '../../../../../_common/route/route-component';
-import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
-import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import { UserWalletModel } from '../../../../../_common/user/wallet/wallet.model';
-import { showWalletWithdrawModal } from '../../../../components/wallet/withdraw/withdraw-modal.service';
-import { useAccountRouteController } from '../RouteDashAccount.vue';
-import marketplaceImage from './marketplace.png';
+} from '~common/route/route-component';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { UserWalletModel } from '~common/user/wallet/wallet.model';
 
 export default {
 	...defineAppRouteOptions({

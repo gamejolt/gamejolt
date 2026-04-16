@@ -1,7 +1,7 @@
-import { Model } from '../model/model.service';
-import { SiteBuildModel } from './build/build-model';
-import { SiteContentBlockModel } from './content-block/content-block-model';
-import { SiteThemeModel } from './theme/theme-model';
+import { Model } from '~common/model/model.service';
+import { SiteBuildModel } from '~common/site/build/build-model';
+import { SiteContentBlockModel } from '~common/site/content-block/content-block-model';
+import { SiteThemeModel } from '~common/site/theme/theme-model';
 
 export const enum SiteStatus {
 	Inactive = 'inactive',

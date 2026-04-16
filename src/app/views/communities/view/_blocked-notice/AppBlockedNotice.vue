@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import { CommunityModel } from '../../../../../_common/community/community.model';
-import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import AppTimeAgo from '../../../../../_common/time/AppTimeAgo.vue';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import { getCommunityBlockReasons } from '../../../../../_common/user/action-reasons';
+import { CommunityModel } from '~common/community/community.model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppTimeAgo from '~common/time/AppTimeAgo.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { getCommunityBlockReasons } from '~common/user/action-reasons';
 
 type Props = {
 	community: CommunityModel;

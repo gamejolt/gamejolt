@@ -1,46 +1,46 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 
-import { Api } from '../../../../../../_common/api/api.service';
-import AppButton from '../../../../../../_common/button/AppButton.vue';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
 import AppForm, {
 	createForm,
 	FormController,
-} from '../../../../../../_common/form-vue/AppForm.vue';
-import AppFormControl from '../../../../../../_common/form-vue/AppFormControl.vue';
-import AppFormGroup from '../../../../../../_common/form-vue/AppFormGroup.vue';
-import { showErrorGrowl } from '../../../../../../_common/growls/growls.service';
-import AppIllustration from '../../../../../../_common/illustration/AppIllustration.vue';
+} from '~common/form-vue/AppForm.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import AppIllustration from '~common/illustration/AppIllustration.vue';
 import {
 	illExtremeSadness,
 	illNoComments,
-} from '../../../../../../_common/illustration/illustrations';
-import { InventoryShopProductSaleModel } from '../../../../../../_common/inventory/shop/inventory-shop-product-sale.model';
-import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
-import AppLoading from '../../../../../../_common/loading/AppLoading.vue';
-import AppLoadingFade from '../../../../../../_common/loading/AppLoadingFade.vue';
-import AppModal from '../../../../../../_common/modal/AppModal.vue';
-import AppModalFloatingHeader from '../../../../../../_common/modal/AppModalFloatingHeader.vue';
-import { useModal } from '../../../../../../_common/modal/modal.service';
-import AppOnHover from '../../../../../../_common/on/AppOnHover.vue';
+} from '~common/illustration/illustrations';
+import { InventoryShopProductSaleModel } from '~common/inventory/shop/inventory-shop-product-sale.model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLoading from '~common/loading/AppLoading.vue';
+import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
+import AppModal from '~common/modal/AppModal.vue';
+import AppModalFloatingHeader from '~common/modal/AppModalFloatingHeader.vue';
+import { useModal } from '~common/modal/modal.service';
+import AppOnHover from '~common/on/AppOnHover.vue';
 import {
 	kThemeBg,
 	kThemeBgOffset,
 	kThemeFg,
 	kThemeFg10,
-} from '../../../../../../_common/theme/variables';
-import { $gettext } from '../../../../../../_common/translate/translate.service';
-import { UserModel } from '../../../../../../_common/user/user.model';
-import AppUserAvatarBubble from '../../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
+} from '~common/theme/variables';
+import { $gettext } from '~common/translate/translate.service';
+import { UserModel } from '~common/user/user.model';
+import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
 import {
 	styleChangeBg,
 	styleFlexCenter,
 	styleTextOverflow,
 	styleTyped,
 	styleWhen,
-} from '../../../../../../_styles/mixins';
-import { kFontSizeBase, kFontSizeLarge, kStrongEaseOut } from '../../../../../../_styles/variables';
-import { debounceWithCancel } from '../../../../../../utils/utils';
+} from '~styles/mixins';
+import { kFontSizeBase, kFontSizeLarge, kStrongEaseOut } from '~styles/variables';
+import { debounceWithCancel } from '~utils/utils';
 
 type FormModel = {
 	input: string;

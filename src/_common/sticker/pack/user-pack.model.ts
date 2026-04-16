@@ -1,5 +1,5 @@
-import { ModelStoreModel, storeModel } from '../../model/model-store.service';
-import { StickerPackModel } from './pack.model';
+import { ModelStoreModel, storeModel } from '~common/model/model-store.service';
+import { StickerPackModel } from '~common/sticker/pack/pack.model';
 
 export class UserStickerPackModel implements ModelStoreModel {
 	declare id: number;

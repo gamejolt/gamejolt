@@ -1,11 +1,11 @@
-import { Api } from '../api/api.service';
-import { Model } from '../model/model.service';
-import { UserModel } from '../user/user.model';
+import { Api } from '~common/api/api.service';
 import {
 	$removeGamePlaylistGame,
 	$saveGamePlaylistGame,
 	GamePlaylistGameModel,
-} from './game/game.model';
+} from '~common/game-playlist/game/game.model';
+import { Model } from '~common/model/model.service';
+import { UserModel } from '~common/user/user.model';
 
 export class GamePlaylistModel extends Model {
 	declare user_id: number;

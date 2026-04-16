@@ -1,19 +1,19 @@
 <script lang="ts" setup>
 import { computed, ref, useTemplateRef } from 'vue';
 
-import { formatNumber } from '../../../filters/number';
-import AppJolticon from '../../../jolticon/AppJolticon.vue';
-import { Model } from '../../../model/model.service';
-import AppProgressBar from '../../../progress/AppProgressBar.vue';
-import AppTranslate from '../../../translate/AppTranslate.vue';
-import { useForm } from '../../AppForm.vue';
+import { formatNumber } from '~common/filters/number';
+import { useForm } from '~common/form-vue/AppForm.vue';
 import {
 	createFormControl,
 	FormControlEmits,
-} from '../../AppFormControl.vue';
-import { useFormGroup } from '../../AppFormGroup.vue';
-import { FormValidator, validateFileAccept } from '../../validators';
-import AppFormControlUploadFile from './AppFormControlUploadFile.vue';
+} from '~common/form-vue/AppFormControl.vue';
+import { useFormGroup } from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlUploadFile from '~common/form-vue/controls/upload/AppFormControlUploadFile.vue';
+import { FormValidator, validateFileAccept } from '~common/form-vue/validators';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { Model } from '~common/model/model.service';
+import AppProgressBar from '~common/progress/AppProgressBar.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 export interface AppFormControlUploadInterface {
 	showFileSelect: () => void;

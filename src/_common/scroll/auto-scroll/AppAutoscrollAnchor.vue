@@ -2,8 +2,8 @@
 import { onMounted, onUnmounted, useTemplateRef, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { Ruler } from '../../ruler/ruler-service';
-import { AutoscrollAnchorState, Scroll } from '../scroll.service';
+import { Ruler } from '~common/ruler/ruler-service';
+import { AutoscrollAnchorState, Scroll } from '~common/scroll/scroll.service';
 
 type Props = {
 	disabled?: boolean;

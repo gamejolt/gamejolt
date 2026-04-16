@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import { CommunityChannelModel } from '../../../../../_common/community/channel/channel.model';
-import { CommunityModel } from '../../../../../_common/community/community.model';
-import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import AppFormsPillSelectorCommunities from '../../../forms/pill-selector/communities/AppFormsPillSelectorCommunities.vue';
-import AppContentTarget from '../AppContentTarget.vue';
+import AppContentTarget from '~app/components/content/target/AppContentTarget.vue';
+import AppFormsPillSelectorCommunities from '~app/components/forms/pill-selector/communities/AppFormsPillSelectorCommunities.vue';
+import { CommunityChannelModel } from '~common/community/channel/channel.model';
+import { CommunityModel } from '~common/community/community.model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 type Props = {
 	communities: CommunityModel[];

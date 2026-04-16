@@ -1,25 +1,25 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 
-import { ContextCapabilities } from '../../../../_common/content/content-context';
-import { ContentDocument } from '../../../../_common/content/content-document';
-import AppEditableOverlay from '../../../../_common/editable-overlay/AppEditableOverlay.vue';
-import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
-import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
-import AppFormControlErrors from '../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormControlContent from '../../../../_common/form-vue/controls/AppFormControlContent.vue';
+import { showUserAvatarModal } from '~app/components/user/avatar-modal/avatar-modal.service';
+import { ContextCapabilities } from '~common/content/content-context';
+import { ContentDocument } from '~common/content/content-document';
+import AppEditableOverlay from '~common/editable-overlay/AppEditableOverlay.vue';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlContent from '~common/form-vue/controls/AppFormControlContent.vue';
 import {
 	validateAvailability,
 	validateContentMaxLength,
 	validateMaxLength,
 	validateMinLength,
 	validateUsername,
-} from '../../../../_common/form-vue/validators';
-import Onboarding from '../../../../_common/onboarding/onboarding.service';
-import { $saveUser, UserModel } from '../../../../_common/user/user.model';
-import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
-import { showUserAvatarModal } from '../../user/avatar-modal/avatar-modal.service';
+} from '~common/form-vue/validators';
+import Onboarding from '~common/onboarding/onboarding.service';
+import { $saveUser, UserModel } from '~common/user/user.model';
+import AppUserAvatar from '~common/user/user-avatar/AppUserAvatar.vue';
 
 type FormModel = {
 	username: string;

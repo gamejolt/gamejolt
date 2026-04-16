@@ -4,13 +4,13 @@
  * for [AppGameThumbnail]
  */
 
-import AppButton from '../../../../_common/button/AppButton.vue';
-import AppGameFollowWidget from '../../../../_common/game/follow-widget/AppGameFollowWidget.vue';
-import { GameModel } from '../../../../_common/game/game.model';
-import AppGameModLinks from '../../../../_common/game/mod-links/AppGameModLinks.vue';
-import AppPopper from '../../../../_common/popper/AppPopper.vue';
-import { useCommonStore } from '../../../../_common/store/common-store';
-import AppGamePlaylistAddToWidget from '../../game-playlist/add-to-widget/add-to-widget.vue';
+import AppGamePlaylistAddToWidget from '~app/components/game-playlist/add-to-widget/add-to-widget.vue';
+import AppButton from '~common/button/AppButton.vue';
+import AppGameFollowWidget from '~common/game/follow-widget/AppGameFollowWidget.vue';
+import { GameModel } from '~common/game/game.model';
+import AppGameModLinks from '~common/game/mod-links/AppGameModLinks.vue';
+import AppPopper from '~common/popper/AppPopper.vue';
+import { useCommonStore } from '~common/store/common-store';
 
 type Props = {
 	game: GameModel;

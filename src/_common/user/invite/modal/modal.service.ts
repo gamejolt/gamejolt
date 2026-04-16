@@ -1,14 +1,14 @@
 import { defineAsyncComponent } from 'vue';
 
-import { showSuccessGrowl } from '../../../growls/growls.service';
-import { showModal } from '../../../modal/modal.service';
-import { $gettext } from '../../../translate/translate.service';
-import { UserModel } from '../../user.model';
+import { showSuccessGrowl } from '~common/growls/growls.service';
+import { showModal } from '~common/modal/modal.service';
+import { $gettext } from '~common/translate/translate.service';
+import { UserModel } from '~common/user/user.model';
 
 export async function showUserInviteFollowModal(user: UserModel) {
 	const result = await showModal<boolean>({
 		modalId: 'userInviteFollow',
-		component: defineAsyncComponent(() => import('./AppUserInviteFollowModal.vue')),
+		component: defineAsyncComponent(() => import('~common/user/invite/modal/AppUserInviteFollowModal.vue')),
 		props: {
 			user,
 		},

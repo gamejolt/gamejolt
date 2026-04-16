@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import { Perm } from '../../../../_common/collaborator/collaboratable';
-import { CommunityModel } from '../../../../_common/community/community.model';
+import { Perm } from '~common/collaborator/collaboratable';
+import { CommunityModel } from '~common/community/community.model';
 
 type Props = {
 	community: CommunityModel;

@@ -1,9 +1,9 @@
 <script lang="ts">
 import { nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
 
-import { queuedThrottle } from '../../utils/utils';
-import AppLoading from '../loading/AppLoading.vue';
-import AppScrollInview, { ScrollInviewConfig } from './inview/AppScrollInview.vue';
+import AppLoading from '~common/loading/AppLoading.vue';
+import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
+import { queuedThrottle } from '~utils/utils';
 
 const InviewConfig = new ScrollInviewConfig({
 	emitsOn: 'partial-overlap',

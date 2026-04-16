@@ -1,6 +1,6 @@
-import { ContentContainerModel } from './content-container-model';
-import { ContentContext } from './content-context';
-import { ContentDocument } from './content-document';
+import { ContentContainerModel } from '~common/content/content-container-model';
+import { ContentContext } from '~common/content/content-context';
+import { ContentDocument } from '~common/content/content-document';
 
 /**
  * Caches ContentDocument computed results.

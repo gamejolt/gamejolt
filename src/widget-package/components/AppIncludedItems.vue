@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import { formatFilesize } from '../../_common/filters/filesize';
-import { GameBuildModel } from '../../_common/game/build/build.model';
-import { vAppTooltip } from '../../_common/tooltip/tooltip-directive';
-import { useWidgetPackageStore } from '../store/index';
+import { formatFilesize } from '~common/filters/filesize';
+import { GameBuildModel } from '~common/game/build/build.model';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { useWidgetPackageStore } from '~widget-package/store/index';
 
 const store = useWidgetPackageStore();
 

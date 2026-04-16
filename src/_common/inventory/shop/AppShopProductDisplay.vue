@@ -1,27 +1,27 @@
 <script lang="ts" setup>
 import { computed, CSSProperties } from 'vue';
 
+import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
+import { DefaultAvatarFrameScale } from '~common/avatar/frame.model';
+import AppBackgroundFade from '~common/background/AppBackgroundFade.vue';
+import AppImgResponsive from '~common/img/AppImgResponsive.vue';
+import {
+	getReadablePurchasableProductType,
+	NormalizedProductData,
+	PurchasableProductType,
+} from '~common/inventory/shop/product-owner-helpers';
+import { Screen } from '~common/screen/screen-service';
+import { useCommonStore } from '~common/store/common-store';
+import { kThemeFgMuted } from '~common/theme/variables';
+import { UserModel } from '~common/user/user.model';
+import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
 import {
 	styleBorderRadiusLg,
 	styleFlexCenter,
 	styleMaxWidthForOptions,
 	styleWhen,
-} from '../../../_styles/mixins';
-import { kFontSizeSmall } from '../../../_styles/variables';
-import AppAspectRatio from '../../aspect-ratio/AppAspectRatio.vue';
-import { DefaultAvatarFrameScale } from '../../avatar/frame.model';
-import AppBackgroundFade from '../../background/AppBackgroundFade.vue';
-import AppImgResponsive from '../../img/AppImgResponsive.vue';
-import { Screen } from '../../screen/screen-service';
-import { useCommonStore } from '../../store/common-store';
-import { kThemeFgMuted } from '../../theme/variables';
-import { UserModel } from '../../user/user.model';
-import AppUserAvatarBubble from '../../user/user-avatar/AppUserAvatarBubble.vue';
-import {
-	getReadablePurchasableProductType,
-	NormalizedProductData,
-	PurchasableProductType,
-} from './product-owner-helpers';
+} from '~styles/mixins';
+import { kFontSizeSmall } from '~styles/variables';
 
 type Props = {
 	productData: NormalizedProductData;

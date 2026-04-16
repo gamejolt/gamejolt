@@ -2,8 +2,8 @@
 import { Player as ShakaPlayer, polyfill } from 'shaka-player';
 import { markRaw, onBeforeUnmount } from 'vue';
 
-import AppVideo from '../AppVideo.vue';
-import { trackVideoPlayerEvent, VideoPlayerController } from './controller';
+import AppVideo from '~common/video/AppVideo.vue';
+import { trackVideoPlayerEvent, VideoPlayerController } from '~common/video/player/controller';
 
 type Props = {
 	player: VideoPlayerController;

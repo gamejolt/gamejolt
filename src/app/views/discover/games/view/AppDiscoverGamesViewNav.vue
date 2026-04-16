@@ -2,22 +2,22 @@
 import { computed } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
 
+import { showCommentModal } from '~app/components/comment/modal/modal.service';
+import AppGamePerms from '~app/components/game/perms/AppGamePerms.vue';
+import { useGameRouteController } from '~app/views/discover/games/view/RouteDiscoverGamesView.vue';
 import {
 	getCommentStore,
 	useCommentStoreManager,
-} from '../../../../../_common/comment/comment-store';
-import { formatNumber } from '../../../../../_common/filters/number';
-import AppGameModLinks from '../../../../../_common/game/mod-links/AppGameModLinks.vue';
-import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import AppPopper from '../../../../../_common/popper/AppPopper.vue';
-import { showReportModal } from '../../../../../_common/report/modal/modal.service';
-import { copyShareLink } from '../../../../../_common/share/share.service';
-import { useCommonStore } from '../../../../../_common/store/common-store';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import { getAbsoluteLink } from '../../../../../utils/router';
-import { showCommentModal } from '../../../../components/comment/modal/modal.service';
-import AppGamePerms from '../../../../components/game/perms/AppGamePerms.vue';
-import { useGameRouteController } from './RouteDiscoverGamesView.vue';
+} from '~common/comment/comment-store';
+import { formatNumber } from '~common/filters/number';
+import AppGameModLinks from '~common/game/mod-links/AppGameModLinks.vue';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppPopper from '~common/popper/AppPopper.vue';
+import { showReportModal } from '~common/report/modal/modal.service';
+import { copyShareLink } from '~common/share/share.service';
+import { useCommonStore } from '~common/store/common-store';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { getAbsoluteLink } from '~utils/router';
 
 const { game, trophiesCount, hasScores, primaryScoreTable } = useGameRouteController()!;
 const { user: globalUser } = useCommonStore();

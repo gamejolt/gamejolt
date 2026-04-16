@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { onBeforeUnmount, onMounted } from 'vue';
 
-import { styleAbsoluteFill, styleWhen } from '../../../_styles/mixins';
-import { useAdStore } from '../ad-store';
+import { useAdStore } from '~common/ad/ad-store';
+import { styleAbsoluteFill, styleWhen } from '~styles/mixins';
 
 export type AdTakeoverProps = {
 	fgImg: string;

@@ -7,10 +7,10 @@ export function setMenuBuilderHook(newHook: MenuBuilderHook) {
 }
 import { computed, onMounted, onUnmounted, Ref, ref } from 'vue';
 
-import { Navigate } from '../../navigate/navigate.service';
-import { Screen } from '../../screen/screen-service';
-import { $gettext } from '../../translate/translate.service';
-import { Client } from '../client.service';
+import { Client } from '~common/client/client.service';
+import { Navigate } from '~common/navigate/navigate.service';
+import { Screen } from '~common/screen/screen-service';
+import { $gettext } from '~common/translate/translate.service';
 </script>
 
 <script lang="ts" setup>

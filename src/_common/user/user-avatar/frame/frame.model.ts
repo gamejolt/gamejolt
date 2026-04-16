@@ -1,6 +1,6 @@
-import { getCurrentServerTime } from '../../../../utils/server-time';
-import { AvatarFrameModel } from '../../../avatar/frame.model';
-import { ModelStoreModel, storeModel } from '../../../model/model-store.service';
+import { AvatarFrameModel } from '~common/avatar/frame.model';
+import { ModelStoreModel, storeModel } from '~common/model/model-store.service';
+import { getCurrentServerTime } from '~utils/server-time';
 
 export class UserAvatarFrameModel implements ModelStoreModel {
 	declare id: number;

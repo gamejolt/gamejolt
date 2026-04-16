@@ -1,15 +1,15 @@
-import { showErrorGrowl, showSuccessGrowl } from '../../../../_common/growls/growls.service';
-import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
-import { Payload } from '../../../../_common/payload/payload-service';
-import { commonStore } from '../../../../_common/store/common-store';
-import { $gettext } from '../../../../_common/translate/translate.service';
+import { showErrorGrowl, showSuccessGrowl } from '~common/growls/growls.service';
+import { showModalConfirm } from '~common/modal/confirm/confirm-service';
+import { Payload } from '~common/payload/payload-service';
+import { commonStore } from '~common/store/common-store';
+import { $gettext } from '~common/translate/translate.service';
 import {
 	$acceptUserFriendship,
 	$removeUserFriendship,
 	$saveUserFriendship,
 	UserFriendshipModel,
-} from '../../../../_common/user/friendship/friendship.model';
-import { UserModel } from '../../../../_common/user/user.model';
+} from '~common/user/friendship/friendship.model';
+import { UserModel } from '~common/user/user.model';
 
 export class UserFriendshipHelper {
 	static async sendRequest(targetUser: UserModel) {

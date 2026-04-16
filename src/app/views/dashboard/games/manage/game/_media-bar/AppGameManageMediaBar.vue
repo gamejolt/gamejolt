@@ -2,17 +2,17 @@
 import { computed } from 'vue';
 import draggable from 'vuedraggable';
 
-import AppEditableOverlay from '../../../../../../../_common/editable-overlay/AppEditableOverlay.vue';
-import { GameModel } from '../../../../../../../_common/game/game.model';
+import { showGameMediaItemAddModal } from '~app/components/game/media-item/add-modal/add-modal.service';
+import { showGameMediaItemEditModal } from '~app/components/game/media-item/edit-modal/edit-modal.service';
+import { Media, useGameDashRouteController } from '~app/views/dashboard/games/manage/manage.store';
+import AppEditableOverlay from '~common/editable-overlay/AppEditableOverlay.vue';
+import { GameModel } from '~common/game/game.model';
 import AppGameMediaBarItem, {
 	MediaBarItemMaxHeight,
-} from '../../../../../../../_common/game/media-bar/item/AppGameMediaBarItem.vue';
-import AppJolticon from '../../../../../../../_common/jolticon/AppJolticon.vue';
-import AppScrollScroller from '../../../../../../../_common/scroll/AppScrollScroller.vue';
-import AppTranslate from '../../../../../../../_common/translate/AppTranslate.vue';
-import { showGameMediaItemAddModal } from '../../../../../../components/game/media-item/add-modal/add-modal.service';
-import { showGameMediaItemEditModal } from '../../../../../../components/game/media-item/edit-modal/edit-modal.service';
-import { Media, useGameDashRouteController } from '../../manage.store';
+} from '~common/game/media-bar/item/AppGameMediaBarItem.vue';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppScrollScroller from '~common/scroll/AppScrollScroller.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 type Props = {
 	game: GameModel;
@@ -97,4 +97,4 @@ async function open(item: Media) {
 	</AppScrollScroller>
 </template>
 
-<style lang="stylus" src="./AppGameManageMediaBar.styl" scoped></style>
+<style lang="stylus" src="~app/views/dashboard/games/manage/game/_media-bar/AppGameManageMediaBar.styl" scoped></style>

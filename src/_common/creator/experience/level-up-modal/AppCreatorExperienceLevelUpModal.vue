@@ -1,17 +1,17 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue';
 
-import { styleAbsoluteFill, styleChangeBg } from '../../../../_styles/mixins';
-import { sleep } from '../../../../utils/utils';
-import AppAspectRatio from '../../../aspect-ratio/AppAspectRatio.vue';
-import AppButton from '../../../button/AppButton.vue';
-import AppModal from '../../../modal/AppModal.vue';
-import { useModal } from '../../../modal/modal.service';
-import AppCircularProgress from '../../../progress/AppCircularProgress.vue';
-import AppSpacer from '../../../spacer/AppSpacer.vue';
-import { useCommonStore } from '../../../store/common-store';
-import AppUserAvatarBubble from '../../../user/user-avatar/AppUserAvatarBubble.vue';
-import { CreatorExperienceLevelModel } from '../level.model';
+import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
+import AppButton from '~common/button/AppButton.vue';
+import { CreatorExperienceLevelModel } from '~common/creator/experience/level.model';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import AppCircularProgress from '~common/progress/AppCircularProgress.vue';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import { useCommonStore } from '~common/store/common-store';
+import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
+import { styleAbsoluteFill, styleChangeBg } from '~styles/mixins';
+import { sleep } from '~utils/utils';
 
 type Props = {
 	level: CreatorExperienceLevelModel;

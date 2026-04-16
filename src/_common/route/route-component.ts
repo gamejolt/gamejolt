@@ -1,15 +1,15 @@
 import { ComponentOptions, getCurrentInstance, MaybeRef, onUnmounted, ref, watch } from 'vue';
 import { NavigationGuardWithThis, RouteLocationNormalized, Router, useRouter } from 'vue-router';
 
-import { RouteLocationRedirect } from '../../utils/router';
-import { RequireAtLeastOne } from '../../utils/utils';
-import { ensureConfig } from '../config/config.service';
-import { HistoryCache } from '../history/cache/cache.service';
-import { Meta, setMetaTitle } from '../meta/meta-service';
-import { Navigate } from '../navigate/navigate.service';
-import { PayloadError, PayloadErrorType } from '../payload/payload-service';
-import { useCommonStore } from '../store/common-store';
-import { EventTopic } from '../system/event/event-topic';
+import { ensureConfig } from '~common/config/config.service';
+import { HistoryCache } from '~common/history/cache/cache.service';
+import { Meta, setMetaTitle } from '~common/meta/meta-service';
+import { Navigate } from '~common/navigate/navigate.service';
+import { PayloadError, PayloadErrorType } from '~common/payload/payload-service';
+import { useCommonStore } from '~common/store/common-store';
+import { EventTopic } from '~common/system/event/event-topic';
+import { RouteLocationRedirect } from '~utils/router';
+import { RequireAtLeastOne } from '~utils/utils';
 
 export type AppRoute = ReturnType<typeof createAppRoute>;
 

@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import { styleWhen } from '../../_styles/mixins';
-import { trackAppPromotionClick } from '../analytics/analytics.service';
-import appStoreImage from './button-app-store.svg';
-import playStoreImage from './button-play-store.png';
-import { AppPromotionSource, getAppUrl, useAppPromotionStore } from './store';
+import { trackAppPromotionClick } from '~common/analytics/analytics.service';
+import appStoreImage from '~common/mobile-app/button-app-store.svg';
+import playStoreImage from '~common/mobile-app/button-play-store.png';
+import { AppPromotionSource, getAppUrl, useAppPromotionStore } from '~common/mobile-app/store';
+import { styleWhen } from '~styles/mixins';
 
 type Props = {
 	source: AppPromotionSource;

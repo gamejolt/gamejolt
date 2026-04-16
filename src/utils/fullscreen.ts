@@ -1,6 +1,6 @@
 import { computed, ref, watch } from 'vue';
 
-import { Screen } from '../_common/screen/screen-service';
+import { Screen } from '~common/screen/screen-service';
 
 /**
  * Returns a CSS representation of the full screen's height. Useful for

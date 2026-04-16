@@ -1,31 +1,31 @@
-import { trackCommentVote } from '../analytics/analytics.service';
-import { Api } from '../api/api.service';
-import { ContentDocument } from '../content/content-document';
-import { Environment } from '../environment/environment.service';
-import { FiresidePostModel } from '../fireside/post/post-model';
-import { GameModel } from '../game/game.model';
-import { showErrorGrowl } from '../growls/growls.service';
-import { Model } from '../model/model.service';
+import { trackCommentVote } from '~common/analytics/analytics.service';
+import { Api } from '~common/api/api.service';
+import {
+	$removeCommentVote,
+	$saveCommentVote,
+	CommentVoteModel,
+	CommentVoteType,
+} from '~common/comment/vote/vote-model';
+import { ContentDocument } from '~common/content/content-document';
+import { Environment } from '~common/environment/environment.service';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import { GameModel } from '~common/game/game.model';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import { Model } from '~common/model/model.service';
 import {
 	ModelStoreModel,
 	RemovableModel,
 	removeModel,
 	saveModel,
 	storeModel,
-} from '../model/model-store.service';
-import { ReactionableModel,ReactionCount } from '../reaction/reaction-count';
+} from '~common/model/model-store.service';
+import { ReactionableModel,ReactionCount } from '~common/reaction/reaction-count';
 import {
 	$createSubscription,
 	$removeSubscription,
 	SubscriptionModel,
-} from '../subscription/subscription.model';
-import { UserModel } from '../user/user.model';
-import {
-	$removeCommentVote,
-	$saveCommentVote,
-	CommentVoteModel,
-	CommentVoteType,
-} from './vote/vote-model';
+} from '~common/subscription/subscription.model';
+import { UserModel } from '~common/user/user.model';
 
 export interface CommentableModel {
 	canViewComments: boolean;

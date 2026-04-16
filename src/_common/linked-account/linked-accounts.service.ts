@@ -1,8 +1,8 @@
 import { Router } from 'vue-router';
 
-import { Api } from '../api/api.service';
-import { Navigate } from '../navigate/navigate.service';
-import { LinkedAccountProvider } from './linked-account.model';
+import { Api } from '~common/api/api.service';
+import { LinkedAccountProvider } from '~common/linked-account/linked-account.model';
+import { Navigate } from '~common/navigate/navigate.service';
 
 export class LinkedAccounts {
 	static async link(

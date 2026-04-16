@@ -1,5 +1,5 @@
 <script lang="ts">
-import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 
 export default {
 	...defineAppRouteOptions({

@@ -1,13 +1,13 @@
 <script lang="ts">
 import { computed } from 'vue';
 
-import AppButton from '../../../_common/button/AppButton.vue';
-import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
-import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
-import { Screen } from '../../../_common/screen/screen-service';
-import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
-import { touchUser } from '../../../_common/user/user.model';
-import AppWeplayLogo from '../../components/weplay/logo/AppWeplayLogo.vue';
+import AppWeplayLogo from '~app/components/weplay/logo/AppWeplayLogo.vue';
+import AppButton from '~common/button/AppButton.vue';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { Screen } from '~common/screen/screen-service';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { touchUser } from '~common/user/user.model';
 
 export default {
 	name: 'RouteWeplay',

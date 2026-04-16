@@ -1,7 +1,7 @@
-import { FiresidePostModel } from '../fireside/post/post-model';
-import { GameModel } from '../game/game.model';
-import { Model } from '../model/model.service';
-import { UserModel } from '../user/user.model';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import { GameModel } from '~common/game/game.model';
+import { Model } from '~common/model/model.service';
+import { UserModel } from '~common/user/user.model';
 
 export const enum EventItemType {
 	PostAdd = 'post-add',

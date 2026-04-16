@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import AppJolticon from '../../_common/jolticon/AppJolticon.vue';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
 </script>
 
 <template>

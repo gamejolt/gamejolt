@@ -1,41 +1,41 @@
 <script lang="ts" setup>
 import { computed, CSSProperties, nextTick, onUnmounted, Ref, ref } from 'vue';
 
-import { Api } from '../../../../_common/api/api.service';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import AppContentViewer from '../../../../_common/content/content-viewer/AppContentViewer.vue';
-import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
-import { illExtremeSadness } from '../../../../_common/illustration/illustrations';
-import AppImgResponsive from '../../../../_common/img/AppImgResponsive.vue';
-import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
-import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
-import { storeModel } from '../../../../_common/model/model-store.service';
-import AppQuestActionButton from '../../../../_common/quest/AppQuestActionButton.vue';
-import AppQuestObjective from '../../../../_common/quest/AppQuestObjective.vue';
-import AppProgressBarQuest from '../../../../_common/quest/AppQuestProgress.vue';
-import AppQuestReward from '../../../../_common/quest/AppQuestReward.vue';
-import { QuestModel } from '../../../../_common/quest/quest-model';
-import { QuestRewardModel } from '../../../../_common/quest/quest-reward-model';
-import { Screen } from '../../../../_common/screen/screen-service';
-import AppScrollAffix from '../../../../_common/scroll/AppScrollAffix.vue';
-import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
-import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
-import { kThemeBgActual, kThemeFgMuted } from '../../../../_common/theme/variables';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { styleFlexCenter, styleWhen } from '../../../../_styles/mixins';
+import AppQuestTimer from '~app/components/quest/AppQuestTimer.vue';
+import AppShellWindow from '~app/components/shell/AppShellWindow.vue';
+import { useAppStore } from '~app/store/index';
+import { useQuestStore } from '~app/store/quest';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import AppContentViewer from '~common/content/content-viewer/AppContentViewer.vue';
+import AppIllustration from '~common/illustration/AppIllustration.vue';
+import { illExtremeSadness } from '~common/illustration/illustrations';
+import AppImgResponsive from '~common/img/AppImgResponsive.vue';
+import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
+import AppMediaItemBackdrop from '~common/media-item/backdrop/AppMediaItemBackdrop.vue';
+import { storeModel } from '~common/model/model-store.service';
+import AppQuestActionButton from '~common/quest/AppQuestActionButton.vue';
+import AppQuestObjective from '~common/quest/AppQuestObjective.vue';
+import AppProgressBarQuest from '~common/quest/AppQuestProgress.vue';
+import AppQuestReward from '~common/quest/AppQuestReward.vue';
+import { QuestModel } from '~common/quest/quest-model';
+import { QuestRewardModel } from '~common/quest/quest-reward-model';
+import { Screen } from '~common/screen/screen-service';
+import AppScrollAffix from '~common/scroll/AppScrollAffix.vue';
+import AppScrollScroller from '~common/scroll/AppScrollScroller.vue';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import { kThemeBgActual, kThemeFgMuted } from '~common/theme/variables';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { styleFlexCenter, styleWhen } from '~styles/mixins';
 import {
 	buildCSSPixelValue,
 	kFontFamilyDisplay,
 	kFontSizeSmall,
 	kFontSizeTiny,
 	kWeakEaseOut,
-} from '../../../../_styles/variables';
-import { numberSort } from '../../../../utils/array';
-import { useAppStore } from '../../../store/index';
-import { useQuestStore } from '../../../store/quest';
-import AppShellWindow from '../../shell/AppShellWindow.vue';
-import AppQuestTimer from '../AppQuestTimer.vue';
+} from '~styles/variables';
+import { numberSort } from '~utils/array';
 
 type Props = {
 	questId: number;

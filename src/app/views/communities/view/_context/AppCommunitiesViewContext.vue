@@ -2,13 +2,13 @@
 import { computed, provide } from 'vue';
 import { useRoute } from 'vue-router';
 
-import { isEditingCommunity } from '../../../../../_common/community/community.model';
-import { CommunityChannelCardWidth } from '../../../../components/community/channel/card/AppCommunityChannelCard.vue';
-import { useAppStore } from '../../../../store';
-import AppCommunitiesViewCard from '../_card/AppCommunitiesViewCard.vue';
-import AppNavChannels from '../_nav/channels/AppNavChannels.vue';
-import AppNavEdit from '../_nav/edit/AppNavEdit.vue';
-import { CommunityRouteStore, CommunityRouteStoreKey } from '../view.store';
+import { CommunityChannelCardWidth } from '~app/components/community/channel/card/AppCommunityChannelCard.vue';
+import { useAppStore } from '~app/store';
+import AppCommunitiesViewCard from '~app/views/communities/view/_card/AppCommunitiesViewCard.vue';
+import AppNavChannels from '~app/views/communities/view/_nav/channels/AppNavChannels.vue';
+import AppNavEdit from '~app/views/communities/view/_nav/edit/AppNavEdit.vue';
+import { CommunityRouteStore, CommunityRouteStoreKey } from '~app/views/communities/view/view.store';
+import { isEditingCommunity } from '~common/community/community.model';
 
 type Props = {
 	routeStore: CommunityRouteStore;

@@ -2,12 +2,12 @@
 import { computed } from 'vue';
 import { RouterLink, RouterView } from 'vue-router';
 
-import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
-import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
-import { kThemeFg } from '../../../../_common/theme/variables';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { imageJolt } from '../../../img/images';
-import { routeLandingHelpIndex } from './help.route';
+import { imageJolt } from '~app/img/images';
+import { routeLandingHelpIndex } from '~app/views/landing/help/help.route';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import AppThemeSvg from '~common/theme/svg/AppThemeSvg.vue';
+import { kThemeFg } from '~common/theme/variables';
+import { $gettext } from '~common/translate/translate.service';
 
 export default {
 	...defineAppRouteOptions({

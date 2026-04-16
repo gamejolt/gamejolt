@@ -1,19 +1,19 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 
-import { CommunityChannelModel } from '../../../_common/community/channel/channel.model';
-import { CommunityModel } from '../../../_common/community/community.model';
-import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
-import { RealmModel } from '../../../_common/realm/realm-model';
-import AppScrollScroller from '../../../_common/scroll/AppScrollScroller.vue';
-import { vAppScrollWhen } from '../../../_common/scroll/scroll-when.directive';
-import { arrayIndexBy } from '../../../utils/array';
-import AppFormsPillSelectorCommunities from '../forms/pill-selector/communities/AppFormsPillSelectorCommunities.vue';
-import AppContentTargetAddCommunity from './target/_add/AppContentTargetAddCommunity.vue';
-import AppContentTarget from './target/AppContentTarget.vue';
-import AppContentTargetCommunity from './target/AppContentTargetCommunity.vue';
-import AppContentTargetRealm from './target/AppContentTargetRealm.vue';
-import { showContentTargetManageRealmsModal } from './target/manage-realms/modal.service';
+import AppContentTargetAddCommunity from '~app/components/content/target/_add/AppContentTargetAddCommunity.vue';
+import AppContentTarget from '~app/components/content/target/AppContentTarget.vue';
+import AppContentTargetCommunity from '~app/components/content/target/AppContentTargetCommunity.vue';
+import AppContentTargetRealm from '~app/components/content/target/AppContentTargetRealm.vue';
+import { showContentTargetManageRealmsModal } from '~app/components/content/target/manage-realms/modal.service';
+import AppFormsPillSelectorCommunities from '~app/components/forms/pill-selector/communities/AppFormsPillSelectorCommunities.vue';
+import { CommunityChannelModel } from '~common/community/channel/channel.model';
+import { CommunityModel } from '~common/community/community.model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { RealmModel } from '~common/realm/realm-model';
+import AppScrollScroller from '~common/scroll/AppScrollScroller.vue';
+import { vAppScrollWhen } from '~common/scroll/scroll-when.directive';
+import { arrayIndexBy } from '~utils/array';
 
 type Props = {
 	/**

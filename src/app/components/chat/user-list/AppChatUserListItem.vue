@@ -1,20 +1,20 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
-import AppNotificationBlip from '../../../../_common/notification/AppNotificationBlip.vue';
-import { kThemeBacklight, kThemeBacklightFg } from '../../../../_common/theme/variables';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import AppUserAvatarBubble from '../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
-import { useGridStore } from '../../grid/grid-store';
-import AppChatListItem from '../_list/AppChatListItem.vue';
-import { isUserOnline, leaveGroupRoom, openChatRoom } from '../client';
-import AppChatNotificationSettings from '../notification-settings/AppChatNotificationSettings.vue';
-import { ChatRoomModel, getChatRoomTitle } from '../room';
-import { ChatUser } from '../user';
-import AppChatUserOnlineStatus from '../user-online-status/AppChatUserOnlineStatus.vue';
+import AppChatListItem from '~app/components/chat/_list/AppChatListItem.vue';
+import { isUserOnline, leaveGroupRoom, openChatRoom } from '~app/components/chat/client';
+import AppChatNotificationSettings from '~app/components/chat/notification-settings/AppChatNotificationSettings.vue';
+import { ChatRoomModel, getChatRoomTitle } from '~app/components/chat/room';
+import { ChatUser } from '~app/components/chat/user';
+import AppChatUserOnlineStatus from '~app/components/chat/user-online-status/AppChatUserOnlineStatus.vue';
+import { useGridStore } from '~app/components/grid/grid-store';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { showModalConfirm } from '~common/modal/confirm/confirm-service';
+import AppNotificationBlip from '~common/notification/AppNotificationBlip.vue';
+import { kThemeBacklight, kThemeBacklightFg } from '~common/theme/variables';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
+import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
 
 type Props = {
 	item: ChatUser | ChatRoomModel;

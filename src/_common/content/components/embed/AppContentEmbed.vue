@@ -1,18 +1,18 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref, useTemplateRef } from 'vue';
 
-import { arrayShuffle } from '../../../../utils/array';
-import { showErrorGrowl } from '../../../growls/growls.service';
-import AppJolticon from '../../../jolticon/AppJolticon.vue';
-import AppLoading from '../../../loading/AppLoading.vue';
-import AppTranslate from '../../../translate/AppTranslate.vue';
-import { $gettext } from '../../../translate/translate.service';
-import AppVideoEmbed from '../../../video/embed/AppVideoEmbed.vue';
-import { ContentEmbedService } from '../../content-editor/content-embed.service';
-import { useContentOwnerController } from '../../content-owner';
-import AppBaseContentComponent from '../AppBaseContentComponent.vue';
-import AppContentEmbedSketchfab from './AppContentEmbedSketchfab.vue';
-import AppContentEmbedSoundcloud from './AppContentEmbedSoundcloud.vue';
+import AppBaseContentComponent from '~common/content/components/AppBaseContentComponent.vue';
+import AppContentEmbedSketchfab from '~common/content/components/embed/AppContentEmbedSketchfab.vue';
+import AppContentEmbedSoundcloud from '~common/content/components/embed/AppContentEmbedSoundcloud.vue';
+import { ContentEmbedService } from '~common/content/content-editor/content-embed.service';
+import { useContentOwnerController } from '~common/content/content-owner';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLoading from '~common/loading/AppLoading.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
+import AppVideoEmbed from '~common/video/embed/AppVideoEmbed.vue';
+import { arrayShuffle } from '~utils/array';
 
 type Props = {
 	type: string;

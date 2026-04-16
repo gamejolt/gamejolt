@@ -1,5 +1,5 @@
-import { Model } from '../../model/model.service';
-import { SellableModel } from '../../sellable/sellable.model';
+import { Model } from '~common/model/model.service';
+import { SellableModel } from '~common/sellable/sellable.model';
 
 export class OrderItemModel extends Model {
 	declare amount: number;

@@ -1,8 +1,8 @@
 <script lang="ts" setup generic="T extends TrophyNavGame | GameScoreTableModel">
-import { TrophyNavGame } from '../../../app/views/profile/trophies/_nav/AppProfileTrophiesNav.vue';
-import { GameScoreTableModel } from '../../game/score-table/score-table.model';
-import AppJolticon from '../../jolticon/AppJolticon.vue';
-import AppPopper from '../../popper/AppPopper.vue';
+import { TrophyNavGame } from '~app/views/profile/trophies/_nav/AppProfileTrophiesNav.vue';
+import { GameScoreTableModel } from '~common/game/score-table/score-table.model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppPopper from '~common/popper/AppPopper.vue';
 
 type Props = {
 	current?: T;

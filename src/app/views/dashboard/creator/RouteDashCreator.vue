@@ -2,32 +2,32 @@
 import { computed, ref } from 'vue';
 import { RouteParamsRaw, RouteRecordName } from 'vue-router';
 
-import { Api } from '../../../../_common/api/api.service';
-import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
-import { CreatorExperienceModel } from '../../../../_common/creator/experience/experience.model';
-import { formatNumber } from '../../../../_common/filters/number';
-import AppInviteCard from '../../../../_common/invite/AppInviteCard.vue';
-import AppJolticon, { Jolticon } from '../../../../_common/jolticon/AppJolticon.vue';
-import { ModelData } from '../../../../_common/model/model.service';
-import AppCircularProgress from '../../../../_common/progress/AppCircularProgress.vue';
-import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
-import AppSheetButton from '../../../../_common/sheet/AppSheetButton.vue';
-import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
-import { useCommonStore } from '../../../../_common/store/common-store';
-import { kThemeFgMuted } from '../../../../_common/theme/variables';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { styleAbsoluteFill, styleFlexCenter } from '../../../../_styles/mixins';
-import { kGridGutterWidth } from '../../../../_styles/variables';
-import { RouteLocationRedirect } from '../../../../utils/router';
-import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
-import { routeLandingCreators } from '../../landing/creators/creators.route';
-import { routeLandingHelpCategory, routeLandingHelpRedirect } from '../../landing/help/help.route';
-import { routeDashAccountBlocks } from '../account/blocks/blocks.route';
-import { routeDashAccountReferrals } from '../account/referrals/referrals.route';
-import { routeDashAccountWallet } from '../account/wallet/wallet.route';
-import { routeDashAnalytics } from '../analytics/analytics.route';
-import { routeDashShopOverview } from '../shop/overview/overview.route';
-import { routeDashSupporters } from '../supporters/supporters.route';
+import AppShellPageBackdrop from '~app/components/shell/AppShellPageBackdrop.vue';
+import { routeDashAccountBlocks } from '~app/views/dashboard/account/blocks/blocks.route';
+import { routeDashAccountReferrals } from '~app/views/dashboard/account/referrals/referrals.route';
+import { routeDashAccountWallet } from '~app/views/dashboard/account/wallet/wallet.route';
+import { routeDashAnalytics } from '~app/views/dashboard/analytics/analytics.route';
+import { routeDashShopOverview } from '~app/views/dashboard/shop/overview/overview.route';
+import { routeDashSupporters } from '~app/views/dashboard/supporters/supporters.route';
+import { routeLandingCreators } from '~app/views/landing/creators/creators.route';
+import { routeLandingHelpCategory, routeLandingHelpRedirect } from '~app/views/landing/help/help.route';
+import { Api } from '~common/api/api.service';
+import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
+import { CreatorExperienceModel } from '~common/creator/experience/experience.model';
+import { formatNumber } from '~common/filters/number';
+import AppInviteCard from '~common/invite/AppInviteCard.vue';
+import AppJolticon, { Jolticon } from '~common/jolticon/AppJolticon.vue';
+import { ModelData } from '~common/model/model.service';
+import AppCircularProgress from '~common/progress/AppCircularProgress.vue';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import AppSheetButton from '~common/sheet/AppSheetButton.vue';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import { useCommonStore } from '~common/store/common-store';
+import { kThemeFgMuted } from '~common/theme/variables';
+import { $gettext } from '~common/translate/translate.service';
+import { styleAbsoluteFill, styleFlexCenter } from '~styles/mixins';
+import { kGridGutterWidth } from '~styles/variables';
+import { RouteLocationRedirect } from '~utils/router';
 
 export default {
 	...defineAppRouteOptions({

@@ -1,18 +1,18 @@
 import { markRaw, reactive } from 'vue';
 
-import { storeModel, storeModelList } from '../../../_common/model/model-store.service';
-import { commonStore } from '../../../_common/store/common-store';
-import { EventTopic } from '../../../_common/system/event/event-topic';
-import { arrayRemove, numberSort } from '../../../utils/array';
-import { createLogger } from '../../../utils/logging';
-import { AppStore } from '../../store';
-import { type GridClient } from '../grid/client.service';
-import { ChatMessageModel, ChatMessageType } from './message';
-import { ChatRoomModel } from './room';
-import { ChatRoomChannel } from './room-channel';
-import { ChatUser } from './user';
-import { ChatUserChannel, createChatUserChannel } from './user-channel';
-import { ChatUserCollection } from './user-collection';
+import { ChatMessageModel, ChatMessageType } from '~app/components/chat/message';
+import { ChatRoomModel } from '~app/components/chat/room';
+import { ChatRoomChannel } from '~app/components/chat/room-channel';
+import { ChatUser } from '~app/components/chat/user';
+import { ChatUserChannel, createChatUserChannel } from '~app/components/chat/user-channel';
+import { ChatUserCollection } from '~app/components/chat/user-collection';
+import { type GridClient } from '~app/components/grid/client.service';
+import { AppStore } from '~app/store';
+import { storeModel, storeModelList } from '~common/model/model-store.service';
+import { commonStore } from '~common/store/common-store';
+import { EventTopic } from '~common/system/event/event-topic';
+import { arrayRemove, numberSort } from '~utils/array';
+import { createLogger } from '~utils/logging';
 
 export const ChatKey = Symbol('chat');
 

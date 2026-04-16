@@ -1,16 +1,16 @@
 <script lang="ts" setup>
 import { onMounted, ref, toRef } from 'vue';
 
-import { Api } from '../../../../_common/api/api.service';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import AppLoading from '../../../../_common/loading/AppLoading.vue';
-import AppModal from '../../../../_common/modal/AppModal.vue';
-import AppModalFloatingHeader from '../../../../_common/modal/AppModalFloatingHeader.vue';
-import { useModal } from '../../../../_common/modal/modal.service';
-import AppSectionTitle from '../../../../_common/section/AppSectionTitle.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { UserModel } from '../../../../_common/user/user.model';
-import AppFollowerList from '../../../components/follower/list/AppFollowerList.vue';
+import AppFollowerList from '~app/components/follower/list/AppFollowerList.vue';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import AppLoading from '~common/loading/AppLoading.vue';
+import AppModal from '~common/modal/AppModal.vue';
+import AppModalFloatingHeader from '~common/modal/AppModalFloatingHeader.vue';
+import { useModal } from '~common/modal/modal.service';
+import AppSectionTitle from '~common/section/AppSectionTitle.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { UserModel } from '~common/user/user.model';
 
 type Props = {
 	user: UserModel;

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import AppContentMediaItem from '../../components/AppContentMediaItem.vue';
-import { ContentObject } from '../../content-object';
+import AppContentMediaItem from '~common/content/components/AppContentMediaItem.vue';
+import { ContentObject } from '~common/content/content-object';
 
 type Props = {
 	contentData: ContentObject;

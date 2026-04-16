@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
 
-import AppJolticon from '../../jolticon/AppJolticon.vue';
-import AppPopper from '../../popper/AppPopper.vue';
-import { Popper } from '../../popper/popper.service';
-import { SiteTemplateModel } from '../../site/template/template-model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppPopper from '~common/popper/AppPopper.vue';
+import { Popper } from '~common/popper/popper.service';
+import { SiteTemplateModel } from '~common/site/template/template-model';
 
 type Props = {
 	templates: SiteTemplateModel[];

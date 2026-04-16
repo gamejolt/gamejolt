@@ -4,22 +4,22 @@ import { ref, toRef } from 'vue';
 import {
 	$saveCommunityDescription,
 	CommunityModel,
-} from '../../../../../_common/community/community.model';
-import { ContextCapabilities } from '../../../../../_common/content/content-context';
+} from '~common/community/community.model';
+import { ContextCapabilities } from '~common/content/content-context';
 import AppForm, {
 	createForm,
 	FormController,
-} from '../../../../../_common/form-vue/AppForm.vue';
-import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
-import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormControlContent from '../../../../../_common/form-vue/controls/AppFormControlContent.vue';
+} from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlContent from '~common/form-vue/controls/AppFormControlContent.vue';
 import {
 	validateContentMaxLength,
 	validateContentNoActiveUploads,
 	validateContentRequired,
-} from '../../../../../_common/form-vue/validators';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
+} from '~common/form-vue/validators';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 type FormModel = CommunityModel;
 

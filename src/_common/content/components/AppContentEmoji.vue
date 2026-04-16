@@ -2,11 +2,11 @@
 import type { Component } from 'vue';
 import { ref } from 'vue';
 
-import { isInstance } from '../../../utils/utils';
-import AppEmoji, { emojiBaseSize, GJ_EMOJIS } from '../../emoji/AppEmoji.vue';
-import { EmojiModel } from '../../emoji/emoji.model';
-import { storeModel } from '../../model/model-store.service';
-import { useContentOwnerController } from '../content-owner';
+import { useContentOwnerController } from '~common/content/content-owner';
+import AppEmoji, { emojiBaseSize, GJ_EMOJIS } from '~common/emoji/AppEmoji.vue';
+import { EmojiModel } from '~common/emoji/emoji.model';
+import { storeModel } from '~common/model/model-store.service';
+import { isInstance } from '~utils/utils';
 
 // App bootstrap will assign the component we should render.
 let contentEmojiWrapper: any = 'span';

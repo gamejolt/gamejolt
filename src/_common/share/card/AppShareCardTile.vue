@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import { trackShareLink } from '../../analytics/analytics.service';
-import AppJolticon from '../../jolticon/AppJolticon.vue';
-import { Navigate } from '../../navigate/navigate.service';
-import { copyShareLink, ShareProvider, ShareResource } from '../share.service';
+import { trackShareLink } from '~common/analytics/analytics.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { Navigate } from '~common/navigate/navigate.service';
+import { copyShareLink, ShareProvider, ShareResource } from '~common/share/share.service';
 
 type Props = {
 	resource: ShareResource;
@@ -167,4 +167,4 @@ function shareProviderLink() {
 	</a>
 </template>
 
-<style lang="stylus" scoped src="./common.styl"></style>
+<style lang="stylus" scoped src="~common/share/card/common.styl"></style>

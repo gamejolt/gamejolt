@@ -1,16 +1,16 @@
 <script lang="ts" setup generic="T extends Record<string, any>">
 import { computed } from 'vue';
 
-import AppScrollScroller from '../../../../../../_common/scroll/AppScrollScroller.vue';
-import AppStickerImg from '../../../../../../_common/sticker/AppStickerImg.vue';
-import { StickerModel } from '../../../../../../_common/sticker/sticker.model';
-import { kThemeFgMuted } from '../../../../../../_common/theme/variables';
-import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
-import { styleAbsoluteFill, styleLineClamp, styleWhen } from '../../../../../../_styles/mixins';
-import { kFontSizeSmall, kLineHeightBase } from '../../../../../../_styles/variables';
-import { isInstance } from '../../../../../../utils/utils';
-import { useShopDashStore } from '../../shop.store';
-import { parseProductDiffEntry } from './AppShopProductDiffMeta.vue';
+import { parseProductDiffEntry } from '~app/views/dashboard/shop/product/_diff/AppShopProductDiffMeta.vue';
+import { useShopDashStore } from '~app/views/dashboard/shop/shop.store';
+import AppScrollScroller from '~common/scroll/AppScrollScroller.vue';
+import AppStickerImg from '~common/sticker/AppStickerImg.vue';
+import { StickerModel } from '~common/sticker/sticker.model';
+import { kThemeFgMuted } from '~common/theme/variables';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { styleAbsoluteFill, styleLineClamp, styleWhen } from '~styles/mixins';
+import { kFontSizeSmall, kLineHeightBase } from '~styles/variables';
+import { isInstance } from '~utils/utils';
 
 type Props = {
 	entry: { key: string; value: any };

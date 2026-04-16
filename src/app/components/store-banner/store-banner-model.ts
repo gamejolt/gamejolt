@@ -1,5 +1,5 @@
-import { MediaItemModel } from '../../../_common/media-item/media-item-model';
-import { Model } from '../../../_common/model/model.service';
+import { MediaItemModel } from '~common/media-item/media-item-model';
+import { Model } from '~common/model/model.service';
 
 export class StoreBannerModel extends Model {
 	constructor(data: any = {}) {

@@ -1,8 +1,8 @@
-import { Api } from '../../api/api.service';
-import { LightboxMediaModel, LightboxMediaType } from '../../lightbox/lightbox-helpers';
-import { MediaItemModel } from '../../media-item/media-item-model';
-import { Model } from '../../model/model.service';
-import { GameModel } from '../game.model';
+import { Api } from '~common/api/api.service';
+import { GameModel } from '~common/game/game.model';
+import { LightboxMediaModel, LightboxMediaType } from '~common/lightbox/lightbox-helpers';
+import { MediaItemModel } from '~common/media-item/media-item-model';
+import { Model } from '~common/model/model.service';
 
 export class GameScreenshotModel extends Model implements LightboxMediaModel {
 	declare media_type: 'image';

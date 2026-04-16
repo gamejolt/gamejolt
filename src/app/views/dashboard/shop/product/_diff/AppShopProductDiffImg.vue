@@ -1,27 +1,27 @@
 <script lang="ts" setup>
 import { computed, CSSProperties } from 'vue';
 
-import AppAspectRatio from '../../../../../../_common/aspect-ratio/AppAspectRatio.vue';
+import { ShopProductBaseForm } from '~app/views/dashboard/shop/product/_forms/FormShopProductBase.vue';
+import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
 import {
 	AvatarFrameModel,
 	DefaultAvatarFrameScale,
-} from '../../../../../../_common/avatar/frame.model';
-import { Screen } from '../../../../../../_common/screen/screen-service';
-import AppScrollScroller from '../../../../../../_common/scroll/AppScrollScroller.vue';
+} from '~common/avatar/frame.model';
+import { Screen } from '~common/screen/screen-service';
+import AppScrollScroller from '~common/scroll/AppScrollScroller.vue';
 import {
 	ShopProductModel,
 	ShopProductResource,
-} from '../../../../../../_common/shop/product/product-model';
-import { StickerPackRatio } from '../../../../../../_common/sticker/pack/AppStickerPack.vue';
-import AppUserAvatarBubble from '../../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
+} from '~common/shop/product/product-model';
+import { StickerPackRatio } from '~common/sticker/pack/AppStickerPack.vue';
+import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
 import {
 	styleFlexCenter,
 	styleMaxWidthForOptions,
 	styleWhen,
-} from '../../../../../../_styles/mixins';
-import { kBorderRadiusBase, kBorderRadiusLg } from '../../../../../../_styles/variables';
-import { isInstance } from '../../../../../../utils/utils';
-import { ShopProductBaseForm } from '../_forms/FormShopProductBase.vue';
+} from '~styles/mixins';
+import { kBorderRadiusBase, kBorderRadiusLg } from '~styles/variables';
+import { isInstance } from '~utils/utils';
 
 type Props = {
 	resource: ShopProductResource;

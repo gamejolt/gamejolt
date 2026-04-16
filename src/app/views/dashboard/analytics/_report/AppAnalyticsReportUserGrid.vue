@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { DeepReadonly } from 'vue';
 
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import AppUserCard from '../../../../../_common/user/card/AppUserCard.vue';
-import { ReportComponent } from '../../../../components/site-analytics/site-analytics-service';
+import { ReportComponent } from '~app/components/site-analytics/site-analytics-service';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import AppUserCard from '~common/user/card/AppUserCard.vue';
 
 type Props = {
 	reportData: DeepReadonly<ReportComponent>;

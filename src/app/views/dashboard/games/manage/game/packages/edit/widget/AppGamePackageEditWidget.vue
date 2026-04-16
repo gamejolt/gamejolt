@@ -1,15 +1,15 @@
 <script lang="ts">
 import { ref, watch } from 'vue';
 
-import { Api } from '../../../../../../../../../_common/api/api.service';
-import { Environment } from '../../../../../../../../../_common/environment/environment.service';
+import { Api } from '~common/api/api.service';
+import { Environment } from '~common/environment/environment.service';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
-} from '../../../../../../../../../_common/route/route-component';
-import { Screen } from '../../../../../../../../../_common/screen/screen-service';
-import { SellableModel } from '../../../../../../../../../_common/sellable/sellable.model';
-import AppTranslate from '../../../../../../../../../_common/translate/AppTranslate.vue';
+} from '~common/route/route-component';
+import { Screen } from '~common/screen/screen-service';
+import { SellableModel } from '~common/sellable/sellable.model';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 export default {
 	name: 'RouteDashGamesManageGamePackagesEditWidget',

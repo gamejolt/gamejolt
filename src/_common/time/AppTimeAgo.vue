@@ -2,8 +2,8 @@
 import { formatDistanceStrict, formatDistanceToNow } from 'date-fns';
 import { onUnmounted, ref, watch } from 'vue';
 
-import { formatDate } from '../filters/date';
-import { $gettext } from '../translate/translate.service';
+import { formatDate } from '~common/filters/date';
+import { $gettext } from '~common/translate/translate.service';
 
 type Props = {
 	date: number | Date;

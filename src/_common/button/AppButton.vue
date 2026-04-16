@@ -2,11 +2,11 @@
 import { computed, HTMLAttributes, toRef } from 'vue';
 import { RouteLocationRaw, RouterLink } from 'vue-router';
 
-import { styleFlexCenter, styleWhen } from '../../_styles/mixins';
-import { kJolticonSize } from '../../_styles/variables';
-import { useDynamicSlots } from '../component-helpers';
-import AppJolticon, { Jolticon } from '../jolticon/AppJolticon.vue';
-import AppCircularProgress from '../progress/AppCircularProgress.vue';
+import { useDynamicSlots } from '~common/component-helpers';
+import AppJolticon, { Jolticon } from '~common/jolticon/AppJolticon.vue';
+import AppCircularProgress from '~common/progress/AppCircularProgress.vue';
+import { styleFlexCenter, styleWhen } from '~styles/mixins';
+import { kJolticonSize } from '~styles/variables';
 
 type Props = {
 	tag?: string;
@@ -142,4 +142,4 @@ const { hasSlot } = useDynamicSlots(toRef(() => dynamicSlots));
 	</component>
 </template>
 
-<style lang="stylus" src="./button.styl" scoped></style>
+<style lang="stylus" src="~common/button/button.styl" scoped></style>

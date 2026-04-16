@@ -1,9 +1,9 @@
 import { defineAsyncComponent } from 'vue';
 
-import { lazyImportNoSSR } from './code-splitting';
+import { lazyImportNoSSR } from '~common/code-splitting';
 
-export const FormCommentLazy = defineAsyncComponent(() => import('./comment/FormComment.vue'));
+export const FormCommentLazy = defineAsyncComponent(() => import('~common/comment/FormComment.vue'));
 
 export const AppVideoPlayerShakaLazy = defineAsyncComponent(
-	lazyImportNoSSR(() => import('./video/player/AppVideoPlayerShaka.vue'))
+	lazyImportNoSSR(() => import('~common/video/player/AppVideoPlayerShaka.vue'))
 );

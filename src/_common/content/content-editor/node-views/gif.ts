@@ -1,6 +1,6 @@
-import AppContentGif from '../../components/AppContentGif.vue';
-import { ContentEditorService } from '../content-editor.service';
-import { BaseNodeView } from './base';
+import AppContentGif from '~common/content/components/AppContentGif.vue';
+import { ContentEditorService } from '~common/content/content-editor/content-editor.service';
+import { BaseNodeView } from '~common/content/content-editor/node-views/base';
 
 export class GifNodeView extends BaseNodeView {
 	mounted() {

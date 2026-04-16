@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { computed, Ref, ref, useTemplateRef, watch } from 'vue';
 
-import { useResizeObserver } from '../../utils/resize-observer';
-import { Ruler } from '../ruler/ruler-service';
-import { provideFormControlHooks } from './form-control-hooks';
+import { provideFormControlHooks } from '~common/form-vue/form-control-hooks';
+import { Ruler } from '~common/ruler/ruler-service';
+import { useResizeObserver } from '~utils/resize-observer';
 
 type Props = {
 	prefix: string;

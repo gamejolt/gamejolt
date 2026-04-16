@@ -1,27 +1,27 @@
 <script lang="ts">
 import { computed, CSSProperties, ref } from 'vue';
 
-import { Api } from '../../../_common/api/api.service';
-import AppAspectRatio from '../../../_common/aspect-ratio/AppAspectRatio.vue';
-import { Environment } from '../../../_common/environment/environment.service';
-import { GameModel } from '../../../_common/game/game.model';
-import { GamePackageModel } from '../../../_common/game/package/package.model';
-import { showErrorGrowl } from '../../../_common/growls/growls.service';
-import AppImgResponsive from '../../../_common/img/AppImgResponsive.vue';
-import AppLoading from '../../../_common/loading/AppLoading.vue';
-import AppMediaItemCover from '../../../_common/media-item/cover/AppMediaItemCover.vue';
-import { MicrotransactionProductModel } from '../../../_common/microtransaction/product.model';
-import { ModelData } from '../../../_common/model/model.service';
-import { Navigate } from '../../../_common/navigate/navigate.service';
-import { OrderModel } from '../../../_common/order/order.model';
-import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
-import { Screen } from '../../../_common/screen/screen-service';
-import { useThemeStore } from '../../../_common/theme/theme.store';
-import { kThemeFgMuted } from '../../../_common/theme/variables';
-import { $gettext } from '../../../_common/translate/translate.service';
-import { styleFlexCenter, styleMaxWidthForOptions } from '../../../_styles/mixins';
-import { kFontFamilyDisplay, kLineHeightComputed } from '../../../_styles/variables';
-import FormPayment from '../../components/forms/FormPayment.vue';
+import FormPayment from '~checkout/components/forms/FormPayment.vue';
+import { Api } from '~common/api/api.service';
+import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
+import { Environment } from '~common/environment/environment.service';
+import { GameModel } from '~common/game/game.model';
+import { GamePackageModel } from '~common/game/package/package.model';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import AppImgResponsive from '~common/img/AppImgResponsive.vue';
+import AppLoading from '~common/loading/AppLoading.vue';
+import AppMediaItemCover from '~common/media-item/cover/AppMediaItemCover.vue';
+import { MicrotransactionProductModel } from '~common/microtransaction/product.model';
+import { ModelData } from '~common/model/model.service';
+import { Navigate } from '~common/navigate/navigate.service';
+import { OrderModel } from '~common/order/order.model';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { Screen } from '~common/screen/screen-service';
+import { useThemeStore } from '~common/theme/theme.store';
+import { kThemeFgMuted } from '~common/theme/variables';
+import { $gettext } from '~common/translate/translate.service';
+import { styleFlexCenter, styleMaxWidthForOptions } from '~styles/mixins';
+import { kFontFamilyDisplay, kLineHeightComputed } from '~styles/variables';
 
 export default {
 	...defineAppRouteOptions({

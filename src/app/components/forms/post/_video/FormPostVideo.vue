@@ -1,30 +1,30 @@
 <script lang="ts">
 import { computed, ref, useTemplateRef, watch } from 'vue';
 
-import { Api, ApiProgressEvent } from '../../../../../_common/api/api.service';
-import AppButton from '../../../../../_common/button/AppButton.vue';
-import { formatNumber } from '../../../../../_common/filters/number';
+import { Api, ApiProgressEvent } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import { formatNumber } from '~common/filters/number';
 import {
 	$removeFiresidePostVideo,
 	FiresidePostModel,
-} from '../../../../../_common/fireside/post/post-model';
-import { FiresidePostVideoModel } from '../../../../../_common/fireside/post/video/video-model';
-import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
-import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormLegend from '../../../../../_common/form-vue/AppFormLegend.vue';
-import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
-import { validateFilesize } from '../../../../../_common/form-vue/validators';
-import { showErrorGrowl, showSuccessGrowl } from '../../../../../_common/growls/growls.service';
-import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
-import { showModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
-import { Payload } from '../../../../../_common/payload/payload-service';
-import AppProgressBar from '../../../../../_common/progress/AppProgressBar.vue';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import AppVideoPlayer from '../../../../../_common/video/player/AppVideoPlayer.vue';
-import AppVideoProcessingProgress from '../../../../../_common/video/processing-progress/AppVideoProcessingProgress.vue';
+} from '~common/fireside/post/post-model';
+import { FiresidePostVideoModel } from '~common/fireside/post/video/video-model';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormLegend from '~common/form-vue/AppFormLegend.vue';
+import AppFormControlUpload from '~common/form-vue/controls/upload/AppFormControlUpload.vue';
+import { validateFilesize } from '~common/form-vue/validators';
+import { showErrorGrowl, showSuccessGrowl } from '~common/growls/growls.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
+import { showModalConfirm } from '~common/modal/confirm/confirm-service';
+import { Payload } from '~common/payload/payload-service';
+import AppProgressBar from '~common/progress/AppProgressBar.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
+import AppVideoPlayer from '~common/video/player/AppVideoPlayer.vue';
+import AppVideoProcessingProgress from '~common/video/processing-progress/AppVideoProcessingProgress.vue';
 
 export const enum VideoStatus {
 	/** No video is being uploaded */

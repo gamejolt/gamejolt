@@ -2,22 +2,22 @@
 import { computed, ref, useTemplateRef } from 'vue';
 import draggable from 'vuedraggable';
 
-import { Api, ApiProgressEvent } from '../../../../../_common/api/api.service';
-import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
-import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
-import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
+import AppFormPostMediaItem from '~app/components/forms/post/_media/item/FormPostMediaItem.vue';
+import { Api, ApiProgressEvent } from '~common/api/api.service';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlUpload from '~common/form-vue/controls/upload/AppFormControlUpload.vue';
 import {
 	validateFilesize,
 	validateImageMaxDimensions,
-} from '../../../../../_common/form-vue/validators';
-import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
-import { MediaItemModel } from '../../../../../_common/media-item/media-item-model';
-import AppScrollScroller from '../../../../../_common/scroll/AppScrollScroller.vue';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import AppFormPostMediaItem from './item/FormPostMediaItem.vue';
+} from '~common/form-vue/validators';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
+import { MediaItemModel } from '~common/media-item/media-item-model';
+import AppScrollScroller from '~common/scroll/AppScrollScroller.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 type FormModel = {
 	image: File[] | null;

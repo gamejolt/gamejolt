@@ -1,8 +1,8 @@
 import { defineAsyncComponent, markRaw } from 'vue';
 
-import { showModal } from '../../../../_common/modal/modal.service';
-import { ProfileQuickLink } from '../overview/shortcut/AppProfileShortcuts.vue';
-import { ProfileRouteStore } from '../RouteProfile.vue';
+import { ProfileQuickLink } from '~app/views/profile/overview/shortcut/AppProfileShortcuts.vue';
+import { ProfileRouteStore } from '~app/views/profile/RouteProfile.vue';
+import { showModal } from '~common/modal/modal.service';
 
 export async function showProfileAboutModal({
 	routeStore,
@@ -13,7 +13,7 @@ export async function showProfileAboutModal({
 }) {
 	return await showModal<void>({
 		modalId: 'ProfileAbout',
-		component: defineAsyncComponent(() => import('./AppProfileAboutModal.vue')),
+		component: defineAsyncComponent(() => import('~app/views/profile/about/AppProfileAboutModal.vue')),
 		size: 'sm',
 		props: {
 			// Don't let Vue automatically unwrap this.

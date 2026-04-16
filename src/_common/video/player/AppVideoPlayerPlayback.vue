@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import { assertNever } from '../../../utils/utils';
-import AppJolticon from '../../jolticon/AppJolticon.vue';
-import { toggleVideoPlayback, trackVideoPlayerEvent, VideoPlayerController } from './controller';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { toggleVideoPlayback, trackVideoPlayerEvent, VideoPlayerController } from '~common/video/player/controller';
+import { assertNever } from '~utils/utils';
 
 type Props = {
 	player: VideoPlayerController;

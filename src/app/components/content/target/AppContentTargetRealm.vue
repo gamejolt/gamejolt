@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import AppImgResponsive from '../../../../_common/img/AppImgResponsive.vue';
-import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
-import { REALM_CARD_RATIO } from '../../../../_common/realm/AppRealmFullCard.vue';
-import { RealmModel } from '../../../../_common/realm/realm-model';
-import AppContentTarget, { CONTENT_TARGET_HEIGHT } from './AppContentTarget.vue';
+import AppContentTarget, { CONTENT_TARGET_HEIGHT } from '~app/components/content/target/AppContentTarget.vue';
+import AppImgResponsive from '~common/img/AppImgResponsive.vue';
+import AppMediaItemBackdrop from '~common/media-item/backdrop/AppMediaItemBackdrop.vue';
+import { REALM_CARD_RATIO } from '~common/realm/AppRealmFullCard.vue';
+import { RealmModel } from '~common/realm/realm-model';
 
 type Props = {
 	realm: RealmModel;

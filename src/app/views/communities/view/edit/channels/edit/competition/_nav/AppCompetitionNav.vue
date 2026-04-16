@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import { CompetitionPeriodVoting } from '../../../../../../../../../_common/community/competition/competition.model';
-import { formatNumber } from '../../../../../../../../../_common/filters/number';
-import AppJolticon from '../../../../../../../../../_common/jolticon/AppJolticon.vue';
-import AppTranslate from '../../../../../../../../../_common/translate/AppTranslate.vue';
-import { useCommunityRouteStore } from '../../../../../view.store';
+import { useCommunityRouteStore } from '~app/views/communities/view/view.store';
+import { CompetitionPeriodVoting } from '~common/community/competition/competition.model';
+import { formatNumber } from '~common/filters/number';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 const routeStore = useCommunityRouteStore()!;
 

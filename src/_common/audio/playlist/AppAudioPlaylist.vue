@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { computed, nextTick, ref, useTemplateRef } from 'vue';
 
-import AppButton from '../../button/AppButton.vue';
-import { formatTime } from '../../filters/time';
-import { GameSongModel } from '../../game/song/song.model';
-import AppAudioPlayer from '../player/AppAudioPlayer.vue';
-import AppAudioScrubber from '../scrubber/AppAudioScrubber.vue';
+import AppAudioPlayer from '~common/audio/player/AppAudioPlayer.vue';
+import AppAudioScrubber from '~common/audio/scrubber/AppAudioScrubber.vue';
+import AppButton from '~common/button/AppButton.vue';
+import { formatTime } from '~common/filters/time';
+import { GameSongModel } from '~common/game/song/song.model';
 
 type Props = {
 	songs: GameSongModel[];

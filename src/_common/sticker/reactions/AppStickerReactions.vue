@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref } from 'vue';
 
-import { numberSort } from '../../../utils/array';
-import { vAppTooltip } from '../../tooltip/tooltip-directive';
-import { StickerTargetController, toggleStickersShouldShow } from '../target/target-controller';
-import AppStickerReactionsItem from './AppStickerReactionsItem.vue';
+import AppStickerReactionsItem from '~common/sticker/reactions/AppStickerReactionsItem.vue';
+import { StickerTargetController, toggleStickersShouldShow } from '~common/sticker/target/target-controller';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { numberSort } from '~utils/array';
 
 type Props = {
 	controller: StickerTargetController;

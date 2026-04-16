@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
 
-import AppButton from '../../../../_common/button/AppButton.vue';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import { Scroll } from '../../../../_common/scroll/scroll.service';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { UserModel } from '../../../../_common/user/user.model';
+import AppButton from '~common/button/AppButton.vue';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { Scroll } from '~common/scroll/scroll.service';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { UserModel } from '~common/user/user.model';
 
 type Props = {
 	user: UserModel;

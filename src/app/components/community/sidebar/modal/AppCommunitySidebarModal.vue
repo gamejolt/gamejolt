@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import AppButton from '../../../../../_common/button/AppButton.vue';
-import { CommunityModel } from '../../../../../_common/community/community.model';
-import AppModal from '../../../../../_common/modal/AppModal.vue';
-import { useModal } from '../../../../../_common/modal/modal.service';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import AppCommunitySidebar from '../AppCommunitySidebar.vue';
-import { CommunitySidebarData } from '../sidebar-data';
+import AppCommunitySidebar from '~app/components/community/sidebar/AppCommunitySidebar.vue';
+import { CommunitySidebarData } from '~app/components/community/sidebar/sidebar-data';
+import AppButton from '~common/button/AppButton.vue';
+import { CommunityModel } from '~common/community/community.model';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import { $gettext } from '~common/translate/translate.service';
 
 type Props = {
 	community: CommunityModel;

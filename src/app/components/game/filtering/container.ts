@@ -1,11 +1,11 @@
 import { RouteLocationNormalized } from 'vue-router';
 
-import { Scroll } from '../../../../_common/scroll/scroll.service';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { forEach } from '../../../../utils/collection';
-import { objectEquals } from '../../../../utils/object';
-import { RouteLocationDefinition } from '../../../../utils/router';
-import { router } from '../../../views/index';
+import { router } from '~app/views/index';
+import { Scroll } from '~common/scroll/scroll.service';
+import { $gettext } from '~common/translate/translate.service';
+import { forEach } from '~utils/collection';
+import { objectEquals } from '~utils/object';
+import { RouteLocationDefinition } from '~utils/router';
 
 const STORAGE_KEY = 'game-filtering:filters-v2';
 

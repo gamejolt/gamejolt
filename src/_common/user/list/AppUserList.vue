@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { UserModel } from '../user.model';
-import AppUserListItem from './AppUserListItem.vue';
+import AppUserListItem from '~common/user/list/AppUserListItem.vue';
+import { UserModel } from '~common/user/user.model';
 
 type Props = {
 	users: UserModel[];

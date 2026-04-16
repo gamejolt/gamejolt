@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import type { HTMLAttributes } from 'vue';
-import AppButton from '../button/AppButton.vue';
+
+import AppButton from '~common/button/AppButton.vue';
 
 type Props = {
 	compact?: boolean;

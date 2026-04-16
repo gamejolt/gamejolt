@@ -1,22 +1,22 @@
 <script lang="ts" setup>
 import { computed, toRef } from 'vue';
 
-import AppButton from '../../../../../../_common/button/AppButton.vue';
+import { showEntryFromCommunityCompetitionEntryModal } from '~app/components/community/competition/entry/modal/modal.service';
+import AppButton from '~common/button/AppButton.vue';
 import {
 	$removeCommunityCompetitionEntry,
 	CommunityCompetitionEntryModel,
-} from '../../../../../../_common/community/competition/entry/entry.model';
-import { CommunityCompetitionVotingCategoryModel } from '../../../../../../_common/community/competition/voting-category/voting-category.model';
-import { GameModel } from '../../../../../../_common/game/game.model';
-import AppGameThumbnailImg from '../../../../../../_common/game/thumbnail/AppGameThumbnailImg.vue';
-import { showSuccessGrowl } from '../../../../../../_common/growls/growls.service';
-import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
-import { showModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
-import { useCommonStore } from '../../../../../../_common/store/common-store';
-import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
-import { $gettext } from '../../../../../../_common/translate/translate.service';
-import { TranslateDirective as vTranslate } from '../../../../../../_common/translate/translate-directive';
-import { showEntryFromCommunityCompetitionEntryModal } from '../modal/modal.service';
+} from '~common/community/competition/entry/entry.model';
+import { CommunityCompetitionVotingCategoryModel } from '~common/community/competition/voting-category/voting-category.model';
+import { GameModel } from '~common/game/game.model';
+import AppGameThumbnailImg from '~common/game/thumbnail/AppGameThumbnailImg.vue';
+import { showSuccessGrowl } from '~common/growls/growls.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { showModalConfirm } from '~common/modal/confirm/confirm-service';
+import { useCommonStore } from '~common/store/common-store';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { $gettext } from '~common/translate/translate.service';
+import { TranslateDirective as vTranslate } from '~common/translate/translate-directive';
 
 type Props = {
 	entry: CommunityCompetitionEntryModel;

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import AppButton from '../button/AppButton.vue';
-import AppTranslate from '../translate/AppTranslate.vue';
-import { CommentBlockReason, CommentModel } from './comment-model';
+import AppButton from '~common/button/AppButton.vue';
+import { CommentBlockReason, CommentModel } from '~common/comment/comment-model';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 type Props = {
 	comment: CommentModel;

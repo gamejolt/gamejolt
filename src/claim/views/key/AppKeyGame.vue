@@ -2,19 +2,19 @@
 import { onUnmounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
-import AppFadeCollapse from '../../../_common/AppFadeCollapse.vue';
-import AppButton from '../../../_common/button/AppButton.vue';
-import AppContentViewer from '../../../_common/content/content-viewer/AppContentViewer.vue';
-import { Environment } from '../../../_common/environment/environment.service';
-import { CustomGameMessage, GameModel } from '../../../_common/game/game.model';
-import AppGamePackageCard from '../../../_common/game/package/card/AppGamePackageCard.vue';
-import { GamePackagePayloadModel } from '../../../_common/game/package/package-payload.model';
-import { GameBundleModel } from '../../../_common/game-bundle/game-bundle.model';
-import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
-import { KeyGroupModel, KeyGroupType } from '../../../_common/key-group/key-group.model';
-import AppMediaItemCover from '../../../_common/media-item/cover/AppMediaItemCover.vue';
-import { useCommonStore } from '../../../_common/store/common-store';
-import { useThemeStore } from '../../../_common/theme/theme.store';
+import AppFadeCollapse from '~common/AppFadeCollapse.vue';
+import AppButton from '~common/button/AppButton.vue';
+import AppContentViewer from '~common/content/content-viewer/AppContentViewer.vue';
+import { Environment } from '~common/environment/environment.service';
+import { CustomGameMessage, GameModel } from '~common/game/game.model';
+import AppGamePackageCard from '~common/game/package/card/AppGamePackageCard.vue';
+import { GamePackagePayloadModel } from '~common/game/package/package-payload.model';
+import { GameBundleModel } from '~common/game-bundle/game-bundle.model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { KeyGroupModel, KeyGroupType } from '~common/key-group/key-group.model';
+import AppMediaItemCover from '~common/media-item/cover/AppMediaItemCover.vue';
+import { useCommonStore } from '~common/store/common-store';
+import { useThemeStore } from '~common/theme/theme.store';
 
 const ClaimGameThemeKey = 'claim-game';
 

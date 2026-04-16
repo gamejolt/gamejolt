@@ -1,8 +1,8 @@
 import type { EditorState } from 'prosemirror-state';
 import type { EditorView } from 'prosemirror-view';
 
-import { ContentEditorController, editorUpdateContent } from '../content-editor-controller';
-import type { ContentEditorSchema } from '../schemas/content-editor-schema';
+import { ContentEditorController, editorUpdateContent } from '~common/content/content-editor/content-editor-controller';
+import type { ContentEditorSchema } from '~common/content/content-editor/schemas/content-editor-schema';
 
 export class UpdateIncrementerPlugin {
 	constructor(private readonly c: ContentEditorController) {}

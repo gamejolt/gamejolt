@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 import { computed, triggerRef } from 'vue';
 
-import AppButton from '../../button/AppButton.vue';
-import { Clipboard } from '../../clipboard/clipboard-service';
-import AppModal from '../../modal/AppModal.vue';
-import { useModal } from '../../modal/modal.service';
-import { showShareModal } from '../../share/card/_modal/modal.service';
-import AppTranslate from '../../translate/AppTranslate.vue';
-import { UserModel } from '../../user/user.model';
+import AppButton from '~common/button/AppButton.vue';
+import { Clipboard } from '~common/clipboard/clipboard-service';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import { showShareModal } from '~common/share/card/_modal/modal.service';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { UserModel } from '~common/user/user.model';
 
 type Props = {
 	/** Should only be your own user. */
@@ -59,7 +59,7 @@ function onInput() {
 			</p>
 
 			<div class="-img">
-				<img src="./high-five.png" />
+				<img src="~common/invite/modal/high-five.png" />
 			</div>
 
 			<input class="-url form-control" :value="url" @input="onInput" />

@@ -1,9 +1,9 @@
 <script lang="ts">
 import { computed } from 'vue';
 
-import { StickerModel } from '../../../../../../_common/sticker/sticker.model';
-import { useShopDashStore } from '../../shop.store';
-import AppShopProductDiffMetaEntry from './AppShopProductDiffMetaEntry.vue';
+import AppShopProductDiffMetaEntry from '~app/views/dashboard/shop/product/_diff/AppShopProductDiffMetaEntry.vue';
+import { useShopDashStore } from '~app/views/dashboard/shop/shop.store';
+import { StickerModel } from '~common/sticker/sticker.model';
 
 export function parseProductDiffEntry(key: string, val: any, extras: { stickers: StickerModel[] }) {
 	const newEntry: [string, any] = [key, val];

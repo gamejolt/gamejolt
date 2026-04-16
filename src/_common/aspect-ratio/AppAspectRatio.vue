@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, CSSProperties, StyleValue } from 'vue';
 
-import { styleFlexCenter, styleWhen } from '../../_styles/mixins';
+import { styleFlexCenter, styleWhen } from '~styles/mixins';
 
 /**
  * Used to create a box that takes the full-width of its parent and sizes its

@@ -1,8 +1,8 @@
-import { EmojiModel } from '../emoji/emoji.model';
-import { MediaItemModel } from '../media-item/media-item-model';
-import { ModelStoreModel, storeModel } from '../model/model-store.service';
-import { ShopProductCommonFields } from '../shop/product/product-model';
-import { UserModel } from '../user/user.model';
+import { EmojiModel } from '~common/emoji/emoji.model';
+import { MediaItemModel } from '~common/media-item/media-item-model';
+import { ModelStoreModel, storeModel } from '~common/model/model-store.service';
+import { ShopProductCommonFields } from '~common/shop/product/product-model';
+import { UserModel } from '~common/user/user.model';
 
 /**
  * Returned from backend when representing a collection of the same sticker.

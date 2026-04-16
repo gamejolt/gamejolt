@@ -1,8 +1,8 @@
-import { Api } from '../../api/api.service';
-import { showInfoGrowl } from '../../growls/growls.service';
-import { commonStore } from '../../store/common-store';
-import { GameModel } from '../game.model';
-import AppGameRatingGrowl from './AppGameRatingGrowl.vue';
+import { Api } from '~common/api/api.service';
+import { GameModel } from '~common/game/game.model';
+import AppGameRatingGrowl from '~common/game/rating-growl/AppGameRatingGrowl.vue';
+import { showInfoGrowl } from '~common/growls/growls.service';
+import { commonStore } from '~common/store/common-store';
 
 export async function showGameRatingGrowl(game: GameModel) {
 	// Don't show when not logged in.

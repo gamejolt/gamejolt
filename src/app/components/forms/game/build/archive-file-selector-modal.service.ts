@@ -1,6 +1,6 @@
 import { defineAsyncComponent } from 'vue';
 
-import { showModal } from '../../../../../_common/modal/modal.service';
+import { showModal } from '~common/modal/modal.service';
 
 export async function showArchiveFileSelectorModal(
 	gameId: number,
@@ -12,7 +12,7 @@ export async function showArchiveFileSelectorModal(
 ) {
 	return await showModal<string>({
 		modalId: 'ArchiveFileSelector',
-		component: defineAsyncComponent(() => import('./AppArchiveFileSelectorModal.vue')),
+		component: defineAsyncComponent(() => import('~app/components/forms/game/build/AppArchiveFileSelectorModal.vue')),
 		props: { gameId, packageId, releaseId, buildId, primaryFileId, platform },
 	});
 }

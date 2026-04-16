@@ -1,16 +1,16 @@
 <script lang="ts">
 import { ref } from 'vue';
 
-import { Api } from '../../../../../_common/api/api.service';
+import AppSitesLinkCard from '~app/components/sites/link-card/AppSitesLinkCard.vue';
+import AppSitesManagePage from '~app/components/sites/manage-page/AppSitesManagePage.vue';
+import { useAccountRouteController } from '~app/views/dashboard/account/RouteDashAccount.vue';
+import { Api } from '~common/api/api.service';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
-} from '../../../../../_common/route/route-component';
-import { SiteModel } from '../../../../../_common/site/site-model';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import AppSitesLinkCard from '../../../../components/sites/link-card/AppSitesLinkCard.vue';
-import AppSitesManagePage from '../../../../components/sites/manage-page/AppSitesManagePage.vue';
-import { useAccountRouteController } from '../RouteDashAccount.vue';
+} from '~common/route/route-component';
+import { SiteModel } from '~common/site/site-model';
+import { $gettext } from '~common/translate/translate.service';
 export default {
 	...defineAppRouteOptions({
 		reloadOn: 'never',

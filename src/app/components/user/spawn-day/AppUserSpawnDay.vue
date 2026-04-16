@@ -2,21 +2,21 @@
 import { formatDistanceStrict } from 'date-fns';
 import { computed, nextTick, onMounted, useTemplateRef } from 'vue';
 
-import AppAlertDismissable from '../../../../_common/alert/dismissable/AppAlertDismissable.vue';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import { ContentDocument } from '../../../../_common/content/content-document';
-import { ContentWriter } from '../../../../_common/content/content-writer';
+import { showCommentModal } from '~app/components/comment/modal/modal.service';
+import { showPostEditModal } from '~app/components/post/edit-modal/edit-modal-service';
+import AppAlertDismissable from '~common/alert/dismissable/AppAlertDismissable.vue';
+import AppButton from '~common/button/AppButton.vue';
+import { ContentDocument } from '~common/content/content-document';
+import { ContentWriter } from '~common/content/content-writer';
 import {
 	$createFiresidePost,
 	FiresidePostModel,
-} from '../../../../_common/fireside/post/post-model';
-import { useCommonStore } from '../../../../_common/store/common-store';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { TranslateDirective as vTranslate } from '../../../../_common/translate/translate-directive';
-import { UserModel } from '../../../../_common/user/user.model';
-import { sleep } from '../../../../utils/utils';
-import { showCommentModal } from '../../comment/modal/modal.service';
-import { showPostEditModal } from '../../post/edit-modal/edit-modal-service';
+} from '~common/fireside/post/post-model';
+import { useCommonStore } from '~common/store/common-store';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { TranslateDirective as vTranslate } from '~common/translate/translate-directive';
+import { UserModel } from '~common/user/user.model';
+import { sleep } from '~utils/utils';
 
 type Props = {
 	user: UserModel;

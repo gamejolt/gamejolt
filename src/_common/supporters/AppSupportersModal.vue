@@ -1,18 +1,18 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref } from 'vue';
 
-import { Api } from '../api/api.service';
-import AppButton from '../button/AppButton.vue';
-import { formatNumber } from '../filters/number';
-import { FiresidePostModel } from '../fireside/post/post-model';
-import { GameModel } from '../game/game.model';
-import AppLoading from '../loading/AppLoading.vue';
-import AppModal from '../modal/AppModal.vue';
-import { useModal } from '../modal/modal.service';
-import AppTranslate from '../translate/AppTranslate.vue';
-import AppUserList from '../user/list/AppUserList.vue';
-import { UserModel } from '../user/user.model';
-import { SupportersModel } from './modal.service';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import { formatNumber } from '~common/filters/number';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import { GameModel } from '~common/game/game.model';
+import AppLoading from '~common/loading/AppLoading.vue';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import { SupportersModel } from '~common/supporters/modal.service';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import AppUserList from '~common/user/list/AppUserList.vue';
+import { UserModel } from '~common/user/user.model';
 
 const PerPage = 20;
 

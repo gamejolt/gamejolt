@@ -1,17 +1,17 @@
 <script lang="ts" setup>
 import { toRef } from 'vue';
 
-import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
-import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
-import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
-import AppFormControlErrors from '../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
-import { validateMaxLength } from '../../../../_common/form-vue/validators';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import { validateMaxLength } from '~common/form-vue/validators';
 import {
 	$saveGamePlaylist,
 	GamePlaylistModel,
-} from '../../../../_common/game-playlist/game-playlist.model';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+} from '~common/game-playlist/game-playlist.model';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 type FormModel = GamePlaylistModel;
 

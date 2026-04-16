@@ -2,21 +2,6 @@
 import { computed, CSSProperties } from 'vue';
 import { RouterLink } from 'vue-router';
 
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
-import AppOnHover from '../../../../_common/on/AppOnHover.vue';
-import { kThemeDarkest } from '../../../../_common/theme/variables';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import AppUserVerifiedTick from '../../../../_common/user/AppUserVerifiedTick.vue';
-import AppUserAvatarBubble from '../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
-import { styleWhen } from '../../../../_styles/mixins';
-import {
-	kBorderWidthLg,
-	kFontFamilyTiny,
-	kFontSizeSmall,
-	kFontSizeTiny,
-} from '../../../../_styles/variables';
-import { useGridStore } from '../../grid/grid-store';
 import {
 	isUserOnline,
 	kickGroupMember,
@@ -24,10 +9,25 @@ import {
 	RoboJoltUserId,
 	tryGetRoomRole,
 	userCanModerateOtherUser,
-} from '../client';
-import { ChatRoomModel } from '../room';
-import { ChatUser } from '../user';
-import AppChatUserOnlineStatus from '../user-online-status/AppChatUserOnlineStatus.vue';
+} from '~app/components/chat/client';
+import { ChatRoomModel } from '~app/components/chat/room';
+import { ChatUser } from '~app/components/chat/user';
+import AppChatUserOnlineStatus from '~app/components/chat/user-online-status/AppChatUserOnlineStatus.vue';
+import { useGridStore } from '~app/components/grid/grid-store';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { showModalConfirm } from '~common/modal/confirm/confirm-service';
+import AppOnHover from '~common/on/AppOnHover.vue';
+import { kThemeDarkest } from '~common/theme/variables';
+import { $gettext } from '~common/translate/translate.service';
+import AppUserVerifiedTick from '~common/user/AppUserVerifiedTick.vue';
+import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
+import { styleWhen } from '~styles/mixins';
+import {
+	kBorderWidthLg,
+	kFontFamilyTiny,
+	kFontSizeSmall,
+	kFontSizeTiny,
+} from '~styles/variables';
 
 type Props = {
 	user: ChatUser;

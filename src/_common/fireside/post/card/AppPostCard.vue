@@ -2,16 +2,16 @@
 import { computed, useSlots } from 'vue';
 import { RouterLink } from 'vue-router';
 
-import { PostOpenSource, trackPostOpen } from '../../../analytics/analytics.service';
-import { ContentRules } from '../../../content/content-rules';
-import AppContentViewer from '../../../content/content-viewer/AppContentViewer.vue';
-import { Environment } from '../../../environment/environment.service';
-import { formatFuzzynumber } from '../../../filters/fuzzynumber';
-import AppJolticon from '../../../jolticon/AppJolticon.vue';
-import AppUserAvatar from '../../../user/user-avatar/AppUserAvatar.vue';
-import { VideoPlayerControllerContext } from '../../../video/player/controller';
-import { FiresidePostModel } from '../post-model';
-import AppPostCardBase from './AppPostCardBase.vue';
+import { PostOpenSource, trackPostOpen } from '~common/analytics/analytics.service';
+import { ContentRules } from '~common/content/content-rules';
+import AppContentViewer from '~common/content/content-viewer/AppContentViewer.vue';
+import { Environment } from '~common/environment/environment.service';
+import { formatFuzzynumber } from '~common/filters/fuzzynumber';
+import AppPostCardBase from '~common/fireside/post/card/AppPostCardBase.vue';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppUserAvatar from '~common/user/user-avatar/AppUserAvatar.vue';
+import { VideoPlayerControllerContext } from '~common/video/player/controller';
 
 const displayRules = new ContentRules({
 	truncateLinks: true,

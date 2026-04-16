@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import AppButton from '../../../../_common/button/AppButton.vue';
-import AppModal from '../../../../_common/modal/AppModal.vue';
-import { useModal } from '../../../../_common/modal/modal.service';
-import { useCommonStore } from '../../../../_common/store/common-store';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { UserModel } from '../../../../_common/user/user.model';
-import FormUserHeader from '../../forms/user-header/FormUserHeader.vue';
+import FormUserHeader from '~app/components/forms/user-header/FormUserHeader.vue';
+import AppButton from '~common/button/AppButton.vue';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import { useCommonStore } from '~common/store/common-store';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { UserModel } from '~common/user/user.model';
 
 const modal = useModal()!;
 const { user: appUser } = useCommonStore();

@@ -1,27 +1,27 @@
 <script lang="ts" setup>
 import { computed, ref, toRef } from 'vue';
 
-import { Api } from '../../../api/api.service';
-import AppButton from '../../../button/AppButton.vue';
-import { ContextCapabilities } from '../../../content/content-context';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import { ContextCapabilities } from '~common/content/content-context';
 import AppForm, {
 	createForm,
 	FormController,
-} from '../../../form-vue/AppForm.vue';
-import AppFormButton from '../../../form-vue/AppFormButton.vue';
-import AppFormControlErrors from '../../../form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../../../form-vue/AppFormGroup.vue';
-import AppFormControlContent from '../../../form-vue/controls/AppFormControlContent.vue';
-import { validateContentMaxLength, validateContentRequired } from '../../../form-vue/validators';
-import { showErrorGrowl } from '../../../growls/growls.service';
-import AppMediaItemBackdrop from '../../../media-item/backdrop/AppMediaItemBackdrop.vue';
-import AppModal from '../../../modal/AppModal.vue';
-import { useModal } from '../../../modal/modal.service';
-import AppSpacer from '../../../spacer/AppSpacer.vue';
-import { $gettext } from '../../../translate/translate.service';
-import AppUserAvatarImg from '../../../user/user-avatar/AppUserAvatarImg.vue';
-import { SupporterActionModel } from '../../action.model';
-import { $saveSupporterMessageTemplate, SupporterMessageModel } from '../../message.model';
+} from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlContent from '~common/form-vue/controls/AppFormControlContent.vue';
+import { validateContentMaxLength, validateContentRequired } from '~common/form-vue/validators';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import AppMediaItemBackdrop from '~common/media-item/backdrop/AppMediaItemBackdrop.vue';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import { SupporterActionModel } from '~common/supporters/action.model';
+import { $saveSupporterMessageTemplate, SupporterMessageModel } from '~common/supporters/message.model';
+import { $gettext } from '~common/translate/translate.service';
+import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
 
 type FormModel = SupporterMessageModel;
 

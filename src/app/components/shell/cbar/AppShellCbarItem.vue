@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import { formatNumber } from '../../../../_common/filters/number';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import { Screen } from '../../../../_common/screen/screen-service';
-import { useSidebarStore } from '../../../../_common/sidebar/sidebar.store';
-import { kThemeGjOverlayNotice } from '../../../../_common/theme/variables';
-import { styleWhen } from '../../../../_styles/mixins';
-import { useAppStore } from '../../../store';
+import { useAppStore } from '~app/store';
+import { formatNumber } from '~common/filters/number';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { Screen } from '~common/screen/screen-service';
+import { useSidebarStore } from '~common/sidebar/sidebar.store';
+import { kThemeGjOverlayNotice } from '~common/theme/variables';
+import { styleWhen } from '~styles/mixins';
 
 type Props = {
 	isControl?: boolean;

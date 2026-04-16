@@ -1,18 +1,18 @@
 <script lang="ts">
 import { nextTick, onMounted, onUnmounted, Ref, ref, useTemplateRef } from 'vue';
 
-import { sleep } from '../../../utils/utils';
-import { illBackpackClosed, illBackpackOpen } from '../../img/ill/illustrations';
-import AppJolticon, { Jolticon } from '../../jolticon/AppJolticon.vue';
-import AppModal from '../../modal/AppModal.vue';
-import { useModal } from '../../modal/modal.service';
-import AppPopcornKettle from '../../popcorn/AppPopcornKettle.vue';
-import { createPopcornKettleController } from '../../popcorn/popcorn-kettle-controller';
-import { Screen } from '../../screen/screen-service';
-import AppSpacer from '../../spacer/AppSpacer.vue';
-import AppThemeSvg from '../../theme/svg/AppThemeSvg.vue';
-import AppQuestThumbnail from '../AppQuestThumbnail.vue';
-import { QuestModel } from '../quest-model';
+import { illBackpackClosed, illBackpackOpen } from '~common/img/ill/illustrations';
+import AppJolticon, { Jolticon } from '~common/jolticon/AppJolticon.vue';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import AppPopcornKettle from '~common/popcorn/AppPopcornKettle.vue';
+import { createPopcornKettleController } from '~common/popcorn/popcorn-kettle-controller';
+import AppQuestThumbnail from '~common/quest/AppQuestThumbnail.vue';
+import { QuestModel } from '~common/quest/quest-model';
+import { Screen } from '~common/screen/screen-service';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import AppThemeSvg from '~common/theme/svg/AppThemeSvg.vue';
+import { sleep } from '~utils/utils';
 
 export interface QuestRewardData {
 	key: string;

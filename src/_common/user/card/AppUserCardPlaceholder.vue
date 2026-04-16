@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import AppButtonPlaceholder from '../../button/AppButtonPlaceholder.vue';
+import AppButtonPlaceholder from '~common/button/AppButtonPlaceholder.vue';
 </script>
 
 <template>

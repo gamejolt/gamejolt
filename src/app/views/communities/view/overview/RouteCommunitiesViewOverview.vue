@@ -2,31 +2,31 @@
 import { computed, Ref, ref, toRef, watchEffect } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-import AppButton from '../../../../../_common/button/AppButton.vue';
-import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
-import { showSuccessGrowl } from '../../../../../_common/growls/growls.service';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '../../../../../_common/route/route-component';
-import { useCommonStore } from '../../../../../_common/store/common-store';
-import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
-import { ActivityFeedView } from '../../../../components/activity/feed/view';
-import AppCommunitySidebar from '../../../../components/community/sidebar/AppCommunitySidebar.vue';
-import { useGridStore } from '../../../../components/grid/grid-store';
-import { useAppStore } from '../../../../store/index';
-import AppCommunitiesViewFeed from '../_feed/AppCommunitiesViewFeed.vue';
-import { doFeedChannelPayload, resolveFeedChannelPayload } from '../_feed/feed-helpers';
-import AppCommunityPageContainer from '../_page-container/AppCommunityPageContainer.vue';
-import { CommunitiesViewChannelDeps } from '../channel/RouteCommunitiesViewChannel.vue';
+import { ActivityFeedService } from '~app/components/activity/feed/feed-service';
+import { ActivityFeedView } from '~app/components/activity/feed/view';
+import AppCommunitySidebar from '~app/components/community/sidebar/AppCommunitySidebar.vue';
+import { useGridStore } from '~app/components/grid/grid-store';
+import { useAppStore } from '~app/store/index';
+import AppCommunitiesViewFeed from '~app/views/communities/view/_feed/AppCommunitiesViewFeed.vue';
+import { doFeedChannelPayload, resolveFeedChannelPayload } from '~app/views/communities/view/_feed/feed-helpers';
+import AppCommunityPageContainer from '~app/views/communities/view/_page-container/AppCommunityPageContainer.vue';
+import { CommunitiesViewChannelDeps } from '~app/views/communities/view/channel/RouteCommunitiesViewChannel.vue';
 import {
 	acceptCollaboration,
 	declineCollaboration,
 	setCommunityMeta,
 	useCommunityRouteStore,
-} from '../view.store';
+} from '~app/views/communities/view/view.store';
+import AppButton from '~common/button/AppButton.vue';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import { showSuccessGrowl } from '~common/growls/growls.service';
+import {
+	createAppRoute,
+	defineAppRouteOptions,
+} from '~common/route/route-component';
+import { useCommonStore } from '~common/store/common-store';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { $gettext } from '~common/translate/translate.service';
 
 export default {
 	...defineAppRouteOptions({

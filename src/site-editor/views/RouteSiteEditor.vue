@@ -1,10 +1,10 @@
 <script lang="ts">
 import { useRoute } from 'vue-router';
 
-import { Api } from '../../_common/api/api.service';
-import { defineAppRouteOptions } from '../../_common/route/route-component';
-import { createAppRoute } from '../../_common/route/route-component';
-import { useSiteEditorStore } from '../store/index';
+import { Api } from '~common/api/api.service';
+import { defineAppRouteOptions } from '~common/route/route-component';
+import { createAppRoute } from '~common/route/route-component';
+import { useSiteEditorStore } from '~site-editor/store/index';
 
 export default {
 	...defineAppRouteOptions({

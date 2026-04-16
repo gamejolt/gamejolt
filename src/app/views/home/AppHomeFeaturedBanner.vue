@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import AppImgResponsive from '../../../_common/img/AppImgResponsive.vue';
-import { styleBorderRadiusBase } from '../../../_styles/mixins';
-import { FeaturedItemModel } from '../../components/featured-item/featured-item.model';
+import { FeaturedItemModel } from '~app/components/featured-item/featured-item.model';
+import AppImgResponsive from '~common/img/AppImgResponsive.vue';
+import { styleBorderRadiusBase } from '~styles/mixins';
 
 type Props = {
 	featuredItem: FeaturedItemModel;

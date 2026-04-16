@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import { Geo } from '../../../../_common/geo/geo.service';
-import { UserAddressModel } from '../../../../_common/user/address/address.model';
+import { Geo } from '~common/geo/geo.service';
+import { UserAddressModel } from '~common/user/address/address.model';
 
 type Props = {
 	address: UserAddressModel;

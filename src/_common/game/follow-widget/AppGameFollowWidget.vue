@@ -1,19 +1,19 @@
 <script lang="ts" setup>
 import { computed, ref, toRef } from 'vue';
 
-import { GameFollowLocation, trackGameFollow } from '../../analytics/analytics.service';
-import { vAppAuthRequired } from '../../auth/auth-required-directive';
-import AppButton from '../../button/AppButton.vue';
-import { formatNumber } from '../../filters/number';
-import { showErrorGrowl } from '../../growls/growls.service';
-import { showModalConfirm } from '../../modal/confirm/confirm-service';
-import AppPopper from '../../popper/AppPopper.vue';
-import { useCommonStore } from '../../store/common-store';
-import { vAppTooltip } from '../../tooltip/tooltip-directive';
-import { $gettext } from '../../translate/translate.service';
-import AppUserFollowButton from '../../user/follow/AppUserFollowButton.vue';
-import { UserFollowSuggestion } from '../../user/follow/suggestion.service';
-import { followGame, GameModel, unfollowGame } from '../game.model';
+import { GameFollowLocation, trackGameFollow } from '~common/analytics/analytics.service';
+import { vAppAuthRequired } from '~common/auth/auth-required-directive';
+import AppButton from '~common/button/AppButton.vue';
+import { formatNumber } from '~common/filters/number';
+import { followGame, GameModel, unfollowGame } from '~common/game/game.model';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import { showModalConfirm } from '~common/modal/confirm/confirm-service';
+import AppPopper from '~common/popper/AppPopper.vue';
+import { useCommonStore } from '~common/store/common-store';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { $gettext } from '~common/translate/translate.service';
+import AppUserFollowButton from '~common/user/follow/AppUserFollowButton.vue';
+import { UserFollowSuggestion } from '~common/user/follow/suggestion.service';
 
 type Props = {
 	game: GameModel;

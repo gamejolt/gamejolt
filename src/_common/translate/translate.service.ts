@@ -1,9 +1,9 @@
 import { App, computed, ref } from 'vue';
 
-import { arrayIndexBy } from '../../utils/array';
-import { isDynamicGoogleBot } from '../device/device.service';
-import AppTranslate from './AppTranslate.vue';
-import { TranslateDirective } from './translate-directive';
+import { isDynamicGoogleBot } from '~common/device/device.service';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { TranslateDirective } from '~common/translate/translate-directive';
+import { arrayIndexBy } from '~utils/array';
 
 type LazyLanguageImport = () => Promise<{
 	[key: string]: any;

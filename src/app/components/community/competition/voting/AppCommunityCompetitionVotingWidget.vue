@@ -2,25 +2,25 @@
 import { computed, ref, toRef } from 'vue';
 import { useRoute } from 'vue-router';
 
-import { vAppAuthRequired } from '../../../../../_common/auth/auth-required-directive';
+import FormCommunityCompetitionVotingCast from '~app/components/forms/community/competition/voting/cast/FormCommunityCompetitionVotingCast.vue';
+import { vAppAuthRequired } from '~common/auth/auth-required-directive';
 import {
 	CommunityCompetitionModel,
 	CompetitionPeriodVoting,
-} from '../../../../../_common/community/competition/competition.model';
-import { CommunityCompetitionEntryModel } from '../../../../../_common/community/competition/entry/entry.model';
-import { CommunityCompetitionEntryVoteModel } from '../../../../../_common/community/competition/entry/vote/vote.model';
-import { CommunityCompetitionVotingCategoryModel } from '../../../../../_common/community/competition/voting-category/voting-category.model';
-import { Environment } from '../../../../../_common/environment/environment.service';
-import { formatNumber } from '../../../../../_common/filters/number';
-import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import { useCommonStore } from '../../../../../_common/store/common-store';
-import AppTimeAgo from '../../../../../_common/time/AppTimeAgo.vue';
-import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
-import { numberSort } from '../../../../../utils/array';
-import FormCommunityCompetitionVotingCast from '../../../forms/community/competition/voting/cast/FormCommunityCompetitionVotingCast.vue';
+} from '~common/community/competition/competition.model';
+import { CommunityCompetitionEntryModel } from '~common/community/competition/entry/entry.model';
+import { CommunityCompetitionEntryVoteModel } from '~common/community/competition/entry/vote/vote.model';
+import { CommunityCompetitionVotingCategoryModel } from '~common/community/competition/voting-category/voting-category.model';
+import { Environment } from '~common/environment/environment.service';
+import { formatNumber } from '~common/filters/number';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { useCommonStore } from '~common/store/common-store';
+import AppTimeAgo from '~common/time/AppTimeAgo.vue';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { TranslateDirective as vTranslate } from '~common/translate/translate-directive';
+import { numberSort } from '~utils/array';
 
 type Props = {
 	competition: CommunityCompetitionModel;

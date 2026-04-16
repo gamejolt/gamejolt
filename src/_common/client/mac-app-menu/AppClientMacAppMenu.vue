@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { onMounted } from 'vue';
 
-import { Client } from '../client.service';
+import { Client } from '~common/client/client.service';
 
 onMounted(() => {
 	const win = nw.Window.get();

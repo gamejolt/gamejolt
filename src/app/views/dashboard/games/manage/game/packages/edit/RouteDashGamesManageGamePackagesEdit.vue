@@ -2,45 +2,45 @@
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { Api } from '../../../../../../../../_common/api/api.service';
-import AppButton from '../../../../../../../../_common/button/AppButton.vue';
-import AppCard from '../../../../../../../../_common/card/AppCard.vue';
-import { formatNumber } from '../../../../../../../../_common/filters/number';
-import AppGamePackageCard from '../../../../../../../../_common/game/package/card/AppGamePackageCard.vue';
+import AppDashGameWizardControls from '~app/components/forms/game/wizard-controls/AppDashGameWizardControls.vue';
+import { showGamePackageEditModal } from '~app/components/game/package/edit-modal/edit-modal.service';
+import AppGamePerms from '~app/components/game/perms/AppGamePerms.vue';
+import { useGameDashRouteController } from '~app/views/dashboard/games/manage/manage.store';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import AppCard from '~common/card/AppCard.vue';
+import { formatNumber } from '~common/filters/number';
+import AppGamePackageCard from '~common/game/package/card/AppGamePackageCard.vue';
 import {
 	GamePackageModel,
 	GamePackageVisibility,
-} from '../../../../../../../../_common/game/package/package.model';
-import { GamePackagePayloadModel } from '../../../../../../../../_common/game/package/package-payload.model';
+} from '~common/game/package/package.model';
+import { GamePackagePayloadModel } from '~common/game/package/package-payload.model';
 import {
 	$removeGameRelease,
 	GameReleaseModel,
 	GameReleaseStatus,
-} from '../../../../../../../../_common/game/release/release.model';
+} from '~common/game/release/release.model';
 import {
 	showErrorGrowl,
 	showSuccessGrowl,
-} from '../../../../../../../../_common/growls/growls.service';
-import AppJolticon from '../../../../../../../../_common/jolticon/AppJolticon.vue';
-import AppLinkHelp from '../../../../../../../../_common/link/AppLinkHelp.vue';
-import AppLoading from '../../../../../../../../_common/loading/AppLoading.vue';
-import { showModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
-import AppNavTabList from '../../../../../../../../_common/nav/tab-list/AppNavTabList.vue';
-import AppProgressPoller from '../../../../../../../../_common/progress/poller/AppProgressPoller.vue';
+} from '~common/growls/growls.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLinkHelp from '~common/link/AppLinkHelp.vue';
+import AppLoading from '~common/loading/AppLoading.vue';
+import { showModalConfirm } from '~common/modal/confirm/confirm-service';
+import AppNavTabList from '~common/nav/tab-list/AppNavTabList.vue';
+import AppProgressPoller from '~common/progress/poller/AppProgressPoller.vue';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
-} from '../../../../../../../../_common/route/route-component';
-import { SellableModel } from '../../../../../../../../_common/sellable/sellable.model';
-import AppTimeAgo from '../../../../../../../../_common/time/AppTimeAgo.vue';
-import { vAppTooltip } from '../../../../../../../../_common/tooltip/tooltip-directive';
-import AppTranslate from '../../../../../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../../../../../_common/translate/translate.service';
-import { TranslateDirective as vTranslate } from '../../../../../../../../_common/translate/translate-directive';
-import AppDashGameWizardControls from '../../../../../../../components/forms/game/wizard-controls/AppDashGameWizardControls.vue';
-import { showGamePackageEditModal } from '../../../../../../../components/game/package/edit-modal/edit-modal.service';
-import AppGamePerms from '../../../../../../../components/game/perms/AppGamePerms.vue';
-import { useGameDashRouteController } from '../../../manage.store';
+} from '~common/route/route-component';
+import { SellableModel } from '~common/sellable/sellable.model';
+import AppTimeAgo from '~common/time/AppTimeAgo.vue';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { TranslateDirective as vTranslate } from '~common/translate/translate-directive';
 
 export default {
 	name: 'RouteDashGamesManageGamePackagesEdit',

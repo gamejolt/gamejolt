@@ -2,14 +2,14 @@
 import { computed, onMounted, onUnmounted, ref, useTemplateRef } from 'vue';
 import { isNavigationFailure, useRouter } from 'vue-router';
 
-import { Backdrop, BackdropController } from '../backdrop/backdrop.service';
-import { EscapeStack, EscapeStackCallback } from '../escape-stack/escape-stack.service';
-import { Screen } from '../screen/screen-service';
-import AppScrollAffix from '../scroll/AppScrollAffix.vue';
-import AppScrollScroller, { createScroller } from '../scroll/AppScrollScroller.vue';
-import AppTheme from '../theme/AppTheme.vue';
-import { ThemeModel } from '../theme/theme.model';
-import { ModalDismissReason, Modals, useModal } from './modal.service';
+import { Backdrop, BackdropController } from '~common/backdrop/backdrop.service';
+import { EscapeStack, EscapeStackCallback } from '~common/escape-stack/escape-stack.service';
+import { ModalDismissReason, Modals, useModal } from '~common/modal/modal.service';
+import { Screen } from '~common/screen/screen-service';
+import AppScrollAffix from '~common/scroll/AppScrollAffix.vue';
+import AppScrollScroller, { createScroller } from '~common/scroll/AppScrollScroller.vue';
+import AppTheme from '~common/theme/AppTheme.vue';
+import { ThemeModel } from '~common/theme/theme.model';
 
 export interface AppModalInterface {
 	scrollTo: (offsetY: number) => void;

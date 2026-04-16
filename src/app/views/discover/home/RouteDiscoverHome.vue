@@ -2,22 +2,22 @@
 import { computed, ref, shallowRef } from 'vue';
 import { useRoute } from 'vue-router';
 
-import { Api } from '../../../../_common/api/api.service';
-import { CommunityModel } from '../../../../_common/community/community.model';
-import { Environment } from '../../../../_common/environment/environment.service';
-import { FiresidePostModel } from '../../../../_common/fireside/post/post-model';
-import { HistoryCache } from '../../../../_common/history/cache/cache.service';
-import AppLoading from '../../../../_common/loading/AppLoading.vue';
-import { Meta } from '../../../../_common/meta/meta-service';
-import { RealmModel } from '../../../../_common/realm/realm-model';
-import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
-import { useCommonStore } from '../../../../_common/store/common-store';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { arrayShuffle } from '../../../../utils/array';
-import { FeaturedItemModel } from '../../../components/featured-item/featured-item.model';
-import socialImage from '../../../img/social/social-share-header.png';
-import AppHomeDefault from './AppHomeDefault.vue';
-import AppHomeSlider from './AppHomeSlider.vue';
+import { FeaturedItemModel } from '~app/components/featured-item/featured-item.model';
+import socialImage from '~app/img/social/social-share-header.png';
+import AppHomeDefault from '~app/views/discover/home/AppHomeDefault.vue';
+import AppHomeSlider from '~app/views/discover/home/AppHomeSlider.vue';
+import { Api } from '~common/api/api.service';
+import { CommunityModel } from '~common/community/community.model';
+import { Environment } from '~common/environment/environment.service';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import { HistoryCache } from '~common/history/cache/cache.service';
+import AppLoading from '~common/loading/AppLoading.vue';
+import { Meta } from '~common/meta/meta-service';
+import { RealmModel } from '~common/realm/realm-model';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { useCommonStore } from '~common/store/common-store';
+import { $gettext } from '~common/translate/translate.service';
+import { arrayShuffle } from '~utils/array';
 
 const CachedCreatorsKey = 'HomeCreators';
 const CachedRealmsKey = 'HomeRealms';

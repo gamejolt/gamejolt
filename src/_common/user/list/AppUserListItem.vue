@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { RouterLink } from 'vue-router';
 
-import { useCommonStore } from '../../store/common-store';
-import AppUserCardHover from '../card/AppUserCardHover.vue';
-import AppUserFollowButton from '../follow/AppUserFollowButton.vue';
-import { UserModel } from '../user.model';
-import AppUserAvatarBubble from '../user-avatar/AppUserAvatarBubble.vue';
+import { useCommonStore } from '~common/store/common-store';
+import AppUserCardHover from '~common/user/card/AppUserCardHover.vue';
+import AppUserFollowButton from '~common/user/follow/AppUserFollowButton.vue';
+import { UserModel } from '~common/user/user.model';
+import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
 
 type Props = {
 	user: UserModel;

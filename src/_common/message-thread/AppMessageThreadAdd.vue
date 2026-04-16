@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { useCommonStore } from '../store/common-store';
-import AppTimelineListItem from '../timeline-list/item/AppTimelineListItem.vue';
-import AppUserAvatarBubble from '../user/user-avatar/AppUserAvatarBubble.vue';
+import { useCommonStore } from '~common/store/common-store';
+import AppTimelineListItem from '~common/timeline-list/item/AppTimelineListItem.vue';
+import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
 
 type Props = {
 	hideMessageSplit?: boolean;

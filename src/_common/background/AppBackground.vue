@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import { computed, CSSProperties, ref, watch } from 'vue';
 
-import { styleWhen } from '../../_styles/mixins';
-import { ImgHelper } from '../img/helper/helper-service';
-import AppMediaItemBackdrop from '../media-item/backdrop/AppMediaItemBackdrop.vue';
-import AppBackgroundFade from './AppBackgroundFade.vue';
-import AppBackgroundImg from './AppBackgroundImg.vue';
-import { BackgroundModel } from './background.model';
+import AppBackgroundFade from '~common/background/AppBackgroundFade.vue';
+import AppBackgroundImg from '~common/background/AppBackgroundImg.vue';
+import { BackgroundModel } from '~common/background/background.model';
+import { ImgHelper } from '~common/img/helper/helper-service';
+import AppMediaItemBackdrop from '~common/media-item/backdrop/AppMediaItemBackdrop.vue';
+import { styleWhen } from '~styles/mixins';
 
 type Props = {
 	background?: BackgroundModel;

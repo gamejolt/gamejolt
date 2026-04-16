@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 import { computed, Ref, ref } from 'vue';
 
-import AppButton from '../../../../_common/button/AppButton.vue';
-import AppModal from '../../../../_common/modal/AppModal.vue';
-import { useModal } from '../../../../_common/modal/modal.service';
-import { ModelData, UnknownModelData } from '../../../../_common/model/model.service';
-import { storeModel } from '../../../../_common/model/model-store.service';
-import { StickerPackModel } from '../../../../_common/sticker/pack/pack.model';
-import { StickerModel } from '../../../../_common/sticker/sticker.model';
-import FormSticker from './FormSticker.vue';
+import FormSticker from '~app/components/forms/sticker/FormSticker.vue';
+import AppButton from '~common/button/AppButton.vue';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import { ModelData, UnknownModelData } from '~common/model/model.service';
+import { storeModel } from '~common/model/model-store.service';
+import { StickerPackModel } from '~common/sticker/pack/pack.model';
+import { StickerModel } from '~common/sticker/sticker.model';
 
 type Props = {
 	sticker?: StickerModel;

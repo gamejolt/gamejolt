@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { Navigate } from '../navigate/navigate.service';
+import { Navigate } from '~common/navigate/navigate.service';
 
 type Props = {
 	email: string;

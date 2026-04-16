@@ -2,10 +2,10 @@
 import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
 
-import { formatFuzzynumberOverThreshold } from '../../../../../_common/filters/fuzzynumber';
-import { formatNumber } from '../../../../../_common/filters/number';
-import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-import { ProfileStat } from './AppProfileStats.vue';
+import { ProfileStat } from '~app/views/profile/overview/stats/AppProfileStats.vue';
+import { formatFuzzynumberOverThreshold } from '~common/filters/fuzzynumber';
+import { formatNumber } from '~common/filters/number';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 
 type Props = {
 	item: ProfileStat;

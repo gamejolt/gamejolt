@@ -1,6 +1,6 @@
-import { HidePrivateKeys, Primitives } from '../../utils/utils';
-import { Api, ApiProgressEvent, RequestOptions } from '../api/api.service';
-import { removeModel } from './model-store.service';
+import { Api, ApiProgressEvent, RequestOptions } from '~common/api/api.service';
+import { removeModel } from '~common/model/model-store.service';
+import { HidePrivateKeys, Primitives } from '~utils/utils';
 
 /**
  * Helper type that looks like our model classes.

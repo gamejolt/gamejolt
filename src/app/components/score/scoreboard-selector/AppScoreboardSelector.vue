@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { GameScoreTableModel } from '../../../../_common/game/score-table/score-table.model';
-import AppListGroupSelector from '../../../../_common/list-group/selector/AppListGroupSelector.vue';
+import { GameScoreTableModel } from '~common/game/score-table/score-table.model';
+import AppListGroupSelector from '~common/list-group/selector/AppListGroupSelector.vue';
 
 type Props = {
 	currentTable: GameScoreTableModel;

@@ -2,22 +2,22 @@
 import { computed, Ref, ref, toRef } from 'vue';
 import { RouteLocationNormalized, RouterLink, useRoute, useRouter } from 'vue-router';
 
-import { Api } from '../../../../../../_common/api/api.service';
-import { EventItemModel } from '../../../../../../_common/event-item/event-item.model';
-import { FiresidePostModel } from '../../../../../../_common/fireside/post/post-model';
-import AppNavTabList from '../../../../../../_common/nav/tab-list/AppNavTabList.vue';
+import AppActivityFeed from '~app/components/activity/feed/AppActivityFeed.vue';
+import AppActivityFeedPlaceholder from '~app/components/activity/feed/AppActivityFeedPlaceholder.vue';
+import { ActivityFeedService } from '~app/components/activity/feed/feed-service';
+import { ActivityFeedView } from '~app/components/activity/feed/view';
+import AppGamePerms from '~app/components/game/perms/AppGamePerms.vue';
+import AppPostAddButton from '~app/components/post/add-button/AppPostAddButton.vue';
+import { useGameDashRouteController } from '~app/views/dashboard/games/manage/manage.store';
+import { Api } from '~common/api/api.service';
+import { EventItemModel } from '~common/event-item/event-item.model';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import AppNavTabList from '~common/nav/tab-list/AppNavTabList.vue';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
-} from '../../../../../../_common/route/route-component';
-import { $gettext } from '../../../../../../_common/translate/translate.service';
-import AppActivityFeed from '../../../../../components/activity/feed/AppActivityFeed.vue';
-import AppActivityFeedPlaceholder from '../../../../../components/activity/feed/AppActivityFeedPlaceholder.vue';
-import { ActivityFeedService } from '../../../../../components/activity/feed/feed-service';
-import { ActivityFeedView } from '../../../../../components/activity/feed/view';
-import AppGamePerms from '../../../../../components/game/perms/AppGamePerms.vue';
-import AppPostAddButton from '../../../../../components/post/add-button/AppPostAddButton.vue';
-import { useGameDashRouteController } from '../manage.store';
+} from '~common/route/route-component';
+import { $gettext } from '~common/translate/translate.service';
 
 function getFetchUrl(route: RouteLocationNormalized) {
 	const tab = route.query.tab || 'active';

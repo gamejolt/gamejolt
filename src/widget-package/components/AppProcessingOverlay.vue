@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import AppLoading from '../../_common/loading/AppLoading.vue';
-import AppWidgetModal from './AppWidgetModal.vue';
+import AppLoading from '~common/loading/AppLoading.vue';
+import AppWidgetModal from '~widget-package/components/AppWidgetModal.vue';
 </script>
 
 <template>

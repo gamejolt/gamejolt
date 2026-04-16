@@ -2,17 +2,17 @@
 import { computed, defineAsyncComponent, markRaw, onMounted, onUnmounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { Meta } from '../../meta/meta-service';
-import AppSpacer from '../../spacer/AppSpacer.vue';
-import { useCommonStore } from '../../store/common-store';
-import errorImage from './ararat.png';
+import errorImage from '~common/error/page/ararat.png';
+import { Meta } from '~common/meta/meta-service';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import { useCommonStore } from '~common/store/common-store';
 
 const errorPages = markRaw({
-	400: defineAsyncComponent(() => import('./AppErrorPage400.vue')),
-	403: defineAsyncComponent(() => import('./AppErrorPage403.vue')),
-	404: defineAsyncComponent(() => import('./AppErrorPage404.vue')),
-	500: defineAsyncComponent(() => import('./AppErrorPage500.vue')),
-	offline: defineAsyncComponent(() => import('./AppErrorPageOffline.vue')),
+	400: defineAsyncComponent(() => import('~common/error/page/AppErrorPage400.vue')),
+	403: defineAsyncComponent(() => import('~common/error/page/AppErrorPage403.vue')),
+	404: defineAsyncComponent(() => import('~common/error/page/AppErrorPage404.vue')),
+	500: defineAsyncComponent(() => import('~common/error/page/AppErrorPage500.vue')),
+	offline: defineAsyncComponent(() => import('~common/error/page/AppErrorPageOffline.vue')),
 });
 
 const { error, clearError } = useCommonStore();

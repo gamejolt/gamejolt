@@ -2,12 +2,12 @@
 import { DeepReadonly } from 'vue';
 import { RouterLink } from 'vue-router';
 
-import { formatNumber } from '../../../../../_common/filters/number';
-import AppGraph from '../../../../../_common/graph/AppGraph.vue';
-import { Screen } from '../../../../../_common/screen/screen-service';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import { ReportComponent } from '../../../../components/site-analytics/site-analytics-service';
-import AppAnalyticsReportUserModel from './AppAnalyticsReportUserModel.vue';
+import { ReportComponent } from '~app/components/site-analytics/site-analytics-service';
+import AppAnalyticsReportUserModel from '~app/views/dashboard/analytics/_report/AppAnalyticsReportUserModel.vue';
+import { formatNumber } from '~common/filters/number';
+import AppGraph from '~common/graph/AppGraph.vue';
+import { Screen } from '~common/screen/screen-service';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 type Props = {
 	reportData: DeepReadonly<ReportComponent>;
@@ -103,4 +103,4 @@ function isScalarLabel(val: any) {
 	</div>
 </template>
 
-<style lang="stylus" src="./report-percentage.styl" scoped></style>
+<style lang="stylus" src="~app/views/dashboard/analytics/_report/report-percentage.styl" scoped></style>

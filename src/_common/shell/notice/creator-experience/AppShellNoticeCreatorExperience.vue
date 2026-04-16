@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import { computed, CSSProperties, ref } from 'vue';
 
-import { kFontSizeTiny } from '../../../../_styles/variables';
-import { sleep } from '../../../../utils/utils';
-import AppCircularProgress from '../../../progress/AppCircularProgress.vue';
-import { $gettext } from '../../../translate/translate.service';
-import AppShellNoticeBase from '../_base/AppShellNoticeBase.vue';
-import { CreatorExperienceNotice } from '../notice.service';
+import AppCircularProgress from '~common/progress/AppCircularProgress.vue';
+import AppShellNoticeBase from '~common/shell/notice/_base/AppShellNoticeBase.vue';
+import { CreatorExperienceNotice } from '~common/shell/notice/notice.service';
+import { $gettext } from '~common/translate/translate.service';
+import { kFontSizeTiny } from '~styles/variables';
+import { sleep } from '~utils/utils';
 
 type Props = {
 	noticeId: number;

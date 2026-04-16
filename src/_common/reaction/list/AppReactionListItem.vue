@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { computed, HTMLAttributes } from 'vue';
 
-import { styleBorderRadiusBase } from '../../../_styles/mixins';
-import { kBorderWidthLg, kFontSizeTiny } from '../../../_styles/variables';
-import { kThemeBacklight, kThemeBgActual, kThemeBgOffset } from '../../theme/variables';
-import { ReactionCount } from '../reaction-count';
+import { ReactionCount } from '~common/reaction/reaction-count';
+import { kThemeBacklight, kThemeBgActual, kThemeBgOffset } from '~common/theme/variables';
+import { styleBorderRadiusBase } from '~styles/mixins';
+import { kBorderWidthLg, kFontSizeTiny } from '~styles/variables';
 
 type Props = {
 	reaction: ReactionCount;

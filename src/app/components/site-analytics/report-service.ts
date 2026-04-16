@@ -1,11 +1,5 @@
 import { readonly, Ref, ref } from 'vue';
 
-import { Api } from '../../../_common/api/api.service';
-import { FiresidePostModel } from '../../../_common/fireside/post/post-model';
-import { Geo } from '../../../_common/geo/geo.service';
-import { $gettext } from '../../../_common/translate/translate.service';
-import { UserModel } from '../../../_common/user/user.model';
-import { arrayUnique } from '../../../utils/array';
 import {
 	Analyzer,
 	Collection,
@@ -15,7 +9,13 @@ import {
 	Request,
 	ResourceFields,
 	ResourceName,
-} from './site-analytics-service';
+} from '~app/components/site-analytics/site-analytics-service';
+import { Api } from '~common/api/api.service';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import { Geo } from '~common/geo/geo.service';
+import { $gettext } from '~common/translate/translate.service';
+import { UserModel } from '~common/user/user.model';
+import { arrayUnique } from '~utils/array';
 
 export type SiteAnalyticsReport = ReturnType<typeof createSiteAnalyticsReport>;
 

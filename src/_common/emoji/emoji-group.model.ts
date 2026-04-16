@@ -1,6 +1,6 @@
-import { MediaItemModel } from '../media-item/media-item-model';
-import { ModelStoreModel, storeModelList } from '../model/model-store.service';
-import { EmojiModel } from './emoji.model';
+import { EmojiModel } from '~common/emoji/emoji.model';
+import { MediaItemModel } from '~common/media-item/media-item-model';
+import { ModelStoreModel, storeModelList } from '~common/model/model-store.service';
 
 export const enum EmojiGroupType {
 	LocalRecent = 'local-recent',

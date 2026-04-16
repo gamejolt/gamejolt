@@ -1,22 +1,22 @@
 <script lang="ts">
 import { ref } from 'vue';
 
-import { Api } from '../../../../../../_common/api/api.service';
-import AppButton from '../../../../../../_common/button/AppButton.vue';
+import AppCommunityPageContainer from '~app/views/communities/view/_page-container/AppCommunityPageContainer.vue';
+import { useCommunityRouteStore } from '~app/views/communities/view/view.store';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
 import {
 	CommunityActivityItemModel,
 	CommunityActivityItemType,
-} from '../../../../../../_common/community/activity-item/activity-item.model';
-import AppCommunityActivityItem from '../../../../../../_common/community/activity-item/AppCommunityActivityItem.vue';
-import { formatDate } from '../../../../../../_common/filters/date';
-import AppLoading from '../../../../../../_common/loading/AppLoading.vue';
+} from '~common/community/activity-item/activity-item.model';
+import AppCommunityActivityItem from '~common/community/activity-item/AppCommunityActivityItem.vue';
+import { formatDate } from '~common/filters/date';
+import AppLoading from '~common/loading/AppLoading.vue';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
-} from '../../../../../../_common/route/route-component';
-import { $gettext } from '../../../../../../_common/translate/translate.service';
-import AppCommunityPageContainer from '../../_page-container/AppCommunityPageContainer.vue';
-import { useCommunityRouteStore } from '../../view.store';
+} from '~common/route/route-component';
+import { $gettext } from '~common/translate/translate.service';
 
 export default {
 	...defineAppRouteOptions({

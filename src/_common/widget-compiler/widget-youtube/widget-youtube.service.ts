@@ -1,8 +1,8 @@
 import { h } from 'vue';
 
-import AppVideoEmbed from '../../video/embed/AppVideoEmbed.vue';
-import { WidgetCompilerWidget } from '../widget';
-import { WidgetCompilerContext } from '../widget-compiler.service';
+import AppVideoEmbed from '~common/video/embed/AppVideoEmbed.vue';
+import { WidgetCompilerWidget } from '~common/widget-compiler/widget';
+import { WidgetCompilerContext } from '~common/widget-compiler/widget-compiler.service';
 
 export class WidgetCompilerWidgetYoutube extends WidgetCompilerWidget {
 	readonly name = 'youtube';

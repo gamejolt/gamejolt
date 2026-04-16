@@ -2,9 +2,9 @@
 import { computed, onMounted, ref, watch } from 'vue';
 import { type Router, useRouter } from 'vue-router';
 
-import { styleChangeBg } from '../../_styles/mixins';
-import { kLayerLoadingBar, kStrongEaseOut } from '../../_styles/variables';
-import { Api } from '../api/api.service';
+import { Api } from '~common/api/api.service';
+import { styleChangeBg } from '~styles/mixins';
+import { kLayerLoadingBar, kStrongEaseOut } from '~styles/variables';
 
 /**
  * How long to wait after a request has started before showing the loading bar.

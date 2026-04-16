@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { imagePartnerBadge } from '../../../app/img/images';
-import { vAppTooltip } from '../../tooltip/tooltip-directive';
-import { $gettext } from '../../translate/translate.service';
+import { imagePartnerBadge } from '~app/img/images';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { $gettext } from '~common/translate/translate.service';
 
 type Props = {
 	size?: 'md' | 'lg' | 'sm' | 'tiny';

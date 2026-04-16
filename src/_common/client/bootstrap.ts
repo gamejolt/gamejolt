@@ -1,7 +1,7 @@
-import { CommonStore } from '../store/common-store';
-import { Client } from './client.service';
-import { ClientUpdater } from './client-updater.service';
-import { ClientUser } from './user/user.service';
+import { Client } from '~common/client/client.service';
+import { ClientUpdater } from '~common/client/client-updater.service';
+import { ClientUser } from '~common/client/user/user.service';
+import { CommonStore } from '~common/store/common-store';
 
 export function bootstrapCommonClient({ commonStore }: { commonStore: CommonStore }) {
 	console.log('Bootstrapping common client');

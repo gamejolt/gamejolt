@@ -1,14 +1,14 @@
 <script lang="ts">
 import { computed, CSSProperties, ref } from 'vue';
 
-import { kFontSizeBase } from '../../../../_styles/variables';
-import { Api } from '../../../api/api.service';
-import { Screen } from '../../../screen/screen-service';
-import AppScrollInview, { ScrollInviewConfig } from '../../../scroll/inview/AppScrollInview.vue';
-import { EmojiGroupData } from '../../../store/common-store';
-import { EmojiModel } from '../../emoji.model';
-import AppEmojiSelectorGroupThumbnail from './AppEmojiSelectorGroupThumbnail.vue';
-import AppEmojiSelectorGroupItemLazy from './item/AppEmojiSelectorGroupItemLazy.vue';
+import { Api } from '~common/api/api.service';
+import { EmojiModel } from '~common/emoji/emoji.model';
+import AppEmojiSelectorGroupThumbnail from '~common/emoji/selector-modal/_group/AppEmojiSelectorGroupThumbnail.vue';
+import AppEmojiSelectorGroupItemLazy from '~common/emoji/selector-modal/_group/item/AppEmojiSelectorGroupItemLazy.vue';
+import { Screen } from '~common/screen/screen-service';
+import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
+import { EmojiGroupData } from '~common/store/common-store';
+import { kFontSizeBase } from '~styles/variables';
 
 const GroupInviewConfig = new ScrollInviewConfig({ margin: `${Screen.height / 2}px` });
 const EmojiInviewConfig = new ScrollInviewConfig({ margin: `200px` });

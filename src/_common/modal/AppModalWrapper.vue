@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { provide } from 'vue';
 
-import { Modal, ModalKey } from './modal.service';
+import { Modal, ModalKey } from '~common/modal/modal.service';
 
 type Props = {
 	modal: Modal;

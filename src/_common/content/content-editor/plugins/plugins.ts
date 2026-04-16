@@ -3,13 +3,13 @@ import { history } from 'prosemirror-history';
 import { keymap } from 'prosemirror-keymap';
 import { Plugin } from 'prosemirror-state';
 
-import { ContentEditorController } from '../content-editor-controller';
-import { ContentEditorSchema } from '../schemas/content-editor-schema';
-import { createInputRules } from './input-rules';
-import { getContentEditorKeymap } from './keymap';
-import UpdateAutolinkPlugin from './update-autolinks-plugin';
-import { UpdateIncrementerPlugin } from './update-incrementer-plugin';
-import { UpdateIsEmptyPlugin } from './update-is-empty-plugin';
+import { ContentEditorController } from '~common/content/content-editor/content-editor-controller';
+import { createInputRules } from '~common/content/content-editor/plugins/input-rules';
+import { getContentEditorKeymap } from '~common/content/content-editor/plugins/keymap';
+import UpdateAutolinkPlugin from '~common/content/content-editor/plugins/update-autolinks-plugin';
+import { UpdateIncrementerPlugin } from '~common/content/content-editor/plugins/update-incrementer-plugin';
+import { UpdateIsEmptyPlugin } from '~common/content/content-editor/plugins/update-is-empty-plugin';
+import { ContentEditorSchema } from '~common/content/content-editor/schemas/content-editor-schema';
 
 type KeyedPlugin = {
 	key: string;

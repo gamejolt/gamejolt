@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { Ref, ref, watch } from 'vue';
 
-import { Api } from '../api/api.service';
-import AppLoading from '../loading/AppLoading.vue';
-import AppGraph from './AppGraph.vue';
-import { Graph } from './graph.service';
+import { Api } from '~common/api/api.service';
+import AppGraph from '~common/graph/AppGraph.vue';
+import { Graph } from '~common/graph/graph.service';
+import AppLoading from '~common/loading/AppLoading.vue';
 
 type Props = {
 	url: string;

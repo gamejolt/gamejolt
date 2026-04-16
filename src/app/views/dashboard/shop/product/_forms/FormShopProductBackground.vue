@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import { BackgroundModel } from '../../../../../../_common/background/background.model';
-import AppLinkHelp from '../../../../../../_common/link/AppLinkHelp.vue';
-import { ShopProductResource } from '../../../../../../_common/shop/product/product-model';
-import { $gettext } from '../../../../../../_common/translate/translate.service';
-import { ShopDashProductType, useShopDashStore } from '../../shop.store';
-import AppDashShopProductHeader from '../AppDashShopProductHeader.vue';
-import FormShopProductBase, { createShopProductBaseForm } from './FormShopProductBase.vue';
+import FormShopProductBase, { createShopProductBaseForm } from '~app/views/dashboard/shop/product/_forms/FormShopProductBase.vue';
+import AppDashShopProductHeader from '~app/views/dashboard/shop/product/AppDashShopProductHeader.vue';
+import { ShopDashProductType, useShopDashStore } from '~app/views/dashboard/shop/shop.store';
+import { BackgroundModel } from '~common/background/background.model';
+import AppLinkHelp from '~common/link/AppLinkHelp.vue';
+import { ShopProductResource } from '~common/shop/product/product-model';
+import { $gettext } from '~common/translate/translate.service';
 
 type Props = {
 	model?: BackgroundModel;

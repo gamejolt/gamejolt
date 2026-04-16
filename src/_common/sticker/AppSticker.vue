@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import { computed, HTMLAttributes } from 'vue';
 
-import { styleWhen } from '../../_styles/mixins';
-import AppAnimElectricity from '../animation/AppAnimElectricity.vue';
-import { ComponentProps } from '../component-helpers';
-import AppStickerImg from './AppStickerImg.vue';
-import { StickerPlacementModel } from './placement/placement.model';
-import { removeStickerFromTarget, StickerTargetController } from './target/target-controller';
+import AppAnimElectricity from '~common/animation/AppAnimElectricity.vue';
+import { ComponentProps } from '~common/component-helpers';
+import AppStickerImg from '~common/sticker/AppStickerImg.vue';
+import { StickerPlacementModel } from '~common/sticker/placement/placement.model';
+import { removeStickerFromTarget, StickerTargetController } from '~common/sticker/target/target-controller';
+import { styleWhen } from '~styles/mixins';
 
 type Props = {
 	sticker: StickerPlacementModel;

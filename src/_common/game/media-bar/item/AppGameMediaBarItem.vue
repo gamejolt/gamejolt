@@ -1,9 +1,9 @@
 <script lang="ts">
 import { ref } from 'vue';
 
-import AppImgResponsive from '../../../img/AppImgResponsive.vue';
-import AppJolticon from '../../../jolticon/AppJolticon.vue';
-import AppMediaItemBackdrop from '../../../media-item/backdrop/AppMediaItemBackdrop.vue';
+import AppImgResponsive from '~common/img/AppImgResponsive.vue';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppMediaItemBackdrop from '~common/media-item/backdrop/AppMediaItemBackdrop.vue';
 
 export const MediaBarItemMaxHeight = 150;
 </script>
@@ -62,4 +62,4 @@ if (item.media_type === 'image') {
 	</div>
 </template>
 
-<style lang="stylus" src="./item.styl" scoped></style>
+<style lang="stylus" src="~common/game/media-bar/item/item.styl" scoped></style>

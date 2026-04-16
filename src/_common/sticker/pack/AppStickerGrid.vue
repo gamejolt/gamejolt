@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import AppAspectRatio from '../../aspect-ratio/AppAspectRatio.vue';
-import AppSpacer from '../../spacer/AppSpacer.vue';
-import { vAppTooltip } from '../../tooltip/tooltip-directive';
-import AppStickerImg from '../AppStickerImg.vue';
-import AppStickerMastery from '../AppStickerMastery.vue';
-import { StickerModel } from '../sticker.model';
+import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import AppStickerImg from '~common/sticker/AppStickerImg.vue';
+import AppStickerMastery from '~common/sticker/AppStickerMastery.vue';
+import { StickerModel } from '~common/sticker/sticker.model';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 
 type Props = {
 	stickers: StickerModel[];

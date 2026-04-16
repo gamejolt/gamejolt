@@ -1,17 +1,17 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 
-import { useGridStore } from '../../../app/components/grid/grid-store';
-import { useAppStore } from '../../../app/store/index';
-import { CommunityJoinLocation } from '../../analytics/analytics.service';
-import { vAppAuthRequired } from '../../auth/auth-required-directive';
-import AppButton from '../../button/AppButton.vue';
-import { formatNumber } from '../../filters/number';
-import { showErrorGrowl } from '../../growls/growls.service';
-import { useCommonStore } from '../../store/common-store';
-import { vAppTooltip } from '../../tooltip/tooltip-directive';
-import { $gettext } from '../../translate/translate.service';
-import { CommunityModel } from '../community.model';
+import { useGridStore } from '~app/components/grid/grid-store';
+import { useAppStore } from '~app/store/index';
+import { CommunityJoinLocation } from '~common/analytics/analytics.service';
+import { vAppAuthRequired } from '~common/auth/auth-required-directive';
+import AppButton from '~common/button/AppButton.vue';
+import { CommunityModel } from '~common/community/community.model';
+import { formatNumber } from '~common/filters/number';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import { useCommonStore } from '~common/store/common-store';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { $gettext } from '~common/translate/translate.service';
 
 type Props = {
 	community: CommunityModel;

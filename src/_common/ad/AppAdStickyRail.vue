@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import { kLayerAds } from '../../_styles/variables';
-import { Screen } from '../screen/screen-service';
-import AppScrollAffix from '../scroll/AppScrollAffix.vue';
-import { useAdStore } from './ad-store';
-import AppAdWidget from './widget/AppAdWidget.vue';
+import { useAdStore } from '~common/ad/ad-store';
+import AppAdWidget from '~common/ad/widget/AppAdWidget.vue';
+import { Screen } from '~common/screen/screen-service';
+import AppScrollAffix from '~common/scroll/AppScrollAffix.vue';
+import { kLayerAds } from '~styles/variables';
 
 type Props = {
 	showLeft?: boolean;

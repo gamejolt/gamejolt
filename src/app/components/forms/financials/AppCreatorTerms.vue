@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 
-import AppButton from '../../../../_common/button/AppButton.vue';
-import { formatDate } from '../../../../_common/filters/date';
-import AppLinkExternal from '../../../../_common/link/AppLinkExternal.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { UserStripeManagedAccountModel } from '../../../../_common/user/stripe-managed-account/stripe-managed-account';
-import { html as termsTemplate } from '../../../../lib/terms/creator/global.md';
-import AppFinancialsCheckmark from './AppFinancialsCheckmark.vue';
-import AppFinancialsTosScroller from './AppFinancialsTosScroller.vue';
+import AppFinancialsCheckmark from '~app/components/forms/financials/AppFinancialsCheckmark.vue';
+import AppFinancialsTosScroller from '~app/components/forms/financials/AppFinancialsTosScroller.vue';
+import AppButton from '~common/button/AppButton.vue';
+import { formatDate } from '~common/filters/date';
+import AppLinkExternal from '~common/link/AppLinkExternal.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { UserStripeManagedAccountModel } from '~common/user/stripe-managed-account/stripe-managed-account';
+import { html as termsTemplate } from '~lib/terms/creator/global.md';
 
 type Props = {
 	account?: UserStripeManagedAccountModel;

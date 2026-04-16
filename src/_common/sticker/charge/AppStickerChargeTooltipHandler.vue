@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref, useTemplateRef, watch } from 'vue';
 
-import { Screen } from '../../screen/screen-service';
+import { Screen } from '~common/screen/screen-service';
 
 type StickerChargeTooltipTrigger = 'hover' | 'focus';
 

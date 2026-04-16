@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import AppAlertBox from '../alert/AppAlertBox.vue';
-import AppTranslate from '../translate/AppTranslate.vue';
-import { CommentableModel } from './comment-model';
+import AppAlertBox from '~common/alert/AppAlertBox.vue';
+import { CommentableModel } from '~common/comment/comment-model';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 type Props = {
 	model: CommentableModel;

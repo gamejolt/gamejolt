@@ -1,20 +1,20 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
 
-import AppAdTakeoverFloat from '../../../../_common/ad/AppAdTakeoverFloat.vue';
-import AppAuthJoin from '../../../../_common/auth/join/AppAuthJoin.vue';
-import { Environment } from '../../../../_common/environment/environment.service';
-import { FiresidePostModel } from '../../../../_common/fireside/post/post-model';
-import AppMobileAppButtons from '../../../../_common/mobile-app/AppMobileAppButtons.vue';
-import { Screen } from '../../../../_common/screen/screen-service';
-import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { styleWhen } from '../../../../_styles/mixins';
-import { arrayShuffle } from '../../../../utils/array';
-import { useFullscreenHeight } from '../../../../utils/fullscreen';
-import { imageGameJoltLogo } from '../../../img/images';
-import AppHomeFsPost from './_home-slider/AppHomeFsPost.vue';
-import AppHomeFsPostMeta from './_home-slider/AppHomeFsPostMeta.vue';
+import { imageGameJoltLogo } from '~app/img/images';
+import AppHomeFsPost from '~app/views/discover/home/_home-slider/AppHomeFsPost.vue';
+import AppHomeFsPostMeta from '~app/views/discover/home/_home-slider/AppHomeFsPostMeta.vue';
+import AppAdTakeoverFloat from '~common/ad/AppAdTakeoverFloat.vue';
+import AppAuthJoin from '~common/auth/join/AppAuthJoin.vue';
+import { Environment } from '~common/environment/environment.service';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import AppMobileAppButtons from '~common/mobile-app/AppMobileAppButtons.vue';
+import { Screen } from '~common/screen/screen-service';
+import AppThemeSvg from '~common/theme/svg/AppThemeSvg.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { styleWhen } from '~styles/mixins';
+import { arrayShuffle } from '~utils/array';
+import { useFullscreenHeight } from '~utils/fullscreen';
 
 type Props = {
 	posts: FiresidePostModel[];

@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import AppJolticon, { Jolticon } from '../jolticon/AppJolticon.vue';
-import AppTranslate from '../translate/AppTranslate.vue';
-import { useForm } from './AppForm.vue';
-import { useFormGroup } from './AppFormGroup.vue';
+import { useForm } from '~common/form-vue/AppForm.vue';
+import { useFormGroup } from '~common/form-vue/AppFormGroup.vue';
+import AppJolticon, { Jolticon } from '~common/jolticon/AppJolticon.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 type Props = {
 	hideLabel?: boolean;

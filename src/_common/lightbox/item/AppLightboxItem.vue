@@ -1,20 +1,20 @@
 <script lang="ts" setup>
 import { computed, nextTick, onMounted, ref, toRef, useTemplateRef, watch } from 'vue';
 
-import { isInstance } from '../../../utils/utils';
-import { GameScreenshotModel } from '../../game/screenshot/screenshot.model';
-import { GameSketchfabModel } from '../../game/sketchfab/sketchfab.model';
-import { GameVideoModel } from '../../game/video/video.model';
-import AppImgResponsive from '../../img/AppImgResponsive.vue';
-import AppMediaItemBackdrop from '../../media-item/backdrop/AppMediaItemBackdrop.vue';
-import { MediaItemModel } from '../../media-item/media-item-model';
-import { onScreenResize, Screen } from '../../screen/screen-service';
-import AppSketchfabEmbed from '../../sketchfab/embed/AppSketchfabEmbed.vue';
-import { useEventSubscription } from '../../system/event/event-topic';
-import AppVideo from '../../video/AppVideo.vue';
-import AppVideoEmbed from '../../video/embed/AppVideoEmbed.vue';
-import { getVideoPlayerFromSources } from '../../video/player/controller';
-import { LightboxConfig, LightboxMediaModel } from '../lightbox-helpers';
+import { GameScreenshotModel } from '~common/game/screenshot/screenshot.model';
+import { GameSketchfabModel } from '~common/game/sketchfab/sketchfab.model';
+import { GameVideoModel } from '~common/game/video/video.model';
+import AppImgResponsive from '~common/img/AppImgResponsive.vue';
+import { LightboxConfig, LightboxMediaModel } from '~common/lightbox/lightbox-helpers';
+import AppMediaItemBackdrop from '~common/media-item/backdrop/AppMediaItemBackdrop.vue';
+import { MediaItemModel } from '~common/media-item/media-item-model';
+import { onScreenResize, Screen } from '~common/screen/screen-service';
+import AppSketchfabEmbed from '~common/sketchfab/embed/AppSketchfabEmbed.vue';
+import { useEventSubscription } from '~common/system/event/event-topic';
+import AppVideo from '~common/video/AppVideo.vue';
+import AppVideoEmbed from '~common/video/embed/AppVideoEmbed.vue';
+import { getVideoPlayerFromSources } from '~common/video/player/controller';
+import { isInstance } from '~utils/utils';
 
 type Props = {
 	item: LightboxMediaModel;
@@ -194,4 +194,4 @@ async function calcActive() {
 	</div>
 </template>
 
-<style lang="stylus" src="./item.styl" scoped></style>
+<style lang="stylus" src="~common/lightbox/item/item.styl" scoped></style>

@@ -1,15 +1,15 @@
 <script lang="ts" setup>
 import { ref, toRef, watch } from 'vue';
 
-import AppForm, { createForm } from '../../../../_common/form-vue/AppForm.vue';
-import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
-import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
-import AppFormControlErrors from '../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormControlSelect from '../../../../_common/form-vue/controls/AppFormControlSelect.vue';
-import { Geo, GeoRegion } from '../../../../_common/geo/geo.service';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { $saveUserAddress, UserAddressModel } from '../../../../_common/user/address/address.model';
+import AppForm, { createForm } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlSelect from '~common/form-vue/controls/AppFormControlSelect.vue';
+import { Geo, GeoRegion } from '~common/geo/geo.service';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $saveUserAddress, UserAddressModel } from '~common/user/address/address.model';
 
 type Props = {
 	model?: UserAddressModel;

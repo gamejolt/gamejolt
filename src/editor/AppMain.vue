@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import { createContentEditorAppAdapter } from '../_common/content/content-editor/app-adapter';
-import AppContentEditor from '../_common/content/content-editor/AppContentEditor.vue';
-import AppTheme from '../_common/theme/AppTheme.vue';
-import { useThemeStore } from '../_common/theme/theme.store';
+import { createContentEditorAppAdapter } from '~common/content/content-editor/app-adapter';
+import AppContentEditor from '~common/content/content-editor/AppContentEditor.vue';
+import AppTheme from '~common/theme/AppTheme.vue';
+import { useThemeStore } from '~common/theme/theme.store';
 
 const themeStore = useThemeStore();
 

@@ -2,17 +2,17 @@
 import { computed, ref, toRef } from 'vue';
 import { RouterLink } from 'vue-router';
 
-import { formatCurrency } from '../../filters/currency';
-import { Screen } from '../../screen/screen-service';
-import AppScrollInview, { ScrollInviewConfig } from '../../scroll/inview/AppScrollInview.vue';
-import { SettingAnimatedThumbnails } from '../../settings/settings.service';
-import AppTranslate from '../../translate/AppTranslate.vue';
-import AppUserVerifiedTick from '../../user/AppUserVerifiedTick.vue';
-import AppUserCardHover from '../../user/card/AppUserCardHover.vue';
-import AppUserAvatarImg from '../../user/user-avatar/AppUserAvatarImg.vue';
-import AppGameCompatIcons from '../compat-icons/AppGameCompatIcons.vue';
-import { GameModel } from '../game.model';
-import AppGameThumbnailImg from './AppGameThumbnailImg.vue';
+import { formatCurrency } from '~common/filters/currency';
+import AppGameCompatIcons from '~common/game/compat-icons/AppGameCompatIcons.vue';
+import { GameModel } from '~common/game/game.model';
+import AppGameThumbnailImg from '~common/game/thumbnail/AppGameThumbnailImg.vue';
+import { Screen } from '~common/screen/screen-service';
+import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
+import { SettingAnimatedThumbnails } from '~common/settings/settings.service';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import AppUserVerifiedTick from '~common/user/AppUserVerifiedTick.vue';
+import AppUserCardHover from '~common/user/card/AppUserCardHover.vue';
+import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
 
 const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height}px` });
 </script>

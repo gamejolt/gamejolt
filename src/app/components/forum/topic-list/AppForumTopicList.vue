@@ -1,14 +1,14 @@
 <script lang="ts" setup>
-import { formatNumber } from '../../../../_common/filters/number';
-import { ForumTopicModel } from '../../../../_common/forum/topic/topic.model';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import { Screen } from '../../../../_common/screen/screen-service';
-import AppTimeAgo from '../../../../_common/time/AppTimeAgo.vue';
-import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import AppUserVerifiedTick from '../../../../_common/user/AppUserVerifiedTick.vue';
-import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
-import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
+import { formatNumber } from '~common/filters/number';
+import { ForumTopicModel } from '~common/forum/topic/topic.model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { Screen } from '~common/screen/screen-service';
+import AppTimeAgo from '~common/time/AppTimeAgo.vue';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import AppUserVerifiedTick from '~common/user/AppUserVerifiedTick.vue';
+import AppUserCardHover from '~common/user/card/AppUserCardHover.vue';
+import AppUserAvatar from '~common/user/user-avatar/AppUserAvatar.vue';
 
 type Props = {
 	topics: ForumTopicModel[];
@@ -155,4 +155,4 @@ function getPostPage(topic: ForumTopicModel) {
 	</div>
 </template>
 
-<style lang="stylus" src="./topic-list.styl" scoped></style>
+<style lang="stylus" src="~app/components/forum/topic-list/topic-list.styl" scoped></style>

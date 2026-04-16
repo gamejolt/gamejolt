@@ -2,23 +2,23 @@
 import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
 
-import { trackGotoCommunity } from '../../../../_common/analytics/analytics.service';
-import { CommunityModel } from '../../../../_common/community/community.model';
-import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
-import { Environment } from '../../../../_common/environment/environment.service';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import { Navigate } from '../../../../_common/navigate/navigate.service';
-import AppPopper from '../../../../_common/popper/AppPopper.vue';
-import { Popper } from '../../../../_common/popper/popper.service';
-import { useSidebarStore } from '../../../../_common/sidebar/sidebar.store';
-import { useCommonStore } from '../../../../_common/store/common-store';
-import { useThemeStore } from '../../../../_common/theme/theme.store';
-import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { useAppStore } from '../../../store';
-import AppCommunityPerms from '../../community/perms/AppCommunityPerms.vue';
-import { useGridStore } from '../../grid/grid-store';
-import AppShellCbarItem from './AppShellCbarItem.vue';
+import AppCommunityPerms from '~app/components/community/perms/AppCommunityPerms.vue';
+import { useGridStore } from '~app/components/grid/grid-store';
+import AppShellCbarItem from '~app/components/shell/cbar/AppShellCbarItem.vue';
+import { useAppStore } from '~app/store';
+import { trackGotoCommunity } from '~common/analytics/analytics.service';
+import { CommunityModel } from '~common/community/community.model';
+import AppCommunityThumbnailImg from '~common/community/thumbnail/AppCommunityThumbnailImg.vue';
+import { Environment } from '~common/environment/environment.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { Navigate } from '~common/navigate/navigate.service';
+import AppPopper from '~common/popper/AppPopper.vue';
+import { Popper } from '~common/popper/popper.service';
+import { useSidebarStore } from '~common/sidebar/sidebar.store';
+import { useCommonStore } from '~common/store/common-store';
+import { useThemeStore } from '~common/theme/theme.store';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 type Props = {
 	community: CommunityModel;

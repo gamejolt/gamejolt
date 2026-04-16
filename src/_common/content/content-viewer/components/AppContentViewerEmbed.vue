@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import AppContentEmbed from '../../components/embed/AppContentEmbed.vue';
-import { ContentObject } from '../../content-object';
+import AppContentEmbed from '~common/content/components/embed/AppContentEmbed.vue';
+import { ContentObject } from '~common/content/content-object';
 
 type Props = {
 	contentData: ContentObject;

@@ -1,54 +1,54 @@
 <script lang="ts" setup>
 // We want to make sure it doesn't actually have to import all these models to
 // display.
-import '../../../../../_common/comment/comment.styl';
+import '~common/comment/comment.styl';
 
 import { computed, ref } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
 
-import AppFadeCollapse from '../../../../../_common/AppFadeCollapse.vue';
-import { AvatarFrameModel } from '../../../../../_common/avatar/frame.model';
-import type { CommentModel } from '../../../../../_common/comment/comment-model';
-import type { CommunityModel } from '../../../../../_common/community/community.model';
-import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
+import { ActivityFeedItem } from '~app/components/activity/feed/item-service';
+import { getNotificationRouteLocation, gotoNotification } from '~app/components/activity/feed/notification/notification-routing';
+import { useActivityFeed } from '~app/components/activity/feed/view';
+import { useAppStore } from '~app/store/index';
+import AppFadeCollapse from '~common/AppFadeCollapse.vue';
+import { AvatarFrameModel } from '~common/avatar/frame.model';
+import type { CommentModel } from '~common/comment/comment-model';
+import type { CommunityModel } from '~common/community/community.model';
+import AppCommunityThumbnailImg from '~common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import {
 	CommunityUserNotificationModel,
 	CommunityUserNotificationType,
-} from '../../../../../_common/community/user-notification/user-notification.model';
-import AppContentViewer from '../../../../../_common/content/content-viewer/AppContentViewer.vue';
-import { CreatorExperienceLevelModel } from '../../../../../_common/creator/experience/level.model';
-import type { FiresidePostCommunityModel } from '../../../../../_common/fireside/post/community/community.model';
-import type { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
-import { InventoryShopGiftModel } from '../../../../../_common/inventory/shop/inventory-shop-gift.model';
-import { getReadablePurchasableProductType } from '../../../../../_common/inventory/shop/product-owner-helpers';
-import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import type { MentionModel } from '../../../../../_common/mention/mention.model';
+} from '~common/community/user-notification/user-notification.model';
+import AppContentViewer from '~common/content/content-viewer/AppContentViewer.vue';
+import { CreatorExperienceLevelModel } from '~common/creator/experience/level.model';
+import type { FiresidePostCommunityModel } from '~common/fireside/post/community/community.model';
+import type { FiresidePostModel } from '~common/fireside/post/post-model';
+import { InventoryShopGiftModel } from '~common/inventory/shop/inventory-shop-gift.model';
+import { getReadablePurchasableProductType } from '~common/inventory/shop/product-owner-helpers';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import type { MentionModel } from '~common/mention/mention.model';
 import {
 	$readNotification,
 	NotificationModel,
 	NotificationType,
-} from '../../../../../_common/notification/notification-model';
-import { NotificationText } from '../../../../../_common/notification/notification-text.service';
-import type { QuestNotificationModel } from '../../../../../_common/quest/quest-notification-model';
-import { SupporterActionModel } from '../../../../../_common/supporters/action.model';
-import { kThemeFgMuted } from '../../../../../_common/theme/variables';
-import AppTimeAgo from '../../../../../_common/time/AppTimeAgo.vue';
-import AppTimelineListItem from '../../../../../_common/timeline-list/item/AppTimelineListItem.vue';
-import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-import { BaseTrophyModel } from '../../../../../_common/trophy/base-trophy.model';
-import { getTrophyImg } from '../../../../../_common/trophy/thumbnail/AppTrophyThumbnail.vue';
-import AppUserCardHover from '../../../../../_common/user/card/AppUserCardHover.vue';
-import type { UserGameTrophyModel } from '../../../../../_common/user/trophy/game-trophy.model';
-import type { UserSiteTrophyModel } from '../../../../../_common/user/trophy/site-trophy.model';
-import { UserBaseTrophyModel } from '../../../../../_common/user/trophy/user-base-trophy.model';
-import { UserModel } from '../../../../../_common/user/user.model';
-import AppUserAvatar from '../../../../../_common/user/user-avatar/AppUserAvatar.vue';
-import { UserAvatarFrameModel } from '../../../../../_common/user/user-avatar/frame/frame.model';
-import { isInstance } from '../../../../../utils/utils';
-import { useAppStore } from '../../../../store/index';
-import { ActivityFeedItem } from '../item-service';
-import { useActivityFeed } from '../view';
-import { getNotificationRouteLocation, gotoNotification } from './notification-routing';
+} from '~common/notification/notification-model';
+import { NotificationText } from '~common/notification/notification-text.service';
+import type { QuestNotificationModel } from '~common/quest/quest-notification-model';
+import { SupporterActionModel } from '~common/supporters/action.model';
+import { kThemeFgMuted } from '~common/theme/variables';
+import AppTimeAgo from '~common/time/AppTimeAgo.vue';
+import AppTimelineListItem from '~common/timeline-list/item/AppTimelineListItem.vue';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { BaseTrophyModel } from '~common/trophy/base-trophy.model';
+import { getTrophyImg } from '~common/trophy/thumbnail/AppTrophyThumbnail.vue';
+import AppUserCardHover from '~common/user/card/AppUserCardHover.vue';
+import type { UserGameTrophyModel } from '~common/user/trophy/game-trophy.model';
+import type { UserSiteTrophyModel } from '~common/user/trophy/site-trophy.model';
+import { UserBaseTrophyModel } from '~common/user/trophy/user-base-trophy.model';
+import { UserModel } from '~common/user/user.model';
+import AppUserAvatar from '~common/user/user-avatar/AppUserAvatar.vue';
+import { UserAvatarFrameModel } from '~common/user/user-avatar/frame/frame.model';
+import { isInstance } from '~utils/utils';
 
 type Props = {
 	item: ActivityFeedItem;

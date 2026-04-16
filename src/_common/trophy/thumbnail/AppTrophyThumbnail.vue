@@ -1,17 +1,17 @@
 <script lang="ts">
 import { computed, type HTMLAttributes, onMounted, ref, useTemplateRef } from 'vue';
 
-import AppImgResponsive from '../../img/AppImgResponsive.vue';
-import { vAppTooltip } from '../../tooltip/tooltip-directive';
-import { BaseTrophyDifficulty, BaseTrophyModel } from '../base-trophy.model';
-import bronzeImage from './bronze.png';
-import bronzeSecretImage from './bronze-secret.png';
-import goldImage from './gold.png';
-import goldSecretImage from './gold-secret.png';
-import platinumImage from './platinum.png';
-import platinumSecretImage from './platinum-secret.png';
-import silverImage from './silver.png';
-import silverSecretImage from './silver-secret.png';
+import AppImgResponsive from '~common/img/AppImgResponsive.vue';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { BaseTrophyDifficulty, BaseTrophyModel } from '~common/trophy/base-trophy.model';
+import bronzeImage from '~common/trophy/thumbnail/bronze.png';
+import bronzeSecretImage from '~common/trophy/thumbnail/bronze-secret.png';
+import goldImage from '~common/trophy/thumbnail/gold.png';
+import goldSecretImage from '~common/trophy/thumbnail/gold-secret.png';
+import platinumImage from '~common/trophy/thumbnail/platinum.png';
+import platinumSecretImage from '~common/trophy/thumbnail/platinum-secret.png';
+import silverImage from '~common/trophy/thumbnail/silver.png';
+import silverSecretImage from '~common/trophy/thumbnail/silver-secret.png';
 
 const imgMapping: any = {
 	bronze: bronzeImage,

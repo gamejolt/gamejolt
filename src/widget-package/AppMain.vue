@@ -1,18 +1,18 @@
 <script lang="ts" setup>
 import { onMounted } from 'vue';
 
-import AppJolticon from '../_common/jolticon/AppJolticon.vue';
-import { SellableType } from '../_common/sellable/sellable.model';
-import AppTheme from '../_common/theme/AppTheme.vue';
-import { useThemeStore } from '../_common/theme/theme.store';
-import AppTooltipPortal from '../_common/tooltip/AppTooltipPortal.vue';
-import AppDownload from './components/AppDownload.vue';
-import AppFooter from './components/AppFooter.vue';
-import AppGameHeader from './components/AppGameHeader.vue';
-import AppProcessingOverlay from './components/AppProcessingOverlay.vue';
-import AppToast from './components/AppToast.vue';
-import FormPayment from './components/forms/FormPayment.vue';
-import { useWidgetPackageStore } from './store/index';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { SellableType } from '~common/sellable/sellable.model';
+import AppTheme from '~common/theme/AppTheme.vue';
+import { useThemeStore } from '~common/theme/theme.store';
+import AppTooltipPortal from '~common/tooltip/AppTooltipPortal.vue';
+import AppDownload from '~widget-package/components/AppDownload.vue';
+import AppFooter from '~widget-package/components/AppFooter.vue';
+import AppGameHeader from '~widget-package/components/AppGameHeader.vue';
+import AppProcessingOverlay from '~widget-package/components/AppProcessingOverlay.vue';
+import AppToast from '~widget-package/components/AppToast.vue';
+import FormPayment from '~widget-package/components/forms/FormPayment.vue';
+import { useWidgetPackageStore } from '~widget-package/store/index';
 
 const WidgetThemeKey = 'widget';
 

@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import { styleFlexCenter } from '../../../../_styles/mixins';
-import AppImgResponsive from '../../../img/AppImgResponsive.vue';
-import AppJolticon, { Jolticon } from '../../../jolticon/AppJolticon.vue';
-import AppMediaItemBackdrop from '../../../media-item/backdrop/AppMediaItemBackdrop.vue';
-import { EmojiGroupModel, EmojiGroupType } from '../../emoji-group.model';
+import { EmojiGroupModel, EmojiGroupType } from '~common/emoji/emoji-group.model';
+import AppImgResponsive from '~common/img/AppImgResponsive.vue';
+import AppJolticon, { Jolticon } from '~common/jolticon/AppJolticon.vue';
+import AppMediaItemBackdrop from '~common/media-item/backdrop/AppMediaItemBackdrop.vue';
+import { styleFlexCenter } from '~styles/mixins';
 
 type Props = {
 	group: EmojiGroupModel;

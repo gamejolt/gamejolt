@@ -1,10 +1,10 @@
 import { defineAsyncComponent } from 'vue';
 
-import { CommunityChannelModel } from '../../../../_common/community/channel/channel.model';
-import { CommunityModel } from '../../../../_common/community/community.model';
-import { FiresidePostModel } from '../../../../_common/fireside/post/post-model';
-import { showModal } from '../../../../_common/modal/modal.service';
-import { RealmModel } from '../../../../_common/realm/realm-model';
+import { CommunityChannelModel } from '~common/community/channel/channel.model';
+import { CommunityModel } from '~common/community/community.model';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import { showModal } from '~common/modal/modal.service';
+import { RealmModel } from '~common/realm/realm-model';
 
 export type PostEditModalOptions = {
 	community?: CommunityModel;
@@ -19,7 +19,7 @@ export async function showPostEditModal(
 	options = options || {};
 	return await showModal<FiresidePostModel>({
 		modalId: 'PostEdit',
-		component: defineAsyncComponent(() => import('./AppPostEditModal.vue')),
+		component: defineAsyncComponent(() => import('~app/components/post/edit-modal/AppPostEditModal.vue')),
 		noBackdropClose: true,
 		noEscClose: true,
 		size: 'sm',

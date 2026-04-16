@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import { FiresidePostModel } from '../fireside/post/post-model';
-import { showSupportersModal } from '../supporters/modal.service';
-import { vAppTooltip } from '../tooltip/tooltip-directive';
-import { $gettext } from '../translate/translate.service';
-import { UserModel } from '../user/user.model';
-import AppUserAvatarImg from '../user/user-avatar/AppUserAvatarImg.vue';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import { showSupportersModal } from '~common/supporters/modal.service';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { $gettext } from '~common/translate/translate.service';
+import { UserModel } from '~common/user/user.model';
+import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
 
 type Props = {
 	model: FiresidePostModel;

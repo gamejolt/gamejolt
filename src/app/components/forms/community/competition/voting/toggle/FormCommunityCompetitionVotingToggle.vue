@@ -4,14 +4,14 @@ import { nextTick, toRef } from 'vue';
 import {
 	$setVotingEnabledOnCommunityCompetition,
 	CommunityCompetitionModel,
-} from '../../../../../../../_common/community/competition/competition.model';
+} from '~common/community/competition/competition.model';
 import AppForm, {
 	createForm,
 	FormController,
-} from '../../../../../../../_common/form-vue/AppForm.vue';
-import AppFormGroup from '../../../../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormControlToggle from '../../../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
-import { TranslateDirective as vTranslate } from '../../../../../../../_common/translate/translate-directive';
+} from '~common/form-vue/AppForm.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlToggle from '~common/form-vue/controls/AppFormControlToggle.vue';
+import { TranslateDirective as vTranslate } from '~common/translate/translate-directive';
 
 type FormModel = CommunityCompetitionModel;
 

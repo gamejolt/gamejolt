@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import AppRealmFullCard from '../../../../../_common/realm/AppRealmFullCard.vue';
-import { RealmModel } from '../../../../../_common/realm/realm-model';
+import AppRealmFullCard from '~common/realm/AppRealmFullCard.vue';
+import { RealmModel } from '~common/realm/realm-model';
 
 type Props = {
 	realms: RealmModel[];

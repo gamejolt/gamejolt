@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { computed, HTMLAttributes, toRaw, useSlots } from 'vue';
 
-import AppExpand from '../../expand/AppExpand.vue';
-import AppJolticon from '../../jolticon/AppJolticon.vue';
-import { Screen } from '../../screen/screen-service';
-import AppCard from '../AppCard.vue';
-import { useCardList } from './AppCardList.vue';
+import AppCard from '~common/card/AppCard.vue';
+import { useCardList } from '~common/card/list/AppCardList.vue';
+import AppExpand from '~common/expand/AppExpand.vue';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { Screen } from '~common/screen/screen-service';
 
 type Props = {
 	item: object;
@@ -61,4 +61,4 @@ function onClick() {
 	</div>
 </template>
 
-<style lang="stylus" src="./list-common.styl" scoped></style>
+<style lang="stylus" src="~common/card/list/list-common.styl" scoped></style>

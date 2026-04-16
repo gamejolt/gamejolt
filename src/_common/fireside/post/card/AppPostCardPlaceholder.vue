@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { AppPostCardAspectRatio } from './AppPostCardBase.vue';
+import { AppPostCardAspectRatio } from '~common/fireside/post/card/AppPostCardBase.vue';
 
 type Props = {
 	aspectRatio?: number;

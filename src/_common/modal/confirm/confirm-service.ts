@@ -1,6 +1,6 @@
 import { defineAsyncComponent } from 'vue';
 
-import { showModal } from '../modal.service';
+import { showModal } from '~common/modal/modal.service';
 
 export async function showModalConfirm(
 	message: string,
@@ -10,7 +10,7 @@ export async function showModalConfirm(
 	return await showModal<boolean>({
 		modalId: 'Confirm',
 		size: 'sm',
-		component: defineAsyncComponent(() => import('./AppModalConfirm.vue')),
+		component: defineAsyncComponent(() => import('~common/modal/confirm/AppModalConfirm.vue')),
 		props: { message, title, buttonType },
 	});
 }

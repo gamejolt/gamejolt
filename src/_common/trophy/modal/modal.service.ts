@@ -1,12 +1,12 @@
 import { defineAsyncComponent } from 'vue';
 
-import { showModal } from '../../modal/modal.service';
-import { UserBaseTrophyModel } from '../../user/trophy/user-base-trophy.model';
+import { showModal } from '~common/modal/modal.service';
+import { UserBaseTrophyModel } from '~common/user/trophy/user-base-trophy.model';
 
 export async function showTrophyModal(userTrophy: UserBaseTrophyModel) {
 	return await showModal<void>({
 		modalId: 'Trophy',
-		component: defineAsyncComponent(() => import('./AppTrophyModal.vue')),
+		component: defineAsyncComponent(() => import('~common/trophy/modal/AppTrophyModal.vue')),
 		props: {
 			userTrophy,
 		},

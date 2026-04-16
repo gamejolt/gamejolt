@@ -2,12 +2,12 @@
 import { computed, ref } from 'vue';
 import { RouterLink } from 'vue-router';
 
-import AppPostCardBase from '../fireside/post/card/AppPostCardBase.vue';
-import { FiresidePostModel } from '../fireside/post/post-model';
-import { useCommonStore } from '../store/common-store';
-import AppUserFollowButton from '../user/follow/AppUserFollowButton.vue';
-import { $toggleUserFollow } from '../user/user.model';
-import AppUserAvatarImg from '../user/user-avatar/AppUserAvatarImg.vue';
+import AppPostCardBase from '~common/fireside/post/card/AppPostCardBase.vue';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import { useCommonStore } from '~common/store/common-store';
+import AppUserFollowButton from '~common/user/follow/AppUserFollowButton.vue';
+import { $toggleUserFollow } from '~common/user/user.model';
+import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
 
 export const AppCreatorCardAspectRatio = 11 / 17;
 </script>

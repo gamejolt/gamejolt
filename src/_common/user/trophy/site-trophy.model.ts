@@ -1,5 +1,5 @@
-import { SiteTrophyModel } from '../../site/trophy/trophy.model';
-import { UserBaseTrophyModel } from './user-base-trophy.model';
+import { SiteTrophyModel } from '~common/site/trophy/trophy.model';
+import { UserBaseTrophyModel } from '~common/user/trophy/user-base-trophy.model';
 
 export class UserSiteTrophyModel extends UserBaseTrophyModel {
 	declare site_trophy_id: number;

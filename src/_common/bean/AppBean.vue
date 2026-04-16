@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import AppAspectRatio from '../aspect-ratio/AppAspectRatio.vue';
-import { beans } from './beans';
+import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
+import { beans } from '~common/bean/beans';
 
 type Props = {
 	variant?: 1 | 2;

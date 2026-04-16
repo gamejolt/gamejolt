@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-import { Api } from '../../api/api.service';
-import AppForm, { createForm, FormController } from '../../form-vue/AppForm.vue';
-import AppFormButton from '../../form-vue/AppFormButton.vue';
-import AppFormGroup from '../../form-vue/AppFormGroup.vue';
-import AppFormControlToggle from '../../form-vue/controls/AppFormControlToggle.vue';
-import AppLinkHelp from '../../link/AppLinkHelp.vue';
-import { $gettext } from '../../translate/translate.service';
-import { UserModel } from '../../user/user.model';
+import { Api } from '~common/api/api.service';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlToggle from '~common/form-vue/controls/AppFormControlToggle.vue';
+import AppLinkHelp from '~common/link/AppLinkHelp.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { UserModel } from '~common/user/user.model';
 
 type FormModel = {
 	removeComments: boolean;

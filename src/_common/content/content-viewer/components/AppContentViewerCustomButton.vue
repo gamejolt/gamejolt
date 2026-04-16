@@ -1,6 +1,6 @@
 <script lang="ts">
-import AppContentCustomButton from '../../components/AppContentCustomButton.vue';
-import { ContentObject } from '../../content-object';
+import AppContentCustomButton from '~common/content/components/AppContentCustomButton.vue';
+import { ContentObject } from '~common/content/content-object';
 </script>
 
 <script lang="ts" setup>

@@ -1,16 +1,16 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import { formatNumber } from '../../filters/number';
-import { GameTrophyModel } from '../../game/trophy/trophy.model';
-import AppJolticon from '../../jolticon/AppJolticon.vue';
-import AppTimeAgo from '../../time/AppTimeAgo.vue';
-import { vAppTooltip } from '../../tooltip/tooltip-directive';
+import { formatNumber } from '~common/filters/number';
+import { GameTrophyModel } from '~common/game/trophy/trophy.model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppTimeAgo from '~common/time/AppTimeAgo.vue';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import AppTrophyThumbnail from '~common/trophy/thumbnail/AppTrophyThumbnail.vue';
 import {
 	indexAchievedGameTrophies,
 	UserGameTrophyModel,
-} from '../../user/trophy/game-trophy.model';
-import AppTrophyThumbnail from '../thumbnail/AppTrophyThumbnail.vue';
+} from '~common/user/trophy/game-trophy.model';
 
 type Props = {
 	trophies: GameTrophyModel[];

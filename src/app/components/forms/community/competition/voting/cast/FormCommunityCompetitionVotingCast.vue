@@ -1,20 +1,20 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 
-import { Api } from '../../../../../../../_common/api/api.service';
-import AppButton from '../../../../../../../_common/button/AppButton.vue';
-import { CommunityCompetitionModel } from '../../../../../../../_common/community/competition/competition.model';
-import { CommunityCompetitionEntryModel } from '../../../../../../../_common/community/competition/entry/entry.model';
-import { CommunityCompetitionEntryVoteModel } from '../../../../../../../_common/community/competition/entry/vote/vote.model';
-import { CommunityCompetitionVotingCategoryModel } from '../../../../../../../_common/community/competition/voting-category/voting-category.model';
-import { formatNumber } from '../../../../../../../_common/filters/number';
-import { showSuccessGrowl } from '../../../../../../../_common/growls/growls.service';
-import AppJolticon from '../../../../../../../_common/jolticon/AppJolticon.vue';
-import AppLoadingFade from '../../../../../../../_common/loading/AppLoadingFade.vue';
-import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
-import AppTranslate from '../../../../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../../../../_common/translate/translate.service';
-import { numberSort } from '../../../../../../../utils/array';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import { CommunityCompetitionModel } from '~common/community/competition/competition.model';
+import { CommunityCompetitionEntryModel } from '~common/community/competition/entry/entry.model';
+import { CommunityCompetitionEntryVoteModel } from '~common/community/competition/entry/vote/vote.model';
+import { CommunityCompetitionVotingCategoryModel } from '~common/community/competition/voting-category/voting-category.model';
+import { formatNumber } from '~common/filters/number';
+import { showSuccessGrowl } from '~common/growls/growls.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { numberSort } from '~utils/array';
 
 type Props = {
 	entry: CommunityCompetitionEntryModel;

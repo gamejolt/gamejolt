@@ -1,21 +1,21 @@
 <script lang="ts" setup>
 import { computed, ref, toRef } from 'vue';
 
-import AppButton from '../../../../../_common/button/AppButton.vue';
-import AppCommunityChannelSelect from '../../../../../_common/community/channel/AppCommunityChannelSelect.vue';
-import { CommunityChannelModel } from '../../../../../_common/community/channel/channel.model';
-import { FiresidePostCommunityModel } from '../../../../../_common/fireside/post/community/community.model';
-import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
-import AppModal from '../../../../../_common/modal/AppModal.vue';
-import { useModal } from '../../../../../_common/modal/modal.service';
-import { getDatalistOptions } from '../../../../../_common/settings/datalist-options.service';
-import { useCommonStore } from '../../../../../_common/store/common-store';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import { REASON_OTHER } from '../../../../../_common/user/action-reasons';
 import FormCommunityMovePost, {
 	MovePostFormModel as FormModel,
-} from '../form/FormCommunityMovePost.vue';
-import { CommunityMovePostModalResult } from './modal.service';
+} from '~app/components/community/move-post/form/FormCommunityMovePost.vue';
+import { CommunityMovePostModalResult } from '~app/components/community/move-post/modal/modal.service';
+import AppButton from '~common/button/AppButton.vue';
+import AppCommunityChannelSelect from '~common/community/channel/AppCommunityChannelSelect.vue';
+import { CommunityChannelModel } from '~common/community/channel/channel.model';
+import { FiresidePostCommunityModel } from '~common/fireside/post/community/community.model';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import { getDatalistOptions } from '~common/settings/datalist-options.service';
+import { useCommonStore } from '~common/store/common-store';
+import { $gettext } from '~common/translate/translate.service';
+import { REASON_OTHER } from '~common/user/action-reasons';
 
 type Props = {
 	firesidePostCommunity: FiresidePostCommunityModel;

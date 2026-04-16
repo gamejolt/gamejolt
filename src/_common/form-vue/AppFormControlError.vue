@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { watch } from 'vue';
 
-import { useFormControlErrors } from './AppFormControlErrors.vue';
+import { useFormControlErrors } from '~common/form-vue/AppFormControlErrors.vue';
 
 type Props = {
 	when: string;

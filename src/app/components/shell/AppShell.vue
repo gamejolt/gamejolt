@@ -2,31 +2,31 @@
 import { computed, defineAsyncComponent, nextTick, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
-import { AppClientBase } from '../../../_common/client/safe-exports';
-import { Connection } from '../../../_common/connection/connection-service';
-import { Meta } from '../../../_common/meta/meta-service';
-import AppMinbar from '../../../_common/minbar/AppMinbar.vue';
-import AppMobileAppPromotionBanner from '../../../_common/mobile-app/AppMobileAppPromotionBanner.vue';
-import { Screen, triggerOnScreenResize } from '../../../_common/screen/screen-service';
-import AppStickerLayer from '../../../_common/sticker/layer/AppStickerLayer.vue';
-import { useBannerStore } from '../../store/banner';
-import { useAppStore } from '../../store/index';
-import { useJoltydexStore } from '../../store/joltydex';
-import { useQuestStore } from '../../store/quest';
-import { AppClientShell, AppClientStatusBar } from '../client/safe-exports';
-import { useGridStore } from '../grid/grid-store';
-import AppShellBanner from './AppShellBanner.vue';
-import AppShellBody from './AppShellBody.vue';
-import AppShellHotBottom from './AppShellHotBottom.vue';
-import AppShellTopNav from './AppShellTopNav.vue';
-import AppShellCbar from './cbar/AppShellCbar.vue';
-import { initShellRoutes } from './shell-routes';
-import AppShellSidebar from './sidebar/AppShellSidebar.vue';
+import { AppClientShell, AppClientStatusBar } from '~app/components/client/safe-exports';
+import { useGridStore } from '~app/components/grid/grid-store';
+import AppShellBanner from '~app/components/shell/AppShellBanner.vue';
+import AppShellBody from '~app/components/shell/AppShellBody.vue';
+import AppShellHotBottom from '~app/components/shell/AppShellHotBottom.vue';
+import AppShellTopNav from '~app/components/shell/AppShellTopNav.vue';
+import AppShellCbar from '~app/components/shell/cbar/AppShellCbar.vue';
+import { initShellRoutes } from '~app/components/shell/shell-routes';
+import AppShellSidebar from '~app/components/shell/sidebar/AppShellSidebar.vue';
+import { useBannerStore } from '~app/store/banner';
+import { useAppStore } from '~app/store/index';
+import { useJoltydexStore } from '~app/store/joltydex';
+import { useQuestStore } from '~app/store/quest';
+import { AppClientBase } from '~common/client/safe-exports';
+import { Connection } from '~common/connection/connection-service';
+import { Meta } from '~common/meta/meta-service';
+import AppMinbar from '~common/minbar/AppMinbar.vue';
+import AppMobileAppPromotionBanner from '~common/mobile-app/AppMobileAppPromotionBanner.vue';
+import { Screen, triggerOnScreenResize } from '~common/screen/screen-service';
+import AppStickerLayer from '~common/sticker/layer/AppStickerLayer.vue';
 
-const AppQuestWindow = defineAsyncComponent(() => import('../quest/window/AppQuestWindow.vue'));
-const AppChatWindow = defineAsyncComponent(() => import('../chat/window/AppChatWindow.vue'));
+const AppQuestWindow = defineAsyncComponent(() => import('~app/components/quest/window/AppQuestWindow.vue'));
+const AppChatWindow = defineAsyncComponent(() => import('~app/components/chat/window/AppChatWindow.vue'));
 const AppJoltydexWindow = defineAsyncComponent(
-	() => import('../joltydex/window/AppJoltydexWindow.vue')
+	() => import('~app/components/joltydex/window/AppJoltydexWindow.vue')
 );
 
 export const CBAR_WIDTH = 70;

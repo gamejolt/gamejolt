@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import AppButton from '../../../../_common/button/AppButton.vue';
-import AppModal from '../../../../_common/modal/AppModal.vue';
-import { useModal } from '../../../../_common/modal/modal.service';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import FormSetPassword from '../../forms/set-password/FormSetPassword.vue';
+import FormSetPassword from '~app/components/forms/set-password/FormSetPassword.vue';
+import AppButton from '~common/button/AppButton.vue';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 const modal = useModal()!;
 

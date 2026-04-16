@@ -2,12 +2,12 @@
 import { CSSProperties, ref, watch } from 'vue';
 import { RouterLink } from 'vue-router';
 
-import { styleChangeBg } from '../../../../_styles/mixins';
-import AppJolticon from '../../../jolticon/AppJolticon.vue';
-import AppUserCardHover from '../../../user/card/AppUserCardHover.vue';
-import AppUserCreatorBadge from '../../../user/creator/AppUserCreatorBadge.vue';
-import { UserModel } from '../../../user/user.model';
-import { useContentOwnerController } from '../../content-owner';
+import { useContentOwnerController } from '~common/content/content-owner';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppUserCardHover from '~common/user/card/AppUserCardHover.vue';
+import AppUserCreatorBadge from '~common/user/creator/AppUserCreatorBadge.vue';
+import { UserModel } from '~common/user/user.model';
+import { styleChangeBg } from '~styles/mixins';
 
 type Props = {
 	username: string;

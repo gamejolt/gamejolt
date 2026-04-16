@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ContentObject } from '../../content-object';
+import { ContentObject } from '~common/content/content-object';
 
 type Props = {
 	contentData: ContentObject;

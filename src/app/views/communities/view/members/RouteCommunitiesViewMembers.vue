@@ -2,15 +2,15 @@
 import { computed, ref, toRef } from 'vue';
 import { RouteLocationNormalized, useRoute } from 'vue-router';
 
-import { Api } from '../../../../../_common/api/api.service';
+import AppFollowerList from '~app/components/follower/list/AppFollowerList.vue';
+import AppCommunityPageContainer from '~app/views/communities/view/_page-container/AppCommunityPageContainer.vue';
+import { useCommunityRouteStore } from '~app/views/communities/view/view.store';
+import { Api } from '~common/api/api.service';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
-} from '../../../../../_common/route/route-component';
-import { UserModel } from '../../../../../_common/user/user.model';
-import AppFollowerList from '../../../../components/follower/list/AppFollowerList.vue';
-import AppCommunityPageContainer from '../_page-container/AppCommunityPageContainer.vue';
-import { useCommunityRouteStore } from '../view.store';
+} from '~common/route/route-component';
+import { UserModel } from '~common/user/user.model';
 
 function getFetchUrl(route: RouteLocationNormalized) {
 	return `/web/communities/members/${route.params.path}`;

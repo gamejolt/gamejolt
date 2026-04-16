@@ -1,9 +1,9 @@
 <script lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue';
 
-import { clampNumber } from '../../utils/number';
-import { Ruler } from '../ruler/ruler-service';
-import { vAppTooltip } from '../tooltip/tooltip-directive';
+import { Ruler } from '~common/ruler/ruler-service';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { clampNumber } from '~utils/number';
 
 export type ScrubberStage = 'start' | 'scrub' | 'end';
 

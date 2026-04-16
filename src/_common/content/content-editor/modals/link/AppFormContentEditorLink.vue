@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import { toRef } from 'vue';
 
-import AppForm, { createForm, FormController } from '../../../../form-vue/AppForm.vue';
-import AppFormButton from '../../../../form-vue/AppFormButton.vue';
-import AppFormControl from '../../../../form-vue/AppFormControl.vue';
-import AppFormGroup from '../../../../form-vue/AppFormGroup.vue';
-import { validateBasicLink } from '../../../../form-vue/validators';
-import { LinkData } from './link-modal.service';
+import { LinkData } from '~common/content/content-editor/modals/link/link-modal.service';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import { validateBasicLink } from '~common/form-vue/validators';
 
 type FormModel = LinkData;
 

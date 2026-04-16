@@ -2,16 +2,16 @@
 import { computed } from 'vue';
 import { RouteLocationRaw } from 'vue-router';
 
-import { kElevateTransition, styleElevate, styleTyped, styleWhen } from '../../_styles/mixins';
-import { kBorderRadiusLg, kBorderWidthLg, kStrongEaseOut } from '../../_styles/variables';
-import { useOnHover } from '../on/useOnHover';
+import { useOnHover } from '~common/on/useOnHover';
 import {
 	kThemeBgOffset,
 	kThemeFg,
 	kThemeFgMuted,
 	kThemePrimary,
 	kThemePrimaryTrans,
-} from '../theme/variables';
+} from '~common/theme/variables';
+import { kElevateTransition, styleElevate, styleTyped, styleWhen } from '~styles/mixins';
+import { kBorderRadiusLg, kBorderWidthLg, kStrongEaseOut } from '~styles/variables';
 
 const BorderRadius = kBorderRadiusLg;
 const BorderWidth = kBorderWidthLg;

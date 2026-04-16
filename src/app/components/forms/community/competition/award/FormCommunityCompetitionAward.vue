@@ -4,21 +4,21 @@ import { computed, toRef } from 'vue';
 import {
 	$saveCommunityCompetitionAward,
 	CommunityCompetitionAwardModel,
-} from '../../../../../../_common/community/competition/award/award.model';
-import { CommunityCompetitionModel } from '../../../../../../_common/community/competition/competition.model';
+} from '~common/community/competition/award/award.model';
+import { CommunityCompetitionModel } from '~common/community/competition/competition.model';
 import AppForm, {
 	createForm,
 	FormController,
-} from '../../../../../../_common/form-vue/AppForm.vue';
-import AppFormButton from '../../../../../../_common/form-vue/AppFormButton.vue';
-import AppFormControl from '../../../../../../_common/form-vue/AppFormControl.vue';
-import AppFormControlErrors from '../../../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../../../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormControlTextarea from '../../../../../../_common/form-vue/controls/AppFormControlTextarea.vue';
+} from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlTextarea from '~common/form-vue/controls/AppFormControlTextarea.vue';
 import {
 	validateAvailability,
 	validateMaxLength,
-} from '../../../../../../_common/form-vue/validators';
+} from '~common/form-vue/validators';
 
 type FormModel = CommunityCompetitionAwardModel;
 

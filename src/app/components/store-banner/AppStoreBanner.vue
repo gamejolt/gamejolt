@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import { trackBannerClick } from '../../../_common/analytics/analytics.service';
-import AppButton from '../../../_common/button/AppButton.vue';
-import { StoreBannerModel } from './store-banner-model';
+import { StoreBannerModel } from '~app/components/store-banner/store-banner-model';
+import { trackBannerClick } from '~common/analytics/analytics.service';
+import AppButton from '~common/button/AppButton.vue';
 
 type Props = {
 	banner: StoreBannerModel;

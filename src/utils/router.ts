@@ -10,11 +10,11 @@ import {
 	RouterHistory,
 } from 'vue-router';
 
-import { Environment } from '../_common/environment/environment.service';
-import { routeError404 } from '../_common/error/page/404.route';
-import { logger as navigateLogger,Navigate } from '../_common/navigate/navigate.service';
-import { initScrollBehavior } from '../_common/scroll/auto-scroll/autoscroll.service';
-import { escapeRegex } from './string';
+import { Environment } from '~common/environment/environment.service';
+import { routeError404 } from '~common/error/page/404.route';
+import { logger as navigateLogger,Navigate } from '~common/navigate/navigate.service';
+import { initScrollBehavior } from '~common/scroll/auto-scroll/autoscroll.service';
+import { escapeRegex } from '~utils/string';
 
 const ClientBaseRegex = new RegExp(
 	escapeRegex(Environment.baseUrlDesktopApp) + '\\/([^.]+)\\.html#'

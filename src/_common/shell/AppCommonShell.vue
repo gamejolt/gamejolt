@@ -1,21 +1,21 @@
 <script lang="ts">
 import { defineAsyncComponent } from 'vue';
 
-import AppGrowls from '../growls/AppGrowls.vue';
-import AppScrollInviewParent from '../scroll/inview/AppScrollInviewParent.vue';
-import AppTheme from '../theme/AppTheme.vue';
+import AppGrowls from '~common/growls/AppGrowls.vue';
+import AppScrollInviewParent from '~common/scroll/inview/AppScrollInviewParent.vue';
+import AppTheme from '~common/theme/AppTheme.vue';
 export default {
 	inheritAttrs: false,
 };
 </script>
 
 <script lang="ts" setup>
-const AppLoadingBar = defineAsyncComponent(() => import('../loading/AppLoadingBar.vue'));
-const AppBackdropPortal = defineAsyncComponent(() => import('../backdrop/AppBackdropPortal.vue'));
-const AppLightboxPortal = defineAsyncComponent(() => import('../lightbox/AppLightboxPortal.vue'));
-const AppModalPortal = defineAsyncComponent(() => import('../modal/AppModalPortal.vue'));
-const AppTooltipPortal = defineAsyncComponent(() => import('../tooltip/AppTooltipPortal.vue'));
-const AppShellNotice = defineAsyncComponent(() => import('./notice/AppShellNotice.vue'));
+const AppLoadingBar = defineAsyncComponent(() => import('~common/loading/AppLoadingBar.vue'));
+const AppBackdropPortal = defineAsyncComponent(() => import('~common/backdrop/AppBackdropPortal.vue'));
+const AppLightboxPortal = defineAsyncComponent(() => import('~common/lightbox/AppLightboxPortal.vue'));
+const AppModalPortal = defineAsyncComponent(() => import('~common/modal/AppModalPortal.vue'));
+const AppTooltipPortal = defineAsyncComponent(() => import('~common/tooltip/AppTooltipPortal.vue'));
+const AppShellNotice = defineAsyncComponent(() => import('~common/shell/notice/AppShellNotice.vue'));
 </script>
 
 <template>

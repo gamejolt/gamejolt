@@ -1,20 +1,20 @@
 <script lang="ts" setup>
 import { computed, nextTick, onMounted, ref, useTemplateRef } from 'vue';
 
-import { Api } from '../../../../api/api.service';
-import AppButton from '../../../../button/AppButton.vue';
-import { showErrorGrowl } from '../../../../growls/growls.service';
-import AppJolticon from '../../../../jolticon/AppJolticon.vue';
-import AppLoading from '../../../../loading/AppLoading.vue';
-import AppModal from '../../../../modal/AppModal.vue';
-import { useModal } from '../../../../modal/modal.service';
-import { Ruler } from '../../../../ruler/ruler-service';
-import { Screen } from '../../../../screen/screen-service';
-import AppScrollScroller, { createScroller } from '../../../../scroll/AppScrollScroller.vue';
-import AppTranslate from '../../../../translate/AppTranslate.vue';
-import { $gettext } from '../../../../translate/translate.service';
-import { Category, SearchResult } from './gif-modal.service';
-import mascotImage from './mascot-complete.png';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import { Category, SearchResult } from '~common/content/content-editor/modals/gif/gif-modal.service';
+import mascotImage from '~common/content/content-editor/modals/gif/mascot-complete.png';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLoading from '~common/loading/AppLoading.vue';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import { Ruler } from '~common/ruler/ruler-service';
+import { Screen } from '~common/screen/screen-service';
+import AppScrollScroller, { createScroller } from '~common/scroll/AppScrollScroller.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
 
 // Module-level cache so categories are only fetched once.
 let categoriesCache: Category[] | undefined;

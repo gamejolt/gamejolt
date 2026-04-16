@@ -1,17 +1,17 @@
 <script lang="ts" setup>
-import AppButton from '../../../../../../_common/button/AppButton.vue';
-import AppModal from '../../../../../../_common/modal/AppModal.vue';
-import { useModal } from '../../../../../../_common/modal/modal.service';
-import AppSpacer from '../../../../../../_common/spacer/AppSpacer.vue';
-import { $gettext } from '../../../../../../_common/translate/translate.service';
-import { UserModel } from '../../../../../../_common/user/user.model';
-import AppUserAvatarBubble from '../../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
+import AppButton from '~common/button/AppButton.vue';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { UserModel } from '~common/user/user.model';
+import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
 import {
 	styleBorderRadiusLg,
 	styleChangeBg,
 	styleFlexCenter,
-} from '../../../../../../_styles/mixins';
-import { kFontSizeLarge, kFontSizeSmall } from '../../../../../../_styles/variables';
+} from '~styles/mixins';
+import { kFontSizeLarge, kFontSizeSmall } from '~styles/variables';
 
 type Props = {
 	giftUser: UserModel;

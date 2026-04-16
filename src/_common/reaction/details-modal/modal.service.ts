@@ -1,7 +1,7 @@
 import { defineAsyncComponent } from 'vue';
 
-import { showModal } from '../../modal/modal.service';
-import { ReactionableModel, ReactionCount } from '../reaction-count';
+import { showModal } from '~common/modal/modal.service';
+import { ReactionableModel, ReactionCount } from '~common/reaction/reaction-count';
 
 interface ReactionDetailsModalOptions {
 	model: ReactionableModel;
@@ -13,7 +13,7 @@ export async function showReactionDetailsModal(options: ReactionDetailsModalOpti
 
 	return await showModal<void>({
 		modalId: 'ReactionDetails',
-		component: defineAsyncComponent(() => import('./AppReactionDetailsModal.vue')),
+		component: defineAsyncComponent(() => import('~common/reaction/details-modal/AppReactionDetailsModal.vue')),
 		props: {
 			model,
 			initialReaction,

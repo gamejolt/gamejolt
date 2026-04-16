@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 
-import { imageGuestAvatar } from '../../img/images';
-import { UserCommonFields } from '../user.model';
+import { imageGuestAvatar } from '~common/img/images';
+import { UserCommonFields } from '~common/user/user.model';
 
 type Props = {
 	user?: UserCommonFields | null;

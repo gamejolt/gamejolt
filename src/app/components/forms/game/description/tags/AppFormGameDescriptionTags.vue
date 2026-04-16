@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { toRef } from 'vue';
 
-import { ContentDocument } from '../../../../../../_common/content/content-document';
-import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
-import AppTagSuggestion from '../../../../../../_common/tag/suggestion/AppTagSuggestion.vue';
-import { $gettext } from '../../../../../../_common/translate/translate.service';
+import { ContentDocument } from '~common/content/content-document';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppTagSuggestion from '~common/tag/suggestion/AppTagSuggestion.vue';
+import { $gettext } from '~common/translate/translate.service';
 
 type Props = {
 	tags: string[];

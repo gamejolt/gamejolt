@@ -2,16 +2,16 @@
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
-import { trackAppPromotionClick } from '../analytics/analytics.service';
-import AppButton from '../button/AppButton.vue';
-import { isDynamicGoogleBot } from '../device/device.service';
-import { illMobileKikkerstein } from '../illustration/illustrations';
-import { Screen } from '../screen/screen-service';
-import AppSpacer from '../spacer/AppSpacer.vue';
-import { useCommonStore } from '../store/common-store';
-import AppTheme from '../theme/AppTheme.vue';
-import AppTranslate from '../translate/AppTranslate.vue';
-import { getAppUrl, useAppPromotionStore } from './store';
+import { trackAppPromotionClick } from '~common/analytics/analytics.service';
+import AppButton from '~common/button/AppButton.vue';
+import { isDynamicGoogleBot } from '~common/device/device.service';
+import { illMobileKikkerstein } from '~common/illustration/illustrations';
+import { getAppUrl, useAppPromotionStore } from '~common/mobile-app/store';
+import { Screen } from '~common/screen/screen-service';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import { useCommonStore } from '~common/store/common-store';
+import AppTheme from '~common/theme/AppTheme.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 const StorageKey = 'banner:app-promo';
 

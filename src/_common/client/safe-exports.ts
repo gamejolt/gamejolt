@@ -7,12 +7,12 @@
 
 import { defineAsyncComponent } from 'vue';
 
-import AppNoop from '../AppNoop.vue';
-import type { ClientAutoStart as ClientAutoStartType } from './autostart/autostart.service';
-import type AppClientBaseType from './base/AppClientBase.vue';
-import type { Client as ClientType } from './client.service';
-import type AppClientHistoryNavigatorType from './history-navigator/AppClientHistoryNavigator.vue';
-import type { ClientHistoryNavigator as ClientHistoryNavigatorType } from './history-navigator/history-navigator.service';
+import AppNoop from '~common/AppNoop.vue';
+import type { ClientAutoStart as ClientAutoStartType } from '~common/client/autostart/autostart.service';
+import type AppClientBaseType from '~common/client/base/AppClientBase.vue';
+import type { Client as ClientType } from '~common/client/client.service';
+import type AppClientHistoryNavigatorType from '~common/client/history-navigator/AppClientHistoryNavigator.vue';
+import type { ClientHistoryNavigator as ClientHistoryNavigatorType } from '~common/client/history-navigator/history-navigator.service';
 
 // Vue components
 export let AppClientHistoryNavigator: typeof AppClientHistoryNavigatorType = AppNoop as any;
@@ -30,15 +30,15 @@ export async function initSafeExportsForClient() {
 
 	// Vue components
 	AppClientHistoryNavigator = defineAsyncComponent(
-		async () => (await import('./history-navigator/AppClientHistoryNavigator.vue')).default
+		async () => (await import('~common/client/history-navigator/AppClientHistoryNavigator.vue')).default
 	);
 	AppClientBase = defineAsyncComponent(
-		async () => (await import('./base/AppClientBase.vue')).default
+		async () => (await import('~common/client/base/AppClientBase.vue')).default
 	);
 
 	// Misc
-	Client = (await import('./client.service')).Client;
-	ClientHistoryNavigator = (await import('./history-navigator/history-navigator.service'))
+	Client = (await import('~common/client/client.service')).Client;
+	ClientHistoryNavigator = (await import('~common/client/history-navigator/history-navigator.service'))
 		.ClientHistoryNavigator;
-	ClientAutoStart = (await import('./autostart/autostart.service')).ClientAutoStart;
+	ClientAutoStart = (await import('~common/client/autostart/autostart.service')).ClientAutoStart;
 }

@@ -2,16 +2,16 @@
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 
-import AppButton from '../../../../_common/button/AppButton.vue';
-import { GameModel } from '../../../../_common/game/game.model';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import AppNavTabList from '../../../../_common/nav/tab-list/AppNavTabList.vue';
-import { $deactivateSite, SiteModel, SiteStatus } from '../../../../_common/site/site-model';
-import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import AppSitesManagePageDomain from './AppSitesManagePageDomain.vue';
-import AppSitesManagePageStatic from './AppSitesManagePageStatic.vue';
-import AppSitesManagePageTemplate from './AppSitesManagePageTemplate.vue';
+import AppSitesManagePageDomain from '~app/components/sites/manage-page/AppSitesManagePageDomain.vue';
+import AppSitesManagePageStatic from '~app/components/sites/manage-page/AppSitesManagePageStatic.vue';
+import AppSitesManagePageTemplate from '~app/components/sites/manage-page/AppSitesManagePageTemplate.vue';
+import AppButton from '~common/button/AppButton.vue';
+import { GameModel } from '~common/game/game.model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppNavTabList from '~common/nav/tab-list/AppNavTabList.vue';
+import { $deactivateSite, SiteModel, SiteStatus } from '~common/site/site-model';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 type Props = {
 	site: SiteModel;

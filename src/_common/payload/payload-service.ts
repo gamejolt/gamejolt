@@ -1,11 +1,11 @@
 import { AxiosError, AxiosPromise } from 'axios';
 
-import { RequestOptions } from '../api/api.service';
-import { Environment } from '../environment/environment.service';
-import { showErrorGrowl } from '../growls/growls.service';
-import { Seo } from '../seo/seo.service';
-import { CommonStore } from '../store/common-store';
-import { $gettext } from '../translate/translate.service';
+import { RequestOptions } from '~common/api/api.service';
+import { Environment } from '~common/environment/environment.service';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import { Seo } from '~common/seo/seo.service';
+import { CommonStore } from '~common/store/common-store';
+import { $gettext } from '~common/translate/translate.service';
 
 export type PayloadFormErrors = { [errorId: string]: boolean };
 

@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
 
-import AppJolticon from '../jolticon/AppJolticon.vue';
-import { $gettext } from '../translate/translate.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { $gettext } from '~common/translate/translate.service';
 
 type Props = {
 	value: Date;

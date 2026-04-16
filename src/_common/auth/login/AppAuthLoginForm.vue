@@ -2,22 +2,22 @@
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-import AppGrecaptchaWidget from '../../../auth/components/grecaptcha/widget/AppGrecaptchaWidget.vue';
-import { trackLoginCaptcha } from '../../analytics/analytics.service';
-import { Api } from '../../api/api.service';
-import AppButton from '../../button/AppButton.vue';
-import { Connection } from '../../connection/connection-service';
-import AppForm, { createForm, FormController } from '../../form-vue/AppForm.vue';
-import AppFormButton from '../../form-vue/AppFormButton.vue';
-import AppFormControl from '../../form-vue/AppFormControl.vue';
-import AppFormControlErrors from '../../form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../../form-vue/AppFormGroup.vue';
-import { validateMaxLength, validateUsername } from '../../form-vue/validators';
-import { LinkedAccountProvider } from '../../linked-account/linked-account.model';
-import { LinkedAccounts } from '../../linked-account/linked-accounts.service';
-import AppLoading from '../../loading/AppLoading.vue';
-import AppTranslate from '../../translate/AppTranslate.vue';
-import googleImage from '../google-icon.svg';
+import AppGrecaptchaWidget from '~auth/components/grecaptcha/widget/AppGrecaptchaWidget.vue';
+import { trackLoginCaptcha } from '~common/analytics/analytics.service';
+import { Api } from '~common/api/api.service';
+import googleImage from '~common/auth/google-icon.svg';
+import AppButton from '~common/button/AppButton.vue';
+import { Connection } from '~common/connection/connection-service';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import { validateMaxLength, validateUsername } from '~common/form-vue/validators';
+import { LinkedAccountProvider } from '~common/linked-account/linked-account.model';
+import { LinkedAccounts } from '~common/linked-account/linked-accounts.service';
+import AppLoading from '~common/loading/AppLoading.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 type FormModel = {
 	username: string;

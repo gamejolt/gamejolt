@@ -10,12 +10,12 @@ import {
 } from 'vue';
 import { RouteLocationNormalized, useRouter } from 'vue-router';
 
-import { objectEquals } from '../../utils/object';
-import { loadScript } from '../../utils/utils';
-import { isDynamicGoogleBot } from '../device/device.service';
-import { Model } from '../model/model.service';
-import { onRouteChangeAfter } from '../route/route-component';
-import { AdMonetizeMoreAdapter } from './monetizemore/monetizemore-adapter';
+import { AdMonetizeMoreAdapter } from '~common/ad/monetizemore/monetizemore-adapter';
+import { isDynamicGoogleBot } from '~common/device/device.service';
+import { Model } from '~common/model/model.service';
+import { onRouteChangeAfter } from '~common/route/route-component';
+import { objectEquals } from '~utils/object';
+import { loadScript } from '~utils/utils';
 
 export type AdStore = ReturnType<typeof createAdStore>;
 const AdStoreKey: InjectionKey<AdStore> = Symbol('ads');

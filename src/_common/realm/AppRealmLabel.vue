@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { RealmModel } from './realm-model';
+import { RealmModel } from '~common/realm/realm-model';
 
 type Props = {
 	realm: RealmModel;

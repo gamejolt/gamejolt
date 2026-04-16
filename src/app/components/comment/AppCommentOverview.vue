@@ -2,25 +2,25 @@
 import { computed, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
-import AppFadeCollapse from '../../../_common/AppFadeCollapse.vue';
+import { DisplayMode } from '~app/components/comment/modal/modal.service';
+import { showCommentThreadModal } from '~app/components/comment/thread/modal.service';
+import AppFadeCollapse from '~common/AppFadeCollapse.vue';
 import {
 	CommentModel,
 	getCommentBlockReason,
 	getCommentModelResourceName,
-} from '../../../_common/comment/comment-model';
+} from '~common/comment/comment-model';
 import {
 	CommentStoreModel,
 	getCommentStore,
 	useCommentStoreManager,
-} from '../../../_common/comment/comment-store';
-import AppContentViewer from '../../../_common/content/content-viewer/AppContentViewer.vue';
-import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
-import { illNoCommentsSmall } from '../../../_common/illustration/illustrations';
-import { Model } from '../../../_common/model/model.service';
-import AppUserCardHover from '../../../_common/user/card/AppUserCardHover.vue';
-import AppUserAvatarBubble from '../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
-import { DisplayMode } from './modal/modal.service';
-import { showCommentThreadModal } from './thread/modal.service';
+} from '~common/comment/comment-store';
+import AppContentViewer from '~common/content/content-viewer/AppContentViewer.vue';
+import AppIllustration from '~common/illustration/AppIllustration.vue';
+import { illNoCommentsSmall } from '~common/illustration/illustrations';
+import { Model } from '~common/model/model.service';
+import AppUserCardHover from '~common/user/card/AppUserCardHover.vue';
+import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
 
 type Props = {
 	comments: CommentModel[];

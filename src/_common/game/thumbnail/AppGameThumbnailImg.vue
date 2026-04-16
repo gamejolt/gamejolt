@@ -1,15 +1,15 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 
-import AppAspectRatio from '../../aspect-ratio/AppAspectRatio.vue';
-import { useContentFocusService } from '../../content-focus/content-focus.service';
-import AppImgResponsive from '../../img/AppImgResponsive.vue';
-import AppJolticon from '../../jolticon/AppJolticon.vue';
-import AppMediaItemBackdrop from '../../media-item/backdrop/AppMediaItemBackdrop.vue';
-import { Screen } from '../../screen/screen-service';
-import AppVideo from '../../video/AppVideo.vue';
-import { getVideoPlayerFromSources } from '../../video/player/controller';
-import { GameModel } from '../game.model';
+import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
+import { useContentFocusService } from '~common/content-focus/content-focus.service';
+import { GameModel } from '~common/game/game.model';
+import AppImgResponsive from '~common/img/AppImgResponsive.vue';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppMediaItemBackdrop from '~common/media-item/backdrop/AppMediaItemBackdrop.vue';
+import { Screen } from '~common/screen/screen-service';
+import AppVideo from '~common/video/AppVideo.vue';
+import { getVideoPlayerFromSources } from '~common/video/player/controller';
 
 type Props = {
 	game: GameModel;

@@ -1,16 +1,16 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
 
-import { CancelToken } from '../../../../utils/cancel-token';
-import { Api } from '../../../api/api.service';
-import AppButton from '../../../button/AppButton.vue';
-import AppModal from '../../../modal/AppModal.vue';
-import { useModal } from '../../../modal/modal.service';
-import { storeModelList } from '../../../model/model-store.service';
-import AppSpacer from '../../../spacer/AppSpacer.vue';
-import { StickerModel } from '../../sticker.model';
-import AppStickerGrid from '../AppStickerGrid.vue';
-import { StickerPackModel } from '../pack.model';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import { storeModelList } from '~common/model/model-store.service';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import AppStickerGrid from '~common/sticker/pack/AppStickerGrid.vue';
+import { StickerPackModel } from '~common/sticker/pack/pack.model';
+import { StickerModel } from '~common/sticker/sticker.model';
+import { CancelToken } from '~utils/cancel-token';
 
 type Props = {
 	pack: StickerPackModel;

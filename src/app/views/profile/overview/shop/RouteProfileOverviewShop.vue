@@ -2,13 +2,13 @@
 import { computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
+import { showVendingMachineModal } from '~app/components/vending-machine/modal/modal.service';
+import { useProfileRouteStore } from '~app/views/profile/RouteProfile.vue';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
-} from '../../../../../_common/route/route-component';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import { showVendingMachineModal } from '../../../../components/vending-machine/modal/modal.service';
-import { useProfileRouteStore } from '../../RouteProfile.vue';
+} from '~common/route/route-component';
+import { $gettext } from '~common/translate/translate.service';
 
 defineOptions(
 	defineAppRouteOptions({

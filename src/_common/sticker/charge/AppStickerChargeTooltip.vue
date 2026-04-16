@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { computed, CSSProperties, useTemplateRef } from 'vue';
 
-import { Ruler } from '../../ruler/ruler-service';
-import { Screen } from '../../screen/screen-service';
-import AppTranslate from '../../translate/AppTranslate.vue';
-import { useStickerStore } from '../sticker-store';
+import { Ruler } from '~common/ruler/ruler-service';
+import { Screen } from '~common/screen/screen-service';
+import { useStickerStore } from '~common/sticker/sticker-store';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 type Props = {
 	/**

@@ -1,17 +1,17 @@
 <script lang="ts">
 import { computed, ref } from 'vue';
 
-import { Api } from '../../../../../_common/api/api.service';
+import { useProfileRouteStore } from '~app/views/profile/RouteProfile.vue';
+import { Api } from '~common/api/api.service';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
-} from '../../../../../_common/route/route-component';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import AppTrophyListPaged from '../../../../../_common/trophy/list/AppTrophyListPaged.vue';
-import { populateTrophies } from '../../../../../_common/user/trophy/trophy-utils';
-import { UserBaseTrophyModel } from '../../../../../_common/user/trophy/user-base-trophy.model';
-import { useProfileRouteStore } from '../../RouteProfile.vue';
+} from '~common/route/route-component';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
+import AppTrophyListPaged from '~common/trophy/list/AppTrophyListPaged.vue';
+import { populateTrophies } from '~common/user/trophy/trophy-utils';
+import { UserBaseTrophyModel } from '~common/user/trophy/user-base-trophy.model';
 
 export default {
 	name: 'RouteProfileTrophiesSite',

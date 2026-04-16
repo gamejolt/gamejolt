@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 import { computed, toRef } from 'vue';
 
-import AppButton from '../../../../../../../../_common/button/AppButton.vue';
-import AppCardListItem from '../../../../../../../../_common/card/list/AppCardListItem.vue';
-import { CommunityChannelModel } from '../../../../../../../../_common/community/channel/channel.model';
-import AppJolticon from '../../../../../../../../_common/jolticon/AppJolticon.vue';
-import { vAppTooltip } from '../../../../../../../../_common/tooltip/tooltip-directive';
-import { $gettext } from '../../../../../../../../_common/translate/translate.service';
-import { showCommunityRemoveChannelModal } from '../../../../../../../components/community/remove-channel/modal/modal.service';
-import { useCommunityRouteStore } from '../../../../view.store';
+import { showCommunityRemoveChannelModal } from '~app/components/community/remove-channel/modal/modal.service';
+import { useCommunityRouteStore } from '~app/views/communities/view/view.store';
+import AppButton from '~common/button/AppButton.vue';
+import AppCardListItem from '~common/card/list/AppCardListItem.vue';
+import { CommunityChannelModel } from '~common/community/channel/channel.model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { $gettext } from '~common/translate/translate.service';
 
 type Props = {
 	channel: CommunityChannelModel;

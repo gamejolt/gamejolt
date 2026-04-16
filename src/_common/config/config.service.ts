@@ -1,9 +1,9 @@
 import { fetchAndActivate, getRemoteConfig, getValue } from 'firebase/remote-config';
 import { reactive } from 'vue';
 
-import { isDynamicGoogleBot } from '../device/device.service';
-import { getFirebaseApp } from '../firebase/firebase.service';
-import { commonStore } from '../store/common-store';
+import { isDynamicGoogleBot } from '~common/device/device.service';
+import { getFirebaseApp } from '~common/firebase/firebase.service';
+import { commonStore } from '~common/store/common-store';
 
 const ConfigService_ = {
 	isLoaded: false,

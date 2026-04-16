@@ -4,26 +4,26 @@ import { EditorState, Plugin, Selection, TextSelection, Transaction } from 'pros
 import { EditorView } from 'prosemirror-view';
 import { inject, InjectionKey, markRaw, MaybeRef, nextTick, reactive, unref, watch } from 'vue';
 
-import { isImage } from '../../../utils/image';
-import { uuidv4 } from '../../../utils/uuid';
-import { GJ_EMOJIS } from '../../emoji/AppEmoji.vue';
-import { EmojiModel } from '../../emoji/emoji.model';
-import { MediaItemModel } from '../../media-item/media-item-model';
-import { ContentContext, ContextCapabilities } from '../content-context';
-import { ContentDocument } from '../content-document';
-import { ContentFormatAdapter, ProsemirrorEditorFormat } from '../content-format-adapter';
-import { ContentOwnerController } from '../content-owner';
-import { ContentEditorAppAdapterMessage, editorGetAppAdapter } from './app-adapter';
-import { ContentEditorService } from './content-editor.service';
-import buildEditorEvents from './events/build-events';
-import { createMediaUploadTask,MediaUploadTask } from './media-upload-task';
-import { CustomButtonData } from './modals/custom-button/custom-button-modal.service';
-import { SearchResult } from './modals/gif/gif-modal.service';
-import { NodeViewRenderData } from './node-views/base';
-import { buildEditorNodeViews } from './node-views/node-view-builder';
-import { BasicMentionRegex } from './plugins/input-rules';
-import { createEditorPlugins } from './plugins/plugins';
-import { ContentEditorSchema, generateEditorSchema } from './schemas/content-editor-schema';
+import { ContentContext, ContextCapabilities } from '~common/content/content-context';
+import { ContentDocument } from '~common/content/content-document';
+import { ContentEditorAppAdapterMessage, editorGetAppAdapter } from '~common/content/content-editor/app-adapter';
+import { ContentEditorService } from '~common/content/content-editor/content-editor.service';
+import buildEditorEvents from '~common/content/content-editor/events/build-events';
+import { createMediaUploadTask,MediaUploadTask } from '~common/content/content-editor/media-upload-task';
+import { CustomButtonData } from '~common/content/content-editor/modals/custom-button/custom-button-modal.service';
+import { SearchResult } from '~common/content/content-editor/modals/gif/gif-modal.service';
+import { NodeViewRenderData } from '~common/content/content-editor/node-views/base';
+import { buildEditorNodeViews } from '~common/content/content-editor/node-views/node-view-builder';
+import { BasicMentionRegex } from '~common/content/content-editor/plugins/input-rules';
+import { createEditorPlugins } from '~common/content/content-editor/plugins/plugins';
+import { ContentEditorSchema, generateEditorSchema } from '~common/content/content-editor/schemas/content-editor-schema';
+import { ContentFormatAdapter, ProsemirrorEditorFormat } from '~common/content/content-format-adapter';
+import { ContentOwnerController } from '~common/content/content-owner';
+import { GJ_EMOJIS } from '~common/emoji/AppEmoji.vue';
+import { EmojiModel } from '~common/emoji/emoji.model';
+import { MediaItemModel } from '~common/media-item/media-item-model';
+import { isImage } from '~utils/image';
+import { uuidv4 } from '~utils/uuid';
 
 export const ContentEditorControllerKey: InjectionKey<ContentEditorController> = Symbol(
 	'content-editor-controller'

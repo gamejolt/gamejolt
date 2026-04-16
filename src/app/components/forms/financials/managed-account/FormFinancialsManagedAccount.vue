@@ -2,28 +2,28 @@
 import * as StripeData from 'stripe';
 import { computed, inject, InjectionKey, provide, Ref, ref, useTemplateRef } from 'vue';
 
-import { Api } from '../../../../../_common/api/api.service';
-import AppExpand from '../../../../../_common/expand/AppExpand.vue';
-import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
-import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
-import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormControlRadio from '../../../../../_common/form-vue/controls/AppFormControlRadio.vue';
-import AppFormControlSelect from '../../../../../_common/form-vue/controls/AppFormControlSelect.vue';
-import { Geo } from '../../../../../_common/geo/geo.service';
-import AppLinkExternal from '../../../../../_common/link/AppLinkExternal.vue';
-import AppLinkHelp from '../../../../../_common/link/AppLinkHelp.vue';
-import AppLoading from '../../../../../_common/loading/AppLoading.vue';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
+import AppFinancialsManagedAccountCompanyDetails from '~app/components/forms/financials/managed-account/AppFinancialsManagedAccountCompanyDetails.vue';
+import AppFinancialsManagedAccountPerson from '~app/components/forms/financials/managed-account/AppFinancialsManagedAccountPerson.vue';
+import { Api } from '~common/api/api.service';
+import AppExpand from '~common/expand/AppExpand.vue';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlRadio from '~common/form-vue/controls/AppFormControlRadio.vue';
+import AppFormControlSelect from '~common/form-vue/controls/AppFormControlSelect.vue';
+import { Geo } from '~common/geo/geo.service';
+import AppLinkExternal from '~common/link/AppLinkExternal.vue';
+import AppLinkHelp from '~common/link/AppLinkHelp.vue';
+import AppLoading from '~common/loading/AppLoading.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 import {
 	UserStripeManagedAccountModel,
 	UserStripeManagedAccountStatus,
 	UserStripeManagedAccountType,
-} from '../../../../../_common/user/stripe-managed-account/stripe-managed-account';
-import { UserModel } from '../../../../../_common/user/user.model';
-import { loadScript } from '../../../../../utils/utils';
-import AppFinancialsManagedAccountCompanyDetails from './AppFinancialsManagedAccountCompanyDetails.vue';
-import AppFinancialsManagedAccountPerson from './AppFinancialsManagedAccountPerson.vue';
+} from '~common/user/stripe-managed-account/stripe-managed-account';
+import { UserModel } from '~common/user/user.model';
+import { loadScript } from '~utils/utils';
 
 export const StripeFileUploadUrl = 'https://uploads.stripe.com/v1/files';
 

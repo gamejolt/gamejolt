@@ -1,31 +1,31 @@
 import { Ref } from 'vue';
 
-import { trackGiftAction } from '../../analytics/analytics.service';
-import { Api } from '../../api/api.service';
-import { AvatarFrameModel } from '../../avatar/frame.model';
-import { BackgroundModel } from '../../background/background.model';
-import { markProductAsUnlocked } from '../../collectible/collectible.model';
+import { trackGiftAction } from '~common/analytics/analytics.service';
+import { Api } from '~common/api/api.service';
+import { AvatarFrameModel } from '~common/avatar/frame.model';
+import { BackgroundModel } from '~common/background/background.model';
+import { markProductAsUnlocked } from '~common/collectible/collectible.model';
 import {
 	canAffordCurrency,
 	Currency,
 	CurrencyCostData,
 	CurrencyType,
-} from '../../currency/currency-type';
-import { showErrorGrowl } from '../../growls/growls.service';
-import { ModelStoreModel, storeModel, storeModelList } from '../../model/model-store.service';
-import { showStickerPackOpenModal } from '../../sticker/pack/open-modal/modal.service';
-import { StickerPackModel } from '../../sticker/pack/pack.model';
-import { UserStickerPackModel } from '../../sticker/pack/user-pack.model';
-import { $gettext } from '../../translate/translate.service';
-import type { UserModel } from '../../user/user.model';
-import { UserAvatarFrameModel } from '../../user/user-avatar/frame/frame.model';
-import { InventoryShopProductSalePricingModel } from './inventory-shop-product-sale-pricing.model';
-import { showNewProductModal } from './product-modal/modal.service';
+} from '~common/currency/currency-type';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import { InventoryShopProductSalePricingModel } from '~common/inventory/shop/inventory-shop-product-sale-pricing.model';
+import { showNewProductModal } from '~common/inventory/shop/product-modal/modal.service';
 import {
 	assignShopProductOwnerData,
 	InventoryShopProduct,
 	PurchasableProductType,
-} from './product-owner-helpers';
+} from '~common/inventory/shop/product-owner-helpers';
+import { ModelStoreModel, storeModel, storeModelList } from '~common/model/model-store.service';
+import { showStickerPackOpenModal } from '~common/sticker/pack/open-modal/modal.service';
+import { StickerPackModel } from '~common/sticker/pack/pack.model';
+import { UserStickerPackModel } from '~common/sticker/pack/user-pack.model';
+import { $gettext } from '~common/translate/translate.service';
+import type { UserModel } from '~common/user/user.model';
+import { UserAvatarFrameModel } from '~common/user/user-avatar/frame/frame.model';
 
 export class InventoryShopProductSaleModel implements ModelStoreModel {
 	declare id: number;

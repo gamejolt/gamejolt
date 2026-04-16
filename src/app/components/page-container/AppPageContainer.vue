@@ -1,13 +1,13 @@
 <script lang="ts">
 import { computed, CSSProperties, toRef, watch } from 'vue';
 
-import { ComponentProps } from '../../../_common/component-helpers';
-import { Screen } from '../../../_common/screen/screen-service';
-import AppScrollAffix from '../../../_common/scroll/AppScrollAffix.vue';
-import AppScrollScroller, { createScroller } from '../../../_common/scroll/AppScrollScroller.vue';
-import { styleWhen } from '../../../_styles/mixins';
-import { kGridGutterWidth } from '../../../_styles/variables';
-import { kShellTopNavHeight } from '../../styles/variables';
+import { kShellTopNavHeight } from '~app/styles/variables';
+import { ComponentProps } from '~common/component-helpers';
+import { Screen } from '~common/screen/screen-service';
+import AppScrollAffix from '~common/scroll/AppScrollAffix.vue';
+import AppScrollScroller, { createScroller } from '~common/scroll/AppScrollScroller.vue';
+import { styleWhen } from '~styles/mixins';
+import { kGridGutterWidth } from '~styles/variables';
 
 </script>
 

@@ -1,20 +1,20 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import { vAppAuthRequired } from '../../../../_common/auth/auth-required-directive';
-import { CommunityChannelModel } from '../../../../_common/community/channel/channel.model';
-import { CommunityModel } from '../../../../_common/community/community.model';
+import { showPostEditModal } from '~app/components/post/edit-modal/edit-modal-service';
+import { vAppAuthRequired } from '~common/auth/auth-required-directive';
+import { CommunityChannelModel } from '~common/community/channel/channel.model';
+import { CommunityModel } from '~common/community/community.model';
 import {
 	$createFiresidePost,
 	FiresidePostModel,
-} from '../../../../_common/fireside/post/post-model';
-import { GameModel } from '../../../../_common/game/game.model';
-import { RealmModel } from '../../../../_common/realm/realm-model';
-import { useCommonStore } from '../../../../_common/store/common-store';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
-import AppUserAvatarBubble from '../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
-import { showPostEditModal } from '../edit-modal/edit-modal-service';
+} from '~common/fireside/post/post-model';
+import { GameModel } from '~common/game/game.model';
+import { RealmModel } from '~common/realm/realm-model';
+import { useCommonStore } from '~common/store/common-store';
+import { $gettext } from '~common/translate/translate.service';
+import AppUserCardHover from '~common/user/card/AppUserCardHover.vue';
+import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
 
 type Props = {
 	game?: GameModel;
@@ -80,4 +80,4 @@ async function open() {
 	</div>
 </template>
 
-<style lang="stylus" src="./add-button.styl" scoped></style>
+<style lang="stylus" src="~app/components/post/add-button/add-button.styl" scoped></style>

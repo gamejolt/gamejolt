@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import AppButton from '../../../../_common/button/AppButton.vue';
-import { GamePlaylistModel } from '../../../../_common/game-playlist/game-playlist.model';
-import AppModal from '../../../../_common/modal/AppModal.vue';
-import { useModal } from '../../../../_common/modal/modal.service';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import FormPlaylist from '../../forms/playlist/FormPlaylist.vue';
-import { GameCollectionModel } from '../../game/collection/collection.model';
+import FormPlaylist from '~app/components/forms/playlist/FormPlaylist.vue';
+import { GameCollectionModel } from '~app/components/game/collection/collection.model';
+import AppButton from '~common/button/AppButton.vue';
+import { GamePlaylistModel } from '~common/game-playlist/game-playlist.model';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 type Props = {
 	collection?: GameCollectionModel;

@@ -1,12 +1,7 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
 
-import AppButton from '../../../button/AppButton.vue';
-import { showErrorGrowl } from '../../../growls/growls.service';
-import AppJolticon from '../../../jolticon/AppJolticon.vue';
-import { Screen } from '../../../screen/screen-service';
-import { vAppTooltip } from '../../../tooltip/tooltip-directive';
-import { $gettext } from '../../../translate/translate.service';
+import AppButton from '~common/button/AppButton.vue';
 import {
 	editorInsertBlockquote,
 	editorInsertBulletList,
@@ -17,7 +12,12 @@ import {
 	editorInsertSpoiler,
 	editorUploadImageFile,
 	useContentEditorController,
-} from '../content-editor-controller';
+} from '~common/content/content-editor/content-editor-controller';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { Screen } from '~common/screen/screen-service';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { $gettext } from '~common/translate/translate.service';
 
 const controller = useContentEditorController()!;
 const top = ref(0);

@@ -1,7 +1,7 @@
-import { ContentContext } from './content-context';
-import { ContentDocument } from './content-document';
-import { ContentObject } from './content-object';
-import { ContentWriter } from './content-writer';
+import { ContentContext } from '~common/content/content-context';
+import { ContentDocument } from '~common/content/content-document';
+import { ContentObject } from '~common/content/content-object';
+import { ContentWriter } from '~common/content/content-writer';
 
 export type ProsemirrorEditorFormat = {
 	type: 'doc';

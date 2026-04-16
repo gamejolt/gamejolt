@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
 
-import AppGameMediaBar from '../../game/media-bar/AppGameMediaBar.vue';
-import { GameScreenshotModel } from '../../game/screenshot/screenshot.model';
-import { GameSketchfabModel } from '../../game/sketchfab/sketchfab.model';
-import { GameVideoModel } from '../../game/video/video.model';
+import AppGameMediaBar from '~common/game/media-bar/AppGameMediaBar.vue';
+import { GameScreenshotModel } from '~common/game/screenshot/screenshot.model';
+import { GameSketchfabModel } from '~common/game/sketchfab/sketchfab.model';
+import { GameVideoModel } from '~common/game/video/video.model';
 
 type GameMediaModel = GameScreenshotModel | GameVideoModel | GameSketchfabModel;
 

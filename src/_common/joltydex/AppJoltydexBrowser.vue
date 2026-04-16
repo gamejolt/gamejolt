@@ -1,21 +1,21 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 
-import { styleFlexCenter } from '../../_styles/mixins';
-import { kBorderRadiusLg, kFontFamilyDisplay } from '../../_styles/variables';
-import AppAspectRatio from '../aspect-ratio/AppAspectRatio.vue';
-import AppButton from '../button/AppButton.vue';
-import AppCollectibleThumb from '../collectible/AppCollectibleThumb.vue';
-import { CollectibleType } from '../collectible/collectible.model';
-import AppIllustration from '../illustration/AppIllustration.vue';
-import { illExtremeSadness } from '../illustration/illustrations';
-import AppCircularProgress from '../progress/AppCircularProgress.vue';
-import AppSpacer from '../spacer/AppSpacer.vue';
-import { useCommonStore } from '../store/common-store';
-import { kThemePlaceholderBg } from '../theme/variables';
-import { $gettext } from '../translate/translate.service';
-import { UserModel } from '../user/user.model';
-import { applyPayloadToJoltydexFeed, loadJoltydexFeed, makeJoltydexFeed } from './joltydex-feed';
+import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
+import AppButton from '~common/button/AppButton.vue';
+import AppCollectibleThumb from '~common/collectible/AppCollectibleThumb.vue';
+import { CollectibleType } from '~common/collectible/collectible.model';
+import AppIllustration from '~common/illustration/AppIllustration.vue';
+import { illExtremeSadness } from '~common/illustration/illustrations';
+import { applyPayloadToJoltydexFeed, loadJoltydexFeed, makeJoltydexFeed } from '~common/joltydex/joltydex-feed';
+import AppCircularProgress from '~common/progress/AppCircularProgress.vue';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import { useCommonStore } from '~common/store/common-store';
+import { kThemePlaceholderBg } from '~common/theme/variables';
+import { $gettext } from '~common/translate/translate.service';
+import { UserModel } from '~common/user/user.model';
+import { styleFlexCenter } from '~styles/mixins';
+import { kBorderRadiusLg, kFontFamilyDisplay } from '~styles/variables';
 
 type Props = {
 	user: UserModel;

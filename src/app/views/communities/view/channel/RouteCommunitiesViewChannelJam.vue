@@ -1,34 +1,34 @@
 <script lang="ts">
 import { computed, defineAsyncComponent, ref, toRef } from 'vue';
 
-import { Api } from '../../../../../_common/api/api.service';
-import AppFadeCollapse from '../../../../../_common/AppFadeCollapse.vue';
-import AppButton from '../../../../../_common/button/AppButton.vue';
-import { CompetitionPeriodVoting } from '../../../../../_common/community/competition/competition.model';
-import { CommunityCompetitionEntryModel } from '../../../../../_common/community/competition/entry/entry.model';
-import { showCommunityCompetitionEntrySubmitModal } from '../../../../../_common/community/competition/entry/submit-modal/submit-modal.service';
-import { CommunityCompetitionVotingCategoryModel } from '../../../../../_common/community/competition/voting-category/voting-category.model';
-import AppContentViewer from '../../../../../_common/content/content-viewer/AppContentViewer.vue';
-import { formatDate } from '../../../../../_common/filters/date';
-import { showSuccessGrowl } from '../../../../../_common/growls/growls.service';
+import AppCommunityCompetitionCountdown from '~app/components/community/competition/countdown/AppCommunityCompetitionCountdown.vue';
+import AppCommunityCompetitionEntryGrid from '~app/components/community/competition/entry/grid/AppCommunityCompetitionEntryGrid.vue';
+import AppCommunityPerms from '~app/components/community/perms/AppCommunityPerms.vue';
+import { router } from '~app/views';
+import AppCommunityPageContainer from '~app/views/communities/view/_page-container/AppCommunityPageContainer.vue';
+import { getChannelPathFromRoute, setCommunityMeta, useCommunityRouteStore } from '~app/views/communities/view/view.store';
+import { Api } from '~common/api/api.service';
+import AppFadeCollapse from '~common/AppFadeCollapse.vue';
+import AppButton from '~common/button/AppButton.vue';
+import { CompetitionPeriodVoting } from '~common/community/competition/competition.model';
+import { CommunityCompetitionEntryModel } from '~common/community/competition/entry/entry.model';
+import { showCommunityCompetitionEntrySubmitModal } from '~common/community/competition/entry/submit-modal/submit-modal.service';
+import { CommunityCompetitionVotingCategoryModel } from '~common/community/competition/voting-category/voting-category.model';
+import AppContentViewer from '~common/content/content-viewer/AppContentViewer.vue';
+import { formatDate } from '~common/filters/date';
+import { showSuccessGrowl } from '~common/growls/growls.service';
 import {
 	asyncRouteLoader,
 	createAppRoute,
 	defineAppRouteOptions,
-} from '../../../../../_common/route/route-component';
-import { Screen } from '../../../../../_common/screen/screen-service';
-import { useCommonStore } from '../../../../../_common/store/common-store';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import { arrayRemove } from '../../../../../utils/array';
-import AppCommunityCompetitionCountdown from '../../../../components/community/competition/countdown/AppCommunityCompetitionCountdown.vue';
-import AppCommunityCompetitionEntryGrid from '../../../../components/community/competition/entry/grid/AppCommunityCompetitionEntryGrid.vue';
-import AppCommunityPerms from '../../../../components/community/perms/AppCommunityPerms.vue';
-import { router } from '../../..';
-import AppCommunityPageContainer from '../_page-container/AppCommunityPageContainer.vue';
-import { getChannelPathFromRoute, setCommunityMeta, useCommunityRouteStore } from '../view.store';
+} from '~common/route/route-component';
+import { Screen } from '~common/screen/screen-service';
+import { useCommonStore } from '~common/store/common-store';
+import { $gettext } from '~common/translate/translate.service';
+import { arrayRemove } from '~utils/array';
 
 const RouteCommunitiesViewChannelJamEntries = defineAsyncComponent(() =>
-	asyncRouteLoader(router, import('./RouteCommunitiesViewChannelJamEntries.vue'))
+	asyncRouteLoader(router, import('~app/views/communities/view/channel/RouteCommunitiesViewChannelJamEntries.vue'))
 );
 
 export default {

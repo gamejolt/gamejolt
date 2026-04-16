@@ -2,8 +2,8 @@
 import { determine } from 'jstimezonedetect';
 import { computed, onMounted, ref } from 'vue';
 
-import { formatDate } from '../../../../../_common/filters/date';
-import { Timezone } from '../../../../../_common/timezone/timezone.service';
+import { formatDate } from '~common/filters/date';
+import { Timezone } from '~common/timezone/timezone.service';
 
 type Props = {
 	date: number;

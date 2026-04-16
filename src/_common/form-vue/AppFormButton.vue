@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
 
-import AppButton from '../button/AppButton.vue';
-import AppJolticon from '../jolticon/AppJolticon.vue';
-import { useForm } from './AppForm.vue';
+import AppButton from '~common/button/AppButton.vue';
+import { useForm } from '~common/form-vue/AppForm.vue';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
 
 type Props = {
 	showWhenValid?: boolean;

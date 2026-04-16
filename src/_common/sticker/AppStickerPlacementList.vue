@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import { FiresidePostModel } from '../fireside/post/post-model';
-import { Screen } from '../screen/screen-service';
-import { UserModel } from '../user/user.model';
-import AppStickerSupporters from './AppStickerSupporters.vue';
-import AppStickerReactions from './reactions/AppStickerReactions.vue';
-import { StickerCount } from './sticker-count';
-import { StickerTargetController } from './target/target-controller';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import { Screen } from '~common/screen/screen-service';
+import AppStickerSupporters from '~common/sticker/AppStickerSupporters.vue';
+import AppStickerReactions from '~common/sticker/reactions/AppStickerReactions.vue';
+import { StickerCount } from '~common/sticker/sticker-count';
+import { StickerTargetController } from '~common/sticker/target/target-controller';
+import { UserModel } from '~common/user/user.model';
 
 type Props = {
 	stickerTargetController: StickerTargetController;

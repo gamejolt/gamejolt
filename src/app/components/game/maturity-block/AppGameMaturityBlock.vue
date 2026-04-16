@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
 
-import { Analytics } from '../../../../_common/analytics/analytics.service';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import { GameModel } from '../../../../_common/game/game.model';
-import { Scroll } from '../../../../_common/scroll/scroll.service';
-import { SettingRestrictedBrowsing } from '../../../../_common/settings/settings.service';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import AppGameOgrs from '../ogrs/AppGameOgrs.vue';
+import AppGameOgrs from '~app/components/game/ogrs/AppGameOgrs.vue';
+import { Analytics } from '~common/analytics/analytics.service';
+import AppButton from '~common/button/AppButton.vue';
+import { GameModel } from '~common/game/game.model';
+import { Scroll } from '~common/scroll/scroll.service';
+import { SettingRestrictedBrowsing } from '~common/settings/settings.service';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 type Props = {
 	game: GameModel;

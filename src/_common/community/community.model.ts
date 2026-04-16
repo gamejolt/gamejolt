@@ -1,17 +1,17 @@
 import { RouteLocationNormalized } from 'vue-router';
 
-import { RouteLocationDefinition } from '../../utils/router';
-import { assertNever } from '../../utils/utils';
-import { CommunityJoinLocation, trackCommunityJoin } from '../analytics/analytics.service';
-import { Api } from '../api/api.service';
-import { Collaboratable, Perm } from '../collaborator/collaboratable';
-import { GameModel } from '../game/game.model';
-import { MediaItemModel } from '../media-item/media-item-model';
-import { Model } from '../model/model.service';
-import { ThemeModel } from '../theme/theme.model';
-import { UserBlockModel } from '../user/block/block.model';
-import { CommunityChannelModel } from './channel/channel.model';
-import noThumbImage from './no-thumb.png';
+import { CommunityJoinLocation, trackCommunityJoin } from '~common/analytics/analytics.service';
+import { Api } from '~common/api/api.service';
+import { Collaboratable, Perm } from '~common/collaborator/collaboratable';
+import { CommunityChannelModel } from '~common/community/channel/channel.model';
+import noThumbImage from '~common/community/no-thumb.png';
+import { GameModel } from '~common/game/game.model';
+import { MediaItemModel } from '~common/media-item/media-item-model';
+import { Model } from '~common/model/model.service';
+import { ThemeModel } from '~common/theme/theme.model';
+import { UserBlockModel } from '~common/user/block/block.model';
+import { RouteLocationDefinition } from '~utils/router';
+import { assertNever } from '~utils/utils';
 
 export class CommunityModel extends Collaboratable(Model) {
 	declare name: string;

@@ -1,9 +1,9 @@
 import { defineAsyncComponent } from 'vue';
 import { Router } from 'vue-router';
 
-import { showModal } from '../../../../_common/modal/modal.service';
-import { Model } from '../../../../_common/model/model.service';
-import { DisplayMode } from '../modal/modal.service';
+import { DisplayMode } from '~app/components/comment/modal/modal.service';
+import { showModal } from '~common/modal/modal.service';
+import { Model } from '~common/model/model.service';
 
 interface CommentThreadModalOptions {
 	router: Router;
@@ -20,7 +20,7 @@ export async function showCommentThreadModal(options: CommentThreadModalOptions)
 
 	return await showModal<void>({
 		modalId: 'CommentThread-' + [model.constructor.name, model.id, commentId].join('-'),
-		component: defineAsyncComponent(() => import('./AppCommentThreadModal.vue')),
+		component: defineAsyncComponent(() => import('~app/components/comment/thread/AppCommentThreadModal.vue')),
 		props: {
 			model,
 			commentId,

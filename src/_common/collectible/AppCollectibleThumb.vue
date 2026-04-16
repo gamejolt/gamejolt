@@ -1,30 +1,30 @@
 <script lang="ts" setup>
 import { computed, CSSProperties } from 'vue';
 
+import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
+import AppCollectibleThumbDetails from '~common/collectible/AppCollectibleThumbDetails.vue';
+import AppCollectibleUnlockedRibbon from '~common/collectible/AppCollectibleUnlockedRibbon.vue';
+import { CollectibleModel, CollectibleType } from '~common/collectible/collectible.model';
+import { showCollectibleDetailsModal } from '~common/collectible/details-modal/modal.service';
+import { JoltydexFeed } from '~common/joltydex/joltydex-feed';
+import { useOnHover } from '~common/on/useOnHover';
+import AppPopper from '~common/popper/AppPopper.vue';
+import { Screen } from '~common/screen/screen-service';
+import AppStickerMastery from '~common/sticker/AppStickerMastery.vue';
+import { kThemeBgOffset, kThemeBiBg, kThemeBiFg, kThemeGjBlue } from '~common/theme/variables';
 import {
 	styleBorderRadiusLg,
 	styleElevate,
 	styleLineClamp,
 	styleTyped,
 	styleWhen,
-} from '../../_styles/mixins';
+} from '~styles/mixins';
 import {
 	kBorderRadiusBase,
 	kBorderRadiusLg,
 	kFontSizeTiny,
 	kStrongEaseOut,
-} from '../../_styles/variables';
-import AppAspectRatio from '../aspect-ratio/AppAspectRatio.vue';
-import { JoltydexFeed } from '../joltydex/joltydex-feed';
-import { useOnHover } from '../on/useOnHover';
-import AppPopper from '../popper/AppPopper.vue';
-import { Screen } from '../screen/screen-service';
-import AppStickerMastery from '../sticker/AppStickerMastery.vue';
-import { kThemeBgOffset, kThemeBiBg, kThemeBiFg, kThemeGjBlue } from '../theme/variables';
-import AppCollectibleThumbDetails from './AppCollectibleThumbDetails.vue';
-import AppCollectibleUnlockedRibbon from './AppCollectibleUnlockedRibbon.vue';
-import { CollectibleModel, CollectibleType } from './collectible.model';
-import { showCollectibleDetailsModal } from './details-modal/modal.service';
+} from '~styles/variables';
 
 type Props = {
 	collectible: CollectibleModel;

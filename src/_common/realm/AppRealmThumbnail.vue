@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import AppImgResponsive from '../img/AppImgResponsive.vue';
-import AppResponsiveDimensions from '../responsive-dimensions/AppResponsiveDimensions.vue';
-import { RealmModel } from './realm-model';
+import AppImgResponsive from '~common/img/AppImgResponsive.vue';
+import { RealmModel } from '~common/realm/realm-model';
+import AppResponsiveDimensions from '~common/responsive-dimensions/AppResponsiveDimensions.vue';
 
 type Props = {
 	realm: RealmModel;

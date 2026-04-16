@@ -2,35 +2,35 @@
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { Api } from '../../../../../../../../_common/api/api.service';
-import AppButton from '../../../../../../../../_common/button/AppButton.vue';
-import AppCardList from '../../../../../../../../_common/card/list/AppCardList.vue';
-import AppCardListDraggable from '../../../../../../../../_common/card/list/AppCardListDraggable.vue';
-import AppCardListItem from '../../../../../../../../_common/card/list/AppCardListItem.vue';
-import { formatCurrency } from '../../../../../../../../_common/filters/currency';
+import AppDashGameWizardControls from '~app/components/forms/game/wizard-controls/AppDashGameWizardControls.vue';
+import { showGamePackageEditModal } from '~app/components/game/package/edit-modal/edit-modal.service';
+import AppGamePerms from '~app/components/game/perms/AppGamePerms.vue';
+import { useGameDashRouteController } from '~app/views/dashboard/games/manage/manage.store';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import AppCardList from '~common/card/list/AppCardList.vue';
+import AppCardListDraggable from '~common/card/list/AppCardListDraggable.vue';
+import AppCardListItem from '~common/card/list/AppCardListItem.vue';
+import { formatCurrency } from '~common/filters/currency';
 import {
 	$removeGamePackage,
 	$saveGamePackageSort,
 	GamePackageModel,
 	GamePackageVisibility,
-} from '../../../../../../../../_common/game/package/package.model';
-import { showSuccessGrowl } from '../../../../../../../../_common/growls/growls.service';
-import AppJolticon from '../../../../../../../../_common/jolticon/AppJolticon.vue';
-import AppLinkHelp from '../../../../../../../../_common/link/AppLinkHelp.vue';
-import { showModalConfirm } from '../../../../../../../../_common/modal/confirm/confirm-service';
+} from '~common/game/package/package.model';
+import { showSuccessGrowl } from '~common/growls/growls.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLinkHelp from '~common/link/AppLinkHelp.vue';
+import { showModalConfirm } from '~common/modal/confirm/confirm-service';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
-} from '../../../../../../../../_common/route/route-component';
-import { SellableModel } from '../../../../../../../../_common/sellable/sellable.model';
-import { vAppTooltip } from '../../../../../../../../_common/tooltip/tooltip-directive';
-import AppTranslate from '../../../../../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../../../../../_common/translate/translate.service';
-import { arrayIndexBy } from '../../../../../../../../utils/array';
-import AppDashGameWizardControls from '../../../../../../../components/forms/game/wizard-controls/AppDashGameWizardControls.vue';
-import { showGamePackageEditModal } from '../../../../../../../components/game/package/edit-modal/edit-modal.service';
-import AppGamePerms from '../../../../../../../components/game/perms/AppGamePerms.vue';
-import { useGameDashRouteController } from '../../../manage.store';
+} from '~common/route/route-component';
+import { SellableModel } from '~common/sellable/sellable.model';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { arrayIndexBy } from '~utils/array';
 
 export default {
 	name: 'RouteDashGamesManageGamePackagesList',

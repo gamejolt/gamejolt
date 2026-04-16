@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import AppShareControl from '../share/AppShareControl.vue';
-import AppSpacer from '../spacer/AppSpacer.vue';
-import AppTranslate from '../translate/AppTranslate.vue';
-import { UserModel } from '../user/user.model';
+import AppShareControl from '~common/share/AppShareControl.vue';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { UserModel } from '~common/user/user.model';
 
 type Props = {
 	user: UserModel;

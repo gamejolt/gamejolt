@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { onMounted, onUnmounted, useTemplateRef, watch } from 'vue';
 
-import { GameSongModel } from '../../game/song/song.model';
+import { GameSongModel } from '~common/game/song/song.model';
 
 type Props = {
 	song: GameSongModel;

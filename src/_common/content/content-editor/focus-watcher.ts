@@ -1,4 +1,4 @@
-import { isChildElement } from '../../../utils/dom';
+import { isChildElement } from '~utils/dom';
 
 /**
  * The purpose of this class is to watch the focus events regarding the content editor.

@@ -1,25 +1,25 @@
 <script lang="ts">
 import { onMounted, ref } from 'vue';
 
-import { Api } from '../../../../_common/api/api.service';
-import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import AppHoverCard from '../../../../_common/card/AppHoverCard.vue';
-import { CommunityModel } from '../../../../_common/community/community.model';
-import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
-import AppCommunityVerifiedTick from '../../../../_common/community/verified-tick/AppCommunityVerifiedTick.vue';
-import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
-import { illExtremeSadnessSmall } from '../../../../_common/illustration/illustrations';
-import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
-import AppModal from '../../../../_common/modal/AppModal.vue';
-import AppModalFloatingHeader from '../../../../_common/modal/AppModalFloatingHeader.vue';
-import { useModal } from '../../../../_common/modal/modal.service';
-import AppSectionTitle from '../../../../_common/section/AppSectionTitle.vue';
-import { kThemeBgSubtle } from '../../../../_common/theme/variables';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { UserModel } from '../../../../_common/user/user.model';
-import { styleBorderRadiusLg, styleChangeBg, styleLineClamp } from '../../../../_styles/mixins';
-import { kFontSizeSmall, kLineHeightBase } from '../../../../_styles/variables';
+import { Api } from '~common/api/api.service';
+import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
+import AppButton from '~common/button/AppButton.vue';
+import AppHoverCard from '~common/card/AppHoverCard.vue';
+import { CommunityModel } from '~common/community/community.model';
+import AppCommunityThumbnailImg from '~common/community/thumbnail/AppCommunityThumbnailImg.vue';
+import AppCommunityVerifiedTick from '~common/community/verified-tick/AppCommunityVerifiedTick.vue';
+import AppIllustration from '~common/illustration/AppIllustration.vue';
+import { illExtremeSadnessSmall } from '~common/illustration/illustrations';
+import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
+import AppModal from '~common/modal/AppModal.vue';
+import AppModalFloatingHeader from '~common/modal/AppModalFloatingHeader.vue';
+import { useModal } from '~common/modal/modal.service';
+import AppSectionTitle from '~common/section/AppSectionTitle.vue';
+import { kThemeBgSubtle } from '~common/theme/variables';
+import { $gettext } from '~common/translate/translate.service';
+import { UserModel } from '~common/user/user.model';
+import { styleBorderRadiusLg, styleChangeBg, styleLineClamp } from '~styles/mixins';
+import { kFontSizeSmall, kLineHeightBase } from '~styles/variables';
 
 const innerCircleEdge = 30 * (Math.SQRT2 - 1);
 </script>

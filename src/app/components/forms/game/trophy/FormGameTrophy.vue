@@ -1,33 +1,33 @@
 <script lang="ts" setup>
 import { computed, ref, toRef } from 'vue';
 
-import AppButton from '../../../../../_common/button/AppButton.vue';
-import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
-import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
-import AppFormControl from '../../../../../_common/form-vue/AppFormControl.vue';
-import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormControlSelect from '../../../../../_common/form-vue/controls/AppFormControlSelect.vue';
-import AppFormControlTextarea from '../../../../../_common/form-vue/controls/AppFormControlTextarea.vue';
-import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
-import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
+import AppButton from '~common/button/AppButton.vue';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlSelect from '~common/form-vue/controls/AppFormControlSelect.vue';
+import AppFormControlTextarea from '~common/form-vue/controls/AppFormControlTextarea.vue';
+import AppFormControlToggle from '~common/form-vue/controls/AppFormControlToggle.vue';
+import AppFormControlUpload from '~common/form-vue/controls/upload/AppFormControlUpload.vue';
 import {
 	validateFilesize,
 	validateImageMaxDimensions,
 	validateMaxLength,
-} from '../../../../../_common/form-vue/validators';
-import { GameModel } from '../../../../../_common/game/game.model';
+} from '~common/form-vue/validators';
+import { GameModel } from '~common/game/game.model';
 import {
 	$clearGameTrophyImage,
 	$saveGameTrophy,
 	GameTrophyModel,
-} from '../../../../../_common/game/trophy/trophy.model';
-import AppImgResponsive from '../../../../../_common/img/AppImgResponsive.vue';
-import { showModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
-import { BaseTrophyDifficulty } from '../../../../../_common/trophy/base-trophy.model';
+} from '~common/game/trophy/trophy.model';
+import AppImgResponsive from '~common/img/AppImgResponsive.vue';
+import { showModalConfirm } from '~common/modal/confirm/confirm-service';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { TranslateDirective as vTranslate } from '~common/translate/translate-directive';
+import { BaseTrophyDifficulty } from '~common/trophy/base-trophy.model';
 
 type FormModel = GameTrophyModel;
 

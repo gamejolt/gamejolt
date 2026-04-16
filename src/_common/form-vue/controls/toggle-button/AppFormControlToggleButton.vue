@@ -1,16 +1,16 @@
 <script lang="ts" setup>
 import { computed, toRef } from 'vue';
 
-import { arrayRemove } from '../../../../utils/array';
-import AppButton from '../../../button/AppButton.vue';
-import { useForm } from '../../AppForm.vue';
+import AppButton from '~common/button/AppButton.vue';
+import { useForm } from '~common/form-vue/AppForm.vue';
 import {
 	createFormControl,
 	FormControlEmits,
-} from '../../AppFormControl.vue';
-import { useFormGroup } from '../../AppFormGroup.vue';
-import { FormValidator } from '../../validators';
-import { useFormControlToggleButtonGroup } from './AppFormControlToggleButtonGroup.vue';
+} from '~common/form-vue/AppFormControl.vue';
+import { useFormGroup } from '~common/form-vue/AppFormGroup.vue';
+import { useFormControlToggleButtonGroup } from '~common/form-vue/controls/toggle-button/AppFormControlToggleButtonGroup.vue';
+import { FormValidator } from '~common/form-vue/validators';
+import { arrayRemove } from '~utils/array';
 
 type Props = {
 	disabled?: boolean;

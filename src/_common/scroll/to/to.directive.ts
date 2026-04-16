@@ -1,6 +1,6 @@
 import { Directive } from 'vue';
 
-import { Scroll } from '../scroll.service';
+import { Scroll } from '~common/scroll/scroll.service';
 
 export const vAppScrollTo: Directive<unknown, string | undefined> = {
 	beforeMount(el: HTMLElement, binding) {

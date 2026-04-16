@@ -2,33 +2,33 @@
 import { computed, nextTick, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
-import { Api } from '../../../../../_common/api/api.service';
-import AppButton from '../../../../../_common/button/AppButton.vue';
-import { Clipboard } from '../../../../../_common/clipboard/clipboard-service';
-import AppContentViewer from '../../../../../_common/content/content-viewer/AppContentViewer.vue';
-import { Environment } from '../../../../../_common/environment/environment.service';
-import AppExpand from '../../../../../_common/expand/AppExpand.vue';
-import { formatDate } from '../../../../../_common/filters/date';
-import { formatNumber } from '../../../../../_common/filters/number';
-import { ForumPostModel } from '../../../../../_common/forum/post/post.model';
-import { ForumTopicModel } from '../../../../../_common/forum/topic/topic.model';
-import { showErrorGrowl } from '../../../../../_common/growls/growls.service';
-import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import AppMessageThread from '../../../../../_common/message-thread/AppMessageThread.vue';
-import AppMessageThreadItem from '../../../../../_common/message-thread/AppMessageThreadItem.vue';
-import { $readNotification } from '../../../../../_common/notification/notification-model';
-import AppPopper from '../../../../../_common/popper/AppPopper.vue';
-import { Popper } from '../../../../../_common/popper/popper.service';
-import { showReportModal } from '../../../../../_common/report/modal/modal.service';
+import FormForumPost from '~app/components/forms/forum/post/FormForumPost.vue';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import { Clipboard } from '~common/clipboard/clipboard-service';
+import AppContentViewer from '~common/content/content-viewer/AppContentViewer.vue';
+import { Environment } from '~common/environment/environment.service';
+import AppExpand from '~common/expand/AppExpand.vue';
+import { formatDate } from '~common/filters/date';
+import { formatNumber } from '~common/filters/number';
+import { ForumPostModel } from '~common/forum/post/post.model';
+import { ForumTopicModel } from '~common/forum/topic/topic.model';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppMessageThread from '~common/message-thread/AppMessageThread.vue';
+import AppMessageThreadItem from '~common/message-thread/AppMessageThreadItem.vue';
+import { $readNotification } from '~common/notification/notification-model';
+import AppPopper from '~common/popper/AppPopper.vue';
+import { Popper } from '~common/popper/popper.service';
+import { showReportModal } from '~common/report/modal/modal.service';
 import AppScrollInview, {
 	ScrollInviewConfig,
-} from '../../../../../_common/scroll/inview/AppScrollInview.vue';
-import { Scroll } from '../../../../../_common/scroll/scroll.service';
-import { useCommonStore } from '../../../../../_common/store/common-store';
-import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import FormForumPost from '../../../forms/forum/post/FormForumPost.vue';
+} from '~common/scroll/inview/AppScrollInview.vue';
+import { Scroll } from '~common/scroll/scroll.service';
+import { useCommonStore } from '~common/store/common-store';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
 
 const InviewConfig = new ScrollInviewConfig();
 

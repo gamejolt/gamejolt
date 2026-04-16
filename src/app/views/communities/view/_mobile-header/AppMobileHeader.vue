@@ -2,26 +2,26 @@
 import { toRef } from 'vue';
 import { useRouter } from 'vue-router';
 
-import AppButton from '../../../../../_common/button/AppButton.vue';
-import AppCommunityJoinWidget from '../../../../../_common/community/join-widget/AppCommunityJoinWidget.vue';
-import AppCommunityVerifiedTick from '../../../../../_common/community/verified-tick/AppCommunityVerifiedTick.vue';
-import { Environment } from '../../../../../_common/environment/environment.service';
-import { formatNumber } from '../../../../../_common/filters/number';
-import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import AppPopper from '../../../../../_common/popper/AppPopper.vue';
-import { Popper } from '../../../../../_common/popper/popper.service';
-import { Screen } from '../../../../../_common/screen/screen-service';
-import { copyShareLink } from '../../../../../_common/share/share.service';
-import { useSidebarStore } from '../../../../../_common/sidebar/sidebar.store';
-import { useCommonStore } from '../../../../../_common/store/common-store';
-import AppTheme from '../../../../../_common/theme/AppTheme.vue';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import { getAbsoluteLink } from '../../../../../utils/router';
-import { showCommunitySidebarModal } from '../../../../components/community/sidebar/modal/modal.service';
-import { useAppStore } from '../../../../store';
-import AppEditableThumbnail from '../_editable-thumbnail/AppEditableThumbnail.vue';
-import { useCommunityRouteStore } from '../view.store';
+import { showCommunitySidebarModal } from '~app/components/community/sidebar/modal/modal.service';
+import { useAppStore } from '~app/store';
+import AppEditableThumbnail from '~app/views/communities/view/_editable-thumbnail/AppEditableThumbnail.vue';
+import { useCommunityRouteStore } from '~app/views/communities/view/view.store';
+import AppButton from '~common/button/AppButton.vue';
+import AppCommunityJoinWidget from '~common/community/join-widget/AppCommunityJoinWidget.vue';
+import AppCommunityVerifiedTick from '~common/community/verified-tick/AppCommunityVerifiedTick.vue';
+import { Environment } from '~common/environment/environment.service';
+import { formatNumber } from '~common/filters/number';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppPopper from '~common/popper/AppPopper.vue';
+import { Popper } from '~common/popper/popper.service';
+import { Screen } from '~common/screen/screen-service';
+import { copyShareLink } from '~common/share/share.service';
+import { useSidebarStore } from '~common/sidebar/sidebar.store';
+import { useCommonStore } from '~common/store/common-store';
+import AppTheme from '~common/theme/AppTheme.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { getAbsoluteLink } from '~utils/router';
 
 type Props = {
 	hasUnread?: boolean;

@@ -1,19 +1,19 @@
 <script lang="ts" setup>
 import { toRef } from 'vue';
 
-import { Environment } from '../../../environment/environment.service';
-import AppJolticon from '../../../jolticon/AppJolticon.vue';
-import AppTranslate from '../../../translate/AppTranslate.vue';
-import { useForm } from '../../AppForm.vue';
+import { Environment } from '~common/environment/environment.service';
+import { useForm } from '~common/form-vue/AppForm.vue';
 import {
 	createFormControl,
 	FormControlEmits,
-} from '../../AppFormControl.vue';
-import { useFormGroup } from '../../AppFormGroup.vue';
-import { vAppFormAutosize } from '../../autosize.directive';
-import { vAppFocusWhen } from '../../focus-when.directive';
-import { FormValidator } from '../../validators';
-import AppFormControlMarkdownMediaItems from './AppFormControlMarkdownMediaItems.vue';
+} from '~common/form-vue/AppFormControl.vue';
+import { useFormGroup } from '~common/form-vue/AppFormGroup.vue';
+import { vAppFormAutosize } from '~common/form-vue/autosize.directive';
+import AppFormControlMarkdownMediaItems from '~common/form-vue/controls/markdown/AppFormControlMarkdownMediaItems.vue';
+import { vAppFocusWhen } from '~common/form-vue/focus-when.directive';
+import { FormValidator } from '~common/form-vue/validators';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 type Props = {
 	disabled?: boolean;

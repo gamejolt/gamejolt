@@ -1,14 +1,14 @@
 <script lang="ts">
 import { computed } from 'vue';
 
-import AppButton from '../../../../../../../_common/button/AppButton.vue';
+import { useGameDashRouteController } from '~app/views/dashboard/games/manage/manage.store';
+import AppButton from '~common/button/AppButton.vue';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
-} from '../../../../../../../_common/route/route-component';
-import AppTranslate from '../../../../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../../../../_common/translate/translate.service';
-import { useGameDashRouteController } from '../../manage.store';
+} from '~common/route/route-component';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
 
 export default {
 	name: 'RouteDashGamesManageGameWizardFinish',

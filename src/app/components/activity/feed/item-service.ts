@@ -1,6 +1,6 @@
-import { EventItemModel, EventItemType } from '../../../../_common/event-item/event-item.model';
-import { $viewPost, FiresidePostModel } from '../../../../_common/fireside/post/post-model';
-import { NotificationModel } from '../../../../_common/notification/notification-model';
+import { EventItemModel, EventItemType } from '~common/event-item/event-item.model';
+import { $viewPost, FiresidePostModel } from '~common/fireside/post/post-model';
+import { NotificationModel } from '~common/notification/notification-model';
 
 export type ActivityFeedInput = NotificationModel | EventItemModel;
 

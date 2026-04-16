@@ -1,6 +1,6 @@
 import { DOMOutputSpec, Fragment, Mark, MarkSpec } from 'prosemirror-model';
 
-import { ContentEditorSchema } from '../../content-editor-schema';
+import { ContentEditorSchema } from '~common/content/content-editor/schemas/content-editor-schema';
 
 const linkAttrs = {
 	href: {},

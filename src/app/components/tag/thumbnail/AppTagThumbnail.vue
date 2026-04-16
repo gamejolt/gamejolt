@@ -2,8 +2,8 @@
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 
-import { RouteLocationDefinition } from '../../../../utils/router';
-import { TagsInfo } from '../tags-info.service';
+import { TagsInfo } from '~app/components/tag/tags-info.service';
+import { RouteLocationDefinition } from '~utils/router';
 
 type Props = {
 	tag: string;

@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import { onMounted, onUnmounted, ref, useTemplateRef } from 'vue';
 
-import AppButton from '../../button/AppButton.vue';
-import { addMinbarItem, removeMinbarItem } from '../../minbar/minbar.service';
-import AppModal from '../../modal/AppModal.vue';
-import { useModal } from '../../modal/modal.service';
-import { GameModel } from '../game.model';
-import { showGameRatingGrowl } from '../rating-growl/rating-growl.service';
+import AppButton from '~common/button/AppButton.vue';
+import { GameModel } from '~common/game/game.model';
+import { showGameRatingGrowl } from '~common/game/rating-growl/rating-growl.service';
+import { addMinbarItem, removeMinbarItem } from '~common/minbar/minbar.service';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
 
 type Props = {
 	game: GameModel;

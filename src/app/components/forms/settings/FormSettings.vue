@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 import { computed, useTemplateRef, watch } from 'vue';
 
-import AppButton from '../../../../_common/button/AppButton.vue';
-import { ClientAutoStart } from '../../../../_common/client/safe-exports';
-import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
-import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
-import AppFormControlErrors from '../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
-import { validateMinValue } from '../../../../_common/form-vue/validators';
+import AppButton from '~common/button/AppButton.vue';
+import { ClientAutoStart } from '~common/client/safe-exports';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlToggle from '~common/form-vue/controls/AppFormControlToggle.vue';
+import { validateMinValue } from '~common/form-vue/validators';
 import {
 	SettingAnimatedThumbnails,
 	SettingAutostartClient,
@@ -22,9 +22,9 @@ import {
 	SettingRestrictedBrowsing,
 	SettingThemeAlwaysOurs,
 	SettingThemeDark,
-} from '../../../../_common/settings/settings.service';
-import { useThemeStore } from '../../../../_common/theme/theme.store';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+} from '~common/settings/settings.service';
+import { useThemeStore } from '~common/theme/theme.store';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 type FormModel = {
 	chat_notify_friends_online: boolean;

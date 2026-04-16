@@ -19,7 +19,26 @@
 		"esModuleInterop": false,
 		"allowSyntheticDefaultImports": true,
 		"jsx": "preserve",
-		"lib": ["esnext", "dom", "dom.iterable", "scripthost"]
+		"lib": ["esnext", "dom", "dom.iterable", "scripthost"],
+		"baseUrl": ".",
+		"paths": {
+			"~img/*": ["src/app/img/*"],
+			"~app/*": ["src/app/*"],
+			"~auth/*": ["src/auth/*"],
+			"~checkout/*": ["src/checkout/*"],
+			"~claim/*": ["src/claim/*"],
+			"~client/*": ["src/client/*"],
+			"~common/*": ["src/_common/*"],
+			"~editor/*": ["src/editor/*"],
+			"~gameserver/*": ["src/gameserver/*"],
+			"~lib/*": ["src/lib/*"],
+			"~site-editor/*": ["src/site-editor/*"],
+			"~styles/*": ["src/_styles/*"],
+			"~utils/*": ["src/utils/*"],
+			"~widget-package/*": ["src/widget-package/*"],
+			"~z/*": ["src/z/*"],
+			"~typings/*": ["typings/*"]
+		}
 	},
 	"exclude": ["build", "node_modules", ".cache"],
 	"vueCompilerOptions": {

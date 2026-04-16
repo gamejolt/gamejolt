@@ -1,16 +1,16 @@
 <script lang="ts" setup>
 import { computed, Ref, ref } from 'vue';
 
+import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
+import { kThemeFg10, kThemePrimary, kThemePrimaryFg } from '~common/theme/variables';
 import {
 	styleAbsoluteFill,
 	styleFlexCenter,
 	styleMaxWidthForOptions,
 	styleWhen,
-} from '../../_styles/mixins';
-import { kBorderWidthLg } from '../../_styles/variables';
-import { useResizeObserver } from '../../utils/resize-observer';
-import AppAspectRatio from '../aspect-ratio/AppAspectRatio.vue';
-import { kThemeFg10, kThemePrimary, kThemePrimaryFg } from '../theme/variables';
+} from '~styles/mixins';
+import { kBorderWidthLg } from '~styles/variables';
+import { useResizeObserver } from '~utils/resize-observer';
 
 type Props = {
 	percent?: number;

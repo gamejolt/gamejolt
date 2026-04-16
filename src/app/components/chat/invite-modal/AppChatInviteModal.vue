@@ -1,22 +1,22 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 
-import { Api } from '../../../../_common/api/api.service';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import { vAppFocusWhen } from '../../../../_common/form-vue/focus-when.directive';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import AppLoading from '../../../../_common/loading/AppLoading.vue';
-import AppModal from '../../../../_common/modal/AppModal.vue';
-import { useModal } from '../../../../_common/modal/modal.service';
-import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
-import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
-import AppUserAvatarList from '../../../../_common/user/user-avatar/AppUserAvatarList.vue';
-import { fuzzysearch } from '../../../../utils/string';
-import { run } from '../../../../utils/utils';
-import { useGridStore } from '../../grid/grid-store';
-import { addGroupMembers, addGroupRoom } from '../client';
-import { ChatRoomModel } from '../room';
-import { ChatUser } from '../user';
+import { addGroupMembers, addGroupRoom } from '~app/components/chat/client';
+import { ChatRoomModel } from '~app/components/chat/room';
+import { ChatUser } from '~app/components/chat/user';
+import { useGridStore } from '~app/components/grid/grid-store';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import { vAppFocusWhen } from '~common/form-vue/focus-when.directive';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLoading from '~common/loading/AppLoading.vue';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import AppScrollScroller from '~common/scroll/AppScrollScroller.vue';
+import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
+import AppUserAvatarList from '~common/user/user-avatar/AppUserAvatarList.vue';
+import { fuzzysearch } from '~utils/string';
+import { run } from '~utils/utils';
 
 type Props = {
 	room: ChatRoomModel;

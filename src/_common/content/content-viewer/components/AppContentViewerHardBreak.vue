@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { ContentObject } from '../../content-object';
-import { useContentOwnerController } from '../../content-owner';
+import { ContentObject } from '~common/content/content-object';
+import { useContentOwnerController } from '~common/content/content-owner';
 
 type Props = {
 	contentData: ContentObject;

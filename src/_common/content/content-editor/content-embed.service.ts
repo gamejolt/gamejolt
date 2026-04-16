@@ -1,8 +1,8 @@
-import { ContentOwnerController } from '../content-owner';
-import { EmbedSource } from './embeds/embed-source';
-import { SketchfabModelEmbed } from './embeds/sketchfab-model';
-import { SoundcloudSongEmbed } from './embeds/soundcloud-song';
-import { YouTubeVideoEmbed } from './embeds/youtube-video';
+import { EmbedSource } from '~common/content/content-editor/embeds/embed-source';
+import { SketchfabModelEmbed } from '~common/content/content-editor/embeds/sketchfab-model';
+import { SoundcloudSongEmbed } from '~common/content/content-editor/embeds/soundcloud-song';
+import { YouTubeVideoEmbed } from '~common/content/content-editor/embeds/youtube-video';
+import { ContentOwnerController } from '~common/content/content-owner';
 
 export type EmbedType = 'youtube-video' | 'soundcloud-song' | 'sketchfab-model';
 

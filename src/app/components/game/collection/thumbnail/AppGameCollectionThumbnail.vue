@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import AppImgResponsive from '../../../../../_common/img/AppImgResponsive.vue';
-import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import { GameCollectionModel } from '../collection.model';
+import { GameCollectionModel } from '~app/components/game/collection/collection.model';
+import AppImgResponsive from '~common/img/AppImgResponsive.vue';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { $gettext } from '~common/translate/translate.service';
 
 type Props = {
 	collection: GameCollectionModel;
@@ -47,4 +47,4 @@ const tagText = computed(() => {
 	</div>
 </template>
 
-<style lang="stylus" src="./thumbnail.styl" scoped></style>
+<style lang="stylus" src="~app/components/game/collection/thumbnail/thumbnail.styl" scoped></style>

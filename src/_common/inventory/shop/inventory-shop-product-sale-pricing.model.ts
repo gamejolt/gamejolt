@@ -1,5 +1,5 @@
-import { getCurrencyTypeFromIdentifier } from '../../../_common/currency/currency-type';
-import { ModelStoreModel } from '../../../_common/model/model-store.service';
+import { getCurrencyTypeFromIdentifier } from '~common/currency/currency-type';
+import { ModelStoreModel } from '~common/model/model-store.service';
 
 export class InventoryShopProductSalePricingModel implements ModelStoreModel {
 	declare id: number;

@@ -2,19 +2,20 @@
 import { Ref } from 'vue';
 import { computed, ref, toRef, watch } from 'vue';
 
-import { Api } from '../../../../../_common/api/api.service';
-import AppCardListItem from '../../../../../_common/card/list/AppCardListItem.vue';
-import AppExpand from '../../../../../_common/expand/AppExpand.vue';
-import { formatFilesize } from '../../../../../_common/filters/filesize';
-import { formatNumber } from '../../../../../_common/filters/number';
-import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
-import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
-import AppFormControl from '../../../../../_common/form-vue/AppFormControl.vue';
-import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormControlCheckbox from '../../../../../_common/form-vue/controls/AppFormControlCheckbox.vue';
-import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
-import { validateMaxLength } from '../../../../../_common/form-vue/validators';
+import { showArchiveFileSelectorModal } from '~app/components/forms/game/build/archive-file-selector-modal.service';
+import { Api } from '~common/api/api.service';
+import AppCardListItem from '~common/card/list/AppCardListItem.vue';
+import AppExpand from '~common/expand/AppExpand.vue';
+import { formatFilesize } from '~common/filters/filesize';
+import { formatNumber } from '~common/filters/number';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlCheckbox from '~common/form-vue/controls/AppFormControlCheckbox.vue';
+import AppFormControlToggle from '~common/form-vue/controls/AppFormControlToggle.vue';
+import { validateMaxLength } from '~common/form-vue/validators';
 import {
 	$saveGameBuild,
 	GameBuildEmulatorInfo,
@@ -22,24 +23,23 @@ import {
 	GameBuildModel,
 	GameBuildStatus,
 	GameBuildType,
-} from '../../../../../_common/game/build/build.model';
+} from '~common/game/build/build.model';
 import {
 	GameBuildLaunchablePlatforms,
 	GameBuildLaunchOptionModel,
-} from '../../../../../_common/game/build/launch-option/launch-option.model';
-import { GameModel } from '../../../../../_common/game/game.model';
-import { GamePackageModel } from '../../../../../_common/game/package/package.model';
-import { GameReleaseModel } from '../../../../../_common/game/release/release.model';
-import { showErrorGrowl } from '../../../../../_common/growls/growls.service';
-import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import AppLoading from '../../../../../_common/loading/AppLoading.vue';
-import AppProgressBar from '../../../../../_common/progress/AppProgressBar.vue';
-import AppProgressPoller from '../../../../../_common/progress/poller/AppProgressPoller.vue';
-import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import { TranslateDirective as vTranslate } from '../../../../../_common/translate/translate-directive';
-import { showArchiveFileSelectorModal } from './archive-file-selector-modal.service';
+} from '~common/game/build/launch-option/launch-option.model';
+import { GameModel } from '~common/game/game.model';
+import { GamePackageModel } from '~common/game/package/package.model';
+import { GameReleaseModel } from '~common/game/release/release.model';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLoading from '~common/loading/AppLoading.vue';
+import AppProgressBar from '~common/progress/AppProgressBar.vue';
+import AppProgressPoller from '~common/progress/poller/AppProgressPoller.vue';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { TranslateDirective as vTranslate } from '~common/translate/translate-directive';
 </script>
 
 <script lang="ts" setup>

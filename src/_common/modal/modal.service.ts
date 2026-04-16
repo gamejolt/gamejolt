@@ -1,7 +1,7 @@
 import { type Component,inject, markRaw, MaybeRef, reactive, ref } from 'vue';
 
-import { arrayRemove } from '../../utils/array';
-import { Popper } from '../popper/popper.service';
+import { Popper } from '~common/popper/popper.service';
+import { arrayRemove } from '~utils/array';
 
 export const ModalKey = Symbol('modal-key');
 

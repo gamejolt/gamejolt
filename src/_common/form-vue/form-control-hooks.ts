@@ -1,6 +1,6 @@
 import { inject, InjectionKey, provide, Ref } from 'vue';
 
-import { FormControlController } from './AppFormControl.vue';
+import { FormControlController } from '~common/form-vue/AppFormControl.vue';
 
 const Key: InjectionKey<FormControlHooks> = Symbol('form-control-hooks');
 

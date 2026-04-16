@@ -1,20 +1,20 @@
 import { computed, inject, InjectionKey, provide, Ref, ref, shallowReadonly } from 'vue';
 
-import { AvatarFrameModel } from '../../../../_common/avatar/frame.model';
-import { BackgroundModel } from '../../../../_common/background/background.model';
+import { AvatarFrameModel } from '~common/avatar/frame.model';
+import { BackgroundModel } from '~common/background/background.model';
 import {
 	CreatorChangeRequestModel,
 	CreatorChangeRequestStatus,
-} from '../../../../_common/creator/change-request/creator-change-request.model';
+} from '~common/creator/change-request/creator-change-request.model';
 import {
 	getShopProductResource,
 	ShopProductModel,
 	ShopProductResource,
-} from '../../../../_common/shop/product/product-model';
-import { StickerPackModel } from '../../../../_common/sticker/pack/pack.model';
-import { StickerModel } from '../../../../_common/sticker/sticker.model';
-import { stringSort } from '../../../../utils/array';
-import { assertNever, isInstance } from '../../../../utils/utils';
+} from '~common/shop/product/product-model';
+import { StickerPackModel } from '~common/sticker/pack/pack.model';
+import { StickerModel } from '~common/sticker/sticker.model';
+import { stringSort } from '~utils/array';
+import { assertNever, isInstance } from '~utils/utils';
 
 export interface ShopDashGroup<T extends ShopProductModel = ShopProductModel> {
 	resource: ShopProductResource;

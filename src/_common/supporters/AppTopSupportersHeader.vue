@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import { kFontSizeH4, kFontSizeH6 } from '../../_styles/variables';
-import AppJolticon from '../jolticon/AppJolticon.vue';
-import { kThemeFgMuted } from '../theme/variables';
-import { vAppTooltip } from '../tooltip/tooltip-directive';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { kThemeFgMuted } from '~common/theme/variables';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { kFontSizeH4, kFontSizeH6 } from '~styles/variables';
 
 type Props = {
 	small?: boolean;

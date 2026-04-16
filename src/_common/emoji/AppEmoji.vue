@@ -1,9 +1,9 @@
 <script lang="ts">
 import { computed, toRefs } from 'vue';
 
-import { styleWhen } from '../../_styles/mixins';
-import { buildCSSPixelValue } from '../../_styles/variables';
-import { EmojiModel } from './emoji.model';
+import { EmojiModel } from '~common/emoji/emoji.model';
+import { styleWhen } from '~styles/mixins';
+import { buildCSSPixelValue } from '~styles/variables';
 
 export const GJ_EMOJIS = [
 	'bucktooth',

@@ -1,30 +1,30 @@
 <script lang="ts">
 import { computed, inject, provide, reactive, ref } from 'vue';
 
-import { useAdStore } from '../../../../_common/ad/ad-store';
-import AppAdFeedParent from '../../../../_common/ad/AppAdFeedParent.vue';
-import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import { CommunityChannelModel } from '../../../../_common/community/channel/channel.model';
-import { CommunityModel } from '../../../../_common/community/community.model';
-import { EventItemModel, EventItemType } from '../../../../_common/event-item/event-item.model';
-import AppExpand from '../../../../_common/expand/AppExpand.vue';
-import { FiresidePostModel } from '../../../../_common/fireside/post/post-model';
-import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
-import { illEndOfFeed } from '../../../../_common/illustration/illustrations';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import AppLoading from '../../../../_common/loading/AppLoading.vue';
-import { Screen } from '../../../../_common/screen/screen-service';
+import AppActivityFeedItem from '~app/components/activity/feed/item/AppActivityFeedItem.vue';
+import AppActivityFeedNewButton from '~app/components/activity/feed/new-button/AppActivityFeedNewButton.vue';
+import { ActivityFeedInterfaceKey, ActivityFeedKey, ActivityFeedView } from '~app/components/activity/feed/view';
+import { kPostItemPaddingVertical, kPostItemPaddingXsVertical } from '~app/components/post/post-styles';
+import { useAdStore } from '~common/ad/ad-store';
+import AppAdFeedParent from '~common/ad/AppAdFeedParent.vue';
+import AppAdWidget from '~common/ad/widget/AppAdWidget.vue';
+import AppButton from '~common/button/AppButton.vue';
+import { CommunityChannelModel } from '~common/community/channel/channel.model';
+import { CommunityModel } from '~common/community/community.model';
+import { EventItemModel, EventItemType } from '~common/event-item/event-item.model';
+import AppExpand from '~common/expand/AppExpand.vue';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import AppIllustration from '~common/illustration/AppIllustration.vue';
+import { illEndOfFeed } from '~common/illustration/illustrations';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLoading from '~common/loading/AppLoading.vue';
+import { Screen } from '~common/screen/screen-service';
 import AppScrollInview, {
 	ScrollInviewConfig,
-} from '../../../../_common/scroll/inview/AppScrollInview.vue';
-import { Scroll } from '../../../../_common/scroll/scroll.service';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { styleWhen } from '../../../../_styles/mixins';
-import { kPostItemPaddingVertical, kPostItemPaddingXsVertical } from '../../post/post-styles';
-import AppActivityFeedItem from './item/AppActivityFeedItem.vue';
-import AppActivityFeedNewButton from './new-button/AppActivityFeedNewButton.vue';
-import { ActivityFeedInterfaceKey, ActivityFeedKey, ActivityFeedView } from './view';
+} from '~common/scroll/inview/AppScrollInview.vue';
+import { Scroll } from '~common/scroll/scroll.service';
+import { $gettext } from '~common/translate/translate.service';
+import { styleWhen } from '~styles/mixins';
 
 const InviewConfigShowNew = new ScrollInviewConfig({ margin: `-${Scroll.offsetTop}px` });
 const InviewConfigLoadMore = new ScrollInviewConfig({ margin: `${Screen.height * 1.5}px` });

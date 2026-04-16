@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { ref, useTemplateRef } from 'vue';
 
-import { Analytics } from '../../../../_common/analytics/analytics.service';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import { GameFilteringContainer } from './container';
+import { GameFilteringContainer } from '~app/components/game/filtering/container';
+import { Analytics } from '~common/analytics/analytics.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
 
 type Props = {
 	filtering: GameFilteringContainer;

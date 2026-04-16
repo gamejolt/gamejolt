@@ -1,17 +1,17 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import { formatNumber } from '../../../../_common/filters/number';
-import { ForumCategoryModel } from '../../../../_common/forum/category/category.model';
-import { ForumChannelModel } from '../../../../_common/forum/channel/channel.model';
-import { ForumPostModel } from '../../../../_common/forum/post/post.model';
-import { Screen } from '../../../../_common/screen/screen-service';
-import AppTimeAgo from '../../../../_common/time/AppTimeAgo.vue';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import AppUserVerifiedTick from '../../../../_common/user/AppUserVerifiedTick.vue';
-import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
-import AppUserAvatar from '../../../../_common/user/user-avatar/AppUserAvatar.vue';
-import { arrayIndexByFunc } from '../../../../utils/array';
+import { formatNumber } from '~common/filters/number';
+import { ForumCategoryModel } from '~common/forum/category/category.model';
+import { ForumChannelModel } from '~common/forum/channel/channel.model';
+import { ForumPostModel } from '~common/forum/post/post.model';
+import { Screen } from '~common/screen/screen-service';
+import AppTimeAgo from '~common/time/AppTimeAgo.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import AppUserVerifiedTick from '~common/user/AppUserVerifiedTick.vue';
+import AppUserCardHover from '~common/user/card/AppUserCardHover.vue';
+import AppUserAvatar from '~common/user/user-avatar/AppUserAvatar.vue';
+import { arrayIndexByFunc } from '~utils/array';
 
 type Props = {
 	category: ForumCategoryModel;

@@ -2,15 +2,15 @@
 import { onMounted } from 'vue';
 import { RouterView } from 'vue-router';
 
-import AppContactLink from '../_common/contact-link/AppContactLink.vue';
-import { Environment } from '../_common/environment/environment.service';
-import AppErrorPage from '../_common/error/page/AppErrorPage.vue';
-import { formatDate } from '../_common/filters/date';
-import AppCommonShell from '../_common/shell/AppCommonShell.vue';
-import { useCommonStore } from '../_common/store/common-store';
-import { loadCurrentLanguage } from '../_common/translate/translate.service';
-import { touchUser } from '../_common/user/user.model';
-import AppUserBar from '../_common/user/user-bar/AppUserBar.vue';
+import AppContactLink from '~common/contact-link/AppContactLink.vue';
+import { Environment } from '~common/environment/environment.service';
+import AppErrorPage from '~common/error/page/AppErrorPage.vue';
+import { formatDate } from '~common/filters/date';
+import AppCommonShell from '~common/shell/AppCommonShell.vue';
+import { useCommonStore } from '~common/store/common-store';
+import { loadCurrentLanguage } from '~common/translate/translate.service';
+import { touchUser } from '~common/user/user.model';
+import AppUserBar from '~common/user/user-bar/AppUserBar.vue';
 
 const { user } = useCommonStore();
 const curDate = new Date();

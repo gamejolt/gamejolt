@@ -1,18 +1,18 @@
 <script lang="ts" setup>
 import { computed, ref, toRef } from 'vue';
 
-import AppButton from '../../../../_common/button/AppButton.vue';
-import AppCommunityChannelSelect from '../../../../_common/community/channel/AppCommunityChannelSelect.vue';
+import AppButton from '~common/button/AppButton.vue';
+import AppCommunityChannelSelect from '~common/community/channel/AppCommunityChannelSelect.vue';
 import {
 	$removeCommunityChannel,
 	CommunityChannelModel,
-} from '../../../../_common/community/channel/channel.model';
-import { CommunityModel } from '../../../../_common/community/community.model';
-import AppExpand from '../../../../_common/expand/AppExpand.vue';
-import { showErrorGrowl } from '../../../../_common/growls/growls.service';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { TranslateDirective as vTranslate } from '../../../../_common/translate/translate-directive';
+} from '~common/community/channel/channel.model';
+import { CommunityModel } from '~common/community/community.model';
+import AppExpand from '~common/expand/AppExpand.vue';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { TranslateDirective as vTranslate } from '~common/translate/translate-directive';
 
 type Props = {
 	community: CommunityModel;

@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { computed, toRef } from 'vue';
 
-import AppButton from '../../../_common/button/AppButton.vue';
-import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
-import AppChatMemberListItem from './member-list/AppChatMemberListItem.vue';
-import { ChatRoomModel } from './room';
-import { useChatRoomMembers } from './room-channel';
+import AppChatMemberListItem from '~app/components/chat/member-list/AppChatMemberListItem.vue';
+import { ChatRoomModel } from '~app/components/chat/room';
+import { useChatRoomMembers } from '~app/components/chat/room-channel';
+import AppButton from '~common/button/AppButton.vue';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
 
 type Props = {
 	room: ChatRoomModel;

@@ -2,20 +2,20 @@
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { Api } from '../../../../../../../../../_common/api/api.service';
-import AppButton from '../../../../../../../../../_common/button/AppButton.vue';
-import { formatDate } from '../../../../../../../../../_common/filters/date';
+import { useGameDashRouteController } from '~app/views/dashboard/games/manage/manage.store';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import { formatDate } from '~common/filters/date';
 import {
 	$removeGameDataStoreItem,
 	GameDataStoreItemModel,
-} from '../../../../../../../../../_common/game/data-store/item/item.model';
-import { showModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
+} from '~common/game/data-store/item/item.model';
+import { showModalConfirm } from '~common/modal/confirm/confirm-service';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
-} from '../../../../../../../../../_common/route/route-component';
-import { $gettext } from '../../../../../../../../../_common/translate/translate.service';
-import { useGameDashRouteController } from '../../../../manage.store';
+} from '~common/route/route-component';
+import { $gettext } from '~common/translate/translate.service';
 
 export default {
 	...defineAppRouteOptions({

@@ -1,16 +1,16 @@
 <script lang="ts">
 import { ref, toRef } from 'vue';
 
-import { Api } from '../../../../../_common/api/api.service';
-import { PaymentSourceModel } from '../../../../../_common/payment-source/payment-source.model';
+import AppUserPaymentSourceCard from '~app/components/user/payment-source/AppUserPaymentSourceCard.vue';
+import { useAccountRouteController } from '~app/views/dashboard/account/RouteDashAccount.vue';
+import { Api } from '~common/api/api.service';
+import { PaymentSourceModel } from '~common/payment-source/payment-source.model';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
-} from '../../../../../_common/route/route-component';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import { arrayRemove } from '../../../../../utils/array';
-import AppUserPaymentSourceCard from '../../../../components/user/payment-source/AppUserPaymentSourceCard.vue';
-import { useAccountRouteController } from '../RouteDashAccount.vue';
+} from '~common/route/route-component';
+import { $gettext } from '~common/translate/translate.service';
+import { arrayRemove } from '~utils/array';
 export default {
 	...defineAppRouteOptions({
 		reloadOn: 'never',

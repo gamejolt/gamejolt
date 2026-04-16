@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { computed, CSSProperties } from 'vue';
 
-import AppAspectRatio from '../aspect-ratio/AppAspectRatio.vue';
-import { AvatarFrameModel, DefaultAvatarFrameScale } from './frame.model';
+import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
+import { AvatarFrameModel, DefaultAvatarFrameScale } from '~common/avatar/frame.model';
 
 type Props = {
 	frame: Pick<AvatarFrameModel, 'image_url' | 'scale'> | null;

@@ -1,17 +1,17 @@
 <script lang="ts" setup>
 import { onUnmounted, ref, toRef } from 'vue';
 
-import { useForm } from '../../../../form-vue/AppForm.vue';
+import { useForm } from '~common/form-vue/AppForm.vue';
 import {
 	createFormControl,
 	FormControlEmits,
-} from '../../../../form-vue/AppFormControl.vue';
-import { FormValidator } from '../../../../form-vue/validators';
-import { useCommonStore } from '../../../../store/common-store';
-import { kThemeDark } from '../../../../theme/variables';
-import AppUserAvatarImg from '../../AppUserAvatarImg.vue';
-import { UserAvatarFrameModel } from '../frame.model';
-import AppUserAvatarFrameTile from './AppUserAvatarFrameTile.vue';
+} from '~common/form-vue/AppFormControl.vue';
+import { FormValidator } from '~common/form-vue/validators';
+import { useCommonStore } from '~common/store/common-store';
+import { kThemeDark } from '~common/theme/variables';
+import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
+import AppUserAvatarFrameTile from '~common/user/user-avatar/frame/_selector/AppUserAvatarFrameTile.vue';
+import { UserAvatarFrameModel } from '~common/user/user-avatar/frame/frame.model';
 
 type Props = {
 	frames: UserAvatarFrameModel[];

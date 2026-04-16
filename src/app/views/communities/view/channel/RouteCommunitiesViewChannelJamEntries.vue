@@ -2,29 +2,29 @@
 import { computed, ref, toRef, watch } from 'vue';
 import { RouteLocationNormalized, RouterLink, useRoute, useRouter } from 'vue-router';
 
-import { Api } from '../../../../../_common/api/api.service';
-import AppButton from '../../../../../_common/button/AppButton.vue';
-import { CommunityCompetitionEntryModel } from '../../../../../_common/community/competition/entry/entry.model';
-import { CommunityCompetitionVotingCategoryModel } from '../../../../../_common/community/competition/voting-category/voting-category.model';
-import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
-import { illNoComments } from '../../../../../_common/illustration/illustrations';
-import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import AppPagination from '../../../../../_common/pagination/AppPagination.vue';
-import AppPopper from '../../../../../_common/popper/AppPopper.vue';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '../../../../../_common/route/route-component';
-import { vAppNoAutoscroll } from '../../../../../_common/scroll/auto-scroll/no-autoscroll.directive';
-import { Scroll } from '../../../../../_common/scroll/scroll.service';
-import { $gettext, $ngettext } from '../../../../../_common/translate/translate.service';
-import AppCommunityCompetitionEntryGrid from '../../../../components/community/competition/entry/grid/AppCommunityCompetitionEntryGrid.vue';
+import AppCommunityCompetitionEntryGrid from '~app/components/community/competition/entry/grid/AppCommunityCompetitionEntryGrid.vue';
 import {
 	CommunityCompetitionEntryModalHashDeregister,
 	showCommunityCompetitionEntryModalIdFromHash,
 	watchCommunityCompetitionEntryModalForHash,
-} from '../../../../components/community/competition/entry/modal/modal.service';
-import { getChannelPathFromRoute, useCommunityRouteStore } from '../view.store';
+} from '~app/components/community/competition/entry/modal/modal.service';
+import { getChannelPathFromRoute, useCommunityRouteStore } from '~app/views/communities/view/view.store';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import { CommunityCompetitionEntryModel } from '~common/community/competition/entry/entry.model';
+import { CommunityCompetitionVotingCategoryModel } from '~common/community/competition/voting-category/voting-category.model';
+import AppIllustration from '~common/illustration/AppIllustration.vue';
+import { illNoComments } from '~common/illustration/illustrations';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppPagination from '~common/pagination/AppPagination.vue';
+import AppPopper from '~common/popper/AppPopper.vue';
+import {
+	createAppRoute,
+	defineAppRouteOptions,
+} from '~common/route/route-component';
+import { vAppNoAutoscroll } from '~common/scroll/auto-scroll/no-autoscroll.directive';
+import { Scroll } from '~common/scroll/scroll.service';
+import { $gettext, $ngettext } from '~common/translate/translate.service';
 
 export default {
 	...defineAppRouteOptions({

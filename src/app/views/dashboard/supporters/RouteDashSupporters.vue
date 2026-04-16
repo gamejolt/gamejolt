@@ -2,29 +2,29 @@
 import { computed, Ref, ref } from 'vue';
 import { RouterLink } from 'vue-router';
 
-import AppAlertBox from '../../../../_common/alert/AppAlertBox.vue';
-import { Api } from '../../../../_common/api/api.service';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import { ContentDocument } from '../../../../_common/content/content-document';
-import AppContentViewer from '../../../../_common/content/content-viewer/AppContentViewer.vue';
-import AppExpand from '../../../../_common/expand/AppExpand.vue';
-import { showErrorGrowl } from '../../../../_common/growls/growls.service';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import AppLoading from '../../../../_common/loading/AppLoading.vue';
-import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
-import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
-import { Screen } from '../../../../_common/screen/screen-service';
+import AppShellPageBackdrop from '~app/components/shell/AppShellPageBackdrop.vue';
+import AppAlertBox from '~common/alert/AppAlertBox.vue';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import { ContentDocument } from '~common/content/content-document';
+import AppContentViewer from '~common/content/content-viewer/AppContentViewer.vue';
+import AppExpand from '~common/expand/AppExpand.vue';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLoading from '~common/loading/AppLoading.vue';
+import { showModalConfirm } from '~common/modal/confirm/confirm-service';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { Screen } from '~common/screen/screen-service';
 import AppScrollInview, {
 	ScrollInviewConfig,
-} from '../../../../_common/scroll/inview/AppScrollInview.vue';
-import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
-import { SupporterActionModel } from '../../../../_common/supporters/action.model';
-import { SupporterMessageModel } from '../../../../_common/supporters/message.model';
-import { showDoSupporterMessageModal } from '../../../../_common/supporters/message/do/modal.service';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
-import { getCurrentServerTime } from '../../../../utils/server-time';
-import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
+} from '~common/scroll/inview/AppScrollInview.vue';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import { SupporterActionModel } from '~common/supporters/action.model';
+import { SupporterMessageModel } from '~common/supporters/message.model';
+import { showDoSupporterMessageModal } from '~common/supporters/message/do/modal.service';
+import { $gettext } from '~common/translate/translate.service';
+import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
+import { getCurrentServerTime } from '~utils/server-time';
 
 const ACTIONS_PER_PAGE = 25;
 const InviewConfigLoadMore = new ScrollInviewConfig({ margin: `${Screen.height}px` });

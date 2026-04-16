@@ -1,14 +1,14 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
 
-import { Api } from '../../api/api.service';
-import AppButton from '../../button/AppButton.vue';
-import AppLoading from '../../loading/AppLoading.vue';
-import { Screen } from '../../screen/screen-service';
-import { $gettext } from '../../translate/translate.service';
-import { populateTrophies } from '../../user/trophy/trophy-utils';
-import { UserBaseTrophyModel } from '../../user/trophy/user-base-trophy.model';
-import AppTrophyCard from '../AppTrophyCard.vue';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import AppLoading from '~common/loading/AppLoading.vue';
+import { Screen } from '~common/screen/screen-service';
+import { $gettext } from '~common/translate/translate.service';
+import AppTrophyCard from '~common/trophy/AppTrophyCard.vue';
+import { populateTrophies } from '~common/user/trophy/trophy-utils';
+import { UserBaseTrophyModel } from '~common/user/trophy/user-base-trophy.model';
 
 const PAGE_SIZE = 12;
 

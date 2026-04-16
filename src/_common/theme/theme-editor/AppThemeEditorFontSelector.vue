@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { computed, nextTick, ref, useTemplateRef, watch } from 'vue';
 
-import { Api } from '../../api/api.service';
-import { $gettext } from '../../translate/translate.service';
-import AppThemeEditorFontSelectorStyleInjector from './AppThemeEditorFontSelectorStyleInjector.vue';
+import { Api } from '~common/api/api.service';
+import AppThemeEditorFontSelectorStyleInjector from '~common/theme/theme-editor/AppThemeEditorFontSelectorStyleInjector.vue';
+import { $gettext } from '~common/translate/translate.service';
 
 interface FontDefinition {
 	family: string;

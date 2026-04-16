@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import AppFadeCollapse from '../../../../_common/AppFadeCollapse.vue';
-import AppContentViewer from '../../../../_common/content/content-viewer/AppContentViewer.vue';
-import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
-import AppProfileSocialLinks from '../AppProfileSocialLinks.vue';
-import { useProfileRouteStore } from '../RouteProfile.vue';
+import AppProfileSocialLinks from '~app/views/profile/AppProfileSocialLinks.vue';
+import { useProfileRouteStore } from '~app/views/profile/RouteProfile.vue';
+import AppFadeCollapse from '~common/AppFadeCollapse.vue';
+import AppContentViewer from '~common/content/content-viewer/AppContentViewer.vue';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
 
 type Props = {
 	noBioText?: string;

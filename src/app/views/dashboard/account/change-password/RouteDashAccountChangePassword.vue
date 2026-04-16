@@ -1,14 +1,14 @@
 <script lang="ts">
 import { ref } from 'vue';
 
-import { Api } from '../../../../../_common/api/api.service';
+import FormChangePassword from '~app/components/forms/change-password/FormChangePassword.vue';
+import { useAccountRouteController } from '~app/views/dashboard/account/RouteDashAccount.vue';
+import { Api } from '~common/api/api.service';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
-} from '../../../../../_common/route/route-component';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import FormChangePassword from '../../../../components/forms/change-password/FormChangePassword.vue';
-import { useAccountRouteController } from '../RouteDashAccount.vue';
+} from '~common/route/route-component';
+import { $gettext } from '~common/translate/translate.service';
 export default {
 	...defineAppRouteOptions({
 		reloadOn: 'never',

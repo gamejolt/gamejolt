@@ -1,16 +1,16 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 
-import { Api } from '../../../../_common/api/api.service';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import { showSuccessGrowl } from '../../../../_common/growls/growls.service';
-import AppLoading from '../../../../_common/loading/AppLoading.vue';
-import AppModal from '../../../../_common/modal/AppModal.vue';
-import { useModal } from '../../../../_common/modal/modal.service';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { run } from '../../../../utils/utils';
-import FormWithdrawFunds from '../../forms/withdraw-funds/FormWithdrawFunds.vue';
+import FormWithdrawFunds from '~app/components/forms/withdraw-funds/FormWithdrawFunds.vue';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import { showSuccessGrowl } from '~common/growls/growls.service';
+import AppLoading from '~common/loading/AppLoading.vue';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { run } from '~utils/utils';
 
 const modal = useModal()!;
 

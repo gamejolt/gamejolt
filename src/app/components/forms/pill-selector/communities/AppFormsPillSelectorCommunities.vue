@@ -1,16 +1,16 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 
-import { CommunityChannelModel } from '../../../../../_common/community/channel/channel.model';
-import { CommunityModel } from '../../../../../_common/community/community.model';
-import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
-import AppCommunityVerifiedTick from '../../../../../_common/community/verified-tick/AppCommunityVerifiedTick.vue';
-import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import { Popper } from '../../../../../_common/popper/popper.service';
-import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-import AppFormsPillSelectorItem from '../_item/AppFormsPillSelectorItem.vue';
-import AppFormsPillSelector from '../AppFormsPillSelector.vue';
-import AppScrollHelper from '../AppScrollHelper.vue';
+import AppFormsPillSelectorItem from '~app/components/forms/pill-selector/_item/AppFormsPillSelectorItem.vue';
+import AppFormsPillSelector from '~app/components/forms/pill-selector/AppFormsPillSelector.vue';
+import AppScrollHelper from '~app/components/forms/pill-selector/AppScrollHelper.vue';
+import { CommunityChannelModel } from '~common/community/channel/channel.model';
+import { CommunityModel } from '~common/community/community.model';
+import AppCommunityThumbnailImg from '~common/community/thumbnail/AppCommunityThumbnailImg.vue';
+import AppCommunityVerifiedTick from '~common/community/verified-tick/AppCommunityVerifiedTick.vue';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { Popper } from '~common/popper/popper.service';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 
 type Props = {
 	communities: CommunityModel[];

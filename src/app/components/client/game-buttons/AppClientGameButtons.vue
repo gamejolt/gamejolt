@@ -2,27 +2,27 @@
 import { computed, ref, watch } from 'vue';
 import { RouterLink } from 'vue-router';
 
-import { Analytics } from '../../../../_common/analytics/analytics.service';
-import { Api } from '../../../../_common/api/api.service';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import { getDeviceArch, getDeviceOS } from '../../../../_common/device/device.service';
+import AppClientInstallProgress from '~app/components/client/AppClientInstallProgress.vue';
+import { showClientInstallPackageModal } from '~app/components/client/install-package-modal/install-package-modal.service';
+import { LocalDbPackage } from '~app/components/client/local-db/package/package.model';
+import { useClientLibraryStore } from '~app/store/client-library';
+import { Analytics } from '~common/analytics/analytics.service';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import { getDeviceArch, getDeviceOS } from '~common/device/device.service';
 import {
 	chooseBestGameBuild,
 	GameModel,
 	pluckInstallableGameBuilds,
-} from '../../../../_common/game/game.model';
-import { GamePackagePayloadModel } from '../../../../_common/game/package/package-payload.model';
-import { showGamePackagePurchaseModal } from '../../../../_common/game/package/purchase-modal/purchase-modal.service';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import AppPopper from '../../../../_common/popper/AppPopper.vue';
-import { Popper } from '../../../../_common/popper/popper.service';
-import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { arrayGroupBy } from '../../../../utils/array';
-import { useClientLibraryStore } from '../../../store/client-library';
-import AppClientInstallProgress from '../AppClientInstallProgress.vue';
-import { showClientInstallPackageModal } from '../install-package-modal/install-package-modal.service';
-import { LocalDbPackage } from '../local-db/package/package.model';
+} from '~common/game/game.model';
+import { GamePackagePayloadModel } from '~common/game/package/package-payload.model';
+import { showGamePackagePurchaseModal } from '~common/game/package/purchase-modal/purchase-modal.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppPopper from '~common/popper/AppPopper.vue';
+import { Popper } from '~common/popper/popper.service';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { $gettext } from '~common/translate/translate.service';
+import { arrayGroupBy } from '~utils/array';
 
 type Props = {
 	game: GameModel;

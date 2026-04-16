@@ -1,21 +1,21 @@
 <script lang="ts" setup>
 import { computed, CSSProperties, HTMLAttributes, StyleValue } from 'vue';
 
+import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
+import AppQuestFrame from '~common/quest/AppQuestFrame.vue';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import AppStickerImg from '~common/sticker/AppStickerImg.vue';
+import AppStickerMastery from '~common/sticker/AppStickerMastery.vue';
+import { StickerModel } from '~common/sticker/sticker.model';
+import { useStickerStore } from '~common/sticker/sticker-store';
+import AppUserAvatar from '~common/user/user-avatar/AppUserAvatar.vue';
 import {
 	styleBorderRadiusLg,
 	styleChangeBg,
 	styleElevate,
 	styleWhen,
-} from '../../../_styles/mixins';
-import { kBorderWidthLg } from '../../../_styles/variables';
-import AppAspectRatio from '../../aspect-ratio/AppAspectRatio.vue';
-import AppQuestFrame from '../../quest/AppQuestFrame.vue';
-import AppSpacer from '../../spacer/AppSpacer.vue';
-import AppUserAvatar from '../../user/user-avatar/AppUserAvatar.vue';
-import AppStickerImg from '../AppStickerImg.vue';
-import AppStickerMastery from '../AppStickerMastery.vue';
-import { StickerModel } from '../sticker.model';
-import { useStickerStore } from '../sticker-store';
+} from '~styles/mixins';
+import { kBorderWidthLg } from '~styles/variables';
 
 type Props = {
 	sticker: StickerModel;

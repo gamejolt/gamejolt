@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { CSSProperties } from 'vue';
 
-import AppLoading from './AppLoading.vue';
+import AppLoading from '~common/loading/AppLoading.vue';
 
 type Props = {
 	isLoading?: boolean;

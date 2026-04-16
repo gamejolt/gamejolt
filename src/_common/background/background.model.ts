@@ -1,9 +1,9 @@
 import { CSSProperties } from 'vue';
 
-import { getMediaserverUrlForBounds } from '../../utils/image';
-import { MediaItemModel } from '../media-item/media-item-model';
-import { ModelStoreModel } from '../model/model-store.service';
-import { ShopProductCommonFields } from '../shop/product/product-model';
+import { MediaItemModel } from '~common/media-item/media-item-model';
+import { ModelStoreModel } from '~common/model/model-store.service';
+import { ShopProductCommonFields } from '~common/shop/product/product-model';
+import { getMediaserverUrlForBounds } from '~utils/image';
 
 export const BackgroundDefaultScale = 2.0;
 

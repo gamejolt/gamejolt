@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { $gettext } from '../../translate/translate.service';
-import FormThemeEditorImage from './FormThemeEditorImage.vue';
+import FormThemeEditorImage from '~common/theme/theme-editor/FormThemeEditorImage.vue';
+import { $gettext } from '~common/translate/translate.service';
 
 type Props = {
 	type: string;

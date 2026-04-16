@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import AppButton from '../../button/AppButton.vue';
-import { $gettext } from '../../translate/translate.service';
-import AppModal from '../AppModal.vue';
-import { useModal } from '../modal.service';
+import AppButton from '~common/button/AppButton.vue';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import { $gettext } from '~common/translate/translate.service';
 
 type Props = {
 	message: string;

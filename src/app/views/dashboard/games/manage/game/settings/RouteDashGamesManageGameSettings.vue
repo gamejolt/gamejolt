@@ -1,20 +1,20 @@
 <script lang="ts">
 import { computed, ref } from 'vue';
 
-import { Api } from '../../../../../../../_common/api/api.service';
-import AppButton from '../../../../../../../_common/button/AppButton.vue';
-import { GameStatus } from '../../../../../../../_common/game/game.model';
-import { showSuccessGrowl } from '../../../../../../../_common/growls/growls.service';
+import FormGameSettings from '~app/components/forms/game/settings/FormGameSettings.vue';
+import { useGameDashRouteController } from '~app/views/dashboard/games/manage/manage.store';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import { GameStatus } from '~common/game/game.model';
+import { showSuccessGrowl } from '~common/growls/growls.service';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
-} from '../../../../../../../_common/route/route-component';
-import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
-import { useCommonStore } from '../../../../../../../_common/store/common-store';
-import AppTranslate from '../../../../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../../../../_common/translate/translate.service';
-import FormGameSettings from '../../../../../../components/forms/game/settings/FormGameSettings.vue';
-import { useGameDashRouteController } from '../../manage.store';
+} from '~common/route/route-component';
+import { Scroll } from '~common/scroll/scroll.service';
+import { useCommonStore } from '~common/store/common-store';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
 
 export default {
 	name: 'RouteDashGamesManageGameSettings',

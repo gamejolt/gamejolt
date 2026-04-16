@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref } from 'vue';
 
-import AppExpand from '../../expand/AppExpand.vue';
-import AppJolticon from '../../jolticon/AppJolticon.vue';
-import { vAppTooltip } from '../../tooltip/tooltip-directive';
+import AppExpand from '~common/expand/AppExpand.vue';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 
 type Props = {
 	alertType: string;

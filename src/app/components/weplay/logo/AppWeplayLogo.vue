@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import image from './stajoltia_logo.png';
+import image from '~app/components/weplay/logo/stajoltia_logo.png';
 </script>
 
 <template>

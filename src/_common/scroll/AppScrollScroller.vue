@@ -13,10 +13,10 @@ import {
 	watchPostEffect,
 } from 'vue';
 
-import { Screen } from '../screen/screen-service';
-import { DefaultTheme, GrayLight, GraySubtle } from '../theme/theme.model';
-import { useThemeStore } from '../theme/theme.store';
-import AppScrollInviewParent from './inview/AppScrollInviewParent.vue';
+import { Screen } from '~common/screen/screen-service';
+import AppScrollInviewParent from '~common/scroll/inview/AppScrollInviewParent.vue';
+import { DefaultTheme, GrayLight, GraySubtle } from '~common/theme/theme.model';
+import { useThemeStore } from '~common/theme/theme.store';
 
 export type ScrollController = ReturnType<typeof createScroller>;
 

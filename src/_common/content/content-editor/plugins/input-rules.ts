@@ -6,8 +6,8 @@ import {
 	editorGetParentNode,
 	editorGetSelectedNode,
 	editorIsNodeCode,
-} from '../content-editor-controller';
-import { ContentEditorSchema } from '../schemas/content-editor-schema';
+} from '~common/content/content-editor/content-editor-controller';
+import { ContentEditorSchema } from '~common/content/content-editor/schemas/content-editor-schema';
 
 export const BasicMentionRegex = /@([\w_-]+)$/i;
 

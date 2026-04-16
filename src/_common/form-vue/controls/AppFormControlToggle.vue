@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import { toRef } from 'vue';
 
-import { MaybePromise } from '../../../utils/utils';
 import {
 	createFormControl,
 	FormControlEmits,
-} from '../AppFormControl.vue';
-import { FormValidator } from '../validators';
+} from '~common/form-vue/AppFormControl.vue';
+import { FormValidator } from '~common/form-vue/validators';
+import { MaybePromise } from '~utils/utils';
 
 type Props = {
 	disabled?: boolean;

@@ -2,26 +2,26 @@
 import { computed, ref } from 'vue';
 import { RouterLink } from 'vue-router';
 
-import { Api } from '../../../../../_common/api/api.service';
-import { formatGemsCurrency } from '../../../../../_common/filters/currency';
-import { formatDate } from '../../../../../_common/filters/date';
-import { imageGems } from '../../../../../_common/img/images';
-import AppInviteCard from '../../../../../_common/invite/AppInviteCard.vue';
-import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
+import AppShellPageBackdrop from '~app/components/shell/AppShellPageBackdrop.vue';
+import { useAccountRouteController } from '~app/views/dashboard/account/RouteDashAccount.vue';
+import { Api } from '~common/api/api.service';
+import { formatGemsCurrency } from '~common/filters/currency';
+import { formatDate } from '~common/filters/date';
+import { imageGems } from '~common/img/images';
+import AppInviteCard from '~common/invite/AppInviteCard.vue';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
-} from '../../../../../_common/route/route-component';
-import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
-import { useCommonStore } from '../../../../../_common/store/common-store';
-import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import { UserModel } from '../../../../../_common/user/user.model';
-import AppUserAvatarImg from '../../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
-import { styleTextOverflow } from '../../../../../_styles/mixins';
-import { kFontSizeLarge } from '../../../../../_styles/variables';
-import AppShellPageBackdrop from '../../../../components/shell/AppShellPageBackdrop.vue';
-import { useAccountRouteController } from '../RouteDashAccount.vue';
+} from '~common/route/route-component';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import { useCommonStore } from '~common/store/common-store';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { $gettext } from '~common/translate/translate.service';
+import { UserModel } from '~common/user/user.model';
+import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
+import { styleTextOverflow } from '~styles/mixins';
+import { kFontSizeLarge } from '~styles/variables';
 
 export default {
 	...defineAppRouteOptions({

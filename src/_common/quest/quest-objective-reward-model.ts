@@ -1,9 +1,9 @@
-import { BackgroundModel } from '../background/background.model';
-import { MediaItemModel } from '../media-item/media-item-model';
-import { Model } from '../model/model.service';
-import { storeModel } from '../model/model-store.service';
-import { SiteTrophyModel } from '../site/trophy/trophy.model';
-import { StickerRewardModel } from '../sticker/sticker-reward-model';
+import { BackgroundModel } from '~common/background/background.model';
+import { MediaItemModel } from '~common/media-item/media-item-model';
+import { Model } from '~common/model/model.service';
+import { storeModel } from '~common/model/model-store.service';
+import { SiteTrophyModel } from '~common/site/trophy/trophy.model';
+import { StickerRewardModel } from '~common/sticker/sticker-reward-model';
 
 export const enum QuestRewardTypes {
 	// Never used, old reward type.

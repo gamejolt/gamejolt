@@ -1,6 +1,6 @@
-import { UserGameTrophyModel } from './game-trophy.model';
-import { UserSiteTrophyModel } from './site-trophy.model';
-import { UserBaseTrophyModel } from './user-base-trophy.model';
+import { UserGameTrophyModel } from '~common/user/trophy/game-trophy.model';
+import { UserSiteTrophyModel } from '~common/user/trophy/site-trophy.model';
+import { UserBaseTrophyModel } from '~common/user/trophy/user-base-trophy.model';
 
 export function populateTrophies(trophyDatas: any[]): UserBaseTrophyModel[] {
 	const trophies = [];

@@ -1,8 +1,8 @@
 <script lang="ts">
-import { defineAppRouteOptions } from '../../../../_common/route/route-component';
-import { createAppRoute } from '../../../../_common/route/route-component';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
+import { defineAppRouteOptions } from '~common/route/route-component';
+import { createAppRoute } from '~common/route/route-component';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
 
 export default {
 	name: 'RouteAuthForgotSent',

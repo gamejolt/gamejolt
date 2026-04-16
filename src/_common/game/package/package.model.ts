@@ -1,9 +1,9 @@
-import { Api } from '../../api/api.service';
-import { Model } from '../../model/model.service';
-import { SellableModel } from '../../sellable/sellable.model';
-import { GameBuildModel } from '../build/build.model';
-import { GameModel } from '../game.model';
-import { GameReleaseModel } from '../release/release.model';
+import { Api } from '~common/api/api.service';
+import { GameBuildModel } from '~common/game/build/build.model';
+import { GameModel } from '~common/game/game.model';
+import { GameReleaseModel } from '~common/game/release/release.model';
+import { Model } from '~common/model/model.service';
+import { SellableModel } from '~common/sellable/sellable.model';
 
 export const enum GamePackageStatus {
 	Hidden = 'hidden',

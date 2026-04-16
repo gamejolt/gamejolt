@@ -1,5 +1,5 @@
-import AppContentMediaUpload from '../../components/AppContentMediaUpload.vue';
-import { BaseNodeView } from './base';
+import AppContentMediaUpload from '~common/content/components/AppContentMediaUpload.vue';
+import { BaseNodeView } from '~common/content/content-editor/node-views/base';
 
 export class MediaUploadNodeView extends BaseNodeView {
 	mounted() {

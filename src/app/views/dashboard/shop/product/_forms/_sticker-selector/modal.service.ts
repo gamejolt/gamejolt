@@ -1,7 +1,7 @@
 import { defineAsyncComponent } from 'vue';
 
-import { showModal } from '../../../../../../../_common/modal/modal.service';
-import { StickerModel } from '../../../../../../../_common/sticker/sticker.model';
+import { showModal } from '~common/modal/modal.service';
+import { StickerModel } from '~common/sticker/sticker.model';
 
 export async function showFormStickerSelectorModal(props: {
 	stickerPackId: number | undefined;
@@ -11,7 +11,7 @@ export async function showFormStickerSelectorModal(props: {
 }) {
 	return await showModal<StickerModel[]>({
 		modalId: 'FormStickerSelector',
-		component: defineAsyncComponent(() => import('./AppFormStickerSelectorModal.vue')),
+		component: defineAsyncComponent(() => import('~app/views/dashboard/shop/product/_forms/_sticker-selector/AppFormStickerSelectorModal.vue')),
 		props,
 	});
 }

@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue';
 
-import { getStickerLayerTargetBoundingBox } from './AppStickerLayerPlacementMaskTarget.vue';
-import { getRectForStickerTarget, StickerLayerController } from './layer-controller';
-import { StickerLayerItem } from './layer-item';
+import { getStickerLayerTargetBoundingBox } from '~common/sticker/layer/AppStickerLayerPlacementMaskTarget.vue';
+import { getRectForStickerTarget, StickerLayerController } from '~common/sticker/layer/layer-controller';
+import { StickerLayerItem } from '~common/sticker/layer/layer-item';
 
 type Props = {
 	target: StickerLayerItem;

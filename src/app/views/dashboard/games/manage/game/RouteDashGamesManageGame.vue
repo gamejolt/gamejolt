@@ -1,19 +1,19 @@
 <script lang="ts">
 import { useRoute } from 'vue-router';
 
-import AppEditableOverlay from '../../../../../../_common/editable-overlay/AppEditableOverlay.vue';
-import AppExpand from '../../../../../../_common/expand/AppExpand.vue';
-import AppMediaItemCover from '../../../../../../_common/media-item/cover/AppMediaItemCover.vue';
-import AppNavTabList from '../../../../../../_common/nav/tab-list/AppNavTabList.vue';
+import { showGameHeaderModal } from '~app/components/game/header-modal/header-modal.service';
+import AppGameManageMediaBar from '~app/views/dashboard/games/manage/game/_media-bar/AppGameManageMediaBar.vue';
+import AppGameManageNav from '~app/views/dashboard/games/manage/game/_nav/AppGameManageNav.vue';
+import { useGameDashRouteController } from '~app/views/dashboard/games/manage/manage.store';
+import AppEditableOverlay from '~common/editable-overlay/AppEditableOverlay.vue';
+import AppExpand from '~common/expand/AppExpand.vue';
+import AppMediaItemCover from '~common/media-item/cover/AppMediaItemCover.vue';
+import AppNavTabList from '~common/nav/tab-list/AppNavTabList.vue';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
-} from '../../../../../../_common/route/route-component';
-import { Screen } from '../../../../../../_common/screen/screen-service';
-import { showGameHeaderModal } from '../../../../../components/game/header-modal/header-modal.service';
-import { useGameDashRouteController } from '../manage.store';
-import AppGameManageMediaBar from './_media-bar/AppGameManageMediaBar.vue';
-import AppGameManageNav from './_nav/AppGameManageNav.vue';
+} from '~common/route/route-component';
+import { Screen } from '~common/screen/screen-service';
 
 export default {
 	...defineAppRouteOptions({

@@ -2,27 +2,27 @@
 import { computed, CSSProperties, ref } from 'vue';
 import { RouteLocationRaw, RouterLink, useRoute, useRouter } from 'vue-router';
 
-import { CommunityUserNotificationModel } from '../../../../_common/community/user-notification/user-notification.model';
-import { FiresidePostModel } from '../../../../_common/fireside/post/post-model';
-import { FiresidePostVideoModel } from '../../../../_common/fireside/post/video/video-model';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import { createLightbox } from '../../../../_common/lightbox/lightbox-helpers';
-import { MediaItemModel } from '../../../../_common/media-item/media-item-model';
-import AppMediaItemPost from '../../../../_common/media-item/post/AppMediaItemPost.vue';
-import { Screen } from '../../../../_common/screen/screen-service';
-import { StickerTargetController } from '../../../../_common/sticker/target/target-controller';
-import { useCommonStore } from '../../../../_common/store/common-store';
-import AppTimeAgo from '../../../../_common/time/AppTimeAgo.vue';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
-import AppUserFollowButton from '../../../../_common/user/follow/AppUserFollowButton.vue';
-import AppUserAvatarBubble from '../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
-import { styleOverlayTextShadow, styleWhen } from '../../../../_styles/mixins';
-import { arrayRemove } from '../../../../utils/array';
-import AppCommunityUserNotification from '../../../components/community/user-notification/AppCommunityUserNotification.vue';
-import AppGameBadge from '../../../components/game/badge/AppGameBadge.vue';
-import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
-import AppPostContent from '../../../components/post/AppPostContent.vue';
+import AppCommunityUserNotification from '~app/components/community/user-notification/AppCommunityUserNotification.vue';
+import AppGameBadge from '~app/components/game/badge/AppGameBadge.vue';
+import AppPageContainer from '~app/components/page-container/AppPageContainer.vue';
+import AppPostContent from '~app/components/post/AppPostContent.vue';
+import { CommunityUserNotificationModel } from '~common/community/user-notification/user-notification.model';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import { FiresidePostVideoModel } from '~common/fireside/post/video/video-model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { createLightbox } from '~common/lightbox/lightbox-helpers';
+import { MediaItemModel } from '~common/media-item/media-item-model';
+import AppMediaItemPost from '~common/media-item/post/AppMediaItemPost.vue';
+import { Screen } from '~common/screen/screen-service';
+import { StickerTargetController } from '~common/sticker/target/target-controller';
+import { useCommonStore } from '~common/store/common-store';
+import AppTimeAgo from '~common/time/AppTimeAgo.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import AppUserCardHover from '~common/user/card/AppUserCardHover.vue';
+import AppUserFollowButton from '~common/user/follow/AppUserFollowButton.vue';
+import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
+import { styleOverlayTextShadow, styleWhen } from '~styles/mixins';
+import { arrayRemove } from '~utils/array';
 
 const UserFollowLocation = 'postPage' as const;
 

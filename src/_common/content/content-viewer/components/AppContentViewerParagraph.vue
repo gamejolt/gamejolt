@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import { ContentObject } from '../../content-object';
-import { useContentOwnerController } from '../../content-owner';
-import { renderContentChildren } from './AppContentViewerBaseComponent.vue';
+import { ContentObject } from '~common/content/content-object';
+import { useContentOwnerController } from '~common/content/content-owner';
+import { renderContentChildren } from '~common/content/content-viewer/components/AppContentViewerBaseComponent.vue';
 
 type Props = {
 	contentData: ContentObject;

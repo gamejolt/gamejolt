@@ -5,8 +5,8 @@ import {
 	getRectForStickerTarget,
 	StickerLayerController,
 	StickerLayerTargetRect,
-} from './layer-controller';
-import { StickerLayerItem } from './layer-item';
+} from '~common/sticker/layer/layer-controller';
+import { StickerLayerItem } from '~common/sticker/layer/layer-item';
 
 // How much extra padding (in px) should we put around each target for the
 // cutout that we make?

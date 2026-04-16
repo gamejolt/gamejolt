@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import '../../social.styl';
+import '~common/social/social.styl';
 
 import { onMounted } from 'vue';
 
-import { TwitterSdk } from '../sdk/sdk.service';
+import { TwitterSdk } from '~common/social/twitter/sdk/sdk.service';
 
 type Props = {
 	content: string;

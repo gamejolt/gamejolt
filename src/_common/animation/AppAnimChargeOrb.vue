@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import AppAnimSlideshow from './AppAnimSlideshow.vue';
-import { sheetChargeOrbBottom, sheetChargeOrbTop } from './slideshow/sheets';
+import AppAnimSlideshow from '~common/animation/AppAnimSlideshow.vue';
+import { sheetChargeOrbBottom, sheetChargeOrbTop } from '~common/animation/slideshow/sheets';
 
 type Props = {
 	pause?: boolean;

@@ -1,11 +1,11 @@
 import { defineAsyncComponent } from 'vue';
 
-import { showModal } from '../../../../_common/modal/modal.service';
+import { showModal } from '~common/modal/modal.service';
 
 export async function showUserAvatarModal() {
 	return await showModal<void>({
 		modalId: 'UserAvatar',
-		component: defineAsyncComponent(() => import('./UserAvatarModal.vue')),
+		component: defineAsyncComponent(() => import('~app/components/user/avatar-modal/UserAvatarModal.vue')),
 		size: 'sm',
 		noBackdropClose: true,
 	});

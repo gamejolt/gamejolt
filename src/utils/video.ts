@@ -1,4 +1,4 @@
-import { REGEX_YOUTUBE } from './regex';
+import { REGEX_YOUTUBE } from '~utils/regex';
 
 export function getYoutubeVideoId(path: string) {
 	const groupArray = REGEX_YOUTUBE.exec(path);

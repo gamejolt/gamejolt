@@ -1,30 +1,30 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import AppButton from '../../../../_common/button/AppButton.vue';
-import AppExpand from '../../../../_common/expand/AppExpand.vue';
-import { formatFilesize } from '../../../../_common/filters/filesize';
+import AppClientInstallProgress from '~app/components/client/AppClientInstallProgress.vue';
+import {
+	LocalDbPackagePatchState,
+	LocalDbPackageRemoveState,
+} from '~app/components/client/local-db/package/package.model';
+import { useClientLibraryStore } from '~app/store/client-library/index';
+import AppButton from '~common/button/AppButton.vue';
+import AppExpand from '~common/expand/AppExpand.vue';
+import { formatFilesize } from '~common/filters/filesize';
 import {
 	canInstallGameBuild,
 	type GameBuildModel,
 	GameBuildType,
-} from '../../../../_common/game/build/build.model';
-import { GameModel } from '../../../../_common/game/game.model';
-import AppGamePackageCardMoreOptions from '../../../../_common/game/package/card/AppGamePackageCardMoreOptions.vue';
-import { GamePackageCardModel } from '../../../../_common/game/package/card/card.model';
-import { GamePackageModel } from '../../../../_common/game/package/package.model';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import AppPopper from '../../../../_common/popper/AppPopper.vue';
-import { Popper } from '../../../../_common/popper/popper.service';
-import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { TranslateDirective as vTranslate } from '../../../../_common/translate/translate-directive';
-import { useClientLibraryStore } from '../../../store/client-library/index';
-import AppClientInstallProgress from '../AppClientInstallProgress.vue';
-import {
-	LocalDbPackagePatchState,
-	LocalDbPackageRemoveState,
-} from '../local-db/package/package.model';
+} from '~common/game/build/build.model';
+import { GameModel } from '~common/game/game.model';
+import AppGamePackageCardMoreOptions from '~common/game/package/card/AppGamePackageCardMoreOptions.vue';
+import { GamePackageCardModel } from '~common/game/package/card/card.model';
+import { GamePackageModel } from '~common/game/package/package.model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppPopper from '~common/popper/AppPopper.vue';
+import { Popper } from '~common/popper/popper.service';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { TranslateDirective as vTranslate } from '~common/translate/translate-directive';
 
 type Props = {
 	game: GameModel;

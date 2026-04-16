@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { GameCollectionModel } from '../collection.model';
-import AppGameCollectionGridItem from './item/AppGameCollectionGridItem.vue';
+import { GameCollectionModel } from '~app/components/game/collection/collection.model';
+import AppGameCollectionGridItem from '~app/components/game/collection/grid/item/AppGameCollectionGridItem.vue';
 
 type Props = {
 	collections: GameCollectionModel[];

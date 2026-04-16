@@ -2,29 +2,29 @@
 import { computed, onMounted, ref } from 'vue';
 import { RouterLink } from 'vue-router';
 
-import { Api } from '../../api/api.service';
-import AppButton from '../../button/AppButton.vue';
-import AppJolticon from '../../jolticon/AppJolticon.vue';
-import AppModal from '../../modal/AppModal.vue';
-import { useModal } from '../../modal/modal.service';
-import { Screen } from '../../screen/screen-service';
-import { SiteTrophyModel } from '../../site/trophy/trophy.model';
-import { useCommonStore } from '../../store/common-store';
-import AppTimeAgo from '../../time/AppTimeAgo.vue';
-import { vAppTooltip } from '../../tooltip/tooltip-directive';
-import AppTranslate from '../../translate/AppTranslate.vue';
-import { $gettext } from '../../translate/translate.service';
-import { TranslateDirective as vTranslate } from '../../translate/translate-directive';
-import AppUserCardHover from '../../user/card/AppUserCardHover.vue';
-import { UserGameTrophyModel } from '../../user/trophy/game-trophy.model';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import { Screen } from '~common/screen/screen-service';
+import { SiteTrophyModel } from '~common/site/trophy/trophy.model';
+import { useCommonStore } from '~common/store/common-store';
+import AppTimeAgo from '~common/time/AppTimeAgo.vue';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { TranslateDirective as vTranslate } from '~common/translate/translate-directive';
+import AppTrophyThumbnail from '~common/trophy/thumbnail/AppTrophyThumbnail.vue';
+import AppUserCardHover from '~common/user/card/AppUserCardHover.vue';
+import { UserGameTrophyModel } from '~common/user/trophy/game-trophy.model';
 import {
 	$viewUserBaseTrophyModel,
 	UserBaseTrophyModel,
-} from '../../user/trophy/user-base-trophy.model';
-import { UserModel } from '../../user/user.model';
-import AppUserAvatarImg from '../../user/user-avatar/AppUserAvatarImg.vue';
-import AppUserAvatarList from '../../user/user-avatar/AppUserAvatarList.vue';
-import AppTrophyThumbnail from '../thumbnail/AppTrophyThumbnail.vue';
+} from '~common/user/trophy/user-base-trophy.model';
+import { UserModel } from '~common/user/user.model';
+import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
+import AppUserAvatarList from '~common/user/user-avatar/AppUserAvatarList.vue';
 
 type Props = {
 	userTrophy: UserBaseTrophyModel;

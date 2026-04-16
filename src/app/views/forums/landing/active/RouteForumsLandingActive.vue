@@ -1,14 +1,14 @@
 <script lang="ts">
 import { computed, ref } from 'vue';
 
-import { Api } from '../../../../../_common/api/api.service';
-import { ForumTopicModel } from '../../../../../_common/forum/topic/topic.model';
+import AppForumTopicList from '~app/components/forum/topic-list/AppForumTopicList.vue';
+import { Api } from '~common/api/api.service';
+import { ForumTopicModel } from '~common/forum/topic/topic.model';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
-} from '../../../../../_common/route/route-component';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import AppForumTopicList from '../../../../components/forum/topic-list/AppForumTopicList.vue';
+} from '~common/route/route-component';
+import { $gettext } from '~common/translate/translate.service';
 
 export default {
 	...defineAppRouteOptions({

@@ -1,20 +1,20 @@
 <script lang="ts" setup>
 import { computed, CSSProperties, onUnmounted, Ref, ref, toRaw } from 'vue';
 
-import { Api } from '../../../../_common/api/api.service';
-import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
+import { Api } from '~common/api/api.service';
+import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
 import AppForm, {
 	createForm,
 	FormController,
-} from '../../../../_common/form-vue/AppForm.vue';
-import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
-import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
-import AppFormControlErrors from '../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormControlPrefix from '../../../../_common/form-vue/AppFormControlPrefix.vue';
-import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormStickySubmit from '../../../../_common/form-vue/AppFormStickySubmit.vue';
-import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
-import AppFormControlUpload from '../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
+} from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormControlPrefix from '~common/form-vue/AppFormControlPrefix.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormStickySubmit from '~common/form-vue/AppFormStickySubmit.vue';
+import AppFormControlToggle from '~common/form-vue/controls/AppFormControlToggle.vue';
+import AppFormControlUpload from '~common/form-vue/controls/upload/AppFormControlUpload.vue';
 import {
 	validateAvailability,
 	validateEmojiName,
@@ -24,19 +24,19 @@ import {
 	validateImageMinDimensions,
 	validateMaxLength,
 	validateMinLength,
-} from '../../../../_common/form-vue/validators';
-import { showErrorGrowl } from '../../../../_common/growls/growls.service';
-import AppLinkHelpDocs from '../../../../_common/link/AppLinkHelpDocs.vue';
-import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
-import { ModelData, UnknownModelData } from '../../../../_common/model/model.service';
-import { storeModel } from '../../../../_common/model/model-store.service';
-import { Screen } from '../../../../_common/screen/screen-service';
-import { StickerPackModel } from '../../../../_common/sticker/pack/pack.model';
-import { StickerModel } from '../../../../_common/sticker/sticker.model';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { TranslateDirective as vTranslate } from '../../../../_common/translate/translate-directive';
-import { styleBorderRadiusLg, styleChangeBg, styleFlexCenter } from '../../../../_styles/mixins';
-import { kLineHeightComputed } from '../../../../_styles/variables';
+} from '~common/form-vue/validators';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import AppLinkHelpDocs from '~common/link/AppLinkHelpDocs.vue';
+import { showModalConfirm } from '~common/modal/confirm/confirm-service';
+import { ModelData, UnknownModelData } from '~common/model/model.service';
+import { storeModel } from '~common/model/model-store.service';
+import { Screen } from '~common/screen/screen-service';
+import { StickerPackModel } from '~common/sticker/pack/pack.model';
+import { StickerModel } from '~common/sticker/sticker.model';
+import { $gettext } from '~common/translate/translate.service';
+import { TranslateDirective as vTranslate } from '~common/translate/translate-directive';
+import { styleBorderRadiusLg, styleChangeBg, styleFlexCenter } from '~styles/mixins';
+import { kLineHeightComputed } from '~styles/variables';
 
 type FormModel = Partial<StickerModel> & {
 	emoji_name: string;

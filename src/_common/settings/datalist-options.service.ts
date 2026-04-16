@@ -1,4 +1,4 @@
-import { assertNever } from '../../utils/utils';
+import { assertNever } from '~utils/utils';
 const STORAGE_PREFIX = 'options.';
 
 type DatalistOptionsType = 'community-eject' | 'community-move-post' | 'community-user-block';

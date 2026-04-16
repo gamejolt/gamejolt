@@ -1,15 +1,15 @@
 <script lang="ts" setup>
 import { computed, CSSProperties } from 'vue';
 
-import { styleChangeBg } from '../../../_styles/mixins';
-import AppAvatarFrame from '../../avatar/AppAvatarFrame.vue';
-import { AvatarFrameModel } from '../../avatar/frame.model';
-import { ComponentProps } from '../../component-helpers';
-import { Environment } from '../../environment/environment.service';
-import { ThemeColor } from '../../theme/variables';
-import AppUserVerifiedWrapper from '../AppUserVerifiedWrapper.vue';
-import { UserCommonFields } from '../user.model';
-import AppUserAvatarImg from './AppUserAvatarImg.vue';
+import AppAvatarFrame from '~common/avatar/AppAvatarFrame.vue';
+import { AvatarFrameModel } from '~common/avatar/frame.model';
+import { ComponentProps } from '~common/component-helpers';
+import { Environment } from '~common/environment/environment.service';
+import { ThemeColor } from '~common/theme/variables';
+import AppUserVerifiedWrapper from '~common/user/AppUserVerifiedWrapper.vue';
+import { UserCommonFields } from '~common/user/user.model';
+import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
+import { styleChangeBg } from '~styles/mixins';
 
 type Props = {
 	user: UserCommonFields | null;

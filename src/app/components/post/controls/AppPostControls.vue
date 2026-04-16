@@ -1,48 +1,48 @@
 <script lang="ts" setup>
 import { computed, onUnmounted, ref } from 'vue';
 
+import { ActivityFeedItem } from '~app/components/activity/feed/item-service';
+import { ActivityFeedView } from '~app/components/activity/feed/view';
+import { showCommentModal } from '~app/components/comment/modal/modal.service';
+import AppPostControlsStats from '~app/components/post/controls/AppPostControlsStats.vue';
+import AppPostControlsMore from '~app/components/post/controls/more/AppPostControlsMore.vue';
+import AppPostControlsSaveProgress from '~app/components/post/controls/save-progress/AppPostControlsSaveProgress.vue';
+import AppPostControlsUserFollow from '~app/components/post/controls/user-follow/AppPostControlsUserFollow.vue';
+import { showPostEditModal } from '~app/components/post/edit-modal/edit-modal-service';
 import {
 	Analytics,
 	PostControlsLocation,
 	trackPostPublish,
-} from '../../../../_common/analytics/analytics.service';
-import AppAnimElectricity from '../../../../_common/animation/AppAnimElectricity.vue';
-import { vAppAuthRequired } from '../../../../_common/auth/auth-required-directive';
-import AppButton from '../../../../_common/button/AppButton.vue';
+} from '~common/analytics/analytics.service';
+import AppAnimElectricity from '~common/animation/AppAnimElectricity.vue';
+import { vAppAuthRequired } from '~common/auth/auth-required-directive';
+import AppButton from '~common/button/AppButton.vue';
 import {
 	commentStoreCount,
 	CommentStoreModel,
 	lockCommentStore,
 	releaseCommentStore,
 	useCommentStoreManager,
-} from '../../../../_common/comment/comment-store';
-import { CommunityChannelModel } from '../../../../_common/community/channel/channel.model';
-import { CommunityModel } from '../../../../_common/community/community.model';
-import { formatFuzzynumber } from '../../../../_common/filters/fuzzynumber';
-import AppFiresidePostLikeWidget from '../../../../_common/fireside/post/like/widget/AppFiresidePostLikeWidget.vue';
+} from '~common/comment/comment-store';
+import { CommunityChannelModel } from '~common/community/channel/channel.model';
+import { CommunityModel } from '~common/community/community.model';
+import { formatFuzzynumber } from '~common/filters/fuzzynumber';
+import AppFiresidePostLikeWidget from '~common/fireside/post/like/widget/AppFiresidePostLikeWidget.vue';
 import {
 	$publishFiresidePost,
 	FiresidePostModel,
-} from '../../../../_common/fireside/post/post-model';
-import { Screen } from '../../../../_common/screen/screen-service';
-import AppStickerControlsOverlay from '../../../../_common/sticker/AppStickerControlsOverlay.vue';
-import { useStickerLayer } from '../../../../_common/sticker/layer/layer-controller';
-import { openStickerDrawer, useStickerStore } from '../../../../_common/sticker/sticker-store';
-import { useCommonStore } from '../../../../_common/store/common-store';
-import AppTheme from '../../../../_common/theme/AppTheme.vue';
-import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { UserFollowSuggestion } from '../../../../_common/user/follow/suggestion.service';
-import { UserModel } from '../../../../_common/user/user.model';
-import { ActivityFeedItem } from '../../activity/feed/item-service';
-import { ActivityFeedView } from '../../activity/feed/view';
-import { showCommentModal } from '../../comment/modal/modal.service';
-import { showPostEditModal } from '../edit-modal/edit-modal-service';
-import AppPostControlsStats from './AppPostControlsStats.vue';
-import AppPostControlsMore from './more/AppPostControlsMore.vue';
-import AppPostControlsSaveProgress from './save-progress/AppPostControlsSaveProgress.vue';
-import AppPostControlsUserFollow from './user-follow/AppPostControlsUserFollow.vue';
+} from '~common/fireside/post/post-model';
+import { Screen } from '~common/screen/screen-service';
+import AppStickerControlsOverlay from '~common/sticker/AppStickerControlsOverlay.vue';
+import { useStickerLayer } from '~common/sticker/layer/layer-controller';
+import { openStickerDrawer, useStickerStore } from '~common/sticker/sticker-store';
+import { useCommonStore } from '~common/store/common-store';
+import AppTheme from '~common/theme/AppTheme.vue';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { UserFollowSuggestion } from '~common/user/follow/suggestion.service';
+import { UserModel } from '~common/user/user.model';
 
 type Props = {
 	post: FiresidePostModel;

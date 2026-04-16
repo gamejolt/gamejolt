@@ -1,15 +1,15 @@
 <script lang="ts">
 import { computed, onMounted, useTemplateRef } from 'vue';
 
-import { Screen } from '../../../../../_common/screen/screen-service';
+import AppActivityFeedItemPlaceholder from '~app/components/activity/feed/item/AppActivityFeedItemPlaceholder.vue';
+import { ActivityFeedItem } from '~app/components/activity/feed/item-service';
+import AppActivityFeedNotification from '~app/components/activity/feed/notification/AppActivityFeedNotification.vue';
+import AppActivityFeedPost from '~app/components/activity/feed/post/AppActivityFeedPost.vue';
+import { useActivityFeed } from '~app/components/activity/feed/view';
+import { Screen } from '~common/screen/screen-service';
 import AppScrollInview, {
 	ScrollInviewConfig,
-} from '../../../../../_common/scroll/inview/AppScrollInview.vue';
-import { ActivityFeedItem } from '../item-service';
-import AppActivityFeedNotification from '../notification/AppActivityFeedNotification.vue';
-import AppActivityFeedPost from '../post/AppActivityFeedPost.vue';
-import { useActivityFeed } from '../view';
-import AppActivityFeedItemPlaceholder from './AppActivityFeedItemPlaceholder.vue';
+} from '~common/scroll/inview/AppScrollInview.vue';
 
 const InviewConfig = new ScrollInviewConfig();
 const InviewConfigHydration = new ScrollInviewConfig({ margin: `${Screen.height}px` });

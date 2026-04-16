@@ -1,8 +1,8 @@
 import { EditorView } from 'prosemirror-view';
 
-import { ContentEditorService } from '../content-editor.service';
-import { ContentEditorController } from '../content-editor-controller';
-import { handleImageUploads } from './build-events';
+import { ContentEditorService } from '~common/content/content-editor/content-editor.service';
+import { ContentEditorController } from '~common/content/content-editor/content-editor-controller';
+import { handleImageUploads } from '~common/content/content-editor/events/build-events';
 
 /**
  * Handles pasting direct image data from e.g. Paint, GIMP or web browsers

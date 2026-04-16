@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 import { computed, ref, toRef } from 'vue';
 
-import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
-import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
-import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
-import { $saveGameSettings, GameModel } from '../../../../../_common/game/game.model';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import AppDashGameWizardControls from '../wizard-controls/AppDashGameWizardControls.vue';
+import AppDashGameWizardControls from '~app/components/forms/game/wizard-controls/AppDashGameWizardControls.vue';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlToggle from '~common/form-vue/controls/AppFormControlToggle.vue';
+import { $saveGameSettings, GameModel } from '~common/game/game.model';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 type FormModel = GameModel;
 

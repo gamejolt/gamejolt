@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import { styleChangeBg, styleWhen } from '../../_styles/mixins';
-import { formatNumber } from '../filters/number';
-import { ThemeColor } from '../theme/variables';
-import AppCurrencyImg from './AppCurrencyImg.vue';
-import { Currency } from './currency-type';
+import AppCurrencyImg from '~common/currency/AppCurrencyImg.vue';
+import { Currency } from '~common/currency/currency-type';
+import { formatNumber } from '~common/filters/number';
+import { ThemeColor } from '~common/theme/variables';
+import { styleChangeBg, styleWhen } from '~styles/mixins';
 
 type Props = {
 	currency: Currency;

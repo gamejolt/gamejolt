@@ -1,5 +1,5 @@
-import { CommunityModel } from '../community/community.model';
-import { Model } from '../model/model.service';
+import { CommunityModel } from '~common/community/community.model';
+import { Model } from '~common/model/model.service';
 
 export class RealmCommunityModel extends Model {
 	constructor(data: any = {}) {

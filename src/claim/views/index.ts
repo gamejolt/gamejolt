@@ -1,7 +1,7 @@
-import { initRouter } from '../../utils/router';
-import { routeKey } from './key/key.route';
-import { routeRetrieve } from './retrieve/retrieve.route';
-import { routeSentKey } from './sent-key/sent-key.route';
+import { routeKey } from '~claim/views/key/key.route';
+import { routeRetrieve } from '~claim/views/retrieve/retrieve.route';
+import { routeSentKey } from '~claim/views/sent-key/sent-key.route';
+import { initRouter } from '~utils/router';
 
 const routes = [routeKey, routeRetrieve, routeSentKey];
 export const router = initRouter(routes);

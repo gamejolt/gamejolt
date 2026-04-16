@@ -2,17 +2,17 @@
 import { computed, ref } from 'vue';
 import { RouterLink } from 'vue-router';
 
-import AppButton from '../../../../_common/button/AppButton.vue';
-import { formatDate } from '../../../../_common/filters/date';
-import AppLinkExternal from '../../../../_common/link/AppLinkExternal.vue';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+import AppFinancialsCheckmark from '~app/components/forms/financials/AppFinancialsCheckmark.vue';
+import AppFinancialsTosScroller from '~app/components/forms/financials/AppFinancialsTosScroller.vue';
+import AppButton from '~common/button/AppButton.vue';
+import { formatDate } from '~common/filters/date';
+import AppLinkExternal from '~common/link/AppLinkExternal.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 import {
 	ManagedAccountTermsDistributionVersion,
 	UserStripeManagedAccountModel,
-} from '../../../../_common/user/stripe-managed-account/stripe-managed-account';
-import { html as termsTemplate } from '../../../../lib/terms/distribution-agreement/global.md';
-import AppFinancialsCheckmark from './AppFinancialsCheckmark.vue';
-import AppFinancialsTosScroller from './AppFinancialsTosScroller.vue';
+} from '~common/user/stripe-managed-account/stripe-managed-account';
+import { html as termsTemplate } from '~lib/terms/distribution-agreement/global.md';
 
 type Props = {
 	account?: UserStripeManagedAccountModel;

@@ -1,11 +1,11 @@
 import { defineAsyncComponent } from 'vue';
 
-import { showModal } from '../../modal/modal.service';
+import { showModal } from '~common/modal/modal.service';
 
 export async function showTranslateLangSelectorModal() {
 	return await showModal<void>({
 		modalId: 'TranslateLangSelector',
-		component: defineAsyncComponent(() => import('./AppTranslateLangSelectorModal.vue')),
+		component: defineAsyncComponent(() => import('~common/translate/lang-selector/AppTranslateLangSelectorModal.vue')),
 		size: 'sm',
 	});
 }
@@ -14,7 +14,7 @@ export class TranslateLangSelectorModal {
 	static async show() {
 		return await showModal<void>({
 			modalId: 'TranslateLangSelector',
-			component: defineAsyncComponent(() => import('./AppTranslateLangSelectorModal.vue')),
+			component: defineAsyncComponent(() => import('~common/translate/lang-selector/AppTranslateLangSelectorModal.vue')),
 			size: 'sm',
 		});
 	}

@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import { ScrollInviewConfig } from '../../../../scroll/inview/AppScrollInview.vue';
-import { EmojiGroupData } from '../../../../store/common-store';
-import { EmojiModel } from '../../../emoji.model';
-import AppEmojiSelectorGroupItem from './AppEmojiSelectorGroupItem.vue';
+import { EmojiModel } from '~common/emoji/emoji.model';
+import AppEmojiSelectorGroupItem from '~common/emoji/selector-modal/_group/item/AppEmojiSelectorGroupItem.vue';
+import { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
+import { EmojiGroupData } from '~common/store/common-store';
 
 type Props = {
 	groupData: EmojiGroupData;

@@ -1,5 +1,5 @@
-import { Model } from '../../../model/model.service';
-import { RealmModel } from '../../../realm/realm-model';
+import { Model } from '~common/model/model.service';
+import { RealmModel } from '~common/realm/realm-model';
 
 export class FiresidePostRealmModel extends Model {
 	declare fireside_post_id: number;

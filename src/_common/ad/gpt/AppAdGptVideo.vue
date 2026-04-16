@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { onMounted, onUnmounted, ref, toValue, useTemplateRef } from 'vue';
 
-import { kBorderRadiusBase } from '../../../_styles/variables';
-import { createLogger } from '../../../utils/logging';
-import { onScreenResize } from '../../screen/screen-service';
-import { useEventSubscription } from '../../system/event/event-topic';
-import { loadVideoAdsTag, useAdStore } from '../ad-store';
+import { loadVideoAdsTag, useAdStore } from '~common/ad/ad-store';
+import { onScreenResize } from '~common/screen/screen-service';
+import { useEventSubscription } from '~common/system/event/event-topic';
+import { kBorderRadiusBase } from '~styles/variables';
+import { createLogger } from '~utils/logging';
 
 const emit = defineEmits<{
 	fail: [];
@@ -244,7 +244,7 @@ useEventSubscription(onScreenResize, () => {
 				height: `100%`,
 			}"
 		>
-			<source src="./dummy.mp4" type="video/mp4" />
+			<source src="~common/ad/gpt/dummy.mp4" type="video/mp4" />
 		</video>
 		<div
 			ref="ad-container"

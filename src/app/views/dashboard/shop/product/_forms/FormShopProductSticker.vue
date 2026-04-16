@@ -1,23 +1,23 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 
-import AppFormControl from '../../../../../../_common/form-vue/AppFormControl.vue';
-import AppFormControlErrors from '../../../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormControlPrefix from '../../../../../../_common/form-vue/AppFormControlPrefix.vue';
-import AppFormGroup from '../../../../../../_common/form-vue/AppFormGroup.vue';
+import FormShopProductBase, { createShopProductBaseForm } from '~app/views/dashboard/shop/product/_forms/FormShopProductBase.vue';
+import AppDashShopProductHeader from '~app/views/dashboard/shop/product/AppDashShopProductHeader.vue';
+import { ShopDashProductType, useShopDashStore } from '~app/views/dashboard/shop/shop.store';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormControlPrefix from '~common/form-vue/AppFormControlPrefix.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
 import {
 	validateAvailability,
 	validateEmojiName,
 	validateMaxLength,
 	validateMinLength,
-} from '../../../../../../_common/form-vue/validators';
-import AppLinkHelp from '../../../../../../_common/link/AppLinkHelp.vue';
-import { ShopProductResource } from '../../../../../../_common/shop/product/product-model';
-import { StickerModel } from '../../../../../../_common/sticker/sticker.model';
-import { $gettext } from '../../../../../../_common/translate/translate.service';
-import { ShopDashProductType, useShopDashStore } from '../../shop.store';
-import AppDashShopProductHeader from '../AppDashShopProductHeader.vue';
-import FormShopProductBase, { createShopProductBaseForm } from './FormShopProductBase.vue';
+} from '~common/form-vue/validators';
+import AppLinkHelp from '~common/link/AppLinkHelp.vue';
+import { ShopProductResource } from '~common/shop/product/product-model';
+import { StickerModel } from '~common/sticker/sticker.model';
+import { $gettext } from '~common/translate/translate.service';
 
 type Props = {
 	model?: StickerModel;

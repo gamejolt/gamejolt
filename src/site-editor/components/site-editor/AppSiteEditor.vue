@@ -2,16 +2,16 @@
 import { computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-import { Api } from '../../../_common/api/api.service';
-import AppButton from '../../../_common/button/AppButton.vue';
-import AppContentBlockEditor from '../../../_common/content-block/editor/AppContentBlockEditor.vue';
-import { showSuccessGrowl } from '../../../_common/growls/growls.service';
-import AppLoading from '../../../_common/loading/AppLoading.vue';
-import AppThemeSelector from '../../../_common/theme/selector/AppThemeSelector.vue';
-import AppThemeEditor from '../../../_common/theme/theme-editor/AppThemeEditor.vue';
-import AppTranslate from '../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../_common/translate/translate.service';
-import { useSiteEditorStore } from '../../store/index';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import AppContentBlockEditor from '~common/content-block/editor/AppContentBlockEditor.vue';
+import { showSuccessGrowl } from '~common/growls/growls.service';
+import AppLoading from '~common/loading/AppLoading.vue';
+import AppThemeSelector from '~common/theme/selector/AppThemeSelector.vue';
+import AppThemeEditor from '~common/theme/theme-editor/AppThemeEditor.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { useSiteEditorStore } from '~site-editor/store/index';
 
 const store = useSiteEditorStore();
 const router = useRouter();

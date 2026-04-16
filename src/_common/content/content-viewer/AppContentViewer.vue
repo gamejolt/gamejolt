@@ -1,16 +1,16 @@
 <script lang="ts" setup>
 import { computed, provide, ref, watch } from 'vue';
 
-import { ContextCapabilities } from '../content-context';
-import { ContentDocument } from '../content-document';
-import { ContentHydrator } from '../content-hydrator';
+import { ContextCapabilities } from '~common/content/content-context';
+import { ContentDocument } from '~common/content/content-document';
+import { ContentHydrator } from '~common/content/content-hydrator';
 import {
 	ContentOwnerControllerKey,
 	ContentOwnerParentBounds,
 	createContentOwnerController,
-} from '../content-owner';
-import { ContentRules } from '../content-rules';
-import AppContentViewerBaseComponent from './components/AppContentViewerBaseComponent.vue';
+} from '~common/content/content-owner';
+import { ContentRules } from '~common/content/content-rules';
+import AppContentViewerBaseComponent from '~common/content/content-viewer/components/AppContentViewerBaseComponent.vue';
 
 type Props = {
 	source: string;

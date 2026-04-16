@@ -1,34 +1,34 @@
 import type { PatchEvents, PatchInstance } from 'client-voodoo';
 import { ComputedRef, markRaw, reactive,Ref } from 'vue';
 
-import { Api } from '../../../_common/api/api.service';
+import { LocalDbGame } from '~app/components/client/local-db/game/game.model';
+import { LocalDb } from '~app/components/client/local-db/local-db.service';
+import type { LocalDbPackageProgress } from '~app/components/client/local-db/package/package.model';
+import {
+	LocalDbPackage,
+	LocalDbPackagePatchState,
+	LocalDbPackageRemoveState,
+} from '~app/components/client/local-db/package/package.model';
+import type { ClientVoodooOperation } from '~app/store/client-library/client-voodoo';
+import { handleClientVoodooError, trackClientVoodooOperation } from '~app/store/client-library/client-voodoo';
+import type ClientLibraryGameDataMutations from '~app/store/client-library/game-data-mutations';
+import type ClientLibraryPackageDataMutations from '~app/store/client-library/package-data-mutations';
+import { Api } from '~common/api/api.service';
 import {
 	Patcher,
 	Rollbacker,
 	State as PatcherState,
 	Uninstaller,
-} from '../../../_common/client/client-voodoo-imports';
-import type { GameBuildModel } from '../../../_common/game/build/build.model';
-import type { GameBuildLaunchOptionModel } from '../../../_common/game/build/launch-option/launch-option.model';
-import type { GameModel } from '../../../_common/game/game.model';
-import type { GamePackageModel } from '../../../_common/game/package/package.model';
-import type { GameReleaseModel } from '../../../_common/game/release/release.model';
-import { showSuccessGrowl } from '../../../_common/growls/growls.service';
-import { HistoryTick } from '../../../_common/history-tick/history-tick-service';
-import { SettingGameInstallDir } from '../../../_common/settings/settings.service';
-import { $gettext } from '../../../_common/translate/translate.service';
-import { LocalDbGame } from '../../components/client/local-db/game/game.model';
-import { LocalDb } from '../../components/client/local-db/local-db.service';
-import type { LocalDbPackageProgress } from '../../components/client/local-db/package/package.model';
-import {
-	LocalDbPackage,
-	LocalDbPackagePatchState,
-	LocalDbPackageRemoveState,
-} from '../../components/client/local-db/package/package.model';
-import type { ClientVoodooOperation } from './client-voodoo';
-import { handleClientVoodooError, trackClientVoodooOperation } from './client-voodoo';
-import type ClientLibraryGameDataMutations from './game-data-mutations';
-import type ClientLibraryPackageDataMutations from './package-data-mutations';
+} from '~common/client/client-voodoo-imports';
+import type { GameBuildModel } from '~common/game/build/build.model';
+import type { GameBuildLaunchOptionModel } from '~common/game/build/launch-option/launch-option.model';
+import type { GameModel } from '~common/game/game.model';
+import type { GamePackageModel } from '~common/game/package/package.model';
+import type { GameReleaseModel } from '~common/game/release/release.model';
+import { showSuccessGrowl } from '~common/growls/growls.service';
+import { HistoryTick } from '~common/history-tick/history-tick-service';
+import { SettingGameInstallDir } from '~common/settings/settings.service';
+import { $gettext } from '~common/translate/translate.service';
 
 const path = require('path') as typeof import('path');
 

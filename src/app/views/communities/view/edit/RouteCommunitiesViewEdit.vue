@@ -2,15 +2,15 @@
 import { computed, toRef } from 'vue';
 import { RouterView } from 'vue-router';
 
-import { Api } from '../../../../../_common/api/api.service';
-import { CollaboratorModel } from '../../../../../_common/collaborator/collaborator.model';
+import { updateCommunity, useCommunityRouteStore } from '~app/views/communities/view/view.store';
+import { Api } from '~common/api/api.service';
+import { CollaboratorModel } from '~common/collaborator/collaborator.model';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
-} from '../../../../../_common/route/route-component';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import { enforceLocation } from '../../../../../utils/router';
-import { updateCommunity, useCommunityRouteStore } from '../view.store';
+} from '~common/route/route-component';
+import { $gettext } from '~common/translate/translate.service';
+import { enforceLocation } from '~utils/router';
 
 export default {
 	...defineAppRouteOptions({

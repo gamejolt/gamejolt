@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import { CommunityModel } from '../../../../_common/community/community.model';
-import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import Onboarding from '../../../../_common/onboarding/onboarding.service';
-import { useAppStore } from '../../../store';
-import { useGridStore } from '../../grid/grid-store';
+import { useGridStore } from '~app/components/grid/grid-store';
+import { useAppStore } from '~app/store';
+import { CommunityModel } from '~common/community/community.model';
+import AppCommunityThumbnailImg from '~common/community/thumbnail/AppCommunityThumbnailImg.vue';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import Onboarding from '~common/onboarding/onboarding.service';
 
 type Props = {
 	community: CommunityModel;

@@ -1,11 +1,11 @@
 <script lang="ts">
 import { computed, ref } from 'vue';
 
-import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
-import { UserModel } from '../../../../_common/user/user.model';
-import { fuzzysearch } from '../../../../utils/string';
-import { ChatRoomModel } from '../room';
-import { ChatUser } from '../user';
+import { ChatRoomModel } from '~app/components/chat/room';
+import { ChatUser } from '~app/components/chat/user';
+import AppScrollScroller from '~common/scroll/AppScrollScroller.vue';
+import { UserModel } from '~common/user/user.model';
+import { fuzzysearch } from '~utils/string';
 
 type ChatListEntry = ChatUser | UserModel | ChatRoomModel;
 

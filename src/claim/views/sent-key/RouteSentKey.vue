@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import { createAppRoute } from '../../../_common/route/route-component';
-import { $gettext } from '../../../_common/translate/translate.service';
+import { createAppRoute } from '~common/route/route-component';
+import { $gettext } from '~common/translate/translate.service';
 
 createAppRoute({
 	routeTitle: computed(() => $gettext(`Keys Sent`)),

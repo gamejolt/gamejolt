@@ -1,24 +1,24 @@
 <script lang="ts">
 import { computed, nextTick, onMounted, ref, useSlots, useTemplateRef, watch } from 'vue';
 
-import AppFadeCollapse from '../../../AppFadeCollapse.vue';
-import AppBackground from '../../../background/AppBackground.vue';
-import AppContentViewer from '../../../content/content-viewer/AppContentViewer.vue';
-import { useContentFocusService } from '../../../content-focus/content-focus.service';
-import AppImgResponsive from '../../../img/AppImgResponsive.vue';
-import AppMediaItemBackdrop from '../../../media-item/backdrop/AppMediaItemBackdrop.vue';
-import { MediaItemType } from '../../../media-item/media-item-model';
-import AppResponsiveDimensions from '../../../responsive-dimensions/AppResponsiveDimensions.vue';
-import { Screen } from '../../../screen/screen-service';
-import AppScrollInview, { ScrollInviewConfig } from '../../../scroll/inview/AppScrollInview.vue';
-import AppVideo from '../../../video/AppVideo.vue';
+import AppFadeCollapse from '~common/AppFadeCollapse.vue';
+import AppBackground from '~common/background/AppBackground.vue';
+import AppContentViewer from '~common/content/content-viewer/AppContentViewer.vue';
+import { useContentFocusService } from '~common/content-focus/content-focus.service';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import AppImgResponsive from '~common/img/AppImgResponsive.vue';
+import AppMediaItemBackdrop from '~common/media-item/backdrop/AppMediaItemBackdrop.vue';
+import { MediaItemType } from '~common/media-item/media-item-model';
+import AppResponsiveDimensions from '~common/responsive-dimensions/AppResponsiveDimensions.vue';
+import { Screen } from '~common/screen/screen-service';
+import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
+import AppVideo from '~common/video/AppVideo.vue';
 import {
 	createVideoPlayerController,
 	getVideoPlayerFromSources,
 	VideoPlayerController,
 	VideoPlayerControllerContext,
-} from '../../../video/player/controller';
-import { FiresidePostModel } from '../post-model';
+} from '~common/video/player/controller';
 
 export const AppPostCardAspectRatio = 10 / 16;
 

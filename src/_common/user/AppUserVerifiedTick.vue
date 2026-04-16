@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import AppJolticon from '../jolticon/AppJolticon.vue';
-import { vAppTooltip } from '../tooltip/tooltip-directive';
-import { $gettext } from '../translate/translate.service';
-import AppUserCreatorBadge from './creator/AppUserCreatorBadge.vue';
-import { UserCommonFields } from './user.model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { $gettext } from '~common/translate/translate.service';
+import AppUserCreatorBadge from '~common/user/creator/AppUserCreatorBadge.vue';
+import { UserCommonFields } from '~common/user/user.model';
 
 type Props = {
 	user: UserCommonFields;

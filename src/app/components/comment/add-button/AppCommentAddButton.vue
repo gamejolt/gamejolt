@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import { vAppAuthRequired } from '../../../../_common/auth/auth-required-directive';
-import { CommentableModel } from '../../../../_common/comment/comment-model';
-import { Model } from '../../../../_common/model/model.service';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { DisplayMode, showCommentModal } from '../modal/modal.service';
+import { DisplayMode, showCommentModal } from '~app/components/comment/modal/modal.service';
+import { vAppAuthRequired } from '~common/auth/auth-required-directive';
+import { CommentableModel } from '~common/comment/comment-model';
+import { Model } from '~common/model/model.service';
+import { $gettext } from '~common/translate/translate.service';
 
 type Props = {
 	model: Model & CommentableModel;

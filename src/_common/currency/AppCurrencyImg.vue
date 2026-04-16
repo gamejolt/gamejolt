@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { computed, CSSProperties } from 'vue';
 
-import AppIllustration from '../illustration/AppIllustration.vue';
-import { Currency } from './currency-type';
+import { Currency } from '~common/currency/currency-type';
+import AppIllustration from '~common/illustration/AppIllustration.vue';
 
 type Props = {
 	currency: Currency;

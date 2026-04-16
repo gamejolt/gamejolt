@@ -1,11 +1,11 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue';
 
-import AppButton from '../../../../button/AppButton.vue';
-import AppModal from '../../../../modal/AppModal.vue';
-import { useModal } from '../../../../modal/modal.service';
-import AppFormContentEditorLink from './AppFormContentEditorLink.vue';
-import { LinkData } from './link-modal.service';
+import AppButton from '~common/button/AppButton.vue';
+import AppFormContentEditorLink from '~common/content/content-editor/modals/link/AppFormContentEditorLink.vue';
+import { LinkData } from '~common/content/content-editor/modals/link/link-modal.service';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
 
 type Props = {
 	selectedText: string;

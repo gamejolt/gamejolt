@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { computed, watch } from 'vue';
 
-import AppDatepicker from '../datepicker/AppDatepicker.vue';
-import AppTimepicker from '../timepicker/AppTimepicker.vue';
+import AppDatepicker from '~common/datepicker/AppDatepicker.vue';
+import AppTimepicker from '~common/timepicker/AppTimepicker.vue';
 
 type Props = {
 	value: number;

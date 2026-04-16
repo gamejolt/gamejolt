@@ -1,13 +1,13 @@
 <script lang="ts">
 import { RouterView } from 'vue-router';
 
-import AppNavTabList from '../../../../../../_common/nav/tab-list/AppNavTabList.vue';
+import AppManageGameApiNav from '~app/views/dashboard/games/manage/api/AppManageGameApiNav.vue';
+import AppNavTabList from '~common/nav/tab-list/AppNavTabList.vue';
 import {
 	createAppRoute,
 	defineAppRouteOptions,
-} from '../../../../../../_common/route/route-component';
-import { Screen } from '../../../../../../_common/screen/screen-service';
-import AppManageGameApiNav from './AppManageGameApiNav.vue';
+} from '~common/route/route-component';
+import { Screen } from '~common/screen/screen-service';
 export default {
 	...defineAppRouteOptions({
 		reloadOn: 'never',

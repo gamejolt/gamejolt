@@ -1,19 +1,19 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue';
 
-import { Api } from '../../../../api/api.service';
-import AppButton from '../../../../button/AppButton.vue';
-import { GameModel } from '../../../../game/game.model';
-import AppGameThumbnail from '../../../../game/thumbnail/AppGameThumbnail.vue';
-import AppGameThumbnailImg from '../../../../game/thumbnail/AppGameThumbnailImg.vue';
-import { showErrorGrowl } from '../../../../growls/growls.service';
-import AppLoading from '../../../../loading/AppLoading.vue';
-import AppModal from '../../../../modal/AppModal.vue';
-import { useModal } from '../../../../modal/modal.service';
-import AppTranslate from '../../../../translate/AppTranslate.vue';
-import { $gettext } from '../../../../translate/translate.service';
-import { CommunityCompetitionModel } from '../../competition.model';
-import { CommunityCompetitionEntryModel } from '../entry.model';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import { CommunityCompetitionModel } from '~common/community/competition/competition.model';
+import { CommunityCompetitionEntryModel } from '~common/community/competition/entry/entry.model';
+import { GameModel } from '~common/game/game.model';
+import AppGameThumbnail from '~common/game/thumbnail/AppGameThumbnail.vue';
+import AppGameThumbnailImg from '~common/game/thumbnail/AppGameThumbnailImg.vue';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import AppLoading from '~common/loading/AppLoading.vue';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
 
 type Props = {
 	competition: CommunityCompetitionModel;

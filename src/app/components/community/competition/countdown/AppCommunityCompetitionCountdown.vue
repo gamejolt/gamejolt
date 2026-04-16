@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { onBeforeUnmount, onMounted, ref } from 'vue';
 
-import { CommunityCompetitionModel } from '../../../../../_common/community/competition/competition.model';
-import { $gettext } from '../../../../../_common/translate/translate.service';
+import { CommunityCompetitionModel } from '~common/community/competition/competition.model';
+import { $gettext } from '~common/translate/translate.service';
 
 type BlockData = {
 	digits: string[];

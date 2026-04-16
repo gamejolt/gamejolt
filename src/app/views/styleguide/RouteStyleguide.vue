@@ -1,17 +1,17 @@
 <script lang="ts">
 import { computed } from 'vue';
 
-import AppButtonStyleguide from '../../../_common/button/AppButtonStyleguide.vue';
-import AppJolticonsStyleguide from '../../../_common/jolticons/AppJolticonsStyleguide.vue';
-import AppListGroupStyleguide from '../../../_common/list-group/AppListGroupStyleguide.vue';
-import AppProgressBarStyleguide from '../../../_common/progress/AppProgressBarStyleguide.vue';
-import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
-import AppScrollAffix from '../../../_common/scroll/AppScrollAffix.vue';
-import { vAppScrollTo } from '../../../_common/scroll/to/to.directive';
-import AppThemeSvgStyleguide from '../../../_common/theme/svg/AppThemeSvgStyleguide.vue';
-import { touchUser } from '../../../_common/user/user.model';
-import AppAvatarFrameStyleguide from './avatar-frame/AppAvatarFrameStyleguide.vue';
-import AppStyleguideColor from './color/AppStyleguideColor.vue';
+import AppAvatarFrameStyleguide from '~app/views/styleguide/avatar-frame/AppAvatarFrameStyleguide.vue';
+import AppStyleguideColor from '~app/views/styleguide/color/AppStyleguideColor.vue';
+import AppButtonStyleguide from '~common/button/AppButtonStyleguide.vue';
+import AppJolticonsStyleguide from '~common/jolticons/AppJolticonsStyleguide.vue';
+import AppListGroupStyleguide from '~common/list-group/AppListGroupStyleguide.vue';
+import AppProgressBarStyleguide from '~common/progress/AppProgressBarStyleguide.vue';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import AppScrollAffix from '~common/scroll/AppScrollAffix.vue';
+import { vAppScrollTo } from '~common/scroll/to/to.directive';
+import AppThemeSvgStyleguide from '~common/theme/svg/AppThemeSvgStyleguide.vue';
+import { touchUser } from '~common/user/user.model';
 
 export default {
 	name: 'RouteStyleguide',

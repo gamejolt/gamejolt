@@ -1,4 +1,4 @@
-import { Api } from '../api/api.service';
+import { Api } from '~common/api/api.service';
 const TIMEOUT_INITIAL = 2000;
 const TIMEOUT_GROW = 1.5;
 const TIMEOUT_MAX = 30000;

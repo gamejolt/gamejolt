@@ -2,9 +2,9 @@
 import { parseToRgb, transparentize } from 'polished';
 import { computed, inject, InjectionKey, MaybeRefOrGetter, provide, toRef } from 'vue';
 
-import AppStyle from '../AppStyle.vue';
-import { DefaultTheme, ThemeModel } from './theme.model';
-import { useThemeStore } from './theme.store';
+import AppStyle from '~common/AppStyle.vue';
+import { DefaultTheme, ThemeModel } from '~common/theme/theme.model';
+import { useThemeStore } from '~common/theme/theme.store';
 
 // This needs to be global so that we can generate an ID for each component.
 let _inc = 0;

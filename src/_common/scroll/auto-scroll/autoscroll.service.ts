@@ -1,7 +1,7 @@
 import { nextTick } from 'vue';
 import { RouterScrollBehavior } from 'vue-router';
 
-import { Scroll } from '../scroll.service';
+import { Scroll } from '~common/scroll/scroll.service';
 
 export function initScrollBehavior(): RouterScrollBehavior {
 	// Should tell the browser that we want to handle our own scrolling.

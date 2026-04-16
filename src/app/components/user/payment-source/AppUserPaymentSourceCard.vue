@@ -1,17 +1,17 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import AppCard from '../../../../_common/card/AppCard.vue';
-import { showSuccessGrowl } from '../../../../_common/growls/growls.service';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
+import AppUserAddressDetails from '~app/components/user/address/AppUserAddressDetails.vue';
+import AppCard from '~common/card/AppCard.vue';
+import { showSuccessGrowl } from '~common/growls/growls.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { showModalConfirm } from '~common/modal/confirm/confirm-service';
 import {
 	$removePaymentSource,
 	PaymentSourceModel,
-} from '../../../../_common/payment-source/payment-source.model';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import AppUserAddressDetails from '../address/AppUserAddressDetails.vue';
+} from '~common/payment-source/payment-source.model';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
 
 type Props = {
 	paymentSource: PaymentSourceModel;

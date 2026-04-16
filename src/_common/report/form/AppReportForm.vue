@@ -1,20 +1,20 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref } from 'vue';
 
-import { arrayRemove } from '../../../utils/array';
-import { Api } from '../../api/api.service';
-import { FiresidePostModel } from '../../fireside/post/post-model';
-import AppForm, { createForm, FormController } from '../../form-vue/AppForm.vue';
-import AppFormButton from '../../form-vue/AppFormButton.vue';
-import AppFormControl from '../../form-vue/AppFormControl.vue';
-import AppFormControlErrors from '../../form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../../form-vue/AppFormGroup.vue';
-import AppFormControlCheckbox from '../../form-vue/controls/AppFormControlCheckbox.vue';
-import AppFormControlRadio from '../../form-vue/controls/AppFormControlRadio.vue';
-import AppFormControlTextarea from '../../form-vue/controls/AppFormControlTextarea.vue';
-import { validateMaxLength } from '../../form-vue/validators';
-import { GameModel } from '../../game/game.model';
-import { $gettext } from '../../translate/translate.service';
+import { Api } from '~common/api/api.service';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlCheckbox from '~common/form-vue/controls/AppFormControlCheckbox.vue';
+import AppFormControlRadio from '~common/form-vue/controls/AppFormControlRadio.vue';
+import AppFormControlTextarea from '~common/form-vue/controls/AppFormControlTextarea.vue';
+import { validateMaxLength } from '~common/form-vue/validators';
+import { GameModel } from '~common/game/game.model';
+import { $gettext } from '~common/translate/translate.service';
+import { arrayRemove } from '~utils/array';
 
 type FormModel = {
 	reason: string;

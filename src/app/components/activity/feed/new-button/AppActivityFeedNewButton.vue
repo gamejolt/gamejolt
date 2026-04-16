@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import AppButton from '../../../../../_common/button/AppButton.vue';
+import AppButton from '~common/button/AppButton.vue';
 
 const emit = defineEmits<{
 	click: [e: Event];

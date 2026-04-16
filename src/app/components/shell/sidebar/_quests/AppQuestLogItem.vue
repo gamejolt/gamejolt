@@ -1,20 +1,20 @@
 <script lang="ts" setup>
 import { toRef } from 'vue';
 
-import AppConfetti from '../../../../../_common/particle-effects/AppConfetti.vue';
-import AppQuestProgress from '../../../../../_common/quest/AppQuestProgress.vue';
-import AppQuestThumbnail from '../../../../../_common/quest/AppQuestThumbnail.vue';
-import { QuestModel } from '../../../../../_common/quest/quest-model';
-import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
+import AppQuestTimer from '~app/components/quest/AppQuestTimer.vue';
+import { useAppStore } from '~app/store/index';
+import { useQuestStore } from '~app/store/quest';
+import AppConfetti from '~common/particle-effects/AppConfetti.vue';
+import AppQuestProgress from '~common/quest/AppQuestProgress.vue';
+import AppQuestThumbnail from '~common/quest/AppQuestThumbnail.vue';
+import { QuestModel } from '~common/quest/quest-model';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
 import {
 	styleBorderRadiusLg,
 	styleChangeBgRgba,
 	styleFlexCenter,
-} from '../../../../../_styles/mixins';
-import { kFontSizeBase, kFontSizeLarge, kFontSizeSmall } from '../../../../../_styles/variables';
-import { useAppStore } from '../../../../store/index';
-import { useQuestStore } from '../../../../store/quest';
-import AppQuestTimer from '../../../quest/AppQuestTimer.vue';
+} from '~styles/mixins';
+import { kFontSizeBase, kFontSizeLarge, kFontSizeSmall } from '~styles/variables';
 
 type Props = {
 	quest: QuestModel;

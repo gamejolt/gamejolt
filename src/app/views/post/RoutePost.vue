@@ -2,24 +2,24 @@
 import { computed, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-import { Api } from '../../../_common/api/api.service';
-import { CommunityUserNotificationModel } from '../../../_common/community/user-notification/user-notification.model';
-import { pullFiresidePostHashFromUrl } from '../../../_common/fireside/post/post-model';
-import { $viewPost, FiresidePostModel } from '../../../_common/fireside/post/post-model';
-import { Meta } from '../../../_common/meta/meta-service';
-import { Registry } from '../../../_common/registry/registry.service';
-import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
-import { useThemeStore } from '../../../_common/theme/theme.store';
-import { $gettext } from '../../../_common/translate/translate.service';
-import { enforceLocation } from '../../../utils/router';
 import {
 	CommentThreadModalPermalinkDeregister,
 	showCommentThreadModalFromPermalink,
 	watchForCommentThreadModalPermalink,
-} from '../../components/comment/thread/modal.service';
-import { IntentService } from '../../components/intent/intent.service';
-import AppPostPage from './_page/AppPostPage.vue';
-import AppPostPagePlaceholder from './_page-placeholder/AppPostPagePlaceholder.vue';
+} from '~app/components/comment/thread/modal.service';
+import { IntentService } from '~app/components/intent/intent.service';
+import AppPostPage from '~app/views/post/_page/AppPostPage.vue';
+import AppPostPagePlaceholder from '~app/views/post/_page-placeholder/AppPostPagePlaceholder.vue';
+import { Api } from '~common/api/api.service';
+import { CommunityUserNotificationModel } from '~common/community/user-notification/user-notification.model';
+import { pullFiresidePostHashFromUrl } from '~common/fireside/post/post-model';
+import { $viewPost, FiresidePostModel } from '~common/fireside/post/post-model';
+import { Meta } from '~common/meta/meta-service';
+import { Registry } from '~common/registry/registry.service';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { useThemeStore } from '~common/theme/theme.store';
+import { $gettext } from '~common/translate/translate.service';
+import { enforceLocation } from '~utils/router';
 
 export default {
 	name: 'RoutePost',

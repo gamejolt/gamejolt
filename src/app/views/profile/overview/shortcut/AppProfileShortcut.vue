@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { RouterLink } from 'vue-router';
 
-import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import { kThemeFg } from '../../../../../_common/theme/variables';
-import { kFontSizeTiny } from '../../../../../_styles/variables';
-import { ProfileQuickLink } from './AppProfileShortcuts.vue';
+import { ProfileQuickLink } from '~app/views/profile/overview/shortcut/AppProfileShortcuts.vue';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { kThemeFg } from '~common/theme/variables';
+import { kFontSizeTiny } from '~styles/variables';
 
 type Props = {
 	item: ProfileQuickLink;

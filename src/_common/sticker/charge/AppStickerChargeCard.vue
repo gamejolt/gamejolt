@@ -2,20 +2,20 @@
 import { computed, CSSProperties, ref, useTemplateRef } from 'vue';
 import { RouterLink } from 'vue-router';
 
-import { routeLandingCreators } from '../../../app/views/landing/creators/creators.route';
-import AppAnimChargeOrb from '../../animation/AppAnimChargeOrb.vue';
-import AppAnimElectricity from '../../animation/AppAnimElectricity.vue';
-import { illChargeOrbEmpty } from '../../animation/slideshow/sheets';
-import AppAspectRatio from '../../aspect-ratio/AppAspectRatio.vue';
-import AppJolticon from '../../jolticon/AppJolticon.vue';
-import AppLoadingFade from '../../loading/AppLoadingFade.vue';
-import { Screen } from '../../screen/screen-service';
-import AppSpacer from '../../spacer/AppSpacer.vue';
-import AppTranslate from '../../translate/AppTranslate.vue';
-import { useStickerStore } from '../sticker-store';
-import AppStickerChargeTooltip from './AppStickerChargeTooltip.vue';
-import AppStickerChargeTooltipCaret from './AppStickerChargeTooltipCaret.vue';
-import AppStickerChargeTooltipHandler from './AppStickerChargeTooltipHandler.vue';
+import { routeLandingCreators } from '~app/views/landing/creators/creators.route';
+import AppAnimChargeOrb from '~common/animation/AppAnimChargeOrb.vue';
+import AppAnimElectricity from '~common/animation/AppAnimElectricity.vue';
+import { illChargeOrbEmpty } from '~common/animation/slideshow/sheets';
+import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
+import { Screen } from '~common/screen/screen-service';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import AppStickerChargeTooltip from '~common/sticker/charge/AppStickerChargeTooltip.vue';
+import AppStickerChargeTooltipCaret from '~common/sticker/charge/AppStickerChargeTooltipCaret.vue';
+import AppStickerChargeTooltipHandler from '~common/sticker/charge/AppStickerChargeTooltipHandler.vue';
+import { useStickerStore } from '~common/sticker/sticker-store';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 const OrbMaxSize = `28px`;
 

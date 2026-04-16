@@ -1,4 +1,4 @@
-import { buildCSSPixelValue, kGridGutterWidth, kGridGutterWidthXs } from '../../_styles/variables';
+import { buildCSSPixelValue, kGridGutterWidth, kGridGutterWidthXs } from '~styles/variables';
 
 /**
  * Shell

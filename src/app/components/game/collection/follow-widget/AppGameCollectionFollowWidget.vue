@@ -1,19 +1,19 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import { vAppAuthRequired } from '../../../../../_common/auth/auth-required-directive';
-import AppButton from '../../../../../_common/button/AppButton.vue';
-import { formatNumber } from '../../../../../_common/filters/number';
-import { useCommonStore } from '../../../../../_common/store/common-store';
-import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../../_common/translate/translate.service';
+import { GameCollectionModel, GameCollectionType } from '~app/components/game/collection/collection.model';
 import {
 	libraryFollowCollection,
 	libraryUnfollowCollection,
 	useLibraryStore,
-} from '../../../../store/library';
-import { GameCollectionModel, GameCollectionType } from '../collection.model';
+} from '~app/store/library';
+import { vAppAuthRequired } from '~common/auth/auth-required-directive';
+import AppButton from '~common/button/AppButton.vue';
+import { formatNumber } from '~common/filters/number';
+import { useCommonStore } from '~common/store/common-store';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
 
 type Props = {
 	collection: GameCollectionModel;

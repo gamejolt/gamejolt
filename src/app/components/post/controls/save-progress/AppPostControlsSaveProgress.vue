@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 
-import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
-import AppProgressBar from '../../../../../_common/progress/AppProgressBar.vue';
-import AppProgressPoller from '../../../../../_common/progress/poller/AppProgressPoller.vue';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import AppProgressBar from '~common/progress/AppProgressBar.vue';
+import AppProgressPoller from '~common/progress/poller/AppProgressPoller.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 type Props = {
 	post: FiresidePostModel;

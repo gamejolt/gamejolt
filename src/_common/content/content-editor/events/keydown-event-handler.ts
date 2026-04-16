@@ -1,6 +1,6 @@
 import { EditorView } from 'prosemirror-view';
 
-import { ContentEditorController } from '../content-editor-controller';
+import { ContentEditorController } from '~common/content/content-editor/content-editor-controller';
 
 export function keydownEventHandler(c: ContentEditorController) {
 	return function (_view: EditorView, e: Event) {

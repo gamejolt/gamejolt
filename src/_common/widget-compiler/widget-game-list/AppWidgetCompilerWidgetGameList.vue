@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { toRef } from 'vue';
 
-import { Environment } from '../../environment/environment.service';
-import { GameModel } from '../../game/game.model';
-import AppGameThumbnailImg from '../../game/thumbnail/AppGameThumbnailImg.vue';
-import { WidgetCompiler } from '../widget-compiler.service';
+import { Environment } from '~common/environment/environment.service';
+import { GameModel } from '~common/game/game.model';
+import AppGameThumbnailImg from '~common/game/thumbnail/AppGameThumbnailImg.vue';
+import { WidgetCompiler } from '~common/widget-compiler/widget-compiler.service';
 
 type Props = {
 	games?: GameModel[];

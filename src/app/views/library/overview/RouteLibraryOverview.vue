@@ -1,17 +1,17 @@
 <script lang="ts">
 import { computed } from 'vue';
 
-import { Connection } from '../../../../_common/connection/connection-service';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
-import { Screen } from '../../../../_common/screen/screen-service';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { GameCollectionModel } from '../../../components/game/collection/collection.model';
-import AppGameCollectionGrid from '../../../components/game/collection/grid/AppGameCollectionGrid.vue';
-import AppGameCollectionList from '../../../components/game/collection/list/AppGameCollectionList.vue';
-import AppPageHeader from '../../../components/page-header/AppPageHeader.vue';
-import { useLibraryStore } from '../../../store/library';
+import { GameCollectionModel } from '~app/components/game/collection/collection.model';
+import AppGameCollectionGrid from '~app/components/game/collection/grid/AppGameCollectionGrid.vue';
+import AppGameCollectionList from '~app/components/game/collection/list/AppGameCollectionList.vue';
+import AppPageHeader from '~app/components/page-header/AppPageHeader.vue';
+import { useLibraryStore } from '~app/store/library';
+import { Connection } from '~common/connection/connection-service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { Screen } from '~common/screen/screen-service';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
 
 export default {
 	name: 'RouteLibraryOverview',

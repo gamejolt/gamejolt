@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 
-import AppButton from '../../../../../../_common/button/AppButton.vue';
-import { CommunityModel } from '../../../../../../_common/community/community.model';
-import AppModal from '../../../../../../_common/modal/AppModal.vue';
-import { useModal } from '../../../../../../_common/modal/modal.service';
-import AppTranslate from '../../../../../../_common/translate/AppTranslate.vue';
-import FormCommunityHeader from '../FormCommunityHeader.vue';
+import FormCommunityHeader from '~app/components/forms/community/header/FormCommunityHeader.vue';
+import AppButton from '~common/button/AppButton.vue';
+import { CommunityModel } from '~common/community/community.model';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 type Props = {
 	community: CommunityModel;
