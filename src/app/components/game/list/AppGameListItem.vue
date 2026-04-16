@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
+import { computed } from 'vue';
 
 import { formatNumber } from '../../../../_common/filters/number';
 import { GameModel } from '../../../../_common/game/game.model';
@@ -7,20 +7,13 @@ import AppGameThumbnailImg from '../../../../_common/game/thumbnail/AppGameThumb
 import AppUserVerifiedTick from '../../../../_common/user/AppUserVerifiedTick.vue';
 import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
 
-const props = defineProps({
-	game: {
-		type: Object as PropType<GameModel>,
-		required: true,
-	},
-	eventLabel: {
-		type: String,
-		default: undefined,
-	},
-});
+type Props = {
+	game: GameModel;
+	eventLabel?: string;
+};
+const { game } = defineProps<Props>();
 
-const { game } = toRefs(props);
-
-const url = computed(() => game.value.getUrl());
+const url = computed(() => game.getUrl());
 </script>
 
 <template>

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, ref, toRefs, unref } from 'vue';
+import { computed, ref, unref } from 'vue';
 
 import AppImgResponsive from '../../img/AppImgResponsive.vue';
 import AppJolticon from '../../jolticon/AppJolticon.vue';
@@ -11,57 +11,35 @@ import { MediaItemModel } from '../../media-item/media-item-model';
 import AppResponsiveDimensions from '../../responsive-dimensions/AppResponsiveDimensions.vue';
 import AppTranslate from '../../translate/AppTranslate.vue';
 import { showContentEditorLinkModal } from '../content-editor/modals/link/link-modal.service';
-import { defineEditableNodeViewProps } from '../content-editor/node-views/base';
 import { useContentOwnerController } from '../content-owner';
 import AppBaseContentComponent from './AppBaseContentComponent.vue';
 
-const props = defineProps({
-	mediaItemId: {
-		type: Number,
-		required: true,
-	},
-	mediaItemWidth: {
-		type: Number,
-		required: true,
-	},
-	mediaItemHeight: {
-		type: Number,
-		required: true,
-	},
-	caption: {
-		type: String,
-		required: true,
-	},
-	align: {
-		type: String,
-		required: true,
-	},
-	href: {
-		type: String,
-		default: '',
-	},
-	isEditing: {
-		type: Boolean,
-	},
-	isDisabled: {
-		type: Boolean,
-	},
-	...defineEditableNodeViewProps(),
-});
-
-const owner = useContentOwnerController()!;
-
+type Props = {
+	mediaItemId: number;
+	mediaItemWidth: number;
+	mediaItemHeight: number;
+	caption: string;
+	align: string;
+	href?: string;
+	isEditing?: boolean;
+	isDisabled?: boolean;
+	onRemoved?: () => void;
+	onUpdateAttrs?: (attrs: Record<string, unknown>) => void;
+};
 const {
 	mediaItemId,
 	mediaItemWidth,
 	mediaItemHeight,
 	caption,
 	align,
-	href,
+	href = '',
 	isEditing,
 	isDisabled,
+	onRemoved,
 	onUpdateAttrs,
-} = toRefs(props);
+} = defineProps<Props>();
+
+const owner = useContentOwnerController()!;
 
 const mediaItem = ref<MediaItemModel>();
 const hasError = ref(false);
@@ -71,7 +49,7 @@ const lightboxItems = computed(() => (mediaItem.value ? [mediaItem.value] : []))
 
 const title = computed(() => {
 	if (mediaItem.value && hasCaption.value) {
-		return caption.value;
+		return caption;
 	}
 	if (mediaItem.value && hasLink.value) {
 		return displayHref.value;
@@ -91,10 +69,10 @@ const title = computed(() => {
 	return '';
 });
 
-const hasCaption = computed(() => !!caption.value);
+const hasCaption = computed(() => !!caption);
 
 const itemAlignment = computed(() => {
-	switch (align.value) {
+	switch (align) {
 		case 'left':
 			return 'flex-start';
 		case 'right':
@@ -104,7 +82,7 @@ const itemAlignment = computed(() => {
 });
 
 const hasLink = computed(() => {
-	return typeof href.value === 'string' && href.value.length > 0;
+	return typeof href === 'string' && href.length > 0;
 });
 
 const canFullscreenItem = computed(() => {
@@ -116,7 +94,7 @@ const canFullscreenItem = computed(() => {
 });
 
 const displayHref = computed(() => {
-	let text = href.value;
+	let text = href;
 	if (text.startsWith('//')) {
 		text = text.substr(2);
 	}
@@ -140,30 +118,30 @@ const shouldUseMediaserver = computed(() => {
 const maxWidth = computed(() => {
 	const maxOwnerWidth = owner.contentRules.maxMediaWidth;
 	if (maxOwnerWidth !== null) {
-		const sizes = [maxOwnerWidth, mediaItemWidth.value];
+		const sizes = [maxOwnerWidth, mediaItemWidth];
 		if (parentWidth.value) {
 			sizes.push(parentWidth.value);
 		}
 		return Math.min(...sizes);
 	}
 
-	return mediaItemWidth.value;
+	return mediaItemWidth;
 });
 
 const maxHeight = computed(() => {
 	const maxOwnerHeight = owner.contentRules.maxMediaHeight;
 	if (maxOwnerHeight !== null) {
-		return Math.min(maxOwnerHeight, mediaItemHeight.value);
+		return Math.min(maxOwnerHeight, mediaItemHeight);
 	}
 
-	return mediaItemHeight.value;
+	return mediaItemHeight;
 });
 
 const parentWidth = computed(() => unref(owner.parentBounds?.width));
 
 const lightbox = createLightbox(lightboxItems);
 
-owner.hydrator.useData('media-item-id', mediaItemId.value.toString(), data => {
+owner.hydrator.useData('media-item-id', mediaItemId.toString(), data => {
 	if (data) {
 		mediaItem.value = new MediaItemModel(data);
 	} else {
@@ -175,15 +153,15 @@ async function onEdit() {
 	if (hasLink.value) {
 		removeLink();
 	} else {
-		const result = await showContentEditorLinkModal(href.value);
+		const result = await showContentEditorLinkModal(href);
 		if (result !== undefined) {
-			onUpdateAttrs?.value?.({ href: result.href });
+			onUpdateAttrs?.({ href: result.href });
 		}
 	}
 }
 
 function removeLink() {
-	onUpdateAttrs?.value?.({ href: '' });
+	onUpdateAttrs?.({ href: '' });
 }
 
 function onImageLoad() {

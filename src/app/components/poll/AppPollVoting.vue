@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, onMounted, onUnmounted, PropType, ref, toRefs } from 'vue';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
 
 import { vAppAuthRequired } from '../../../_common/auth/auth-required-directive';
 import AppButton from '../../../_common/button/AppButton.vue';
@@ -12,18 +12,11 @@ import { useCommonStore } from '../../../_common/store/common-store';
 import AppTimeAgo from '../../../_common/time/AppTimeAgo.vue';
 import { $ngettext } from '../../../_common/translate/translate.service';
 
-const props = defineProps({
-	poll: {
-		type: Object as PropType<PollModel>,
-		required: true,
-	},
-	post: {
-		type: Object as PropType<FiresidePostModel>,
-		required: true,
-	},
-});
-
-const { poll, post } = toRefs(props);
+type Props = {
+	poll: PollModel;
+	post: FiresidePostModel;
+};
+const { poll, post } = defineProps<Props>();
 
 const { user: myUser } = useCommonStore();
 
@@ -33,11 +26,11 @@ const areResultsReady = ref(false);
 const now = ref(Date.now());
 const dateRefresh = ref<NodeJS.Timer | null>(null);
 
-const game = computed(() => post.value.game);
-const user = computed(() => post.value.user);
+const game = computed(() => post.game);
+const user = computed(() => post.user);
 
 const isOwner = computed(() => !!myUser.value && user.value.id === myUser.value.id);
-const shouldObscureResults = computed(() => poll.value.is_private && !isOwner.value);
+const shouldObscureResults = computed(() => poll.is_private && !isOwner.value);
 
 const showResults = computed(
 	() =>
@@ -48,7 +41,7 @@ const showResults = computed(
 );
 
 const votedId = computed(() => {
-	for (const item of poll.value.items) {
+	for (const item of poll.items) {
 		if (item.is_voted) {
 			return item.id;
 		}
@@ -56,7 +49,7 @@ const votedId = computed(() => {
 	return null;
 });
 
-const isVotable = computed(() => poll.value.end_time && poll.value.end_time > now.value);
+const isVotable = computed(() => poll.end_time && poll.end_time > now.value);
 
 onMounted(() => {
 	if (isVotable.value) {
@@ -71,7 +64,7 @@ onUnmounted(() => {
 });
 
 function getItemPercentage(item: PollItemModel) {
-	return (item.vote_count || 0) / Math.max(poll.value.vote_count, 1);
+	return (item.vote_count || 0) / Math.max(poll.vote_count, 1);
 }
 
 async function vote(id: number) {
@@ -80,7 +73,7 @@ async function vote(id: number) {
 	}
 
 	isProcessing.value = true;
-	const payload = await $voteOnPoll(poll.value, id);
+	const payload = await $voteOnPoll(poll, id);
 	handleVotePayload(payload);
 	isProcessing.value = false;
 }
@@ -93,7 +86,7 @@ function handleVotePayload(payload: any) {
 
 	switch (payload.parent_resource) {
 		case 'Fireside_Post':
-			post.value.processUpdate(payload, parentResourceField);
+			post.processUpdate(payload, parentResourceField);
 			break;
 		case 'Game':
 			game.value?.processUpdate(payload, parentResourceField);
@@ -125,7 +118,7 @@ function setDateRefresh() {
 		now.value = Date.now();
 		if (!isVotable.value) {
 			clearDateRefresh();
-			await $refreshPoll(poll.value);
+			await $refreshPoll(poll);
 			areResultsReady.value = true;
 		}
 	}, 1000);

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, Ref, ref, toRefs } from 'vue';
+import { computed, Ref, ref } from 'vue';
 
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppModal from '../../../../_common/modal/AppModal.vue';
@@ -10,49 +10,34 @@ import { StickerPackModel } from '../../../../_common/sticker/pack/pack.model';
 import { StickerModel } from '../../../../_common/sticker/sticker.model';
 import FormSticker from './FormSticker.vue';
 
-const props = defineProps({
-	sticker: {
-		type: Object as PropType<StickerModel>,
-		default: undefined,
-	},
-	stickers: {
-		type: Array as PropType<StickerModel[]>,
-		default: undefined,
-	},
-	updatePack: {
-		type: Function as PropType<(pack: StickerPackModel | undefined) => void>,
-		default: undefined,
-	},
-	emojiPrefix: {
-		type: String,
-		default: undefined,
-	},
-	canActivate: {
-		type: Boolean,
-	},
-	warnDeactivate: {
-		type: Boolean,
-	},
-});
-
-const { sticker, stickers, updatePack, emojiPrefix, canActivate, warnDeactivate } = toRefs(props);
+type Props = {
+	sticker?: StickerModel;
+	stickers?: StickerModel[];
+	updatePack?: (pack: StickerPackModel | undefined) => void;
+	emojiPrefix?: string;
+	canActivate?: boolean;
+	warnDeactivate?: boolean;
+};
+const { sticker, stickers, updatePack, emojiPrefix, canActivate, warnDeactivate } =
+	defineProps<Props>();
 
 const modal = useModal()!;
 
 const newSticker = ref() as Ref<StickerModel | undefined>;
-const model = computed(() => sticker?.value || newSticker.value);
+const model = computed(() => sticker || newSticker.value);
 
 function onFormChanged(data: UnknownModelData | ModelData<StickerModel>) {
 	if (model.value) {
 		storeModel(StickerModel, data);
 	} else {
 		newSticker.value = storeModel(StickerModel, data);
-		stickers?.value?.unshift(newSticker.value);
+		// eslint-disable-next-line vue/no-mutating-props
+		stickers?.unshift(newSticker.value);
 	}
 }
 
 function onPackChanged(data: StickerPackModel | undefined) {
-	updatePack?.value?.(data);
+	updatePack?.(data);
 }
 </script>
 

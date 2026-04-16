@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType } from 'vue';
+import { computed } from 'vue';
 
 import AppPostCardPlaceholder from '../../../../../_common/fireside/post/card/AppPostCardPlaceholder.vue';
 import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
@@ -8,12 +8,10 @@ import AppScrollScroller from '../../../../../_common/scroll/AppScrollScroller.v
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import AppPostPageRecommendationsPosts from './AppPostPageRecommendationsPosts.vue';
 
-defineProps({
-	post: {
-		type: Object as PropType<FiresidePostModel>,
-		required: true,
-	},
-});
+type Props = {
+	post: FiresidePostModel;
+};
+const { post } = defineProps<Props>();
 
 const shouldScroll = computed(() => Screen.isXs);
 </script>

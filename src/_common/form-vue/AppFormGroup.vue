@@ -4,12 +4,11 @@ import {
 	inject,
 	InjectionKey,
 	onUnmounted,
-	PropType,
 	provide,
 	Ref,
 	ref,
 	shallowRef,
-	toRefs,
+	toRef,
 	useSlots,
 } from 'vue';
 
@@ -124,43 +123,34 @@ function createFormGroup({
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	name: {
-		type: String,
-		required: true,
-	},
-	label: {
-		type: String,
-		default: undefined,
-	},
-	optional: {
-		type: Boolean,
-	},
-	hideLabel: {
-		type: Boolean,
-	},
-	labelClass: {
-		type: String,
-		default: undefined,
-	},
-	icon: {
-		type: String as PropType<Jolticon>,
-		default: undefined,
-	},
-	small: {
-		type: Boolean,
-	},
-	tinyLabelMargin: {
-		type: Boolean,
-	},
-});
+type Props = {
+	name: string;
+	label?: string;
+	optional?: boolean;
+	hideLabel?: boolean;
+	labelClass?: string;
+	icon?: Jolticon;
+	small?: boolean;
+	tinyLabelMargin?: boolean;
+};
+const {
+	name,
+	label,
+	optional,
+	hideLabel,
+	labelClass,
+	icon,
+	small,
+	tinyLabelMargin,
+} = defineProps<Props>();
 
 const slots = useSlots();
 
-const propsRefs = toRefs(props);
-const { labelClass, hideLabel, small } = propsRefs;
-
-const c = createFormGroup(propsRefs);
+const c = createFormGroup({
+	name: toRef(() => name),
+	label: toRef(() => label),
+	optional: toRef(() => optional ?? false),
+});
 provide(Key, c);
 
 const { humanLabel } = c;

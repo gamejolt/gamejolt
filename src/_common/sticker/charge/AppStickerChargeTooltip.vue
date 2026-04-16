@@ -1,20 +1,17 @@
 <script lang="ts" setup>
-import { computed, CSSProperties, PropType, toRefs, useTemplateRef } from 'vue';
+import { computed, CSSProperties, useTemplateRef } from 'vue';
 
 import { Ruler } from '../../ruler/ruler-service';
 import { Screen } from '../../screen/screen-service';
 import AppTranslate from '../../translate/AppTranslate.vue';
 import { useStickerStore } from '../sticker-store';
 
-const props = defineProps({
+type Props = {
 	/**
 	 * HTMLElement that the tooltip will align itself to. Tooltip handles caret
 	 * offset and other positioning by itself.
 	 */
-	caretElement: {
-		type: Object as PropType<HTMLElement | null>,
-		required: true,
-	},
+	caretElement: HTMLElement | null;
 	/**
 	 * HTMLElement that the tooltip can use for left/right positioning.
 	 *
@@ -26,23 +23,14 @@ const props = defineProps({
 	 * it's centered on the {@link caretElement} while staying within the bounds
 	 * of the screen.
 	 */
-	widthTrackerElement: {
-		type: Object as PropType<HTMLElement | null>,
-		default: null,
-	},
-	show: {
-		type: Boolean,
-		required: true,
-	},
+	widthTrackerElement?: HTMLElement | null;
+	show: boolean;
 	/**
 	 * `position: fixed` instead of `absolute`.
 	 */
-	fixed: {
-		type: Boolean,
-	},
-});
-
-const { caretElement, widthTrackerElement, show, fixed } = toRefs(props);
+	fixed?: boolean;
+};
+const { caretElement, widthTrackerElement = null, show, fixed } = defineProps<Props>();
 
 const { chargeCost } = useStickerStore();
 
@@ -56,13 +44,13 @@ const orbCostText = computed(() => {
 });
 
 const tooltipPosition = computed<CSSProperties | null>(() => {
-	const widthElement = widthTrackerElement?.value;
+	const widthElement = widthTrackerElement;
 	const parent = root.value?.parentElement;
 
-	if (!caretElement.value) {
+	if (!caretElement) {
 		return null;
 	}
-	const anchorOffset = Ruler.offset(caretElement.value);
+	const anchorOffset = Ruler.offset(caretElement);
 
 	const widthTrackerOffset = widthElement ? Ruler.offset(widthElement) : null;
 	const parentOffset = parent ? Ruler.offset(parent) : null;
@@ -87,7 +75,7 @@ const tooltipPosition = computed<CSSProperties | null>(() => {
 	const hasBounds = baseBoundsLeft !== undefined && boundsWidth !== undefined;
 
 	let boundsLeft = baseBoundsLeft;
-	if (hasBounds && !fixed.value) {
+	if (hasBounds && !fixed) {
 		boundsLeft = boundsLeft! - parentLeft!;
 	}
 
@@ -101,7 +89,7 @@ const tooltipPosition = computed<CSSProperties | null>(() => {
 	const errorMargin = 1;
 
 	// Start with the distance between the root top and the text top.
-	let top = caretAnchorTop - (fixed.value ? 0 : parentTop) + caretAnchorHeight;
+	let top = caretAnchorTop - (fixed ? 0 : parentTop) + caretAnchorHeight;
 
 	// Line ourselves up with the edge of the caret, then back into it a little
 	// so we don't leave a weird gap.
@@ -113,7 +101,7 @@ const tooltipPosition = computed<CSSProperties | null>(() => {
 		: Math.min(Math.max(32, Screen.width - wantedScreenMargin * 2), 350);
 
 	const result: CSSProperties = {
-		position: fixed.value ? 'fixed' : 'absolute',
+		position: fixed ? 'fixed' : 'absolute',
 		top: `${top}px`,
 		left: hasBounds ? `${boundsLeft}px` : undefined,
 		right: hasBounds ? `${boundsRight}px` : undefined,

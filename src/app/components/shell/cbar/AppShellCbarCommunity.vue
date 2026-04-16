@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
+import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
 
 import { trackGotoCommunity } from '../../../../_common/analytics/analytics.service';
@@ -20,14 +20,10 @@ import AppCommunityPerms from '../../community/perms/AppCommunityPerms.vue';
 import { useGridStore } from '../../grid/grid-store';
 import AppShellCbarItem from './AppShellCbarItem.vue';
 
-const props = defineProps({
-	community: {
-		type: Object as PropType<CommunityModel>,
-		required: true,
-	},
-});
-
-const { community } = toRefs(props);
+type Props = {
+	community: CommunityModel;
+};
+const { community } = defineProps<Props>();
 const { activeCommunity, communityStates, leaveCommunity, joinCommunity, toggleLeftPane } =
 	useAppStore();
 const { user } = useCommonStore();
@@ -35,14 +31,14 @@ const { grid } = useGridStore();
 const { userTheme } = useThemeStore();
 const { showContextOnRouteChange } = useSidebarStore();
 
-const communityState = computed(() => communityStates.value.getCommunityState(community.value));
+const communityState = computed(() => communityStates.value.getCommunityState(community));
 
 const isUnread = computed(() => communityState.value.isUnread);
-const isActive = computed(() => activeCommunity.value?.id === community.value.id);
+const isActive = computed(() => activeCommunity.value?.id === community.id);
 
 const highlight = computed(() => {
 	if (isActive.value) {
-		const theme = community.value.theme || userTheme.value;
+		const theme = community.theme || userTheme.value;
 		if (theme) {
 			return '#' + theme.darkHighlight_;
 		}
@@ -51,12 +47,12 @@ const highlight = computed(() => {
 });
 
 const shouldShowModerate = computed(() => user.value && user.value.isMod);
-const shouldShowLeave = computed(() => !community.value.hasPerms() && !!community.value.is_member);
-const shouldShowJoin = computed(() => !community.value.is_member);
+const shouldShowLeave = computed(() => !community.hasPerms() && !!community.is_member);
+const shouldShowJoin = computed(() => !community.is_member);
 
 async function onLeaveCommunityClick() {
 	Popper.hideAll();
-	await leaveCommunity(community.value, {
+	await leaveCommunity(community, {
 		grid: grid.value,
 		location: 'cbar',
 		shouldConfirm: true,
@@ -65,7 +61,7 @@ async function onLeaveCommunityClick() {
 
 async function onJoinCommunityClick() {
 	Popper.hideAll();
-	await joinCommunity(community.value, { grid: grid.value, location: 'cbar' });
+	await joinCommunity(community, { grid: grid.value, location: 'cbar' });
 }
 
 function onCommunityClick(event: Event) {
@@ -80,12 +76,12 @@ function onCommunityClick(event: Event) {
 }
 
 function onGotoCommunity() {
-	trackGotoCommunity({ source: 'cbar', id: community.value.id, path: community.value.path });
+	trackGotoCommunity({ source: 'cbar', id: community.id, path: community.path });
 }
 
 function gotoModerate() {
 	Popper.hideAll();
-	Navigate.newWindow(Environment.baseUrl + `/moderate/communities/view/${community.value.id}`);
+	Navigate.newWindow(Environment.baseUrl + `/moderate/communities/view/${community.id}`);
 }
 </script>
 

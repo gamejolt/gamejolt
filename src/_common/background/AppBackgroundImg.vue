@@ -2,8 +2,6 @@
 import {
 	computed,
 	CSSProperties,
-	PropType,
-	toRefs,
 	useTemplateRef,
 	watch,
 	watchEffect,
@@ -13,36 +11,24 @@ import { PageScrollSubscriptionTimeout, usePageScrollSubscription } from '../scr
 import { SettingParallaxBackgrounds } from '../settings/settings.service';
 import { BackgroundModel, getBackgroundCSSProperties } from './background.model';
 
-const props = defineProps({
-	background: {
-		type: Object as PropType<BackgroundModel>,
-		required: true,
-	},
-	backgroundStyle: {
-		type: Object as PropType<CSSProperties>,
-		default: undefined,
-	},
-	scrollDirection: {
-		type: String,
-		default: undefined,
-	},
-	enablePageScroll: {
-		type: Boolean,
-	},
-});
-
-const { background, backgroundStyle, scrollDirection, enablePageScroll } = toRefs(props);
+type Props = {
+	background: BackgroundModel;
+	backgroundStyle?: CSSProperties;
+	scrollDirection?: string;
+	enablePageScroll?: boolean;
+};
+const { background, backgroundStyle, scrollDirection, enablePageScroll } = defineProps<Props>();
 
 const root = useTemplateRef('root');
 
-const shouldParallax = computed(() => enablePageScroll.value && SettingParallaxBackgrounds.get());
+const shouldParallax = computed(() => enablePageScroll && SettingParallaxBackgrounds.get());
 
 const baseStyles = computed(() => {
 	// We're casting this to CSSStyleDeclaration so that we can more easily
 	// apply to the style property.
 	return {
-		...getBackgroundCSSProperties(background.value),
-		...backgroundStyle?.value,
+		...getBackgroundCSSProperties(background),
+		...backgroundStyle,
 	} as CSSStyleDeclaration;
 });
 
@@ -66,7 +52,7 @@ function attachPageOffsetBackgroundStyles(top: number) {
 	if (!root.value) {
 		return;
 	}
-	if (!shouldParallax.value || scrollDirection?.value) {
+	if (!shouldParallax.value || scrollDirection) {
 		root.value.style.backgroundPosition = baseStyles.value.backgroundPosition;
 		root.value.style.transition = '';
 	} else {

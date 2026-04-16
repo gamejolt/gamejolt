@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, onMounted, PropType, ref, toRef, toRefs, useTemplateRef } from 'vue';
+import { computed, onMounted, ref, toRef, useTemplateRef } from 'vue';
 
 import { Clipboard } from '../../../../_common/clipboard/clipboard-service';
 import { CollaboratorModel } from '../../../../_common/collaborator/collaborator.model';
@@ -30,34 +30,22 @@ import { $gettext } from '../../../../_common/translate/translate.service';
 import AppCommentControls from '../controls/AppCommentControls.vue';
 import { useCommentWidget } from './AppCommentWidget.vue';
 
-const props = defineProps({
-	model: {
-		type: Object as PropType<Model & CommentableModel>,
-		required: true,
-	},
-	comment: {
-		type: Object as PropType<CommentModel>,
-		required: true,
-	},
-	children: {
-		type: Array as PropType<CommentModel[]>,
-		default: () => [],
-	},
-	parent: {
-		type: Object as PropType<CommentModel>,
-		default: undefined,
-	},
-	isLastInThread: {
-		type: Boolean as PropType<boolean>,
-		default: false,
-	},
-	showChildren: {
-		type: Boolean as PropType<boolean>,
-		default: false,
-	},
-});
-
-const { model, parent, comment, children, showChildren, isLastInThread } = toRefs(props);
+type Props = {
+	model: Model & CommentableModel;
+	comment: CommentModel;
+	children?: CommentModel[];
+	parent?: CommentModel;
+	isLastInThread?: boolean;
+	showChildren?: boolean;
+};
+const {
+	model,
+	parent,
+	comment,
+	children = [],
+	showChildren = false,
+	isLastInThread = false,
+} = defineProps<Props>();
 const { user } = useCommonStore();
 const {
 	threadCommentId,
@@ -73,15 +61,15 @@ const hasBypassedBlock = ref(false);
 
 const scrollTargetRef = useTemplateRef('scrollTarget');
 
-const isReply = toRef(() => !!parent?.value);
-const isActive = toRef(() => threadCommentId.value === comment.value.id);
+const isReply = toRef(() => !!parent);
+const isActive = toRef(() => threadCommentId.value === comment.id);
 
 const isOwner = toRef(() => {
 	if (!resourceOwner.value) {
 		return false;
 	}
 
-	return resourceOwner.value.id === comment.value.user.id;
+	return resourceOwner.value.id === comment.user.id;
 });
 
 const isCollaborator = computed(() => {
@@ -89,7 +77,7 @@ const isCollaborator = computed(() => {
 		return false;
 	}
 
-	return !!collaborators.value.some(i => i.user_id === comment.value.user.id);
+	return !!collaborators.value.some(i => i.user_id === comment.user.id);
 });
 
 /**
@@ -127,7 +115,7 @@ const canRemove = toRef(() => {
 	}
 
 	// The comment author can remove their own comments.
-	if (user.value.id === comment.value.user.id) {
+	if (user.value.id === comment.user.id) {
 		return true;
 	}
 
@@ -140,10 +128,10 @@ const canPin = toRef(() => {
 	}
 
 	// Must have "mod" permissions to be able to pin.
-	return !comment.value.parent_id && hasModPermissions.value;
+	return !comment.parent_id && hasModPermissions.value;
 });
 
-const isShowingReplies = toRef(() => children.value.length > 0 && showChildren.value);
+const isShowingReplies = toRef(() => children.length > 0 && showChildren);
 
 const canFollow = toRef(() => {
 	// Can't subscribe if...
@@ -161,25 +149,25 @@ const canFollow = toRef(() => {
 	return true;
 });
 
-const blockReason = computed(() => getCommentBlockReason(comment.value));
+const blockReason = computed(() => getCommentBlockReason(comment));
 
 const isBlocked = toRef(() => {
-	if (hasBypassedBlock.value || !comment.value) {
+	if (hasBypassedBlock.value || !comment) {
 		return false;
 	}
 
 	return blockReason.value !== false;
 });
 
-const showReplies = toRef(() => !parent?.value && !showChildren.value);
-const canReply = computed(() => showReplies.value && canCommentOnModel(model.value, parent?.value));
+const showReplies = toRef(() => !parent && !showChildren);
+const canReply = computed(() => showReplies.value && canCommentOnModel(model, parent));
 const canReact = toRef(() => {
-	if (comment.value.user.hasAnyBlock === true || parent?.value?.user.hasAnyBlock === true) {
+	if (comment.user.hasAnyBlock === true || parent?.user.hasAnyBlock === true) {
 		return false;
 	}
-	return model.value.canInteractWithComments;
+	return model.canInteractWithComments;
 });
-const canVote = toRef(() => model.value.canInteractWithComments);
+const canVote = toRef(() => model.canInteractWithComments);
 
 onMounted(() => {
 	// Scroll it into view if it's active.
@@ -213,29 +201,29 @@ async function doRemoveComment() {
 	}
 
 	try {
-		await removeComment(comment.value);
+		await removeComment(comment);
 	} catch (err) {
 		console.warn('Failed to remove comment');
 		return;
 	}
 
-	onCommentRemove(comment.value);
+	onCommentRemove(comment);
 }
 
 function onFollowClick() {
-	if (!comment.value.subscription) {
-		$followComment(comment.value);
+	if (!comment.subscription) {
+		$followComment(comment);
 	} else {
-		$unfollowComment(comment.value);
+		$unfollowComment(comment);
 	}
 }
 
 function copyPermalink() {
-	Clipboard.copy(comment.value.permalink);
+	Clipboard.copy(comment.permalink);
 }
 
 function report() {
-	showReportModal(comment.value);
+	showReportModal(comment);
 }
 
 function onUnhideBlock() {

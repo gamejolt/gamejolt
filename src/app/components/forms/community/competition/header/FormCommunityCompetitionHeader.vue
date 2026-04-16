@@ -7,10 +7,7 @@ import {
 	$saveCommunityCompetitionHeader,
 	CommunityCompetitionModel,
 } from '../../../../../../_common/community/competition/competition.model';
-import AppForm, {
-	createForm,
-	FormController,
-} from '../../../../../../_common/form-vue/AppForm.vue';
+import AppForm, { createForm, FormController } from '../../../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControlErrors from '../../../../../../_common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '../../../../../../_common/form-vue/AppFormGroup.vue';
@@ -31,12 +28,10 @@ type FormModel = CommunityCompetitionModel & {
 	header_crop?: any;
 };
 
-const props = defineProps({
-	model: {
-		type: Object as () => CommunityCompetitionModel,
-		default: undefined,
-	},
-});
+type Props = {
+	model?: CommunityCompetitionModel;
+};
+const { model } = defineProps<Props>();
 
 const emit = defineEmits<{
 	submit: [competition: CommunityCompetitionModel];
@@ -55,8 +50,8 @@ const crop = computed(() => (form.formModel.header ? form.formModel.header.getCr
 const form: FormController<FormModel> = createForm({
 	modelClass: CommunityCompetitionModel,
 	modelSaveHandler: $saveCommunityCompetitionHeader,
-	model: toRef(props, 'model'),
-	loadUrl: computed(() => `/web/dash/communities/competitions/header/save/${props.model!.id}`),
+	model: toRef(() => model),
+	loadUrl: computed(() => `/web/dash/communities/competitions/header/save/${model!.id}`),
 	onLoad(payload: any) {
 		maxFilesize.value = payload.maxFilesize;
 		minAspectRatio.value = payload.minAspectRatio;
@@ -90,7 +85,7 @@ async function clearHeader() {
 		// Overwrite the base model's header media item here.
 		// This needs to be done because this form does not resolve (and may never resolve)
 		// after cleaning a header. Need to ensure that the base model's header gets cleared.
-		props.model?.assign(payload.competition);
+		model?.assign(payload.competition);
 	}
 }
 

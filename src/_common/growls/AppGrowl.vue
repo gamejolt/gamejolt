@@ -1,40 +1,33 @@
 <script lang="ts" setup>
 import './growl-content.styl';
 
-import { computed, onMounted, PropType, toRefs } from 'vue';
+import { computed, onMounted } from 'vue';
 
 import AppJolticon from '../jolticon/AppJolticon.vue';
 import AppGrowlDynamic from './AppGrowlDynamic.vue';
 import { Growl } from './growls.service';
 
-const props = defineProps({
-	index: {
-		type: Number,
-		required: true,
-	},
-	growl: {
-		type: Object as PropType<Growl>,
-		required: true,
-	},
-});
-
-const { growl } = toRefs(props);
+type Props = {
+	index: number;
+	growl: Growl;
+};
+const { growl } = defineProps<Props>();
 
 let _leaveTimer: NodeJS.Timer | undefined;
 
 const classes = computed(() => {
 	return [
-		'growl-type-' + growl.value.type,
+		'growl-type-' + growl.type,
 		{
-			'growl-clickable': !!growl.value.onClick,
-			'growl-has-icon': !!growl.value.icon,
-			'growl-sticky': growl.value.sticky,
+			'growl-clickable': !!growl.onClick,
+			'growl-has-icon': !!growl.icon,
+			'growl-sticky': growl.sticky,
 		},
 	];
 });
 
 onMounted(() => {
-	if (!growl.value.sticky) {
+	if (!growl.sticky) {
 		setLeaveTimer();
 	}
 });
@@ -42,8 +35,8 @@ onMounted(() => {
 // When they click on the element, never auto-leave again.
 // They must explictly close it after that.
 function onClick(event: Event) {
-	if (growl.value.onClick) {
-		growl.value.onClick(event);
+	if (growl.onClick) {
+		growl.onClick(event);
 		remove(event);
 	}
 }
@@ -54,14 +47,14 @@ function remove(event?: Event) {
 	}
 
 	// Remove from the growls list.
-	growl.value.close();
+	growl.close();
 }
 
 /**
  * After a certain amount of time has elapsed, we want to remove the growl message.
  */
 function setLeaveTimer() {
-	if (growl.value.sticky || _leaveTimer) {
+	if (growl.sticky || _leaveTimer) {
 		return;
 	}
 
@@ -75,7 +68,7 @@ function setLeaveTimer() {
  * Cancel the leave timer if there is one set.
  */
 function cancelLeave() {
-	if (growl.value.sticky || !_leaveTimer) {
+	if (growl.sticky || !_leaveTimer) {
 		return;
 	}
 

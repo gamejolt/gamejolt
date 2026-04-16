@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
+import { computed } from 'vue';
 
 import AppFadeCollapse from '../AppFadeCollapse.vue';
 import { GameModel } from '../game/game.model';
@@ -11,21 +11,17 @@ import { UserBaseTrophyModel } from '../user/trophy/user-base-trophy.model';
 import { showTrophyModal } from './modal/modal.service';
 import AppTrophyThumbnail from './thumbnail/AppTrophyThumbnail.vue';
 
-const props = defineProps({
-	userTrophy: {
-		type: Object as PropType<UserBaseTrophyModel>,
-		required: true,
-	},
-});
-
-const { userTrophy } = toRefs(props);
+type Props = {
+	userTrophy: UserBaseTrophyModel;
+};
+const { userTrophy } = defineProps<Props>();
 const { user } = useCommonStore();
 
-const trophy = computed(() => userTrophy.value.trophy!);
+const trophy = computed(() => userTrophy.trophy!);
 
 const isNew = computed(() => {
 	if (user.value) {
-		return !userTrophy.value.viewed_on && userTrophy.value.user_id === user.value.id;
+		return !userTrophy.viewed_on && userTrophy.user_id === user.value.id;
 	}
 	return false;
 });
@@ -33,25 +29,25 @@ const isNew = computed(() => {
 const bgClass = computed(() => '-trophy-difficulty-' + trophy.value.difficulty);
 
 const isGame = computed(
-	() => userTrophy.value instanceof UserGameTrophyModel && !!userTrophy.value.game
+	() => userTrophy instanceof UserGameTrophyModel && !!userTrophy.game
 );
 
 const gameTitle = computed(() => {
 	if (
-		userTrophy.value instanceof UserGameTrophyModel &&
-		userTrophy.value.game instanceof GameModel
+		userTrophy instanceof UserGameTrophyModel &&
+		userTrophy.game instanceof GameModel
 	) {
-		return userTrophy.value.game.title;
+		return userTrophy.game.title;
 	}
 	return $gettext(`Game Trophy`);
 });
 
 const loggedInUserUnlocked = computed(() =>
-	Boolean(user.value && userTrophy.value.user_id === user.value.id)
+	Boolean(user.value && userTrophy.user_id === user.value.id)
 );
 
 function onClick() {
-	showTrophyModal(userTrophy.value);
+	showTrophyModal(userTrophy);
 }
 </script>
 

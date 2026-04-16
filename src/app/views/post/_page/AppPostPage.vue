@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, shallowRef, toRefs, useTemplateRef, watch } from 'vue';
+import { computed, ref, shallowRef, useTemplateRef, watch } from 'vue';
 import { RouteLocationRaw, useRoute, useRouter } from 'vue-router';
 
 import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
@@ -43,25 +43,18 @@ import AppPostControls from '../../../components/post/controls/AppPostControls.v
 import AppPostPageContent from './AppPostPageContent.vue';
 import AppPostPageRecommendations from './recommendations/AppPostPageRecommendations.vue';
 
-const props = defineProps({
-	post: {
-		type: Object as PropType<FiresidePostModel>,
-		required: true,
-	},
-	communityNotifications: {
-		type: Array as PropType<CommunityUserNotificationModel[]>,
-		default: () => [],
-	},
-});
-
-const { post, communityNotifications } = toRefs(props);
+type Props = {
+	post: FiresidePostModel;
+	communityNotifications?: CommunityUserNotificationModel[];
+};
+const { post, communityNotifications = [] } = defineProps<Props>();
 
 const route = useRoute();
 const router = useRouter();
 
 const stickerTargetController = shallowRef<StickerTargetController>(
-	createStickerTargetController(post.value, {
-		canReceiveCharge: () => post.value.can_receive_charged_stickers,
+	createStickerTargetController(post, {
+		canReceiveCharge: () => post.can_receive_charged_stickers,
 	})
 );
 
@@ -73,13 +66,13 @@ const videoStartTime = ref(0);
 const hasVideoProcessingError = ref(false);
 const videoProcessingErrorMsg = ref('');
 
-const communities = computed(() => post.value.communities || []);
-const realms = computed(() => post.value.realms.map(i => i.realm));
+const communities = computed(() => post.communities || []);
+const realms = computed(() => post.realms.map(i => i.realm));
 const shouldShowCommunityPublishError = computed(
-	() => post.value.status === FiresidePostStatus.Draft && !post.value.canPublishToCommunities()
+	() => post.status === FiresidePostStatus.Draft && !post.canPublishToCommunities()
 );
-const video = computed<FiresidePostVideoModel | null>(() => post.value.videos[0] || null);
-const background = computed(() => post.value.background);
+const video = computed<FiresidePostVideoModel | null>(() => post.videos[0] || null);
+const background = computed(() => post.background);
 
 if (typeof route.query.t === 'string') {
 	if (video.value) {
@@ -96,10 +89,10 @@ if (typeof route.query.t === 'string') {
 }
 
 watch(
-	() => post.value.id,
+	() => post.id,
 	() => {
-		stickerTargetController.value = createStickerTargetController(post.value, {
-			canReceiveCharge: () => post.value.can_receive_charged_stickers,
+		stickerTargetController.value = createStickerTargetController(post, {
+			canReceiveCharge: () => post.can_receive_charged_stickers,
 		});
 	}
 );

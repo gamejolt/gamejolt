@@ -1,24 +1,12 @@
 <script lang="ts" setup>
-defineProps({
-	scale: {
-		type: Number,
-		default: 0,
-	},
-	scaleSm: {
-		type: Number,
-		default: 0,
-	},
-	scaleXs: {
-		type: Number,
-		default: 0,
-	},
-	horizontal: {
-		type: Boolean,
-	},
-	vertical: {
-		type: Boolean,
-	},
-});
+type Props = {
+	scale?: number;
+	scaleSm?: number;
+	scaleXs?: number;
+	horizontal?: boolean;
+	vertical?: boolean;
+};
+defineProps<Props>();
 </script>
 
 <template>

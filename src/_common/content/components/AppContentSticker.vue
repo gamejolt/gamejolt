@@ -8,22 +8,18 @@ import { StickerModel } from '../../sticker/sticker.model';
 import AppTranslate from '../../translate/AppTranslate.vue';
 import { useContentOwnerController } from '../content-owner';
 
-const props = defineProps({
-	stickerId: {
-		type: Number,
-		required: true,
-	},
-	isCharged: {
-		type: Boolean,
-	},
-});
+type Props = {
+	stickerId: number;
+	isCharged?: boolean;
+};
+const { stickerId, isCharged } = defineProps<Props>();
 
 const owner = useContentOwnerController()!;
 
 const sticker = ref<StickerModel>();
 const hasError = ref(false);
 
-owner.hydrator.useData('sticker-id', props.stickerId.toString(), data => {
+owner.hydrator.useData('sticker-id', stickerId.toString(), data => {
 	if (data) {
 		sticker.value = storeModel(StickerModel, data);
 	} else {

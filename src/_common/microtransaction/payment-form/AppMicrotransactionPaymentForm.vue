@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, Ref, ref, toRefs, watch } from 'vue';
+import { computed, Ref, ref, watch } from 'vue';
 
 import { arrayIndexBy } from '../../../utils/array';
 import { Api } from '../../api/api.service';
@@ -39,14 +39,10 @@ type FormModel = {
 	email_address?: string;
 };
 
-const props = defineProps({
-	sellable: {
-		type: Object as PropType<SellableModel>,
-		required: true,
-	},
-});
-
-const { sellable } = toRefs(props);
+type Props = {
+	sellable: SellableModel;
+};
+const { sellable } = defineProps<Props>();
 
 const { user } = useCommonStore();
 
@@ -72,7 +68,7 @@ const emit = defineEmits<{
 	'processing-changed': [isProcessing: boolean];
 }>();
 
-const pricing = computed(() => sellable.value.pricings[0]);
+const pricing = computed(() => sellable.pricings[0]);
 const formattedAmount = computed(() => formatCurrency(pricing.value.amount));
 
 const hasSufficientWalletFunds = computed(() => {
@@ -129,7 +125,7 @@ const form: FormController<FormModel> = createForm<FormModel>({
 
 		const data: any = {
 			payment_method: checkoutType.value,
-			sellable_id: sellable.value.id,
+			sellable_id: sellable.id,
 			pricing_id: pricing.value.id,
 			amount: pricing.value.amount,
 
@@ -248,7 +244,7 @@ function startOver() {
 function checkoutSavedCard(card: any) {
 	const data: any = {
 		payment_method: 'cc-stripe',
-		sellable_id: sellable.value.id,
+		sellable_id: sellable.id,
 		pricing_id: pricing.value.id,
 		amount: pricing.value.amount,
 	};
@@ -259,7 +255,7 @@ function checkoutSavedCard(card: any) {
 function checkoutWallet() {
 	const data: any = {
 		payment_method: 'wallet',
-		sellable_id: sellable.value.id,
+		sellable_id: sellable.id,
 		pricing_id: pricing.value.id,
 		amount: pricing.value.amount,
 	};

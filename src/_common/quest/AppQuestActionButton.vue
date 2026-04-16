@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, PropType, ref, toRefs, useTemplateRef, watch } from 'vue';
+import { computed, ref, useTemplateRef, watch } from 'vue';
 
 import { getMediaserverUrlForBounds } from '../../utils/image';
 import { Api } from '../api/api.service';
@@ -16,20 +16,12 @@ import { showQuestRewardModal } from './reward/modal.service';
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	quest: {
-		type: Object as PropType<QuestModel>,
-		required: true,
-	},
-	show: {
-		type: Boolean,
-	},
-	isAccept: {
-		type: Boolean,
-	},
-});
-
-const { quest, show, isAccept } = toRefs(props);
+type Props = {
+	quest: QuestModel;
+	show?: boolean;
+	isAccept?: boolean;
+};
+const { quest, show, isAccept } = defineProps<Props>();
 
 const emit = defineEmits<{
 	newQuest: [quest: QuestModel];
@@ -43,12 +35,12 @@ const root = useTemplateRef('root');
 const isProcessingAction = ref(false);
 const hasError = ref(false);
 
-watch(quest, _ => {
+watch(() => quest, _ => {
 	// Reset our error state if the quest was updated from something.
 	hasError.value = false;
 });
 
-const shouldShow = computed(() => show.value && !hasError.value);
+const shouldShow = computed(() => show && !hasError.value);
 
 async function onActionPressed() {
 	if (isProcessingAction.value) {
@@ -58,10 +50,10 @@ async function onActionPressed() {
 	isProcessingAction.value = true;
 	let url: string;
 
-	if (isAccept.value) {
-		url = `/web/dash/quests/accept/${quest.value.id}`;
+	if (isAccept) {
+		url = `/web/dash/quests/accept/${quest.id}`;
 	} else {
-		url = `/web/dash/quests/claim_all_rewards/${quest.value.id}`;
+		url = `/web/dash/quests/claim_all_rewards/${quest.id}`;
 	}
 
 	try {
@@ -189,13 +181,13 @@ async function onActionPressed() {
 		}
 
 		const rewards = [...compactRewards.values()];
-		if (rewards.length === 0 && !isAccept.value) {
+		if (rewards.length === 0 && !isAccept) {
 			return;
 		}
-		const title = isAccept.value ? quest.value.title : undefined;
+		const title = isAccept ? quest.title : undefined;
 
 		showQuestRewardModal({
-			quest: quest.value,
+			quest,
 			rewards,
 			title,
 		});

@@ -1,47 +1,35 @@
 <script lang="ts" setup>
-import { computed, onMounted, ref, toRefs } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 
 import AppExpand from '../../expand/AppExpand.vue';
 import AppJolticon from '../../jolticon/AppJolticon.vue';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
 
-const props = defineProps({
-	alertType: {
-		type: String,
-		required: true,
-	},
-	dismissKey: {
-		type: String,
-		default: null,
-	},
-	noMargin: {
-		type: Boolean,
-	},
-	dismissTooltip: {
-		type: String,
-		default: undefined,
-	},
-});
+type Props = {
+	alertType: string;
+	dismissKey?: string | null;
+	noMargin?: boolean;
+	dismissTooltip?: string;
+};
+const { dismissKey = null } = defineProps<Props>();
 
 const emit = defineEmits<{
 	dismiss: [];
 }>();
 
-const { dismissKey } = toRefs(props);
-
 const StorageKeyPrefix = 'dismiss-alert:';
 const shouldShow = ref(false);
 
-const _key = computed(() => StorageKeyPrefix + dismissKey.value);
+const _key = computed(() => StorageKeyPrefix + dismissKey);
 
 onMounted(() => {
-	if (!dismissKey.value || !window.localStorage.getItem(_key.value)) {
+	if (!dismissKey || !window.localStorage.getItem(_key.value)) {
 		shouldShow.value = true;
 	}
 });
 
 function dismiss() {
-	if (dismissKey.value) {
+	if (dismissKey) {
 		window.localStorage.setItem(_key.value, Date.now() + '');
 	}
 	shouldShow.value = false;

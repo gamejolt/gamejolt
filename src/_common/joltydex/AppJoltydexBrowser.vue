@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRefs } from 'vue';
+import { computed, ref } from 'vue';
 
 import { styleFlexCenter } from '../../_styles/mixins';
 import { kBorderRadiusLg, kFontFamilyDisplay } from '../../_styles/variables';
@@ -17,14 +17,10 @@ import { $gettext } from '../translate/translate.service';
 import { UserModel } from '../user/user.model';
 import { applyPayloadToJoltydexFeed, loadJoltydexFeed, makeJoltydexFeed } from './joltydex-feed';
 
-const props = defineProps({
-	user: {
-		type: Object as PropType<UserModel>,
-		required: true,
-	},
-});
-
-const { user } = toRefs(props);
+type Props = {
+	user: UserModel;
+};
+const { user } = defineProps<Props>();
 const { user: loggedInUser } = useCommonStore();
 
 const ItemsPerPage = 24;
@@ -55,7 +51,7 @@ async function init() {
 	try {
 		const payload = await loadJoltydexFeed({
 			types: feedTypes,
-			ownerUser: user.value,
+			ownerUser: user,
 			user: loggedInUser.value!,
 			perPage: ItemsPerPage,
 		});
@@ -76,7 +72,7 @@ async function loadMore(type: CollectibleType) {
 	try {
 		const payload = await loadJoltydexFeed({
 			types: feedTypes,
-			ownerUser: user.value,
+			ownerUser: user,
 			user: loggedInUser.value!,
 			pos: feed.collectibles.value.length,
 			perPage: ItemsPerPage,

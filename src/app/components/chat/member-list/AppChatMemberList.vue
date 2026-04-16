@@ -1,27 +1,19 @@
 <script lang="ts" setup>
-import { PropType, toRefs } from 'vue';
+import { toRef } from 'vue';
 
 import AppChatList from '../_list/AppChatList.vue';
 import { ChatRoomModel } from '../room';
 import { useChatRoomMembers } from '../room-channel';
 import AppChatMemberListItem from './AppChatMemberListItem.vue';
 
-const props = defineProps({
-	room: {
-		type: Object as PropType<ChatRoomModel>,
-		required: true,
-	},
-	hideFilter: {
-		type: Boolean,
-	},
-	horizontalPadding: {
-		type: Number,
-		default: undefined,
-	},
-});
+type Props = {
+	room: ChatRoomModel;
+	hideFilter?: boolean;
+	horizontalPadding?: number;
+};
+const { room, hideFilter = false, horizontalPadding } = defineProps<Props>();
 
-const { room } = toRefs(props);
-const { memberCollection } = useChatRoomMembers(room);
+const { memberCollection } = useChatRoomMembers(toRef(() => room));
 </script>
 
 <template>

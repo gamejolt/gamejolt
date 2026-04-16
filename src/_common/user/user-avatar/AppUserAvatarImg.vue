@@ -1,15 +1,13 @@
 <script lang="ts" setup>
-import { PropType, ref } from 'vue';
+import { ref } from 'vue';
 
 import { imageGuestAvatar } from '../../img/images';
 import { UserCommonFields } from '../user.model';
 
-defineProps({
-	user: {
-		type: Object as PropType<UserCommonFields | null | undefined>,
-		default: undefined,
-	},
-});
+type Props = {
+	user?: UserCommonFields | null;
+};
+const { user } = defineProps<Props>();
 
 const hasError = ref(false);
 </script>

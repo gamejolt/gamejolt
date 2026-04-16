@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRefs, watch } from 'vue';
+import { computed, ref, toRef, watch } from 'vue';
 
 import { ContextCapabilities } from '../../../../../_common/content/content-context';
 import { ContentDocument } from '../../../../../_common/content/content-document';
@@ -7,7 +7,6 @@ import { ContentWriter } from '../../../../../_common/content/content-writer';
 import AppExpand from '../../../../../_common/expand/AppExpand.vue';
 import AppForm, {
 	createForm,
-	defineFormProps,
 	FormController,
 } from '../../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
@@ -32,19 +31,15 @@ type FormModel = GameModel & {
 	autotag_skip?: boolean;
 };
 
-const props = defineProps({
-	tags: {
-		type: Array as PropType<string[]>,
-		required: true,
-	},
-	...defineFormProps<GameModel>(true),
-});
+type Props = {
+	tags: string[];
+	model: GameModel;
+};
+const { tags, model } = defineProps<Props>();
 
 const emit = defineEmits<{
 	submit: [];
 }>();
-
-const { tags, model } = toRefs(props);
 
 const isFnafDetected = ref(false);
 const isDisabled = ref(false);
@@ -52,8 +47,8 @@ const lengthLimit = ref(50_000);
 const descriptionContentCapabilities = ref(ContextCapabilities.getPlaceholder());
 
 const form: FormController<FormModel> = createForm<FormModel>({
-	loadUrl: `/web/dash/developer/games/description/save/${model.value.id}`,
-	model,
+	loadUrl: `/web/dash/developer/games/description/save/${model.id}`,
+	model: toRef(() => model),
 	modelClass: GameModel,
 	modelSaveHandler: $saveGameDescription,
 	onLoad(payload) {

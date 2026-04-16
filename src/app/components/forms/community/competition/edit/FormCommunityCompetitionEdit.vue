@@ -24,21 +24,19 @@ import AppCommunityCompetitionDate from '../../../../community/competition/date/
 
 type FormModel = CommunityCompetitionModel;
 
-const props = defineProps({
-	model: {
-		type: Object as () => CommunityCompetitionModel,
-		default: undefined,
-	},
-});
+type Props = {
+	model?: CommunityCompetitionModel;
+};
+const { model } = defineProps<Props>();
 
 const timezoneService = ref<FormTimezoneService<CommunityCompetitionModel> | null>(null);
 
-const shouldShowSaveButton = computed(() => props.model!.periodNum < CompetitionPeriodVoting);
+const shouldShowSaveButton = computed(() => model!.periodNum < CompetitionPeriodVoting);
 
 const form: FormController<FormModel> = createForm<FormModel>({
 	modelClass: CommunityCompetitionModel,
 	modelSaveHandler: $saveCommunityCompetition,
-	model: toRef(props, 'model'),
+	model: toRef(() => model),
 	async onInit() {
 		timezoneService.value = new FormTimezoneService(form);
 		await timezoneService.value.load(true);

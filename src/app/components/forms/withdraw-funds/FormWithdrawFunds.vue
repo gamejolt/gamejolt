@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
 
 import AppAlertBox from '../../../../_common/alert/AppAlertBox.vue';
@@ -18,35 +17,22 @@ type FormModel = {
 	amount: number;
 };
 
-const props = defineProps({
-	minAmount: {
-		type: Number,
-		required: true,
-	},
-	withdrawableAmount: {
-		type: Number,
-		required: true,
-	},
-	paypalId: {
-		type: String,
-		default: undefined,
-	},
-	paypalEmail: {
-		type: String,
-		default: undefined,
-	},
-});
+type Props = {
+	minAmount: number;
+	withdrawableAmount: number;
+	paypalId?: string;
+	paypalEmail?: string;
+};
+const { minAmount, withdrawableAmount, paypalId, paypalEmail } = defineProps<Props>();
 
 const emit = defineEmits<{
 	submit: [model: FormModel];
 }>();
 
-const { minAmount, withdrawableAmount, paypalId, paypalEmail } = toRefs(props);
-
 const form: FormController<FormModel> = createForm({
 	warnOnDiscard: false,
 	onInit() {
-		form.formModel.amount = withdrawableAmount.value;
+		form.formModel.amount = withdrawableAmount;
 	},
 	onSubmit() {
 		return Api.sendRequest('/web/dash/funds/withdraw', form.formModel);

@@ -1,5 +1,5 @@
 <script lang="ts">
-import { inject, InjectionKey, PropType, provide, Ref, shallowReadonly, toRef } from 'vue';
+import { inject, InjectionKey, provide, Ref, shallowReadonly, toRef } from 'vue';
 
 type Controller = ReturnType<typeof createController>;
 type Direction = 'row' | 'column';
@@ -16,29 +16,25 @@ function createController(options: { multi: boolean; direction: Ref<Direction> }
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
+type Props = {
 	/**
 	 * If you want to be able to select multiple options. Note: this is not
 	 * reactive and can not be changed during runtime.
 	 */
-	multi: {
-		type: Boolean,
-	},
+	multi?: boolean;
 	/**
 	 * Which flex direction do you want the items to be layed out in.
 	 */
-	direction: {
-		type: String as PropType<Direction>,
-		default: 'row',
-	},
-});
+	direction?: Direction;
+};
+const { multi, direction = 'row' } = defineProps<Props>();
 
 provide(
 	key,
 	createController({
 		// not reactive
-		multi: props.multi,
-		direction: toRef(props, 'direction'),
+		multi,
+		direction: toRef(() => direction),
 	})
 );
 </script>

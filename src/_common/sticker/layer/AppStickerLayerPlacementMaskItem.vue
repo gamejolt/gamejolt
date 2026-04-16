@@ -1,22 +1,15 @@
 <script lang="ts" setup>
-import { onMounted, PropType, ref, toRefs } from 'vue';
+import { onMounted, ref } from 'vue';
 
 import { getStickerLayerTargetBoundingBox } from './AppStickerLayerPlacementMaskTarget.vue';
 import { getRectForStickerTarget, StickerLayerController } from './layer-controller';
 import { StickerLayerItem } from './layer-item';
 
-const props = defineProps({
-	target: {
-		type: Object as PropType<StickerLayerItem>,
-		required: true,
-	},
-	layer: {
-		type: Object as PropType<StickerLayerController>,
-		required: true,
-	},
-});
-
-const { target, layer } = toRefs(props);
+type Props = {
+	target: StickerLayerItem;
+	layer: StickerLayerController;
+};
+const { target, layer } = defineProps<Props>();
 
 const _x = ref(0);
 const _y = ref(0);
@@ -24,7 +17,7 @@ const _width = ref(0);
 const _height = ref(0);
 
 onMounted(() => {
-	const rect = getRectForStickerTarget(layer.value, target.value);
+	const rect = getRectForStickerTarget(layer, target);
 	if (!rect) {
 		return;
 	}

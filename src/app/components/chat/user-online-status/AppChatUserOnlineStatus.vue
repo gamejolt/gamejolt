@@ -1,28 +1,15 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-
-defineProps({
-	isOnline: {
-		type: Boolean,
-		required: true,
-	},
-	size: {
-		type: Number,
-		default: 12,
-	},
-	segmentWidth: {
-		type: Number,
-		default: 1.5,
-	},
+type Props = {
+	isOnline: boolean;
+	size?: number;
+	segmentWidth?: number;
 	/**
 	 * The color to be displayed behind the layers of the bubble. Useful when
 	 * `--theme-bg-actual` is set to something with transparency.
 	 */
-	backgroundColorBase: {
-		type: String as PropType<'bg' | 'bg-offset'>,
-		default: undefined,
-	},
-});
+	backgroundColorBase?: 'bg' | 'bg-offset';
+};
+const { size = 12, segmentWidth = 1.5 } = defineProps<Props>();
 </script>
 
 <template>

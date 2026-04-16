@@ -1,16 +1,12 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-
 import AppImgResponsive from '../../../_common/img/AppImgResponsive.vue';
 import { styleBorderRadiusBase } from '../../../_styles/mixins';
 import { FeaturedItemModel } from '../../components/featured-item/featured-item.model';
 
-defineProps({
-	featuredItem: {
-		type: Object as PropType<FeaturedItemModel>,
-		required: true,
-	},
-});
+type Props = {
+	featuredItem: FeaturedItemModel;
+};
+const { featuredItem } = defineProps<Props>();
 </script>
 
 <template>

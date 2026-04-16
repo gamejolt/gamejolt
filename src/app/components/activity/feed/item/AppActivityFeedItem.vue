@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, onMounted, PropType, toRefs, useTemplateRef } from 'vue';
+import { computed, onMounted, useTemplateRef } from 'vue';
 
 import { Screen } from '../../../../../_common/screen/screen-service';
 import AppScrollInview, {
@@ -16,24 +16,20 @@ const InviewConfigHydration = new ScrollInviewConfig({ margin: `${Screen.height}
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	item: {
-		type: Object as PropType<ActivityFeedItem>,
-		required: true,
-	},
-});
-
-const { item } = toRefs(props);
+type Props = {
+	item: ActivityFeedItem;
+};
+const { item } = defineProps<Props>();
 const feed = useActivityFeed()!;
 
 const container = useTemplateRef('container');
 
 const isBootstrapped = computed(() => {
-	return feed.isItemBootstrapped(item.value);
+	return feed.isItemBootstrapped(item);
 });
 
 onMounted(() => {
-	const height = feed.getItemHeight(item.value);
+	const height = feed.getItemHeight(item);
 	if (height && container.value) {
 		container.value.style.height = height;
 	}
@@ -41,16 +37,16 @@ onMounted(() => {
 
 function onInviewChange(inview: boolean) {
 	if (inview) {
-		feed.setItemViewed(item.value);
+		feed.setItemViewed(item);
 	}
 }
 
 function onInviewHydrationChange(inview: boolean) {
-	feed.setItemHydration(item.value, inview);
+	feed.setItemHydration(item, inview);
 }
 
 function onResize(height: number) {
-	feed.setItemHeight(item.value, height + 'px');
+	feed.setItemHeight(item, height + 'px');
 	if (container.value) {
 		container.value.style.height = height + 'px';
 	}

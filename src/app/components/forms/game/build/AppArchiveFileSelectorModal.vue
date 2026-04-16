@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, ref, toRefs } from 'vue';
+import { computed, ref } from 'vue';
 
 import { Api } from '../../../../../_common/api/api.service';
 import AppButton from '../../../../../_common/button/AppButton.vue';
@@ -9,34 +9,15 @@ import { useModal } from '../../../../../_common/modal/modal.service';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import { run } from '../../../../../utils/utils';
 
-const props = defineProps({
-	gameId: {
-		type: Number,
-		required: true,
-	},
-	packageId: {
-		type: Number,
-		required: true,
-	},
-	releaseId: {
-		type: Number,
-		required: true,
-	},
-	buildId: {
-		type: Number,
-		required: true,
-	},
-	primaryFileId: {
-		type: Number,
-		required: true,
-	},
-	platform: {
-		type: String,
-		required: true,
-	},
-});
-
-const { gameId, packageId, releaseId, buildId, primaryFileId, platform } = toRefs(props);
+type Props = {
+	gameId: number;
+	packageId: number;
+	releaseId: number;
+	buildId: number;
+	primaryFileId: number;
+	platform: string;
+};
+const { gameId, packageId, releaseId, buildId, primaryFileId, platform } = defineProps<Props>();
 
 const modal = useModal()!;
 
@@ -55,12 +36,12 @@ const filteredFiles = computed(() => {
 run(async () => {
 	try {
 		const params = [
-			gameId.value,
-			packageId.value,
-			releaseId.value,
-			buildId.value,
-			primaryFileId.value,
-			platform.value,
+			gameId,
+			packageId,
+			releaseId,
+			buildId,
+			primaryFileId,
+			platform,
 		];
 
 		const response = await Api.sendRequest(

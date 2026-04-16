@@ -1,6 +1,4 @@
 <script lang="ts">
-import { PropType } from 'vue';
-
 import {
 	styleBorderRadiusBase,
 	styleBorderRadiusLg,
@@ -43,19 +41,12 @@ export interface OwnSupport {
 </script>
 
 <script lang="ts" setup>
-defineProps({
-	supporters: {
-		type: Array as PropType<TopSupporter[]>,
-		required: true,
-	},
-	ownSupport: {
-		type: Object as PropType<OwnSupport>,
-		required: true,
-	},
-	insetHeader: {
-		type: Boolean,
-	},
-});
+type Props = {
+	supporters: TopSupporter[];
+	ownSupport: OwnSupport;
+	insetHeader?: boolean;
+};
+const { supporters, ownSupport, insetHeader = false } = defineProps<Props>();
 
 const { user: myUser } = useCommonStore();
 </script>

@@ -1,80 +1,61 @@
 <script lang="ts">
-import { computed, PropType, toRefs } from 'vue';
+import { computed, toRef } from 'vue';
 
-import { defineDynamicSlotProps, useDynamicSlots } from '../component-helpers';
+import { useDynamicSlots } from '../component-helpers';
 import { Screen } from '../screen/screen-service';
 
 const validSlots = ['leading', 'title', 'actions', 'bottom'] as const;
 export type HeaderBarSlots = (typeof validSlots)[number];
+
+type DynamicSlotsProp = HeaderBarSlots[] | Record<HeaderBarSlots, boolean> | boolean;
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	...defineDynamicSlotProps(validSlots, true),
-	centerTitle: {
-		type: Boolean,
-	},
-	automaticallyImplyLeading: {
-		type: Boolean,
-		default: true,
-	},
-	elevation: {
-		type: Number,
-		default: 0,
-	},
-	titleSpacing: {
-		type: Number,
-		default: undefined,
-		validator: val => (typeof val === 'number' && val >= 0) || typeof val === 'undefined',
-	},
-	titleSize: {
-		type: String as PropType<'md' | 'lg'>,
-		default: 'md',
-	},
-	edgePadding: {
-		type: Number,
-		default: undefined,
-		validator: val => (typeof val === 'number' && val >= 0) || typeof val === 'undefined',
-	},
-	reverseLeading: {
-		type: Boolean,
-	},
-	reverseActions: {
-		type: Boolean,
-	},
-});
-
+type Props = {
+	dynamicSlots?: DynamicSlotsProp;
+	centerTitle?: boolean;
+	automaticallyImplyLeading?: boolean;
+	elevation?: number;
+	titleSpacing?: number;
+	titleSize?: 'md' | 'lg';
+	edgePadding?: number;
+	reverseLeading?: boolean;
+	reverseActions?: boolean;
+};
 const {
+	dynamicSlots = true,
 	centerTitle,
-	automaticallyImplyLeading,
-	elevation,
+	automaticallyImplyLeading = true,
+	elevation = 0,
 	titleSpacing,
+	titleSize = 'md',
 	edgePadding,
-	dynamicSlots,
-} = toRefs(props);
+	reverseLeading,
+	reverseActions,
+} = defineProps<Props>();
 
-const { hasSlot } = useDynamicSlots(dynamicSlots);
+const { hasSlot } = useDynamicSlots(toRef(() => dynamicSlots));
 
 const hasLeading = computed(() => hasSlot('leading'));
 const hasTitle = computed(() => hasSlot('title'));
 const hasActions = computed(() => hasSlot('actions'));
 const hasBottom = computed(() => hasSlot('bottom'));
 
-const shouldShrinkLeading = computed(() => !automaticallyImplyLeading.value && !hasLeading.value);
+const shouldShrinkLeading = computed(() => !automaticallyImplyLeading && !hasLeading.value);
 const shouldShrinkActions = computed(
-	() => !hasActions.value || (shouldShrinkLeading.value && centerTitle.value)
+	() => !hasActions.value || (shouldShrinkLeading.value && centerTitle)
 );
 
 const effectiveTitleSpacing = computed(() => {
-	if (typeof titleSpacing?.value === 'number') {
-		return titleSpacing.value;
+	if (typeof titleSpacing === 'number') {
+		return titleSpacing;
 	}
 	return Screen.isXs ? 12 : 16;
 });
 
 const effectiveEdgePadding = computed(() => {
-	if (typeof edgePadding?.value === 'number') {
-		return edgePadding.value;
+	if (typeof edgePadding === 'number') {
+		return edgePadding;
 	}
 	return Screen.isXs ? 12 : 16;
 });

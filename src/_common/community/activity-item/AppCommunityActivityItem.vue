@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, toRef, toRefs } from 'vue';
+import { computed, toRef } from 'vue';
 import { RouteLocationRaw } from 'vue-router';
 
 import { formatDate } from '../../filters/date';
@@ -19,55 +19,45 @@ import { CommunityCompetitionModel } from '../competition/competition.model';
 import { CommunityCompetitionEntryModel } from '../competition/entry/entry.model';
 import { CommunityActivityItemModel, CommunityActivityItemType } from './activity-item.model';
 
-const props = defineProps({
-	item: {
-		type: Object as PropType<CommunityActivityItemModel>,
-		required: true,
-	},
-	usersplit: {
-		type: Boolean,
-		required: true,
-	},
-	showIcon: {
-		type: Boolean,
-		required: true,
-	},
-});
+type Props = {
+	item: CommunityActivityItemModel;
+	usersplit: boolean;
+	showIcon: boolean;
+};
+const { item, usersplit, showIcon } = defineProps<Props>();
 
-const { item, showIcon } = toRefs(props);
-
-const icon = computed(() => item.value.getTypeIcon()?.icon);
-const color = computed(() => item.value.getTypeIcon()?.color);
+const icon = computed(() => item.getTypeIcon()?.icon);
+const color = computed(() => item.getTypeIcon()?.color);
 
 const isToday = computed(
-	() => formatDate(item.value.added_on, 'mediumDate') === formatDate(Date.now(), 'mediumDate')
+	() => formatDate(item.added_on, 'mediumDate') === formatDate(Date.now(), 'mediumDate')
 );
 
 const isYesterday = computed(() => {
 	const oneDay = 24 * 60 * 60 * 1000;
 	return (
-		formatDate(item.value.added_on, 'mediumDate') ===
+		formatDate(item.added_on, 'mediumDate') ===
 		formatDate(Date.now() - oneDay, 'mediumDate')
 	);
 });
 
 const actionTo = computed<RouteLocationRaw | undefined>(() => {
-	if (item.value.action_resource instanceof FiresidePostModel) {
-		return item.value.action_resource.routeLocation;
-	} else if (item.value.action_resource instanceof UserModel) {
-		return item.value.action_resource.url;
-	} else if (item.value.action_resource instanceof UserBlockModel) {
-		return item.value.action_resource.user.url;
-	} else if (item.value.action_resource instanceof CommunityChannelModel) {
+	if (item.action_resource instanceof FiresidePostModel) {
+		return item.action_resource.routeLocation;
+	} else if (item.action_resource instanceof UserModel) {
+		return item.action_resource.url;
+	} else if (item.action_resource instanceof UserBlockModel) {
+		return item.action_resource.user.url;
+	} else if (item.action_resource instanceof CommunityChannelModel) {
 		return {
 			name: 'communities.view.channel',
 			params: {
-				channel: item.value.action_resource.title,
+				channel: item.action_resource.title,
 			},
 		};
-	} else if (item.value.action_resource instanceof GameModel) {
-		return item.value.action_resource.routeLocation;
-	} else if (item.value.action_resource instanceof CommunityCompetitionModel) {
+	} else if (item.action_resource instanceof GameModel) {
+		return item.action_resource.routeLocation;
+	} else if (item.action_resource instanceof CommunityCompetitionModel) {
 		// For community competitions, the channel title is encoded in the extra data.
 		const channelTitle = getExtraData('channel-title');
 		return {
@@ -76,7 +66,7 @@ const actionTo = computed<RouteLocationRaw | undefined>(() => {
 				channel: channelTitle,
 			},
 		};
-	} else if (item.value.action_resource instanceof CommunityCompetitionEntryModel) {
+	} else if (item.action_resource instanceof CommunityCompetitionEntryModel) {
 		// For community competition entries, the channel title is encoded in the extra data.
 		const channelTitle = getExtraData('channel-title');
 		return {
@@ -84,39 +74,39 @@ const actionTo = computed<RouteLocationRaw | undefined>(() => {
 			params: {
 				channel: channelTitle,
 			},
-			hash: '#entry-' + item.value.action_resource.id,
+			hash: '#entry-' + item.action_resource.id,
 		};
 	}
 });
 
 const actionText = computed(() => {
-	if (item.value.action_resource instanceof FiresidePostModel) {
-		return item.value.action_resource.getShortLead();
-	} else if (item.value.action_resource instanceof UserModel) {
-		return '@' + item.value.action_resource.username;
-	} else if (item.value.action_resource instanceof UserBlockModel) {
-		return '@' + item.value.action_resource.user.username;
-	} else if (item.value.action_resource instanceof CommunityChannelModel) {
-		return item.value.action_resource.title;
-	} else if (item.value.action_resource instanceof GameModel) {
-		return item.value.action_resource.title;
-	} else if (item.value.action_resource instanceof CommunityCompetitionModel) {
+	if (item.action_resource instanceof FiresidePostModel) {
+		return item.action_resource.getShortLead();
+	} else if (item.action_resource instanceof UserModel) {
+		return '@' + item.action_resource.username;
+	} else if (item.action_resource instanceof UserBlockModel) {
+		return '@' + item.action_resource.user.username;
+	} else if (item.action_resource instanceof CommunityChannelModel) {
+		return item.action_resource.title;
+	} else if (item.action_resource instanceof GameModel) {
+		return item.action_resource.title;
+	} else if (item.action_resource instanceof CommunityCompetitionModel) {
 		// For community competitions, the channel title is encoded in the extra data.
 		const channelTitle = getExtraData('channel-title');
 		return channelTitle;
-	} else if (item.value.action_resource instanceof CommunityCompetitionEntryModel) {
-		return item.value.action_resource.resource.title;
+	} else if (item.action_resource instanceof CommunityCompetitionEntryModel) {
+		return item.action_resource.resource.title;
 	}
 });
 
 const shouldShowActionSecondLine = toRef(() => !!actionTo.value || !!actionText.value);
 
-const extraData = computed<Record<string, any>>(() => JSON.parse(item.value.extra_data));
+const extraData = computed<Record<string, any>>(() => JSON.parse(item.extra_data));
 
 const reasonText = computed(() => {
 	// The user block resource comes with a reason.
-	if (item.value.action_resource instanceof UserBlockModel) {
-		return getSingleReasonText(item.value.action_resource.reason);
+	if (item.action_resource instanceof UserBlockModel) {
+		return getSingleReasonText(item.action_resource.reason);
 	}
 
 	// Some other actions might encode a "reason" field in the extra data.

@@ -13,7 +13,6 @@ import {
 	Ref,
 	ref,
 	shallowRef,
-	toRefs,
 } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -467,41 +466,34 @@ export interface FormController<T = any> {
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	controller: {
-		type: Object as PropType<FormController>,
-		required: true,
-	},
+type Props = {
+	controller: FormController;
 	/** Used to override the normal form loading state. */
-	forcedIsLoading: {
-		type: Boolean,
-		default: undefined,
-	},
-});
+	forcedIsLoading?: boolean;
+};
+const { controller, forcedIsLoading } = defineProps<Props>();
 
 const emit = defineEmits<{
 	/** @deprecated This is only here for old forms, use the controller's onChange callback instead */
 	changed: [formModel: any];
 }>();
 
-const { controller, forcedIsLoading } = toRefs(props);
-
 // To support old forms.
-controller.value._override({
+controller._override({
 	onChange: formModel => emit('changed', formModel),
 });
 
-provide(Key, controller.value);
+provide(Key, controller);
 
 const isLoaded = computed(() => {
-	if (typeof forcedIsLoading?.value === 'boolean') {
-		return !forcedIsLoading.value;
+	if (typeof forcedIsLoading === 'boolean') {
+		return !forcedIsLoading;
 	}
 
 	// Check specifically false so that "null" is correctly shown as loaded.
-	return controller.value.isLoaded !== false;
+	return controller.isLoaded !== false;
 });
-const isLoadedBootstrapped = computed(() => controller.value.isLoadedBootstrapped !== false);
+const isLoadedBootstrapped = computed(() => controller.isLoadedBootstrapped !== false);
 </script>
 
 <template>

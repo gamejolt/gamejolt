@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, CSSProperties, nextTick, onMounted, onUnmounted, ref, toRefs, useTemplateRef, watch } from 'vue';
+import { computed, CSSProperties, nextTick, onMounted, onUnmounted, ref, useTemplateRef, watch } from 'vue';
 
 import { Api } from '../../../../api/api.service';
 import AppJolticon from '../../../../jolticon/AppJolticon.vue';
@@ -12,14 +12,10 @@ import AppUserAvatarImg from '../../../../user/user-avatar/AppUserAvatarImg.vue'
 import { editorInsertMention, useContentEditorController } from '../../content-editor-controller';
 import ContentEditorMentionCache from './cache.service';
 
-const props = defineProps({
-	canShow: {
-		type: Boolean,
-		required: true,
-	},
-});
-
-const { canShow } = toRefs(props);
+type Props = {
+	canShow: boolean;
+};
+const { canShow } = defineProps<Props>();
 const controller = useContentEditorController()!;
 
 const query = ref(''); // Currently active suggestion query
@@ -41,7 +37,7 @@ const displayUsers = computed(() =>
 
 const showControl = computed(() => visible.value && (isLoading.value || users.value.length > 0));
 
-const visible = computed(() => controller.capabilities.hasMentionControls && canShow.value);
+const visible = computed(() => controller.capabilities.hasMentionControls && canShow);
 
 // If the text control is more than 50% down the page, open the control
 // above ("inverted")

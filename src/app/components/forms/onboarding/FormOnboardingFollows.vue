@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, ref } from 'vue';
+import { computed, ref } from 'vue';
 
 import { CommunityModel } from '../../../../_common/community/community.model';
 import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
@@ -12,16 +12,11 @@ type FormModel = {
 	// nothing
 };
 
-defineProps({
-	user: {
-		type: Object as PropType<UserModel>,
-		required: true,
-	},
-	isSocialRegistration: {
-		type: Boolean,
-		required: true,
-	},
-});
+type Props = {
+	user: UserModel;
+	isSocialRegistration: boolean;
+};
+defineProps<Props>();
 
 const emit = defineEmits<{
 	next: [];

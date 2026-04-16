@@ -1,5 +1,5 @@
 <script lang="ts">
-import { PropType, ref, toRefs } from 'vue';
+import { ref } from 'vue';
 
 import AppOnHover from '../../../../../_common/on/AppOnHover.vue';
 import { Screen } from '../../../../../_common/screen/screen-service';
@@ -17,14 +17,10 @@ const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height / 2}px` }
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	user: {
-		type: Object as PropType<UserModel>,
-		required: true,
-	},
-});
-
-const { user } = toRefs(props);
+type Props = {
+	user: UserModel;
+};
+const { user } = defineProps<Props>();
 const { selectedJoltydexUser } = useJoltydexStore();
 
 const isInview = ref(false);

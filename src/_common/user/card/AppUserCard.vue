@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, toRef, toRefs, useTemplateRef } from 'vue';
+import { computed, toRef, useTemplateRef } from 'vue';
 import { RouterLink } from 'vue-router';
 
 import { styleWhen } from '../../../_styles/mixins';
@@ -17,41 +17,29 @@ import { UserModel } from '../user.model';
 import AppUserAvatarBubble from '../user-avatar/AppUserAvatarBubble.vue';
 import AppUserAvatarImg from '../user-avatar/AppUserAvatarImg.vue';
 
-const props = defineProps({
-	user: {
-		type: Object as PropType<UserModel>,
-		required: true,
-	},
-	isLoading: {
-		type: Boolean,
-	},
-	elevate: {
-		type: Boolean,
-	},
-	noStats: {
-		type: Boolean,
-	},
-	disableFollowWidget: {
-		type: Boolean,
-	},
-});
-
-const { user, isLoading, elevate } = toRefs(props);
+type Props = {
+	user: UserModel;
+	isLoading?: boolean;
+	elevate?: boolean;
+	noStats?: boolean;
+	disableFollowWidget?: boolean;
+};
+const { user, isLoading, elevate } = defineProps<Props>();
 
 const headerElement = useTemplateRef('headerElement');
 
 const { user: sessionUser } = useCommonStore();
 
-const followerCount = toRef(() => user.value.follower_count || 0);
-const followingCount = toRef(() => user.value.following_count || 0);
-const postCount = toRef(() => user.value.post_count || 0);
-const gameCount = toRef(() => user.value.game_count || 0);
-const likeCount = toRef(() => user.value.like_count || 0);
-const dogtags = toRef(() => user.value.dogtags || []);
-const showTags = toRef(() => !!user.value.follows_you || dogtags.value.length > 0);
+const followerCount = toRef(() => user.follower_count || 0);
+const followingCount = toRef(() => user.following_count || 0);
+const postCount = toRef(() => user.post_count || 0);
+const gameCount = toRef(() => user.game_count || 0);
+const likeCount = toRef(() => user.like_count || 0);
+const dogtags = toRef(() => user.dogtags || []);
+const showTags = toRef(() => !!user.follows_you || dogtags.value.length > 0);
 
 const headerBackgroundImage = computed(() => {
-	let src = user.value.header_media_item?.mediaserver_url;
+	let src = user.header_media_item?.mediaserver_url;
 	if (src) {
 		const { offsetWidth, offsetHeight } = headerElement.value || {};
 		src = getMediaserverUrlForBounds({

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, Ref, ref, shallowRef, toRefs, useTemplateRef } from 'vue';
+import { computed, Ref, ref, shallowRef, useTemplateRef } from 'vue';
 
 import { kFontSizeBase, kGridGutterWidth } from '../../../_styles/variables';
 import { Api } from '../../api/api.service';
@@ -28,18 +28,11 @@ interface ReactionDetailsFeed {
 	reachedEnd: Ref<boolean>;
 }
 
-const props = defineProps({
-	model: {
-		type: Object as PropType<ReactionableModel>,
-		required: true,
-	},
-	initialReaction: {
-		type: Object as PropType<ReactionCount>,
-		default: undefined,
-	},
-});
-
-const { model, initialReaction } = toRefs(props);
+type Props = {
+	model: ReactionableModel;
+	initialReaction?: ReactionCount;
+};
+const { model, initialReaction } = defineProps<Props>();
 
 const modal = useModal<void>()!;
 const rootModal = useTemplateRef('rootModal');
@@ -92,7 +85,7 @@ function selectReaction(reaction: ReactionCount) {
 	}
 }
 
-selectReaction(initialReaction?.value || model.value.reaction_counts[0]);
+selectReaction(initialReaction || model.reaction_counts[0]);
 
 async function bootstrapFeed(feed: ReactionDetailsFeed) {
 	if (feed.isBootstrapped.value || feed.isLoadingMore.value) {
@@ -169,8 +162,8 @@ async function loadMore(feed: ReactionDetailsFeed | null) {
 
 function getQueryParamsForFeed(feed: ReactionDetailsFeed, newPage: number) {
 	return [
-		`resource=${model.value.resourceName}`,
-		`resourceId=${model.value.id}`,
+		`resource=${model.resourceName}`,
+		`resourceId=${model.id}`,
 		`emojiId=${feed.reaction.id}`,
 		`page=${newPage}`,
 		`perPage=${perPage}`,

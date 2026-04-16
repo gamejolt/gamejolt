@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs, triggerRef } from 'vue';
+import { computed, triggerRef } from 'vue';
 
 import AppButton from '../../button/AppButton.vue';
 import { Clipboard } from '../../clipboard/clipboard-service';
@@ -9,18 +9,14 @@ import { showShareModal } from '../../share/card/_modal/modal.service';
 import AppTranslate from '../../translate/AppTranslate.vue';
 import { UserModel } from '../../user/user.model';
 
-const props = defineProps({
+type Props = {
 	/** Should only be your own user. */
-	user: {
-		type: Object as PropType<UserModel>,
-		required: true,
-	},
-});
-
-const { user } = toRefs(props);
+	user: UserModel;
+};
+const { user } = defineProps<Props>();
 const modal = useModal()!;
 
-const url = computed(() => `https://gamejolt.com/invite/${user.value.username}`);
+const url = computed(() => `https://gamejolt.com/invite/${user.username}`);
 
 function onCopy() {
 	Clipboard.copy(url.value);

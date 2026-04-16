@@ -1,22 +1,13 @@
 <script lang="ts" setup>
-import { PropType, toRefs } from 'vue';
-
 import { GameModel } from '../../../../../../_common/game/game.model';
 import { GamePackageModel } from '../../../../../../_common/game/package/package.model';
 import AppGameThumbnailImg from '../../../../../../_common/game/thumbnail/AppGameThumbnailImg.vue';
 
-const props = defineProps({
-	gamePackage: {
-		type: Object as PropType<GamePackageModel>,
-		required: true,
-	},
-	game: {
-		type: Object as PropType<GameModel>,
-		required: true,
-	},
-});
-
-const { gamePackage, game } = toRefs(props);
+type Props = {
+	gamePackage: GamePackageModel;
+	game: GameModel;
+};
+const { gamePackage, game } = defineProps<Props>();
 </script>
 
 <template>

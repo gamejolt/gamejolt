@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import { PropType, toRefs } from 'vue';
-
 import { Api } from '../../api/api.service';
 import AppForm, { createForm, FormController } from '../../form-vue/AppForm.vue';
 import AppFormButton from '../../form-vue/AppFormButton.vue';
@@ -14,23 +12,19 @@ type FormModel = {
 	removeComments: boolean;
 };
 
-const props = defineProps({
-	user: {
-		type: Object as PropType<UserModel>,
-		required: true,
-	},
-});
+type Props = {
+	user: UserModel;
+};
+const { user } = defineProps<Props>();
 
 const emit = defineEmits<{
 	submit: [];
 }>();
 
-const { user } = toRefs(props);
-
 const form: FormController<FormModel> = createForm<FormModel>({
 	onSubmit() {
 		const data = {
-			username: user.value.username,
+			username: user.username,
 			removeComments: !!form.formModel.removeComments,
 		};
 

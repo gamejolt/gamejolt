@@ -5,17 +5,16 @@ import { useForm } from '../AppForm.vue';
 import {
 	createFormControl,
 	FormControlEmits,
-	defineFormControlProps,
 } from '../AppFormControl.vue';
 import { useFormGroup } from '../AppFormGroup.vue';
+import { FormValidator } from '../validators';
 
-const props = defineProps({
-	...defineFormControlProps(),
-	value: {
-		type: null,
-		default: undefined,
-	},
-});
+type Props = {
+	disabled?: boolean;
+	validators?: FormValidator[];
+	value?: any;
+};
+const { disabled, validators = [], value } = defineProps<Props>();
 
 const emit = defineEmits<FormControlEmits>();
 
@@ -24,16 +23,16 @@ const { name } = useFormGroup()!;
 
 const { applyValue } = createFormControl<any>({
 	initialValue: undefined,
-	validators: toRef(props, 'validators'),
+	validators: toRef(() => validators),
 	onChange: val => emit('changed', val),
 	multi: true,
 	alwaysOptional: true,
 });
 
-const checked = computed(() => form.formModel[name.value] === props.value);
+const checked = computed(() => form.formModel[name.value] === value);
 
 function onChange() {
-	applyValue(props.value);
+	applyValue(value);
 }
 </script>
 

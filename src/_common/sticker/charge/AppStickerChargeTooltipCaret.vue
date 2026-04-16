@@ -1,12 +1,9 @@
 <script lang="ts" setup>
-defineProps({
-	show: {
-		type: Boolean,
-	},
-	inline: {
-		type: Boolean,
-	},
-});
+type Props = {
+	show?: boolean;
+	inline?: boolean;
+};
+defineProps<Props>();
 </script>
 
 <template>

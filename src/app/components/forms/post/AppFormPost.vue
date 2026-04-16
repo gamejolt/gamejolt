@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { addWeeks, startOfDay } from 'date-fns';
 import { determine } from 'jstimezonedetect';
-import { computed, nextTick, PropType, type Ref, ref, toRefs, watch } from 'vue';
+import { computed, nextTick, type Ref, ref, toRef, watch } from 'vue';
 
 import { trackPostPublish } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
@@ -23,7 +23,6 @@ import { FiresidePostRealmModel } from '../../../../_common/fireside/post/realm/
 import { FiresidePostVideoModel } from '../../../../_common/fireside/post/video/video-model';
 import AppForm, {
 	createForm,
-	defineFormProps,
 	FormController,
 } from '../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
@@ -100,33 +99,20 @@ const MAX_POLL_ITEMS = 10;
 const MIN_POLL_DURATION = 5;
 const MAX_POLL_DURATION = 20160;
 
-const props = defineProps({
-	defaultCommunity: {
-		type: Object as PropType<CommunityModel | null>,
-		default: null,
-	},
-	defaultChannel: {
-		type: Object as PropType<CommunityChannelModel | null>,
-		default: null,
-	},
-	defaultRealm: {
-		type: Object as PropType<RealmModel | null>,
-		default: null,
-	},
-	overlay: {
-		type: Boolean,
-		default: false,
-	},
-	...defineFormProps<FiresidePostModel>(true),
-});
+type Props = {
+	defaultCommunity?: CommunityModel | null;
+	defaultChannel?: CommunityChannelModel | null;
+	defaultRealm?: RealmModel | null;
+	overlay?: boolean;
+	model: FiresidePostModel;
+};
+const { defaultCommunity = null, defaultChannel = null, defaultRealm = null, overlay = false, model } = defineProps<Props>();
 
 const emit = defineEmits<{
 	submit: [data: FiresidePostModel];
 	videoUploadStatusChange: [status: VideoStatus];
 	backgroundChange: [background?: BackgroundModel];
 }>();
-
-const { defaultCommunity, defaultChannel, defaultRealm, overlay, model } = toRefs(props);
 
 const { user } = useCommonStore();
 
@@ -168,11 +154,11 @@ const uploadingVideoStatus = ref(VideoStatus.IDLE);
 const isShowingMoreOptions = ref(false);
 
 const form: FormController<FormPostModel> = createForm<FormPostModel>({
-	model: model as Ref<FormPostModel | undefined>,
+	model: toRef(() => model) as Ref<FormPostModel | undefined>,
 	modelClass: FiresidePostModel as any,
-	loadUrl: computed(() => `/web/posts/manage/save/${model.value.id}`),
+	loadUrl: computed(() => `/web/posts/manage/save/${model.id}`),
 	onInit: async () => {
-		const _model = model.value;
+		const _model = model;
 
 		isNewPost.value = _model.status === FiresidePostStatus.Temp;
 		isSavedDraftPost.value = _model.status === FiresidePostStatus.Draft;
@@ -285,18 +271,18 @@ const form: FormController<FormPostModel> = createForm<FormPostModel>({
 			);
 		}
 
-		if (defaultRealm.value) {
-			attachRealm(defaultRealm.value);
+		if (defaultRealm) {
+			attachRealm(defaultRealm);
 		}
 
 		if (
-			defaultCommunity.value &&
-			defaultChannel.value &&
-			defaultCommunity.value.postableChannels.some(
-				channel => channel.title === defaultChannel.value!.title
+			defaultCommunity &&
+			defaultChannel &&
+			defaultCommunity.postableChannels.some(
+				channel => channel.title === defaultChannel!.title
 			)
 		) {
-			attachCommunity(defaultCommunity.value, defaultChannel.value);
+			attachCommunity(defaultCommunity, defaultChannel);
 		}
 
 		if (payload.targetableCommunities) {
@@ -363,8 +349,8 @@ const form: FormController<FormPostModel> = createForm<FormPostModel>({
 		return $saveFiresidePost(form.formModel);
 	},
 	onSubmitSuccess() {
-		Object.assign(model.value, form.formModel);
-		emit('submit', model.value);
+		Object.assign(model, form.formModel);
+		emit('submit', model);
 	},
 });
 
@@ -395,7 +381,7 @@ const hasPoll = computed(() => {
 });
 
 const isPollEditable = computed(() => {
-	const poll = model.value.poll;
+	const poll = model.poll;
 	if (poll) {
 		return !poll.end_time;
 	}
@@ -450,7 +436,7 @@ const possibleCommunities = computed(() => {
 	return targetableCommunities.value.filter(c1 => {
 		// Also exclude the default community. If it is specified,
 		// it'll be force-added through the pill-incomplete component.
-		if (c1.id === defaultCommunity?.value?.id) {
+		if (c1.id === defaultCommunity?.id) {
 			return false;
 		}
 
@@ -462,7 +448,7 @@ const incompleteDefaultCommunity = computed(() => {
 	// The default community is considered incomplete if the channel for it
 	// needs to be selected (default channel is null or the community is not attached to the post).
 
-	const community = defaultCommunity.value;
+	const community = defaultCommunity;
 
 	if (!(community instanceof CommunityModel)) {
 		return null;
@@ -488,12 +474,12 @@ const submitButtonsEnabled = computed(
 );
 
 const shouldShowAuthorOptions = computed(() => {
-	if (!model.value.game || !user.value) {
+	if (!model.game || !user.value) {
 		return false;
 	}
 
 	// Original post authors can always choose whether to share the post on their profile.
-	if (user.value.id === model.value.user.id) {
+	if (user.value.id === model.user.id) {
 		return true;
 	}
 
@@ -501,7 +487,7 @@ const shouldShowAuthorOptions = computed(() => {
 	// We can't toggle on sharing the post to profile because its not our post.
 	// We can only toggle "as game owner" if the post isn't already shared
 	// on the author's profile.
-	return !model.value.post_to_user_profile;
+	return !model.post_to_user_profile;
 });
 
 watch(

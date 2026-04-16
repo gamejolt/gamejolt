@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRef, toRefs } from 'vue';
+import { computed, ref, toRef } from 'vue';
 
 import { Api } from '../../../../../_common/api/api.service';
 import { CommunityModel } from '../../../../../_common/community/community.model';
@@ -44,22 +44,15 @@ const expiryOptions = {
 	never: $gettext('Never'),
 } as const;
 
-const props = defineProps({
-	community: {
-		type: Object as PropType<CommunityModel>,
-		required: true,
-	},
-	user: {
-		type: Object as PropType<UserModel>,
-		default: undefined,
-	},
-});
+type Props = {
+	community: CommunityModel;
+	user?: UserModel;
+};
+const { community, user } = defineProps<Props>();
 
 const emit = defineEmits<{
 	submit: [];
 }>();
-
-const { community, user } = toRefs(props);
 
 const usernameLocked = ref(false);
 const otherOptions = ref<string[]>([]);
@@ -75,17 +68,17 @@ const form: FormController<FormModel> = createForm<FormModel>({
 		form.formModel.expiry = 'week';
 		form.formModel.ejectPosts = true;
 
-		if (user?.value) {
-			form.formModel.username = user.value.username;
+		if (user) {
+			form.formModel.username = user.username;
 			usernameLocked.value = true;
 		}
 
-		const options = getDatalistOptions('community-user-block', community.value.id.toString());
+		const options = getDatalistOptions('community-user-block', community.id.toString());
 		otherOptions.value = options.getList();
 	},
 	async onSubmit() {
 		const response = await Api.sendRequest(
-			`/web/dash/communities/blocks/add/${community.value.id}`,
+			`/web/dash/communities/blocks/add/${community.id}`,
 			form.formModel
 		);
 
@@ -104,7 +97,7 @@ const form: FormController<FormModel> = createForm<FormModel>({
 			if (form.formModel.reasonType === REASON_OTHER && form.formModel.reason) {
 				const options = getDatalistOptions(
 					'community-user-block',
-					community.value.id.toString()
+					community.id.toString()
 				);
 				options.unshiftItem(form.formModel.reason);
 			}

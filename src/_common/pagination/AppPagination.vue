@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, toRef, toRefs } from 'vue';
+import { computed, toRef } from 'vue';
 import { RouteLocationRaw, useRoute } from 'vue-router';
 
 import AppButton from '../button/AppButton.vue';
@@ -7,71 +7,45 @@ import { Screen } from '../screen/screen-service';
 import { vAppNoAutoscroll } from '../scroll/auto-scroll/no-autoscroll.directive';
 import { $gettext } from '../translate/translate.service';
 
-const props = defineProps({
-	totalItems: {
-		type: Number,
-		required: true,
-	},
-	itemsPerPage: {
-		type: Number,
-		required: true,
-	},
-	currentPage: {
-		type: Number,
-		required: true,
-	},
-	queryParam: {
-		type: String,
-		default: 'page',
-	},
-	preventUrlChange: {
-		type: Boolean,
-	},
-
+type Props = {
+	totalItems: number;
+	itemsPerPage: number;
+	currentPage: number;
+	queryParam?: string;
+	preventUrlChange?: boolean;
 	// These only make sense for pagers.
-	pager: {
-		type: Boolean,
-	},
-	reverseButtons: {
-		type: Boolean,
-	},
-	nextText: {
-		type: String,
-		default: undefined,
-	},
-	previousText: {
-		type: String,
-		default: undefined,
-	},
-});
-
-const emit = defineEmits<{
-	pagechange: [page: number, event: Event];
-}>();
-
+	pager?: boolean;
+	reverseButtons?: boolean;
+	nextText?: string;
+	previousText?: string;
+};
 const {
 	totalItems,
 	itemsPerPage,
 	currentPage,
-	queryParam,
+	queryParam = 'page',
 	preventUrlChange,
 	pager,
 	reverseButtons,
 	nextText,
 	previousText,
-} = toRefs(props);
+} = defineProps<Props>();
+
+const emit = defineEmits<{
+	pagechange: [page: number, event: Event];
+}>();
 
 const route = useRoute();
 
 const MaxPagesShown = 5;
 
-const hasPrevious = toRef(() => currentPage.value > 1);
-const hasNext = toRef(() => currentPage.value < totalPages.value);
-const prevPage = toRef(() => (hasPrevious.value ? currentPage.value - 1 : undefined));
-const nextPage = toRef(() => (hasNext.value ? currentPage.value + 1 : undefined));
+const hasPrevious = toRef(() => currentPage > 1);
+const hasNext = toRef(() => currentPage < totalPages.value);
+const prevPage = toRef(() => (hasPrevious.value ? currentPage - 1 : undefined));
+const nextPage = toRef(() => (hasNext.value ? currentPage + 1 : undefined));
 
 const totalPages = computed(() => {
-	const totalPages = Math.ceil(totalItems.value / itemsPerPage.value);
+	const totalPages = Math.ceil(totalItems / itemsPerPage);
 	return Math.max(totalPages || 0, 1);
 });
 
@@ -107,7 +81,7 @@ const nextChunkPage = computed(() => {
 });
 
 function getEdgePages() {
-	const startPage = (Math.ceil(currentPage.value / MaxPagesShown) - 1) * MaxPagesShown + 1;
+	const startPage = (Math.ceil(currentPage / MaxPagesShown) - 1) * MaxPagesShown + 1;
 
 	// Adjust last page if limit is exceeded
 	const endPage = Math.min(startPage + MaxPagesShown - 1, totalPages.value);
@@ -125,12 +99,12 @@ function getPageLocation(page: number): RouteLocationRaw {
 
 function getQuery(page: number) {
 	return Object.assign({}, route.query, {
-		[queryParam.value || 'page']: page,
+		[queryParam || 'page']: page,
 	});
 }
 
 function onPageClick(event: Event, page: number) {
-	if (preventUrlChange.value) {
+	if (preventUrlChange) {
 		event.preventDefault();
 	}
 

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { PropType, ref, toRefs, watch } from 'vue';
+import { ref, watch } from 'vue';
 
 import { Api } from '../../../_common/api/api.service';
 import AppExpand from '../../../_common/expand/AppExpand.vue';
@@ -26,18 +26,12 @@ import { OrderModel } from '../../../_common/order/order.model';
 import { useCommonStore } from '../../../_common/store/common-store';
 import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
 
-const props = defineProps({
-	cards: {
-		type: Array as PropType<any[]>,
-		required: true,
-	},
-	order: {
-		type: Object as PropType<OrderModel>,
-		required: true,
-	},
-});
+type Props = {
+	cards: any[];
+	order: OrderModel;
+};
+const { cards, order } = defineProps<Props>();
 
-const { cards, order } = toRefs(props);
 const { user } = useCommonStore();
 
 const stripeError = ref<string | null>(null);
@@ -93,8 +87,8 @@ const form: FormController<FormModel> = createForm({
 	onInit() {
 		form.formModel.country = 'us';
 		form.formModel.selectedCard = 0;
-		if (cards.value && cards.value.length) {
-			form.formModel.selectedCard = cards.value[0].id;
+		if (cards && cards.length) {
+			form.formModel.selectedCard = cards[0].id;
 		}
 
 		form.formModel.save_card = true;
@@ -146,7 +140,7 @@ const form: FormController<FormModel> = createForm({
 			const data = {
 				save_card: false,
 				token: response.id,
-				amount: order.value.amount / 100,
+				amount: order.amount / 100,
 
 				fullname: form.formModel.fullname,
 				country: form.formModel.country,
@@ -159,11 +153,11 @@ const form: FormController<FormModel> = createForm({
 				data.save_card = form.formModel.save_card;
 			}
 
-			return Api.sendRequest('/web/checkout/charge/' + order.value.hash, data);
+			return Api.sendRequest('/web/checkout/charge/' + order.hash, data);
 		} else {
 			// Existing/saved card
 			const data = { payment_source: form.formModel.selectedCard };
-			return Api.sendRequest('/web/checkout/charge/' + order.value.hash, data);
+			return Api.sendRequest('/web/checkout/charge/' + order.hash, data);
 		}
 	},
 	onSubmitSuccess(response) {
@@ -202,7 +196,7 @@ function selectCard(card?: any) {
 async function _getTax() {
 	let address: any = {};
 	if (form.formModel.selectedCard !== 0) {
-		const card: any = cards.value.find(i => i.id === form.formModel.selectedCard);
+		const card: any = cards.find((i: any) => i.id === form.formModel.selectedCard);
 		if (!card) {
 			return;
 		}
@@ -217,7 +211,7 @@ async function _getTax() {
 	}
 
 	const data = {
-		amount: order.value.amount,
+		amount: order.amount,
 		country: address.country,
 		region: address.region,
 	};

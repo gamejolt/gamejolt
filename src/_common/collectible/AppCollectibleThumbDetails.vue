@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, CSSProperties, PropType, toRefs } from 'vue';
+import { computed, CSSProperties } from 'vue';
 
 import { styleBorderRadiusBase, styleFlexCenter, styleWhen } from '../../_styles/mixins';
 import { kBorderRadiusBase, kFontSizeLarge, kFontSizeSmall } from '../../_styles/variables';
@@ -18,31 +18,24 @@ import { $gettext } from '../translate/translate.service';
 import { AcquisitionMethod } from './acquisition.model';
 import { CollectibleModel, CollectibleType, getCollectibleResourceId } from './collectible.model';
 
-const props = defineProps({
-	collectible: {
-		type: Object as PropType<CollectibleModel>,
-		required: true,
-	},
-	feed: {
-		type: Object as PropType<JoltydexFeed>,
-		required: true,
-	},
-});
+type Props = {
+	collectible: CollectibleModel;
+	feed: JoltydexFeed;
+};
+const { collectible, feed } = defineProps<Props>();
 
-const { collectible, feed } = toRefs(props);
-
-const maybePacks = computed(() => feed.value.getAcquisitionPacks(collectible.value.acquisition));
+const maybePacks = computed(() => feed.getAcquisitionPacks(collectible.acquisition));
 
 const stickerMasteryInfo = computed(() => {
-	if (typeof collectible.value.sticker_mastery !== 'number') {
+	if (typeof collectible.sticker_mastery !== 'number') {
 		return undefined;
 	}
 
-	if (collectible.value.sticker_mastery === 0) {
+	if (collectible.sticker_mastery === 0) {
 		return $gettext(`You haven't used this sticker yet. Use it to gain mastery!`);
 	}
 
-	if (collectible.value.sticker_mastery !== 100) {
+	if (collectible.sticker_mastery !== 100) {
 		return $gettext(
 			`Use this sticker to gain mastery. Once you master it, you'll be able to use it for emojis and reactions!`
 		);
@@ -52,12 +45,12 @@ const stickerMasteryInfo = computed(() => {
 });
 
 const collectibleResourceAcquisition = computed(() => {
-	const productType = collectible.value.type;
+	const productType = collectible.type;
 	if (!productType || productType === CollectibleType.Sticker) {
 		return null;
 	}
 	// Ignore if we have no shop purchase acquisitions.
-	if (collectible.value.acquisition.every(i => i.method !== AcquisitionMethod.ShopPurchase)) {
+	if (collectible.acquisition.every(i => i.method !== AcquisitionMethod.ShopPurchase)) {
 		return null;
 	}
 
@@ -72,7 +65,7 @@ const collectibleResourceAcquisition = computed(() => {
 	}
 	return {
 		resource,
-		resourceId: getCollectibleResourceId(collectible.value),
+		resourceId: getCollectibleResourceId(collectible),
 	};
 });
 

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRefs, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 import { Api } from '../../api/api.service';
 import AppButton from '../../button/AppButton.vue';
@@ -12,19 +12,11 @@ import AppTrophyCard from '../AppTrophyCard.vue';
 
 const PAGE_SIZE = 12;
 
-const props = defineProps({
-	url: {
-		type: String,
-		required: true,
-	},
-	initialTrophies: {
-		type: Array as PropType<UserBaseTrophyModel[]>,
-		required: false,
-		default: () => [],
-	},
-});
-
-const { url, initialTrophies } = toRefs(props);
+type Props = {
+	url: string;
+	initialTrophies?: UserBaseTrophyModel[];
+};
+const { url, initialTrophies = [] } = defineProps<Props>();
 
 const trophies = ref<UserBaseTrophyModel[]>([]);
 const isLoading = ref(false);
@@ -43,7 +35,7 @@ const placeholderCount = computed(() => {
 const shouldShowLoadMore = computed(() => !reachedEnd.value);
 
 async function loadNext() {
-	let requestUrl = url.value;
+	let requestUrl = url;
 	if (trophies.value.length > 0) {
 		const lastTrophy = trophies.value[trophies.value.length - 1];
 		requestUrl += `?scroll=${lastTrophy.logged_on}`;
@@ -73,7 +65,7 @@ async function onClickLoadMore() {
 }
 
 watch(
-	initialTrophies,
+	() => initialTrophies,
 	newTrophies => {
 		// If the initial trophies changed, it means that the route was bootstrapped. Gotta clear
 		// everything out again.

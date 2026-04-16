@@ -1,25 +1,18 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRefs } from 'vue';
+import { computed, ref } from 'vue';
 
 import { ComponentProps } from '../../../../component-helpers';
 import AppScrollInview, { ScrollInviewConfig } from '../../../../scroll/inview/AppScrollInview.vue';
 import { EmojiModel } from '../../../emoji.model';
 
-const props = defineProps({
-	emoji: {
-		type: Object as PropType<EmojiModel>,
-		required: true,
-	},
+type Props = {
+	emoji: EmojiModel;
 	/**
 	 * If provided, the emoji will only be rendered when it is inview.
 	 */
-	inviewConfig: {
-		type: Object as PropType<ScrollInviewConfig>,
-		default: undefined,
-	},
-});
-
-const { emoji, inviewConfig } = toRefs(props);
+	inviewConfig?: ScrollInviewConfig;
+};
+const { emoji, inviewConfig } = defineProps<Props>();
 
 const emit = defineEmits<{
 	select: [emoji: EmojiModel];
@@ -28,19 +21,19 @@ const emit = defineEmits<{
 const isHydrated = ref(import.meta.env.SSR);
 
 const rootComponentProps = computed(() => {
-	if (!inviewConfig?.value) {
+	if (!inviewConfig) {
 		return {};
 	}
 
 	return {
-		config: inviewConfig.value,
+		config: inviewConfig,
 		onInview,
 		onOutview,
 	} as ComponentProps<typeof AppScrollInview>;
 });
 
 function onClickEmoji() {
-	emit('select', emoji.value);
+	emit('select', emoji);
 }
 
 function onInview() {

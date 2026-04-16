@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, toRefs } from 'vue';
+import { computed } from 'vue';
 
 import { Environment } from '../environment/environment.service';
 import { Navigate } from '../navigate/navigate.service';
@@ -11,16 +11,12 @@ import AppLinkHelpDocs from './AppLinkHelpDocs.vue';
  *
  * Use {@link AppLinkHelpDocs} when going directly to a category/page.
  */
-const props = defineProps({
-	page: {
-		type: String,
-		required: true,
-	},
-});
+type Props = {
+	page: string;
+};
+const { page } = defineProps<Props>();
 
-const { page } = toRefs(props);
-
-const url = computed(() => Environment.helpBaseUrl + '/' + page.value);
+const url = computed(() => Environment.helpBaseUrl + '/' + page);
 
 function onClick(e: Event) {
 	Navigate.newWindow(url.value);

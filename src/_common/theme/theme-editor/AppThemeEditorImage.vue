@@ -2,16 +2,11 @@
 import { $gettext } from '../../translate/translate.service';
 import FormThemeEditorImage from './FormThemeEditorImage.vue';
 
-defineProps({
-	type: {
-		type: String,
-		required: true,
-	},
-	parentId: {
-		type: Number,
-		required: true,
-	},
-});
+type Props = {
+	type: string;
+	parentId: number;
+};
+const { type, parentId } = defineProps<Props>();
 
 const modelValue = defineModel<any>({ required: true });
 

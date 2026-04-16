@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-
 import AppBackgroundFade from '../../../../../_common/background/AppBackgroundFade.vue';
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import AppImgResponsive from '../../../../../_common/img/AppImgResponsive.vue';
@@ -19,12 +17,10 @@ import {
 } from '../../../../../_styles/mixins';
 import { kBorderWidthBase } from '../../../../../_styles/variables';
 
-defineProps({
-	user: {
-		type: Object as PropType<UserModel>,
-		required: true,
-	},
-});
+type Props = {
+	user: UserModel;
+};
+const { user } = defineProps<Props>();
 
 const { hoverBinding, hovered } = useOnHover();
 </script>

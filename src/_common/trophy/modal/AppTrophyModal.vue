@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, onMounted, PropType, ref, toRefs } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { RouterLink } from 'vue-router';
 
 import { Api } from '../../api/api.service';
@@ -26,26 +26,22 @@ import AppUserAvatarImg from '../../user/user-avatar/AppUserAvatarImg.vue';
 import AppUserAvatarList from '../../user/user-avatar/AppUserAvatarList.vue';
 import AppTrophyThumbnail from '../thumbnail/AppTrophyThumbnail.vue';
 
-const props = defineProps({
-	userTrophy: {
-		type: Object as PropType<UserBaseTrophyModel>,
-		required: true,
-	},
-});
-
-const { userTrophy } = toRefs(props);
+type Props = {
+	userTrophy: UserBaseTrophyModel;
+};
+const { userTrophy } = defineProps<Props>();
 const { user } = useCommonStore();
 const modal = useModal()!;
 
 const completionPercentage = ref<number | null>(null);
 const friends = ref<UserModel[]>([]);
 
-const trophy = computed(() => userTrophy.value.trophy!);
+const trophy = computed(() => userTrophy.trophy!);
 
 const bgClass = computed(() => '-trophy-difficulty-' + trophy.value.difficulty);
 
 const canReceiveExp = computed(() =>
-	!userTrophy.value.trophy ? false : !userTrophy.value.trophy.is_owner
+	!userTrophy.trophy ? false : !userTrophy.trophy.is_owner
 );
 
 const completionPercentageForDisplay = computed(() => {
@@ -63,15 +59,15 @@ const completionPercentageForDisplay = computed(() => {
 const shouldShowFriends = computed(() => Boolean(friends.value && friends.value.length > 0));
 
 const game = computed(() =>
-	userTrophy.value instanceof UserGameTrophyModel && userTrophy.value.game
-		? userTrophy.value.game
+	userTrophy instanceof UserGameTrophyModel && userTrophy.game
+		? userTrophy.game
 		: undefined
 );
 
 const isGame = computed(() => !!game.value);
 
 const loggedInUserUnlocked = computed(() =>
-	Boolean(user.value && userTrophy.value.user_id === user.value.id)
+	Boolean(user.value && userTrophy.user_id === user.value.id)
 );
 
 const artist = computed(() =>
@@ -87,8 +83,8 @@ onMounted(() => {
 	if (user.value) {
 		populateFriends();
 
-		if (userTrophy.value.user_id === user.value.id && !userTrophy.value.viewed_on) {
-			$viewUserBaseTrophyModel(userTrophy.value);
+		if (userTrophy.user_id === user.value.id && !userTrophy.viewed_on) {
+			$viewUserBaseTrophyModel(userTrophy);
 		}
 	}
 });

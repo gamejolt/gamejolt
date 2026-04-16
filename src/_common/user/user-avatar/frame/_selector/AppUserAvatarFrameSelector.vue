@@ -1,29 +1,26 @@
 <script lang="ts" setup>
-import { onUnmounted, PropType, ref, toRefs } from 'vue';
+import { onUnmounted, ref, toRef } from 'vue';
 
 import { useForm } from '../../../../form-vue/AppForm.vue';
 import {
 	createFormControl,
 	FormControlEmits,
-	defineFormControlProps,
 } from '../../../../form-vue/AppFormControl.vue';
+import { FormValidator } from '../../../../form-vue/validators';
 import { useCommonStore } from '../../../../store/common-store';
 import { kThemeDark } from '../../../../theme/variables';
 import AppUserAvatarImg from '../../AppUserAvatarImg.vue';
 import { UserAvatarFrameModel } from '../frame.model';
 import AppUserAvatarFrameTile from './AppUserAvatarFrameTile.vue';
 
-const props = defineProps({
-	frames: {
-		type: Array as PropType<UserAvatarFrameModel[]>,
-		required: true,
-	},
-	...defineFormControlProps(),
-});
+type Props = {
+	frames: UserAvatarFrameModel[];
+	disabled?: boolean;
+	validators?: FormValidator[];
+};
+const { validators = [] } = defineProps<Props>();
 
 const emit = defineEmits<FormControlEmits>();
-
-const { frames, validators } = toRefs(props);
 
 const { user } = useCommonStore();
 
@@ -33,7 +30,7 @@ const { applyValue } = createFormControl<number>({
 	initialValue: user.value?.avatar_frame?.id || 0,
 	alwaysOptional: true,
 	onChange: val => emit('changed', val),
-	validators,
+	validators: toRef(() => validators),
 });
 
 const expiryInfoKey = ref(-1);

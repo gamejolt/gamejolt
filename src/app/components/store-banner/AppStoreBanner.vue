@@ -1,18 +1,16 @@
 <script lang="ts" setup>
-import { computed, PropType } from 'vue';
+import { computed } from 'vue';
 
 import { trackBannerClick } from '../../../_common/analytics/analytics.service';
 import AppButton from '../../../_common/button/AppButton.vue';
 import { StoreBannerModel } from './store-banner-model';
 
-const props = defineProps({
-	banner: {
-		type: Object as PropType<StoreBannerModel>,
-		required: true,
-	},
-});
+type Props = {
+	banner: StoreBannerModel;
+};
+const { banner } = defineProps<Props>();
 
-const backgroundImage = computed(() => `url('${props.banner.banner_media?.mediaserver_url}')`);
+const backgroundImage = computed(() => `url('${banner.banner_media?.mediaserver_url}')`);
 </script>
 
 <template>

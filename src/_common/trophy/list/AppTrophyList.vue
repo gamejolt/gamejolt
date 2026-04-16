@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
+import { computed } from 'vue';
 
 import { formatNumber } from '../../filters/number';
 import { GameTrophyModel } from '../../game/trophy/trophy.model';
@@ -12,20 +12,13 @@ import {
 } from '../../user/trophy/game-trophy.model';
 import AppTrophyThumbnail from '../thumbnail/AppTrophyThumbnail.vue';
 
-const props = defineProps({
-	trophies: {
-		type: Array as PropType<GameTrophyModel[]>,
-		required: true,
-	},
-	achieved: {
-		type: Array as PropType<UserGameTrophyModel[]>,
-		required: true,
-	},
-});
+type Props = {
+	trophies: GameTrophyModel[];
+	achieved: UserGameTrophyModel[];
+};
+const { achieved } = defineProps<Props>();
 
-const { achieved } = toRefs(props);
-
-const achievedIndexed = computed(() => indexAchievedGameTrophies(achieved.value));
+const achievedIndexed = computed(() => indexAchievedGameTrophies(achieved));
 </script>
 
 <template>

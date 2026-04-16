@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType } from 'vue';
+import { computed } from 'vue';
 
 import AppCard from '../../../../_common/card/AppCard.vue';
 import { showSuccessGrowl } from '../../../../_common/growls/growls.service';
@@ -13,22 +13,18 @@ import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import AppUserAddressDetails from '../address/AppUserAddressDetails.vue';
 
-const props = defineProps({
-	paymentSource: {
-		type: Object as PropType<PaymentSourceModel>,
-		required: true,
-	},
-	showRemove: {
-		type: Boolean,
-	},
-});
+type Props = {
+	paymentSource: PaymentSourceModel;
+	showRemove?: boolean;
+};
+const { paymentSource, showRemove } = defineProps<Props>();
 
 const emit = defineEmits<{
 	remove: [];
 }>();
 
 const expires = computed(() => {
-	return props.paymentSource.exp_month + '/' + props.paymentSource.exp_year;
+	return paymentSource.exp_month + '/' + paymentSource.exp_year;
 });
 
 async function remove() {
@@ -37,7 +33,7 @@ async function remove() {
 		return;
 	}
 
-	await $removePaymentSource(props.paymentSource);
+	await $removePaymentSource(paymentSource);
 
 	showSuccessGrowl(
 		$gettext(`Your card has successfully been removed.`),

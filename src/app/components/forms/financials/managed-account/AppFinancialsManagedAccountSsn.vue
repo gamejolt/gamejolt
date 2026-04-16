@@ -6,19 +6,12 @@ import { validatePattern } from '../../../../../_common/form-vue/validators';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { useFormManagedAccount } from './FormFinancialsManagedAccount.vue';
 
-defineProps({
-	namePrefix: {
-		type: String,
-		required: true,
-	},
-	countryCode: {
-		type: String,
-		required: true,
-	},
-	isForceRequired: {
-		type: Boolean,
-	},
-});
+type Props = {
+	namePrefix: string;
+	countryCode: string;
+	isForceRequired?: boolean;
+};
+defineProps<Props>();
 
 const { requiresField, getStripeField } = useFormManagedAccount()!;
 </script>

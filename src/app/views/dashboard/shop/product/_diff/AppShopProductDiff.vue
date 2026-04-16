@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, CSSProperties, PropType, ref, watch } from 'vue';
+import { computed, CSSProperties, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { Api } from '../../../../../../_common/api/api.service';
@@ -30,12 +30,10 @@ import AppShopProductDiffImg from './AppShopProductDiffImg.vue';
 import AppShopProductDiffMeta from './AppShopProductDiffMeta.vue';
 import AppShopProductDiffState from './AppShopProductDiffState.vue';
 
-const props = defineProps({
-	data: {
-		type: Object as PropType<ShopProductBaseForm>,
-		required: true,
-	},
-});
+type Props = {
+	data: ShopProductBaseForm;
+};
+const { data } = defineProps<Props>();
 
 type Section = 'before' | 'after';
 
@@ -51,7 +49,6 @@ const {
 	removeChangeRequest,
 } = useShopDashStore()!;
 
-// eslint-disable-next-line vue/no-setup-props-destructure
 const {
 	form,
 	resource,
@@ -62,7 +59,7 @@ const {
 	diffData,
 	diffKeys,
 	changeRequest,
-} = props.data;
+} = data;
 
 const currentSection = ref<Section>(diffData.value.hasBefore ? 'before' : 'after');
 

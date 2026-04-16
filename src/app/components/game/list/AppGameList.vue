@@ -1,19 +1,12 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-
 import { GameModel } from '../../../../_common/game/game.model';
 import AppGameListItem from './AppGameListItem.vue';
 
-defineProps({
-	games: {
-		type: Array as PropType<GameModel[]>,
-		required: true,
-	},
-	eventLabel: {
-		type: String,
-		default: undefined,
-	},
-});
+type Props = {
+	games: GameModel[];
+	eventLabel?: string;
+};
+defineProps<Props>();
 </script>
 
 <template>

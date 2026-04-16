@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRefs } from 'vue';
+import { computed, ref } from 'vue';
 
 import { CommunityChannelModel } from '../../../../../_common/community/channel/channel.model';
 import { CommunityModel } from '../../../../../_common/community/community.model';
@@ -12,22 +12,16 @@ import AppFormsPillSelectorItem from '../_item/AppFormsPillSelectorItem.vue';
 import AppFormsPillSelector from '../AppFormsPillSelector.vue';
 import AppScrollHelper from '../AppScrollHelper.vue';
 
-const props = defineProps({
-	communities: {
-		type: Array as PropType<CommunityModel[]>,
-		required: true,
-	},
-	initialCommunity: {
-		type: Object as PropType<CommunityModel | null>,
-		default: null,
-	},
-	noChannel: {
-		type: Boolean,
-		default: false,
-	},
-});
-
-const { communities, initialCommunity, noChannel } = toRefs(props);
+type Props = {
+	communities: CommunityModel[];
+	initialCommunity?: CommunityModel | null;
+	noChannel?: boolean;
+};
+const {
+	communities,
+	initialCommunity = null,
+	noChannel = false,
+} = defineProps<Props>();
 
 const emit = defineEmits<{
 	selectCommunity: [community: CommunityModel];
@@ -40,9 +34,9 @@ const selectedCommunity = ref<CommunityModel | null>(null);
 
 const channels = computed(() => selectedCommunity.value?.postableChannels);
 
-const isInitial = computed(() => selectedCommunity.value === initialCommunity.value);
+const isInitial = computed(() => selectedCommunity.value === initialCommunity);
 
-const shouldShowCommunitySelector = computed(() => !selectedCommunity.value || noChannel.value);
+const shouldShowCommunitySelector = computed(() => !selectedCommunity.value || noChannel);
 
 resetSelections();
 
@@ -58,7 +52,7 @@ function selectCommunity(community: CommunityModel) {
 	selectedCommunity.value = community;
 	emit('selectCommunity', community);
 
-	if (noChannel.value) {
+	if (noChannel) {
 		_closeAndReset();
 	}
 }
@@ -70,12 +64,12 @@ function selectChannel(channel: CommunityChannelModel) {
 }
 
 function resetSelections() {
-	selectedCommunity.value = initialCommunity.value;
+	selectedCommunity.value = initialCommunity;
 }
 
 function _closeAndReset() {
 	Popper.hideAll();
-	selectedCommunity.value = initialCommunity.value;
+	selectedCommunity.value = initialCommunity;
 }
 </script>
 

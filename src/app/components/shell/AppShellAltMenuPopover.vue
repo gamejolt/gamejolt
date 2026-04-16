@@ -16,11 +16,10 @@ import { ClientSystemReportModal } from '../client/safe-exports';
 import AppShellAltMenuDevelopers from './AppShellAltMenuDevelopers.vue';
 import AppShellAltMenuExtra from './AppShellAltMenuExtra.vue';
 
-defineProps({
-	showStore: {
-		type: Boolean,
-	},
-});
+type Props = {
+	showStore?: boolean;
+};
+const { showStore } = defineProps<Props>();
 
 function showSystemReport() {
 	ClientSystemReportModal?.show();

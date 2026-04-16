@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onMounted, PropType, ref, toRef, toRefs } from 'vue';
+import { onMounted, ref, toRef } from 'vue';
 
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
@@ -12,21 +12,17 @@ import { $gettext } from '../../../../_common/translate/translate.service';
 import { UserModel } from '../../../../_common/user/user.model';
 import AppFollowerList from '../../../components/follower/list/AppFollowerList.vue';
 
-const props = defineProps({
-	user: {
-		type: Object as PropType<UserModel>,
-		required: true,
-	},
-});
-
-const { user } = toRefs(props);
+type Props = {
+	user: UserModel;
+};
+const { user } = defineProps<Props>();
 
 const modal = useModal()!;
 
 const isBootstrapped = ref(false);
 const users = ref<UserModel[]>([]);
 
-const loadUrl = toRef(() => `/web/profile/followers/@${user.value.username}`);
+const loadUrl = toRef(() => `/web/profile/followers/@${user.username}`);
 
 onMounted(async () => {
 	try {
@@ -35,7 +31,7 @@ onMounted(async () => {
 	} catch (e) {
 		console.error(
 			'Something went wrong fetching followers for this user',
-			user.value.username,
+			user.username,
 			e
 		);
 	} finally {

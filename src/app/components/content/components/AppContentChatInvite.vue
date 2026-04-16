@@ -22,15 +22,11 @@ import { kFontSizeLarge } from '../../../../_styles/variables';
 import { openChatRoom } from '../../chat/client';
 import { useGridStore } from '../../grid/grid-store';
 
-const props = defineProps({
-	inviteId: {
-		type: Number,
-		required: true,
-	},
-	isEditing: {
-		type: Boolean,
-	},
-});
+type Props = {
+	inviteId: number;
+	isEditing?: boolean;
+};
+const { inviteId } = defineProps<Props>();
 
 const owner = useContentOwnerController();
 
@@ -41,7 +37,7 @@ const isProcessing = ref(false);
 const { user } = useCommonStore();
 const { chatUnsafe: chat } = useGridStore();
 
-owner?.hydrator.useData('chat-invite', props.inviteId.toString(), data => {
+owner?.hydrator.useData('chat-invite', inviteId.toString(), data => {
 	if (data) {
 		invite.value = new ChatInviteModel(data);
 	} else {

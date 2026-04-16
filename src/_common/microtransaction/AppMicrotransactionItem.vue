@@ -1,33 +1,29 @@
 <script lang="ts" setup>
-import { computed, CSSProperties, onMounted, PropType, StyleValue, toRefs } from 'vue';
+import { computed, CSSProperties, onMounted, StyleValue, toRef } from 'vue';
 
 import { styleBorderRadiusBase } from '../../_styles/mixins';
 import { kFontFamilyHeading, kFontSizeLarge, kLineHeightBase } from '../../_styles/variables';
-import { defineDynamicSlotProps, useDynamicSlots } from '../component-helpers';
+import { useDynamicSlots } from '../component-helpers';
 import AppImgResponsive from '../img/AppImgResponsive.vue';
 import { kThemeFg10 } from '../theme/variables';
 import { MicrotransactionProductModel } from './product.model';
 
-const props = defineProps({
-	...defineDynamicSlotProps(['trailing'], false),
-	item: {
-		type: Object as PropType<MicrotransactionProductModel>,
-		default: undefined,
-	},
-	isPlaceholder: {
-		type: Boolean,
-	},
-});
+type DynamicSlotsProp = 'trailing'[] | Record<'trailing', boolean> | boolean;
 
-const { item, isPlaceholder, dynamicSlots } = toRefs(props);
+type Props = {
+	dynamicSlots?: DynamicSlotsProp;
+	item?: MicrotransactionProductModel;
+	isPlaceholder?: boolean;
+};
+const { dynamicSlots = false, item, isPlaceholder } = defineProps<Props>();
 
 onMounted(() => {
-	if (!item?.value && !isPlaceholder.value) {
+	if (!item && !isPlaceholder) {
 		throw Error('AppMicrotransactionItem: item prop is required when not using placeholder');
 	}
 });
 
-const { hasSlot } = useDynamicSlots(dynamicSlots);
+const { hasSlot } = useDynamicSlots(toRef(() => dynamicSlots));
 
 const itemStyles = computed<CSSProperties>(() => {
 	return { display: `flex`, alignItems: `flex-start`, gap: `12px`, padding: `8px 0` };
@@ -42,7 +38,7 @@ const itemLeadingStyles = computed(() => {
 		},
 	];
 
-	if (isPlaceholder.value) {
+	if (isPlaceholder) {
 		result.push(placeholderStyles);
 	}
 
@@ -64,7 +60,7 @@ const itemTitleStyles = computed(() => {
 		},
 	];
 
-	if (isPlaceholder.value) {
+	if (isPlaceholder) {
 		result.push(placeholderStyles, {
 			height: titleFontSize.value * kLineHeightBase + 'px',
 			maxHeight: 0,

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, CSSProperties, PropType, ref, toRefs } from 'vue';
+import { computed, CSSProperties, ref } from 'vue';
 import { RouteLocationRaw, RouterLink, useRoute, useRouter } from 'vue-router';
 
 import { CommunityUserNotificationModel } from '../../../../_common/community/user-notification/user-notification.model';
@@ -26,22 +26,16 @@ import AppPostContent from '../../../components/post/AppPostContent.vue';
 
 const UserFollowLocation = 'postPage' as const;
 
-const props = defineProps({
-	post: {
-		type: Object as PropType<FiresidePostModel>,
-		required: true,
-	},
-	stickerTargetController: {
-		type: Object as PropType<StickerTargetController>,
-		required: true,
-	},
-	communityNotifications: {
-		type: Array as PropType<CommunityUserNotificationModel[]>,
-		default: () => [],
-	},
-});
-
-const { post, communityNotifications } = toRefs(props);
+type Props = {
+	post: FiresidePostModel;
+	stickerTargetController: StickerTargetController;
+	communityNotifications?: CommunityUserNotificationModel[];
+};
+const {
+	post,
+	stickerTargetController: _stickerTargetController,
+	communityNotifications = [],
+} = defineProps<Props>();
 
 const route = useRoute();
 const router = useRouter();
@@ -49,11 +43,11 @@ const { user } = useCommonStore();
 
 const videoStartTime = ref(0);
 
-const lightbox = createLightbox(computed(() => post.value.media));
+const lightbox = createLightbox(computed(() => post.media));
 
-const displayUser = computed(() => post.value.displayUser);
-const video = computed<FiresidePostVideoModel | null>(() => post.value.videos[0] || null);
-const background = computed(() => post.value.background);
+const displayUser = computed(() => post.displayUser);
+const video = computed<FiresidePostVideoModel | null>(() => post.videos[0] || null);
+const background = computed(() => post.background);
 const shouldOverlay = computed(() => !!background.value);
 
 if (typeof route.query.t === 'string') {
@@ -71,12 +65,12 @@ if (typeof route.query.t === 'string') {
 }
 
 function onClickFullscreen(mediaItem: MediaItemModel) {
-	const index = post.value.media.findIndex(i => i.id === mediaItem.id);
+	const index = post.media.findIndex(i => i.id === mediaItem.id);
 	lightbox.show(index !== -1 ? index : null);
 }
 
 function onDismissNotification(notification: CommunityUserNotificationModel) {
-	arrayRemove(communityNotifications.value, i => i.id === notification.id);
+	arrayRemove(communityNotifications, i => i.id === notification.id);
 }
 
 const overlayText: CSSProperties = {

@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-
 import AppButton from '../../button/AppButton.vue';
 import { JoltydexFeed } from '../../joltydex/joltydex-feed';
 import AppModal from '../../modal/AppModal.vue';
@@ -9,16 +7,11 @@ import { $gettext } from '../../translate/translate.service';
 import AppCollectibleThumbDetails from '../AppCollectibleThumbDetails.vue';
 import { CollectibleModel } from '../collectible.model';
 
-defineProps({
-	collectible: {
-		type: Object as PropType<CollectibleModel>,
-		required: true,
-	},
-	feed: {
-		type: Object as PropType<JoltydexFeed>,
-		required: true,
-	},
-});
+type Props = {
+	collectible: CollectibleModel;
+	feed: JoltydexFeed;
+};
+const { collectible, feed } = defineProps<Props>();
 
 const modal = useModal()!;
 </script>

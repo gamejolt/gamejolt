@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRefs } from 'vue';
+import { computed, ref } from 'vue';
 
 import { ContextCapabilities } from '../../../../_common/content/content-context';
 import { ContentDocument } from '../../../../_common/content/content-document';
@@ -26,22 +26,15 @@ type FormModel = {
 	bio: string;
 };
 
-const props = defineProps({
-	user: {
-		type: Object as PropType<UserModel>,
-		required: true,
-	},
-	isSocialRegistration: {
-		type: Boolean,
-		required: true,
-	},
-});
+type Props = {
+	user: UserModel;
+	isSocialRegistration: boolean;
+};
+const { user, isSocialRegistration } = defineProps<Props>();
 
 const emit = defineEmits<{
 	next: [];
 }>();
-
-const { user, isSocialRegistration } = toRefs(props);
 
 const originalUsername = ref('');
 const allowUsernameChange = ref(false);
@@ -60,16 +53,16 @@ const form: FormController<FormModel> = createForm({
 	onInit() {
 		Onboarding.startStep('profile');
 
-		bootstrappedAvatar.value = !!user.value && !!user.value.avatar_media_item;
+		bootstrappedAvatar.value = !!user && !!user.avatar_media_item;
 		if (bootstrappedAvatar.value) {
 			Onboarding.trackEvent('avatar-bootstrap');
 		}
 
-		originalUsername.value = user.value.username;
+		originalUsername.value = user.username;
 		form.formModel.username = originalUsername.value;
 
 		const emptyBio = new ContentDocument('user-bio').toJson();
-		originalBio.value = user.value.bio_content || emptyBio;
+		originalBio.value = user.bio_content || emptyBio;
 		form.formModel.bio = originalBio.value;
 		if (hasBio.value) {
 			Onboarding.trackEvent('bio-bootstrap');
@@ -89,11 +82,11 @@ const form: FormController<FormModel> = createForm({
 			Onboarding.trackEvent(bootstrappedAvatar.value ? 'avatar-accept' : 'avatar-skip');
 		}
 
-		if (isSocialRegistration.value) {
+		if (isSocialRegistration) {
 			const usernameChanged = originalUsername.value !== form.formModel.username;
 			Onboarding.trackEvent(usernameChanged ? 'username-change' : 'username-accept');
-			user.value.username = form.formModel.username;
-			user.value.name = form.formModel.username;
+			user.username = form.formModel.username;
+			user.name = form.formModel.username;
 		}
 
 		const doc = ContentDocument.fromJson(originalBio.value);
@@ -102,9 +95,9 @@ const form: FormController<FormModel> = createForm({
 		} else {
 			Onboarding.trackEvent(hasModifiedBio.value ? 'bio-set' : 'bio-skip');
 		}
-		user.value.bio_content = form.formModel.bio;
+		user.bio_content = form.formModel.bio;
 
-		return $saveUser(user.value);
+		return $saveUser(user);
 	},
 	onSubmitSuccess() {
 		Onboarding.endStep(shouldShowSkip.value);
@@ -112,9 +105,9 @@ const form: FormController<FormModel> = createForm({
 	},
 });
 
-const showUsername = computed(() => isSocialRegistration.value && allowUsernameChange.value);
+const showUsername = computed(() => isSocialRegistration && allowUsernameChange.value);
 const hasModifiedBio = computed(() => originalBio.value !== form.formModel.bio);
-const hasAvatar = computed(() => !!user.value.avatar_media_item);
+const hasAvatar = computed(() => !!user.avatar_media_item);
 
 const hasBio = computed(() => {
 	if (!form.formModel.bio) {

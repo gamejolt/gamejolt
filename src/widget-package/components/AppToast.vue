@@ -3,12 +3,10 @@ import { onMounted } from 'vue';
 
 import AppJolticon from '../../_common/jolticon/AppJolticon.vue';
 
-defineProps({
-	type: {
-		type: String,
-		default: 'info',
-	},
-});
+type Props = {
+	type?: string;
+};
+const { type = 'info' } = defineProps<Props>();
 
 const emit = defineEmits<{
 	dismiss: [];

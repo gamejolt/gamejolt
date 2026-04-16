@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
 import { RouterLink } from 'vue-router';
 
 import AppGameFollowWidget from '../../../../_common/game/follow-widget/AppGameFollowWidget.vue';
@@ -8,15 +7,11 @@ import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/AppMed
 import AppTheme from '../../../../_common/theme/AppTheme.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
 
-defineProps({
-	game: {
-		type: Object as PropType<GameModel>,
-		required: true,
-	},
-	fullBleed: {
-		type: Boolean,
-	},
-});
+type Props = {
+	game: GameModel;
+	fullBleed?: boolean;
+};
+defineProps<Props>();
 </script>
 
 <template>

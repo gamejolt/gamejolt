@@ -1,26 +1,19 @@
 <script lang="ts" setup>
-import { onMounted, onUnmounted, toRefs } from 'vue';
+import { onMounted, onUnmounted } from 'vue';
 
 import { Api } from '../../api/api.service';
 
-const props = defineProps({
-	url: {
-		type: String,
-		required: true,
-	},
-	interval: {
-		type: Number,
-		default: 5_000,
-	},
-});
+type Props = {
+	url: string;
+	interval?: number;
+};
+const { url, interval = 5_000 } = defineProps<Props>();
 
 const emit = defineEmits<{
 	progress: [response: unknown, progress: number, indeterminate: boolean];
 	complete: [response: unknown];
 	error: [response: unknown];
 }>();
-
-const { url, interval } = toRefs(props);
 
 let timeoutHandle: NodeJS.Timer | undefined;
 
@@ -34,14 +27,14 @@ onUnmounted(() => {
 });
 
 async function check() {
-	if (!url.value) {
+	if (!url) {
 		return;
 	}
 
 	let response;
 	let hasError = false;
 	try {
-		response = await Api.sendRequest(url.value, undefined, {
+		response = await Api.sendRequest(url, undefined, {
 			detach: true,
 		});
 	} catch (e) {
@@ -71,7 +64,7 @@ async function check() {
 
 function setPollTimeout() {
 	clearPollTimeout();
-	timeoutHandle = setTimeout(() => check(), interval.value);
+	timeoutHandle = setTimeout(() => check(), interval);
 }
 
 function clearPollTimeout() {

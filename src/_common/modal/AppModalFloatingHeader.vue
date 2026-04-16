@@ -1,12 +1,10 @@
 <script lang="ts" setup>
 import AppScrollAffix from '../scroll/AppScrollAffix.vue';
 
-defineProps({
-	controlsGap: {
-		type: Number,
-		default: undefined,
-	},
-});
+type Props = {
+	controlsGap?: number;
+};
+defineProps<Props>();
 </script>
 
 <template>

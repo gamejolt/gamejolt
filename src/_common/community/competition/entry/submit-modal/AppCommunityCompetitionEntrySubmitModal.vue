@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onMounted, PropType, ref, toRefs } from 'vue';
+import { onMounted, ref } from 'vue';
 
 import { Api } from '../../../../api/api.service';
 import AppButton from '../../../../button/AppButton.vue';
@@ -15,14 +15,10 @@ import { $gettext } from '../../../../translate/translate.service';
 import { CommunityCompetitionModel } from '../../competition.model';
 import { CommunityCompetitionEntryModel } from '../entry.model';
 
-const props = defineProps({
-	competition: {
-		type: Object as PropType<CommunityCompetitionModel>,
-		required: true,
-	},
-});
-
-const { competition } = toRefs(props);
+type Props = {
+	competition: CommunityCompetitionModel;
+};
+const { competition } = defineProps<Props>();
 
 const modal = useModal()!;
 
@@ -39,7 +35,7 @@ async function loadGames() {
 	isLoading.value = true;
 
 	const payload = await Api.sendRequest(
-		`/web/communities/competitions/entries/list-games/${competition.value.id}`
+		`/web/communities/competitions/entries/list-games/${competition.id}`
 	);
 
 	if (payload.games) {
@@ -62,7 +58,7 @@ async function onClickSubmit() {
 
 	try {
 		const payload = await Api.sendRequest(
-			`/web/communities/competitions/entries/submit-game/${competition.value.id}/${selectedGame.value.id}`,
+			`/web/communities/competitions/entries/submit-game/${competition.id}/${selectedGame.value.id}`,
 			{},
 			{
 				noErrorRedirect: true,

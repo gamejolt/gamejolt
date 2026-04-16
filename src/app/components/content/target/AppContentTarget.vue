@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, PropType, toRef, toRefs } from 'vue';
+import { computed, toRef } from 'vue';
 import { RouteLocationRaw } from 'vue-router';
 
 import { ComponentProps } from '../../../../_common/component-helpers';
@@ -11,37 +11,17 @@ export const CONTENT_TARGET_HEIGHT = 30;
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	noImg: {
-		type: Boolean,
-	},
-	to: {
-		type: Object as PropType<RouteLocationRaw>,
-		default: undefined,
-	},
-	leftTo: {
-		type: Object as PropType<RouteLocationRaw>,
-		default: undefined,
-	},
-	rightTo: {
-		type: Object as PropType<RouteLocationRaw>,
-		default: undefined,
-	},
-	hasRemove: {
-		type: Boolean,
-	},
-	hasRight: {
-		type: Boolean,
-	},
-	bleedImg: {
-		type: Boolean,
-	},
-	noHover: {
-		type: Boolean,
-	},
-});
-
-const { to, leftTo, rightTo, hasRemove, hasRight, bleedImg, noHover } = toRefs(props);
+type Props = {
+	noImg?: boolean;
+	to?: RouteLocationRaw;
+	leftTo?: RouteLocationRaw;
+	rightTo?: RouteLocationRaw;
+	hasRemove?: boolean;
+	hasRight?: boolean;
+	bleedImg?: boolean;
+	noHover?: boolean;
+};
+const { to, leftTo, rightTo, hasRemove, hasRight, bleedImg, noHover } = defineProps<Props>();
 
 const emit = defineEmits<{
 	remove: [];
@@ -49,7 +29,7 @@ const emit = defineEmits<{
 }>();
 
 const component = toRef(() => {
-	if (hasRight.value) {
+	if (hasRight) {
 		return AppPillBi;
 	}
 
@@ -58,21 +38,21 @@ const component = toRef(() => {
 
 const componentProps = computed(() => {
 	return {
-		bleedImg: bleedImg?.value,
-		...(hasRight.value
+		bleedImg: bleedImg,
+		...(hasRight
 			? ({
-					leftTo: leftTo?.value,
-					rightTo: rightTo?.value,
-					noHover: noHover.value,
+					leftTo: leftTo,
+					rightTo: rightTo,
+					noHover: noHover,
 			  } satisfies ComponentProps<typeof AppPillBi>)
 			: ({
-					to: to?.value,
+					to: to,
 			  } satisfies ComponentProps<typeof AppPill>)),
 	};
 });
 
 const contentSlot = computed(() => {
-	if (hasRight.value) {
+	if (hasRight) {
 		return 'left';
 	}
 

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, CSSProperties, onMounted, Ref, ref, toRefs } from 'vue';
+import { computed, CSSProperties, onMounted, Ref, ref } from 'vue';
 
 import { Api } from '../../../../_common/api/api.service';
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
@@ -78,14 +78,10 @@ interface Section {
 	sales: InventoryShopProductSaleModel[];
 }
 
-const props = defineProps({
-	userId: {
-		type: Number,
-		default: undefined,
-	},
-});
-
-const { userId } = toRefs(props);
+type Props = {
+	userId?: number;
+};
+const { userId } = defineProps<Props>();
 
 const { isDark } = useThemeStore();
 const { user: authUser, coinBalance, joltbuxBalance } = useCommonStore();
@@ -125,8 +121,8 @@ async function init() {
 
 	let productUrl = `/web/inventory/shop/sales`;
 	const productUrlParams: string[] = [`include_unpurchasable=true`];
-	if (userId?.value) {
-		productUrlParams.push(`userId=${userId.value}`);
+	if (userId) {
+		productUrlParams.push(`userId=${userId}`);
 	}
 	if (productUrlParams.length) {
 		productUrl += `?${productUrlParams.join('&')}`;

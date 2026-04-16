@@ -3,20 +3,18 @@ import './item-content.styl';
 
 import { toRef, useSlots } from 'vue';
 
-defineProps({
-	isActive: {
-		type: Boolean,
-	},
-	isNew: {
-		type: Boolean,
-	},
-	isThread: {
-		type: Boolean,
-	},
-	isLast: {
-		type: Boolean,
-	},
-});
+type Props = {
+	isActive?: boolean;
+	isNew?: boolean;
+	isThread?: boolean;
+	isLast?: boolean;
+};
+const {
+	isActive = false,
+	isNew = false,
+	isThread = false,
+	isLast = false,
+} = defineProps<Props>();
 
 const slots = useSlots();
 

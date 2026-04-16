@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, h, PropType, toRefs } from 'vue';
+import { computed, h } from 'vue';
 
 import { Environment } from '../../../environment/environment.service';
 import AppLinkExternal from '../../../link/AppLinkExternal.vue';
@@ -8,14 +8,11 @@ import { useContentOwnerController } from '../../content-owner';
 import AppContentViewerMention from './AppContentViewerMention.vue';
 import AppContentViewerTag from './AppContentViewerTag.vue';
 
-const props = defineProps({
-	contentData: {
-		type: Object as PropType<ContentObject>,
-		required: true,
-	},
-});
+type Props = {
+	contentData: ContentObject;
+};
+const { contentData } = defineProps<Props>();
 
-const { contentData } = toRefs(props);
 const { contentRules } = useContentOwnerController()!;
 
 const isBold = computed(() => hasMark('strong'));
@@ -27,7 +24,7 @@ const isMention = computed(() => hasMark('mention'));
 const isTag = computed(() => hasMark('tag'));
 
 const text = computed(() => {
-	const textData = contentData.value.text;
+	const textData = contentData.text;
 
 	if (textData && textData?.length > 64 && isLink.value) {
 		if (contentRules.truncateLinks) {
@@ -39,12 +36,12 @@ const text = computed(() => {
 });
 
 function hasMark(mark: string) {
-	return contentData.value.marks && contentData.value.marks.some(m => m.type === mark);
+	return contentData.marks && contentData.marks.some(m => m.type === mark);
 }
 
 function getMarkAttrs(mark: string) {
 	if (hasMark(mark)) {
-		return contentData.value.marks.find(m => m.type === mark)!.attrs;
+		return contentData.marks.find(m => m.type === mark)!.attrs;
 	}
 	return {};
 }

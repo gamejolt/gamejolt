@@ -1,25 +1,15 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-
 import { styleBorderRadiusBase, styleWhen } from '../../_styles/mixins';
 import { kFontSizeSmall } from '../../_styles/variables';
 import AppJolticon, { Jolticon } from '../jolticon/AppJolticon.vue';
 import { kThemeFgMuted, kThemePrimary } from '../theme/variables';
 
-defineProps({
-	icon: {
-		type: String as PropType<Jolticon>,
-		default: undefined,
-	},
-	color: {
-		type: String as PropType<'default' | 'primary'>,
-		default: 'default',
-	},
-	fillColor: {
-		type: String as PropType<'backdrop' | 'offset' | 'bg'>,
-		default: 'backdrop',
-	},
-});
+type Props = {
+	icon?: Jolticon;
+	color?: 'default' | 'primary';
+	fillColor?: 'backdrop' | 'offset' | 'bg';
+};
+const { icon, color = 'default', fillColor = 'backdrop' } = defineProps<Props>();
 </script>
 
 <template>

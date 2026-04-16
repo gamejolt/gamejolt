@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, CSSProperties, PropType, toRefs } from 'vue';
+import { computed, CSSProperties } from 'vue';
 
 import { styleChangeBg } from '../../_styles/mixins';
 import { kThemeFg } from '../theme/variables';
@@ -15,34 +15,19 @@ interface PositionData {
 
 type PositionCorner = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
 
-const props = defineProps({
-	user: {
-		type: [Object, null] as PropType<UserCommonFields | null>,
-		required: true,
-	},
-	position: {
-		type: String as PropType<PositionCorner>,
-		default: 'bottom-right',
-	},
-	hideTick: {
-		type: Boolean,
-	},
-	tickOffset: {
-		type: Number,
-		default: 20,
-	},
-	big: {
-		type: Boolean,
-	},
-	small: {
-		type: Boolean,
-	},
-	tiny: {
-		type: Boolean,
-	},
-});
-
-const { user, position, hideTick, tickOffset, big, small, tiny } = toRefs(props);
+type Props = {
+	user: UserCommonFields | null;
+	position?: PositionCorner;
+	hideTick?: boolean;
+	tickOffset?: number;
+	big?: boolean;
+	small?: boolean;
+	tiny?: boolean;
+};
+const {
+	position = 'bottom-right',
+	tickOffset = 20,
+} = defineProps<Props>();
 
 const floatingTickPositionStyles = computed(() => {
 	const result: CSSProperties = {
@@ -50,7 +35,7 @@ const floatingTickPositionStyles = computed(() => {
 		pointerEvents: `all`,
 	};
 
-	const offset = tickOffset.value;
+	const offset = tickOffset;
 	const inset = 0;
 
 	const data: Record<PositionCorner, PositionData> = {
@@ -80,7 +65,7 @@ const floatingTickPositionStyles = computed(() => {
 		},
 	};
 
-	const { hPos, vPos, translateX, translateY } = data[position.value];
+	const { hPos, vPos, translateX, translateY } = data[position];
 
 	result[hPos] = inset;
 	result[vPos] = inset;

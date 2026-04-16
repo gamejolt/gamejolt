@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, toRef, toRefs } from 'vue';
+import { computed, toRef } from 'vue';
 
 import AppBackgroundSelector from '../../background/AppBackgroundSelector.vue';
 import { BackgroundModel } from '../../background/background.model';
@@ -8,36 +8,29 @@ import { useForm } from '../AppForm.vue';
 import {
 	createFormControl,
 	FormControlEmits,
-	defineFormControlProps,
 } from '../AppFormControl.vue';
 import { useFormGroup } from '../AppFormGroup.vue';
+import { FormValidator } from '../validators';
 
-const props = defineProps({
-	backgrounds: {
-		type: Array as PropType<Array<BackgroundModel>>,
-		required: true,
-	},
-	tileSize: {
-		type: Number,
-		default: 56,
-		validator: val => typeof val === 'number' && val > 0,
-	},
-	hideEmptyTile: {
-		type: Boolean,
-	},
+type Props = {
+	backgrounds: BackgroundModel[];
+	tileSize?: number;
+	hideEmptyTile?: boolean;
 	/** Only shows when [disabled] is `true`. */
-	disabledText: {
-		type: String,
-		default: undefined,
-	},
-	tileGap: {
-		type: Number,
-		default: undefined,
-	},
-	...defineFormControlProps(),
-});
-
-const { backgrounds, disabledText, disabled } = toRefs(props);
+	disabledText?: string;
+	tileGap?: number;
+	disabled?: boolean;
+	validators?: FormValidator[];
+};
+const {
+	backgrounds,
+	tileSize = 56,
+	hideEmptyTile,
+	disabledText,
+	tileGap,
+	disabled,
+	validators = [],
+} = defineProps<Props>();
 
 const form = useForm()!;
 const { name } = useFormGroup()!;
@@ -45,14 +38,14 @@ const { name } = useFormGroup()!;
 const { applyValue } = createFormControl<number | undefined>({
 	initialValue: undefined,
 	onChange: val => emit('changed', val),
-	validators: toRef(props, 'validators'),
+	validators: toRef(() => validators),
 });
 
 const displayDisabledText = computed(() => {
-	if (!disabled.value) {
+	if (!disabled) {
 		return undefined;
 	}
-	return disabledText?.value;
+	return disabledText;
 });
 
 const selectedBackgroundId = computed<number | null>(() => form.formModel[name.value] || null);
@@ -61,7 +54,7 @@ const currentBackground = computed(() => {
 		return undefined;
 	}
 
-	return backgrounds.value.find(i => i.id === selectedBackgroundId.value);
+	return backgrounds.find((i: BackgroundModel) => i.id === selectedBackgroundId.value);
 });
 
 const emit = defineEmits<

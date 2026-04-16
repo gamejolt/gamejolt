@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
+import { computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
@@ -7,12 +7,10 @@ import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { TagsInfo } from '../../tag/tags-info.service';
 import { GameFilteringContainer } from './container';
 
-const props = defineProps({
-	filtering: {
-		type: Object as PropType<GameFilteringContainer>,
-		required: true,
-	},
-});
+type Props = {
+	filtering: GameFilteringContainer;
+};
+const { filtering } = defineProps<Props>();
 
 interface ArrayFilter {
 	type: 'array';
@@ -30,8 +28,6 @@ type Filter = (ArrayFilter | RadioFilter) & {
 	label: string;
 };
 
-const { filtering } = toRefs(props);
-
 const router = useRouter();
 const route = useRoute();
 
@@ -47,7 +43,7 @@ const tag = computed(() => {
 const filters = computed(() => {
 	const filters: Filter[] = [];
 
-	for (const [key, value] of Object.entries(filtering.value.filters)) {
+	for (const [key, value] of Object.entries(filtering.filters)) {
 		if (!value) {
 			continue;
 		}
@@ -82,8 +78,8 @@ const filters = computed(() => {
 function removeFilterOption(filter: string, option: any) {
 	// Analytics.trackEvent('game-filtering', 'remove', filter + '-' + option);
 
-	filtering.value.unsetFilter(filter, option);
-	filtering.value.onChanged();
+	filtering.unsetFilter(filter, option);
+	filtering.onChanged();
 }
 
 function clearTag() {

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { EditorView } from 'prosemirror-view';
-import { computed, onMounted, PropType, toRefs } from 'vue';
+import { computed, onMounted } from 'vue';
 
 import { Api, ApiProgressEvent } from '../../api/api.service';
 import { showErrorGrowl } from '../../growls/growls.service';
@@ -17,21 +17,14 @@ import {
 import { ContentEditorSchema } from '../content-editor/schemas/content-editor-schema';
 import { useContentOwnerController } from '../content-owner';
 
-const props = defineProps({
-	uploadId: {
-		type: String,
-		required: true,
-	},
-	editorView: {
-		type: Object as PropType<EditorView<ContentEditorSchema>>,
-		required: true,
-	},
-});
-
-const { uploadId } = toRefs(props);
+type Props = {
+	uploadId: string;
+	editorView: EditorView<ContentEditorSchema>;
+};
+const { uploadId } = defineProps<Props>();
 
 const owner = useContentOwnerController()!;
-const task = ContentEditorService.UploadTaskCache[uploadId.value]!;
+const task = ContentEditorService.UploadTaskCache[uploadId]!;
 const { file: taskfile, thumbnail, progress, isProcessing, updateProgress } = task;
 
 const placeholderMaxHeight = computed(() => {

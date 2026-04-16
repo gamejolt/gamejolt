@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, onMounted, onUnmounted, PropType, Ref, ref, toRefs, watchEffect } from 'vue';
+import { computed, onMounted, onUnmounted, Ref, ref, watchEffect } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { Api } from '../../../../../_common/api/api.service';
@@ -72,18 +72,11 @@ import AppProfileShopButton from '../../../../views/profile/overview/shop/AppPro
 import { showPurchaseShopProductConfirmModal } from './confirm/modal.service';
 import { showGiftRecipientModal } from './gift-recipient/modal.service';
 
-const props = defineProps({
-	initialProductData: {
-		type: Object as PropType<PurchasableProductData>,
-		required: true,
-	},
-	onItemPurchased: {
-		type: Function as PropType<() => void>,
-		default: undefined,
-	},
-});
-
-const { initialProductData, onItemPurchased } = toRefs(props);
+type Props = {
+	initialProductData: PurchasableProductData;
+	onItemPurchased?: () => void;
+};
+const { initialProductData, onItemPurchased } = defineProps<Props>();
 
 const modal = useModal()!;
 const router = useRouter();
@@ -91,7 +84,7 @@ const { stickerPacks } = useStickerStore();
 const { user: authUser, coinBalance, joltbuxBalance } = useCommonStore();
 
 const sale = ref<InventoryShopProductSaleModel>();
-const partialProductData = ref(getShopProductDisplayData(initialProductData.value));
+const partialProductData = ref(getShopProductDisplayData(initialProductData));
 
 const productData = computed(() => {
 	const data = partialProductData.value;
@@ -379,7 +372,7 @@ async function purchaseProduct(currency: Currency) {
 		balanceRefs,
 		onSuccess() {
 			modal.dismiss();
-			onItemPurchased?.value?.();
+			onItemPurchased?.();
 
 			if (giftTo) {
 				showInfoGrowl($gettext(`Your gift was sent to @${giftTo.username}`));

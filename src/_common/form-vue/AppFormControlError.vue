@@ -3,22 +3,17 @@ import { watch } from 'vue';
 
 import { useFormControlErrors } from './AppFormControlErrors.vue';
 
-const props = defineProps({
-	when: {
-		type: String,
-		required: true,
-	},
-	message: {
-		type: String,
-		required: true,
-	},
-});
+type Props = {
+	when: string;
+	message: string;
+};
+const { when, message } = defineProps<Props>();
 
 const { setOverride } = useFormControlErrors()!;
 
 watch(
-	() => props.message,
-	() => setOverride(props.when, props.message),
+	() => message,
+	() => setOverride(when, message),
 	{ immediate: true }
 );
 </script>

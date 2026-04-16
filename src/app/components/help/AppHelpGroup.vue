@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
 import { RouterLink } from 'vue-router';
 
 import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
@@ -7,16 +6,11 @@ import { routeLandingHelpPage } from '../../views/landing/help/help.route';
 import { HelpCategoryModel } from './category/category.model';
 import { HelpPageModel } from './page/page.model';
 
-defineProps({
-	category: {
-		type: Object as PropType<HelpCategoryModel>,
-		required: true,
-	},
-	pages: {
-		type: Array as PropType<HelpPageModel[]>,
-		required: true,
-	},
-});
+type Props = {
+	category: HelpCategoryModel;
+	pages: HelpPageModel[];
+};
+defineProps<Props>();
 </script>
 
 <template>

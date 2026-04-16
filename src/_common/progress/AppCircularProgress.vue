@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, Ref, ref, toRefs } from 'vue';
+import { computed, Ref, ref } from 'vue';
 
 import {
 	styleAbsoluteFill,
@@ -12,22 +12,12 @@ import { useResizeObserver } from '../../utils/resize-observer';
 import AppAspectRatio from '../aspect-ratio/AppAspectRatio.vue';
 import { kThemeFg10, kThemePrimary, kThemePrimaryFg } from '../theme/variables';
 
-const props = defineProps({
-	percent: {
-		type: Number,
-		default: undefined,
-	},
-	strokeWidth: {
-		type: Number,
-		default: kBorderWidthLg.value * 2,
-	},
-	transitionMs: {
-		type: Number,
-		default: 500,
-	},
-});
-
-const { percent, strokeWidth } = toRefs(props);
+type Props = {
+	percent?: number;
+	strokeWidth?: number;
+	transitionMs?: number;
+};
+const { percent, strokeWidth = kBorderWidthLg.value * 2, transitionMs = 500 } = defineProps<Props>();
 
 const emit = defineEmits<{
 	'after-transition': [];
@@ -40,14 +30,14 @@ const parentSize = ref({ width: 0, height: 0 });
  * NOTE: Formatting was breaking due to a non-null assertion in the template.
  * Using this to avoid that.
  */
-const safePercent = computed(() => percent?.value ?? 0);
+const safePercent = computed(() => percent ?? 0);
 
 const smallestSide = computed(() => Math.min(parentSize.value.width, parentSize.value.height));
 const trackLength = computed(() => 2 * Math.PI * (smallestSide.value / 2));
 const trackLength75 = computed(() => trackLength.value * 0.75);
-const radius = computed(() => smallestSide.value / 2 - strokeWidth.value / 2);
+const radius = computed(() => smallestSide.value / 2 - strokeWidth / 2);
 
-const indeterminate = computed(() => typeof percent?.value !== 'number');
+const indeterminate = computed(() => typeof percent !== 'number');
 
 useResizeObserver({
 	target: root,

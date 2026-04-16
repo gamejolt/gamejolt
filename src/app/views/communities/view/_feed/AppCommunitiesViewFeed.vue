@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, toRef, toRefs } from 'vue';
+import { computed, toRef } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
 
 import { Api } from '../../../../../_common/api/api.service';
@@ -20,21 +20,17 @@ import AppPostAddButton from '../../../../components/post/add-button/AppPostAddB
 import AppBlockedNotice from '../_blocked-notice/AppBlockedNotice.vue';
 import { isVirtualChannel, useCommunityRouteStore } from '../view.store';
 
-const props = defineProps({
-	// It's optional since it may not have loaded into the page yet. In that
-	// case, we show a placeholder and wait.
-	feed: {
-		type: Object as PropType<ActivityFeedView | null>,
-		default: null,
-	},
-});
+// feed is optional since it may not have loaded into the page yet. In that
+// case, we show a placeholder and wait.
+type Props = {
+	feed?: ActivityFeedView | null;
+};
+const { feed = null } = defineProps<Props>();
 
 const emit = defineEmits<{
 	'add-post': [post: FiresidePostModel];
 	'load-new': [];
 }>();
-
-const { feed } = toRefs(props);
 const routeStore = useCommunityRouteStore()!;
 const { user } = useCommonStore();
 const route = useRoute();
@@ -77,7 +73,7 @@ const shouldShowTabs = computed(() => {
 		return false;
 	}
 
-	if (!feed?.value || feed.value.hasItems) {
+	if (!feed || feed.hasItems) {
 		return true;
 	}
 
@@ -116,28 +112,28 @@ function onLoadedNew() {
 
 function onPostUnfeatured(eventItem: EventItemModel, communityInput: CommunityModel) {
 	if (
-		feed?.value &&
+		feed &&
 		channel.value === routeStore.frontpageChannel &&
 		community.value.id === communityInput.id
 	) {
-		feed.value.remove([eventItem]);
+		feed.remove([eventItem]);
 	}
 }
 
 function onPostRejected(eventItem: EventItemModel, communityInput: CommunityModel) {
-	if (feed?.value && community.value.id === communityInput.id) {
-		feed.value.remove([eventItem]);
+	if (feed && community.value.id === communityInput.id) {
+		feed.remove([eventItem]);
 	}
 }
 
 function onPostMovedChannel(eventItem: EventItemModel, movedTo: CommunityChannelModel) {
 	if (
-		feed?.value &&
+		feed &&
 		community.value.id === movedTo.community_id &&
 		!isVirtualChannel(routeStore, channel.value) &&
 		channel.value.title !== movedTo.title
 	) {
-		feed.value.remove([eventItem]);
+		feed.remove([eventItem]);
 	}
 }
 </script>

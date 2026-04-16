@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onMounted, ref, toRefs } from 'vue';
+import { onMounted, ref } from 'vue';
 
 import AppButton from '../../../../button/AppButton.vue';
 import AppModal from '../../../../modal/AppModal.vue';
@@ -7,14 +7,10 @@ import { useModal } from '../../../../modal/modal.service';
 import AppFormContentEditorLink from './AppFormContentEditorLink.vue';
 import { LinkData } from './link-modal.service';
 
-const props = defineProps({
-	selectedText: {
-		type: String,
-		required: true,
-	},
-});
-
-const { selectedText } = toRefs(props);
+type Props = {
+	selectedText: string;
+};
+const { selectedText } = defineProps<Props>();
 const modal = useModal()!;
 
 const linkData = ref<LinkData>({
@@ -24,8 +20,8 @@ const linkData = ref<LinkData>({
 
 onMounted(() => {
 	// Preset the href when the input looks like a url
-	if (isValidUrl(selectedText.value)) {
-		linkData.value.href = selectedText.value;
+	if (isValidUrl(selectedText)) {
+		linkData.value.href = selectedText;
 	}
 });
 

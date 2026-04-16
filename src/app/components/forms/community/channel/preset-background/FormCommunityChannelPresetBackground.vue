@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRefs, watchEffect } from 'vue';
+import { computed, ref, toRef, watchEffect } from 'vue';
 
 import AppButton from '../../../../../../_common/button/AppButton.vue';
 import {
@@ -11,7 +11,6 @@ import {
 } from '../../../../../../_common/community/community.model';
 import AppForm, {
 	createForm,
-	defineFormProps,
 	FormController,
 } from '../../../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../../../_common/form-vue/AppFormButton.vue';
@@ -31,19 +30,17 @@ type FormModel = CommunityModel & {
 	crop?: any;
 };
 
-const props = defineProps({
-	presetType: {
-		type: String as PropType<CommunityPresetChannelType>,
-		required: true,
-	},
-	...defineFormProps<CommunityModel>(true),
-});
+type Props = {
+	presetType: CommunityPresetChannelType;
+	model: CommunityModel;
+};
+const { presetType, model } = defineProps<Props>();
 
 const emit = defineEmits<{
 	submit: [model: CommunityModel];
 }>();
 
-const { model, presetType } = toRefs(props);
+const modelRef = toRef(() => model);
 
 const maxFilesize = ref(0);
 const aspectRatio = ref(0);
@@ -52,15 +49,15 @@ const minHeight = ref(0);
 const maxWidth = ref(0);
 const maxHeight = ref(0);
 
-const background = computed(() => getCommunityChannelBackground(form.formModel, presetType.value));
+const background = computed(() => getCommunityChannelBackground(form.formModel, presetType));
 
 const crop = computed(() => background.value?.getCrop());
 
 const form: FormController<FormModel> = createForm({
-	model,
+	model: modelRef,
 	modelClass: CommunityModel,
 	loadUrl: computed(
-		() => `/web/dash/communities/channels/save-preset-background/${model.value.id}`
+		() => `/web/dash/communities/channels/save-preset-background/${model.id}`
 	),
 	onLoad(payload: any) {
 		maxFilesize.value = payload.maxFilesize;
@@ -76,11 +73,11 @@ const form: FormController<FormModel> = createForm({
 	async onSubmit() {
 		const response = await $saveCommunityPresetChannelBackground(
 			form.formModel,
-			presetType.value
+			presetType
 		);
 
-		if (model.value) {
-			Object.assign(model.value, form.formModel);
+		if (model) {
+			Object.assign(model, form.formModel);
 		}
 
 		return response;
@@ -109,9 +106,9 @@ async function clearBackground() {
 		return;
 	}
 
-	const payload = await $clearCommunityPresetChannelBackground(form.formModel, presetType.value);
+	const payload = await $clearCommunityPresetChannelBackground(form.formModel, presetType);
 
-	model.value?.assign(payload.community);
+	model?.assign(payload.community);
 }
 </script>
 

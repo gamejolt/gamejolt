@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
+import { computed } from 'vue';
 
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
@@ -16,22 +16,18 @@ import { ChatRoomModel, getChatRoomTitle } from '../room';
 import { ChatUser } from '../user';
 import AppChatUserOnlineStatus from '../user-online-status/AppChatUserOnlineStatus.vue';
 
-const props = defineProps({
-	item: {
-		type: Object as PropType<ChatUser | ChatRoomModel>,
-		required: true,
-	},
-});
-
-const { item } = toRefs(props);
+type Props = {
+	item: ChatUser | ChatRoomModel;
+};
+const { item } = defineProps<Props>();
 
 const { chatUnsafe: chat } = useGridStore();
 
 const roomId = computed(() =>
-	item.value instanceof ChatUser ? item.value.room_id : item.value.id
+	item instanceof ChatUser ? item.room_id : item.id
 );
 
-const user = computed(() => (item.value instanceof ChatUser ? item.value : null));
+const user = computed(() => (item instanceof ChatUser ? item : null));
 const isActive = computed(() => chat.value.activeRoomId === roomId.value);
 const hasNotification = computed(() => !!chat.value.notifications.get(roomId.value));
 
@@ -40,14 +36,14 @@ const isOnline = computed(() => {
 		return null;
 	}
 
-	return isUserOnline(chat.value, item.value.id);
+	return isUserOnline(chat.value, item.id);
 });
 
 const title = computed(() =>
-	item.value instanceof ChatUser ? item.value.display_name : getChatRoomTitle(item.value)
+	item instanceof ChatUser ? item.display_name : getChatRoomTitle(item)
 );
 
-const meta = computed(() => (item.value instanceof ChatUser ? `@${item.value.username}` : null));
+const meta = computed(() => (item instanceof ChatUser ? `@${item.username}` : null));
 
 const hoverTitle = computed(() => {
 	const parts = [title.value];
@@ -67,7 +63,7 @@ function onClick(e: Event) {
  * Only for group chats.
  */
 async function leaveRoom() {
-	if (!(item.value instanceof ChatRoomModel)) {
+	if (!(item instanceof ChatRoomModel)) {
 		return;
 	}
 
@@ -79,7 +75,7 @@ async function leaveRoom() {
 		return;
 	}
 
-	leaveGroupRoom(chat.value, item.value);
+	leaveGroupRoom(chat.value, item);
 }
 </script>
 

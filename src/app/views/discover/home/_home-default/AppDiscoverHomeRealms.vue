@@ -1,30 +1,20 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-
 import AppRealmFullCard from '../../../../../_common/realm/AppRealmFullCard.vue';
 import { RealmModel } from '../../../../../_common/realm/realm-model';
 
-defineProps({
-	realms: {
-		type: Array as PropType<RealmModel[]>,
-		required: true,
-	},
-	isLoading: {
-		type: Boolean,
-	},
-	gridColumnsDesktop: {
-		type: Number,
-		default: 4,
-	},
-	gridColumnsSm: {
-		type: Number,
-		default: 3,
-	},
-	gridColumnsXs: {
-		type: Number,
-		default: 2,
-	},
-});
+type Props = {
+	realms: RealmModel[];
+	isLoading?: boolean;
+	gridColumnsDesktop?: number;
+	gridColumnsSm?: number;
+	gridColumnsXs?: number;
+};
+const {
+	realms,
+	gridColumnsDesktop = 4,
+	gridColumnsSm = 3,
+	gridColumnsXs = 2,
+} = defineProps<Props>();
 </script>
 
 <template>

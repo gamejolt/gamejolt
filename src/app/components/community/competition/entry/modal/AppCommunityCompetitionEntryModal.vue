@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, onMounted, PropType, ref, toRef, toRefs } from 'vue';
+import { computed, onMounted, ref, toRef } from 'vue';
 import { RouterLink } from 'vue-router';
 
 import { Api } from '../../../../../../_common/api/api.service';
@@ -24,21 +24,14 @@ import { numberSort } from '../../../../../../utils/array';
 import AppGameBadge from '../../../../game/badge/AppGameBadge.vue';
 import AppCommunityCompetitionVotingWidget from '../../voting/AppCommunityCompetitionVotingWidget.vue';
 
-const props = defineProps({
-	entry: {
-		type: Object as PropType<CommunityCompetitionEntryModel>,
-		default: undefined,
-	},
-	entryId: {
-		type: Number,
-		default: undefined,
-	},
-});
-
-const { entry, entryId } = toRefs(props);
+type Props = {
+	entry?: CommunityCompetitionEntryModel;
+	entryId?: number;
+};
+const { entry, entryId } = defineProps<Props>();
 const modal = useModal()!;
 
-const m_entry = ref<CommunityCompetitionEntryModel | null>(entry?.value || null);
+const m_entry = ref<CommunityCompetitionEntryModel | null>(entry || null);
 const competition = ref<CommunityCompetitionModel | null>(null);
 const votingCategories = ref<CommunityCompetitionVotingCategoryModel[]>([]);
 const userVotes = ref<CommunityCompetitionEntryVoteModel[]>([]);
@@ -73,7 +66,7 @@ const sortedAwards = computed(() =>
 );
 
 onMounted(async () => {
-	const newEntryId = entryId?.value || entry?.value?.id;
+	const newEntryId = entryId || entry?.id;
 	if (!newEntryId) {
 		throw new Error('Entry or entryId has to be provided.');
 	}

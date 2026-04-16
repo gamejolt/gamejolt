@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import { PropType, toRefs } from 'vue';
-
 import { CommunityChannelModel } from '../../../../../_common/community/channel/channel.model';
 import { CommunityModel } from '../../../../../_common/community/community.model';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
@@ -8,22 +6,12 @@ import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import AppFormsPillSelectorCommunities from '../../../forms/pill-selector/communities/AppFormsPillSelectorCommunities.vue';
 import AppContentTarget from '../AppContentTarget.vue';
 
-const props = defineProps({
-	communities: {
-		type: Array as PropType<CommunityModel[]>,
-		required: true,
-	},
-	initialCommunity: {
-		type: Object as PropType<CommunityModel>,
-		default: undefined,
-	},
-	noChannel: {
-		type: Boolean,
-		default: false,
-	},
-});
-
-const { communities, initialCommunity, noChannel } = toRefs(props);
+type Props = {
+	communities: CommunityModel[];
+	initialCommunity?: CommunityModel;
+	noChannel?: boolean;
+};
+const { communities, initialCommunity, noChannel = false } = defineProps<Props>();
 
 const emit = defineEmits<{
 	selectCommunity: [community: CommunityModel];
@@ -37,7 +25,7 @@ function onSelectCommunity(community: CommunityModel) {
 
 	// If channels are disabled, it's enough to select a community, so also emit
 	// the 'select' event.
-	if (noChannel.value) {
+	if (noChannel) {
 		emit('select', community);
 	}
 }

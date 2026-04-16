@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
+import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
 
 import { UserFollowLocation } from '../../../_common/analytics/analytics.service';
@@ -25,43 +25,28 @@ import {
 	PostHeaderTimeStyles,
 } from './post-styles';
 
-const props = defineProps({
-	post: {
-		type: Object as PropType<FiresidePostModel>,
-		required: true,
-	},
-	followLocation: {
-		type: String as PropType<UserFollowLocation>,
-		required: true,
-	},
-	feed: {
-		type: Object as PropType<ActivityFeedView>,
-		default: undefined,
-	},
-	showPinned: {
-		type: Boolean,
-	},
-	dateLink: {
-		type: String as PropType<string>,
-		default: undefined,
-	},
-});
+type Props = {
+	post: FiresidePostModel;
+	followLocation: UserFollowLocation;
+	feed?: ActivityFeedView;
+	showPinned?: boolean;
+	dateLink?: string;
+};
+const { post, followLocation, feed, showPinned, dateLink } = defineProps<Props>();
 
-const { post, feed, showPinned, dateLink } = toRefs(props);
+const user = computed(() => post.displayUser);
+const overlay = computed(() => !!post.background);
 
-const user = computed(() => post.value.displayUser);
-const overlay = computed(() => !!post.value.background);
-
-const game = computed(() => post.value.game);
+const game = computed(() => post.game);
 const gameUrl = computed(() => game.value?.getUrl());
 
 const shouldShowFollow = computed(() => {
 	// Don't show follow for game posts. Only for user posts.
-	if (!feed?.value?.shouldShowFollow || post.value.game) {
+	if (!feed?.shouldShowFollow || post.game) {
 		return false;
 	}
 
-	if (post.value.user.blocked_you) {
+	if (post.user.blocked_you) {
 		return false;
 	}
 

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, CSSProperties, PropType, toRef, toRefs } from 'vue';
+import { computed, CSSProperties, toRef } from 'vue';
 
 import {
 	styleBorderRadiusBase,
@@ -19,33 +19,22 @@ import {
 import { vAppTooltip } from '../../../../tooltip/tooltip-directive';
 import { UserAvatarFrameModel } from '../frame.model';
 
-const props = defineProps({
-	frame: {
-		type: Object as PropType<UserAvatarFrameModel>,
-		default: undefined,
-	},
-	isPlaceholder: {
-		type: Boolean,
-	},
-	isSelected: {
-		type: Boolean,
-	},
+type Props = {
+	frame?: UserAvatarFrameModel;
+	isPlaceholder?: boolean;
+	isSelected?: boolean;
 	/**
 	 * Used as a key to rebuild the expiry info.
 	 */
-	expiryInfoKey: {
-		type: Number,
-		required: true,
-	},
-});
+	expiryInfoKey: number;
+};
+const { frame, isPlaceholder, isSelected } = defineProps<Props>();
 
 const emit = defineEmits<{
 	'select-tile': [id: number];
 }>();
 
-const { frame, isPlaceholder, isSelected } = toRefs(props);
-
-const name = toRef(() => frame?.value?.avatar_frame.name || '');
+const name = toRef(() => frame?.avatar_frame.name || '');
 
 const rootStyles = computed(() => {
 	return {
@@ -54,23 +43,23 @@ const rootStyles = computed(() => {
 		padding: `24px`,
 		transition: `background-color 300ms ${kStrongEaseOut}`,
 		border: `${kBorderWidthLg.px} solid ${kThemeFg10}`,
-		...(isPlaceholder.value
+		...(isPlaceholder
 			? {
 					backgroundColor: kThemeBgSubtle,
 			  }
 			: {
-					cursor: frame?.value?.isExpired ? 'normal' : 'pointer',
-					backgroundColor: isSelected.value ? kThemeBgOffset : `transparent`,
+					cursor: frame?.isExpired ? 'normal' : 'pointer',
+					backgroundColor: isSelected ? kThemeBgOffset : `transparent`,
 			  }),
 	} satisfies CSSProperties;
 });
 
 function onClickFrame() {
-	if (isPlaceholder.value || frame?.value?.isExpired) {
+	if (isPlaceholder || frame?.isExpired) {
 		return;
 	}
 
-	emit('select-tile', frame?.value?.avatar_frame.id || 0);
+	emit('select-tile', frame?.avatar_frame.id || 0);
 }
 </script>
 

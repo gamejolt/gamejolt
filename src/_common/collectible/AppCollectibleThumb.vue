@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, CSSProperties, PropType, toRefs } from 'vue';
+import { computed, CSSProperties } from 'vue';
 
 import {
 	styleBorderRadiusLg,
@@ -26,18 +26,11 @@ import AppCollectibleUnlockedRibbon from './AppCollectibleUnlockedRibbon.vue';
 import { CollectibleModel, CollectibleType } from './collectible.model';
 import { showCollectibleDetailsModal } from './details-modal/modal.service';
 
-const props = defineProps({
-	collectible: {
-		type: Object as PropType<CollectibleModel>,
-		required: true,
-	},
-	feed: {
-		type: Object as PropType<JoltydexFeed>,
-		required: true,
-	},
-});
-
-const { collectible, feed } = toRefs(props);
+type Props = {
+	collectible: CollectibleModel;
+	feed: JoltydexFeed;
+};
+const { collectible, feed } = defineProps<Props>();
 const { hoverBinding, hovered } = useOnHover();
 
 function onClick(e: MouseEvent) {
@@ -45,7 +38,7 @@ function onClick(e: MouseEvent) {
 		return;
 	}
 
-	showCollectibleDetailsModal({ collectible: collectible.value, feed: feed.value });
+	showCollectibleDetailsModal({ collectible, feed });
 	e.stopImmediatePropagation();
 }
 
@@ -53,7 +46,7 @@ const acquisitionStates = computed(() => {
 	let hasSale = false;
 	let hasChargeReward = false;
 
-	for (const i of collectible.value.acquisition) {
+	for (const i of collectible.acquisition) {
 		// Anything with a sale id is sellable.
 		if (i.sale_id) {
 			hasSale = true;

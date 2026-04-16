@@ -13,6 +13,7 @@ const Slots = ['avatar', 'supertitle', 'title'] as const;
 </script>
 
 <script lang="ts" setup>
+// TODO defineProps-migration: uses spread of defineDynamicSlotProps (runtime helper)
 const props = defineProps({
 	avatarHeight: {
 		type: Number,

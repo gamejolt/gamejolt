@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { nextTick, PropType, ref, toRaw, toRefs, watch } from 'vue';
+import { nextTick, ref, toRaw, watch } from 'vue';
 
 import { run } from '../../../utils/utils';
 import { Api } from '../../api/api.service';
@@ -18,30 +18,17 @@ interface StyleGroup {
 	}[];
 }
 
-const props = defineProps({
-	windowId: {
-		type: String,
-		required: true,
-	},
-	template: {
-		type: Number,
-		required: true,
-	},
-	theme: {
-		type: Object as PropType<any>,
-		required: true,
-	},
-	resourceId: {
-		type: Number,
-		required: true,
-	},
-});
+type Props = {
+	windowId: string;
+	template: number;
+	theme: any;
+	resourceId: number;
+};
+const { windowId, template, theme } = defineProps<Props>();
 
 const emit = defineEmits<{
 	change: [theme: any];
 }>();
-
-const { windowId, template, theme, resourceId } = toRefs(props);
 
 const isLoaded = ref(false);
 const selectedGroup = ref<StyleGroup>(null as any);
@@ -49,7 +36,7 @@ const templateObj = ref<SiteTemplateModel>({} as any);
 const definition = ref<any>({});
 
 run(async () => {
-	const response = await Api.sendRequest('/sites-io/get-template/' + template.value, undefined, {
+	const response = await Api.sendRequest('/sites-io/get-template/' + template, undefined, {
 		detach: true,
 	});
 
@@ -64,7 +51,7 @@ run(async () => {
 });
 
 watch(
-	() => theme.value,
+	() => theme,
 	() => {
 		if (!isLoaded.value) {
 			return;
@@ -79,25 +66,26 @@ async function refresh(initial = false) {
 	// Gotta wait for the value to be saved.
 	await nextTick();
 
-	const iframe = document.getElementById(windowId.value) as HTMLIFrameElement | undefined;
+	const iframe = document.getElementById(windowId) as HTMLIFrameElement | undefined;
 	if (iframe && iframe.contentWindow) {
 		const msg = {
 			type: 'theme-update',
 			template: toRaw(templateObj.value),
 			definition: toRaw(definition.value),
-			theme: toRaw(theme.value),
+			theme: toRaw(theme),
 		};
 
 		iframe.contentWindow.postMessage(msg, '*');
 	}
 
 	if (!initial) {
-		emit('change', theme.value);
+		emit('change', theme);
 	}
 }
 
 function updateField(field: string, content?: string) {
-	theme.value[field] = content;
+	// eslint-disable-next-line vue/no-mutating-props
+	theme[field] = content;
 	refresh();
 }
 </script>

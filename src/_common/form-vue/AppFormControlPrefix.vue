@@ -5,12 +5,10 @@ import { useResizeObserver } from '../../utils/resize-observer';
 import { Ruler } from '../ruler/ruler-service';
 import { provideFormControlHooks } from './form-control-hooks';
 
-defineProps({
-	prefix: {
-		type: String,
-		required: true,
-	},
-});
+type Props = {
+	prefix: string;
+};
+const { prefix } = defineProps<Props>();
 
 const prefixElement = useTemplateRef('prefixElement');
 let inputElem: Readonly<Ref<HTMLInputElement | null>>;

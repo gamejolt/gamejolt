@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
+import { computed } from 'vue';
 
 import AppButton from '../../../_common/button/AppButton.vue';
 import AppContentViewer from '../../../_common/content/content-viewer/AppContentViewer.vue';
@@ -19,17 +19,13 @@ import { getVideoPlayerFromSources } from '../../../_common/video/player/control
 import AppPollVoting from '../poll/AppPollVoting.vue';
 import AppPostControls from '../post/controls/AppPostControls.vue';
 
-const props = defineProps({
-	posts: {
-		type: Array as PropType<FiresidePostModel[]>,
-		required: true,
-	},
-});
-
-const { posts } = toRefs(props);
+type Props = {
+	posts: FiresidePostModel[];
+};
+const { posts } = defineProps<Props>();
 const modal = useModal()!;
 
-const post = computed(() => posts.value[0]);
+const post = computed(() => posts[0]);
 const stickerTargetController = createStickerTargetController(post.value, {
 	canReceiveCharge: () => post.value.can_receive_charged_stickers,
 });

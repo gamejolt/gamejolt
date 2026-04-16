@@ -8,7 +8,7 @@ import { MediaItemModel } from '../../../media-item/media-item-model';
 import { vAppTooltip } from '../../../tooltip/tooltip-directive';
 import AppTranslate from '../../../translate/AppTranslate.vue';
 import { $gettext } from '../../../translate/translate.service';
-import AppForm, { createForm, defineFormProps, FormController } from '../../AppForm.vue';
+import AppForm, { createForm, FormController } from '../../AppForm.vue';
 import AppFormControlErrors from '../../AppFormControlErrors.vue';
 import AppFormGroup from '../../AppFormGroup.vue';
 import { validateFilesize, validateImageMaxDimensions } from '../../validators';
@@ -21,20 +21,13 @@ type FormModel = {
 	_progress: ApiProgressEvent | null;
 };
 
-const props = defineProps({
-	...defineFormProps<FormModel>(),
-	type: {
-		type: String,
-		required: true,
-	},
-	parentId: {
-		type: Number,
-		required: true,
-	},
-	disabled: {
-		type: Boolean,
-	},
-});
+type Props = {
+	model?: FormModel;
+	type: string;
+	parentId: number;
+	disabled?: boolean;
+};
+const { model, type, parentId, disabled } = defineProps<Props>();
 
 const mediaItems = ref([] as MediaItemModel[]);
 const maxFilesize = ref(0);
@@ -42,13 +35,13 @@ const maxWidth = ref(0);
 const maxHeight = ref(0);
 
 const form: FormController<FormModel> = createForm<FormModel>({
-	model: toRef(props, 'model'),
+	model: toRef(() => model),
 	loadUrl: `/web/dash/media-items`,
 	loadData: computed(() => form.formModel),
 	reloadOnSubmit: true,
 	onInit() {
-		form.formModel['type'] = props.type;
-		form.formModel['parent_id'] = props.parentId;
+		form.formModel['type'] = type;
+		form.formModel['parent_id'] = parentId;
 		form.formModel['image'] = null;
 	},
 	onLoad(response) {

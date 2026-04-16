@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onMounted, onUnmounted, PropType, ref, toRefs, useTemplateRef } from 'vue';
+import { onMounted, onUnmounted, ref, useTemplateRef } from 'vue';
 
 import AppButton from '../../button/AppButton.vue';
 import { addMinbarItem, removeMinbarItem } from '../../minbar/minbar.service';
@@ -8,21 +8,12 @@ import { useModal } from '../../modal/modal.service';
 import { GameModel } from '../game.model';
 import { showGameRatingGrowl } from '../rating-growl/rating-growl.service';
 
-const props = defineProps({
-	game: {
-		type: Object as PropType<GameModel>,
-		required: true,
-	},
-	url: {
-		type: String,
-		required: true,
-	},
-	canMinimize: {
-		type: Boolean,
-	},
-});
-
-const { game, url, canMinimize } = toRefs(props);
+type Props = {
+	game: GameModel;
+	url: string;
+	canMinimize?: boolean;
+};
+const { game, url, canMinimize } = defineProps<Props>();
 const modal = useModal()!;
 
 const isMinimized = ref(false);
@@ -49,8 +40,8 @@ function minimize() {
 
 	// When this minbar item is clicked, it basically shows this modal again.
 	const minbarItem = addMinbarItem({
-		title: game.value.title,
-		thumb: game.value.img_thumbnail,
+		title: game.title,
+		thumb: game.img_thumbnail,
 		isActive: true, // Only one game open at a time, so make it active.
 		onClick: () => {
 			// We remove the item from the minbar.
@@ -75,7 +66,7 @@ function close() {
 	// Show a rating growl when they close the game play modal. This will
 	// urge them to rate the game after playing it, but only if they haven't
 	// rated it yet.
-	showGameRatingGrowl(game.value);
+	showGameRatingGrowl(game);
 }
 </script>
 

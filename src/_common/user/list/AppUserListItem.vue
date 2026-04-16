@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
 import { RouterLink } from 'vue-router';
 
 import { useCommonStore } from '../../store/common-store';
@@ -8,19 +7,12 @@ import AppUserFollowButton from '../follow/AppUserFollowButton.vue';
 import { UserModel } from '../user.model';
 import AppUserAvatarBubble from '../user-avatar/AppUserAvatarBubble.vue';
 
-defineProps({
-	user: {
-		type: Object as PropType<UserModel>,
-		required: true,
-	},
-	eventLabel: {
-		type: String,
-		default: 'global',
-	},
-	userHoverCard: {
-		type: Boolean,
-	},
-});
+type Props = {
+	user: UserModel;
+	eventLabel?: string;
+	userHoverCard?: boolean;
+};
+defineProps<Props>();
 
 const emit = defineEmits<{
 	follow: [];

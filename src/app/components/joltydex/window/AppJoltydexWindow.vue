@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, nextTick, onMounted, onUnmounted, ref, toRefs, watch } from 'vue';
+import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
 
 import { trackJoltydex } from '../../../../_common/analytics/analytics.service';
 import { Api } from '../../../../_common/api/api.service';
@@ -18,26 +18,22 @@ import { useJoltydexStore } from '../../../store/joltydex';
 import AppShellWindow from '../../shell/AppShellWindow.vue';
 import { showVendingMachineModal } from '../../vending-machine/modal/modal.service';
 
-const props = defineProps({
-	selectedUser: {
-		type: UserModel,
-		required: true,
-	},
-});
-
-const { selectedUser } = toRefs(props);
+type Props = {
+	selectedUser: UserModel;
+};
+const { selectedUser } = defineProps<Props>();
 const { selectedJoltydexUser } = useJoltydexStore();
 const { toggleLeftPane } = useAppStore();
 
 onMounted(() => {
-	trackJoltydex({ action: 'show-collection', collectionId: selectedUser.value.id });
+	trackJoltydex({ action: 'show-collection', collectionId: selectedUser.id });
 });
 
 onUnmounted(async () => {
 	// Wait a tick in case a different quest window was opened and changed the activeQuestId.
 	await nextTick();
 
-	if (selectedUser.value === selectedJoltydexUser.value) {
+	if (selectedUser === selectedJoltydexUser.value) {
 		selectedJoltydexUser.value = undefined;
 	}
 });
@@ -45,11 +41,11 @@ onUnmounted(async () => {
 let isLoadingSales = false;
 const userWithSales = ref<number>();
 const hasSale = computed(
-	() => !!userWithSales.value && userWithSales.value === selectedUser.value.id
+	() => !!userWithSales.value && userWithSales.value === selectedUser.id
 );
 
 watch(
-	selectedUser,
+	() => selectedUser,
 	async (newUser, oldUser) => {
 		if (newUser.id !== oldUser?.id) {
 			userWithSales.value = undefined;
@@ -66,7 +62,7 @@ watch(
 				},
 				{ detach: true }
 			);
-			if (payload.hasSales && selectedUser.value.id === newUser.id) {
+			if (payload.hasSales && selectedUser.id === newUser.id) {
 				userWithSales.value = newUser.id;
 			}
 		} finally {

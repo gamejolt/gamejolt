@@ -1,14 +1,10 @@
 <script lang="ts" setup>
-import { onMounted, onUnmounted, ref, toRefs } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 
-const props = defineProps({
-	expiresOn: {
-		type: Number,
-		required: true,
-	},
-});
-
-const { expiresOn } = toRefs(props);
+type Props = {
+	expiresOn: number;
+};
+const { expiresOn } = defineProps<Props>();
 const updateTimer = ref<NodeJS.Timer>();
 const displayText = ref('');
 
@@ -27,7 +23,7 @@ onUnmounted(() => {
 });
 
 function _updateDisplayText() {
-	const totalDiff = expiresOn.value - Date.now();
+	const totalDiff = expiresOn - Date.now();
 	let diff = totalDiff;
 
 	/**

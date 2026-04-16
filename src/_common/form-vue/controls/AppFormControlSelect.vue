@@ -1,17 +1,18 @@
 <script lang="ts" setup>
 import { toRef, useTemplateRef } from 'vue';
 
-
 import {
 	createFormControl,
 	FormControlEmits,
-	defineFormControlProps,
 } from '../AppFormControl.vue';
 import { useFormGroup } from '../AppFormGroup.vue';
+import { FormValidator } from '../validators';
 
-const props = defineProps({
-	...defineFormControlProps(),
-});
+type Props = {
+	disabled?: boolean;
+	validators?: FormValidator[];
+};
+const { disabled, validators = [] } = defineProps<Props>();
 
 const emit = defineEmits<FormControlEmits>();
 
@@ -19,7 +20,7 @@ const { name } = useFormGroup()!;
 
 const { id, controlVal, applyValue } = createFormControl({
 	initialValue: '',
-	validators: toRef(props, 'validators'),
+	validators: toRef(() => validators),
 	onChange: val => emit('changed', val),
 	alwaysOptional: true,
 });

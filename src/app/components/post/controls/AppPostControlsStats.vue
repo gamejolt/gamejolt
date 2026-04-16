@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
+import { computed } from 'vue';
 
 import { formatNumber } from '../../../../_common/filters/number';
 import { FiresidePostModel } from '../../../../_common/fireside/post/post-model';
@@ -8,28 +8,22 @@ import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { styleWhen } from '../../../../_styles/mixins';
 import { PostOverlayTextStyles } from '../post-styles';
 
-const props = defineProps({
-	post: {
-		type: Object as PropType<FiresidePostModel>,
-		required: true,
-	},
-	overlay: {
-		type: Boolean,
-	},
-});
-
-const { post, overlay } = toRefs(props);
+type Props = {
+	post: FiresidePostModel;
+	overlay?: boolean;
+};
+const { post, overlay } = defineProps<Props>();
 const { user } = useCommonStore();
 
 const hasPerms = computed(() => {
 	if (!user.value) {
 		return false;
 	}
-	return post.value.isEditableByUser(user.value);
+	return post.isEditableByUser(user.value);
 });
 
 const shouldShowStats = computed(() => {
-	return hasPerms.value && post.value.isActive && !post.value.is_processing;
+	return hasPerms.value && post.isActive && !post.is_processing;
 });
 </script>
 

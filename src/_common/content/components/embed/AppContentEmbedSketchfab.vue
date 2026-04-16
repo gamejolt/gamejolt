@@ -1,14 +1,12 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-const props = defineProps({
-	modelId: {
-		type: String,
-		required: true,
-	},
-});
+type Props = {
+	modelId: string;
+};
+const { modelId } = defineProps<Props>();
 
-const embedSrc = computed(() => `https://sketchfab.com/models/${props.modelId}/embed?camera=0`);
+const embedSrc = computed(() => `https://sketchfab.com/models/${modelId}/embed?camera=0`);
 </script>
 
 <template>

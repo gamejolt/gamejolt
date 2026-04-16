@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-
 import AppEditableOverlay from '../../../../../../_common/editable-overlay/AppEditableOverlay.vue';
 import { MediaItemModel } from '../../../../../../_common/media-item/media-item-model';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
@@ -10,12 +8,10 @@ import {
 	CommunityChannelCardWidth,
 } from '../AppCommunityChannelCard.vue';
 
-defineProps({
-	background: {
-		type: Object as PropType<MediaItemModel | null>,
-		default: null,
-	},
-});
+type Props = {
+	background?: MediaItemModel | null;
+};
+const { background = null } = defineProps<Props>();
 
 const emit = defineEmits<{
 	click: [];

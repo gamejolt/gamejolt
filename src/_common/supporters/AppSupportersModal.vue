@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, onMounted, PropType, ref, toRefs } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 
 import { Api } from '../api/api.service';
 import AppButton from '../button/AppButton.vue';
@@ -16,18 +16,11 @@ import { SupportersModel } from './modal.service';
 
 const PerPage = 20;
 
-const props = defineProps({
-	model: {
-		type: Object as PropType<SupportersModel>,
-		required: true,
-	},
-	count: {
-		type: Number,
-		default: undefined,
-	},
-});
-
-const { count, model } = toRefs(props);
+type Props = {
+	model: SupportersModel;
+	count?: number;
+};
+const { count, model } = defineProps<Props>();
 const modal = useModal()!;
 
 const reachedEnd = ref(false);
@@ -35,19 +28,19 @@ const isLoading = ref(false);
 const currentPage = ref(0);
 const users = ref<UserModel[]>([]);
 
-const isGame = computed(() => model.value instanceof GameModel);
+const isGame = computed(() => model instanceof GameModel);
 
 // Just for display purposes, if we have more users than the count passed in,
 // display that instead. This can happen when the count was fetched before new
 // users were added to the list.
-const realCount = computed(() => (count?.value ? Math.max(count.value, users.value.length) : 0));
+const realCount = computed(() => (count ? Math.max(count, users.value.length) : 0));
 const shouldShowLoadMore = computed(() => !isLoading.value && !reachedEnd.value);
 
 const requestUrl = computed(() => {
-	if (model.value instanceof FiresidePostModel) {
-		return `/web/posts/supporters/${model.value.id}?perPage=${PerPage}&offset=${users.value.length}`;
-	} else if (model.value instanceof GameModel) {
-		return `/web/discover/games/supporters/${model.value.id}?page=${currentPage.value}`;
+	if (model instanceof FiresidePostModel) {
+		return `/web/posts/supporters/${model.id}?perPage=${PerPage}&offset=${users.value.length}`;
+	} else if (model instanceof GameModel) {
+		return `/web/discover/games/supporters/${model.id}?page=${currentPage.value}`;
 	}
 
 	throw new Error(`Invalid model type.`);

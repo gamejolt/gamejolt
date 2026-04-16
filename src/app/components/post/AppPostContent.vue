@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRefs } from 'vue';
+import { computed, ref } from 'vue';
 
 import AppFadeCollapse from '../../../_common/AppFadeCollapse.vue';
 import { ComponentProps } from '../../../_common/component-helpers';
@@ -10,33 +10,18 @@ import AppStickerTarget from '../../../_common/sticker/target/AppStickerTarget.v
 import { StickerTargetController } from '../../../_common/sticker/target/target-controller';
 import { PostContentContainerStyles, PostContentLeadStyles } from './post-styles';
 
-const props = defineProps({
-	post: {
-		type: Object as PropType<FiresidePostModel>,
-		required: true,
-	},
-	stickerTargetController: {
-		type: Object as PropType<StickerTargetController>,
-		required: true,
-	},
-	truncateLinks: {
-		type: Boolean,
-	},
+type Props = {
+	post: FiresidePostModel;
+	stickerTargetController: StickerTargetController;
+	truncateLinks?: boolean;
 	/**
 	 * The component we'll use to wrap the content viewer.
 	 */
-	wrapperComponent: {
-		type: [Object, String] as PropType<any>,
-		default: undefined,
-	},
-	wrapperComponentProps: {
-		type: Object as PropType<ComponentProps<any>>,
-		default: undefined,
-	},
-});
-
+	wrapperComponent?: any;
+	wrapperComponentProps?: ComponentProps<any>;
+};
 const { post, stickerTargetController, truncateLinks, wrapperComponent, wrapperComponentProps } =
-	toRefs(props);
+	defineProps<Props>();
 
 // For feeds we want to truncate links, the full links can be seen:
 // - on the post page
@@ -45,12 +30,12 @@ const { post, stickerTargetController, truncateLinks, wrapperComponent, wrapperC
 const isLeadOpen = ref(false);
 const canToggleLead = ref(false);
 
-const displayRules = computed(() => new ContentRules({ truncateLinks: truncateLinks.value }));
-const overlay = computed(() => !!post.value.background);
+const displayRules = computed(() => new ContentRules({ truncateLinks }));
+const overlay = computed(() => !!post.background);
 
 const componentProps = computed(
 	() =>
-		wrapperComponentProps?.value || {
+		wrapperComponentProps || {
 			collapseHeight: 400,
 			isOpen: isLeadOpen.value,
 			animate: false,

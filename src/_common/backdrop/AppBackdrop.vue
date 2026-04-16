@@ -1,19 +1,17 @@
 <script lang="ts" setup>
-import { computed, PropType } from 'vue';
+import { computed } from 'vue';
 
 import { BackdropController } from './backdrop.service';
 
-const props = defineProps({
-	controller: {
-		type: Object as PropType<BackdropController>,
-		required: true,
-	},
-});
+type Props = {
+	controller: BackdropController;
+};
+const { controller } = defineProps<Props>();
 
-const className = computed(() => props.controller.className);
+const className = computed(() => controller.className);
 
 function onClicked() {
-	props.controller.onClicked?.();
+	controller.onClicked?.();
 }
 </script>
 

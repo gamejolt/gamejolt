@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { PropType, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
 
 import { trackGotoCommunity } from '../../analytics/analytics.service';
@@ -7,31 +6,20 @@ import AppCommunityCardBase from '../card-base/AppCommunityCardBase.vue';
 import { CommunityModel } from '../community.model';
 import AppCommunityThumbnailImg from '../thumbnail/AppCommunityThumbnailImg.vue';
 
-const props = defineProps({
-	community: {
-		type: Object as PropType<CommunityModel>,
-		required: true,
-	},
-	elevate: {
-		type: Boolean,
-	},
-	allowEdit: {
-		type: Boolean,
-		default: true,
-	},
-	trackGoto: {
-		type: Boolean,
-	},
-});
-
-const { community, trackGoto } = toRefs(props);
+type Props = {
+	community: CommunityModel;
+	elevate?: boolean;
+	allowEdit?: boolean;
+	trackGoto?: boolean;
+};
+const { community, elevate, allowEdit = true, trackGoto } = defineProps<Props>();
 
 function doTrackGotoCommunity() {
-	if (trackGoto.value) {
+	if (trackGoto) {
 		trackGotoCommunity({
 			source: 'card',
-			id: community.value.id,
-			path: community.value.path,
+			id: community.id,
+			path: community.path,
 		});
 	}
 }

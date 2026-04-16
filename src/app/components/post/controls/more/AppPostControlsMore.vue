@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, toRef, toRefs } from 'vue';
+import { computed, toRef } from 'vue';
 import { useRoute } from 'vue-router';
 
 import { Api } from '../../../../../_common/api/api.service';
@@ -38,18 +38,11 @@ import { showCommunityMovePostModal } from '../../../community/move-post/modal/m
 import AppCommunityPerms from '../../../community/perms/AppCommunityPerms.vue';
 import { useGridStore } from '../../../grid/grid-store';
 
-const props = defineProps({
-	post: {
-		type: Object as PropType<FiresidePostModel>,
-		required: true,
-	},
-
-	overlay: {
-		type: Boolean,
-	},
-});
-
-const { post, overlay } = toRefs(props);
+type Props = {
+	post: FiresidePostModel;
+	overlay?: boolean;
+};
+const { post, overlay } = defineProps<Props>();
 
 const route = useRoute();
 
@@ -66,20 +59,20 @@ const emit = defineEmits<{
 	unpin: [];
 }>();
 
-const canEdit = toRef(() => post.value.isEditableByUser(sessionUser.value));
+const canEdit = toRef(() => post.isEditableByUser(sessionUser.value));
 const shouldShowManageCommunities = toRef(
 	() =>
-		post.value.status === FiresidePostStatus.Active &&
-		post.value.manageableCommunities.length !== 0
+		post.status === FiresidePostStatus.Active &&
+		post.manageableCommunities.length !== 0
 );
 const shouldShowModTools = toRef(() => sessionUser.value && sessionUser.value.isMod);
 const siteModerateLink = toRef(
-	() => Environment.baseUrl + `/moderate/fireside-posts/view/${post.value.id}`
+	() => Environment.baseUrl + `/moderate/fireside-posts/view/${post.id}`
 );
-const avatarFrame = toRef(() => post.value.displayUser.avatar_frame);
+const avatarFrame = toRef(() => post.displayUser.avatar_frame);
 const shouldShowBlockCommunityUser = toRef(() => {
 	// Cannot block yourself.
-	return post.value.user.id !== sessionUser.value?.id;
+	return post.user.id !== sessionUser.value?.id;
 });
 
 const shouldShowPins = computed(() => {
@@ -96,11 +89,11 @@ const shouldShowPins = computed(() => {
 		return false;
 	}
 
-	if (post.value.status !== FiresidePostStatus.Active) {
+	if (post.status !== FiresidePostStatus.Active) {
 		return false;
 	}
 
-	const pinContext = post.value.getPinContextFor(route);
+	const pinContext = post.getPinContextFor(route);
 	if (pinContext instanceof GameModel) {
 		return canEdit.value;
 	} else if (pinContext instanceof FiresidePostCommunityModel) {
@@ -114,11 +107,11 @@ const shouldShowPins = computed(() => {
 
 async function toggleFeatured(postCommunity: FiresidePostCommunityModel) {
 	if (postCommunity.isFeatured) {
-		await $unfeatureFiresidePost(post.value, postCommunity.community);
+		await $unfeatureFiresidePost(post, postCommunity.community);
 		emit('unfeature', postCommunity.community);
 	} else {
-		await $featureFiresidePost(post.value, postCommunity.community);
-		grid.value?.recordFeaturedPost(post.value);
+		await $featureFiresidePost(post, postCommunity.community);
+		grid.value?.recordFeaturedPost(post);
 		emit('feature', postCommunity.community);
 	}
 }
@@ -129,14 +122,14 @@ async function movePostFromCommunityChannel(postCommunity: FiresidePostCommunity
 		possibleChannels = await fetchCommunityChannels(postCommunity.community);
 	}
 
-	const result = await showCommunityMovePostModal(postCommunity, post.value, possibleChannels);
+	const result = await showCommunityMovePostModal(postCommunity, post, possibleChannels);
 	if (!result) {
 		return;
 	}
 
 	try {
 		await $moveFiresidePostToChannel(
-			post.value,
+			post,
 			postCommunity.community,
 			result.channel,
 			result
@@ -166,17 +159,17 @@ async function fetchCommunityChannels(community: CommunityModel) {
 }
 
 async function rejectFromCommunity(postCommunity: FiresidePostCommunityModel) {
-	const result = await showCommunityEjectPostModal(postCommunity, post.value);
+	const result = await showCommunityEjectPostModal(postCommunity, post);
 	if (!result) {
 		return;
 	}
 
 	try {
-		await $rejectFiresidePost(post.value, postCommunity.community, result);
+		await $rejectFiresidePost(post, postCommunity.community, result);
 		// Make sure the post community gets removed from the post.
 		// The backend might not return the post resource if the post was already
 		// ejected, so the community list doesn't get updated.
-		arrayRemove(post.value.communities, i => i.id === postCommunity.id);
+		arrayRemove(post.communities, i => i.id === postCommunity.id);
 		emit('reject', postCommunity.community);
 	} catch (err) {
 		console.warn('Failed to eject post');
@@ -185,25 +178,25 @@ async function rejectFromCommunity(postCommunity: FiresidePostCommunityModel) {
 }
 
 function blockFromCommunity(postCommunity: FiresidePostCommunityModel) {
-	showCommunityBlockUserModal(post.value.user, postCommunity.community);
+	showCommunityBlockUserModal(post.user, postCommunity.community);
 }
 
 function copyShareUrl() {
-	copyShareLink(post.value.url, 'post');
+	copyShareLink(post.url, 'post');
 }
 
 function report() {
-	showReportModal(post.value);
+	showReportModal(post);
 }
 
 async function remove() {
-	if (await $removeFiresidePost(post.value)) {
+	if (await $removeFiresidePost(post)) {
 		emit('remove');
 	}
 }
 
 function _getPinTarget() {
-	const pinContext = post.value.getPinContextFor(route);
+	const pinContext = post.getPinContextFor(route);
 
 	let resourceName: string;
 	let resourceId: number;
@@ -225,11 +218,11 @@ function _getPinTarget() {
 }
 
 async function togglePin() {
-	const wasPinned = post.value.is_pinned;
+	const wasPinned = post.is_pinned;
 
 	const { resourceName, resourceId } = _getPinTarget();
-	await $togglePinOnFiresidePost(post.value, resourceName, resourceId);
-	post.value.is_pinned = !wasPinned;
+	await $togglePinOnFiresidePost(post, resourceName, resourceId);
+	post.is_pinned = !wasPinned;
 
 	if (wasPinned) {
 		emit('unpin');

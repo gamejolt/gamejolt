@@ -1,20 +1,13 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-
 import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
 import AppDashShopProductType from '../AppDashShopProductType.vue';
 import { ShopDashProductType } from '../shop.store';
 
-defineProps({
-	productType: {
-		type: String as PropType<ShopDashProductType | undefined>,
-		default: undefined,
-	},
-	heading: {
-		type: String,
-		required: true,
-	},
-});
+type Props = {
+	productType?: ShopDashProductType;
+	heading: string;
+};
+defineProps<Props>();
 </script>
 
 <template>

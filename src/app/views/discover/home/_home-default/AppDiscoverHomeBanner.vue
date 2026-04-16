@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
+import { computed } from 'vue';
 
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import AppCommunityJoinWidget from '../../../../../_common/community/join-widget/AppCommunityJoinWidget.vue';
@@ -10,63 +10,57 @@ import AppTheme from '../../../../../_common/theme/AppTheme.vue';
 import { RouteLocationDefinition } from '../../../../../utils/router';
 import { FeaturedItemModel } from '../../../../components/featured-item/featured-item.model';
 
-const props = defineProps({
-	item: {
-		type: Object as PropType<FeaturedItemModel>,
-		default: undefined,
-	},
-	isLoading: {
-		type: Boolean,
-	},
-});
-
-const { item, isLoading } = toRefs(props);
+type Props = {
+	item?: FeaturedItemModel;
+	isLoading?: boolean;
+};
+const { item } = defineProps<Props>();
 const { user } = useCommonStore();
 
 const shouldShowViewGame = computed(() => {
-	if (!item?.value?.game) {
+	if (!item?.game) {
 		return false;
 	}
 
-	return !item?.value.hero_button_url || !shouldShowFollowGame.value;
+	return !item.hero_button_url || !shouldShowFollowGame.value;
 });
 
 const shouldShowFollowGame = computed(() => {
-	if (item?.value?.game) {
-		return !user.value || !item?.value.game.is_following;
+	if (item?.game) {
+		return !user.value || !item.game.is_following;
 	}
 	return false;
 });
 
 const shouldShowViewCommunity = computed(() => {
-	if (!item?.value?.community) {
+	if (!item?.community) {
 		return false;
 	}
 
-	return !item?.value.hero_button_url || !shouldShowJoinCommunity.value;
+	return !item.hero_button_url || !shouldShowJoinCommunity.value;
 });
 
 const shouldShowJoinCommunity = computed(() => {
-	if (item?.value?.community) {
-		return !user.value || !item?.value.community.is_member;
+	if (item?.community) {
+		return !user.value || !item.community.is_member;
 	}
 	return false;
 });
 
 const location = computed((): RouteLocationDefinition | undefined => {
-	if (item?.value?.game) {
+	if (item?.game) {
 		return {
 			name: 'discover.games.view.overview',
 			params: {
-				id: item?.value.game.id + '',
-				slug: item?.value.game.slug,
+				id: item.game.id + '',
+				slug: item.game.slug,
 			},
 		};
-	} else if (item?.value?.community) {
+	} else if (item?.community) {
 		return {
 			name: 'communities.view.overview',
 			params: {
-				path: item?.value.community.path,
+				path: item.community.path,
 			},
 		};
 	}
@@ -74,21 +68,21 @@ const location = computed((): RouteLocationDefinition | undefined => {
 });
 
 const theme = computed(() => {
-	if (item?.value?.game) {
-		return item?.value.game.theme;
-	} else if (item?.value?.community) {
-		return item?.value.community.theme;
+	if (item?.game) {
+		return item.game.theme;
+	} else if (item?.community) {
+		return item.community.theme;
 	}
 	return undefined;
 });
 
 const bannerMediaItem = computed(() => {
-	if (item?.value?.game) {
-		return item?.value.game.header_media_item;
+	if (item?.game) {
+		return item.game.header_media_item;
 	}
 
-	if (item?.value?.community) {
-		return item?.value.community.header;
+	if (item?.community) {
+		return item.community.header;
 	}
 
 	return undefined;

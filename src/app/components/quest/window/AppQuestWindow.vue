@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, CSSProperties, nextTick, onUnmounted, PropType, Ref, ref, toRefs } from 'vue';
+import { computed, CSSProperties, nextTick, onUnmounted, Ref, ref } from 'vue';
 
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
@@ -37,18 +37,11 @@ import { useQuestStore } from '../../../store/quest';
 import AppShellWindow from '../../shell/AppShellWindow.vue';
 import AppQuestTimer from '../AppQuestTimer.vue';
 
-const props = defineProps({
-	questId: {
-		type: Number,
-		required: true,
-	},
-	resource: {
-		type: Object as PropType<QuestModel>,
-		default: undefined,
-	},
-});
-
-const { questId, resource } = toRefs(props);
+type Props = {
+	questId: number;
+	resource?: QuestModel;
+};
+const { questId, resource } = defineProps<Props>();
 
 const { toggleLeftPane } = useAppStore();
 const { clearNewQuestIds, clearQuestActivityIds, activeQuest, activeQuestId } = useQuestStore();
@@ -59,7 +52,7 @@ const hasActionButtonError = ref(false);
 
 const localQuest = ref() as Ref<QuestModel | undefined>;
 
-const quest = computed(() => localQuest.value || resource?.value);
+const quest = computed(() => localQuest.value || resource);
 
 const objectives = computed(() => {
 	const q = quest.value;
@@ -117,7 +110,7 @@ async function init() {
 
 	try {
 		const payload = await Api.sendFieldsRequest(
-			`/mobile/quest/${questId.value}`,
+			`/mobile/quest/${questId}`,
 			{ quest: true },
 			{ detach: true }
 		);
@@ -138,7 +131,7 @@ onUnmounted(async () => {
 	// Wait a tick in case a different quest window was opened and changed the activeQuestId.
 	await nextTick();
 
-	if (activeQuestId.value === questId.value) {
+	if (activeQuestId.value === questId) {
 		activeQuest.value = undefined;
 	}
 });

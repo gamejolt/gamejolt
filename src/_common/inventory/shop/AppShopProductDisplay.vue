@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, CSSProperties, PropType, toRefs } from 'vue';
+import { computed, CSSProperties } from 'vue';
 
 import {
 	styleBorderRadiusLg,
@@ -23,38 +23,31 @@ import {
 	PurchasableProductType,
 } from './product-owner-helpers';
 
-const props = defineProps({
-	productData: {
-		type: Object as PropType<NormalizedProductData>,
-		required: true,
-	},
-	avatarFrameUser: {
-		type: Object as PropType<UserModel>,
-		default: undefined,
-	},
-});
-
-const { productData } = toRefs(props);
+type Props = {
+	productData: NormalizedProductData;
+	avatarFrameUser?: UserModel;
+};
+const { productData, avatarFrameUser } = defineProps<Props>();
 
 const { user: authUser } = useCommonStore();
 
 const frameOverride = computed(() => {
 	if (
-		!productData.value.imgUrl ||
-		productData.value.resource !== PurchasableProductType.AvatarFrame
+		!productData.imgUrl ||
+		productData.resource !== PurchasableProductType.AvatarFrame
 	) {
 		return undefined;
 	}
 	return {
-		image_url: productData.value.imgUrl,
-		scale: productData.value.scale ?? DefaultAvatarFrameScale,
+		image_url: productData.imgUrl,
+		scale: productData.scale ?? DefaultAvatarFrameScale,
 	};
 });
 
 const itemWidthStyles = computed(() => {
 	return {
 		...styleMaxWidthForOptions({
-			ratio: productData.value.aspectRatio,
+			ratio: productData.aspectRatio,
 			maxWidth: 320,
 			maxHeight: Screen.height / 3,
 		}),

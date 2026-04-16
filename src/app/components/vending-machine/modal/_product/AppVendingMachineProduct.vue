@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, toRef, toRefs } from 'vue';
+import { computed, toRef } from 'vue';
 
 import { ShopViewType, trackShopView } from '../../../../../_common/analytics/analytics.service';
 import AppAspectRatio from '../../../../../_common/aspect-ratio/AppAspectRatio.vue';
@@ -21,20 +21,14 @@ import AppUserAvatarBubble from '../../../../../_common/user/user-avatar/AppUser
 import { styleElevate, styleTyped, styleWhen } from '../../../../../_styles/mixins';
 import { kBorderRadiusLg, kFontSizeSmall, kStrongEaseOut } from '../../../../../_styles/variables';
 
-const props = defineProps({
-	shopProduct: {
-		type: Object as PropType<InventoryShopProductSaleModel>,
-		required: true,
-	},
+type Props = {
+	shopProduct: InventoryShopProductSaleModel;
 	/**
 	 * Used to prevent further purchases while we're processing one.
 	 */
-	disablePurchases: {
-		type: Boolean,
-	},
-});
-
-const { shopProduct, disablePurchases } = toRefs(props);
+	disablePurchases?: boolean;
+};
+const { shopProduct, disablePurchases } = defineProps<Props>();
 
 const emit = defineEmits<{
 	purchase: [shopProduct: InventoryShopProductSaleModel];
@@ -42,19 +36,19 @@ const emit = defineEmits<{
 
 const { user: myUser } = useCommonStore();
 
-const name = computed(() => shopProduct.value.product?.name || '');
+const name = computed(() => shopProduct.product?.name || '');
 
 const { hoverBinding, hovered } = useOnHover({
 	disable: toRef(() => !Screen.isPointerMouse),
 });
 
 function onClickProduct() {
-	if (disablePurchases.value) {
+	if (disablePurchases) {
 		return;
 	}
 
 	let type: ShopViewType = 'unhandled-product';
-	const i = shopProduct.value;
+	const i = shopProduct;
 	if (i.avatarFrame) {
 		type = 'avatar-frame';
 	} else if (i.background) {
@@ -64,13 +58,13 @@ function onClickProduct() {
 	}
 
 	trackShopView({ type });
-	emit('purchase', shopProduct.value);
+	emit('purchase', shopProduct);
 }
 
 const overlayTagZIndex = 2;
 
 const productType = computed(() => {
-	const product = shopProduct.value;
+	const product = shopProduct;
 	if (product.avatarFrame) {
 		return $gettext(`Avatar frame`);
 	} else if (product.background) {
@@ -82,7 +76,7 @@ const productType = computed(() => {
 });
 
 const readableEndsOn = computed(() => {
-	const endsOn = shopProduct.value.ends_on;
+	const endsOn = shopProduct.ends_on;
 	if (!endsOn) {
 		return;
 	}

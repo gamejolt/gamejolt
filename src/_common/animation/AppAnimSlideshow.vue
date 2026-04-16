@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRefs, useTemplateRef } from 'vue';
+import { computed, ref, useTemplateRef } from 'vue';
 
 import { styleWhen } from '../../_styles/mixins';
 import { useResizeObserver } from '../../utils/resize-observer';
@@ -8,30 +8,18 @@ import { Ruler } from '../ruler/ruler-service';
 import AppAnimSlideshowImg from './AppAnimSlideshowImg.vue';
 import { getImgSlideshowData, ImgSlideshow } from './slideshow/sheets';
 
-const props = defineProps({
-	sheet: {
-		type: Object as PropType<ImgSlideshow>,
-		required: true,
-	},
-	overlay: {
-		type: Boolean,
-	},
-	pause: {
-		type: Boolean,
-	},
-	startOffset: {
-		type: Number,
-		default: 0,
-		validator: val => typeof val === 'number' && 0 <= val && val <= 1,
-	},
-});
-
-const { sheet, overlay, pause, startOffset } = toRefs(props);
+type Props = {
+	sheet: ImgSlideshow;
+	overlay?: boolean;
+	pause?: boolean;
+	startOffset?: number;
+};
+const { sheet, overlay, pause, startOffset = 0 } = defineProps<Props>();
 
 const root = useTemplateRef('root');
 const size = ref({ width: 200, height: 200 });
 
-const sheetData = computed(() => getImgSlideshowData(sheet.value));
+const sheetData = computed(() => getImgSlideshowData(sheet));
 
 useResizeObserver({
 	target: root,

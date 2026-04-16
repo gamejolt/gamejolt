@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRefs } from 'vue';
+import { computed, ref } from 'vue';
 
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { formatDate } from '../../../../_common/filters/date';
@@ -10,22 +10,18 @@ import { html as termsTemplate } from '../../../../lib/terms/creator/global.md';
 import AppFinancialsCheckmark from './AppFinancialsCheckmark.vue';
 import AppFinancialsTosScroller from './AppFinancialsTosScroller.vue';
 
-const props = defineProps({
-	account: {
-		type: Object as PropType<UserStripeManagedAccountModel>,
-		default: undefined,
-	},
-});
+type Props = {
+	account?: UserStripeManagedAccountModel;
+};
+const { account } = defineProps<Props>();
 
 const emit = defineEmits<{
 	accepted: [];
 }>();
 
-const { account } = toRefs(props);
-
 const checked = ref(false);
 
-const hasSigned = computed(() => account?.value && account.value.tos_signed_creator > 0);
+const hasSigned = computed(() => account && account.tos_signed_creator > 0);
 
 const agreementLink = computed(
 	() =>

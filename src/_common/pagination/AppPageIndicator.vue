@@ -1,22 +1,14 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType } from 'vue';
+import { CSSProperties } from 'vue';
 
 import { styleChangeBg, styleFlexCenter } from '../../_styles/mixins';
 
-defineProps({
-	count: {
-		type: Number,
-		required: true,
-	},
-	current: {
-		type: Number,
-		required: true,
-	},
-	innerStyles: {
-		type: Object as PropType<CSSProperties>,
-		default: undefined,
-	},
-});
+type Props = {
+	count: number;
+	current: number;
+	innerStyles?: CSSProperties;
+};
+const { count, current, innerStyles } = defineProps<Props>();
 </script>
 
 <template>

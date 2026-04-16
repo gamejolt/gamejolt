@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
+import { computed } from 'vue';
 
 import { styleFlexCenter } from '../../../../_styles/mixins';
 import AppImgResponsive from '../../../img/AppImgResponsive.vue';
@@ -7,35 +7,27 @@ import AppJolticon, { Jolticon } from '../../../jolticon/AppJolticon.vue';
 import AppMediaItemBackdrop from '../../../media-item/backdrop/AppMediaItemBackdrop.vue';
 import { EmojiGroupModel, EmojiGroupType } from '../../emoji-group.model';
 
-const props = defineProps({
-	group: {
-		type: Object as PropType<EmojiGroupModel>,
-		required: true,
-	},
+type Props = {
+	group: EmojiGroupModel;
 	/**
 	 * Pixel size of the thumbnail.
 	 */
-	size: {
-		type: Number,
-		validator: val => typeof val === 'number' && val > 0,
-		required: true,
-	},
-});
+	size: number;
+};
+const { group, size } = defineProps<Props>();
 
-const { group } = toRefs(props);
-
-const mediaItem = computed(() => group.value.media_item);
+const mediaItem = computed(() => group.media_item);
 
 const icon = computed(() => {
 	let result: Jolticon = 'other-os';
 
-	switch (group.value.type) {
+	switch (group.type) {
 		case EmojiGroupType.Legacy:
 			result = 'bolt-filled';
 			break;
 
 		case EmojiGroupType.Unicode: {
-			const name = group.value.name.toLowerCase();
+			const name = group.name.toLowerCase();
 
 			if (name === 'smileys & people' || name === 'smileys & emotion') {
 				result = 'smiley';
@@ -62,7 +54,7 @@ const icon = computed(() => {
 			break;
 
 		default:
-			if (group.value.isRecentlyUsed) {
+			if (group.isRecentlyUsed) {
 				result = 'clock';
 			}
 			break;

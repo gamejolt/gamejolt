@@ -1,14 +1,10 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-
 import { Growl } from './growls.service';
 
-defineProps({
-	growl: {
-		type: Object as PropType<Growl>,
-		required: true,
-	},
-});
+type Props = {
+	growl: Growl;
+};
+defineProps<Props>();
 
 const emit = defineEmits<{
 	close: [];

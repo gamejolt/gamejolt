@@ -1,27 +1,25 @@
 <script lang="ts" setup>
-import { computed, PropType } from 'vue';
+import { computed } from 'vue';
 
 import { Geo } from '../../../../_common/geo/geo.service';
 import { UserAddressModel } from '../../../../_common/user/address/address.model';
 
-const props = defineProps({
-	address: {
-		type: Object as PropType<UserAddressModel>,
-		required: true,
-	},
-});
+type Props = {
+	address: UserAddressModel;
+};
+const { address } = defineProps<Props>();
 
 const country = computed(() => {
-	if (props.address) {
-		return Geo.getCountryName(props.address.country);
+	if (address) {
+		return Geo.getCountryName(address.country);
 	}
 	return undefined;
 });
 
 const region = computed(() => {
-	if (props.address) {
+	if (address) {
 		return (
-			Geo.getRegionName(props.address.country, props.address.region) || props.address.region
+			Geo.getRegionName(address.country, address.region) || address.region
 		);
 	}
 	return undefined;

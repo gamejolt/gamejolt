@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRefs } from 'vue';
+import { computed, ref } from 'vue';
 
 import AppBlockForm from '../../block/form/AppBlockForm.vue';
 import AppButton from '../../button/AppButton.vue';
@@ -16,40 +16,35 @@ import { $gettext } from '../../translate/translate.service';
 import { UserModel } from '../../user/user.model';
 import AppReportForm from '../form/AppReportForm.vue';
 
-const props = defineProps({
-	resource: {
-		type: Object as PropType<
-			| CommentModel
-			| UserModel
-			| GameModel
-			| FiresidePostModel
-			| ForumTopicModel
-			| ForumPostModel
-			| CommunityModel
-		>,
-		required: true,
-	},
-});
-
-const { resource } = toRefs(props);
+type Props = {
+	resource:
+		| CommentModel
+		| UserModel
+		| GameModel
+		| FiresidePostModel
+		| ForumTopicModel
+		| ForumPostModel
+		| CommunityModel;
+};
+const { resource } = defineProps<Props>();
 const modal = useModal()!;
 
 const page = ref<'report' | 'block'>('report');
 
 const type = computed(() => {
-	if (resource.value instanceof CommentModel) {
+	if (resource instanceof CommentModel) {
 		return 'Comment';
-	} else if (resource.value instanceof UserModel) {
+	} else if (resource instanceof UserModel) {
 		return 'User';
-	} else if (resource.value instanceof GameModel) {
+	} else if (resource instanceof GameModel) {
 		return 'Game';
-	} else if (resource.value instanceof FiresidePostModel) {
+	} else if (resource instanceof FiresidePostModel) {
 		return 'Fireside_Post';
-	} else if (resource.value instanceof ForumTopicModel) {
+	} else if (resource instanceof ForumTopicModel) {
 		return 'Forum_Topic';
-	} else if (resource.value instanceof ForumPostModel) {
+	} else if (resource instanceof ForumPostModel) {
 		return 'Forum_Post';
-	} else if (resource.value instanceof CommunityModel) {
+	} else if (resource instanceof CommunityModel) {
 		return 'Community';
 	}
 	return '';
@@ -71,10 +66,10 @@ function onSubmittedReport() {
 }
 
 function onSubmittedBlock() {
-	if (resource.value instanceof UserModel) {
+	if (resource instanceof UserModel) {
 		showInfoGrowl(
 			$gettext(`You blocked %{ user }!`, {
-				user: resource.value.username,
+				user: resource.username,
 			}),
 			$gettext('Blocked')
 		);

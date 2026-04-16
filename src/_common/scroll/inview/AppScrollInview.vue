@@ -1,5 +1,5 @@
 <script lang="ts">
-import { onMounted, onUnmounted, PropType, reactive, useTemplateRef, watch } from 'vue';
+import { onMounted, onUnmounted, reactive, useTemplateRef, watch } from 'vue';
 
 import { useScrollInviewParent } from './AppScrollInviewParent.vue';
 
@@ -78,20 +78,12 @@ export class ScrollInviewConfig {
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	config: {
-		type: Object as PropType<ScrollInviewConfig>,
-		required: true,
-	},
-	tag: {
-		type: String,
-		default: 'div',
-	},
-	controller: {
-		type: Object as PropType<ScrollInviewController>,
-		default: () => createScrollInview(),
-	},
-});
+type Props = {
+	config: ScrollInviewConfig;
+	tag?: string;
+	controller?: ScrollInviewController;
+};
+const { config, tag = 'div', controller = createScrollInview() } = defineProps<Props>();
 
 // These will get called by [ScrollInviewContainer].
 const emit = defineEmits<{
@@ -111,12 +103,12 @@ const onChange: ChangeHandler = visible => {
 
 onMounted(async () => {
 	// Set up the controller with the props from the component.
-	props.controller._changeHandlers.add(onChange);
+	controller._changeHandlers.add(onChange);
 });
 
 onUnmounted(() => {
-	parent.getContainer(props.config).unobserveItem(props.controller);
-	props.controller._changeHandlers.delete(onChange);
+	parent.getContainer(config).unobserveItem(controller);
+	controller._changeHandlers.delete(onChange);
 });
 
 const root = useTemplateRef<HTMLElement>('root');
@@ -124,8 +116,8 @@ const root = useTemplateRef<HTMLElement>('root');
 // The ref will be assigned to this once it's fully rendered.
 watch(root, newElement => {
 	if (newElement) {
-		props.controller._setElement(newElement);
-		parent.getContainer(props.config).observeItem(props.controller);
+		controller._setElement(newElement);
+		parent.getContainer(config).observeItem(controller);
 	}
 });
 </script>

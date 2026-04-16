@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, toRef, toRefs } from 'vue';
+import { computed, toRef } from 'vue';
 
 import AppButton from '../../../_common/button/AppButton.vue';
 import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
@@ -7,19 +7,16 @@ import AppChatMemberListItem from './member-list/AppChatMemberListItem.vue';
 import { ChatRoomModel } from './room';
 import { useChatRoomMembers } from './room-channel';
 
-const props = defineProps({
-	room: {
-		type: Object as PropType<ChatRoomModel>,
-		required: true,
-	},
-});
+type Props = {
+	room: ChatRoomModel;
+};
+const { room } = defineProps<Props>();
 
 const emit = defineEmits<{
 	viewMembers: [];
 }>();
 
-const { room } = toRefs(props);
-const { memberCollection } = useChatRoomMembers(room);
+const { memberCollection } = useChatRoomMembers(toRef(() => room));
 
 const members = toRef(() => memberCollection.value?.users || []);
 const membersPreview = computed(() => members.value.slice(0, 5));

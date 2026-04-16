@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, onMounted, onUnmounted, PropType, ref, useTemplateRef } from 'vue';
+import { computed, onMounted, onUnmounted, ref, useTemplateRef } from 'vue';
 import { isNavigationFailure, useRouter } from 'vue-router';
 
 import { Backdrop, BackdropController } from '../backdrop/backdrop.service';
@@ -29,20 +29,13 @@ const _modalBackdropChecks: (() => boolean)[] = [];
 </script>
 
 <script lang="ts" setup>
-defineProps({
-	modal: {
-		type: Object,
-		default: undefined,
-	},
-	theme: {
-		type: Object as PropType<ThemeModel>,
-		default: undefined,
-	},
-	forceTheme: {
-		type: String as PropType<'dark' | 'light'>,
-		default: undefined,
-	},
-});
+// Note: `modal` prop is not destructured to avoid collision with `const modal = useModal()!;` below.
+type Props = {
+	modal?: object;
+	theme?: ThemeModel;
+	forceTheme?: 'dark' | 'light';
+};
+const { theme, forceTheme } = defineProps<Props>();
 
 const emit = defineEmits<{
 	close: [];

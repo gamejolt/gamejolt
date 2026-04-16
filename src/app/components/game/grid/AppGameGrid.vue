@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, PropType, toRef, toRefs } from 'vue';
+import { computed, toRef } from 'vue';
 import draggable from 'vuedraggable';
 
 import { useAdStore } from '../../../../_common/ad/ad-store';
@@ -23,51 +23,38 @@ let idCounter = 0;
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	games: {
-		type: Array as PropType<GameModel[]>,
-		default: () => [],
-	},
-	gamesCount: {
-		type: Number,
-		default: 0,
-	},
-	currentPage: {
-		type: Number,
-		default: 0,
-	},
-	truncateToFit: {
-		type: Boolean,
-	},
-	scrollable: {
-		type: Boolean,
-	},
-	forceScrollable: {
-		type: Boolean,
-	},
-	showAds: {
-		type: Boolean,
-	},
-	canReorder: {
-		type: Boolean,
-	},
-	eventLabel: {
-		type: String,
-		default: undefined,
-	},
-});
+type Props = {
+	games?: GameModel[];
+	gamesCount?: number;
+	currentPage?: number;
+	truncateToFit?: boolean;
+	scrollable?: boolean;
+	forceScrollable?: boolean;
+	showAds?: boolean;
+	canReorder?: boolean;
+	eventLabel?: string;
+};
+const {
+	games = [],
+	gamesCount = 0,
+	currentPage = 0,
+	truncateToFit,
+	scrollable,
+	forceScrollable,
+	showAds,
+	canReorder,
+} = defineProps<Props>();
 
 const emit = defineEmits<{
 	sort: [games: GameModel[]];
 }>();
 
-const { canReorder, showAds, truncateToFit, scrollable, forceScrollable, games } = toRefs(props);
 const { shouldShow: globalShouldShowAds } = useAdStore();
 
 const id = ++idCounter;
 
-const shouldShowAds = toRef(() => !canReorder.value && showAds.value && globalShouldShowAds.value);
-const isScrollable = toRef(() => (Screen.isXs && scrollable.value) || forceScrollable.value);
+const shouldShowAds = toRef(() => !canReorder && showAds && globalShouldShowAds.value);
+const isScrollable = toRef(() => (Screen.isXs && scrollable) || forceScrollable);
 const shouldShowStickyAd = toRef(() => Screen.width >= 2100);
 
 const rowSize = toRef(() => {
@@ -79,7 +66,7 @@ const rowSize = toRef(() => {
 		return GameGridRowSizeLg;
 	}
 
-	return games.value.length;
+	return games.length;
 });
 
 /**
@@ -89,18 +76,18 @@ const rowSize = toRef(() => {
  */
 const processedGames = computed({
 	get: () => {
-		if (!truncateToFit.value || isScrollable.value) {
-			return games.value;
+		if (!truncateToFit || isScrollable.value) {
+			return games;
 		}
 
-		let chunkSize = Math.max(1, Math.floor(games.value.length / rowSize.value)) * rowSize.value;
+		let chunkSize = Math.max(1, Math.floor(games.length / rowSize.value)) * rowSize.value;
 
 		// Subtract one for the ad slot.
 		if (Screen.isDesktop && shouldShowAds.value) {
 			chunkSize -= 1;
 		}
 
-		return games.value.slice(0, chunkSize);
+		return games.slice(0, chunkSize);
 	},
 	set: games => {
 		emit('sort', games);

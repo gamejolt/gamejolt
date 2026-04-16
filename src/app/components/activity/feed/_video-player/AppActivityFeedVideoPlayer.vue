@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, onBeforeUnmount, PropType, Ref, ref, toRefs, watch } from 'vue';
+import { computed, onBeforeUnmount, Ref, ref, watch } from 'vue';
 
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import { MediaItemModel } from '../../../../../_common/media-item/media-item-model';
@@ -27,18 +27,11 @@ import { InviewConfigFocused } from '../view';
  */
 const LoadDelay = 300;
 
-const props = defineProps({
-	mediaItem: {
-		type: Object as PropType<MediaItemModel>,
-		required: true,
-	},
-	manifests: {
-		type: Object as PropType<VideoSourceArray>,
-		required: true,
-	},
-});
-
-const { mediaItem, manifests } = toRefs(props);
+type Props = {
+	mediaItem: MediaItemModel;
+	manifests: VideoSourceArray;
+};
+const { manifests } = defineProps<Props>();
 
 const emit = defineEmits<{
 	play: [];
@@ -105,7 +98,7 @@ watch(
 
 watch(shouldLoadVideo, shouldLoad => {
 	if (shouldLoad) {
-		player.value = createVideoPlayerController(manifests.value, 'feed');
+		player.value = createVideoPlayerController(manifests, 'feed');
 
 		if (previousTimestamp) {
 			queueVideoTimeChange(player.value, previousTimestamp);

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
+import { computed } from 'vue';
 
 import { useForm } from '../../../../../_common/form-vue/AppForm.vue';
 import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
@@ -15,27 +15,21 @@ export interface AppFinancialsManagedAccountDocumentInterface {
 	uploadDocument: (stripePublishableKey: string) => Promise<string>;
 }
 
-const props = defineProps({
-	namePrefix: {
-		type: String,
-		required: true,
-	},
-	type: {
-		type: String as PropType<'id' | 'additional'>,
-		required: true,
-	},
-});
+type Props = {
+	namePrefix: string;
+	type: 'id' | 'additional';
+};
+const { namePrefix, type } = defineProps<Props>();
 
-const { namePrefix, type } = toRefs(props);
 const { requiresField, getStripeField } = useFormManagedAccount()!;
 const form = useForm()!;
 
 const prefix = computed(() => {
-	return `${namePrefix.value}.${type.value === 'id' ? 'document' : 'additional_document'}`;
+	return `${namePrefix}.${type === 'id' ? 'document' : 'additional_document'}`;
 });
 
 const fieldName = computed(() => {
-	return type.value === 'id' ? $gettext('ID Document') : $gettext('Utility / Bill');
+	return type === 'id' ? $gettext('ID Document') : $gettext('Utility / Bill');
 });
 
 /**

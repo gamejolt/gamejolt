@@ -4,11 +4,10 @@ import AppJolticon from '../jolticon/AppJolticon.vue';
 import { kThemeFgMuted } from '../theme/variables';
 import { vAppTooltip } from '../tooltip/tooltip-directive';
 
-defineProps({
-	small: {
-		type: Boolean,
-	},
-});
+type Props = {
+	small?: boolean;
+};
+defineProps<Props>();
 </script>
 
 <template>

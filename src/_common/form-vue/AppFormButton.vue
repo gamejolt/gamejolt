@@ -5,38 +5,27 @@ import AppButton from '../button/AppButton.vue';
 import AppJolticon from '../jolticon/AppJolticon.vue';
 import { useForm } from './AppForm.vue';
 
-const props = defineProps({
-	showWhenValid: {
-		type: Boolean,
-	},
-	primary: {
-		type: Boolean,
-		default: true,
-	},
-	trans: {
-		type: Boolean,
-	},
-	overlay: {
-		type: Boolean,
-	},
-	solid: {
-		type: Boolean,
-		default: true,
-	},
-	block: {
-		type: Boolean,
-	},
-	lg: {
-		type: Boolean,
-	},
-	icon: {
-		type: String,
-		default: undefined,
-	},
-	disabled: {
-		type: Boolean,
-	},
-});
+type Props = {
+	showWhenValid?: boolean;
+	primary?: boolean;
+	trans?: boolean;
+	overlay?: boolean;
+	solid?: boolean;
+	block?: boolean;
+	lg?: boolean;
+	icon?: string;
+	disabled?: boolean;
+};
+const {
+	showWhenValid,
+	primary = true,
+	trans,
+	overlay,
+	solid = true,
+	block,
+	icon,
+	disabled,
+} = defineProps<Props>();
 
 const emit = defineEmits<{
 	'before-submit': [e: Event];
@@ -49,7 +38,7 @@ const isShowingSuccess = ref(false);
 
 // When the form is submitted, we want to show a success indicator.
 const shouldShow = computed(() => {
-	if (!props.showWhenValid) {
+	if (!showWhenValid) {
 		return true;
 	}
 

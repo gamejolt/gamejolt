@@ -24,12 +24,10 @@ type FormModel = CommunityModel & {
 	thumbnail_crop?: any;
 };
 
-const props = defineProps({
-	model: {
-		type: Object as () => CommunityModel,
-		default: undefined,
-	},
-});
+type Props = {
+	model?: CommunityModel;
+};
+const { model } = defineProps<Props>();
 
 const emit = defineEmits<{
 	submit: [community: CommunityModel];
@@ -46,10 +44,10 @@ const crop = computed(() =>
 const form: FormController<FormModel> = createForm({
 	modelClass: CommunityModel,
 	modelSaveHandler: $saveCommunityThumbnail,
-	model: toRef(props, 'model'),
+	model: toRef(() => model),
 	warnOnDiscard: false,
 	reloadOnSubmit: true,
-	loadUrl: computed(() => `/web/dash/communities/design/save-thumbnail/${props.model!.id}`),
+	loadUrl: computed(() => `/web/dash/communities/design/save-thumbnail/${model!.id}`),
 	onLoad(payload: any) {
 		maxFilesize.value = payload.maxFilesize;
 		minSize.value = payload.minSize;

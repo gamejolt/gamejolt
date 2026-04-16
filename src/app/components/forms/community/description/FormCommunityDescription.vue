@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, toRefs } from 'vue';
+import { ref, toRef } from 'vue';
 
 import {
 	$saveCommunityDescription,
@@ -8,7 +8,6 @@ import {
 import { ContextCapabilities } from '../../../../../_common/content/content-context';
 import AppForm, {
 	createForm,
-	defineFormProps,
 	FormController,
 } from '../../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
@@ -24,23 +23,22 @@ import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 
 type FormModel = CommunityModel;
 
-const props = defineProps({
-	...defineFormProps<FormModel>(true),
-});
-
-const { model } = toRefs(props);
+type Props = {
+	model: FormModel;
+};
+const { model } = defineProps<Props>();
 
 const lengthLimit = ref(5_000);
 const descriptionContentCapabilities = ref(ContextCapabilities.getPlaceholder());
 
 const form: FormController<FormModel> = createForm<FormModel>({
-	loadUrl: `/web/dash/communities/description/save/${model.value.id}`,
-	model,
+	loadUrl: `/web/dash/communities/description/save/${model.id}`,
+	model: toRef(() => model),
 	modelClass: CommunityModel,
 	modelSaveHandler: $saveCommunityDescription,
 	onLoad(payload) {
 		lengthLimit.value = payload.lengthLimit;
-		form.formModel.description_content = model.value.description_content ?? '';
+		form.formModel.description_content = model.description_content ?? '';
 
 		descriptionContentCapabilities.value = ContextCapabilities.fromPayloadList(
 			payload.contentCapabilities

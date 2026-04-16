@@ -1,33 +1,31 @@
 <script lang="ts" setup>
-import { computed, PropType } from 'vue';
+import { computed } from 'vue';
 
 import { assertNever } from '../../../utils/utils';
 import AppJolticon from '../../jolticon/AppJolticon.vue';
 import { toggleVideoPlayback, trackVideoPlayerEvent, VideoPlayerController } from './controller';
 
-const props = defineProps({
-	player: {
-		type: Object as PropType<VideoPlayerController>,
-		required: true,
-	},
-});
+type Props = {
+	player: VideoPlayerController;
+};
+const { player } = defineProps<Props>();
 
 const icon = computed(() => {
-	switch (props.player.state) {
+	switch (player.state) {
 		case 'playing':
 			return 'pause';
 		case 'paused':
 			return 'play';
 		default:
-			assertNever(props.player.state);
+			assertNever(player.state);
 	}
 });
 
 function onClickPlayback() {
-	toggleVideoPlayback(props.player);
+	toggleVideoPlayback(player);
 	trackVideoPlayerEvent(
-		props.player,
-		props.player.state === 'playing' ? 'play' : 'pause',
+		player,
+		player.state === 'playing' ? 'play' : 'pause',
 		'click-control'
 	);
 }

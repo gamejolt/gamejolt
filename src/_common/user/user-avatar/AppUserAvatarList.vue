@@ -1,23 +1,15 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import AppUserVerifiedTick from '../AppUserVerifiedTick.vue';
 import { UserCommonFields } from '../user.model';
 import AppUserAvatar from './AppUserAvatar.vue';
 
-defineProps({
-	users: {
-		type: Array as PropType<UserCommonFields[]>,
-		required: true,
-	},
-	sm: {
-		type: Boolean,
-	},
-	inline: {
-		type: Boolean,
-	},
-});
+type Props = {
+	users: UserCommonFields[];
+	sm?: boolean;
+	inline?: boolean;
+};
+const { users, sm = false, inline = false } = defineProps<Props>();
 </script>
 
 <template>

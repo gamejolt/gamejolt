@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onMounted, PropType, toRefs } from 'vue';
+import { onMounted } from 'vue';
 
 import { trackGiftAction } from '../../../_common/analytics/analytics.service';
 import AppButton from '../../../_common/button/AppButton.vue';
@@ -20,27 +20,20 @@ import AppUserAvatarBubble from '../../../_common/user/user-avatar/AppUserAvatar
 import { isInstance } from '../../../utils/utils';
 import { GiftAction } from './modal.service';
 
-const props = defineProps({
-	gift: {
-		type: Object as PropType<InventoryShopGiftModel>,
-		required: true,
-	},
-	product: {
-		type: Object as PropType<InventoryShopProduct>,
-		required: true,
-	},
-});
-
-const { gift, product } = toRefs(props);
+type Props = {
+	gift: InventoryShopGiftModel;
+	product: InventoryShopProduct;
+};
+const { gift, product } = defineProps<Props>();
 
 const modal = useModal<GiftAction>()!;
 
 onMounted(() => {
-	trackGiftAction({ action: 'view', giftId: gift.value.id });
+	trackGiftAction({ action: 'view', giftId: gift.id });
 });
 
 function doAction(action: 'accept' | 'reject' | 'ignore') {
-	trackGiftAction({ action, giftId: gift.value.id });
+	trackGiftAction({ action, giftId: gift.id });
 	modal.resolve(action);
 }
 </script>

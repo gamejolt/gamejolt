@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
+import { computed } from 'vue';
 
 import AppAspectRatio from '../../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import {
@@ -32,18 +32,11 @@ import { kFontSizeH2, kFontSizeSmall } from '../../../../../_styles/variables';
 import { isInstance } from '../../../../../utils/utils';
 import { showGiftActionModal } from '../../../gift/modal.service';
 
-const props = defineProps({
-	gift: {
-		type: Object as PropType<InventoryShopGiftModel>,
-		required: true,
-	},
-	product: {
-		type: Object as PropType<InventoryShopProduct>,
-		required: true,
-	},
-});
-
-const { gift, product } = toRefs(props);
+type Props = {
+	gift: InventoryShopGiftModel;
+	product: InventoryShopProduct;
+};
+const { gift, product } = defineProps<Props>();
 
 const emit = defineEmits<{
 	remove: [];
@@ -55,11 +48,11 @@ const { stickerPacks } = useStickerStore();
 let isHandlingClick = false;
 
 const readableProductType = computed(() =>
-	getReadablePurchasableProductType(gift.value.product_type)
+	getReadablePurchasableProductType(gift.product_type)
 );
 
 const leadingData = computed(() => {
-	if (isInstance(product.value, StickerPackModel)) {
+	if (isInstance(product, StickerPackModel)) {
 		return {
 			ratio: StickerPackRatio,
 		};
@@ -77,8 +70,8 @@ async function onClickGift() {
 	isHandlingClick = true;
 	try {
 		const result = await showGiftActionModal({
-			gift: gift.value,
-			product: product.value,
+			gift,
+			product,
 			stickerPacks,
 		});
 		if (result === 'accept' || result === 'reject') {

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import './comment.styl';
 
-import { PropType, ref } from 'vue';
+import { ref } from 'vue';
 
 import { kFontSizeBase } from '../../_styles/variables';
 import AppFadeCollapse from '../AppFadeCollapse.vue';
@@ -12,19 +12,12 @@ import AppReactionList from '../reaction/list/AppReactionList.vue';
 import AppTranslate from '../translate/AppTranslate.vue';
 import { CommentModel } from './comment-model';
 
-defineProps({
-	comment: {
-		type: Object as PropType<CommentModel>,
-		required: true,
-	},
-	content: {
-		type: String,
-		default: '',
-	},
-	canReact: {
-		type: Boolean,
-	},
-});
+type Props = {
+	comment: CommentModel;
+	content?: string;
+	canReact?: boolean;
+};
+const { comment, content = '', canReact } = defineProps<Props>();
 
 const canToggleContent = ref(false);
 const showFullContent = ref(false);

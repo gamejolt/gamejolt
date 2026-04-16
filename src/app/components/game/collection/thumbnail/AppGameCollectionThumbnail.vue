@@ -1,25 +1,19 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
+import { computed } from 'vue';
 
 import AppImgResponsive from '../../../../../_common/img/AppImgResponsive.vue';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import { GameCollectionModel } from '../collection.model';
 
-const props = defineProps({
-	collection: {
-		type: Object as PropType<GameCollectionModel>,
-		required: true,
-	},
-	hideTag: {
-		type: Boolean,
-	},
-});
-
-const { collection } = toRefs(props);
+type Props = {
+	collection: GameCollectionModel;
+	hideTag?: boolean;
+};
+const { collection, hideTag } = defineProps<Props>();
 
 const tagText = computed(() => {
-	switch (collection.value.type) {
+	switch (collection.type) {
 		case 'developer':
 			return $gettext(`Developer's Games`);
 		case 'followed':

@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { toRefs } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { Api } from '../../api/api.service';
@@ -28,20 +27,16 @@ export type JoinFormModel = {
 	token: string;
 };
 
-const props = defineProps({
-	overlay: {
-		type: Boolean,
-	},
-	blocked: {
-		type: Boolean,
-	},
-});
+type Props = {
+	overlay?: boolean;
+	blocked?: boolean;
+};
+defineProps<Props>();
 
 const emit = defineEmits<{
 	submit: [model: JoinFormModel];
 }>();
 
-const { overlay, blocked } = toRefs(props);
 const router = useRouter();
 
 const form: FormController<JoinFormModel> = createForm<JoinFormModel>({

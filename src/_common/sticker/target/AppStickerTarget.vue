@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, nextTick, onBeforeUnmount, PropType, toRaw, toRefs, useTemplateRef, watch } from 'vue';
+import { computed, nextTick, onBeforeUnmount, toRaw, useTemplateRef, watch } from 'vue';
 
 import { sleep } from '../../../utils/utils';
 import { Api } from '../../api/api.service';
@@ -27,17 +27,11 @@ const InviewConfig = new ScrollInviewConfig();
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	controller: {
-		type: Object as PropType<StickerTargetController>,
-		required: true,
-	},
-	disabled: {
-		type: Boolean,
-	},
-});
-
-const { controller, disabled } = toRefs(props);
+type Props = {
+	controller: StickerTargetController;
+	disabled?: boolean;
+};
+const { controller, disabled } = defineProps<Props>();
 
 const root = useTemplateRef('root');
 
@@ -47,7 +41,7 @@ const { isDragging, isDrawerOpen, sticker: storeSticker } = stickerStore;
 const layer = useStickerLayer()!;
 
 const layerItem = new StickerLayerItem(
-	controller.value,
+	controller,
 	() => root.value!.getBoundingClientRect(),
 	pointer => onPlaceDrawerSticker(pointer)
 );
@@ -56,26 +50,26 @@ let queuedInview = false;
 
 const stickers = computed(() => {
 	// Sort so that the newer stickers go on top of the older ones.
-	return [...controller.value.stickers.value].sort((a, b) => a.id - b.id);
+	return [...controller.stickers.value].sort((a, b) => a.id - b.id);
 });
 
 const isShowingStickers = computed(() => {
 	return (
-		controller.value.shouldShow.value &&
-		controller.value.isInview.value &&
+		controller.shouldShow.value &&
+		controller.isInview.value &&
 		stickers.value.length > 0
 	);
 });
 
 const shouldFade = computed(() => isDrawerOpen.value);
 
-watch(controller.value.shouldLoad, shouldLoad => {
+watch(controller.shouldLoad, shouldLoad => {
 	if (shouldLoad) {
 		_loadStickers();
 	}
 });
 
-watch(disabled, checkDisabledState);
+watch(() => disabled, checkDisabledState);
 watch(isShowingStickers, onIsShowingStickersChange);
 
 checkDisabledState();
@@ -84,7 +78,7 @@ onBeforeUnmount(() => {
 	unregisterStickerTarget(layer, layerItem);
 
 	const wasAttemptingPlacement =
-		toRaw(stickerStore.targetController.value) === toRaw(controller.value);
+		toRaw(stickerStore.targetController.value) === toRaw(controller);
 	const hasOtherLayers = (stickerStore.activeLayer.value?.layerItems.value.length || 0) > 0;
 
 	// Close the sticker drawer if the placement (or drawer itself) has become
@@ -95,7 +89,7 @@ onBeforeUnmount(() => {
 });
 
 function checkDisabledState() {
-	if (disabled.value) {
+	if (disabled) {
 		unregisterStickerTarget(layer, layerItem);
 	} else {
 		registerStickerTarget(layer, layerItem);
@@ -106,17 +100,17 @@ async function onIsShowingStickersChange() {
 	await nextTick();
 
 	if (isShowingStickers.value) {
-		controller.value.newStickers.value = [];
+		controller.newStickers.value = [];
 	}
 }
 
 async function _loadStickers() {
-	controller.value.hasLoadedStickers.value = true;
+	controller.hasLoadedStickers.value = true;
 
 	const {
 		model,
 		model: { id: resourceId },
-	} = controller.value;
+	} = controller;
 
 	const resourceName = getStickerModelResourceName(model);
 
@@ -128,7 +122,7 @@ async function _loadStickers() {
 		}
 	);
 
-	controller.value.stickers.value = StickerPlacementModel.populate(stickers);
+	controller.stickers.value = StickerPlacementModel.populate(stickers);
 }
 
 async function onInview() {
@@ -140,14 +134,14 @@ async function onInview() {
 	await sleep(500);
 
 	if (queuedInview) {
-		controller.value.isInview.value = true;
+		controller.isInview.value = true;
 		queuedInview = false;
 	}
 }
 
 function onOutview() {
 	queuedInview = false;
-	controller.value.isInview.value = false;
+	controller.isInview.value = false;
 }
 
 function onPlaceDrawerSticker(pointer: PointerPosition) {
@@ -168,19 +162,19 @@ function onPlaceDrawerSticker(pointer: PointerPosition) {
 		sticker: storeSticker.value,
 	});
 
-	assignStickerStoreItem(stickerStore, stickerPlacement, controller.value);
+	assignStickerStoreItem(stickerStore, stickerPlacement, controller);
 }
 
 function getStickerAnimationDelay(placement: StickerPlacementModel, index: number) {
 	// Immediately show stickers if we're in a Live context.
-	if (controller.value.isLive) {
+	if (controller.isLive) {
 		return 'unset';
 	}
 
 	// If the sticker was placed since we last rendered the stickers, we
 	// don't want it to delay or it'll feel broken/slow. We wait a little
 	// bit just because it looks a bit later after placing to wait.
-	if (controller.value.newStickers.value.includes(placement)) {
+	if (controller.newStickers.value.includes(placement)) {
 		return '0.1s';
 	}
 

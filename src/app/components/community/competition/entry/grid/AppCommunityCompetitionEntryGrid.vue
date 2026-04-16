@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, toRef, toRefs } from 'vue';
+import { computed, toRef } from 'vue';
 
 import {
 	CommunityCompetitionModel,
@@ -10,59 +10,38 @@ import { CommunityCompetitionVotingCategoryModel } from '../../../../../../_comm
 import { formatNumber } from '../../../../../../_common/filters/number';
 import AppCommunityCompetitionEntryThumbnail from '../thumbnail/AppCommunityCompetitionEntryThumbnail.vue';
 
-const props = defineProps({
-	competition: {
-		type: Object as PropType<CommunityCompetitionModel>,
-		required: true,
-	},
-	entries: {
-		type: Array as PropType<CommunityCompetitionEntryModel[]>,
-		required: true,
-	},
-	currentPage: {
-		type: Number,
-		default: 0,
-	},
-	pageCount: {
-		type: Number,
-		default: 0,
-	},
-	numPlaceholders: {
-		type: Number,
-		default: 6,
-	},
-	category: {
-		type: Object as PropType<CommunityCompetitionVotingCategoryModel>,
-		default: undefined,
-	},
-	showRemove: {
-		type: Boolean,
-	},
-});
+type Props = {
+	competition: CommunityCompetitionModel;
+	entries: CommunityCompetitionEntryModel[];
+	currentPage?: number;
+	pageCount?: number;
+	numPlaceholders?: number;
+	category?: CommunityCompetitionVotingCategoryModel;
+	showRemove?: boolean;
+};
+const { competition, entries, currentPage = 0, pageCount = 0, numPlaceholders = 6, category, showRemove } = defineProps<Props>();
 
 const emit = defineEmits<{
 	remove: [entry: CommunityCompetitionEntryModel];
 }>();
 
-const { competition, numPlaceholders } = toRefs(props);
-
 const shouldShowThumbnailRanks = toRef(
 	() =>
-		competition.value.is_voting_enabled &&
-		competition.value.has_community_voting &&
-		competition.value.are_results_calculated
+		competition.is_voting_enabled &&
+		competition.has_community_voting &&
+		competition.are_results_calculated
 );
 
 const shouldShowThumbnailAwards = toRef(
 	() =>
-		competition.value.is_voting_enabled &&
-		competition.value.has_awards &&
-		competition.value.periodNum >= CompetitionPeriodVoting
+		competition.is_voting_enabled &&
+		competition.has_awards &&
+		competition.periodNum >= CompetitionPeriodVoting
 );
 
 const placeholderCount = computed(() => {
 	const iterators = [];
-	for (let i = 0; i < numPlaceholders.value; i++) {
+	for (let i = 0; i < numPlaceholders; i++) {
 		iterators.push(i);
 	}
 	return iterators;

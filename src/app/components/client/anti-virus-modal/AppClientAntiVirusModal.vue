@@ -4,16 +4,11 @@ import AppModal from '../../../../_common/modal/AppModal.vue';
 import { useModal } from '../../../../_common/modal/modal.service';
 import { $gettext } from '../../../../_common/translate/translate.service';
 
-defineProps({
-	title: {
-		type: String,
-		default: undefined,
-	},
-	message: {
-		type: String,
-		required: true,
-	},
-});
+type Props = {
+	title?: string;
+	message: string;
+};
+defineProps<Props>();
 const modal = useModal()!;
 </script>
 

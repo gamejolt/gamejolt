@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { PropType, ref } from 'vue';
+import { ref } from 'vue';
 
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppInviteCard from '../../../../_common/invite/AppInviteCard.vue';
@@ -21,21 +21,16 @@ import AppProfileShortcuts, {
 } from '../overview/shortcut/AppProfileShortcuts.vue';
 import { ProfileRouteStore, provideProfileRouteStore } from '../RouteProfile.vue';
 
-const props = defineProps({
-	routeStore: {
-		type: Object as PropType<ProfileRouteStore>,
-		required: true,
-	},
-	quickLinks: {
-		type: Array as PropType<ProfileQuickLink[]>,
-		required: true,
-	},
-});
+type Props = {
+	routeStore: ProfileRouteStore;
+	quickLinks: ProfileQuickLink[];
+};
+const { routeStore, quickLinks } = defineProps<Props>();
 
 // Route store shouldn't change, so this is fine.
-provideProfileRouteStore(props.routeStore);
+provideProfileRouteStore(routeStore);
 // eslint-disable-next-line vue/no-setup-props-destructure
-const { user: routeUser, myUser, isMe, shareUrl } = props.routeStore;
+const { user: routeUser, myUser, isMe, shareUrl } = routeStore;
 
 const modal = useModal()!;
 

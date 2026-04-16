@@ -28,22 +28,13 @@ export function createFormControlErrors() {
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	label: {
-		type: String,
-		default: undefined,
-	},
-	position: {
-		type: String,
-		default: undefined,
-	},
-	hideCaret: {
-		type: Boolean,
-	},
-	ignoreDirty: {
-		type: Boolean,
-	},
-});
+type Props = {
+	label?: string;
+	position?: string;
+	hideCaret?: boolean;
+	ignoreDirty?: boolean;
+};
+const { label, position, hideCaret } = defineProps<Props>();
 
 const c = createFormControlErrors();
 provide(Key, c);
@@ -52,7 +43,7 @@ const { overrides } = c;
 const form = useForm()!;
 const { name, humanLabel: groupLabel, error, dirty } = useFormGroup()!;
 
-const _label = computed(() => (props.label || groupLabel.value || '').toLocaleLowerCase());
+const _label = computed(() => (label || groupLabel.value || '').toLocaleLowerCase());
 
 const errorMessage = computed(() => {
 	// Only show input errors if the field has been modified from its initial

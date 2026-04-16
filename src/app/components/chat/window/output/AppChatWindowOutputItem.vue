@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, CSSProperties, PropType, reactive, ref, toRefs, useTemplateRef } from 'vue';
+import { computed, CSSProperties, reactive, ref, useTemplateRef } from 'vue';
 import { RouterLink } from 'vue-router';
 
 import { ContentOwnerParentBounds } from '../../../../../_common/content/content-owner';
@@ -43,39 +43,27 @@ const DisplayRules = new ContentRules({ maxMediaWidth: 400, maxMediaHeight: 300 
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	message: {
-		type: Object as PropType<ChatMessageModel>,
-		required: true,
-	},
-	room: {
-		type: Object as PropType<ChatRoomModel>,
-		required: true,
-	},
-	messagePadding: {
-		type: Number,
-		default: 12,
-	},
-	maxContentWidth: {
-		type: Number,
-		default: 100,
-	},
-	avatarPopperPlacement: {
-		type: String as PropType<PopperPlacementType>,
-		default: 'right',
-	},
-	avatarPopperPlacementFallbacks: {
-		type: Array as PropType<PopperPlacementType[]>,
-		default: undefined,
-	},
-});
+type Props = {
+	message: ChatMessageModel;
+	room: ChatRoomModel;
+	messagePadding?: number;
+	maxContentWidth?: number;
+	avatarPopperPlacement?: PopperPlacementType;
+	avatarPopperPlacementFallbacks?: PopperPlacementType[];
+};
+const {
+	message,
+	room,
+	messagePadding = 12,
+	maxContentWidth = 100,
+	avatarPopperPlacement = 'right',
+	avatarPopperPlacementFallbacks,
+} = defineProps<Props>();
 
 const emit = defineEmits<{
 	showPopper: [];
 	hidePopper: [];
 }>();
-
-const { message, room, maxContentWidth } = toRefs(props);
 const { chatUnsafe: chat } = useGridStore();
 
 const avatarSizeStyles: CSSProperties = {
@@ -91,12 +79,14 @@ const isShowingAvatarPopper = ref(false);
 const popperHideTrigger = ref(0);
 
 const contentViewerBounds: ContentOwnerParentBounds = reactive({
-	width: maxContentWidth,
+	get width() {
+		return maxContentWidth;
+	},
 });
 
-const showAsQueued = computed(() => message.value._showAsQueued);
-const hasError = computed(() => !!message.value._error);
-const isEditing = computed(() => room.value.messageEditing === message.value);
+const showAsQueued = computed(() => message._showAsQueued);
+const hasError = computed(() => !!message._error);
+const isEditing = computed(() => room.messageEditing === message);
 
 const messageState = computed<{ icon?: Jolticon; display: string; tooltip?: string } | null>(() => {
 	const wrap = (text: string) => `(${text})`;
@@ -121,10 +111,10 @@ const messageState = computed<{ icon?: Jolticon; display: string; tooltip?: stri
 		};
 	}
 
-	if (message.value.edited_on) {
+	if (message.edited_on) {
 		return {
 			display: wrap($gettext('edited')),
-			tooltip: formatDate(message.value.edited_on!, 'medium'),
+			tooltip: formatDate(message.edited_on!, 'medium'),
 		};
 	}
 
@@ -169,21 +159,21 @@ const canRemoveMessage = computed(() => {
 	}
 
 	// The owner of the message can remove it.
-	if (chat.value.currentUser.id === message.value.user.id) {
+	if (chat.value.currentUser.id === message.user.id) {
 		return true;
 	}
 
 	// Mods/Room owners can also remove the message.
-	return userCanModerateOtherUser(room.value, chat.value.currentUser, message.value.user);
+	return userCanModerateOtherUser(room, chat.value.currentUser, message.user);
 });
 
 const canReactToMessage = computed(() => {
-	if (message.value.is_automated) {
+	if (message.is_automated) {
 		return false;
 	}
 
 	// Only content messages can be edited.
-	if (message.value.type !== 'content') {
+	if (message.type !== 'content') {
 		return false;
 	}
 
@@ -200,17 +190,17 @@ const canEditMessage = computed(() => {
 	}
 
 	// Only the owner of the message can edit.
-	return !!chat.value.currentUser && chat.value.currentUser.id === message.value.user.id;
+	return !!chat.value.currentUser && chat.value.currentUser.id === message.user.id;
 });
 
 const roleData = computed(() =>
-	getChatUserRoleData(room.value, message.value.user, {
-		mesage: message.value,
+	getChatUserRoleData(room, message.user, {
+		mesage: message,
 	})
 );
 
 const shouldShowAvatar = computed(
-	() => message.value.showAvatar === true || isShowingAvatarPopper.value
+	() => message.showAvatar === true || isShowingAvatarPopper.value
 );
 
 function onAvatarPopperVisible(isShowing: boolean) {
@@ -224,12 +214,12 @@ function onAvatarPopperVisible(isShowing: boolean) {
 }
 
 function startEdit() {
-	room.value.messageEditing = message.value;
+	room.messageEditing = message;
 	Popper.hideAll();
 }
 
 function stopEdit() {
-	room.value.messageEditing = null;
+	room.messageEditing = null;
 	Popper.hideAll();
 }
 
@@ -244,8 +234,8 @@ async function removeMessage() {
 		return;
 	}
 
-	room.value.messageEditing = null;
-	chatRemoveMessage(chat.value, room.value, message.value.id);
+	room.messageEditing = null;
+	chatRemoveMessage(chat.value, room, message.id);
 }
 
 async function onFocusItem() {
@@ -267,7 +257,7 @@ function onRowClick() {
 
 async function onMessageClick() {
 	if (hasError.value) {
-		retryFailedQueuedMessage(room.value, message.value);
+		retryFailedQueuedMessage(room, message);
 	}
 }
 </script>

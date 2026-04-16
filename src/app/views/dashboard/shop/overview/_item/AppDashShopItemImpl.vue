@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, CSSProperties, PropType, toRefs } from 'vue';
+import { computed, CSSProperties } from 'vue';
 
 import AppAspectRatio from '../../../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import { AvatarFrameModel } from '../../../../../../_common/avatar/frame.model';
@@ -30,28 +30,15 @@ import { isInstance } from '../../../../../../utils/utils';
 import AppDashShopProductType from '../../AppDashShopProductType.vue';
 import { getShopDashProductType, ShopDashProductStates } from '../../shop.store';
 
-const props = defineProps({
-	item: {
-		type: Object as PropType<ShopProductModel>,
-		required: true,
-	},
-	borderRadius: {
-		type: Number,
-		required: true,
-	},
-	hovered: {
-		type: Boolean,
-		required: true,
-	},
-	itemStates: {
-		type: Object as PropType<ShopDashProductStates>,
-		required: true,
-	},
-});
+type Props = {
+	item: ShopProductModel;
+	borderRadius: number;
+	hovered: boolean;
+	itemStates: ShopDashProductStates;
+};
+const { item, borderRadius, hovered, itemStates } = defineProps<Props>();
 
-const { item, borderRadius, hovered } = toRefs(props);
-
-const productType = computed(() => getShopDashProductType(item.value));
+const productType = computed(() => getShopDashProductType(item));
 
 const baseInfoTagStyles: CSSProperties = {
 	...styleBorderRadiusLg,

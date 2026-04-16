@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { toRef, toRefs } from 'vue';
+import { toRef } from 'vue';
 import { useRouter } from 'vue-router';
 
 import AppButton from '../../../../../_common/button/AppButton.vue';
@@ -23,13 +23,10 @@ import { useAppStore } from '../../../../store';
 import AppEditableThumbnail from '../_editable-thumbnail/AppEditableThumbnail.vue';
 import { useCommunityRouteStore } from '../view.store';
 
-const props = defineProps({
-	hasUnread: {
-		type: Boolean,
-	},
-});
-
-const { hasUnread } = toRefs(props);
+type Props = {
+	hasUnread?: boolean;
+};
+defineProps<Props>();
 const routeStore = useCommunityRouteStore()!;
 const { toggleLeftPane } = useAppStore();
 const { user } = useCommonStore();

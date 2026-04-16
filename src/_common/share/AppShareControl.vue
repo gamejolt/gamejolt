@@ -1,22 +1,15 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-
 import AppButton from '../button/AppButton.vue';
 import { copyShareLink, ShareResource } from './share.service';
 
-const props = defineProps({
-	resource: {
-		type: String as PropType<ShareResource>,
-		required: true,
-	},
-	url: {
-		type: String,
-		required: true,
-	},
-});
+type Props = {
+	resource: ShareResource;
+	url: string;
+};
+const { resource, url } = defineProps<Props>();
 
 function copyLink() {
-	copyShareLink(props.url, props.resource);
+	copyShareLink(url, resource);
 }
 </script>
 

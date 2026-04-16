@@ -7,16 +7,11 @@ import { Geo } from '../../../../../_common/geo/geo.service';
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { useFormManagedAccount } from './FormFinancialsManagedAccount.vue';
 
-defineProps({
-	namePrefix: {
-		type: String,
-		required: true,
-	},
-	countryCode: {
-		type: String,
-		default: undefined,
-	},
-});
+type Props = {
+	namePrefix: string;
+	countryCode?: string;
+};
+const { namePrefix } = defineProps<Props>();
 
 const { requiresField, getStripeField, account } = useFormManagedAccount()!;
 const countries = Geo.getCountries();

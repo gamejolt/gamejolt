@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, CSSProperties, PropType, ref, toRefs } from 'vue';
+import { computed, CSSProperties, ref } from 'vue';
 
 import { kFontSizeBase } from '../../../../_styles/variables';
 import { Api } from '../../../api/api.service';
@@ -15,18 +15,11 @@ const EmojiInviewConfig = new ScrollInviewConfig({ margin: `200px` });
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	groupData: {
-		type: Object as PropType<EmojiGroupData>,
-		required: true,
-	},
-	gridStyles: {
-		type: Object as PropType<CSSProperties>,
-		required: true,
-	},
-});
-
-const { groupData } = toRefs(props);
+type Props = {
+	groupData: EmojiGroupData;
+	gridStyles: CSSProperties;
+};
+const { groupData } = defineProps<Props>();
 
 const inview = ref(false);
 
@@ -37,7 +30,7 @@ const emit = defineEmits<{
 }>();
 
 const itemCount = computed(() => {
-	return Math.max(groupData.value.group.emojis.length, groupData.value.group.num_emojis);
+	return Math.max(groupData.group.emojis.length, groupData.group.num_emojis);
 });
 
 function onInview() {

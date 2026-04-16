@@ -1,33 +1,23 @@
 <script lang="ts" setup>
-import { computed, toRef, toRefs } from 'vue';
+import { computed, toRef } from 'vue';
 
 import AppGameThumbnailPlaceholder from '../../../../_common/game/thumbnail/AppGameThumbnailPlaceholder.vue';
 import { Screen } from '../../../../_common/screen/screen-service';
 import { GameGridRowSizeLg, GameGridRowSizeMd, GameGridRowSizeSm } from './AppGameGrid.vue';
 
-const props = defineProps({
-	num: {
-		type: Number,
-		required: true,
-	},
-	truncateToFit: {
-		type: Boolean,
-	},
-	scrollable: {
-		type: Boolean,
-	},
-	forceScrollable: {
-		type: Boolean,
-	},
-});
+type Props = {
+	num: number;
+	truncateToFit?: boolean;
+	scrollable?: boolean;
+	forceScrollable?: boolean;
+};
+const { num, truncateToFit, scrollable, forceScrollable } = defineProps<Props>();
 
-const { num, truncateToFit, scrollable, forceScrollable } = toRefs(props);
-
-const isScrollable = toRef(() => (Screen.isXs && scrollable.value) || forceScrollable.value);
+const isScrollable = toRef(() => (Screen.isXs && scrollable) || forceScrollable);
 
 const count = computed(() => {
-	if (!truncateToFit.value || isScrollable.value) {
-		return num.value;
+	if (!truncateToFit || isScrollable.value) {
+		return num;
 	}
 
 	let rowSize: number;
@@ -38,10 +28,10 @@ const count = computed(() => {
 	} else if (Screen.isLg) {
 		rowSize = GameGridRowSizeLg;
 	} else {
-		rowSize = num.value;
+		rowSize = num;
 	}
 
-	return Math.max(1, Math.floor(num.value / rowSize)) * rowSize;
+	return Math.max(1, Math.floor(num / rowSize)) * rowSize;
 });
 </script>
 

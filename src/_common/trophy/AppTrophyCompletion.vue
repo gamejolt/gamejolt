@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, toRefs } from 'vue';
+import { computed } from 'vue';
 
 import AppCard from '../card/AppCard.vue';
 import { formatNumber } from '../filters/number';
@@ -7,28 +7,15 @@ import AppJolticon from '../jolticon/AppJolticon.vue';
 import AppProgressBar from '../progress/AppProgressBar.vue';
 import AppTranslate from '../translate/AppTranslate.vue';
 
-const props = defineProps({
-	total: {
-		type: Number,
-		required: true,
-	},
-	achieved: {
-		type: Number,
-		required: true,
-	},
-	experience: {
-		type: Number,
-		required: true,
-	},
-	isLoggedInUser: {
-		type: Boolean,
-		default: true,
-	},
-});
+type Props = {
+	total: number;
+	achieved: number;
+	experience: number;
+	isLoggedInUser?: boolean;
+};
+const { achieved, total, isLoggedInUser = true } = defineProps<Props>();
 
-const { achieved, total } = toRefs(props);
-
-const completionRate = computed(() => Math.ceil((achieved.value / total.value) * 100));
+const completionRate = computed(() => Math.ceil((achieved / total) * 100));
 </script>
 
 <template>

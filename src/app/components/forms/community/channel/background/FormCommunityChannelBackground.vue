@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, toRef, toRefs, watchEffect } from 'vue';
+import { ref, toRef, watchEffect } from 'vue';
 
 import AppButton from '../../../../../../_common/button/AppButton.vue';
 import {
@@ -9,7 +9,6 @@ import {
 } from '../../../../../../_common/community/channel/channel.model';
 import AppForm, {
 	createForm,
-	defineFormProps,
 	FormController,
 } from '../../../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../../../_common/form-vue/AppFormButton.vue';
@@ -29,15 +28,16 @@ type FormModel = CommunityChannelModel & {
 	crop?: any;
 };
 
-const props = defineProps({
-	...defineFormProps<CommunityChannelModel>(true),
-});
+type Props = {
+	model: CommunityChannelModel;
+};
+const { model } = defineProps<Props>();
 
 const emit = defineEmits<{
 	submit: [model: CommunityChannelModel];
 }>();
 
-const { model } = toRefs(props);
+const modelRef = toRef(() => model);
 
 const maxFilesize = ref(0);
 const aspectRatio = ref(0);
@@ -49,11 +49,11 @@ const maxHeight = ref(0);
 const crop = toRef(() => form.formModel.background?.getCrop());
 
 const loadUrl = toRef(
-	() => `/web/dash/communities/channels/save/${model.value.community_id}/${model.value.id}`
+	() => `/web/dash/communities/channels/save/${model.community_id}/${model.id}`
 );
 
 const form: FormController<FormModel> = createForm({
-	model,
+	model: modelRef,
 	modelClass: CommunityChannelModel,
 	modelSaveHandler: $saveCommunityChannelBackground,
 	loadUrl,
@@ -94,7 +94,7 @@ async function clearBackground() {
 
 	const payload = await $clearCommunityChannelBackground(form.formModel);
 
-	model.value?.assign(payload.channel);
+	model?.assign(payload.channel);
 }
 </script>
 

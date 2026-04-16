@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { PropType, ref } from 'vue';
+import { ref } from 'vue';
 
 import AppButton from '../../button/AppButton.vue';
 import AppModal from '../../modal/AppModal.vue';
@@ -10,12 +10,10 @@ import { $gettext } from '../../translate/translate.service';
 import AppCollectibleResourceThumbDetails from '../AppCollectibleResourceDetails.vue';
 import { CollectibleResourceItem } from './modal.service';
 
-defineProps({
-	item: {
-		type: Object as PropType<CollectibleResourceItem>,
-		required: true,
-	},
-});
+type Props = {
+	item: CollectibleResourceItem;
+};
+const { item } = defineProps<Props>();
 
 const packs = ref<StickerPackModel[]>([]);
 

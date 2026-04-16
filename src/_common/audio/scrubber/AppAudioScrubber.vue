@@ -1,25 +1,18 @@
 <script lang="ts" setup>
-import { computed, ref, toRefs, useTemplateRef, watch } from 'vue';
+import { computed, ref, useTemplateRef, watch } from 'vue';
 
 import { Ruler } from '../../ruler/ruler-service';
 import AppTouch, { AppTouchInput } from '../../touch/AppTouch.vue';
 
-const props = defineProps({
-	currentTime: {
-		type: Number,
-		required: true,
-	},
-	duration: {
-		type: Number,
-		required: true,
-	},
-});
+type Props = {
+	currentTime: number;
+	duration: number;
+};
+const { currentTime, duration } = defineProps<Props>();
 
 const emit = defineEmits<{
 	seek: [pos: number];
 }>();
-
-const { currentTime, duration } = toRefs(props);
 
 const isDragging = ref(false);
 
@@ -35,11 +28,11 @@ const unfilledRight = computed(() => {
 		return 100 - scrubPos.value * 100 + '%';
 	}
 
-	if (!duration.value) {
+	if (!duration) {
 		return 'auto';
 	}
 
-	return 100 - (currentTime.value / duration.value) * 100 + '%';
+	return 100 - (currentTime / duration) * 100 + '%';
 });
 
 /**
@@ -48,7 +41,7 @@ const unfilledRight = computed(() => {
  * that the scrub pos override will go back to normal as soon as a new time
  * change comes in.
  */
-watch(currentTime, () => {
+watch(() => currentTime, () => {
 	if (!isDragging.value) {
 		scrubPos.value = -1;
 	}

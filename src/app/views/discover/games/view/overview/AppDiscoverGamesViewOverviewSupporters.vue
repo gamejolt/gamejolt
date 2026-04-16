@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { PropType, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
 
 import AppButton from '../../../../../../_common/button/AppButton.vue';
@@ -12,24 +11,18 @@ import { UserModel } from '../../../../../../_common/user/user.model';
 import AppUserAvatarImg from '../../../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
 import { useGameRouteController } from '../RouteDiscoverGamesView.vue';
 
-const props = defineProps({
-	supporters: {
-		type: Array as PropType<UserModel[]>,
-		required: true,
-	},
-	supporterCount: {
-		type: Number,
-		required: true,
-	},
-});
+type Props = {
+	supporters: UserModel[];
+	supporterCount: number;
+};
+const { supporters, supporterCount } = defineProps<Props>();
 
-const { supporterCount } = toRefs(props);
 const { game } = useGameRouteController()!;
 
 function viewAll() {
 	showSupportersModal({
 		model: game.value!,
-		count: supporterCount.value,
+		count: supporterCount,
 	});
 }
 </script>

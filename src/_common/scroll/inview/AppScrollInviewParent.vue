@@ -1,5 +1,5 @@
 <script lang="ts">
-import { inject, InjectionKey, PropType, provide, ref } from 'vue';
+import { inject, InjectionKey, provide, ref } from 'vue';
 
 import { ScrollInviewConfig, ScrollInviewController } from './AppScrollInview.vue';
 
@@ -162,16 +162,14 @@ function createScrollInviewContainer(config: ScrollInviewConfig, root: Element |
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
+type Props = {
 	// If this is a child of AppScrollScroller, we need to get it as a prop so
 	// we can use that scroll element as the root context.
-	scrollElement: {
-		type: Object as PropType<HTMLElement>,
-		default: null,
-	},
-});
+	scrollElement?: HTMLElement | null;
+};
+const { scrollElement = null } = defineProps<Props>();
 
-createScrollInviewParent(props.scrollElement);
+createScrollInviewParent(scrollElement);
 </script>
 
 <template>

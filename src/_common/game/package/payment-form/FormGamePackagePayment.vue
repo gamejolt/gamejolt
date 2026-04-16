@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRefs, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 import { arrayIndexBy } from '../../../../utils/array';
 import { Api } from '../../../api/api.service';
@@ -36,36 +36,19 @@ import { GamePackageModel } from '../package.model';
 
 type FormModel = any;
 
-const props = defineProps({
-	game: {
-		type: Object as PropType<GameModel>,
-		required: true,
-	},
-	gamePackage: {
-		type: Object as PropType<GamePackageModel>,
-		required: true,
-	},
-	build: {
-		type: Object as PropType<GameBuildModel | null>,
-		required: false,
-		default: null,
-	},
-	sellable: {
-		type: Object as PropType<SellableModel>,
-		required: true,
-	},
-	operation: {
-		type: String as PropType<'download' | 'play'>,
-		required: true,
-	},
-});
+type Props = {
+	game: GameModel;
+	gamePackage: GamePackageModel;
+	build?: GameBuildModel | null;
+	sellable: SellableModel;
+	operation: 'download' | 'play';
+};
+const { game, gamePackage, build = null, sellable, operation } = defineProps<Props>();
 
 const emit = defineEmits<{
 	bought: [];
 	skip: [];
 }>();
-
-const { game, gamePackage, build, sellable, operation } = toRefs(props);
 const { user } = useCommonStore();
 
 const isBootstrapped = ref(false);
@@ -85,14 +68,14 @@ const walletBalance = ref(0);
 const walletTax = ref(0);
 const minOrderAmount = ref(50);
 
-const isNameYourPrice = computed(() => sellable.value.type === 'pwyw');
-const isPlaying = computed(() => operation.value === 'play');
-const isDownloading = computed(() => operation.value === 'download' && !GJ_IS_DESKTOP_APP);
-const isInstalling = computed(() => operation.value === 'download' && GJ_IS_DESKTOP_APP);
-const pricing = computed(() => sellable.value.pricings[0]);
+const isNameYourPrice = computed(() => sellable.type === 'pwyw');
+const isPlaying = computed(() => operation === 'play');
+const isDownloading = computed(() => operation === 'download' && !GJ_IS_DESKTOP_APP);
+const isInstalling = computed(() => operation === 'download' && GJ_IS_DESKTOP_APP);
+const pricing = computed(() => sellable.pricings[0]);
 
 const _minOrderAmount = computed(() =>
-	sellable.value.type === 'paid' ? pricing.value.amount / 100 : minOrderAmount.value / 100
+	sellable.type === 'paid' ? pricing.value.amount / 100 : minOrderAmount.value / 100
 );
 
 const formattedAmount = computed(() => formatCurrency(pricing.value.amount));
@@ -117,7 +100,7 @@ const hasSufficientWalletFunds = computed(() => {
 
 	// Paid games have to be more than the amount of the game base price.
 	if (
-		sellable.value.type === SellableType.Paid &&
+		sellable.type === SellableType.Paid &&
 		walletBalance.value < sellableAmount + taxAmount
 	) {
 		return false;
@@ -145,7 +128,7 @@ const form: FormController<FormModel> = createForm({
 
 		const data: any = {
 			payment_method: checkoutType.value,
-			sellable_id: sellable.value.id,
+			sellable_id: sellable.id,
 			pricing_id: pricing.value.id,
 			amount: form.formModel.amount * 100,
 			country: form.formModel.country,
@@ -162,7 +145,7 @@ const form: FormController<FormModel> = createForm({
 			data.address_id = addresses.value[0].id;
 		}
 
-		data['source'] = HistoryTick.getSource('Game', gamePackage.value.game_id) || null;
+		data['source'] = HistoryTick.getSource('Game', gamePackage.game_id) || null;
 		data['os'] = getDeviceOS();
 		data['arch'] = getDeviceArch();
 
@@ -312,7 +295,7 @@ function startOver() {
 function checkoutSavedCard(card: any) {
 	const data: any = {
 		payment_method: 'cc-stripe',
-		sellable_id: sellable.value.id,
+		sellable_id: sellable.id,
 		pricing_id: pricing.value.id,
 		amount: form.formModel.amount * 100,
 	};
@@ -323,7 +306,7 @@ function checkoutSavedCard(card: any) {
 function checkoutWallet() {
 	const data: any = {
 		payment_method: 'wallet',
-		sellable_id: sellable.value.id,
+		sellable_id: sellable.id,
 		pricing_id: pricing.value.id,
 		amount: form.formModel.amount * 100,
 	};
@@ -351,7 +334,7 @@ async function doCheckout(setupData: any, chargeData: any) {
 
 	isProcessing.value = true;
 
-	setupData['source'] = HistoryTick.getSource('Game', gamePackage.value.game_id) || null;
+	setupData['source'] = HistoryTick.getSource('Game', gamePackage.game_id) || null;
 	setupData['os'] = getDeviceOS();
 	setupData['arch'] = getDeviceArch();
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, inject, PropType, provide, reactive, ref, toRefs } from 'vue';
+import { computed, inject, provide, reactive, ref } from 'vue';
 
 import { useAdStore } from '../../../../_common/ad/ad-store';
 import AppAdFeedParent from '../../../../_common/ad/AppAdFeedParent.vue';
@@ -55,15 +55,11 @@ export function useActivityFeedInterface() {
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	feed: {
-		type: Object as PropType<ActivityFeedView>,
-		required: true,
-	},
-	showAds: {
-		type: Boolean,
-	},
-});
+type Props = {
+	feed: ActivityFeedView;
+	showAds?: boolean;
+};
+const { feed, showAds } = defineProps<Props>();
 
 const emit = defineEmits<{
 	'edit-post': [eventItem: EventItemModel];
@@ -76,11 +72,9 @@ const emit = defineEmits<{
 	'load-new': [];
 	'load-more': [];
 }>();
-
-const { feed, showAds } = toRefs(props);
 const { shouldShow: globalShouldShowAds } = useAdStore();
 
-provide(ActivityFeedKey, feed.value);
+provide(ActivityFeedKey, feed);
 
 provide(
 	ActivityFeedInterfaceKey,
@@ -100,34 +94,34 @@ provide(
 const isNewButtonInview = ref(false);
 
 const shouldShowLoadMore = computed(
-	() => !feed.value.reachedEnd && !feed.value.isLoadingMore && feed.value.hasItems
+	() => !feed.reachedEnd && !feed.isLoadingMore && feed.hasItems
 );
-const lastPostScrollId = computed(() => feed.value.state.endScrollId);
-const newCount = computed(() => feed.value.newCount);
-const shouldShowAds = computed(() => showAds.value && globalShouldShowAds.value);
+const lastPostScrollId = computed(() => feed.state.endScrollId);
+const newCount = computed(() => feed.newCount);
+const shouldShowAds = computed(() => showAds && globalShouldShowAds.value);
 
 function onNewButtonInview() {
 	isNewButtonInview.value = true;
 }
 
 function onPostEdited(eventItem: EventItemModel) {
-	feed.value.update(eventItem);
+	feed.update(eventItem);
 	emit('edit-post', eventItem);
 }
 
 function onPostPublished(eventItem: EventItemModel) {
-	feed.value.update(eventItem);
+	feed.update(eventItem);
 	emit('publish-post', eventItem);
 }
 
 function onPostRemoved(eventItem: EventItemModel) {
-	feed.value.remove([eventItem]);
+	feed.remove([eventItem]);
 	emit('remove-post', eventItem);
 }
 
 function onPostPinned(eventItem: EventItemModel) {
 	// Pin the passed in item, and unpin all others.
-	for (const item of feed.value.items) {
+	for (const item of feed.items) {
 		if (
 			item.feedItem instanceof EventItemModel &&
 			item.feedItem.type === EventItemType.PostAdd &&
@@ -151,7 +145,7 @@ function onPostUnpinned(eventItem: EventItemModel) {
 
 // Auto-loading while scrolling.
 function onScrollLoadMore() {
-	if (!feed.value.shouldScrollLoadMore) {
+	if (!feed.shouldScrollLoadMore) {
 		return;
 	}
 
@@ -159,12 +153,12 @@ function onScrollLoadMore() {
 }
 
 function loadMoreButton() {
-	feed.value.timesLoaded = 0;
+	feed.timesLoaded = 0;
 	loadMore();
 }
 
 function loadMore() {
-	feed.value.loadMore();
+	feed.loadMore();
 	emit('load-more');
 }
 
@@ -173,8 +167,8 @@ async function loadNew() {
 		return;
 	}
 
-	await feed.value.reload();
-	feed.value.newCount = 0;
+	await feed.reload();
+	feed.newCount = 0;
 	emit('load-new');
 	// Make sure this is after the emitter so we remove the button before resetting
 	isNewButtonInview.value = false;

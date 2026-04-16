@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { PropType, toRef } from 'vue';
+import { toRef } from 'vue';
 
 import { Environment } from '../../../environment/environment.service';
 import AppJolticon from '../../../jolticon/AppJolticon.vue';
@@ -8,30 +8,21 @@ import { useForm } from '../../AppForm.vue';
 import {
 	createFormControl,
 	FormControlEmits,
-	defineFormControlProps,
 } from '../../AppFormControl.vue';
 import { useFormGroup } from '../../AppFormGroup.vue';
 import { vAppFormAutosize } from '../../autosize.directive';
 import { vAppFocusWhen } from '../../focus-when.directive';
+import { FormValidator } from '../../validators';
 import AppFormControlMarkdownMediaItems from './AppFormControlMarkdownMediaItems.vue';
 
-const props = defineProps({
-	...defineFormControlProps(),
-	markdownMode: {
-		type: String as PropType<'game-site' | 'user-site'>,
-		required: true,
-	},
-	mediaItemType: {
-		type: String,
-		required: true,
-	},
-	disabled: {
-		type: Boolean,
-	},
-	focus: {
-		type: Boolean,
-	},
-});
+type Props = {
+	disabled?: boolean;
+	validators?: FormValidator[];
+	markdownMode: 'game-site' | 'user-site';
+	mediaItemType: string;
+	focus?: boolean;
+};
+const { disabled, validators = [], markdownMode, mediaItemType, focus } = defineProps<Props>();
 
 const emit = defineEmits<FormControlEmits>();
 
@@ -40,7 +31,7 @@ const { name } = useFormGroup()!;
 
 const { id, controlVal, applyValue } = createFormControl({
 	initialValue: '',
-	validators: toRef(props, 'validators'),
+	validators: toRef(() => validators),
 	onChange: val => emit('changed', val),
 	alwaysOptional: true,
 });

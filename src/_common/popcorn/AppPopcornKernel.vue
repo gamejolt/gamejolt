@@ -1,23 +1,20 @@
 <script lang="ts">
-import { computed, onBeforeUnmount, onMounted, PropType, ref, toRaw, toRefs } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref, toRaw } from 'vue';
 
 import { arrayRemove } from '../../utils/array';
 import { PopcornKernelData, usePopcornKettleController } from './popcorn-kettle-controller';
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	kernelData: {
-		type: Object as PropType<PopcornKernelData>,
-		required: true,
-	},
-});
+type Props = {
+	kernelData: PopcornKernelData;
+};
+const { kernelData } = defineProps<Props>();
 
-const { kernelData } = toRefs(props);
 const { kernelFrameCallbacks } = usePopcornKettleController()!;
 
 const startTime = Date.now();
-const endTime = startTime + kernelData.value.duration;
+const endTime = startTime + kernelData.duration;
 
 const styleData = ref({
 	opacity: 0,
@@ -28,7 +25,7 @@ const styleData = ref({
 });
 
 const canShow = computed(
-	() => !!kernelData.value.kernelImage || !!kernelData.value.kernelComponent
+	() => !!kernelData.kernelImage || !!kernelData.kernelComponent
 );
 
 onMounted(() => kernelFrameCallbacks.value.push(calcData));
@@ -57,7 +54,7 @@ function calcData() {
 		fadeInStop,
 		fadeOutStart,
 		fadeOut,
-	} = kernelData.value;
+	} = kernelData;
 
 	const now = Date.now();
 	const dateVal = (now - startTime) / (endTime - startTime);

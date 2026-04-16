@@ -1,25 +1,19 @@
 <script lang="ts" setup>
-import { nextTick, onMounted, ref, toRefs, useTemplateRef, watch } from 'vue';
+import { nextTick, onMounted, ref, useTemplateRef, watch } from 'vue';
 
 import { useResizeObserver } from '../../utils/resize-observer.js';
 import { debounce } from '../../utils/utils.js';
 
-const props = defineProps({
-	density: {
-		type: Number,
-		default: 1,
-	},
-	colors: {
-		type: Array as () => string[],
-		default: () => ['gold', 'orangered', 'dodgerblue'],
-	},
-	animationSpeed: {
-		type: Number,
-		default: 1,
-	},
-});
-
-const { density, colors, animationSpeed } = toRefs(props);
+type Props = {
+	density?: number;
+	colors?: string[];
+	animationSpeed?: number;
+};
+const {
+	density = 1,
+	colors = ['gold', 'orangered', 'dodgerblue'],
+	animationSpeed = 1,
+} = defineProps<Props>();
 
 const effects = useTemplateRef('effects');
 
@@ -38,7 +32,7 @@ onMounted(async () => {
 	resetEffects();
 });
 
-watch([density, colors, animationSpeed], () => resetEffects());
+watch([() => density, () => colors, () => animationSpeed], () => resetEffects());
 
 const animations = ref<Animation[]>([]);
 const particles = ref<HTMLDivElement[]>([]);
@@ -55,7 +49,7 @@ async function _resetEffects() {
 	// await sleep(1000);
 	await nextTick();
 
-	const numParticles = Math.round((effects.value.clientWidth / 5.5) * density.value);
+	const numParticles = Math.round((effects.value.clientWidth / 5.5) * density);
 	for (let i = 0; i < numParticles; i++) {
 		const width = Math.random() * 10;
 		const height = width * 0.4;
@@ -67,7 +61,7 @@ async function _resetEffects() {
 		elem.style.opacity = (Math.random() + 0.5).toString();
 		elem.style.transform = 'rotate(' + Math.random() * 360 + 'deg)';
 		elem.style.position = 'absolute';
-		elem.style.backgroundColor = colors.value[Math.floor(Math.random() * colors.value.length)];
+		elem.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
 
 		effects.value.appendChild(elem);
 		particles.value.push(elem);
@@ -87,11 +81,11 @@ async function drop(elem: HTMLDivElement) {
 			},
 		],
 		{
-			duration: (Math.random() * 2000 + 2000) / animationSpeed.value,
+			duration: (Math.random() * 2000 + 2000) / animationSpeed,
 			iterations: Infinity,
 		}
 	);
-	animation.currentTime = (Math.random() * 2000 + 2000) / animationSpeed.value;
+	animation.currentTime = (Math.random() * 2000 + 2000) / animationSpeed;
 
 	animations.value.push(animation);
 }

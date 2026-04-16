@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, nextTick, onMounted, PropType, ref, shallowRef, toRefs } from 'vue';
+import { computed, nextTick, onMounted, ref, shallowRef } from 'vue';
 
 import { Api, RequestOptions } from '../../../../../_common/api/api.service';
 import AppAspectRatio from '../../../../../_common/aspect-ratio/AppAspectRatio.vue';
@@ -146,18 +146,11 @@ function createRealmSearchFeed(query: string) {
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	selectedRealms: {
-		type: Array as PropType<RealmModel[]>,
-		required: true,
-	},
-	maxRealms: {
-		type: Number,
-		required: true,
-	},
-});
-
-const { selectedRealms, maxRealms } = toRefs(props);
+type Props = {
+	selectedRealms: RealmModel[];
+	maxRealms: number;
+};
+const { selectedRealms, maxRealms } = defineProps<Props>();
 
 const modal = useModal()!;
 const scrollController = createScroller();
@@ -184,14 +177,14 @@ const isOverview = computed(() => renderedFeed.value.isOverview);
 const hasError = computed(() => renderedFeed.value.hasError.value);
 
 const canLoadMore = computed(() => renderedFeed.value.canLoadMore.value);
-const canAddRealms = computed(() => selectedRealms.value.length < maxRealms.value);
+const canAddRealms = computed(() => selectedRealms.length < maxRealms);
 
 onMounted(() => {
 	realmFeeds.value.get(currentQuery.value)?.init();
 });
 
 function isRealmSelected(realm: RealmModel) {
-	return selectedRealms.value.findIndex(i => i.id === realm.id) !== -1;
+	return selectedRealms.findIndex(i => i.id === realm.id) !== -1;
 }
 
 function toggleRealmSelection(realm: RealmModel) {
@@ -203,11 +196,12 @@ function toggleRealmSelection(realm: RealmModel) {
 }
 
 async function selectRealm(realm: RealmModel) {
-	if (selectedRealms.value.length >= maxRealms.value || isRealmSelected(realm)) {
+	if (selectedRealms.length >= maxRealms || isRealmSelected(realm)) {
 		return;
 	}
 
-	selectedRealms.value.push(realm);
+	// eslint-disable-next-line vue/no-mutating-props
+	selectedRealms.push(realm);
 	await nextTick();
 	const offset = scrollController.element.value?.scrollWidth;
 	if (offset) {
@@ -219,7 +213,8 @@ async function selectRealm(realm: RealmModel) {
 }
 
 function removeRealm(realm: RealmModel) {
-	arrayRemove(selectedRealms.value, i => i.id === realm.id);
+	// eslint-disable-next-line vue/no-mutating-props
+	arrayRemove(selectedRealms, i => i.id === realm.id);
 }
 
 const debounceSearchInput = debounce(() => {

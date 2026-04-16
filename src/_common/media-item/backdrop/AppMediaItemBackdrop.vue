@@ -1,52 +1,44 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
+import { computed } from 'vue';
 
 import { styleAbsoluteFill } from '../../../_styles/mixins';
 import { MediaItemModel } from '../media-item-model';
 
-const props = defineProps({
-	mediaItem: {
-		type: Object as PropType<MediaItemModel>,
-		default: undefined,
-	},
-	radius: {
-		type: String as PropType<'sm' | 'md' | 'lg' | 'full'>,
-		default: undefined,
-	},
+type Props = {
+	mediaItem?: MediaItemModel;
+	radius?: 'sm' | 'md' | 'lg' | 'full';
 	/**
 	 * If no color on the media item, will use this fallback color. You can use
 	 * the theme variables in this prop like `var(--theme-bg-offset)`
 	 */
-	fallbackColor: {
-		type: String,
-		default: '',
-	},
-	colorOpacity: {
-		type: Number,
-		default: 1,
-	},
-});
-
-const { mediaItem, radius, fallbackColor } = toRefs(props);
+	fallbackColor?: string;
+	colorOpacity?: number;
+};
+const {
+	mediaItem,
+	radius,
+	fallbackColor = '',
+	colorOpacity = 1,
+} = defineProps<Props>();
 
 const radiusClass = computed(() => {
-	if (!radius?.value) {
+	if (!radius) {
 		return;
 	}
 
-	return '-' + radius?.value;
+	return '-' + radius;
 });
 
 const colorStyles = computed(() => {
-	if (!mediaItem?.value?.avg_img_color || mediaItem?.value.img_has_transparency) {
-		if (fallbackColor.value) {
-			return { backgroundColor: fallbackColor.value };
+	if (!mediaItem?.avg_img_color || mediaItem?.img_has_transparency) {
+		if (fallbackColor) {
+			return { backgroundColor: fallbackColor };
 		}
 
 		return;
 	}
 
-	return { backgroundColor: '#' + mediaItem.value.avg_img_color };
+	return { backgroundColor: '#' + mediaItem.avg_img_color };
 });
 </script>
 

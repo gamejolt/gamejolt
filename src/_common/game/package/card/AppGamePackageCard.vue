@@ -1,6 +1,6 @@
 <script lang="ts">
-import type { Component, PropType } from 'vue';
-import { computed, ref, toRefs } from 'vue';
+import type { Component } from 'vue';
+import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import AppFadeCollapse from '../../../AppFadeCollapse.vue';
@@ -41,34 +41,22 @@ export function setMetaComponent(component: Component) {
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	game: {
-		type: Object as PropType<GameModel>,
-		required: true,
-	},
-	package: {
-		type: Object as PropType<GamePackageModel>,
-		required: true,
-	},
-	sellable: {
-		type: Object as PropType<SellableModel>,
-		required: true,
-	},
-	releases: {
-		type: Array as PropType<GameReleaseModel[]>,
-		default: () => [],
-	},
-	builds: {
-		type: Array as PropType<GameBuildModel[]>,
-		default: () => [],
-	},
-	accessKey: {
-		type: String,
-		default: undefined,
-	},
-});
-
-const { game, package: gamePackage, sellable, releases, builds, accessKey } = toRefs(props);
+type Props = {
+	game: GameModel;
+	package: GamePackageModel;
+	sellable: SellableModel;
+	releases?: GameReleaseModel[];
+	builds?: GameBuildModel[];
+	accessKey?: string;
+};
+const {
+	game,
+	package: gamePackage,
+	sellable,
+	releases = [],
+	builds = [],
+	accessKey,
+} = defineProps<Props>();
 const router = useRouter();
 
 const showFullDescription = ref(false);
@@ -88,29 +76,29 @@ const metaComponent = _metaComponent;
 const buttonsComponent = _buttonsComponent ?? AppGamePackageCardButtons;
 
 const card = computed(
-	() => new GamePackageCardModel(sellable.value, releases.value, builds.value, linkedKeys.value)
+	() => new GamePackageCardModel(sellable, releases, builds, linkedKeys.value)
 );
 
 const isOwned = computed(() => {
 	// If there is a key on the package, then we should show it as being
 	// "owned".
-	if (accessKey?.value) {
+	if (accessKey) {
 		return true;
 	}
 
-	return sellable.value.is_owned ? true : false;
+	return sellable.is_owned ? true : false;
 });
 
-const linkedKeys = computed(() => sellable.value.linked_keys || []);
+const linkedKeys = computed(() => sellable.linked_keys || []);
 
 const canBuy = computed(
-	() => !isOwned.value && (sellable.value.type === 'pwyw' || sellable.value.type === 'paid')
+	() => !isOwned.value && (sellable.type === 'pwyw' || sellable.type === 'paid')
 );
 
-if (sellable.value.pricings.length > 0) {
-	pricing.value = sellable.value.pricings[0];
+if (sellable.pricings.length > 0) {
+	pricing.value = sellable.pricings[0];
 	if (pricing.value.promotional) {
-		saleOldPricing.value = sellable.value.pricings[1];
+		saleOldPricing.value = sellable.pricings[1];
 		sale.value = true;
 		salePercentageOff.value = (
 			((saleOldPricing.value.amount - pricing.value.amount) / saleOldPricing.value.amount) *
@@ -124,7 +112,7 @@ function buildClick(build: GameBuildModel, fromExtraSection = false) {
 	// showing payment form. Just take them directly to site.
 	if (GJ_IS_DESKTOP_APP && fromExtraSection) {
 		doBuildClick(build, fromExtraSection);
-	} else if (sellable.value.type === 'pwyw' && canBuy.value) {
+	} else if (sellable.type === 'pwyw' && canBuy.value) {
 		showPayment(build, fromExtraSection);
 	} else {
 		doBuildClick(build, fromExtraSection);
@@ -146,23 +134,23 @@ function doBuildClick(build: GameBuildModel, fromExtraSection = false) {
 
 function showPayment(build: GameBuildModel | null, fromExtraSection: boolean) {
 	showGamePackagePurchaseModal({
-		game: game.value,
-		package: gamePackage.value,
+		game: game,
+		package: gamePackage,
 		build: build,
 		fromExtraSection,
 	});
 }
 
 function download(build: GameBuildModel) {
-	GameDownloader.download(router, game.value, build, {
+	GameDownloader.download(router, game, build, {
 		isOwned: isOwned.value,
-		key: accessKey?.value,
+		key: accessKey,
 	});
 }
 
 function showBrowserModal(build: GameBuildModel) {
-	showGamePlayModal(game.value, build, {
-		key: accessKey?.value,
+	showGamePlayModal(game, build, {
+		key: accessKey,
 	});
 }
 

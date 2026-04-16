@@ -28,12 +28,10 @@ type FormModel = CommunityModel & {
 	header_crop?: any;
 };
 
-const props = defineProps({
-	model: {
-		type: Object as () => CommunityModel,
-		default: undefined,
-	},
-});
+type Props = {
+	model?: CommunityModel;
+};
+const { model } = defineProps<Props>();
 
 const emit = defineEmits<{
 	submit: [community: CommunityModel];
@@ -54,8 +52,8 @@ const crop = computed(() => (form.formModel.header ? form.formModel.header.getCr
 const form: FormController<FormModel> = createForm({
 	modelClass: CommunityModel,
 	modelSaveHandler: saveHandler,
-	model: toRef(props, 'model'),
-	loadUrl: computed(() => `/web/dash/communities/design/save_header/${props.model!.id}`),
+	model: toRef(() => model),
+	loadUrl: computed(() => `/web/dash/communities/design/save_header/${model!.id}`),
 	onLoad(payload: any) {
 		maxFilesize.value = payload.maxFilesize;
 		minAspectRatio.value = payload.minAspectRatio;

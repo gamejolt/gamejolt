@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-
 import AppAspectRatio from '../../../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppHoverCard from '../../../../../../_common/card/AppHoverCard.vue';
 import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
@@ -11,17 +9,11 @@ import { styleFlexCenter } from '../../../../../../_styles/mixins';
 import { routeDashShopProduct } from '../../product/product.route';
 import { getShopDashProductResourceParam } from '../../shop.store';
 
-defineProps({
-	resource: {
-		type: String as PropType<ShopProductResource>,
-		required: true,
-	},
-	ratio: {
-		type: Number,
-		default: 1,
-		validator: val => typeof val === 'number' && val > 0,
-	},
-});
+type Props = {
+	resource: ShopProductResource;
+	ratio?: number;
+};
+const { resource, ratio = 1 } = defineProps<Props>();
 </script>
 
 <template>

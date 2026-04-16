@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, type Ref, ref, toRef, watch } from 'vue';
+import { computed, type Ref, ref, toRef, watch } from 'vue';
 
 import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
@@ -21,12 +21,10 @@ type FormModel = GameModel & {
 	thumb_crop: any;
 };
 
-const props = defineProps({
-	game: {
-		type: Object as PropType<GameModel>,
-		required: true,
-	},
-});
+type Props = {
+	game: GameModel;
+};
+const { game } = defineProps<Props>();
 
 const emit = defineEmits<{
 	submit: [game: GameModel];
@@ -42,10 +40,10 @@ const cropAspectRatio = ref(0);
 const form: FormController<FormModel> = createForm<FormModel>({
 	modelClass: GameModel as any,
 	modelSaveHandler: $saveGameThumbnail,
-	model: toRef(props, 'game') as Ref<FormModel | undefined>,
+	model: toRef(() => game) as Ref<FormModel | undefined>,
 	warnOnDiscard: false,
 	resetOnSubmit: true,
-	loadUrl: computed(() => `/web/dash/developer/games/thumbnail/save/${props.game.id}`),
+	loadUrl: computed(() => `/web/dash/developer/games/thumbnail/save/${game.id}`),
 	onInit() {
 		form.formModel.thumb_crop = crop.value;
 	},
@@ -77,8 +75,6 @@ watch(crop, newCrop => (form.formModel.thumb_crop = newCrop));
  * if it's too small to crop to signal to the form to remove the cropper.
  */
 const canCrop = computed(() => {
-	const game = props.game;
-
 	if (!game.thumbnail_media_item) {
 		return false;
 	}

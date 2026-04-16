@@ -1,11 +1,10 @@
 <script lang="ts" setup>
 import { styleFlexCenter } from '../../_styles/mixins';
 
-defineProps({
-	row: {
-		type: Boolean,
-	},
-});
+type Props = {
+	row?: boolean;
+};
+defineProps<Props>();
 </script>
 
 <template>

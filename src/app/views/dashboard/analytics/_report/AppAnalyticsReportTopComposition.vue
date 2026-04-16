@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { DeepReadonly, PropType } from 'vue';
+import { DeepReadonly } from 'vue';
 import { RouterLink } from 'vue-router';
 
 import { formatNumber } from '../../../../../_common/filters/number';
@@ -9,12 +9,10 @@ import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { ReportComponent } from '../../../../components/site-analytics/site-analytics-service';
 import AppAnalyticsReportUserModel from './AppAnalyticsReportUserModel.vue';
 
-defineProps({
-	reportData: {
-		type: Object as PropType<DeepReadonly<ReportComponent>>,
-		required: true,
-	},
-});
+type Props = {
+	reportData: DeepReadonly<ReportComponent>;
+};
+const { reportData } = defineProps<Props>();
 
 function isScalarLabel(val: any) {
 	return typeof val.label !== 'object';

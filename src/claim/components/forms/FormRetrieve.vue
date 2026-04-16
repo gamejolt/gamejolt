@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-
 import { Api } from '../../../_common/api/api.service';
 import AppForm, { createForm, FormController } from '../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../_common/form-vue/AppFormButton.vue';
@@ -12,20 +10,12 @@ import { GameModel } from '../../../_common/game/game.model';
 import { GameBundleModel } from '../../../_common/game-bundle/game-bundle.model';
 import AppTranslate from '../../../_common/translate/AppTranslate.vue';
 
-const props = defineProps({
-	keyId: {
-		type: String,
-		required: true,
-	},
-	bundle: {
-		type: Object as PropType<GameBundleModel>,
-		default: undefined,
-	},
-	game: {
-		type: Object as PropType<GameModel>,
-		default: undefined,
-	},
-});
+type Props = {
+	keyId: string;
+	bundle?: GameBundleModel;
+	game?: GameModel;
+};
+const { keyId, bundle, game } = defineProps<Props>();
 
 const emit = defineEmits<{
 	submit: [];
@@ -39,10 +29,10 @@ const form: FormController<FormModel> = createForm<FormModel>({
 	warnOnDiscard: false,
 	onSubmit: () => {
 		let url = '/claim/retrieve';
-		if (props.bundle) {
-			url += '/bundle/' + props.keyId;
-		} else if (props.game) {
-			url += '/game/' + props.keyId;
+		if (bundle) {
+			url += '/bundle/' + keyId;
+		} else if (game) {
+			url += '/game/' + keyId;
 		}
 
 		return Api.sendRequest(url, form.formModel);

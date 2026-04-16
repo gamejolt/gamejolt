@@ -1,11 +1,10 @@
 <script lang="ts" setup>
-import { onUnmounted, toRefs } from 'vue';
+import { onUnmounted, toRef } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { $saveCommunity, CommunityModel } from '../../../../_common/community/community.model';
 import AppForm, {
 	createForm,
-	defineFormProps,
 	FormController,
 } from '../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
@@ -28,15 +27,16 @@ import AppPostAddButtonFormControl from '../../post/add-button/AppPostAddButtonF
 
 type FormModel = CommunityModel;
 
-const props = defineProps({
-	...defineFormProps<FormModel>(),
-});
+type Props = {
+	model?: FormModel;
+};
+const { model } = defineProps<Props>();
 
 const emit = defineEmits<{
 	submit: [model: CommunityModel];
 }>();
 
-const { model } = toRefs(props);
+const modelRef = toRef(() => model);
 
 const { joinCommunity } = useAppStore();
 const { grid } = useGridStore();
@@ -44,7 +44,7 @@ const { userTheme, setFormTheme } = useThemeStore();
 const router = useRouter();
 
 const form: FormController<FormModel> = createForm<FormModel>({
-	model,
+	model: modelRef,
 	modelClass: CommunityModel,
 	modelSaveHandler: $saveCommunity,
 	onInit() {
@@ -52,7 +52,7 @@ const form: FormController<FormModel> = createForm<FormModel>({
 	},
 	onSubmitSuccess(response: any) {
 		if (form.method !== 'add') {
-			emit('submit', model!.value!);
+			emit('submit', model!);
 			return;
 		}
 

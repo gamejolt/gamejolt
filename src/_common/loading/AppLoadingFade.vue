@@ -1,17 +1,13 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType } from 'vue';
+import { CSSProperties } from 'vue';
 
 import AppLoading from './AppLoading.vue';
 
-defineProps({
-	isLoading: {
-		type: Boolean,
-	},
-	contentStyles: {
-		type: Object as PropType<CSSProperties>,
-		default: undefined,
-	},
-});
+type Props = {
+	isLoading?: boolean;
+	contentStyles?: CSSProperties;
+};
+const { isLoading, contentStyles } = defineProps<Props>();
 </script>
 
 <template>

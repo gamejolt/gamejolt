@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, PropType, toRefs } from 'vue';
+import { computed } from 'vue';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
 
 import { formatNumber } from '../../../../../_common/filters/number';
@@ -14,35 +14,26 @@ export interface TrophyNavGame {
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	games: {
-		type: Array as PropType<TrophyNavGame[]>,
-		required: true,
-	},
-	siteTrophyCount: {
-		type: Number,
-		required: true,
-	},
-	unviewedGames: {
-		type: Array as PropType<number[]>,
-		required: true,
-	},
-});
+type Props = {
+	games: TrophyNavGame[];
+	siteTrophyCount: number;
+	unviewedGames: number[];
+};
+const { games, unviewedGames } = defineProps<Props>();
 
-const { games, unviewedGames } = toRefs(props);
 const { trophyCount } = useProfileRouteStore()!;
 const route = useRoute();
 const router = useRouter();
 
-const hasGames = computed(() => games.value.length > 0);
+const hasGames = computed(() => games.length > 0);
 
 const currentGame = computed(() => {
 	const id = parseInt(route.params.id as string, 10);
-	return games.value.find(i => i.id === id);
+	return games.find(i => i.id === id);
 });
 
 function gameHasUnviewedTrophies(gameId: number) {
-	return unviewedGames.value.includes(gameId);
+	return unviewedGames.includes(gameId);
 }
 
 function changeGame(game: TrophyNavGame) {

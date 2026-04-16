@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs, watch } from 'vue';
+import { computed, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 import AppFadeCollapse from '../../../_common/AppFadeCollapse.vue';
@@ -22,22 +22,12 @@ import AppUserAvatarBubble from '../../../_common/user/user-avatar/AppUserAvatar
 import { DisplayMode } from './modal/modal.service';
 import { showCommentThreadModal } from './thread/modal.service';
 
-const props = defineProps({
-	comments: {
-		type: Array as PropType<CommentModel[]>,
-		required: true,
-	},
-	model: {
-		type: Object as PropType<Model>,
-		required: true,
-	},
-	displayMode: {
-		type: String as PropType<DisplayMode>,
-		required: true,
-	},
-});
-
-const { comments, model, displayMode } = toRefs(props);
+type Props = {
+	comments: CommentModel[];
+	model: Model;
+	displayMode: DisplayMode;
+};
+const { comments, model, displayMode } = defineProps<Props>();
 
 const emit = defineEmits<{
 	'reload-comments': [];
@@ -47,14 +37,14 @@ const commentManager = useCommentStoreManager()!;
 const router = useRouter();
 
 const displayComments = computed(() => {
-	return comments.value.filter(c => getCommentBlockReason(c) === false);
+	return comments.filter(c => getCommentBlockReason(c) === false);
 });
 
 const hasComments = computed(() => {
 	const store = getCommentStore(
 		commentManager,
-		getCommentModelResourceName(model.value),
-		model.value.id
+		getCommentModelResourceName(model),
+		model.id
 	);
 	if (store instanceof CommentStoreModel) {
 		return store.totalCount > 0;
@@ -66,8 +56,8 @@ const hasComments = computed(() => {
 const commentStoreDirtyState = computed(() => {
 	const store = getCommentStore(
 		commentManager,
-		getCommentModelResourceName(model.value),
-		model.value.id
+		getCommentModelResourceName(model),
+		model.id
 	);
 	if (store instanceof CommentStoreModel) {
 		return store.overviewNeedsRefresh;
@@ -79,8 +69,8 @@ watch(commentStoreDirtyState, dirtyState => {
 	if (dirtyState) {
 		const store = getCommentStore(
 			commentManager,
-			getCommentModelResourceName(model.value),
-			model.value.id
+			getCommentModelResourceName(model),
+			model.id
 		);
 		if (store instanceof CommentStoreModel) {
 			store.overviewNeedsRefresh = false;
@@ -93,9 +83,9 @@ watch(commentStoreDirtyState, dirtyState => {
 function open(comment: CommentModel) {
 	showCommentThreadModal({
 		router,
-		model: model.value,
+		model,
 		commentId: comment.id,
-		displayMode: displayMode.value,
+		displayMode,
 	});
 }
 </script>

@@ -1,8 +1,5 @@
 <script lang="ts" setup>
-import { toRefs } from 'vue';
-
 import { BackgroundModel } from '../../../../../../_common/background/background.model';
-import { defineFormProps } from '../../../../../../_common/form-vue/AppForm.vue';
 import AppLinkHelp from '../../../../../../_common/link/AppLinkHelp.vue';
 import { ShopProductResource } from '../../../../../../_common/shop/product/product-model';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
@@ -10,18 +7,17 @@ import { ShopDashProductType, useShopDashStore } from '../../shop.store';
 import AppDashShopProductHeader from '../AppDashShopProductHeader.vue';
 import FormShopProductBase, { createShopProductBaseForm } from './FormShopProductBase.vue';
 
-const props = defineProps({
-	...defineFormProps<BackgroundModel>(),
-});
-
-const { model } = toRefs(props);
+type Props = {
+	model?: BackgroundModel;
+};
+const { model } = defineProps<Props>();
 
 const shopStore = useShopDashStore()!;
 
 const data = createShopProductBaseForm({
 	shopStore,
 	resource: ShopProductResource.Background,
-	baseModel: model?.value,
+	baseModel: model,
 });
 
 const { productType, isEditing } = data;

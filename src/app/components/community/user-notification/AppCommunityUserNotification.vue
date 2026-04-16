@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, toRef, toRefs } from 'vue';
+import { computed, toRef } from 'vue';
 
 import AppAlertDismissable from '../../../../_common/alert/dismissable/AppAlertDismissable.vue';
 import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
@@ -16,21 +16,17 @@ import {
 	getCommunityMovePostReasons,
 } from '../../../../_common/user/action-reasons';
 
-const props = defineProps({
-	notification: {
-		type: Object as PropType<CommunityUserNotificationModel>,
-		required: true,
-	},
-});
+type Props = {
+	notification: CommunityUserNotificationModel;
+};
+const { notification } = defineProps<Props>();
 
 const emit = defineEmits<{
 	dismiss: [];
 }>();
 
-const { notification } = toRefs(props);
-
 const notificationReasons = computed(() => {
-	switch (notification.value.type) {
+	switch (notification.type) {
 		case CommunityUserNotificationType.POSTS_MOVE:
 			return getCommunityMovePostReasons();
 		case CommunityUserNotificationType.POSTS_EJECT:
@@ -40,10 +36,10 @@ const notificationReasons = computed(() => {
 	throw new Error('No reasons defined.');
 });
 
-const hasReason = toRef(() => notification.value.reason !== null);
+const hasReason = toRef(() => notification.reason !== null);
 
 const reasonText = computed(() => {
-	const reason = notification.value.reason;
+	const reason = notification.reason;
 	if (reason === null) {
 		return null;
 	}
@@ -57,7 +53,7 @@ const reasonText = computed(() => {
 
 function onDismiss() {
 	// Hope it succeeds, but don't wait on it.
-	$removeCommunityUserNotification(notification.value);
+	$removeCommunityUserNotification(notification);
 	emit('dismiss');
 }
 </script>

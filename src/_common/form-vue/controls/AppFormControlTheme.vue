@@ -20,12 +20,14 @@ import { $gettext } from '../../translate/translate.service';
 import {
 	createFormControl,
 	FormControlEmits,
-	defineFormControlProps,
 } from '../AppFormControl.vue';
+import { FormValidator } from '../validators';
 
-const props = defineProps({
-	...defineFormControlProps(),
-});
+type Props = {
+	disabled?: boolean;
+	validators?: FormValidator[];
+};
+const { validators = [] } = defineProps<Props>();
 
 const emit = defineEmits<FormControlEmits>();
 
@@ -35,7 +37,7 @@ interface VueColor {
 
 const { controlVal, applyValue } = createFormControl({
 	initialValue: null as ThemeModel | null,
-	validators: toRef(props, 'validators'),
+	validators: toRef(() => validators),
 	onChange: val => emit('changed', val),
 	alwaysOptional: true,
 });

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, CSSProperties, PropType, ref, toRefs } from 'vue';
+import { computed, CSSProperties, ref } from 'vue';
 
 import { styleFlexCenter } from '../../../../_styles/mixins';
 import { kBorderWidthLg, kFontSizeLarge, kFontSizeTiny } from '../../../../_styles/variables';
@@ -34,26 +34,19 @@ interface JolticonContent extends BaseContent {
 
 type PercentData = TextContent | StickerContent | JolticonContent;
 
-const props = defineProps({
-	noticeId: {
-		type: Number,
-		required: true,
-	},
-	data: {
-		type: Object as PropType<StickerMasteryNotice>,
-		required: true,
-	},
-});
-
-const { noticeId, data } = toRefs(props);
+type Props = {
+	noticeId: number;
+	data: StickerMasteryNotice;
+};
+const { noticeId, data } = defineProps<Props>();
 
 const percentTransitionMs = 500;
 const progressStrokeWidth = kBorderWidthLg.value * 2;
 let squareInCircleData: { diameter: number; squareDimension: number } | undefined = undefined;
 
 const masteryData = computed(() => {
-	const maxProgress = Math.max(1, data.value.max);
-	const progress = clampNumber(data.value.progress, 0, maxProgress);
+	const maxProgress = Math.max(1, data.max);
+	const progress = clampNumber(data.progress, 0, maxProgress);
 	const isMax = progress >= maxProgress;
 
 	const currentPercent = clampNumber(progress / maxProgress, 0, 1);

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, nextTick, onUnmounted, PropType, ref, toRefs, watch } from 'vue';
+import { computed, nextTick, onUnmounted, ref, watch } from 'vue';
 
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import { ContextCapabilities } from '../../../../../_common/content/content-context';
@@ -33,31 +33,18 @@ const TYPING_TIMEOUT_INTERVAL = 3000;
 // into the editor without scrolling.
 const displayRules = new ContentRules({ maxMediaWidth: 125, maxMediaHeight: 100 });
 
-const props = defineProps({
-	room: {
-		type: Object as PropType<ChatRoomModel>,
-		required: true,
-	},
-	capabilities: {
-		type: Object as PropType<ContextCapabilities>,
-		required: true,
-	},
+type Props = {
+	room: ChatRoomModel;
+	capabilities: ContextCapabilities;
 	/** Duration in milliseconds */
-	slowmodeDuration: {
-		type: Number,
-		default: 0,
-	},
-	maxContentLength: {
-		type: Number,
-		required: true,
-	},
-});
+	slowmodeDuration?: number;
+	maxContentLength: number;
+};
+const { room, slowmodeDuration = 0, maxContentLength } = defineProps<Props>();
 
 const emit = defineEmits<{
 	'focus-change': [focused: boolean];
 }>();
-
-const { room, slowmodeDuration, maxContentLength, capabilities } = toRefs(props);
 
 const { isDark } = useThemeStore();
 const { chatUnsafe: chat } = useGridStore();
@@ -72,7 +59,7 @@ let lastMessageTimestamp: number | null = null;
 
 let typingTimeout: NodeJS.Timer | null = null;
 
-const roomChannel = computed(() => chat.value.roomChannels.get(room.value.id));
+const roomChannel = computed(() => chat.value.roomChannels.get(room.id));
 
 // Doing it like this instead of a computed so that we can only set the state
 // after the first change.
@@ -85,8 +72,8 @@ watch(
 );
 
 const contentEditorTempResourceContextData = computed(() => {
-	if (chat.value && room.value) {
-		return { roomId: room.value.id };
+	if (chat.value && room) {
+		return { roomId: room.id };
 	}
 	return undefined;
 });
@@ -119,14 +106,14 @@ const isSendButtonDisabled = computed(() => {
 	return !FormValidatorContentNoMediaUpload(form.formModel.content ?? '');
 });
 
-const isEditing = computed(() => !!room.value.messageEditing);
+const isEditing = computed(() => !!room.messageEditing);
 const editorModelId = computed(() => form.formModel.id);
 
 const typingText = computed(() => {
 	const { currentUser } = chat.value;
 
 	const typingNames: string[] = [];
-	for (const [userId, typingData] of room.value.usersTyping) {
+	for (const [userId, typingData] of room.usersTyping) {
 		if (userId === currentUser?.id) {
 			continue;
 		}
@@ -198,7 +185,7 @@ onUnmounted(() => {
 });
 
 watch(
-	() => room.value.messageEditing,
+	() => room.messageEditing,
 	async (message: ChatMessageModel | null) => {
 		if (message) {
 			form.formModel.content = message.content;
@@ -218,7 +205,8 @@ watch(
 );
 
 function editMessage({ content, id }: FormModel) {
-	room.value.messageEditing = null;
+	// eslint-disable-next-line vue/no-mutating-props
+	room.messageEditing = null;
 	// This shouldn't happen, but typescript complains without this.
 	if (!id) {
 		return;
@@ -230,14 +218,14 @@ function editMessage({ content, id }: FormModel) {
 		content = contentJson;
 	}
 
-	chatEditMessage(chat.value, room.value, { content, id });
+	chatEditMessage(chat.value, room, { content, id });
 }
 
 function sendMessage({ content }: FormModel) {
 	const doc = ContentDocument.fromJson(content);
 	if (doc instanceof ContentDocument) {
 		const contentJson = doc.toJson();
-		queueChatMessage(room.value, 'content', contentJson);
+		queueChatMessage(room, 'content', contentJson);
 	}
 }
 
@@ -257,7 +245,7 @@ async function submitMessage() {
 			data.id = form.formModel.id;
 		}
 
-		if (room.value.messageEditing) {
+		if (room.messageEditing) {
 			editMessage(data);
 		} else {
 			sendMessage(data);
@@ -282,10 +270,10 @@ async function onSubmit() {
 	applyNextMessageTimeout({ ignoreLastMessageTimestamp: true });
 }
 
-watch(slowmodeDuration, () => applyNextMessageTimeout({ ignoreLastMessageTimestamp: false }));
+watch(() => slowmodeDuration, () => applyNextMessageTimeout({ ignoreLastMessageTimestamp: false }));
 
 function applyNextMessageTimeout(options: { ignoreLastMessageTimestamp: boolean }) {
-	if (!slowmodeDuration.value) {
+	if (!slowmodeDuration) {
 		if (nextMessageTimeout.value) {
 			clearTimeout(nextMessageTimeout.value);
 			nextMessageTimeout.value = null;
@@ -296,16 +284,16 @@ function applyNextMessageTimeout(options: { ignoreLastMessageTimestamp: boolean 
 	const { currentUser } = chat.value;
 	if (currentUser) {
 		// Chat owner and moderators are ignored for slowmode timeouts.
-		if (currentUser.id === room.value.owner_id) {
+		if (currentUser.id === room.owner_id) {
 			return;
 		}
-		const userRole = tryGetRoomRole(room.value, currentUser);
+		const userRole = tryGetRoomRole(room, currentUser);
 		if (userRole === 'owner' || userRole === 'moderator') {
 			return;
 		}
 	}
 
-	let duration = slowmodeDuration.value;
+	let duration = slowmodeDuration;
 
 	if (!options.ignoreLastMessageTimestamp && lastMessageTimestamp) {
 		const timeSinceLastMessage = Date.now() - lastMessageTimestamp;
@@ -368,7 +356,7 @@ function onUpKeyPressed(event: KeyboardEvent) {
 		return;
 	}
 	const { currentUser } = chat.value;
-	const { messages } = room.value;
+	const { messages } = room;
 
 	// Find the last message sent by the current user.
 	const userMessages = messages.filter(i => i.user.id === currentUser?.id);
@@ -380,12 +368,14 @@ function onUpKeyPressed(event: KeyboardEvent) {
 		// of the content. This prevents it jump to the beginning of the line.
 		event.preventDefault();
 
-		room.value.messageEditing = lastMessage;
+		// eslint-disable-next-line vue/no-mutating-props
+		room.messageEditing = lastMessage;
 	}
 }
 
 async function cancelEditing() {
-	room.value.messageEditing = null;
+	// eslint-disable-next-line vue/no-mutating-props
+	room.messageEditing = null;
 	clearMsg();
 
 	// Wait in case the editor loses focus

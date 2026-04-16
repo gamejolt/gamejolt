@@ -15,12 +15,10 @@ import { TranslateDirective as vTranslate } from '../../../../../../../_common/t
 
 type FormModel = CommunityCompetitionModel;
 
-const props = defineProps({
-	model: {
-		type: Object as () => CommunityCompetitionModel,
-		default: undefined,
-	},
-});
+type Props = {
+	model?: CommunityCompetitionModel;
+};
+const { model } = defineProps<Props>();
 
 const emit = defineEmits<{
 	'toggle-not-set-up': [];
@@ -29,7 +27,7 @@ const emit = defineEmits<{
 const form: FormController<FormModel> = createForm<FormModel>({
 	modelClass: CommunityCompetitionModel,
 	modelSaveHandler: $setVotingEnabledOnCommunityCompetition,
-	model: toRef(props, 'model'),
+	model: toRef(() => model),
 });
 
 function setField<K extends keyof CommunityCompetitionModel>(
@@ -42,7 +40,7 @@ function setField<K extends keyof CommunityCompetitionModel>(
 defineExpose({ setField });
 
 async function onToggle() {
-	if (!props.model!.isVotingSetUp) {
+	if (!model!.isVotingSetUp) {
 		emit('toggle-not-set-up');
 		// No change to the actual model should be counted.
 		await nextTick();

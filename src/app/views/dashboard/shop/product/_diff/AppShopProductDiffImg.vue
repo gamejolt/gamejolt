@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, CSSProperties, PropType, toRefs } from 'vue';
+import { computed, CSSProperties } from 'vue';
 
 import AppAspectRatio from '../../../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import {
@@ -23,32 +23,19 @@ import { kBorderRadiusBase, kBorderRadiusLg } from '../../../../../../_styles/va
 import { isInstance } from '../../../../../../utils/utils';
 import { ShopProductBaseForm } from '../_forms/FormShopProductBase.vue';
 
-const props = defineProps({
-	resource: {
-		type: String as PropType<ShopProductResource>,
-		required: true,
-	},
-	form: {
-		type: Object as PropType<ShopProductBaseForm>,
-		required: true,
-	},
-	model: {
-		type: Object as PropType<ShopProductModel>,
-		default: undefined,
-	},
-	imgUrl: {
-		type: String,
-		default: undefined,
-	},
-});
-
-const { resource, form, model, imgUrl } = toRefs(props);
+type Props = {
+	resource: ShopProductResource;
+	form: ShopProductBaseForm;
+	model?: ShopProductModel;
+	imgUrl?: string;
+};
+const { resource, form, model, imgUrl } = defineProps<Props>();
 
 const backgroundData = computed(() => {
-	if (resource.value !== ShopProductResource.Background) {
+	if (resource !== ShopProductResource.Background) {
 		return undefined;
 	}
-	return form.value.getBackgroundSize(model?.value ?? imgUrl?.value);
+	return form.getBackgroundSize(model ?? imgUrl);
 });
 
 const scrollableBackgroundSize = computed(() => {
@@ -76,7 +63,7 @@ const scrollableBackgroundSize = computed(() => {
 const imgData = computed(() => {
 	let borderRadius = '';
 	let placeholderRatio = 1;
-	switch (resource.value) {
+	switch (resource) {
 		case ShopProductResource.Background:
 			borderRadius = kBorderRadiusLg.px;
 			break;

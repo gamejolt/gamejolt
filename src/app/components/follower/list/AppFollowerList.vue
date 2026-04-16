@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { PropType, ref, toRef, toRefs, watch } from 'vue';
+import { ref, toRef, watch } from 'vue';
 
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
@@ -10,22 +10,12 @@ import AppUserCard from '../../../../_common/user/card/AppUserCard.vue';
 import AppUserCardPlaceholder from '../../../../_common/user/card/AppUserCardPlaceholder.vue';
 import { UserModel } from '../../../../_common/user/user.model';
 
-const props = defineProps({
-	url: {
-		type: String,
-		required: true,
-	},
-	count: {
-		type: Number,
-		required: true,
-	},
-	initialUsers: {
-		type: Array as PropType<UserModel[]>,
-		required: true,
-	},
-});
-
-const { url, count, initialUsers } = toRefs(props);
+type Props = {
+	url: string;
+	count: number;
+	initialUsers: UserModel[];
+};
+const { url, count, initialUsers } = defineProps<Props>();
 
 const users = ref<UserModel[]>([]);
 const page = ref(1);
@@ -44,10 +34,10 @@ const placeholderCount = toRef(() => {
 	return 8;
 });
 
-const shouldShowLoadMore = toRef(() => users.value.length < count.value && !reachedEnd.value);
+const shouldShowLoadMore = toRef(() => users.value.length < count && !reachedEnd.value);
 
 watch(
-	initialUsers,
+	() => initialUsers,
 	(newUsers: UserModel[]) => {
 		// If the initial users changed, it means that the route was bootstrapped. Gotta clear
 		// everything out again.
@@ -64,7 +54,7 @@ watch(
 );
 
 async function loadPage() {
-	let currUrl = url.value;
+	let currUrl = url;
 
 	if (page.value) {
 		currUrl += `?page=${page.value}`;

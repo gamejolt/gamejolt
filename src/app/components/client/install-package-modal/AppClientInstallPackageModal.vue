@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRefs } from 'vue';
+import { computed, ref } from 'vue';
 
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
@@ -15,14 +15,10 @@ import { useModal } from '../../../../_common/modal/modal.service';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { arrayIndexBy } from '../../../../utils/array';
 
-const props = defineProps({
-	game: {
-		type: Object as PropType<GameModel>,
-		required: true,
-	},
-});
-
-const { game } = toRefs(props);
+type Props = {
+	game: GameModel;
+};
+const { game } = defineProps<Props>();
 const modal = useModal()!;
 
 const isLoading = ref(true);
@@ -49,7 +45,7 @@ const installablePackages = computed(() => {
 });
 
 async function init() {
-	const payload = await Api.sendRequest(`/web/discover/games/packages/${game.value.id}`);
+	const payload = await Api.sendRequest(`/web/discover/games/packages/${game.id}`);
 	packageData.value = new GamePackagePayloadModel(payload);
 
 	const os = getDeviceOS();

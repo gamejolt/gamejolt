@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
+import { computed } from 'vue';
 
 import { CommunityModel } from '../../../../../_common/community/community.model';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
@@ -7,21 +7,17 @@ import AppTimeAgo from '../../../../../_common/time/AppTimeAgo.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import { getCommunityBlockReasons } from '../../../../../_common/user/action-reasons';
 
-const props = defineProps({
-	community: {
-		type: Object as PropType<CommunityModel>,
-		required: true,
-	},
-});
-
-const { community } = toRefs(props);
+type Props = {
+	community: CommunityModel;
+};
+const { community } = defineProps<Props>();
 
 const communityBlockReason = computed(() => {
-	if (!community.value.user_block) {
+	if (!community.user_block) {
 		return '';
 	}
 
-	const reason = community.value.user_block.reason;
+	const reason = community.user_block.reason;
 	const reasons = getCommunityBlockReasons();
 	if (reasons[reason]) {
 		return reasons[reason];

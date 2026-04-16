@@ -1,9 +1,8 @@
 <script lang="ts" setup>
-import { computed, Ref, ref, toRefs, watch } from 'vue';
+import { computed, Ref, ref, watch } from 'vue';
 
 import AppAlertBox from '../../../../../../_common/alert/AppAlertBox.vue';
 import AppButton from '../../../../../../_common/button/AppButton.vue';
-import { defineFormProps } from '../../../../../../_common/form-vue/AppForm.vue';
 import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
 import AppLinkHelp from '../../../../../../_common/link/AppLinkHelp.vue';
 import { showModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
@@ -28,11 +27,10 @@ import AppDashShopProductHeader from '../AppDashShopProductHeader.vue';
 import { showFormStickerSelectorModal } from './_sticker-selector/modal.service';
 import FormShopProductBase, { createShopProductBaseForm } from './FormShopProductBase.vue';
 
-const props = defineProps({
-	...defineFormProps<StickerPackModel>(),
-});
-
-const { model } = toRefs(props);
+type Props = {
+	model?: StickerPackModel;
+};
+const { model } = defineProps<Props>();
 
 const minStickers = ref(3);
 const maxStickers = ref(5);
@@ -43,7 +41,7 @@ const shopStore = useShopDashStore()!;
 const data = createShopProductBaseForm({
 	shopStore,
 	resource: ShopProductResource.StickerPack,
-	baseModel: model?.value,
+	baseModel: model,
 	fields: {
 		stickers: [] as number[],
 	},
@@ -116,7 +114,7 @@ function _setStickers(isInitial: boolean, newStickers: StickerModel[] | undefine
 
 	if (!isInitial) {
 		form.triggerChanged();
-	} else if (!model?.value?.was_approved) {
+	} else if (!model?.was_approved) {
 		initialFormModel.value.stickers = stickerIds;
 	}
 }
@@ -124,7 +122,7 @@ function _setStickers(isInitial: boolean, newStickers: StickerModel[] | undefine
 async function addStickers() {
 	// Will return all the stickers (the current in pack as well as new).
 	const newStickers = await showFormStickerSelectorModal({
-		stickerPackId: model?.value?.id,
+		stickerPackId: model?.id,
 		premium: productType.value === ShopDashProductType.Premium,
 		currentStickers: stickers.value,
 		availableSlots: maxStickers.value,

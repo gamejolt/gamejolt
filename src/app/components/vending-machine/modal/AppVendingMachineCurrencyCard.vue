@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType, toRefs } from 'vue';
+import { CSSProperties } from 'vue';
 
 import { trackShopView } from '../../../../_common/analytics/analytics.service';
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
@@ -36,18 +36,11 @@ import {
 } from '../../../../_styles/variables';
 import { showGetCoinsRedirectModal } from './_get-coins-redirect-modal/modal.service';
 
-const props = defineProps({
-	currency: {
-		type: Object as PropType<Currency>,
-		required: true,
-	},
-	amount: {
-		type: Number,
-		required: true,
-	},
-});
-
-const { currency, amount } = toRefs(props);
+type Props = {
+	currency: Currency;
+	amount: number;
+};
+const { currency, amount } = defineProps<Props>();
 
 const modal = useModal();
 const { user: authUser } = useCommonStore();

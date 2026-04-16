@@ -1,36 +1,29 @@
 <script lang="ts" setup>
-import { PropType, ref, toRefs, watch } from 'vue';
+import { ref, watch } from 'vue';
 
 import AppJolticon from '../../jolticon/AppJolticon.vue';
 import AppPopper from '../../popper/AppPopper.vue';
 import { Popper } from '../../popper/popper.service';
 import { SiteTemplateModel } from '../../site/template/template-model';
 
-const props = defineProps({
-	templates: {
-		type: Array as PropType<SiteTemplateModel[]>,
-		required: true,
-	},
-	currentTemplate: {
-		type: Number,
-		required: true,
-	},
-});
+type Props = {
+	templates: SiteTemplateModel[];
+	currentTemplate: number;
+};
+const { templates, currentTemplate } = defineProps<Props>();
 
 const emit = defineEmits<{
 	change: [id: number];
 }>();
 
-const { templates, currentTemplate } = toRefs(props);
-
 const current = ref<SiteTemplateModel | null>(null);
 
-if (currentTemplate.value) {
+if (currentTemplate) {
 	onTemplateChange();
 }
 
 watch(
-	currentTemplate,
+	() => currentTemplate,
 	() => {
 		onTemplateChange();
 	},
@@ -38,7 +31,7 @@ watch(
 );
 
 function onTemplateChange() {
-	current.value = templates.value.find(t => t.id === currentTemplate.value) || null;
+	current.value = templates.find(t => t.id === currentTemplate) || null;
 }
 
 function select(id: number) {

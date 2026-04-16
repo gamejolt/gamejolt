@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, Ref, ref, toRefs } from 'vue';
+import { computed, Ref, ref } from 'vue';
 
 import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
@@ -21,21 +21,12 @@ import {
 import { ActivityFeedItem } from '../item-service';
 import { useActivityFeed } from '../view';
 
-const props = defineProps({
-	item: {
-		type: Object as PropType<ActivityFeedItem>,
-		required: true,
-	},
-	post: {
-		type: Object as PropType<FiresidePostModel>,
-		required: true,
-	},
-	canPlaceSticker: {
-		type: Boolean,
-	},
-});
-
-const { item, post, canPlaceSticker } = toRefs(props);
+type Props = {
+	item: ActivityFeedItem;
+	post: FiresidePostModel;
+	canPlaceSticker?: boolean;
+};
+const { item, post, canPlaceSticker = false } = defineProps<Props>();
 
 const feed = useActivityFeed()!;
 
@@ -45,16 +36,16 @@ const slider = ref() as Ref<HTMLElement>;
 const page = ref(1);
 const isDragging = ref(false);
 
-const lightbox = createLightbox(computed(() => post.value.media));
-const isHydrated = computed(() => feed.isItemHydrated(item.value));
+const lightbox = createLightbox(computed(() => post.media));
+const isHydrated = computed(() => feed.isItemHydrated(item));
 
 function goNext() {
-	if (page.value >= post.value.media.length) {
+	if (page.value >= post.media.length) {
 		_updateSliderOffset();
 		return;
 	}
 
-	page.value = Math.min(page.value + 1, post.value.media.length);
+	page.value = Math.min(page.value + 1, post.media.length);
 	_updateSliderOffset();
 }
 

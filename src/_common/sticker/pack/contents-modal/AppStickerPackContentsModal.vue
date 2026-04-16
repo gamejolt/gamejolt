@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { PropType, ref, toRefs, watch } from 'vue';
+import { ref, watch } from 'vue';
 
 import { CancelToken } from '../../../../utils/cancel-token';
 import { Api } from '../../../api/api.service';
@@ -12,14 +12,10 @@ import { StickerModel } from '../../sticker.model';
 import AppStickerGrid from '../AppStickerGrid.vue';
 import { StickerPackModel } from '../pack.model';
 
-const props = defineProps({
-	pack: {
-		type: Object as PropType<StickerPackModel>,
-		required: true,
-	},
-});
-
-const { pack } = toRefs(props);
+type Props = {
+	pack: StickerPackModel;
+};
+const { pack } = defineProps<Props>();
 
 const modal = useModal()!;
 
@@ -29,7 +25,7 @@ const stickers = ref<StickerModel[]>([]);
 let cancelToken = new CancelToken();
 
 watch(
-	pack,
+	() => pack,
 	async () => {
 		cancelToken.cancel();
 		cancelToken = new CancelToken();
@@ -41,7 +37,7 @@ watch(
 			`/mobile/sticker`,
 			{
 				packContents: {
-					packId: pack.value.id,
+					packId: pack.id,
 				},
 			},
 			{ detach: true }

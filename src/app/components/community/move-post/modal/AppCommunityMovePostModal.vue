@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRef, toRefs } from 'vue';
+import { computed, ref, toRef } from 'vue';
 
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import AppCommunityChannelSelect from '../../../../../_common/community/channel/AppCommunityChannelSelect.vue';
@@ -17,22 +17,12 @@ import FormCommunityMovePost, {
 } from '../form/FormCommunityMovePost.vue';
 import { CommunityMovePostModalResult } from './modal.service';
 
-const props = defineProps({
-	firesidePostCommunity: {
-		type: Object as PropType<FiresidePostCommunityModel>,
-		required: true,
-	},
-	post: {
-		type: Object as PropType<FiresidePostModel>,
-		required: true,
-	},
-	channels: {
-		type: Array as PropType<CommunityChannelModel[]>,
-		required: true,
-	},
-});
-
-const { firesidePostCommunity, post, channels } = toRefs(props);
+type Props = {
+	firesidePostCommunity: FiresidePostCommunityModel;
+	post: FiresidePostModel;
+	channels: CommunityChannelModel[];
+};
+const { firesidePostCommunity, post, channels } = defineProps<Props>();
 
 const { user } = useCommonStore();
 const modal = useModal()!;
@@ -41,21 +31,21 @@ const selectedChannel = ref<CommunityChannelModel | undefined>(undefined);
 const reasonFormModel = ref<FormModel | null>(null);
 
 const selectableChannels = computed(() => {
-	if (!firesidePostCommunity.value.channel) {
-		return channels.value;
+	if (!firesidePostCommunity.channel) {
+		return channels;
 	}
 
-	return channels.value.filter(i => i.id !== firesidePostCommunity.value.channel!.id);
+	return channels.filter(i => i.id !== firesidePostCommunity.channel!.id);
 });
 
 const hasSelectedChannel = toRef(() => selectedChannel.value instanceof CommunityChannelModel);
 
 // More than 1, since the post can't be moved to the channel it's already in.
-const canMove = toRef(() => channels.value.length > 1);
+const canMove = toRef(() => channels.length > 1);
 
 // Do not show the form when the logged in user is the author of the post.
 // It does not make sense to let them notify themselves.
-const shouldShowForm = toRef(() => post.value.user.id !== user.value!.id);
+const shouldShowForm = toRef(() => post.user.id !== user.value!.id);
 
 // Create a default form model, because the form will not show when a post author moves
 // their own post.
@@ -88,7 +78,7 @@ function onMove() {
 	if (result.reasonType === REASON_OTHER && result.reason) {
 		const options = getDatalistOptions(
 			'community-move-post',
-			firesidePostCommunity.value.community.id.toString()
+			firesidePostCommunity.community.id.toString()
 		);
 		options.unshiftItem(result.reason);
 	}

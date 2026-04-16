@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-
 import AppButton from '../../../../../../_common/button/AppButton.vue';
 import AppModal from '../../../../../../_common/modal/AppModal.vue';
 import { useModal } from '../../../../../../_common/modal/modal.service';
@@ -15,12 +13,10 @@ import {
 } from '../../../../../../_styles/mixins';
 import { kFontSizeLarge, kFontSizeSmall } from '../../../../../../_styles/variables';
 
-defineProps({
-	giftUser: {
-		type: Object as PropType<UserModel>,
-		required: true,
-	},
-});
+type Props = {
+	giftUser: UserModel;
+};
+const { giftUser } = defineProps<Props>();
 
 const modal = useModal<boolean>()!;
 </script>

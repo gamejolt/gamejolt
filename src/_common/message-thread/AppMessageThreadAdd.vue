@@ -3,11 +3,10 @@ import { useCommonStore } from '../store/common-store';
 import AppTimelineListItem from '../timeline-list/item/AppTimelineListItem.vue';
 import AppUserAvatarBubble from '../user/user-avatar/AppUserAvatarBubble.vue';
 
-defineProps({
-	hideMessageSplit: {
-		type: Boolean,
-	},
-});
+type Props = {
+	hideMessageSplit?: boolean;
+};
+defineProps<Props>();
 
 const { user } = useCommonStore();
 </script>

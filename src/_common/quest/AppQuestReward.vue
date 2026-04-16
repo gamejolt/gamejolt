@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, PropType, toRefs } from 'vue';
+import { computed } from 'vue';
 
 import {
 	styleBorderRadiusLg,
@@ -32,17 +32,13 @@ const itemsWithCount = new Set([
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	reward: {
-		type: Object as PropType<QuestRewardModel>,
-		required: true,
-	},
-});
-
-const { reward } = toRefs(props);
+type Props = {
+	reward: QuestRewardModel;
+};
+const { reward } = defineProps<Props>();
 
 const displayCount = computed(() => {
-	const { type, amount } = reward.value;
+	const { type, amount } = reward;
 	if ((itemsWithCount.has(type) && amount >= 1) || amount > 1) {
 		return `x${formatNumber(amount)}`;
 	}
@@ -50,11 +46,11 @@ const displayCount = computed(() => {
 });
 
 const subtitle = computed(() => {
-	if (reward.value.is_secret) {
+	if (reward.is_secret) {
 		return $gettext(`Secret`);
 	}
 
-	switch (reward.value.type) {
+	switch (reward.type) {
 		case QuestRewardTypes.Sticker:
 			return $gettext(`Sticker`);
 		case QuestRewardTypes.SiteTrophy:

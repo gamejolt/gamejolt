@@ -1,5 +1,5 @@
 <script lang="ts">
-import { nextTick, onBeforeUnmount, onMounted, PropType, ref, toRefs, useTemplateRef, watch } from 'vue';
+import { nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue';
 
 import AppLoading from '../loading/AppLoading.vue';
 import { setVideoMuted, trackVideoPlayerEvent, VideoPlayerController } from './player/controller';
@@ -16,34 +16,20 @@ type VideoSourceObject = {
 // https://forum.ionicframework.com/t/ionic-2-video-video-memory-leak-garbage-collection-solved/52333
 // Massive memory leaks if we don't keep this out of Vue and finely tuned.
 
-const props = defineProps({
-	player: {
-		type: Object as PropType<VideoPlayerController>,
-		required: true,
-	},
-	showLoading: {
-		type: Boolean,
-	},
-	shouldPlay: {
-		type: Boolean,
-		default: true,
-	},
-	initCallback: {
-		type: Function as PropType<(videoTag: HTMLVideoElement) => Promise<boolean>>,
-		default: undefined,
-	},
+type Props = {
+	player: VideoPlayerController;
+	showLoading?: boolean;
+	shouldPlay?: boolean;
+	initCallback?: (videoTag: HTMLVideoElement) => Promise<boolean>;
 	/**
 	 * If their browser settings block autoplaying with audio, then the browser
 	 * will never autoplay the video since it's not set to be muted. We will try
 	 * autoplaying "muted" just to see if that works. We don't want to do that
 	 * everywhere, so it's an opt-in behavior through a prop.
 	 */
-	allowDegradedAutoplay: {
-		type: Boolean,
-	},
-});
-
-const { player, showLoading, shouldPlay, initCallback, allowDegradedAutoplay } = toRefs(props);
+	allowDegradedAutoplay?: boolean;
+};
+const { player, showLoading, shouldPlay = true, initCallback, allowDegradedAutoplay } = defineProps<Props>();
 
 const root = useTemplateRef('root');
 const isLoaded = ref(false);
@@ -55,10 +41,10 @@ onMounted(() => {
 	videoElem = document.createElement('video');
 	videoElem.style.display = 'block';
 	videoElem.style.width = '100%';
-	videoElem.poster = player.value.poster || '';
+	videoElem.poster = player.poster || '';
 	videoElem.loop = true;
-	videoElem.autoplay = shouldPlay.value;
-	videoElem.muted = player.value.muted || player.value.context === 'gif';
+	videoElem.autoplay = shouldPlay;
+	videoElem.muted = player.muted || player.context === 'gif';
 
 	// Allows videos in iOS Safari to play without automatically going
 	// fullscreen.
@@ -66,8 +52,8 @@ onMounted(() => {
 
 	setupVideoEvents();
 
-	if (player.value.context !== 'page') {
-		player.value.sources.forEach(({ src: url, type }) => {
+	if (player.context !== 'page') {
+		player.sources.forEach(({ src: url, type }) => {
 			const elem = document.createElement('source');
 			elem.type = type;
 			elem.src = url;
@@ -107,23 +93,23 @@ onBeforeUnmount(() => {
 	}
 });
 
-watch(shouldPlay, () => {
-	if (shouldPlay.value) {
+watch(() => shouldPlay, () => {
+	if (shouldPlay) {
 		tryPlayingVideo();
 	} else {
 		videoElem.pause();
 	}
 });
 
-watch(() => player.value.muted, syncMuted, { immediate: true });
-watch(() => player.value.volume, syncVolume, { immediate: true });
-watch(() => player.value.queuedPlaybackChange, syncPlayState, { immediate: true });
-watch(() => player.value.queuedTimeChange, syncTime, { immediate: true });
+watch(() => player.muted, syncMuted, { immediate: true });
+watch(() => player.volume, syncVolume, { immediate: true });
+watch(() => player.queuedPlaybackChange, syncPlayState, { immediate: true });
+watch(() => player.queuedTimeChange, syncTime, { immediate: true });
 
 async function endOfInit() {
-	if (initCallback?.value) {
+	if (initCallback) {
 		// Wait for the callback to fail or succeed,
-		await initCallback.value(videoElem);
+		await initCallback(videoElem);
 	}
 	// then sync the states.
 	await syncStates();
@@ -138,14 +124,14 @@ async function syncStates() {
 
 function trackVideoPlaytime() {
 	// Gifs currently don't pause when they become 'inactive'.
-	if (!videoStartTime || player.value.context === 'gif') {
+	if (!videoStartTime || player.context === 'gif') {
 		return;
 	}
 
 	const playtime = Date.now() - videoStartTime;
-	const loops = Math.floor(playtime / player.value.duration);
-	trackVideoPlayerEvent(player.value, 'watched', 'playtime', `${Math.ceil(playtime / 1000)}`);
-	trackVideoPlayerEvent(player.value, 'watched', 'loops', `${loops}`);
+	const loops = Math.floor(playtime / player.duration);
+	trackVideoPlayerEvent(player, 'watched', 'playtime', `${Math.ceil(playtime / 1000)}`);
+	trackVideoPlayerEvent(player, 'watched', 'loops', `${loops}`);
 	videoStartTime = 0;
 }
 
@@ -154,35 +140,35 @@ function setupVideoEvents() {
 		return;
 	}
 	videoElem.addEventListener('play', () => {
-		player.value.state = 'playing';
+		player.state = 'playing';
 		videoStartTime = Date.now();
 	});
 	videoElem.addEventListener('pause', () => {
-		player.value.state = 'paused';
+		player.state = 'paused';
 		trackVideoPlaytime();
 	});
 	videoElem.addEventListener('volumechange', () => {
-		player.value.volume = videoElem.volume;
+		player.volume = videoElem.volume;
 
-		if (player.value.altControlsBehavior && player.value.muted != videoElem.muted) {
-			setVideoMuted(player.value, videoElem.muted);
+		if (player.altControlsBehavior && player.muted != videoElem.muted) {
+			setVideoMuted(player, videoElem.muted);
 		}
 	});
 	videoElem.addEventListener('durationchange', () => {
 		if (videoElem.duration) {
-			player.value.duration = videoElem.duration * 1000;
+			player.duration = videoElem.duration * 1000;
 		}
 	});
 	videoElem.addEventListener(
 		'timeupdate',
-		() => (player.value.currentTime = videoElem.currentTime * 1000)
+		() => (player.currentTime = videoElem.currentTime * 1000)
 	);
 	videoElem.addEventListener('progress', () => {
 		let time = 0;
 		for (let i = 0; i < videoElem.buffered.length; ++i) {
 			time = Math.max(time, videoElem.buffered.end(i) * 1000);
 		}
-		player.value.bufferedTo = time;
+		player.bufferedTo = time;
 	});
 }
 
@@ -191,21 +177,21 @@ async function tryPlayingVideo() {
 		return;
 	}
 
-	const startVolume = player.value.volume;
+	const startVolume = player.volume;
 	try {
 		await videoElem.play();
 		return;
 	} catch {}
 
-	if (!allowDegradedAutoplay.value) {
-		player.value.state = 'paused';
+	if (!allowDegradedAutoplay) {
+		player.state = 'paused';
 		return;
 	}
 
 	// If autoplaying the video failed, first try setting the volume of the
 	// video to 0.
 	if (startVolume > 0) {
-		player.value.volume = 0;
+		player.volume = 0;
 		await nextTick();
 	}
 
@@ -217,8 +203,8 @@ async function tryPlayingVideo() {
 	// If the autoplaying is still blocked with the volume set to 0, pause the
 	// video in the player controller and reset the player volume to the initial
 	// setting.
-	player.value.state = 'paused';
-	player.value.volume = startVolume;
+	player.state = 'paused';
+	player.volume = startVolume;
 }
 
 function syncMuted() {
@@ -226,8 +212,8 @@ function syncMuted() {
 		return;
 	}
 
-	if (player.value.muted !== videoElem.muted) {
-		videoElem.muted = player.value.muted;
+	if (player.muted !== videoElem.muted) {
+		videoElem.muted = player.muted;
 	}
 }
 
@@ -236,43 +222,43 @@ function syncVolume() {
 		return;
 	}
 
-	if (player.value.volume > 0) {
+	if (player.volume > 0) {
 		setVideoMuted(
-			player.value,
+			player,
 			false,
 			// Need to specify an unmuteVolume here, otherwise volume won't
 			// adjust when we're in the middle of a volume scrub.
-			{ unmuteVolume: player.value.volume }
+			{ unmuteVolume: player.volume }
 		);
 	}
 
-	if (player.value.volume !== videoElem.volume) {
-		videoElem.volume = player.value.volume;
+	if (player.volume !== videoElem.volume) {
+		videoElem.volume = player.volume;
 	}
 }
 
 async function syncPlayState() {
-	if (!videoElem || player.value.queuedPlaybackChange === null) {
+	if (!videoElem || player.queuedPlaybackChange === null) {
 		return;
 	}
 
-	if (player.value.queuedPlaybackChange === 'paused' && !videoElem.paused) {
+	if (player.queuedPlaybackChange === 'paused' && !videoElem.paused) {
 		videoElem.pause();
-	} else if (player.value.queuedPlaybackChange === 'playing' && videoElem.paused) {
+	} else if (player.queuedPlaybackChange === 'playing' && videoElem.paused) {
 		await tryPlayingVideo();
 	}
-	player.value.queuedPlaybackChange = null;
-	player.value.isLoading = false;
+	player.queuedPlaybackChange = null;
+	player.isLoading = false;
 }
 
 function syncTime() {
-	if (!videoElem || player.value.queuedTimeChange === null) {
+	if (!videoElem || player.queuedTimeChange === null) {
 		return;
 	}
 
-	const time = player.value.queuedTimeChange;
-	player.value.currentTime = time;
-	player.value.queuedTimeChange = null;
+	const time = player.queuedTimeChange;
+	player.currentTime = time;
+	player.queuedTimeChange = null;
 
 	// We store in milliseconds, HTMLMediaElement works in seconds.
 	videoElem.currentTime = time / 1000;

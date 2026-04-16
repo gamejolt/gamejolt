@@ -3,18 +3,16 @@ import { ref, watch } from 'vue';
 
 import { ImgHelper } from '../../_common/img/helper/helper-service';
 
-const props = defineProps({
-	imgUrl: {
-		type: String,
-		required: true,
-	},
-});
+type Props = {
+	imgUrl: string;
+};
+const { imgUrl } = defineProps<Props>();
 
 const isLoaded = ref(false);
 
 if (!import.meta.env.SSR) {
 	watch(
-		() => props.imgUrl,
+		() => imgUrl,
 		async imgUrl => {
 			isLoaded.value = false;
 			await ImgHelper.loaded(imgUrl);

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onMounted, toRefs, watch } from 'vue';
+import { onMounted, watch } from 'vue';
 
 import {
 	styleAbsoluteFill,
@@ -27,33 +27,19 @@ import { getShellNotice } from '../notice.service';
 
 const { remove: removeShellNoticeItem } = getShellNotice();
 
-const props = defineProps({
-	noticeId: {
-		type: Number,
-		required: true,
-	},
-	message: {
-		type: String,
-		required: true,
-	},
+type Props = {
+	noticeId: number;
+	message: string;
 	/**
 	 * Duration to wait before automatically closing.
 	 */
-	autoCloseMs: {
-		type: Number,
-		default: undefined,
-		validator: val => val === undefined || (typeof val === 'number' && val > 0),
-	},
+	autoCloseMs?: number;
 	/**
 	 * Duration override for `anim-fade-*` classes.
 	 */
-	animDurationMs: {
-		type: Number,
-		default: 500,
-	},
-});
-
-const { noticeId, message, autoCloseMs, animDurationMs } = toRefs(props);
+	animDurationMs?: number;
+};
+const { noticeId, autoCloseMs, animDurationMs = 500 } = defineProps<Props>();
 
 const { hovered, hoverBinding } = useOnHover();
 
@@ -67,11 +53,11 @@ let autoCloseTimeout: NodeJS.Timer | undefined;
 // Variables to keep track of auto-close timeout. Used so we can pause the
 // animation and timeout when hovered.
 const start = Date.now();
-let end = start + (autoCloseMs?.value ?? 0);
+let end = start + (autoCloseMs ?? 0);
 let timeLeft = end - start;
 
 watch(
-	[hovered, () => autoCloseMs?.value],
+	[hovered, () => autoCloseMs],
 	([hovered, autoCloseMs]) => {
 		if (autoCloseMs === undefined || autoCloseMs <= 0) {
 			clearAutoCloseTimeout();
@@ -84,7 +70,7 @@ watch(
 		} else {
 			end = Date.now() + timeLeft;
 			autoCloseTimeout ??= setTimeout(() => {
-				removeShellNoticeItem(noticeId.value);
+				removeShellNoticeItem(noticeId);
 			}, timeLeft);
 		}
 	},
@@ -92,7 +78,7 @@ watch(
 );
 
 onMounted(async () => {
-	await sleep(animDurationMs.value);
+	await sleep(animDurationMs);
 	emit('show-transition-end');
 });
 
@@ -105,7 +91,7 @@ function clearAutoCloseTimeout() {
 
 function removeNotice() {
 	clearAutoCloseTimeout();
-	removeShellNoticeItem(noticeId.value);
+	removeShellNoticeItem(noticeId);
 }
 </script>
 

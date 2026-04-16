@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRef, watch } from 'vue';
+import { computed, ref, toRef, watch } from 'vue';
 
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
@@ -24,12 +24,10 @@ type FormModel = UserModel & {
 	header_crop?: any;
 };
 
-const props = defineProps({
-	model: {
-		type: Object as PropType<UserModel>,
-		default: undefined,
-	},
-});
+type Props = {
+	model?: UserModel;
+};
+const { model } = defineProps<Props>();
 
 const emit = defineEmits<{
 	submit: [user: UserModel];
@@ -50,7 +48,7 @@ const crop = computed(() =>
 const form: FormController<FormModel> = createForm({
 	modelClass: UserModel,
 	modelSaveHandler: $saveUserHeader,
-	model: toRef(props, 'model'),
+	model: toRef(() => model),
 	loadUrl: `/web/dash/header/save`,
 	onLoad(payload: any) {
 		maxFilesize.value = payload.maxFilesize;

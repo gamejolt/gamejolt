@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType } from 'vue';
+import { computed } from 'vue';
 
 import { styleWhen } from '../../_styles/mixins';
 import { trackAppPromotionClick } from '../analytics/analytics.service';
@@ -7,18 +7,12 @@ import appStoreImage from './button-app-store.svg';
 import playStoreImage from './button-play-store.png';
 import { AppPromotionSource, getAppUrl, useAppPromotionStore } from './store';
 
-defineProps({
-	source: {
-		type: String as PropType<AppPromotionSource>,
-		required: true,
-	},
-	justified: {
-		type: Boolean,
-	},
-	wrap: {
-		type: Boolean,
-	},
-});
+type Props = {
+	source: AppPromotionSource;
+	justified?: boolean;
+	wrap?: boolean;
+};
+const { source, justified, wrap } = defineProps<Props>();
 
 const appPromotion = useAppPromotionStore();
 const playStoreUrl = computed(() => getAppUrl(appPromotion, { targetStore: 'play' }));

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRefs, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { RouterLink } from 'vue-router';
 
 import { Analytics } from '../../../../_common/analytics/analytics.service';
@@ -24,31 +24,16 @@ import AppClientInstallProgress from '../AppClientInstallProgress.vue';
 import { showClientInstallPackageModal } from '../install-package-modal/install-package-modal.service';
 import { LocalDbPackage } from '../local-db/package/package.model';
 
-const props = defineProps({
-	game: {
-		type: Object as PropType<GameModel>,
-		required: true,
-	},
-	overlay: {
-		type: Boolean,
-	},
-	small: {
-		type: Boolean,
-	},
-	large: {
-		type: Boolean,
-	},
-	label: {
-		type: String,
-		default: undefined,
-	},
-	canInstall: {
-		type: Boolean,
-	},
-	noProgress: {
-		type: Boolean,
-	},
-});
+type Props = {
+	game: GameModel;
+	overlay?: boolean;
+	small?: boolean;
+	large?: boolean;
+	label?: string;
+	canInstall?: boolean;
+	noProgress?: boolean;
+};
+const { game, canInstall } = defineProps<Props>();
 
 const emit = defineEmits<{
 	'show-launch-options': [];
@@ -56,8 +41,6 @@ const emit = defineEmits<{
 	'show-options': [];
 	'hide-options': [];
 }>();
-
-const { game, canInstall } = toRefs(props);
 
 const {
 	findPackageToRepresentGameStatus,
@@ -73,22 +56,22 @@ const {
 const isLoadingPackageData = ref(false);
 const packageDataPromise = ref<Promise<GamePackagePayloadModel> | null>(null);
 
-watch(game, () => {
+watch(() => game, () => {
 	isLoadingPackageData.value = false;
 	packageDataPromise.value = null;
 });
 
 // We try to pull a package with some action on it.
 // For example, if a package is installing, we want to pull that one to show.
-const localPackage = computed(() => findPackageToRepresentGameStatus(game.value.id));
-const gamePackages = computed(() => packagesByGameId.value[game.value.id] || []);
+const localPackage = computed(() => findPackageToRepresentGameStatus(game.id));
+const gamePackages = computed(() => packagesByGameId.value[game.id] || []);
 const settledGamePackages = computed(() => gamePackages.value.filter(p => p.isSettled));
 const uninstallableGamePackages = computed(() =>
 	gamePackages.value.filter(p => !p.install_state && !p.isRemoving)
 );
 
 const installTooltip = computed(() => {
-	if (!canInstall.value) {
+	if (!canInstall) {
 		return $gettext(`This game is not available for installing on your OS.`);
 	}
 });
@@ -107,7 +90,7 @@ async function install() {
 	const byPackageId = arrayGroupBy(packageData.installableBuilds!, 'game_package_id');
 	// If more than one package for their OS, then we have to show an install package modal.
 	if (Object.keys(byPackageId).length > 1) {
-		showClientInstallPackageModal(game.value);
+		showClientInstallPackageModal(game);
 		return;
 	}
 
@@ -117,7 +100,7 @@ async function install() {
 	// payment form.
 	if (build._package!.shouldShowNamePrice()) {
 		showGamePackagePurchaseModal({
-			game: game.value,
+			game,
 			package: build._package!,
 			build: build,
 			fromExtraSection: false,
@@ -126,7 +109,7 @@ async function install() {
 	}
 
 	return packageInstall(
-		game.value,
+		game,
 		build._package!,
 		build._release!,
 		build,
@@ -135,7 +118,7 @@ async function install() {
 }
 
 async function fetchPackageData() {
-	const payload = await Api.sendRequest('/web/discover/games/packages/' + game.value.id);
+	const payload = await Api.sendRequest('/web/discover/games/packages/' + game.id);
 
 	const packageData = new GamePackagePayloadModel(payload);
 	packageData.installableBuilds = pluckInstallableGameBuilds({

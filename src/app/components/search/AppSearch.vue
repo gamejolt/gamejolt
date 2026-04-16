@@ -8,7 +8,6 @@ import {
 	provide,
 	Ref,
 	ref,
-	toRefs,
 	watch,
 } from 'vue';
 import { useRouter } from 'vue-router';
@@ -98,14 +97,13 @@ function createSearchController({
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	autocompleteDisabled: {
-		type: Boolean,
-	},
-	autofocus: {
-		type: Boolean,
-	},
-});
+import { toRef } from 'vue';
+
+type Props = {
+	autocompleteDisabled?: boolean;
+	autofocus?: boolean;
+};
+const { autocompleteDisabled, autofocus } = defineProps<Props>();
 
 const {
 	id: inputId,
@@ -115,7 +113,10 @@ const {
 	shouldShowAutocomplete,
 	isShowingAutocomplete,
 	query,
-} = createSearchController(toRefs(props));
+} = createSearchController({
+	autocompleteDisabled: toRef(() => autocompleteDisabled),
+	autofocus: toRef(() => autofocus),
+});
 
 const router = useRouter();
 

@@ -1,21 +1,14 @@
 <script lang="ts" setup generic="T extends TrophyNavGame | GameScoreTableModel">
-import { PropType } from 'vue';
-
 import { TrophyNavGame } from '../../../app/views/profile/trophies/_nav/AppProfileTrophiesNav.vue';
 import { GameScoreTableModel } from '../../game/score-table/score-table.model';
 import AppJolticon from '../../jolticon/AppJolticon.vue';
 import AppPopper from '../../popper/AppPopper.vue';
 
-defineProps({
-	current: {
-		type: Object as PropType<T | undefined>,
-		default: undefined,
-	},
-	items: {
-		type: Array as PropType<T[]>,
-		default: () => [],
-	},
-});
+type Props = {
+	current?: T;
+	items?: T[];
+};
+const { current, items = [] } = defineProps<Props>();
 
 const emit = defineEmits<{
 	change: [item: any];

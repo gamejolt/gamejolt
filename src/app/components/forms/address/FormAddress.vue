@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref, toRef, watch } from 'vue';
 
-import AppForm, { createForm, defineFormProps } from '../../../../_common/form-vue/AppForm.vue';
+import AppForm, { createForm } from '../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
 import AppFormControlErrors from '../../../../_common/form-vue/AppFormControlErrors.vue';
@@ -11,9 +11,10 @@ import { Geo, GeoRegion } from '../../../../_common/geo/geo.service';
 import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $saveUserAddress, UserAddressModel } from '../../../../_common/user/address/address.model';
 
-const props = defineProps({
-	...defineFormProps<UserAddressModel>(),
-});
+type Props = {
+	model?: UserAddressModel;
+};
+const { model } = defineProps<Props>();
 
 const emit = defineEmits<{
 	submit: [address: UserAddressModel];
@@ -24,7 +25,7 @@ const regions = ref<GeoRegion[] | null>(null);
 let initialLoad = true;
 
 const form = createForm<UserAddressModel>({
-	model: toRef(() => props.model),
+	model: toRef(() => model),
 	modelClass: UserAddressModel,
 	modelSaveHandler: $saveUserAddress,
 	onSubmitSuccess() {

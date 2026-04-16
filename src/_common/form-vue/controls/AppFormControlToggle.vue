@@ -1,20 +1,19 @@
 <script lang="ts" setup>
-import { PropType, toRef } from 'vue';
+import { toRef } from 'vue';
 
 import { MaybePromise } from '../../../utils/utils';
 import {
 	createFormControl,
 	FormControlEmits,
-	defineFormControlProps,
 } from '../AppFormControl.vue';
+import { FormValidator } from '../validators';
 
-const { validators, disabled, beforeChange } = defineProps({
-	...defineFormControlProps(),
-	beforeChange: {
-		type: Function as PropType<(next: boolean) => MaybePromise<boolean>>,
-		default: undefined,
-	},
-});
+type Props = {
+	disabled?: boolean;
+	validators?: FormValidator[];
+	beforeChange?: (next: boolean) => MaybePromise<boolean>;
+};
+const { validators = [], disabled, beforeChange } = defineProps<Props>();
 
 const emit = defineEmits<FormControlEmits>();
 

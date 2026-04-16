@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, toRefs } from 'vue';
+import { ref, toRef } from 'vue';
 
 import { useForm } from '../../../../../_common/form-vue/AppForm.vue';
 import AppFinancialsManagedAccountAddress from './AppFinancialsManagedAccountAddress.vue';
@@ -17,18 +17,13 @@ export interface AppFinancialsManagedAccountPersonInterface {
 	uploadDocuments: (stripePublishableKey: string) => Promise<[string, string]>;
 }
 
-const props = defineProps({
-	namePrefix: {
-		type: String,
-		required: true,
-	},
-	countryCode: {
-		type: String,
-		default: null,
-	},
-});
+type Props = {
+	namePrefix: string;
+	countryCode?: string;
+};
+const { namePrefix, countryCode } = defineProps<Props>();
 
-const { namePrefix } = toRefs(props);
+const namePrefixRef = toRef(() => namePrefix);
 const form = useForm<ManagedAccountFormModel>()!;
 
 const idDocument = ref<AppFinancialsManagedAccountDocumentInterface>();
@@ -38,12 +33,12 @@ async function uploadDocuments(stripePublishableKey: string) {
 	let idDocumentRequest: Promise<string> = Promise.resolve('');
 	let additionalDocumentRequest: Promise<string> = Promise.resolve('');
 
-	if (form.formModel[`${namePrefix.value}.verification.status`] !== 'verified') {
-		if (form.formModel[`${namePrefix.value}.verification.document.front`]) {
+	if (form.formModel[`${namePrefix}.verification.status`] !== 'verified') {
+		if (form.formModel[`${namePrefix}.verification.document.front`]) {
 			idDocumentRequest = idDocument.value!.uploadDocument(stripePublishableKey);
 		}
 
-		if (form.formModel[`${namePrefix.value}.verification.additional_document.front`]) {
+		if (form.formModel[`${namePrefix}.verification.additional_document.front`]) {
 			additionalDocumentRequest =
 				additionalDocument.value!.uploadDocument(stripePublishableKey);
 		}
@@ -53,7 +48,7 @@ async function uploadDocuments(stripePublishableKey: string) {
 }
 
 defineExpose({
-	namePrefix,
+	namePrefix: namePrefixRef,
 	uploadDocuments,
 });
 </script>
@@ -87,7 +82,7 @@ defineExpose({
 		<!--
 			SSN
 		-->
-		<AppFinancialsManagedAccountSsn :name-prefix="namePrefix" :country-code="countryCode" />
+		<AppFinancialsManagedAccountSsn v-if="countryCode" :name-prefix="namePrefix" :country-code="countryCode" />
 
 		<!--
 			Personal ID Verification

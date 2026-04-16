@@ -1,7 +1,6 @@
 <script lang="ts" setup>
-import { computed, ref, toRefs } from 'vue';
+import { computed, ref } from 'vue';
 
-import { defineFormProps } from '../../../../../../_common/form-vue/AppForm.vue';
 import AppFormControl from '../../../../../../_common/form-vue/AppFormControl.vue';
 import AppFormControlErrors from '../../../../../../_common/form-vue/AppFormControlErrors.vue';
 import AppFormControlPrefix from '../../../../../../_common/form-vue/AppFormControlPrefix.vue';
@@ -20,24 +19,23 @@ import { ShopDashProductType, useShopDashStore } from '../../shop.store';
 import AppDashShopProductHeader from '../AppDashShopProductHeader.vue';
 import FormShopProductBase, { createShopProductBaseForm } from './FormShopProductBase.vue';
 
-const props = defineProps({
-	...defineFormProps<StickerModel>(),
-});
-
-const { model } = toRefs(props);
+type Props = {
+	model?: StickerModel;
+};
+const { model } = defineProps<Props>();
 
 const emojiNameMinLength = ref(3);
 const emojiNameMaxLength = ref(30);
-const emojiPrefix = ref(props.model?.emoji?.prefix);
+const emojiPrefix = ref(model?.emoji?.prefix);
 
 const shopStore = useShopDashStore()!;
 
 const data = createShopProductBaseForm({
 	shopStore,
 	resource: ShopProductResource.Sticker,
-	baseModel: model?.value,
+	baseModel: model,
 	fields: {
-		emoji_name: model?.value?.emoji?.short_name ?? '',
+		emoji_name: model?.emoji?.short_name ?? '',
 	},
 	onLoad({ payload }) {
 		emojiNameMinLength.value = payload.emojiNameMinLength || emojiNameMinLength.value;

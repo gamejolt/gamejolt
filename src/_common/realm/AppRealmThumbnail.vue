@@ -1,24 +1,14 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-
 import AppImgResponsive from '../img/AppImgResponsive.vue';
 import AppResponsiveDimensions from '../responsive-dimensions/AppResponsiveDimensions.vue';
 import { RealmModel } from './realm-model';
 
-defineProps({
-	realm: {
-		type: Object as PropType<RealmModel>,
-		required: true,
-	},
-	maxHeight: {
-		type: Number,
-		default: undefined,
-	},
-	notRounded: {
-		type: Boolean,
-		default: false,
-	},
-});
+type Props = {
+	realm: RealmModel;
+	maxHeight?: number;
+	notRounded?: boolean;
+};
+defineProps<Props>();
 </script>
 
 <template>

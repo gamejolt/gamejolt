@@ -16,11 +16,9 @@ import {
 	computed,
 	markRaw,
 	onMounted,
-	PropType,
 	Ref,
 	ref,
 	toRaw,
-	toRefs,
 	useTemplateRef,
 	watch,
 } from 'vue';
@@ -125,21 +123,12 @@ Chart.register(
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	dataset: {
-		type: Array as PropType<any[]>,
-		required: true,
-	},
-	type: {
-		type: String as PropType<'line' | 'doughnut'>,
-		default: 'line',
-	},
-	backgroundVariant: {
-		type: Boolean,
-	},
-});
-
-const { dataset, type, backgroundVariant } = toRefs(props);
+type Props = {
+	dataset: any[];
+	type?: 'line' | 'doughnut';
+	backgroundVariant?: boolean;
+};
+const { dataset, type = 'line', backgroundVariant } = defineProps<Props>();
 const { theme } = useThemeStore();
 
 // Frustrating, but having this as a Ref<Chart> was causing volar to slow down
@@ -188,13 +177,13 @@ const globalColors = computed(() => {
 Object.assign(chartOptions.value, JSON.parse(JSON.stringify(chartOptionsTemplate)));
 Object.assign(ourColors.value, JSON.parse(JSON.stringify(globalColors.value)));
 
-if (type.value === 'line') {
+if (type === 'line') {
 	_mergeOptions(lineChartOptionsTemplate as any);
-} else if (type.value === 'doughnut') {
+} else if (type === 'doughnut') {
 	_mergeOptions(doughnutChartOptionsTemplate as any);
 }
 
-if (backgroundVariant.value) {
+if (backgroundVariant) {
 	_mergeOptions(backgroundVariantChartOptionsTemplate as any);
 
 	ourColors.value[0] = {
@@ -212,14 +201,14 @@ if (backgroundVariant.value) {
 }
 
 // Will only get called when dataset changes reference.
-watch(dataset, _checkData);
+watch(() => dataset, _checkData);
 
 onMounted(() => {
 	_checkData();
 
 	chart.value = markRaw(
 		new Chart(canvasElem.value!, {
-			type: type.value,
+			type: type,
 			data: toRaw(graphData.value),
 			options: toRaw(chartOptions.value),
 		})
@@ -243,20 +232,20 @@ function _mergeOptions(from: ChartOptions) {
 }
 
 function _checkData() {
-	if (!dataset.value) {
+	if (!dataset) {
 		return;
 	}
 
 	// Work on a raw version of the dataset so that we don't trigger a ton
 	// of proxying.
-	const rawDataset = toRaw(dataset.value);
+	const rawDataset = toRaw(dataset);
 
 	const newGraphData = {
 		labels: [] as any[],
 		datasets: [] as any[],
 	};
 
-	if (type.value === 'line') {
+	if (type === 'line') {
 		rawDataset.forEach((series: any, i: number) => {
 			const dataset: any = {
 				label: series.label,
@@ -275,7 +264,7 @@ function _checkData() {
 
 			newGraphData.datasets.push(dataset);
 		});
-	} else if (type.value === 'doughnut') {
+	} else if (type === 'doughnut') {
 		newGraphData.datasets.push({
 			data: [],
 		});

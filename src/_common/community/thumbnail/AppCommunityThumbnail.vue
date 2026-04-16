@@ -1,23 +1,20 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
 import { RouterLink } from 'vue-router';
 
 import { trackGotoCommunity } from '../../analytics/analytics.service';
 import { CommunityModel } from '../community.model';
 import AppCommunityThumbnailImg from './AppCommunityThumbnailImg.vue';
 
-const props = defineProps({
-	community: {
-		type: Object as PropType<CommunityModel>,
-		required: true,
-	},
-});
+type Props = {
+	community: CommunityModel;
+};
+const { community } = defineProps<Props>();
 
 function onGotoCommunity() {
 	trackGotoCommunity({
 		source: 'thumbnail',
-		id: props.community.id,
-		path: props.community.path,
+		id: community.id,
+		path: community.path,
 	});
 }
 </script>

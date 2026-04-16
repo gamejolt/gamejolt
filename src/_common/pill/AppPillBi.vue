@@ -1,31 +1,19 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs, useSlots } from 'vue';
+import { computed, useSlots } from 'vue';
 import { RouteLocationRaw, RouterLink } from 'vue-router';
 
-const props = defineProps({
-	leftTo: {
-		type: Object as PropType<RouteLocationRaw>,
-		default: undefined,
-	},
-	rightTo: {
-		type: Object as PropType<RouteLocationRaw>,
-		default: undefined,
-	},
-	noHover: {
-		type: Boolean,
-		default: false,
-	},
-	bleedImg: {
-		type: Boolean,
-	},
-});
-
-const { leftTo, rightTo, noHover, bleedImg } = toRefs(props);
+type Props = {
+	leftTo?: RouteLocationRaw;
+	rightTo?: RouteLocationRaw;
+	noHover?: boolean;
+	bleedImg?: boolean;
+};
+const { leftTo, rightTo } = defineProps<Props>();
 
 const slots = useSlots();
 
-const leftComponent = computed(() => (leftTo?.value ? RouterLink : 'span'));
-const rightComponent = computed(() => (rightTo?.value ? RouterLink : 'span'));
+const leftComponent = computed(() => (leftTo ? RouterLink : 'span'));
+const rightComponent = computed(() => (rightTo ? RouterLink : 'span'));
 
 const hasImg = computed(() => !!slots.img);
 </script>

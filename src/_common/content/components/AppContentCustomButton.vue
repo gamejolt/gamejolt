@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, toRefs } from 'vue';
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { CustomButtonModel } from '../../custom-button/custom-button-model.js';
@@ -11,27 +11,17 @@ import AppConfetti from '../../particle-effects/AppConfetti.vue';
 import AppTranslate from '../../translate/AppTranslate.vue';
 import { $gettext } from '../../translate/translate.service.js';
 import { showContentEditorCustomButtonModal } from '../content-editor/modals/custom-button/custom-button-modal.service.js';
-import { defineEditableNodeViewProps } from '../content-editor/node-views/base.js';
 import { useContentOwnerController } from '../content-owner';
 import AppBaseContentComponent from './AppBaseContentComponent.vue';
 
-const props = defineProps({
-	customButtonId: {
-		type: String,
-		required: true,
-	},
-	isEditing: {
-		type: Boolean,
-		required: true,
-	},
-	isDisabled: {
-		type: Boolean,
-		required: true,
-	},
-	...defineEditableNodeViewProps(),
-});
-
-const { customButtonId, isEditing, isDisabled, onUpdateAttrs } = toRefs(props);
+type Props = {
+	customButtonId: string;
+	isEditing: boolean;
+	isDisabled: boolean;
+	onRemoved?: () => void;
+	onUpdateAttrs?: (attrs: Record<string, unknown>) => void;
+};
+const { customButtonId, isEditing, isDisabled, onRemoved, onUpdateAttrs } = defineProps<Props>();
 
 const router = useRouter();
 
@@ -40,7 +30,7 @@ const owner = useContentOwnerController()!;
 const customButton = ref<CustomButtonModel>();
 const hasError = ref(false);
 
-owner.hydrator.useData('custom-button-id', customButtonId.value.toString(), data => {
+owner.hydrator.useData('custom-button-id', customButtonId.toString(), data => {
 	if (data) {
 		customButton.value = new CustomButtonModel(data);
 	} else {
@@ -49,10 +39,10 @@ owner.hydrator.useData('custom-button-id', customButtonId.value.toString(), data
 });
 
 async function onEdit() {
-	const result = await showContentEditorCustomButtonModal(customButtonId.value);
+	const result = await showContentEditorCustomButtonModal(customButtonId);
 	console.log('Editing custom button in document', result);
 	if (result !== undefined) {
-		onUpdateAttrs?.value?.({ customButtonId: result.customButtonId });
+		onUpdateAttrs?.({ customButtonId: result.customButtonId });
 	}
 }
 

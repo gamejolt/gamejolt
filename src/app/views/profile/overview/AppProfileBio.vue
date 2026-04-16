@@ -5,12 +5,10 @@ import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
 import AppProfileSocialLinks from '../AppProfileSocialLinks.vue';
 import { useProfileRouteStore } from '../RouteProfile.vue';
 
-defineProps({
-	noBioText: {
-		type: String,
-		default: '',
-	},
-});
+type Props = {
+	noBioText?: string;
+};
+const { noBioText = '' } = defineProps<Props>();
 
 const showFullDescription = defineModel<boolean>('showFullDescription', { required: true });
 const canToggleDescription = defineModel<boolean>('canToggleDescription', { required: true });

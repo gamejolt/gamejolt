@@ -3,12 +3,10 @@ import { kBorderRadiusBase } from '../../_styles/variables';
 import AppJolticon from '../jolticon/AppJolticon.vue';
 import { kThemeBgActual, kThemeFg10, kThemePrimary } from '../theme/variables';
 
-defineProps({
-	progress: {
-		type: Number,
-		required: true,
-	},
-});
+type Props = {
+	progress: number;
+};
+defineProps<Props>();
 </script>
 
 <template>

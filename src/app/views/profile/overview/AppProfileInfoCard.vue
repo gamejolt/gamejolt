@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, CSSProperties, PropType } from 'vue';
+import { computed, CSSProperties } from 'vue';
 
 import { Screen } from '../../../../_common/screen/screen-service';
 import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
@@ -21,18 +21,12 @@ import AppProfileShortcuts, { ProfileQuickLink } from './shortcut/AppProfileShor
 import AppProfileStat from './stats/AppProfileStat.vue';
 import AppProfileStats, { ProfileStat } from './stats/AppProfileStats.vue';
 
-defineProps({
-	showAvatar: {
-		type: Boolean,
-	},
-	fadeAvatar: {
-		type: Boolean,
-	},
-	cardStyles: {
-		type: Object as PropType<CSSProperties>,
-		default: () => ({}),
-	},
-});
+type Props = {
+	showAvatar?: boolean;
+	fadeAvatar?: boolean;
+	cardStyles?: CSSProperties;
+};
+const { showAvatar, fadeAvatar, cardStyles = {} } = defineProps<Props>();
 
 const {
 	user: routeUser,

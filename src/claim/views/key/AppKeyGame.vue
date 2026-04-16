@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onUnmounted, PropType, ref, toRefs } from 'vue';
+import { onUnmounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
 import AppFadeCollapse from '../../../_common/AppFadeCollapse.vue';
@@ -18,26 +18,16 @@ import { useThemeStore } from '../../../_common/theme/theme.store';
 
 const ClaimGameThemeKey = 'claim-game';
 
-const props = defineProps({
-	payload: {
-		type: Object as PropType<any>,
-		required: true,
-	},
-	loginUrl: {
-		type: String,
-		required: true,
-	},
-	accessKey: {
-		type: String,
-		default: undefined,
-	},
-});
+type Props = {
+	payload: any;
+	loginUrl: string;
+	accessKey?: string;
+};
+const { payload, loginUrl, accessKey } = defineProps<Props>();
 
 const emit = defineEmits<{
 	claim: [game: GameModel];
 }>();
-
-const { payload, loginUrl, accessKey } = toRefs(props);
 
 const { user } = useCommonStore();
 const { setPageTheme, clearPageTheme } = useThemeStore();
@@ -48,10 +38,10 @@ const isClaimOnly = ref(false);
 const canToggleDescription = ref(false);
 const showingFullDescription = ref(false);
 
-const game = ref(new GameModel(payload.value.game));
-const bundle = ref(payload.value.bundle ? new GameBundleModel(payload.value.bundle) : null);
-const keyGroup = ref(payload.value.keyGroup ? new KeyGroupModel(payload.value.keyGroup) : null);
-const gameIsLocked = ref(payload.value.gameIsLocked ?? false);
+const game = ref(new GameModel(payload.game));
+const bundle = ref(payload.bundle ? new GameBundleModel(payload.bundle) : null);
+const keyGroup = ref(payload.keyGroup ? new KeyGroupModel(payload.keyGroup) : null);
+const gameIsLocked = ref(payload.gameIsLocked ?? false);
 const customGameMessages = ref<CustomGameMessage[]>([]);
 const packagePayload = ref<GamePackagePayloadModel | null>(null);
 
@@ -62,11 +52,11 @@ if (
 ) {
 	isClaimOnly.value = true;
 } else {
-	customGameMessages.value = payload.value.customMessages;
+	customGameMessages.value = payload.customMessages;
 
 	packagePayload.value =
-		payload.value.packages && payload.value.packages.length
-			? new GamePackagePayloadModel(payload.value)
+		payload.packages && payload.packages.length
+			? new GamePackagePayloadModel(payload)
 			: null;
 }
 

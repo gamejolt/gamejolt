@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, toRef, toRefs } from 'vue';
+import { computed, toRef } from 'vue';
 
 import AppButton from '../../../../../../_common/button/AppButton.vue';
 import {
@@ -18,57 +18,45 @@ import { $gettext } from '../../../../../../_common/translate/translate.service'
 import { TranslateDirective as vTranslate } from '../../../../../../_common/translate/translate-directive';
 import { showEntryFromCommunityCompetitionEntryModal } from '../modal/modal.service';
 
-const props = defineProps({
-	entry: {
-		type: Object as PropType<CommunityCompetitionEntryModel>,
-		required: true,
-	},
-	showRemove: {
-		type: Boolean,
-	},
-	showRank: {
-		type: Boolean,
-	},
+type Props = {
+	entry: CommunityCompetitionEntryModel;
+	showRemove?: boolean;
+	showRank?: boolean;
 	/** Voting category the rank should be shown from. No voting category means Overall. */
-	votingCategory: {
-		type: Object as PropType<CommunityCompetitionVotingCategoryModel>,
-		default: undefined,
-	},
-	showAwards: {
-		type: Boolean,
-	},
-});
+	votingCategory?: CommunityCompetitionVotingCategoryModel;
+	showAwards?: boolean;
+};
+const { entry, showRemove, showRank, votingCategory, showAwards } = defineProps<Props>();
 
 const emit = defineEmits<{
 	remove: [];
 }>();
 
-const { entry, showRemove, showRank, votingCategory, showAwards } = toRefs(props);
 const { user } = useCommonStore();
 
 const shouldShowRemove = computed(
-	() => showRemove.value && user.value && user.value.id === entry.value.user.id
+	() => showRemove && user.value && user.value.id === entry.user.id
 );
 
-const game = toRef(() => entry.value.resource as GameModel);
+const game = toRef(() => entry.resource as GameModel);
 
-const hasAwards = toRef(() => entry.value.awards && entry.value.awards.length > 0);
+const hasAwards = toRef(() => entry.awards && entry.awards.length > 0);
 
-const shouldShowAwards = toRef(() => showAwards.value && hasAwards.value);
+const shouldShowAwards = toRef(() => showAwards && hasAwards.value);
 
 const shouldShowNoVotes = toRef(
 	() =>
-		showRank.value &&
-		!votingCategory?.value &&
-		(!entry.value.vote_results || entry.value.vote_results.length === 0)
+		showRank &&
+		!votingCategory &&
+		(!entry.vote_results || entry.vote_results.length === 0)
 );
 
 const shouldShowRank = computed(() => {
-	if (!showRank.value) {
+	if (!showRank) {
 		return false;
 	}
 
-	if (!entry.value.vote_results || entry.value.vote_results.length === 0) {
+	if (!entry.vote_results || entry.vote_results.length === 0) {
 		return false;
 	}
 
@@ -77,8 +65,8 @@ const shouldShowRank = computed(() => {
 
 const displayRank = computed(() => {
 	// Find the result for the given category.
-	const categoryId = votingCategory?.value ? votingCategory.value.id : null;
-	const voteResult = entry.value.vote_results.find(
+	const categoryId = votingCategory ? votingCategory.id : null;
+	const voteResult = entry.vote_results.find(
 		i => i.community_competition_voting_category_id === categoryId
 	);
 	if (voteResult) {
@@ -87,8 +75,8 @@ const displayRank = computed(() => {
 });
 
 const displayCategoryName = computed(() => {
-	if (votingCategory?.value) {
-		return votingCategory.value.name;
+	if (votingCategory) {
+		return votingCategory.name;
 	}
 
 	return $gettext(`Overall`);
@@ -100,8 +88,8 @@ async function onClickRemove() {
 	);
 
 	if (result) {
-		await $removeCommunityCompetitionEntry(entry.value);
-		if (entry.value._removed) {
+		await $removeCommunityCompetitionEntry(entry);
+		if (entry._removed) {
 			showSuccessGrowl($gettext(`Your entry was successfully removed from the jam.`));
 			emit('remove');
 		}
@@ -110,7 +98,7 @@ async function onClickRemove() {
 
 /** Instead of navigating to the link target, open the entry modal instead. */
 function onClickThumbnail() {
-	showEntryFromCommunityCompetitionEntryModal(entry.value);
+	showEntryFromCommunityCompetitionEntryModal(entry);
 }
 </script>
 

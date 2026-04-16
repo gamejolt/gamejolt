@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
+import { computed } from 'vue';
 
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppExpand from '../../../../_common/expand/AppExpand.vue';
@@ -26,22 +26,12 @@ import {
 	LocalDbPackageRemoveState,
 } from '../local-db/package/package.model';
 
-const props = defineProps({
-	game: {
-		type: Object as PropType<GameModel>,
-		required: true,
-	},
-	package: {
-		type: Object as PropType<GamePackageModel>,
-		required: true,
-	},
-	card: {
-		type: Object as PropType<GamePackageCardModel>,
-		required: true,
-	},
-});
-
-const { game, package: pkg, card } = toRefs(props);
+type Props = {
+	game: GameModel;
+	package: GamePackageModel;
+	card: GamePackageCardModel;
+};
+const { game, package: pkg, card } = defineProps<Props>();
 
 const emit = defineEmits<{
 	click: [data: { build: GameBuildModel; fromExtraSection?: boolean }];
@@ -58,7 +48,7 @@ const {
 	launcherLaunch,
 } = useClientLibraryStore();
 
-const localPackage = computed(() => packagesById.value[pkg.value.id]);
+const localPackage = computed(() => packagesById.value[pkg.id]);
 
 function buildClick(build: GameBuildModel, fromExtraSection?: boolean) {
 	emit('click', { build, fromExtraSection });
@@ -79,7 +69,7 @@ function startInstall(build: GameBuildModel) {
 		throw new Error(`Attempted to install a non installable build ${build.id}`);
 	}
 
-	packageInstall(game.value, build._package!, build._release!, build, build._launch_options!);
+	packageInstall(game, build._package!, build._release!, build, build._launch_options!);
 }
 
 function pauseInstall() {
@@ -167,22 +157,24 @@ function retryUninstall() {
 //
 // TODO(game-build-installers) this is extremely silly. put this logic in card model.
 if (
-	card.value.browserBuild &&
-	card.value.browserBuild.type !== GameBuildType.Html &&
-	card.value.browserBuild.type !== GameBuildType.Rom
+	card.browserBuild &&
+	card.browserBuild.type !== GameBuildType.Html &&
+	card.browserBuild.type !== GameBuildType.Rom
 ) {
-	const _build = card.value.browserBuild;
+	const _build = card.browserBuild;
 
-	card.value.extraBuilds.unshift({
+	// eslint-disable-next-line vue/no-mutating-props
+	card.extraBuilds.unshift({
 		type: _build.type,
-		icon: card.value.platformSupportInfo[_build.type].icon,
+		icon: card.platformSupportInfo[_build.type].icon,
 		build: _build,
 		platform: _build.type,
 		arch: null,
 	});
 
 	// Clear out the browser build since it's not quick playable.
-	card.value.browserBuild = null;
+	// eslint-disable-next-line vue/no-mutating-props
+	card.browserBuild = null;
 }
 
 // This sets up proper messaging for what you can or cannot do with the build.
@@ -195,13 +187,13 @@ enum BuildCapability {
 }
 
 const buildCapability = computed(() => {
-	if (card.value.primaryAction === 'install') {
+	if (card.primaryAction === 'install') {
 		return BuildCapability.Installable;
-	} else if (card.value.browserBuild) {
+	} else if (card.browserBuild) {
 		return BuildCapability.QuickPlayable;
-	} else if (card.value.primaryIsCompatible) {
+	} else if (card.primaryIsCompatible) {
 		return BuildCapability.Runnable;
-	} else if (card.value.primaryBuild) {
+	} else if (card.primaryBuild) {
 		return BuildCapability.Unsupported;
 	} else {
 		return BuildCapability.NonExistant;

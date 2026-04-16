@@ -1,32 +1,25 @@
 <script lang="ts" setup>
 import { determine } from 'jstimezonedetect';
-import { computed, onMounted, ref, toRefs } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 
 import { formatDate } from '../../../../../_common/filters/date';
 import { Timezone } from '../../../../../_common/timezone/timezone.service';
 
-const props = defineProps({
-	date: {
-		type: Number,
-		required: true,
-	},
-	timezone: {
-		type: String,
-		required: true,
-	},
-});
-
-const { date, timezone } = toRefs(props);
+type Props = {
+	date: number;
+	timezone: string;
+};
+const { date, timezone } = defineProps<Props>();
 
 type GroupedTimezones = Awaited<ReturnType<typeof Timezone.getGroupedTimezones>>;
 const timezones = ref<GroupedTimezones>(null as any);
 
 // date is UTC, add the set offset, and remove the local timezone offset.
 // This displays the time with the passed in timezone.
-const offsetDate = computed(() => date.value + offset.value - localOffset.value);
+const offsetDate = computed(() => date + offset.value - localOffset.value);
 
 const localOffset = computed(() => {
-	if (!timezone?.value || !timezones.value) {
+	if (!timezone || !timezones.value) {
 		return 0;
 	}
 
@@ -34,11 +27,11 @@ const localOffset = computed(() => {
 });
 
 const offset = computed(() => {
-	if (!timezone?.value || !timezones.value) {
+	if (!timezone || !timezones.value) {
 		return 0;
 	}
 
-	return _getOffset(timezone.value);
+	return _getOffset(timezone);
 });
 
 onMounted(async () => {

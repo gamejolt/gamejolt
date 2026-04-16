@@ -4,7 +4,6 @@ import {
 	CSSProperties,
 	nextTick,
 	onUnmounted,
-	PropType,
 	Ref,
 	ref,
 	shallowReadonly,
@@ -656,12 +655,10 @@ export function createShopProductBaseForm<
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	data: {
-		type: Object as PropType<ShopProductBaseForm>,
-		required: true,
-	},
-});
+type Props = {
+	data: ShopProductBaseForm;
+};
+const { data } = defineProps<Props>();
 
 // eslint-disable-next-line vue/no-setup-props-destructure
 const {
@@ -693,7 +690,7 @@ const {
 	maxNameLength,
 	getFieldAvailabilityUrl,
 	changeRequest,
-} = props.data;
+} = data;
 
 const productTypeSelectorStyle: CSSProperties = {
 	...styleBorderRadiusLg,

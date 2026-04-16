@@ -4,12 +4,10 @@ import VueDraggable from 'vuedraggable';
 
 import { useCardList } from './AppCardList.vue';
 
-defineProps({
-	itemKey: {
-		type: String,
-		required: true,
-	},
-});
+type Props = {
+	itemKey: string;
+};
+const { itemKey } = defineProps<Props>();
 
 const emit = defineEmits<{
 	change: [items: any[]];

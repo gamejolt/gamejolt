@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import { CommunityChannelModel } from '../../../../../_common/community/channel/channel.model';
 import { CommunityModel } from '../../../../../_common/community/community.model';
@@ -10,16 +8,11 @@ import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import AppCommunityRemoveChannel from '../AppCommunityRemoveChannel.vue';
 
-defineProps({
-	community: {
-		type: Object as PropType<CommunityModel>,
-		required: true,
-	},
-	channel: {
-		type: Object as PropType<CommunityChannelModel>,
-		required: true,
-	},
-});
+type Props = {
+	community: CommunityModel;
+	channel: CommunityChannelModel;
+};
+defineProps<Props>();
 
 const modal = useModal()!;
 

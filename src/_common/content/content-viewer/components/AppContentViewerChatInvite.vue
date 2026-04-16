@@ -1,5 +1,5 @@
 <script lang="ts">
-import type { Component, PropType } from 'vue';
+import type { Component } from 'vue';
 
 import { ContentObject } from '../../content-object';
 
@@ -16,12 +16,10 @@ export function setChatInviteComponent(newComponent: Component) {
 </script>
 
 <script lang="ts" setup>
-defineProps({
-	contentData: {
-		type: Object as PropType<ContentObject>,
-		required: true,
-	},
-});
+type Props = {
+	contentData: ContentObject;
+};
+const { contentData } = defineProps<Props>();
 </script>
 
 <template>

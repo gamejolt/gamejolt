@@ -4,12 +4,10 @@ import {
 	inject,
 	InjectionKey,
 	onUnmounted,
-	PropType,
 	provide,
 	Ref,
 	ref,
 	shallowReadonly,
-	toRefs,
 	watch,
 } from 'vue';
 import { useRoute } from 'vue-router';
@@ -391,37 +389,26 @@ export function useCommentWidget() {
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	model: {
-		type: Object as PropType<Model & CommentableModel>,
-		required: true,
-	},
-	autofocus: {
-		type: Boolean,
-	},
-	threadCommentId: {
-		type: Number,
-		default: null,
-	},
-	showAdd: {
-		type: Boolean,
-		default: true,
-	},
-	showTabs: {
-		type: Boolean,
-		default: true,
-	},
-	initialTab: {
-		type: String as PropType<CommentSort>,
-		default: null,
-	},
-	displayMode: {
-		type: String as PropType<DisplayMode>,
-		default: null,
-	},
-});
+import { toRef } from 'vue';
 
-const { displayMode } = toRefs(props);
+type Props = {
+	model: Model & CommentableModel;
+	autofocus?: boolean;
+	threadCommentId?: number | null;
+	showAdd?: boolean;
+	showTabs?: boolean;
+	initialTab?: CommentSort | null;
+	displayMode?: DisplayMode | null;
+};
+const {
+	model,
+	autofocus,
+	threadCommentId = null,
+	showAdd = true,
+	showTabs = true,
+	initialTab = null,
+	displayMode = null,
+} = defineProps<Props>();
 
 const emit = defineEmits<{
 	error: [e: any];
@@ -431,7 +418,10 @@ const emit = defineEmits<{
 }>();
 
 const c = createCommentWidget({
-	...toRefs(props),
+	model: toRef(() => model),
+	threadCommentId: toRef(() => threadCommentId),
+	showTabs: toRef(() => showTabs),
+	initialTab: toRef(() => initialTab),
 	onError: e => emit('error', e),
 	onAdd: comment => emit('add', comment),
 	onEdit: comment => emit('edit', comment),
@@ -465,7 +455,7 @@ const {
 } = c;
 
 const placeholder = computed(() => {
-	if (!resourceOwner.value || displayMode?.value !== 'shouts') {
+	if (!resourceOwner.value || displayMode !== 'shouts') {
 		return undefined;
 	}
 

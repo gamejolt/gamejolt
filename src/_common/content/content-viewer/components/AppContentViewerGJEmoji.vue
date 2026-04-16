@@ -1,15 +1,11 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-
 import AppContentEmoji from '../../components/AppContentEmoji.vue';
 import { ContentObject } from '../../content-object';
 
-defineProps({
-	contentData: {
-		type: Object as PropType<ContentObject>,
-		required: true,
-	},
-});
+type Props = {
+	contentData: ContentObject;
+};
+const { contentData } = defineProps<Props>();
 </script>
 
 <template>

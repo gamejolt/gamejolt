@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-
 import AppButton from '../../../button/AppButton.vue';
 import { formatFilesize } from '../../../filters/filesize';
 import AppJolticon from '../../../jolticon/AppJolticon.vue';
@@ -11,16 +9,11 @@ import { GamePackageModel } from '../package.model';
 import AppGamePackageCardMoreOptions from './AppGamePackageCardMoreOptions.vue';
 import { GamePackageCardModel } from './card.model';
 
-defineProps({
-	package: {
-		type: Object as PropType<GamePackageModel>,
-		required: true,
-	},
-	card: {
-		type: Object as PropType<GamePackageCardModel>,
-		required: true,
-	},
-});
+type Props = {
+	package: GamePackageModel;
+	card: GamePackageCardModel;
+};
+defineProps<Props>();
 
 const emit = defineEmits<{
 	click: [data: { build: GameBuildModel; fromExtraSection: boolean }];

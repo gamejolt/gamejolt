@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, CSSProperties, PropType, toRefs } from 'vue';
+import { computed, CSSProperties } from 'vue';
 
 import AppJolticon from '../../../../../../../_common/jolticon/AppJolticon.vue';
 import AppStickerImg from '../../../../../../../_common/sticker/AppStickerImg.vue';
@@ -16,25 +16,13 @@ import {
 } from '../../../../../../../_styles/mixins';
 import { kBorderWidthBase, kStrongEaseOut } from '../../../../../../../_styles/variables';
 
-const props = defineProps({
-	sticker: {
-		type: Object as PropType<StickerModel>,
-		required: true,
-	},
-	selected: {
-		type: Boolean,
-		required: true,
-	},
-	disabled: {
-		type: Boolean,
-	},
-	onClick: {
-		type: Function,
-		required: true,
-	},
-});
-
-const { sticker, selected, disabled } = toRefs(props);
+type Props = {
+	sticker: StickerModel;
+	selected: boolean;
+	disabled?: boolean;
+	onClick: Function;
+};
+const { sticker, selected, disabled } = defineProps<Props>();
 
 const emit = defineEmits<{
 	click: [event: Event];
@@ -52,11 +40,11 @@ const baseStyles = computed(() => {
 		transition: `border-color 300ms ${kStrongEaseOut}`,
 	};
 
-	if (selected.value) {
+	if (selected) {
 		result.borderColor = kThemePrimary;
 	}
 
-	if (disabled.value) {
+	if (disabled) {
 		result.opacity = 0.5;
 	} else {
 		result.cursor = `pointer`;
@@ -66,7 +54,7 @@ const baseStyles = computed(() => {
 });
 
 function onClickSticker(event: Event) {
-	if (disabled.value) {
+	if (disabled) {
 		return;
 	}
 

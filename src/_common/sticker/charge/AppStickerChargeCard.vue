@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, CSSProperties, ref, toRefs, useTemplateRef } from 'vue';
+import { computed, CSSProperties, ref, useTemplateRef } from 'vue';
 import { RouterLink } from 'vue-router';
 
 import { routeLandingCreators } from '../../../app/views/landing/creators/creators.route';
@@ -19,44 +19,34 @@ import AppStickerChargeTooltipHandler from './AppStickerChargeTooltipHandler.vue
 
 const OrbMaxSize = `28px`;
 
-const props = defineProps({
-	elevate: {
-		type: Boolean,
-	},
+type Props = {
+	elevate?: boolean;
 	/**
 	 * Move the "Charge" text and "help_circle" jolticon above the card of orbs.
 	 */
-	headerCharge: {
-		type: Boolean,
-	},
+	headerCharge?: boolean;
 	/**
 	 * Shows text below the charge card when we're able to charge a sticker.
 	 */
-	allowFullyChargedText: {
-		type: Boolean,
-	},
-	paddingH: {
-		type: Number,
-		default: 24,
-	},
-	paddingV: {
-		type: Number,
-		default: 16,
-	},
-	isLoading: {
-		type: Boolean,
-	},
+	allowFullyChargedText?: boolean;
+	paddingH?: number;
+	paddingV?: number;
+	isLoading?: boolean;
 	/**
 	 * Passed into the AppSpacer component between the header and the charge
 	 * card.
 	 */
-	headerSpacerHeight: {
-		type: String,
-		default: undefined,
-	},
-});
-
-const { elevate, headerCharge, allowFullyChargedText, paddingH, paddingV } = toRefs(props);
+	headerSpacerHeight?: string;
+};
+const {
+	elevate,
+	headerCharge,
+	allowFullyChargedText,
+	paddingH = 24,
+	paddingV = 16,
+	isLoading,
+	headerSpacerHeight,
+} = defineProps<Props>();
 
 const root = useTemplateRef('root');
 const helpIcon = useTemplateRef('helpIcon');
@@ -74,7 +64,7 @@ const gridStyling = computed<CSSProperties>(() => {
 	};
 });
 
-const showFullyChargedText = computed(() => allowFullyChargedText.value && canChargeSticker.value);
+const showFullyChargedText = computed(() => allowFullyChargedText && canChargeSticker.value);
 </script>
 
 <template>

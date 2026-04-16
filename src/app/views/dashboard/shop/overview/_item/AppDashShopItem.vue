@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
+import { computed } from 'vue';
 
 import AppHoverCard from '../../../../../../_common/card/AppHoverCard.vue';
 import { ShopProductModel } from '../../../../../../_common/shop/product/product-model';
@@ -8,18 +8,15 @@ import { routeDashShopProduct } from '../../product/product.route';
 import { getShopDashProductResourceParam, useShopDashStore } from '../../shop.store';
 import AppDashShopItemImpl from './AppDashShopItemImpl.vue';
 
-const props = defineProps({
-	item: {
-		type: Object as PropType<ShopProductModel>,
-		required: true,
-	},
-});
+type Props = {
+	item: ShopProductModel;
+};
+const { item } = defineProps<Props>();
 
-const { item } = toRefs(props);
 const { getShopProductStates } = useShopDashStore()!;
 
-const itemStates = computed(() => getShopProductStates(item.value));
-const resourceParam = computed(() => getShopDashProductResourceParam(item.value));
+const itemStates = computed(() => getShopProductStates(item));
+const resourceParam = computed(() => getShopDashProductResourceParam(item));
 </script>
 
 <template>

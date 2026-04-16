@@ -1,17 +1,15 @@
 <script lang="ts" setup>
-import { PropType, toRef } from 'vue';
+import { toRef } from 'vue';
 
 import { Environment } from '../../environment/environment.service';
 import { GameModel } from '../../game/game.model';
 import AppGameThumbnailImg from '../../game/thumbnail/AppGameThumbnailImg.vue';
 import { WidgetCompiler } from '../widget-compiler.service';
 
-defineProps({
-	games: {
-		type: Array as PropType<GameModel[]>,
-		default: () => [],
-	},
-});
+type Props = {
+	games?: GameModel[];
+};
+const { games = [] } = defineProps<Props>();
 
 const contentClass = toRef(() => WidgetCompiler.getContentClass());
 

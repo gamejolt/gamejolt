@@ -5,12 +5,10 @@ import AppFormControlSelect from '../../../../../_common/form-vue/controls/AppFo
 import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
 import { useFormManagedAccount } from './FormFinancialsManagedAccount.vue';
 
-defineProps({
-	namePrefix: {
-		type: String,
-		required: true,
-	},
-});
+type Props = {
+	namePrefix: string;
+};
+defineProps<Props>();
 
 const { getStripeField, requiresField } = useFormManagedAccount()!;
 

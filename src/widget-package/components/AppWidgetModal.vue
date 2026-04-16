@@ -2,11 +2,10 @@
 import AppButton from '../../_common/button/AppButton.vue';
 import AppScrollScroller from '../../_common/scroll/AppScrollScroller.vue';
 
-defineProps({
-	hideClose: {
-		type: Boolean,
-	},
-});
+type Props = {
+	hideClose?: boolean;
+};
+const { hideClose } = defineProps<Props>();
 
 const emit = defineEmits<{
 	close: [];

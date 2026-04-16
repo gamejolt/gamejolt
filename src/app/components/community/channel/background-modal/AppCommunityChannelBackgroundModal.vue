@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { PropType, ref, toRefs } from 'vue';
+import { ref } from 'vue';
 
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import { CommunityChannelModel } from '../../../../../_common/community/channel/channel.model';
@@ -8,17 +8,14 @@ import { useModal } from '../../../../../_common/modal/modal.service';
 import { $gettext } from '../../../../../_common/translate/translate.service';
 import FormCommunityChannelBackground from '../../../forms/community/channel/background/FormCommunityChannelBackground.vue';
 
-const props = defineProps({
-	channel: {
-		type: Object as PropType<CommunityChannelModel>,
-		required: true,
-	},
-});
+type Props = {
+	channel: CommunityChannelModel;
+};
+const { channel } = defineProps<Props>();
 
-const { channel } = toRefs(props);
 const modal = useModal()!;
 
-const previousBackgroundId = ref(channel.value.background?.id || null);
+const previousBackgroundId = ref(channel.background?.id || null);
 
 function onSubmit(channel: CommunityChannelModel) {
 	const newBackgroundId = (channel.background && channel.background.id) || null;

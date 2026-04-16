@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRef, toRefs } from 'vue';
+import { computed, ref, toRef } from 'vue';
 
 import { Analytics } from '../../analytics/analytics.service';
 import { vAppObserveDimensions } from '../../observe-dimensions/observe-dimensions.directive';
@@ -13,16 +13,12 @@ import AppStickerLayerPlacementMaskItem from './AppStickerLayerPlacementMaskItem
 import AppStickerLayerPlacementMaskTarget from './AppStickerLayerPlacementMaskTarget.vue';
 import { calculateStickerTargetRects, StickerLayerController } from './layer-controller';
 
-const props = defineProps({
-	layer: {
-		type: Object as PropType<StickerLayerController>,
-		required: true,
-	},
-});
+type Props = {
+	layer: StickerLayerController;
+};
+const { layer } = defineProps<Props>();
 
-const { layer } = toRefs(props);
-
-const { canChargeAllTargets } = layer.value;
+const { canChargeAllTargets } = layer;
 
 const parentScroller = useScroller();
 const stickerStore = useStickerStore();
@@ -55,7 +51,7 @@ function onDimensionsChange([
 	const scrollLeft = Scroll.getScrollLeft(scrollElement);
 	const scrollTop = Scroll.getScrollTop(scrollElement);
 
-	calculateStickerTargetRects(layer.value, scrollLeft, scrollTop);
+	calculateStickerTargetRects(layer, scrollLeft, scrollTop);
 }
 
 function onClickMask() {

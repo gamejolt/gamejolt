@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
+import { computed } from 'vue';
 
 import { FiresidePostModel } from '../fireside/post/post-model';
 import { Screen } from '../screen/screen-service';
@@ -9,31 +9,21 @@ import AppStickerReactions from './reactions/AppStickerReactions.vue';
 import { StickerCount } from './sticker-count';
 import { StickerTargetController } from './target/target-controller';
 
-const props = defineProps({
-	stickerTargetController: {
-		type: Object as PropType<StickerTargetController>,
-		required: true,
-	},
-	supporters: {
-		type: Array as PropType<UserModel[]>,
-		required: true,
-	},
-	stickers: {
-		type: Array as PropType<StickerCount[]>,
-		required: true,
-	},
-});
+type Props = {
+	stickerTargetController: StickerTargetController;
+	supporters: UserModel[];
+	stickers: StickerCount[];
+};
+const { stickerTargetController } = defineProps<Props>();
 
 const emit = defineEmits<{
 	show: [];
 }>();
 
-const { stickerTargetController } = toRefs(props);
-
 // We only allow this type of model to show the supporters currently.
 const supportersModel = computed(() =>
-	stickerTargetController.value.model instanceof FiresidePostModel
-		? stickerTargetController.value.model
+	stickerTargetController.model instanceof FiresidePostModel
+		? stickerTargetController.model
 		: undefined
 );
 </script>

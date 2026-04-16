@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppCard from '../../../../_common/card/AppCard.vue';
 import { showSuccessGrowl } from '../../../../_common/growls/growls.service';
@@ -15,22 +13,18 @@ import {
 import AppUserAddressDetails from './AppUserAddressDetails.vue';
 import { showUserAddressEditModal } from './edit-modal/edit-modal.service';
 
-const props = defineProps({
-	address: {
-		type: Object as PropType<UserAddressModel>,
-		required: true,
-	},
-	showRemove: {
-		type: Boolean,
-	},
-});
+type Props = {
+	address: UserAddressModel;
+	showRemove?: boolean;
+};
+const { address, showRemove } = defineProps<Props>();
 
 const emit = defineEmits<{
 	remove: [];
 }>();
 
 function edit() {
-	showUserAddressEditModal(props.address);
+	showUserAddressEditModal(address);
 }
 
 async function remove() {
@@ -39,7 +33,7 @@ async function remove() {
 		return;
 	}
 
-	await $removeUserAddress(props.address);
+	await $removeUserAddress(address);
 
 	showSuccessGrowl(
 		$gettext(`Your address has successfully been removed.`),

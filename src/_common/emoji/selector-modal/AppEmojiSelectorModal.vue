@@ -5,10 +5,8 @@ import {
 	nextTick,
 	onMounted,
 	onUnmounted,
-	PropType,
 	Ref,
 	ref,
-	toRefs,
 } from 'vue';
 
 import { styleChangeBg } from '../../../_styles/mixins';
@@ -29,18 +27,11 @@ import { EmojiModel } from '../emoji.model';
 import { EmojiGroupModel, EmojiGroupType } from '../emoji-group.model';
 import AppEmojiSelectorGroup from './_group/AppEmojiSelectorGroup.vue';
 
-const props = defineProps({
-	type: {
-		type: String as PropType<'emojis' | 'reactions'>,
-		required: true,
-	},
-	modelData: {
-		type: Object as PropType<ContentEditorModelData>,
-		required: true,
-	},
-});
-
-const { modelData } = toRefs(props);
+type Props = {
+	type: 'emojis' | 'reactions';
+	modelData: ContentEditorModelData;
+};
+const { type, modelData } = defineProps<Props>();
 
 const modal = useModal<EmojiModel>()!;
 const { reactionsData, reactionsCursor } = useCommonStore();
@@ -69,15 +60,15 @@ const requestBodyData = computed(() => {
 		result.cursor = reactionsCursor.value;
 	}
 
-	if (modelData.value.type === 'newChatMessage') {
-		result.chatRoomId = modelData.value.chatRoomId;
-	} else if (modelData.value.type === 'commentingOnResource') {
-		result.commentingOnResource = modelData.value.resource;
-		result.commentingOnResourceId = modelData.value.resourceId;
-	} else if (modelData.value.type === 'resource') {
-		result.resource = modelData.value.resource;
-		result.resourceId = modelData.value.resourceId;
-	} else if (modelData.value.type === 'supporterMessage') {
+	if (modelData.type === 'newChatMessage') {
+		result.chatRoomId = modelData.chatRoomId;
+	} else if (modelData.type === 'commentingOnResource') {
+		result.commentingOnResource = modelData.resource;
+		result.commentingOnResourceId = modelData.resourceId;
+	} else if (modelData.type === 'resource') {
+		result.resource = modelData.resource;
+		result.resourceId = modelData.resourceId;
+	} else if (modelData.type === 'supporterMessage') {
 		result.forSupporterMessage = true;
 	}
 

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, onMounted, PropType, ref, toRefs } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 
 import { arrayRemove } from '../../../utils/array';
 import { Api } from '../../api/api.service';
@@ -23,30 +23,23 @@ type FormModel = {
 	source: string;
 };
 
-const props = defineProps({
-	type: {
-		type: String,
-		required: true,
-	},
-	resource: {
-		type: Object as PropType<any>,
-		required: true,
-	},
-});
+type Props = {
+	type: string;
+	resource: any;
+};
+const { type, resource } = defineProps<Props>();
 
 const emit = defineEmits<{
 	submit: [];
 }>();
-
-const { type, resource } = toRefs(props);
 
 const form: FormController<FormModel> = createForm<FormModel>({
 	warnOnDiscard: false,
 	loadUrl: '/web/report',
 	onSubmit() {
 		const data = {
-			resourceName: type.value,
-			resourceId: resource.value.id,
+			resourceName: type,
+			resourceId: resource.id,
 			reason: form.formModel.reason,
 			context: form.formModel.context as string[] | undefined,
 			description: form.formModel.description,
@@ -110,7 +103,7 @@ interface Reason {
 }
 
 const reasons = computed<Reason[]>(() => {
-	switch (type.value) {
+	switch (type) {
 		case 'Game':
 			return [
 				{
@@ -182,13 +175,13 @@ const reasons = computed<Reason[]>(() => {
 			// For a devlog post of a game that is maturity restricted, we don't want to show the "explicit" report option.
 			// Those devlog posts can be explicit, and we don't want to encourage false reports.
 			const isAdultGamePost =
-				resource.value instanceof FiresidePostModel &&
-				resource.value.game instanceof GameModel &&
-				resource.value.game.tigrs_age === 3;
+				resource instanceof FiresidePostModel &&
+				resource.game instanceof GameModel &&
+				resource.game.tigrs_age === 3;
 
 			// However, in cases where the post may be shown outside of the game page, we won't disable reporting.
 			const onlyShowsOnGame =
-				!resource.value.post_to_user_profile && resource.value.communities.length === 0;
+				!resource.post_to_user_profile && resource.communities.length === 0;
 
 			if (isAdultGamePost && onlyShowsOnGame) {
 				arrayRemove(reasons, i => i.radioValue === 'explicit');

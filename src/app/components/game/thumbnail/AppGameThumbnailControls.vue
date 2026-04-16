@@ -4,8 +4,6 @@
  * for [AppGameThumbnail]
  */
 
-import { PropType } from 'vue';
-
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppGameFollowWidget from '../../../../_common/game/follow-widget/AppGameFollowWidget.vue';
 import { GameModel } from '../../../../_common/game/game.model';
@@ -14,12 +12,10 @@ import AppPopper from '../../../../_common/popper/AppPopper.vue';
 import { useCommonStore } from '../../../../_common/store/common-store';
 import AppGamePlaylistAddToWidget from '../../game-playlist/add-to-widget/add-to-widget.vue';
 
-defineProps({
-	game: {
-		type: Object as PropType<GameModel>,
-		required: true,
-	},
-});
+type Props = {
+	game: GameModel;
+};
+const { game } = defineProps<Props>();
 
 const { user } = useCommonStore();
 </script>

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
+import { computed } from 'vue';
 import { RouteLocationRaw } from 'vue-router';
 
 import { kElevateTransition, styleElevate, styleTyped, styleWhen } from '../../_styles/mixins';
@@ -16,64 +16,43 @@ import {
 const BorderRadius = kBorderRadiusLg;
 const BorderWidth = kBorderWidthLg;
 
-const props = defineProps({
-	to: {
-		type: [Object, String] as PropType<RouteLocationRaw>,
-		default: undefined,
-	},
-	onClick: {
-		type: Function,
-		default: undefined,
-	},
-	borderColor: {
-		type: String,
-		default: kThemePrimaryTrans,
-	},
-	borderStyle: {
-		type: String as PropType<'solid' | 'dashed'>,
-		default: `solid`,
-	},
-	backgroundColor: {
-		type: String,
-		default: kThemeBgOffset,
-	},
-	padding: {
-		type: Number,
-		default: 8,
-		validator: val => typeof val === 'number' && val >= 0,
-	},
-	paddingH: {
-		type: Number,
-		default: undefined,
-	},
-	paddingV: {
-		type: Number,
-		default: undefined,
-	},
-	hoverScale: {
-		type: Number,
-		default: 1.1,
-	},
-	disableScale: {
-		type: Boolean,
-	},
-	center: {
-		type: Boolean,
-	},
-});
-
-const { onClick: onClickProp, to, padding, paddingH, paddingV } = toRefs(props);
+type Props = {
+	to?: RouteLocationRaw;
+	onClick?: Function;
+	borderColor?: string;
+	borderStyle?: 'solid' | 'dashed';
+	backgroundColor?: string;
+	padding?: number;
+	paddingH?: number;
+	paddingV?: number;
+	hoverScale?: number;
+	disableScale?: boolean;
+	center?: boolean;
+};
+const {
+	to,
+	onClick: onClickProp,
+	borderColor = kThemePrimaryTrans,
+	borderStyle = `solid`,
+	backgroundColor = kThemeBgOffset,
+	padding = 8,
+	paddingH,
+	paddingV,
+	hoverScale = 1.1,
+	disableScale,
+	center,
+} = defineProps<Props>();
 
 const { hoverBinding, hovered } = useOnHover();
 
-const isClickable = computed(() => !!onClickProp?.value || !!to?.value);
+const isClickable = computed(() => !!onClickProp || !!to);
 
 function _scalePadding(value: number | null | undefined) {
-	return Math.max(0, (value ?? padding.value) - BorderWidth.value);
+	return Math.max(0, (value ?? padding) - BorderWidth.value);
 }
 
-const horizontalPadding = computed(() => _scalePadding(paddingH?.value));
-const verticalPadding = computed(() => _scalePadding(paddingV?.value));
+const horizontalPadding = computed(() => _scalePadding(paddingH));
+const verticalPadding = computed(() => _scalePadding(paddingV));
 </script>
 
 <template>

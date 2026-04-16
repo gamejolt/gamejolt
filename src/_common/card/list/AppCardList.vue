@@ -1,57 +1,12 @@
-<script lang="ts" setup>
-const props = defineProps({
-	...defineCardListItems(),
-	...defineCardListProps(),
-});
-
-const emit = defineEmits<{
-	activate: [item: any];
-}>();
-
-const items = ref(props.items);
-
-watch(
-	() => props.items,
-	() => {
-		if (props.items === c.items.value) {
-			return;
-		}
-		c.items.value = props.items;
-	},
-	{
-		deep: true,
-	}
-);
-
-const c = createCardListController(props, item => emit('activate', item), items);
-provide(Key, c);
-</script>
-
 <script lang="ts">
-import { ExtractPropTypes, inject, InjectionKey, provide, Ref, ref, toRefs, watch } from 'vue';
+import { inject, InjectionKey, provide, ref, toRef, ToRefs, watch } from 'vue';
 
-function defineCardListItems() {
-	return {
-		items: {
-			type: Array,
-			default: () => [],
-		},
-	};
-}
-function defineCardListProps() {
-	return {
-		activeItem: {
-			type: Object,
-			default: null,
-		},
-		isAdding: {
-			type: Boolean,
-		},
-		isDraggable: {
-			type: Boolean,
-		},
-	};
-}
+type CardListControllerProps = {
+	items?: any[];
+	activeItem?: object | null;
+	isAdding?: boolean;
+	isDraggable?: boolean;
+};
 
 const Key: InjectionKey<CardListController> = Symbol('card-list');
 export type CardListController = ReturnType<typeof createCardListController>;
@@ -61,12 +16,9 @@ export function useCardList() {
 }
 
 function createCardListController(
-	props: ExtractPropTypes<ReturnType<typeof defineCardListProps>>,
-	emit: (item: any) => void,
-	items: Ref<any[]>
+	{ items, activeItem, isAdding, isDraggable }: ToRefs<Required<CardListControllerProps>>,
+	emit: (item: any) => void
 ) {
-	const { activeItem, isAdding, isDraggable } = toRefs(props);
-
 	function activate(item: any | null) {
 		emit(item);
 	}
@@ -79,6 +31,42 @@ function createCardListController(
 		activate,
 	};
 }
+</script>
+
+<script lang="ts" setup>
+const {
+	items: itemsProp = [],
+	activeItem = null,
+	isAdding = false,
+	isDraggable = false,
+} = defineProps<CardListControllerProps>();
+
+const emit = defineEmits<{
+	activate: [item: any];
+}>();
+
+const c = createCardListController(
+	{
+		// Create a local ref for the controller. This won't get updated from
+		// outside.
+		items: ref(itemsProp),
+		activeItem: toRef(() => activeItem),
+		isAdding: toRef(() => isAdding),
+		isDraggable: toRef(() => isDraggable),
+	},
+	item => emit('activate', item)
+);
+
+watch(
+	() => itemsProp,
+	newItems => {
+		if (newItems !== c.items.value) {
+			c.items.value = newItems;
+		}
+	}
+);
+
+provide(Key, c);
 </script>
 
 <template>

@@ -1,10 +1,8 @@
 <script lang="ts" setup>
-defineProps({
-	num: {
-		type: Number,
-		required: true,
-	},
-});
+type Props = {
+	num: number;
+};
+defineProps<Props>();
 </script>
 
 <template>

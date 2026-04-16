@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
+import { computed } from 'vue';
 
 import AppJolticon, { Jolticon } from '../../../../../../_common/jolticon/AppJolticon.vue';
 import { ShopProductResource } from '../../../../../../_common/shop/product/product-model';
@@ -15,21 +15,14 @@ import { styleBorderRadiusLg, styleFlexCenter, styleWhen } from '../../../../../
 import { kFontSizeBase } from '../../../../../../_styles/variables';
 import { ShopDashProductStates } from '../../shop.store';
 
-const props = defineProps({
-	resource: {
-		type: String as PropType<ShopProductResource>,
-		required: true,
-	},
-	itemStates: {
-		type: Object as PropType<ShopDashProductStates>,
-		required: true,
-	},
-});
-
-const { resource, itemStates } = toRefs(props);
+type Props = {
+	resource: ShopProductResource;
+	itemStates: ShopDashProductStates;
+};
+const { resource, itemStates } = defineProps<Props>();
 
 const data = computed(() => {
-	const { inReview, rejected, published } = itemStates.value;
+	const { inReview, rejected, published } = itemStates;
 
 	if (inReview) {
 		return {
@@ -43,7 +36,7 @@ const data = computed(() => {
 		};
 	} else if (published) {
 		let label = $gettext(`Published`);
-		if (resource.value === ShopProductResource.Sticker) {
+		if (resource === ShopProductResource.Sticker) {
 			label = $gettext(`In published sticker pack`);
 		}
 

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { PropType, toRef, toRefs } from 'vue';
+import { toRef } from 'vue';
 
 import {
 	$saveCommunityChannel,
@@ -8,7 +8,6 @@ import {
 import { CommunityModel } from '../../../../../../_common/community/community.model';
 import AppForm, {
 	createForm,
-	defineFormProps,
 	FormController,
 } from '../../../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../../../_common/form-vue/AppFormButton.vue';
@@ -30,35 +29,33 @@ type FormModel = CommunityChannelModel & {
 	permission_posting?: string;
 };
 
-const props = defineProps({
-	community: {
-		type: Object as PropType<CommunityModel>,
-		required: true,
-	},
-	...defineFormProps<FormModel>(true),
-});
+type Props = {
+	community: CommunityModel;
+	model: FormModel;
+};
+const { community, model } = defineProps<Props>();
 
 const emit = defineEmits<{
 	backgroundChange: [model: CommunityChannelModel];
 	submit: [model: CommunityChannelModel];
 }>();
 
-const { community, model } = toRefs(props);
+const modelRef = toRef(() => model);
 
 const titleAvailabilityUrl = toRef(
 	() =>
-		`/web/dash/communities/channels/check-field-availability/${community.value.id}/${
-			model.value!.id
+		`/web/dash/communities/channels/check-field-availability/${community.id}/${
+			model!.id
 		}`
 );
 const loadUrl = toRef(
-	() => `/web/dash/communities/channels/save/${community.value.id}/${form.formModel.id}`
+	() => `/web/dash/communities/channels/save/${community.id}/${form.formModel.id}`
 );
 
-const shouldShowPermissions = toRef(() => model.value && !model.value.is_archived);
+const shouldShowPermissions = toRef(() => model && !model.is_archived);
 
 const form: FormController<FormModel> = createForm<FormModel>({
-	model,
+	model: modelRef,
 	modelClass: CommunityChannelModel,
 	loadUrl,
 	modelSaveHandler: $saveCommunityChannel,

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, CSSProperties, onMounted, PropType, ref, toRef, toRefs, watch } from 'vue';
+import { computed, CSSProperties, onMounted, ref, toRef, watch } from 'vue';
 
 import {
 	styleBorderRadiusBase,
@@ -38,14 +38,10 @@ import AppCollectibleUnlockedRibbon from './AppCollectibleUnlockedRibbon.vue';
 import { CollectibleModel } from './collectible.model';
 import { CollectibleResourceItem } from './resource-details-modal/modal.service';
 
-const props = defineProps({
-	item: {
-		type: Object as PropType<CollectibleResourceItem>,
-		required: true,
-	},
-});
-
-const { item } = toRefs(props);
+type Props = {
+	item: CollectibleResourceItem;
+};
+const { item } = defineProps<Props>();
 
 const packs = defineModel<StickerPackModel[]>('packs', { required: true });
 
@@ -64,10 +60,10 @@ function ifInstance<T>(item: any, constructor: new (...data: any) => T): T | und
 	return item && isInstance(item, constructor) ? item : undefined;
 }
 
-const sticker = computed(() => ifInstance(item.value, StickerModel));
-const emoji = computed(() => ifInstance(item.value, EmojiModel));
-const avatarFrame = computed(() => ifInstance(item.value, AvatarFrameModel));
-const background = computed(() => ifInstance(item.value, BackgroundModel));
+const sticker = computed(() => ifInstance(item, StickerModel));
+const emoji = computed(() => ifInstance(item, EmojiModel));
+const avatarFrame = computed(() => ifInstance(item, AvatarFrameModel));
+const background = computed(() => ifInstance(item, BackgroundModel));
 
 const collectibleLoadData = toRef<
 	() => null | {
@@ -115,21 +111,21 @@ const description = toRef(() => {
 	if (collectible.value?.description) {
 		return collectible.value.description;
 	}
-	if ('description' in item.value && item.value.description) {
-		return item.value.description;
+	if ('description' in item && item.description) {
+		return item.description;
 	}
 	return null;
 });
 
 const imageUrl = computed(() => {
 	// Grab data from the media item if possible.
-	if ('media_item' in item.value && item.value.media_item) {
-		return getMediaItemImageSrc(item.value.media_item).src;
+	if ('media_item' in item && item.media_item) {
+		return getMediaItemImageSrc(item.media_item).src;
 	}
-	return 'img_url' in item.value
-		? item.value.img_url
-		: 'image_url' in item.value
-		? item.value.image_url
+	return 'img_url' in item
+		? item.img_url
+		: 'image_url' in item
+		? item.image_url
 		: '';
 });
 
@@ -154,7 +150,7 @@ const collectibleResourceAcquisition = computed(() => {
 
 	return {
 		resource,
-		resourceId: item.value.id,
+		resourceId: item.id,
 	};
 });
 
@@ -172,7 +168,7 @@ onMounted(async () => {
 	if (resource) {
 		trackResourceInfoView({
 			resource,
-			resourceId: item.value.id,
+			resourceId: item.id,
 		});
 	}
 

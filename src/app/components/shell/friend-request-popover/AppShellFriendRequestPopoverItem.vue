@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, PropType, ref, toRefs } from 'vue';
+import { computed, ref } from 'vue';
 import { RouterLink } from 'vue-router';
 
 import AppButton from '../../../../_common/button/AppButton.vue';
@@ -18,12 +18,10 @@ const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height / 2}px` }
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	request: {
-		type: Object as PropType<UserFriendshipModel>,
-		required: true,
-	},
-});
+type Props = {
+	request: UserFriendshipModel;
+};
+const { request } = defineProps<Props>();
 
 const emit = defineEmits<{
 	cancel: [];
@@ -31,7 +29,6 @@ const emit = defineEmits<{
 	reject: [];
 }>();
 
-const { request } = toRefs(props);
 const { user } = useCommonStore();
 
 const isInview = ref(false);
@@ -39,8 +36,8 @@ const isInview = ref(false);
 /**
  * Is it a request we sent?
  */
-const isPending = computed(() => request.value.target_user.id !== user.value!.id);
-const them = computed(() => request.value.getThem(user.value!));
+const isPending = computed(() => request.target_user.id !== user.value!.id);
+const them = computed(() => request.getThem(user.value!));
 </script>
 
 <template>

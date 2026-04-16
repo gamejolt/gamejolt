@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { PropType, toRef } from 'vue';
+import { toRef } from 'vue';
 
 import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
@@ -15,12 +15,10 @@ import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 
 type FormModel = GamePlaylistModel;
 
-const props = defineProps({
-	model: {
-		type: Object as PropType<GamePlaylistModel>,
-		default: undefined,
-	},
-});
+type Props = {
+	model?: GamePlaylistModel;
+};
+const { model } = defineProps<Props>();
 
 const emit = defineEmits<{
 	submit: [model: GamePlaylistModel, response: any];
@@ -29,7 +27,7 @@ const emit = defineEmits<{
 const form: FormController<FormModel> = createForm<FormModel>({
 	modelClass: GamePlaylistModel,
 	modelSaveHandler: $saveGamePlaylist,
-	model: toRef(props, 'model'),
+	model: toRef(() => model),
 	onSubmitSuccess(response) {
 		emit('submit', form.formModel, response);
 	},

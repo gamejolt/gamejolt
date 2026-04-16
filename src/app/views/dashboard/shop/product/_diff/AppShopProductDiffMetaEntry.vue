@@ -1,5 +1,5 @@
 <script lang="ts" setup generic="T extends Record<string, any>">
-import { computed, PropType, toRefs } from 'vue';
+import { computed } from 'vue';
 
 import AppScrollScroller from '../../../../../../_common/scroll/AppScrollScroller.vue';
 import AppStickerImg from '../../../../../../_common/sticker/AppStickerImg.vue';
@@ -12,43 +12,27 @@ import { isInstance } from '../../../../../../utils/utils';
 import { useShopDashStore } from '../../shop.store';
 import { parseProductDiffEntry } from './AppShopProductDiffMeta.vue';
 
-const props = defineProps({
-	entry: {
-		type: Object as PropType<{ key: string; value: any }>,
-		required: true,
-	},
-	current: {
-		type: Object as PropType<T & { name: string }>,
-		required: true,
-	},
-	other: {
-		type: Object as PropType<T & { name: string }>,
-		default: undefined,
-	},
-	diffBackground: {
-		type: String,
-		default: undefined,
-	},
-	diffColor: {
-		type: String,
-		default: undefined,
-	},
-});
-
-const { current, other, entry } = toRefs(props);
+type Props = {
+	entry: { key: string; value: any };
+	current: T & { name: string };
+	other?: T & { name: string };
+	diffBackground?: string;
+	diffColor?: string;
+};
+const { current, other, entry, diffBackground, diffColor } = defineProps<Props>();
 
 const { isSameValues, stickers: shopStickers } = useShopDashStore()!;
 
 function isFieldEqual(key: string): boolean {
-	if (!other?.value) {
+	if (!other) {
 		return true;
 	}
 
 	const stickers = shopStickers.value.items;
 
 	return isSameValues(
-		parseProductDiffEntry(key, current.value[key], { stickers }),
-		parseProductDiffEntry(key, other.value[key], { stickers })
+		parseProductDiffEntry(key, current[key], { stickers }),
+		parseProductDiffEntry(key, other[key], { stickers })
 	);
 }
 
@@ -68,7 +52,7 @@ function isSimple(val: any): val is number | string {
 const helpers = computed(() => {
 	let lineClamp: number | undefined = undefined;
 	let tooltip: string | undefined = undefined;
-	const { key, value } = entry.value;
+	const { key, value } = entry;
 
 	if (!isSimple(value)) {
 		// Nothing to do, initial values are good.

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, CSSProperties, PropType, toRefs } from 'vue';
+import { computed, CSSProperties } from 'vue';
 
 import { styleChangeBg } from '../../../_styles/mixins';
 import AppAvatarFrame from '../../avatar/AppAvatarFrame.vue';
@@ -11,88 +11,57 @@ import AppUserVerifiedWrapper from '../AppUserVerifiedWrapper.vue';
 import { UserCommonFields } from '../user.model';
 import AppUserAvatarImg from './AppUserAvatarImg.vue';
 
-const props = defineProps({
-	user: {
-		type: [Object, null] as PropType<UserCommonFields | null>,
-		required: true,
-	},
-	bgColor: {
-		type: String as PropType<ThemeColor>,
-		default: 'bg',
-	},
-	disableLink: {
-		type: Boolean,
-	},
+type Props = {
+	user: UserCommonFields | null;
+	bgColor?: ThemeColor;
+	disableLink?: boolean;
 	/**
 	 * Shows verified tick or creator badge when available.
 	 */
-	showVerified: {
-		type: Boolean,
-	},
-	verifiedOffset: {
-		type: Number,
-		default: undefined,
-	},
-	verifiedSize: {
-		type: String as PropType<'big' | 'small' | 'tiny'>,
-		default: undefined,
-	},
-	verifiedPosition: {
-		type: String as PropType<ComponentProps<typeof AppUserVerifiedWrapper>['position']>,
-		default: undefined,
-	},
+	showVerified?: boolean;
+	verifiedOffset?: number;
+	verifiedSize?: 'big' | 'small' | 'tiny';
+	verifiedPosition?: ComponentProps<typeof AppUserVerifiedWrapper>['position'];
 	/**
 	 * Shows an avatar frame around the avatar when available.
 	 */
-	showFrame: {
-		type: Boolean,
-	},
+	showFrame?: boolean;
 	/**
 	 * Allows overriding the avatar frame to display something other than what
 	 * the User has equipped.
 	 */
-	frameOverride: {
-		type: Object as PropType<Pick<AvatarFrameModel, 'image_url' | 'scale'>>,
-		default: undefined,
-	},
+	frameOverride?: Pick<AvatarFrameModel, 'image_url' | 'scale'>;
 	/**
 	 * Treats the frame as a border that insets our avatar instead of the having
 	 * the frame extend the container bounds.
 	 */
-	smoosh: {
-		type: Boolean,
-	},
-	imgWrapperStyles: {
-		type: Object as PropType<CSSProperties>,
-		default: () => ({}),
-	},
-	tag: {
-		type: String,
-		default: 'div',
-	},
-});
-
+	smoosh?: boolean;
+	imgWrapperStyles?: CSSProperties;
+	tag?: string;
+};
 const {
 	user,
-	bgColor,
-	disableLink,
-	showVerified,
+	bgColor = 'bg',
+	disableLink = false,
+	showVerified = false,
 	verifiedOffset,
 	verifiedSize,
-	showFrame,
+	showFrame = false,
 	frameOverride,
-	smoosh,
-} = toRefs(props);
+	smoosh = false,
+	imgWrapperStyles = {},
+	tag = 'div',
+} = defineProps<Props>();
 
-const avatarFrame = computed(() => frameOverride?.value || user.value?.avatar_frame || null);
-const maySmooshFrame = computed(() => !!avatarFrame.value && showFrame.value && smoosh.value);
+const avatarFrame = computed(() => frameOverride || user?.avatar_frame || null);
+const maySmooshFrame = computed(() => !!avatarFrame.value && showFrame && smoosh);
 
 const href = computed(() => {
-	if (disableLink.value || !user.value) {
+	if (disableLink || !user) {
 		return undefined;
 	}
 
-	return Environment.wttfBaseUrl + '/@' + user.value.username;
+	return Environment.wttfBaseUrl + '/@' + user.username;
 });
 </script>
 

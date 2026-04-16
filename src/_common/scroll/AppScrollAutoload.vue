@@ -1,5 +1,5 @@
 <script lang="ts">
-import { nextTick, onMounted, onUnmounted, PropType, ref, toRefs, watch } from 'vue';
+import { nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
 
 import { queuedThrottle } from '../../utils/utils';
 import AppLoading from '../loading/AppLoading.vue';
@@ -12,21 +12,12 @@ const InviewConfig = new ScrollInviewConfig({
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	loadMore: {
-		type: Function as PropType<() => Promise<void>>,
-		required: true,
-	},
-	canLoadMore: {
-		type: Boolean,
-		required: true,
-	},
-	immediate: {
-		type: Boolean,
-	},
-});
-
-const { loadMore, canLoadMore, immediate } = toRefs(props);
+type Props = {
+	loadMore: () => Promise<void>;
+	canLoadMore: boolean;
+	immediate?: boolean;
+};
+const { loadMore, canLoadMore, immediate } = defineProps<Props>();
 
 const isLoadingMore = ref(false);
 const mounted = ref(false);
@@ -34,7 +25,7 @@ const inview = ref(false);
 
 const queue = queuedThrottle(1_000);
 
-watch([mounted, inview, canLoadMore], values => {
+watch([mounted, inview, () => canLoadMore], values => {
 	if (values.every(i => i)) {
 		loadOrQueue();
 	}
@@ -57,20 +48,20 @@ function onOutview() {
 }
 
 async function handleLoadMore() {
-	if (!mounted.value || !canLoadMore.value) {
+	if (!mounted.value || !canLoadMore) {
 		return;
 	}
 
-	await loadMore.value().catch(e => console.error(e));
+	await loadMore().catch(e => console.error(e));
 }
 
 async function loadOrQueue() {
-	if (!mounted.value || !canLoadMore.value || isLoadingMore.value) {
+	if (!mounted.value || !canLoadMore || isLoadingMore.value) {
 		return;
 	}
 
 	isLoadingMore.value = true;
-	if (immediate.value) {
+	if (immediate) {
 		await handleLoadMore();
 	} else {
 		await queue.call(handleLoadMore);

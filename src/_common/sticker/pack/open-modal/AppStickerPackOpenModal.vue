@@ -5,9 +5,7 @@ import {
 	nextTick,
 	onMounted,
 	onUnmounted,
-	PropType,
 	ref,
-	toRefs,
 	useTemplateRef,
 } from 'vue';
 
@@ -117,21 +115,15 @@ export const packOpenFallbackError = $gettext(
 <script lang="ts" setup>
 const modal = useModal()!;
 
-const props = defineProps({
-	pack: {
-		type: Object as PropType<UserStickerPackModel>,
-		required: true,
-	},
+type Props = {
+	pack: UserStickerPackModel;
 	/**
 	 * Set to `true` if we want to open the pack immediately and display
 	 * results, otherwise we'll ask them to confirm the pack opening.
 	 */
-	openImmediate: {
-		type: Boolean,
-	},
-});
-
-const { pack } = toRefs(props);
+	openImmediate?: boolean;
+};
+const { pack, openImmediate } = defineProps<Props>();
 
 const {
 	stickerPacks: myPacks,
@@ -177,7 +169,7 @@ async function afterMount() {
 	}
 	_isMounted = true;
 
-	if (props.openImmediate) {
+	if (openImmediate) {
 		setStage('pack-open');
 	}
 }
@@ -186,7 +178,7 @@ async function _openPack() {
 	let errorMessage: string | null = null;
 
 	try {
-		const packId = pack.value.id;
+		const packId = pack.id;
 		const payload = await Api.sendRequest(
 			`/web/stickers/open-pack/${packId}`,
 			{},

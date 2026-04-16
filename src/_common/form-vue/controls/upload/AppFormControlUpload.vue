@@ -10,7 +10,6 @@ import { useForm } from '../../AppForm.vue';
 import {
 	createFormControl,
 	FormControlEmits,
-	defineFormControlProps,
 } from '../../AppFormControl.vue';
 import { useFormGroup } from '../../AppFormGroup.vue';
 import { FormValidator, validateFileAccept } from '../../validators';
@@ -23,33 +22,32 @@ export interface AppFormControlUploadInterface {
 	drop: (e: DragEvent) => Promise<void>;
 }
 
-const props = defineProps({
-	...defineFormControlProps(),
-	multiple: {
-		type: Boolean,
-	},
-	uploadLinkLabel: {
-		type: String,
-		default: null,
-	},
-	accept: {
-		type: String,
-		default: null,
-	},
-});
+type Props = {
+	disabled?: boolean;
+	validators?: FormValidator[];
+	multiple?: boolean;
+	uploadLinkLabel?: string;
+	accept?: string;
+};
+const {
+	validators = [],
+	multiple,
+	uploadLinkLabel,
+	accept,
+} = defineProps<Props>();
 
 const emit = defineEmits<FormControlEmits<File | File[] | null>>();
 
-const validators = computed(() => {
+const computedValidators = computed(() => {
 	let _validators: FormValidator[] = [];
 
 	// Push the accept first so it matches before any img geometry checks.
-	if (props.accept) {
-		_validators.push(validateFileAccept(props.accept));
+	if (accept) {
+		_validators.push(validateFileAccept(accept));
 	}
 
 	// Then push the rest.
-	_validators.push(...props.validators);
+	_validators.push(...validators);
 	return _validators;
 });
 
@@ -58,7 +56,7 @@ const { name } = useFormGroup()!;
 
 const { id, controlVal, applyValue } = createFormControl({
 	initialValue: null as File | File[] | null,
-	validators,
+	validators: computedValidators,
 	onChange: val => emit('changed', val),
 });
 
@@ -164,7 +162,7 @@ function clearAllFiles() {
 function setFiles(files: File[] | File | null | undefined) {
 	if (!files) {
 		applyValue(null);
-	} else if (props.multiple) {
+	} else if (multiple) {
 		applyValue(files);
 	} else if (Array.isArray(files)) {
 		applyValue(files[0]);

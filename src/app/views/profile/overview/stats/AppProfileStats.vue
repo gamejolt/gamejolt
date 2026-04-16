@@ -1,6 +1,4 @@
 <script lang="ts">
-import { PropType } from 'vue';
-
 import { ProfileTileAction } from '../RouteProfileOverview.vue';
 
 export type ProfileStat = {
@@ -11,12 +9,10 @@ export type ProfileStat = {
 </script>
 
 <script lang="ts" setup>
-defineProps({
-	items: {
-		type: Array as PropType<ProfileStat[]>,
-		required: true,
-	},
-});
+type Props = {
+	items: ProfileStat[];
+};
+defineProps<Props>();
 </script>
 
 <template>

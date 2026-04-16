@@ -1,23 +1,16 @@
 <script lang="ts" setup>
-import { computed, PropType, useSlots } from 'vue';
+import { computed, useSlots } from 'vue';
 import { RouteLocationRaw, RouterLink } from 'vue-router';
 
-const props = defineProps({
-	to: {
-		type: Object as PropType<RouteLocationRaw>,
-		default: undefined,
-	},
+type Props = {
+	to?: RouteLocationRaw;
 	// In order to check if this event is bound, we need to specify it as a prop
 	// as well.
 	// https://github.com/vuejs/core/issues/5220
-	onClick: {
-		type: Function,
-		default: undefined,
-	},
-	bleedImg: {
-		type: Boolean,
-	},
-});
+	onClick?: Function;
+	bleedImg?: boolean;
+};
+const { to, onClick: onClickProp, bleedImg } = defineProps<Props>();
 
 const emit = defineEmits<{
 	click: [e: MouseEvent];
@@ -26,10 +19,10 @@ const emit = defineEmits<{
 const slots = useSlots();
 
 const hasImg = computed(() => !!slots.img);
-const hasClickListener = computed(() => !!props.onClick);
+const hasClickListener = computed(() => !!onClickProp);
 
 const component = computed(() => {
-	if (props.to) {
+	if (to) {
 		return RouterLink;
 	}
 

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRef, toRefs } from 'vue';
+import { computed, ref, toRef } from 'vue';
 
 import { styleWhen } from '../../../../../_styles/mixins';
 import { PostOverlayTextStyles } from '../../../../../app/components/post/post-styles';
@@ -20,52 +20,39 @@ import {
 	FiresidePostLikeModel,
 } from '../like-model';
 
-const props = defineProps({
-	post: {
-		type: Object as PropType<FiresidePostModel>,
-		required: true,
-	},
-	location: {
-		type: String as PropType<PostControlsLocation>,
-		required: true,
-	},
-	overlay: {
-		type: Boolean,
-	},
-	trans: {
-		type: Boolean,
-	},
-	block: {
-		type: Boolean,
-	},
-});
+type Props = {
+	post: FiresidePostModel;
+	location: PostControlsLocation;
+	overlay?: boolean;
+	trans?: boolean;
+	block?: boolean;
+};
+const { post, location, overlay, trans, block } = defineProps<Props>();
 
 const emit = defineEmits<{
 	change: [value: boolean];
 }>();
-
-const { post, location } = toRefs(props);
 const showLikeAnim = ref(false);
 const showDislikeAnim = ref(false);
 
-const likeCount = computed(() => formatFuzzynumber(post.value.like_count));
+const likeCount = computed(() => formatFuzzynumber(post.like_count));
 
-const liked = toRef(() => !!post.value.user_like);
+const liked = toRef(() => !!post.user_like);
 
 const tooltip = computed(() => (liked.value ? $gettext(`Liked!`) : $gettext(`Like This Post`)));
 
 async function toggleLike() {
-	const currentLike = post.value.user_like;
+	const currentLike = post.user_like;
 
 	if (!currentLike) {
 		emit('change', true);
 
 		const newLike = new FiresidePostLikeModel({
-			fireside_post_id: post.value.id,
+			fireside_post_id: post.id,
 		});
 
-		post.value.user_like = newLike;
-		++post.value.like_count;
+		post.user_like = newLike;
+		++post.like_count;
 		showLikeAnim.value = true;
 		showDislikeAnim.value = false;
 
@@ -74,17 +61,17 @@ async function toggleLike() {
 			await $saveFiresidePostLike(newLike);
 		} catch (e) {
 			failed = true;
-			post.value.user_like = null;
-			--post.value.like_count;
+			post.user_like = null;
+			--post.like_count;
 			showErrorGrowl($gettext(`Can't do that now. Try again later?`));
 		} finally {
-			trackPostLike(true, { failed, location: location.value });
+			trackPostLike(true, { failed, location: location });
 		}
 	} else {
 		emit('change', false);
 
-		post.value.user_like = null;
-		--post.value.like_count;
+		post.user_like = null;
+		--post.like_count;
 		showLikeAnim.value = false;
 		showDislikeAnim.value = true;
 
@@ -93,17 +80,17 @@ async function toggleLike() {
 			await $removeFiresidePostLike(currentLike);
 		} catch (e) {
 			failed = true;
-			post.value.user_like = currentLike;
-			++post.value.like_count;
+			post.user_like = currentLike;
+			++post.like_count;
 			showErrorGrowl($gettext(`Can't do that now. Try again later?`));
 		} finally {
-			trackPostLike(false, { failed, location: location.value });
+			trackPostLike(false, { failed, location: location });
 		}
 	}
 }
 
 function showLikers() {
-	showLikersModal({ count: post.value.like_count, resource: post.value });
+	showLikersModal({ count: post.like_count, resource: post });
 }
 </script>
 

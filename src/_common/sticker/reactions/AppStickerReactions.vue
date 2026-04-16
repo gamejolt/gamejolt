@@ -1,51 +1,47 @@
 <script lang="ts" setup>
-import { computed, onMounted, PropType, ref, toRefs } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 
 import { numberSort } from '../../../utils/array';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
 import { StickerTargetController, toggleStickersShouldShow } from '../target/target-controller';
 import AppStickerReactionsItem from './AppStickerReactionsItem.vue';
 
-const props = defineProps({
-	controller: {
-		type: Object as PropType<StickerTargetController>,
-		required: true,
-	},
-});
+type Props = {
+	controller: StickerTargetController;
+};
+const { controller } = defineProps<Props>();
 
 const emit = defineEmits<{
 	show: [];
 }>();
 
-const { controller } = toRefs(props);
-
 const animate = ref(false);
 
-const canShowBorder = computed(() => !controller.value.isLive);
-const showAsActive = computed(() => canShowBorder.value && controller.value.shouldShow.value);
+const canShowBorder = computed(() => !controller.isLive);
+const showAsActive = computed(() => canShowBorder.value && controller.shouldShow.value);
 const shouldAnimate = computed(() => animate.value);
 
 const reactions = computed(() =>
-	[...controller.value.model.sticker_counts].sort((a, b) => numberSort(b.count, a.count))
+	[...controller.model.sticker_counts].sort((a, b) => numberSort(b.count, a.count))
 );
 
 onMounted(() => {
 	//  Wait for a little bit before setting this. We want new reactions to
 	//  animate themselves, but not the initial ones.
 	setTimeout(() => {
-		animate.value = controller.value.isLive;
+		animate.value = controller.isLive;
 	}, 1_000);
 });
 
 function onClick() {
 	// Stickers in a Live context will automatically remove themselves - do nothing.
-	if (controller.value.isLive) {
+	if (controller.isLive) {
 		return;
 	}
 
-	toggleStickersShouldShow(controller.value, true);
+	toggleStickersShouldShow(controller, true);
 
-	if (controller.value.shouldShow.value) {
+	if (controller.shouldShow.value) {
 		emit('show');
 	}
 }

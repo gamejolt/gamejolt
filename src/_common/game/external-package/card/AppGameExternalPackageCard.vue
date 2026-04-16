@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRefs } from 'vue';
+import { computed, ref } from 'vue';
 
 import { Analytics } from '../../../analytics/analytics.service';
 import AppFadeCollapse from '../../../AppFadeCollapse.vue';
@@ -12,22 +12,18 @@ import { $gettext } from '../../../translate/translate.service';
 import { GameBuildPlatformSupportInfo } from '../../build/build.model';
 import { GameExternalPackageModel } from '../external-package.model';
 
-const props = defineProps({
-	package: {
-		type: Object as PropType<GameExternalPackageModel>,
-		required: true,
-	},
-});
-
-const { package: gamePackage } = toRefs(props);
+type Props = {
+	package: GameExternalPackageModel;
+};
+const { package: gamePackage } = defineProps<Props>();
 
 const showFullDescription = ref(false);
 const canToggleDescription = ref(false);
 
 const platforms = computed(() => {
 	const platforms = [];
-	for (const prop in gamePackage.value) {
-		if (!(gamePackage.value as any)[prop]) {
+	for (const prop in gamePackage) {
+		if (!(gamePackage as any)[prop]) {
 			continue;
 		}
 
@@ -48,7 +44,7 @@ const platforms = computed(() => {
 function gotoExternal() {
 	Analytics.trackEvent('game-package-card', 'download', 'external');
 
-	Navigate.newWindow(gamePackage.value.url);
+	Navigate.newWindow(gamePackage.url);
 }
 </script>
 

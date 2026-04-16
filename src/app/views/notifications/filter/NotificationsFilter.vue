@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
+import { computed } from 'vue';
 import { RouteLocationRaw, useRouter } from 'vue-router';
 
 import AppButton from '../../../../_common/button/AppButton.vue';
@@ -24,17 +24,11 @@ type FormModel = {
 	[k: string]: boolean;
 };
 
-const props = defineProps({
-	filters: {
-		type: Array as PropType<string[]>,
-		required: true,
-	},
-	replaceRoute: {
-		type: Boolean,
-	},
-});
-
-const { filters, replaceRoute } = toRefs(props);
+type Props = {
+	filters: string[];
+	replaceRoute?: boolean;
+};
+const { filters, replaceRoute } = defineProps<Props>();
 
 const modal = useModal()!;
 const router = useRouter();
@@ -45,7 +39,7 @@ const notificationLabels = computed(() => getNotificationFeedTypeLabels(user.val
 const form: FormController<FormModel> = createForm<FormModel>({
 	onInit() {
 		NotificationFeedTypes.sort((a, b) => stringSort(a, b)).forEach(i => {
-			form.formModel[i] = filters.value.includes(i);
+			form.formModel[i] = filters.includes(i);
 		});
 	},
 	async onSubmit() {
@@ -70,7 +64,7 @@ const form: FormController<FormModel> = createForm<FormModel>({
 			query,
 		};
 
-		if (replaceRoute.value) {
+		if (replaceRoute) {
 			router.replace(routeData);
 		} else {
 			router.push(routeData);

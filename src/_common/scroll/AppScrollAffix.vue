@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType, ref, toRef, toRefs, useTemplateRef } from 'vue';
+import { CSSProperties, ref, toRef, useTemplateRef } from 'vue';
 
 import { styleWhen } from '../../_styles/mixins';
 import { useResizeObserver } from '../../utils/resize-observer';
@@ -7,31 +7,20 @@ import { Ruler } from '../ruler/ruler-service';
 import AppScrollInview, { ScrollInviewConfig } from './inview/AppScrollInview.vue';
 import { Scroll } from './scroll.service';
 
-const props = defineProps({
-	disabled: {
-		type: Boolean,
-		default: false,
-	},
-	padding: {
-		type: Number,
-		default: 24,
-	},
-	anchor: {
-		type: String as PropType<'top' | 'bottom'>,
-		validator: i => typeof i === 'string' && ['top', 'bottom'].indexOf(i) !== -1,
-		default: 'top',
-	},
-	offsetTop: {
-		type: Number,
-		default: undefined,
-	},
-	affixedStyles: {
-		type: Object as PropType<CSSProperties>,
-		default: () => ({}),
-	},
-});
-
-const { disabled, padding, anchor, offsetTop } = toRefs(props);
+type Props = {
+	disabled?: boolean;
+	padding?: number;
+	anchor?: 'top' | 'bottom';
+	offsetTop?: number;
+	affixedStyles?: CSSProperties;
+};
+const {
+	disabled = false,
+	padding = 24,
+	anchor = 'top',
+	offsetTop,
+	affixedStyles = {},
+} = defineProps<Props>();
 
 const container = useTemplateRef('container');
 const placeholder = useTemplateRef('placeholder');
@@ -51,7 +40,7 @@ useResizeObserver({
 	},
 });
 
-const isAffixed = toRef(() => shouldAffix.value && !disabled.value);
+const isAffixed = toRef(() => shouldAffix.value && !disabled);
 
 function outview() {
 	if (shouldAffix.value) {
@@ -71,21 +60,21 @@ function inview() {
 }
 
 function getOffsetTop() {
-	return offsetTop?.value ?? Scroll.offsetTop;
+	return offsetTop ?? Scroll.offsetTop;
 }
 
 function _createInviewConfig() {
-	let offset = padding.value;
-	if (anchor.value === 'top') {
+	let offset = padding;
+	if (anchor === 'top') {
 		offset += getOffsetTop();
-	} else if (offsetTop?.value !== undefined) {
-		offset += offsetTop.value;
+	} else if (offsetTop !== undefined) {
+		offset += offsetTop;
 	}
 
 	// The 10000px is so that it only considers the element "out of view" in
 	// one direction.
 	const margin =
-		anchor.value === 'top'
+		anchor === 'top'
 			? `${offset * -1}px 0px 10000px 0px`
 			: `10000px 0px ${offset * -1}px 0px`;
 

@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-
 import { CommunityModel } from '../../../../_common/community/community.model';
 import AppCreatorsList from '../../../../_common/creator/AppCreatorsList.vue';
 import { FiresidePostModel } from '../../../../_common/fireside/post/post-model';
@@ -11,27 +9,19 @@ import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop
 import AppDiscoverHomeBanner from './_home-default/AppDiscoverHomeBanner.vue';
 import AppDiscoverHomeRealms from './_home-default/AppDiscoverHomeRealms.vue';
 
-defineProps({
-	isBootstrapped: {
-		type: Boolean,
-	},
-	featuredItem: {
-		type: Object as PropType<FeaturedItemModel>,
-		default: null,
-	},
-	featuredCommunities: {
-		type: Array as PropType<CommunityModel[]>,
-		default: () => [],
-	},
-	featuredRealms: {
-		type: Array as PropType<RealmModel[]>,
-		default: () => [],
-	},
-	creatorPosts: {
-		type: Array as PropType<FiresidePostModel[]>,
-		default: () => [],
-	},
-});
+type Props = {
+	isBootstrapped?: boolean;
+	featuredItem?: FeaturedItemModel;
+	featuredCommunities?: CommunityModel[];
+	featuredRealms?: RealmModel[];
+	creatorPosts?: FiresidePostModel[];
+};
+const {
+	isBootstrapped,
+	featuredItem,
+	featuredRealms = [],
+	creatorPosts = [],
+} = defineProps<Props>();
 
 const cardColumnsDesktop = 4;
 const cardColumnsSm = 3;

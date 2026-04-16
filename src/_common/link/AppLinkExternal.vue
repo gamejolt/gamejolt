@@ -1,18 +1,14 @@
 <script lang="ts" setup>
-import { AnchorHTMLAttributes, computed, PropType } from 'vue';
+import { AnchorHTMLAttributes, computed } from 'vue';
 
-const props = defineProps({
-	targetSelf: {
-		type: Boolean,
-	},
-	href: {
-		type: String as PropType<AnchorHTMLAttributes['href']>,
-		required: true,
-	},
-});
+type Props = {
+	targetSelf?: boolean;
+	href: AnchorHTMLAttributes['href'];
+};
+const { targetSelf, href } = defineProps<Props>();
 
 const target = computed(() => {
-	if (props.targetSelf) {
+	if (targetSelf) {
 		return '_self';
 	}
 	return '_blank';

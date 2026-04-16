@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, nextTick, onMounted, onUnmounted, PropType, ref, toRefs, useTemplateRef, watch } from 'vue';
+import { computed, nextTick, onMounted, onUnmounted, ref, useTemplateRef, watch } from 'vue';
 
 import AppBackground from '../../../../../_common/background/AppBackground.vue';
 import { BackgroundModel } from '../../../../../_common/background/background.model';
@@ -26,29 +26,14 @@ import AppChatWindowOutputItem from './AppChatWindowOutputItem.vue';
 const AUTOSCROLL_THRESHOLD = 10;
 const MESSAGE_PADDING = 12;
 
-const props = defineProps({
-	room: {
-		type: Object as PropType<ChatRoomModel>,
-		required: true,
-	},
-	background: {
-		type: Object as PropType<BackgroundModel>,
-		default: undefined,
-	},
-	overlay: {
-		type: Boolean,
-	},
-	avatarPopperPlacement: {
-		type: String as PropType<PopperPlacementType>,
-		default: undefined,
-	},
-	avatarPopperPlacementFallbacks: {
-		type: Array as PropType<PopperPlacementType[]>,
-		default: undefined,
-	},
-});
-
-const { room, background } = toRefs(props);
+type Props = {
+	room: ChatRoomModel;
+	background?: BackgroundModel;
+	overlay?: boolean;
+	avatarPopperPlacement?: PopperPlacementType;
+	avatarPopperPlacementFallbacks?: PopperPlacementType[];
+};
+const { room, background } = defineProps<Props>();
 const { user } = useCommonStore();
 const { chatUnsafe: chat } = useGridStore();
 
@@ -68,8 +53,8 @@ let _isOnScrollQueued = false;
 let _lastScrollMessageId: number | undefined;
 let _lastAutoscrollOffset: number | undefined;
 
-const messages = computed(() => room.value.messages);
-const queuedMessages = computed(() => room.value.queuedMessages);
+const messages = computed(() => room.messages);
+const queuedMessages = computed(() => room.queuedMessages);
 
 const oldestMessage = computed(() => (messages.value.length ? messages.value[0] : null));
 const newestMessage = computed(() =>
@@ -81,7 +66,7 @@ const allMessages = computed(() => [...messages.value, ...queuedMessages.value])
 // Rooms with a message limit will delete older messages as newer ones arrive,
 // so they can't load older.
 const canLoadOlder = computed(
-	() => !room.value.messageLimit && !reachedEnd.value && !isLoadingOlder.value
+	() => !room.messageLimit && !reachedEnd.value && !isLoadingOlder.value
 );
 
 const shouldShowIntro = computed(() => allMessages.value.length === 0);
@@ -94,7 +79,7 @@ const shouldShowNewMessagesButton = computed(() => {
 	return newestMessage.value.logged_on > latestFrozenTimestamp.value;
 });
 
-const roomChannel = computed(() => chat.value.roomChannels.get(room.value.id));
+const roomChannel = computed(() => chat.value.roomChannels.get(room.id));
 
 useEventSubscription(onNewChatMessage, async message => {
 	// When the user sent a message, we want the chat to scroll all the way down
@@ -154,7 +139,7 @@ async function loadOlder() {
 	const firstMessage = oldestMessage.value;
 
 	try {
-		await loadOlderChatMessages(room.value);
+		await loadOlderChatMessages(room);
 	} catch (e) {
 		console.error(e);
 	}
@@ -219,7 +204,7 @@ function onScroll() {
 
 	const offset = getOffsetFromBottom();
 
-	if (room.value.messageLimit) {
+	if (room.messageLimit) {
 		const _lastOffset = _lastAutoscrollOffset ?? 0;
 		const _lastId = _lastScrollMessageId;
 

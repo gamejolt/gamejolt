@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-
 import AppAspectRatio from '../../aspect-ratio/AppAspectRatio.vue';
 import AppSpacer from '../../spacer/AppSpacer.vue';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
@@ -8,17 +6,11 @@ import AppStickerImg from '../AppStickerImg.vue';
 import AppStickerMastery from '../AppStickerMastery.vue';
 import { StickerModel } from '../sticker.model';
 
-defineProps({
-	stickers: {
-		type: Array as PropType<StickerModel[]>,
-		required: true,
-	},
-	minWidth: {
-		type: Number,
-		default: 56,
-		validator: (val: number) => val > 0,
-	},
-});
+type Props = {
+	stickers: StickerModel[];
+	minWidth?: number;
+};
+const { stickers, minWidth = 56 } = defineProps<Props>();
 </script>
 
 <template>

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRefs } from 'vue';
+import { computed, ref } from 'vue';
 
 import { CommunityChannelModel } from '../../../_common/community/channel/channel.model';
 import { CommunityModel } from '../../../_common/community/community.model';
@@ -15,76 +15,47 @@ import AppContentTargetCommunity from './target/AppContentTargetCommunity.vue';
 import AppContentTargetRealm from './target/AppContentTargetRealm.vue';
 import { showContentTargetManageRealmsModal } from './target/manage-realms/modal.service';
 
-const props = defineProps({
+type Props = {
 	/**
 	 * The selected communities. These are not mutated by this component
 	 * directly. Instead, it emits events to add and remove items from it, and
 	 * its up to the parent to apply these back to the prop.
 	 */
 	communities: {
-		type: Array as PropType<
-			{ community: CommunityModel; channel?: CommunityChannelModel; featured_on?: number }[]
-		>,
-		required: true,
-	},
+		community: CommunityModel;
+		channel?: CommunityChannelModel;
+		featured_on?: number;
+	}[];
 	/**
 	 * Similar to communities, these are not mutated by this component directly.
 	 */
-	realms: {
-		type: Array as PropType<RealmModel[]>,
-		required: true,
-	},
-	incompleteCommunity: {
-		type: Object as PropType<CommunityModel>,
-		default: undefined,
-	},
-	targetableCommunities: {
-		type: Array as PropType<CommunityModel[]>,
-		default: () => [],
-	},
-	noCommunityChannels: {
-		type: Boolean,
-		default: false,
-	},
-	maxCommunities: {
-		type: Number,
-		default: 0,
-	},
-	maxRealms: {
-		type: Number,
-		default: 0,
-	},
-	canAddCommunity: {
-		type: Boolean,
-	},
-	canAddRealm: {
-		type: Boolean,
-	},
-	canRemoveCommunities: {
-		type: Boolean,
-	},
-	canRemoveRealms: {
-		type: Boolean,
-	},
-	hasLinks: {
-		type: Boolean,
-	},
-});
+	realms: RealmModel[];
+	incompleteCommunity?: CommunityModel;
+	targetableCommunities?: CommunityModel[];
+	noCommunityChannels?: boolean;
+	maxCommunities?: number;
+	maxRealms?: number;
+	canAddCommunity?: boolean;
+	canAddRealm?: boolean;
+	canRemoveCommunities?: boolean;
+	canRemoveRealms?: boolean;
+	hasLinks?: boolean;
+};
 
 const {
-	incompleteCommunity,
-	targetableCommunities,
-	noCommunityChannels,
-	maxCommunities,
-	maxRealms,
 	communities,
 	realms,
+	incompleteCommunity,
+	targetableCommunities = [],
+	noCommunityChannels = false,
+	maxCommunities = 0,
+	maxRealms = 0,
 	canAddCommunity,
 	canAddRealm,
 	canRemoveCommunities,
 	canRemoveRealms,
 	hasLinks,
-} = toRefs(props);
+} = defineProps<Props>();
 
 const emit = defineEmits<{
 	showCommunities: [];
@@ -99,16 +70,16 @@ const scrollingKey = ref(0);
 
 const canShow = computed(() => {
 	// If has a community or a realm selected already.
-	if (communities.value.length > 0 || realms.value.length > 0) {
+	if (communities.length > 0 || realms.length > 0) {
 		return true;
 	}
 
 	// If can select a community (requires targetableCommunities)
-	if (canAddCommunity.value && !!targetableCommunities?.value?.length) {
+	if (canAddCommunity && !!targetableCommunities?.length) {
 		return true;
 	}
 
-	if (canAddRealm.value) {
+	if (canAddRealm) {
 		return true;
 	}
 
@@ -116,16 +87,16 @@ const canShow = computed(() => {
 });
 
 const showAddCommunity = computed(() => {
-	if (!canAddCommunity.value) {
+	if (!canAddCommunity) {
 		return false;
 	}
 
-	if (!targetableCommunities.value.length) {
+	if (!targetableCommunities.length) {
 		return false;
 	}
 
-	const maxNum = maxCommunities.value;
-	if (communities.value.length >= maxNum) {
+	const maxNum = maxCommunities;
+	if (communities.length >= maxNum) {
 		return false;
 	}
 
@@ -133,12 +104,12 @@ const showAddCommunity = computed(() => {
 });
 
 const showAddRealm = computed(() => {
-	if (!canAddRealm.value) {
+	if (!canAddRealm) {
 		return false;
 	}
 
-	const maxNum = maxRealms.value;
-	if (realms.value.length >= maxNum) {
+	const maxNum = maxRealms;
+	if (realms.length >= maxNum) {
 		return false;
 	}
 
@@ -148,7 +119,7 @@ const showAddRealm = computed(() => {
 const baseClasses = computed(() => {
 	const result = ['-no-flex'];
 
-	if (canRemoveCommunities.value) {
+	if (canRemoveCommunities) {
 		result.push('anim-fade-in-enlarge', 'no-animate-leave');
 	}
 
@@ -156,11 +127,7 @@ const baseClasses = computed(() => {
 });
 
 const isEditing = computed(
-	() =>
-		canAddCommunity.value ||
-		canAddRealm.value ||
-		canRemoveCommunities.value ||
-		canRemoveRealms.value
+	() => canAddCommunity || canAddRealm || canRemoveCommunities || canRemoveRealms
 );
 
 function onRemoveRealm(realm: RealmModel) {
@@ -189,12 +156,12 @@ async function _scrollToEnd() {
 }
 
 async function onClickAddRealm() {
-	const curRealms = realms.value;
+	const curRealms = realms;
 	const newRealms = [...curRealms];
 
 	await showContentTargetManageRealmsModal({
 		selectedRealms: newRealms,
-		maxRealms: maxRealms?.value || 0,
+		maxRealms: maxRealms || 0,
 	});
 
 	const curRealmsMap = arrayIndexBy(curRealms, 'id');

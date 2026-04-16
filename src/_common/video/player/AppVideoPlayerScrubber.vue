@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, Ref, ref, toRefs } from 'vue';
+import { computed, Ref, ref } from 'vue';
 
 import { styleChangeBg, styleWhen } from '../../../_styles/mixins';
 import { buildCSSPixelValue } from '../../../_styles/variables';
@@ -8,14 +8,10 @@ import { kThemeHighlight } from '../../theme/variables';
 import AppTouch, { AppTouchInput } from '../../touch/AppTouch.vue';
 import { scrubVideo, VideoPlayerController } from './controller';
 
-const props = defineProps({
-	player: {
-		type: Object as PropType<VideoPlayerController>,
-		required: true,
-	},
-});
-
-const { player } = toRefs(props);
+type Props = {
+	player: VideoPlayerController;
+};
+const { player } = defineProps<Props>();
 
 const timebar = ref() as Ref<HTMLDivElement>;
 
@@ -23,11 +19,11 @@ const timebarLeft = ref(0);
 const timebarWidth = ref(0);
 
 const currentPos = computed(() => {
-	return (player.value.queuedTimeChange ?? player.value.currentTime) / player.value.duration;
+	return (player.queuedTimeChange ?? player.currentTime) / player.duration;
 });
 
 const filledRight = computed(() => {
-	if (!player.value.duration) {
+	if (!player.duration) {
 		return 'auto';
 	}
 
@@ -35,11 +31,11 @@ const filledRight = computed(() => {
 });
 
 const bufferedRight = computed(() => {
-	if (!player.value.bufferedTo) {
+	if (!player.bufferedTo) {
 		return 'auto';
 	}
 
-	const bufferedPos = player.value.bufferedTo / player.value.duration;
+	const bufferedPos = player.bufferedTo / player.duration;
 	return 100 - bufferedPos * 100 + '%';
 });
 
@@ -50,18 +46,18 @@ function tap(event: AppTouchInput) {
 
 function panStart(event: AppTouchInput) {
 	initTimebarData();
-	scrubVideo(player.value, calcScrubPos(event), 'start');
+	scrubVideo(player, calcScrubPos(event), 'start');
 
 	// Will tell the browser to not select text while dragging.
 	event.preventDefault();
 }
 
 function pan(event: AppTouchInput) {
-	scrubVideo(player.value, calcScrubPos(event), 'scrub');
+	scrubVideo(player, calcScrubPos(event), 'scrub');
 }
 
 function panEnd(event: AppTouchInput) {
-	scrubVideo(player.value, calcScrubPos(event), 'end');
+	scrubVideo(player, calcScrubPos(event), 'end');
 }
 
 function initTimebarData() {

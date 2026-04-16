@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, CSSProperties, PropType, ref, toRefs } from 'vue';
+import { computed, CSSProperties, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { Api } from '../../../../../../../_common/api/api.service';
@@ -17,26 +17,13 @@ import { kFontSizeSmall } from '../../../../../../../_styles/variables';
 import { run } from '../../../../../../../utils/utils';
 import AppFormStickerSelectorItem from './AppFormStickerSelectorItem.vue';
 
-const props = defineProps({
-	stickerPackId: {
-		type: Number,
-		default: undefined,
-	},
-	premium: {
-		type: Boolean,
-		required: true,
-	},
-	currentStickers: {
-		type: Array as PropType<StickerModel[]>,
-		required: true,
-	},
-	availableSlots: {
-		type: Number,
-		required: true,
-	},
-});
-
-const { stickerPackId, premium, currentStickers, availableSlots } = toRefs(props);
+type Props = {
+	stickerPackId?: number;
+	premium: boolean;
+	currentStickers: StickerModel[];
+	availableSlots: number;
+};
+const { stickerPackId, premium, currentStickers, availableSlots } = defineProps<Props>();
 
 const router = useRouter();
 const modal = useModal()!;
@@ -46,26 +33,26 @@ const selectableStickers = ref<StickerModel[]>([]);
 const selectedStickers = ref<StickerModel[]>([]);
 
 /** Combined current in the pack and the newly selected */
-const combinedStickers = computed(() => currentStickers.value.concat(selectedStickers.value));
+const combinedStickers = computed(() => currentStickers.concat(selectedStickers.value));
 
 run(async () => {
 	let url = '/web/dash/creators/shop/packs/stickers';
-	if (stickerPackId?.value) {
-		url += `/${stickerPackId.value}`;
+	if (stickerPackId) {
+		url += `/${stickerPackId}`;
 	}
 
 	const payload = await Api.sendRequest(url);
 
 	selectableStickers.value = storeModelList(
 		StickerModel,
-		premium.value ? payload.selectablePremium : payload.selectableFree
-	).filter(i => !currentStickers.value.includes(i));
+		premium ? payload.selectablePremium : payload.selectableFree
+	).filter(i => !currentStickers.includes(i));
 
 	isLoading.value = false;
 });
 
 const modalError = computed(() => {
-	if (combinedStickers.value.length >= availableSlots.value) {
+	if (combinedStickers.value.length >= availableSlots) {
 		return $gettext(`You've hit the sticker limit for this pack.`);
 	}
 

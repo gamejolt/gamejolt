@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onMounted, ref, toRefs } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { Api } from '../../api/api.service';
@@ -7,13 +7,10 @@ import { Environment } from '../../environment/environment.service';
 import { Navigate } from '../../navigate/navigate.service';
 import AppAuthJoinForm, { JoinFormModel } from './AppAuthJoinForm.vue';
 
-const props = defineProps({
-	overlay: {
-		type: Boolean,
-	},
-});
-
-const { overlay } = toRefs(props);
+type Props = {
+	overlay?: boolean;
+};
+const { overlay } = defineProps<Props>();
 const router = useRouter();
 
 const blocked = ref(false);

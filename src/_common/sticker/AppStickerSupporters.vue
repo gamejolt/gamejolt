@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
+import { computed } from 'vue';
 
 import { FiresidePostModel } from '../fireside/post/post-model';
 import { showSupportersModal } from '../supporters/modal.service';
@@ -8,27 +8,17 @@ import { $gettext } from '../translate/translate.service';
 import { UserModel } from '../user/user.model';
 import AppUserAvatarImg from '../user/user-avatar/AppUserAvatarImg.vue';
 
-const props = defineProps({
-	model: {
-		type: Object as PropType<FiresidePostModel>,
-		required: true,
-	},
-	supporters: {
-		type: Array as PropType<UserModel[]>,
-		required: true,
-	},
-	limit: {
-		type: Number,
-		default: undefined,
-	},
-});
+type Props = {
+	model: FiresidePostModel;
+	supporters: UserModel[];
+	limit?: number;
+};
+const { model, supporters, limit } = defineProps<Props>();
 
-const { model, supporters, limit } = toRefs(props);
-
-const displaySupporters = computed(() => supporters.value.slice(0, limit?.value));
+const displaySupporters = computed(() => supporters.slice(0, limit));
 
 function onClick() {
-	showSupportersModal({ model: model.value });
+	showSupportersModal({ model });
 }
 </script>
 

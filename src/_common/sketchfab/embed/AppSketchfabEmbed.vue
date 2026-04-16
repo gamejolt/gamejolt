@@ -1,5 +1,5 @@
 <script lang="ts">
-import { nextTick, onMounted, ref, toRefs, useTemplateRef, watch } from 'vue';
+import { nextTick, onMounted, ref, useTemplateRef, watch } from 'vue';
 
 import { Ruler } from '../../ruler/ruler-service';
 import { onScreenResize } from '../../screen/screen-service';
@@ -41,25 +41,13 @@ export function getSketchfabIdFromInput(input: string) {
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	sketchfabId: {
-		type: String,
-		required: true,
-	},
-	maxWidth: {
-		type: Number,
-		default: 0,
-	},
-	maxHeight: {
-		type: Number,
-		default: 0,
-	},
-	autoplay: {
-		type: Boolean,
-	},
-});
-
-const { sketchfabId, maxWidth, maxHeight, autoplay } = toRefs(props);
+type Props = {
+	sketchfabId: string;
+	maxWidth?: number;
+	maxHeight?: number;
+	autoplay?: boolean;
+};
+const { sketchfabId, maxWidth = 0, maxHeight = 0, autoplay } = defineProps<Props>();
 
 const embedUrl = ref('');
 const width = ref(0);
@@ -73,15 +61,15 @@ onMounted(() => {
 });
 
 watch(
-	sketchfabId,
+	() => sketchfabId,
 	() => {
-		if (!sketchfabId.value) {
+		if (!sketchfabId) {
 			return;
 		}
 
-		let url = `https://sketchfab.com/models/${sketchfabId.value}/embed`;
+		let url = `https://sketchfab.com/models/${sketchfabId}/embed`;
 
-		if (autoplay.value) {
+		if (autoplay) {
 			url += '?autostart=1';
 		}
 
@@ -99,14 +87,14 @@ async function recalculateDimensions() {
 
 	width.value = Ruler.width(innerElem.value);
 
-	if (maxWidth.value) {
-		width.value = Math.min(maxWidth.value, width.value);
+	if (maxWidth) {
+		width.value = Math.min(maxWidth, width.value);
 	}
 
 	height.value = width.value * RATIO;
 
-	if (maxHeight.value && height.value > maxHeight.value) {
-		height.value = maxHeight.value;
+	if (maxHeight && height.value > maxHeight) {
+		height.value = maxHeight;
 		width.value = height.value / RATIO;
 	}
 }

@@ -2,17 +2,14 @@
 import AppAnimSlideshow from './AppAnimSlideshow.vue';
 import { sheetChargeOrbBottom, sheetChargeOrbTop } from './slideshow/sheets';
 
-const props = defineProps({
-	pause: {
-		type: Boolean,
-	},
-	useRandomOffset: {
-		type: Boolean,
-	},
-});
+type Props = {
+	pause?: boolean;
+	useRandomOffset?: boolean;
+};
+const { useRandomOffset } = defineProps<Props>();
 
-const bottomOffset = props.useRandomOffset ? Math.random() : undefined;
-const topOffset = props.useRandomOffset ? Math.random() : undefined;
+const bottomOffset = useRandomOffset ? Math.random() : undefined;
+const topOffset = useRandomOffset ? Math.random() : undefined;
 </script>
 
 <template>

@@ -1,5 +1,5 @@
 <script lang="ts">
-import { onMounted, PropType, ref, toRefs } from 'vue';
+import { onMounted, ref } from 'vue';
 
 import { Api } from '../../../../_common/api/api.service';
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
@@ -25,14 +25,10 @@ const innerCircleEdge = 30 * (Math.SQRT2 - 1);
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	user: {
-		type: Object as PropType<UserModel>,
-		required: true,
-	},
-});
-
-const { user } = toRefs(props);
+type Props = {
+	user: UserModel;
+};
+const { user } = defineProps<Props>();
 
 const communities = ref<CommunityModel[]>([]);
 const isBootstrapped = ref(false);
@@ -42,7 +38,7 @@ const modal = useModal()!;
 onMounted(async () => {
 	try {
 		const payload = await Api.sendRequest(
-			`/web/profile/communities/@${user.value.username}`,
+			`/web/profile/communities/@${user.username}`,
 			undefined,
 			{ detach: true }
 		);

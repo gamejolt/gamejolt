@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
+import { computed } from 'vue';
 
 import { styleElevate, styleFlexCenter, styleOverlayTextShadow } from '../../_styles/mixins';
 import { kFontSizeBase, kFontSizeTiny } from '../../_styles/variables';
@@ -15,17 +15,13 @@ interface QuestBlipState {
 	icon: Jolticon | null;
 }
 
-const props = defineProps({
-	quest: {
-		type: Object as PropType<QuestModel>,
-		required: true,
-	},
-});
-
-const { quest } = toRefs(props);
+type Props = {
+	quest: QuestModel;
+};
+const { quest } = defineProps<Props>();
 
 const questBlipState = computed<QuestBlipState | undefined>(() => {
-	const q = quest.value;
+	const q = quest;
 	if (q.has_activity) {
 		return {
 			bgColor: kThemeGjOverlayNotice,

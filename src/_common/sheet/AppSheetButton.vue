@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
+import { computed } from 'vue';
 import { RouteLocationRaw, RouterLink } from 'vue-router';
 
 import { styleBorderRadiusLg, styleWhen } from '../../_styles/mixins';
@@ -8,20 +8,13 @@ import AppJolticon, { Jolticon } from '../jolticon/AppJolticon.vue';
 import AppOnHover from '../on/AppOnHover.vue';
 import { kThemeBg, kThemeBiBg, kThemeBiFg, kThemeFg } from '../theme/variables';
 
-const props = defineProps({
-	icon: {
-		type: String as PropType<Jolticon>,
-		required: true,
-	},
-	to: {
-		type: null as unknown as PropType<RouteLocationRaw>,
-		default: undefined,
-	},
-});
+type Props = {
+	icon: Jolticon;
+	to?: RouteLocationRaw;
+};
+const { icon, to } = defineProps<Props>();
 
-const { to } = toRefs(props);
-
-const ourTag = computed(() => (to?.value ? RouterLink : 'div'));
+const ourTag = computed(() => (to ? RouterLink : 'div'));
 </script>
 
 <template>

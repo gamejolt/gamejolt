@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, h, PropType, toRefs } from 'vue';
+import { computed, h } from 'vue';
 
 import { ContentObject } from '../../content-object';
 import { ContentRules } from '../../content-rules';
@@ -89,20 +89,13 @@ export function renderContentChildren(
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	content: {
-		type: Array as PropType<ContentObject[]>,
-		required: true,
-	},
-	contentRules: {
-		type: Object as PropType<ContentRules>,
-		required: true,
-	},
-});
+type Props = {
+	content: ContentObject[];
+	contentRules: ContentRules;
+};
+const { content, contentRules } = defineProps<Props>();
 
-const { content, contentRules } = toRefs(props);
-
-const children = computed(() => renderContentChildren(content.value, contentRules.value));
+const children = computed(() => renderContentChildren(content, contentRules));
 </script>
 
 <template>

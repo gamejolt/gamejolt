@@ -1,11 +1,7 @@
 <script lang="ts" setup>
 import { toRef } from 'vue';
 
-import AppForm, {
-	createForm,
-	defineFormProps,
-	FormController,
-} from '../../../../form-vue/AppForm.vue';
+import AppForm, { createForm, FormController } from '../../../../form-vue/AppForm.vue';
 import AppFormButton from '../../../../form-vue/AppFormButton.vue';
 import AppFormControl from '../../../../form-vue/AppFormControl.vue';
 import AppFormGroup from '../../../../form-vue/AppFormGroup.vue';
@@ -14,16 +10,17 @@ import { CustomButtonData } from './custom-button-modal.service';
 
 type FormModel = CustomButtonData;
 
-const props = defineProps({
-	...defineFormProps<FormModel>(true),
-});
+type Props = {
+	model: FormModel;
+};
+const { model } = defineProps<Props>();
 
 const emit = defineEmits<{
 	submit: [model: FormModel];
 }>();
 
 const form: FormController<FormModel> = createForm<FormModel>({
-	model: toRef(props, 'model'),
+	model: toRef(() => model),
 	onInit() {
 		form.formModel.customButtonId ??= '';
 	},

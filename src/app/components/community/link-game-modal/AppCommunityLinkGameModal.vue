@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onMounted, PropType, ref, toRefs } from 'vue';
+import { onMounted, ref } from 'vue';
 
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
@@ -13,14 +13,11 @@ import { useModal } from '../../../../_common/modal/modal.service';
 import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
 import { $gettext } from '../../../../_common/translate/translate.service';
 
-const props = defineProps({
-	community: {
-		type: Object as PropType<CommunityModel>,
-		required: true,
-	},
-});
+type Props = {
+	community: CommunityModel;
+};
+const { community } = defineProps<Props>();
 
-const { community } = toRefs(props);
 const modal = useModal()!;
 
 const page = ref(1);
@@ -37,7 +34,7 @@ async function loadPage() {
 
 	try {
 		const payload = await Api.sendRequest(
-			'/web/dash/communities/games/list/' + community.value.id + '?page=' + page.value,
+			'/web/dash/communities/games/list/' + community.id + '?page=' + page.value,
 			undefined,
 			{ noErrorRedirect: true }
 		);

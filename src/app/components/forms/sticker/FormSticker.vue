@@ -1,11 +1,10 @@
 <script lang="ts" setup>
-import { computed, CSSProperties, onUnmounted, Ref, ref, toRaw, toRefs } from 'vue';
+import { computed, CSSProperties, onUnmounted, Ref, ref, toRaw } from 'vue';
 
 import { Api } from '../../../../_common/api/api.service';
 import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
 import AppForm, {
 	createForm,
-	defineFormProps,
 	FormController,
 } from '../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
@@ -44,30 +43,27 @@ type FormModel = Partial<StickerModel> & {
 	file: File | undefined;
 };
 
-const props = defineProps({
-	...defineFormProps<StickerModel>(),
-	emojiPrefix: {
-		type: String,
-		default: '',
-	},
-	canActivate: {
-		type: Boolean,
-	},
-	warnDeactivate: {
-		type: Boolean,
-	},
-});
+type Props = {
+	model?: StickerModel;
+	emojiPrefix?: string;
+	canActivate?: boolean;
+	warnDeactivate?: boolean;
+};
+const {
+	model,
+	emojiPrefix: emojiPrefixProp = '',
+	canActivate,
+	warnDeactivate,
+} = defineProps<Props>();
 
 const emit = defineEmits<{
 	changed: [payloadSticker: UnknownModelData | ModelData<StickerModel>];
 	pack: [payloadPack: StickerPackModel | undefined];
 }>();
 
-const { model, canActivate, warnDeactivate } = toRefs(props);
-
 const emojiNameMinLength = ref(3);
 const emojiNameMaxLength = ref(30);
-const emojiPrefix = ref(props.emojiPrefix);
+const emojiPrefix = ref(emojiPrefixProp);
 
 const minNameLength = ref(3);
 const maxNameLength = ref(50);
@@ -77,8 +73,8 @@ const maxSize = ref(400);
 const aspectRatio = ref(1);
 
 const loadUrl = computed(() => {
-	if (model?.value) {
-		return `/web/dash/creators/stickers/save/${model.value.id}`;
+	if (model) {
+		return `/web/dash/creators/stickers/save/${model.id}`;
 	}
 	return `/web/dash/creators/stickers/save`;
 });
@@ -86,15 +82,15 @@ const loadUrl = computed(() => {
 const form: FormController<FormModel> = createForm({
 	loadUrl,
 	model: ref({
-		...model?.value,
+		...model,
 		is_active: false,
-		emoji_name: model?.value?.emoji?.short_name || '',
+		emoji_name: model?.emoji?.short_name || '',
 	} as FormModel),
 	onInit() {
-		if (!model?.value) {
-			form.formModel.is_active = canActivate?.value === true;
+		if (!model) {
+			form.formModel.is_active = canActivate === true;
 		} else {
-			form.formModel.is_active = model.value.is_active === true;
+			form.formModel.is_active = model.is_active === true;
 		}
 	},
 	onLoad(payload) {
@@ -110,11 +106,11 @@ const form: FormController<FormModel> = createForm({
 
 		if (payload.sticker) {
 			storeModel(StickerModel, payload.sticker);
-			emojiPrefix.value = model?.value?.emoji?.prefix ?? emojiPrefix.value;
+			emojiPrefix.value = model?.emoji?.prefix ?? emojiPrefix.value;
 			form.formModel.emoji_name =
-				model?.value?.emoji?.short_name ?? form.formModel.emoji_name;
+				model?.emoji?.short_name ?? form.formModel.emoji_name;
 
-			form.formModel.is_active = (model?.value?.is_active ?? payload.is_active) === true;
+			form.formModel.is_active = (model?.is_active ?? payload.is_active) === true;
 		}
 	},
 	onSubmit() {
@@ -153,20 +149,20 @@ onUnmounted(() => {
 const processedFileData = ref() as Ref<{ file: File; url: string } | undefined>;
 const imgUrl = computed(() => getImgUrl());
 const canToggleActive = computed(() => {
-	if (canActivate.value) {
+	if (canActivate) {
 		return true;
 	}
 
-	if (model?.value) {
-		return model.value.is_active === true;
+	if (model) {
+		return model.is_active === true;
 	}
 
 	return false;
 });
 
 function getImgUrl(): string | undefined {
-	if (model?.value) {
-		return model.value.img_url;
+	if (model) {
+		return model.img_url;
 	}
 
 	// If we weren't provided a model to edit, try grabbing one from our file.
@@ -222,22 +218,22 @@ const stickerGridItems = computed(() => {
 });
 
 const validateNameAvailabilityPath = computed(() => {
-	if (model?.value) {
-		return `/web/dash/creators/stickers/check-field-availability/${model.value.id}/name`;
+	if (model) {
+		return `/web/dash/creators/stickers/check-field-availability/${model.id}/name`;
 	}
 	return `/web/dash/creators/stickers/check-field-availability/0/name`;
 });
 
 const validateEmojiAvailabilityPath = computed(() => {
-	if (model?.value) {
-		return `/web/dash/creators/stickers/check-field-availability/${model.value.id}/emojiName`;
+	if (model) {
+		return `/web/dash/creators/stickers/check-field-availability/${model.id}/emojiName`;
 	}
 	return `/web/dash/creators/stickers/check-field-availability/0/emojiName`;
 });
 
 async function beforeChangeIsActive(next: boolean) {
 	// Only warn when deactivating a currently-active sticker.
-	if (next || !model?.value || !model.value.is_active || !warnDeactivate.value) {
+	if (next || !model || !model.is_active || !warnDeactivate) {
 		return true;
 	}
 

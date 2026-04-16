@@ -1,14 +1,10 @@
 <script lang="ts" setup>
-import { onMounted, onUnmounted, ref, toRefs } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 
-const props = defineProps({
-	end: {
-		type: Number,
-		required: true,
-	},
-});
-
-const { end } = toRefs(props);
+type Props = {
+	end: number;
+};
+const { end } = defineProps<Props>();
 
 const time = ref('');
 let interval: number | undefined;
@@ -16,7 +12,7 @@ let interval: number | undefined;
 updateTimer();
 
 function updateTimer() {
-	let timeLeft = (end.value - Date.now()) / 1000;
+	let timeLeft = (end - Date.now()) / 1000;
 	if (timeLeft < 0) {
 		time.value = '0:0:0';
 		return;

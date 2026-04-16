@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, PropType, ref, toRefs } from 'vue';
+import { computed, ref } from 'vue';
 import { RouterLink } from 'vue-router';
 
 import AppPostCardBase from '../fireside/post/card/AppPostCardBase.vue';
@@ -13,39 +13,24 @@ export const AppCreatorCardAspectRatio = 11 / 17;
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	post: {
-		type: Object as PropType<FiresidePostModel>,
-		required: true,
-	},
-	fancyHover: {
-		type: Boolean,
-	},
-	noVideo: {
-		type: Boolean,
-	},
-	noLink: {
-		type: Boolean,
-	},
-	followButtonType: {
-		type: String as PropType<'with-count' | 'no-count'>,
-		default: undefined,
-	},
-	followOnClick: {
-		type: Boolean,
-	},
-});
-
-const { post, fancyHover, noVideo, noLink, followButtonType, followOnClick } = toRefs(props);
+type Props = {
+	post: FiresidePostModel;
+	fancyHover?: boolean;
+	noVideo?: boolean;
+	noLink?: boolean;
+	followButtonType?: 'with-count' | 'no-count';
+	followOnClick?: boolean;
+};
+const { post, fancyHover, noVideo, noLink, followButtonType, followOnClick } = defineProps<Props>();
 
 const isHovered = ref(false);
 const isProcessing = ref(false);
 
 const { user: sessionUser } = useCommonStore();
 
-const user = computed(() => post.value.displayUser);
+const user = computed(() => post.displayUser);
 const isMe = computed(() => sessionUser.value?.id === user.value.id);
-const hasFollowOnClick = computed(() => followOnClick.value && !isMe.value);
+const hasFollowOnClick = computed(() => followOnClick && !isMe.value);
 
 async function onClick(event: Event) {
 	if (!hasFollowOnClick.value) {

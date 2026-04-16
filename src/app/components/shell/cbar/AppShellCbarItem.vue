@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, toRefs } from 'vue';
+import { computed } from 'vue';
 
 import { formatNumber } from '../../../../_common/filters/number';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
@@ -9,63 +9,46 @@ import { kThemeGjOverlayNotice } from '../../../../_common/theme/variables';
 import { styleWhen } from '../../../../_styles/mixins';
 import { useAppStore } from '../../../store';
 
-const props = defineProps({
-	isControl: {
-		type: Boolean,
-	},
-	isActive: {
-		type: Boolean,
-	},
-	isUnread: {
-		type: Boolean,
-	},
-	highlight: {
-		type: String,
-		default: undefined,
-	},
-	notificationCount: {
-		type: Number,
-		default: 0,
-	},
-	/**
-	 * Shows an overlay-notice blip instead of count.
-	 */
-	showBlip: {
-		type: Boolean,
-	},
-});
-
-const { isControl, isActive, isUnread, highlight, notificationCount, showBlip } = toRefs(props);
+type Props = {
+	isControl?: boolean;
+	isActive?: boolean;
+	isUnread?: boolean;
+	highlight?: string;
+	notificationCount?: number;
+	/** Shows an overlay-notice blip instead of count. */
+	showBlip?: boolean;
+};
+const { isControl, isActive, isUnread, highlight, notificationCount = 0, showBlip } = defineProps<Props>();
 const { visibleLeftPane } = useAppStore();
 const { activeContextPane } = useSidebarStore();
 
 const notificationCountText = computed(() => {
-	if (showBlip.value) {
+	if (showBlip) {
 		return '';
 	}
 
-	if (notificationCount.value > 99) {
+	if (notificationCount > 99) {
 		return '99+';
 	}
 
-	return formatNumber(notificationCount.value);
+	return formatNumber(notificationCount);
 });
 
 // We want a context indicator only for non-control items that are the current
 // active item (selected or active route).
 const hasContextIndicator = computed(
-	() => !Screen.isLg && isActive.value && !isControl.value && activeContextPane.value
+	() => !Screen.isLg && isActive && !isControl && activeContextPane.value
 );
 
 // There can be two active items between the cbar controls and normal cbar
 // items, so we check the pane information to figure out what should be the
 // active item visually.
 const showAsActive = computed(() => {
-	if (!isActive.value) {
+	if (!isActive) {
 		return false;
 	}
 
-	return !visibleLeftPane.value || visibleLeftPane.value === 'context' || isControl.value;
+	return !visibleLeftPane.value || visibleLeftPane.value === 'context' || isControl;
 });
 
 // Check what the actual active item is and if it's showing a pane.

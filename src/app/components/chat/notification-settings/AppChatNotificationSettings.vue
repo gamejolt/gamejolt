@@ -1,23 +1,16 @@
 <script lang="ts" setup>
-import { computed, onMounted, ref, toRefs } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 
 import { Api } from '../../../../_common/api/api.service';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
 import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
 
-const props = defineProps({
-	roomId: {
-		type: Number,
-		required: true,
-	},
-	isPmRoom: {
-		type: Boolean,
-		required: true,
-	},
-});
-
-const { roomId, isPmRoom } = toRefs(props);
+type Props = {
+	roomId: number;
+	isPmRoom: boolean;
+};
+const { roomId, isPmRoom } = defineProps<Props>();
 
 const isLoadingNotificationSettings = ref(false);
 const notificationLevel = ref('');
@@ -29,7 +22,7 @@ const notificationSettings = computed(() => {
 		text: $gettext(`All Messages`),
 		level: 'all',
 	});
-	if (!isPmRoom.value) {
+	if (!isPmRoom) {
 		settings.push({
 			text: $gettext(`Only @mentions`),
 			level: 'mentions',
@@ -47,7 +40,7 @@ onMounted(async () => {
 	isLoadingNotificationSettings.value = true;
 
 	const payload = await Api.sendRequest(
-		`/web/chat/rooms/get-notification-settings/${roomId.value}`,
+		`/web/chat/rooms/get-notification-settings/${roomId}`,
 		undefined,
 		{ detach: true }
 	);
@@ -61,7 +54,7 @@ async function onClickSetNotificationLevel(level: string) {
 	notificationLevel.value = level;
 
 	const payload = await Api.sendRequest(
-		`/web/chat/rooms/set-notification-settings/${roomId.value}`,
+		`/web/chat/rooms/set-notification-settings/${roomId}`,
 		{ level },
 		{ detach: true }
 	);

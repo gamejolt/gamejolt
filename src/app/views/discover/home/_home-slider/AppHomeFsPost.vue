@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, onMounted, PropType, ref, toRefs } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 
 import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
 import AppImgResponsive from '../../../../../_common/img/AppImgResponsive.vue';
@@ -10,36 +10,32 @@ import {
 	VideoPlayerController,
 } from '../../../../../_common/video/player/controller';
 
-const props = defineProps({
-	post: {
-		type: Object as PropType<FiresidePostModel>,
-		required: true,
-	},
-});
+type Props = {
+	post: FiresidePostModel;
+};
+const { post } = defineProps<Props>();
 
 const emit = defineEmits<{
 	loaded: [];
 }>();
 
-const { post } = toRefs(props);
-
 const videoController = ref(null as VideoPlayerController | null);
 const imgLoaded = ref(false);
 
 const mediaItem = computed(() => {
-	if (post.value.hasVideo) {
-		return post.value.videos[0].posterMediaItem!;
+	if (post.hasVideo) {
+		return post.videos[0].posterMediaItem!;
 	}
 
-	return post.value.media[0];
+	return post.media[0];
 });
 
 const video = computed(() => {
-	if (!post.value.hasVideo) {
+	if (!post.hasVideo) {
 		return;
 	}
 
-	return post.value.videos[0];
+	return post.videos[0];
 });
 
 onMounted(() => {

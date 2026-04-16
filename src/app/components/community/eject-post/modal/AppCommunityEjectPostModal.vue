@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { PropType, ref, toRef, toRefs } from 'vue';
+import { ref, toRef } from 'vue';
 
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import { FiresidePostCommunityModel } from '../../../../../_common/fireside/post/community/community.model';
@@ -16,18 +16,11 @@ import FormCommunityEjectPost, {
 } from '../form/FormCommunityEjectPost.vue';
 import { CommunityEjectPostModalResult } from './modal.service';
 
-const props = defineProps({
-	firesidePostCommunity: {
-		type: Object as PropType<FiresidePostCommunityModel>,
-		required: true,
-	},
-	post: {
-		type: Object as PropType<FiresidePostModel>,
-		required: true,
-	},
-});
-
-const { firesidePostCommunity, post } = toRefs(props);
+type Props = {
+	firesidePostCommunity: FiresidePostCommunityModel;
+	post: FiresidePostModel;
+};
+const { firesidePostCommunity, post } = defineProps<Props>();
 
 const { user } = useCommonStore();
 const modal = useModal()!;
@@ -35,7 +28,7 @@ const reasonFormModel = ref<FormModel | null>(null);
 
 // Do not show the form when the logged in user is the author of the post.
 // It does not make sense to let them notify themselves.
-const shouldShowForm = toRef(() => post.value.user.id !== user.value!.id);
+const shouldShowForm = toRef(() => post.user.id !== user.value!.id);
 
 reasonFormModel.value = {
 	notifyUser: 'no',
@@ -65,7 +58,7 @@ function onEject() {
 	if (result.reasonType === REASON_OTHER && result.reason) {
 		const options = getDatalistOptions(
 			'community-eject',
-			firesidePostCommunity.value.community.id.toString()
+			firesidePostCommunity.community.id.toString()
 		);
 		options.unshiftItem(result.reason);
 	}

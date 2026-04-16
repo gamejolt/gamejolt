@@ -1,49 +1,29 @@
 <script lang="ts" setup>
-import { PropType, toRefs } from 'vue';
-
 import AppImgResponsive from '../img/AppImgResponsive.vue';
 import AppScrollScroller from '../scroll/AppScrollScroller.vue';
 import { BackgroundModel } from './background.model';
 
-const props = defineProps({
-	backgrounds: {
-		type: Array as PropType<Array<BackgroundModel>>,
-		required: true,
-	},
-	background: {
-		type: Object as PropType<BackgroundModel>,
-		default: undefined,
-	},
-	tileSize: {
-		type: Number,
-		default: 56,
-		validator: val => typeof val === 'number' && val > 0,
-	},
-	hideEmptyTile: {
-		type: Boolean,
-	},
-	disabled: {
-		type: Boolean,
-	},
-	tileGap: {
-		type: Number,
-		default: 12,
-	},
-});
-
-const { backgrounds, background, tileSize, disabled } = toRefs(props);
+type Props = {
+	backgrounds: BackgroundModel[];
+	background?: BackgroundModel;
+	tileSize?: number;
+	hideEmptyTile?: boolean;
+	disabled?: boolean;
+	tileGap?: number;
+};
+const { background, disabled, tileSize = 56, tileGap = 12 } = defineProps<Props>();
 
 const emit = defineEmits<{
 	backgroundChange: [item?: BackgroundModel];
 }>();
 
 function onSelect(item: BackgroundModel | undefined) {
-	if (disabled.value) {
+	if (disabled) {
 		return;
 	}
 
 	let result = item;
-	if (item?.id === background?.value?.id) {
+	if (item?.id === background?.id) {
 		result = undefined;
 	}
 	emit('backgroundChange', result);

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onMounted, PropType, ref, toRefs, useTemplateRef, watch } from 'vue';
+import { onMounted, ref, useTemplateRef, watch } from 'vue';
 
 import { sleep } from '../utils/utils';
 import { Screen } from './screen/screen-service';
@@ -12,36 +12,20 @@ const ExtraCollapsePadding = 200;
  * collapse.
  */
 const Threshold = 50;
-const props = defineProps({
-	collapseHeight: {
-		type: Number,
-		required: true,
-	},
-	isOpen: {
-		type: Boolean,
-	},
-	animate: {
-		type: Boolean,
-	},
-	size: {
-		type: String as PropType<'sm'>,
-		default: undefined,
-		validator: val => !val || val === 'sm',
-	},
-	ignoreThreshold: {
-		type: Boolean,
-	},
-	asMask: {
-		type: Boolean,
-	},
-});
+type Props = {
+	collapseHeight: number;
+	isOpen?: boolean;
+	animate?: boolean;
+	size?: 'sm';
+	ignoreThreshold?: boolean;
+	asMask?: boolean;
+};
+const { collapseHeight, isOpen, animate, size, ignoreThreshold, asMask } = defineProps<Props>();
 
 const emit = defineEmits<{
 	requireChange: [isRequired: boolean];
 	expand: [e: Event];
 }>();
-
-const { collapseHeight, isOpen, animate, size, ignoreThreshold, asMask } = toRefs(props);
 const isCollapsed = ref(false);
 const frameRequestHandle = ref<number | undefined>();
 
@@ -60,27 +44,27 @@ onMounted(async () => {
 	// Take threshold into account only if our collapse height is big enough
 	// for threshold to matter.
 	const threshold =
-		!ignoreThreshold.value && collapseHeight.value > Threshold * 2 ? Threshold : 0;
+		!ignoreThreshold && collapseHeight > Threshold * 2 ? Threshold : 0;
 
-	if (collapseHeight.value && root.value.scrollHeight - threshold > collapseHeight.value) {
+	if (collapseHeight && root.value.scrollHeight - threshold > collapseHeight) {
 		isRequired = true;
 	}
 
 	emit('requireChange', isRequired);
 
-	if (isRequired && !isOpen.value) {
+	if (isRequired && !isOpen) {
 		collapse();
 	}
 });
 
 watch(
-	() => isOpen.value,
+	() => isOpen,
 	() => {
 		if (!isRequired) {
 			return;
 		}
 
-		if (isOpen.value) {
+		if (isOpen) {
 			expand();
 		} else {
 			collapse();
@@ -111,21 +95,21 @@ function collapse() {
 		return;
 	}
 	isCollapsed.value = true;
-	root.value.style.maxHeight = collapseHeight.value + 'px';
+	root.value.style.maxHeight = collapseHeight + 'px';
 
 	if (isPrimed) {
 		// We will scroll to the bottom of the element minus some extra padding.
 		// This keeps the element in view a bit.
 		const scrollTo =
 			Scroll.getElementOffsetTopFromContext(root.value) +
-			collapseHeight.value -
+			collapseHeight -
 			ExtraCollapsePadding;
 
 		// Only if we're past where we would scroll.
 		if (Scroll.getScrollTop() > scrollTo) {
 			// If we're on a tiny screen, don't animate the scroll.
 			// Just set it and move on.
-			if (Screen.isXs || !animate.value) {
+			if (Screen.isXs || !animate) {
 				Scroll.to(scrollTo, { animate: false });
 			} else {
 				// Otherwise set up a scroll animation to follow the bottom of the element as it collapses.

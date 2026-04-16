@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { determine } from 'jstimezonedetect';
-import { computed, nextTick, PropType, ref, toRef, toRefs } from 'vue';
+import { computed, nextTick, ref, toRef } from 'vue';
 
 import {
 	$saveCommunityChannel,
@@ -47,26 +47,16 @@ const types = [
 	},
 ];
 
-const props = defineProps({
-	community: {
-		type: Object as PropType<CommunityModel>,
-		required: true,
-	},
-	channels: {
-		type: Array as PropType<CommunityChannelModel[]>,
-		required: true,
-	},
-	archivedChannels: {
-		type: Array as PropType<CommunityChannelModel[]>,
-		required: true,
-	},
-});
+type Props = {
+	community: CommunityModel;
+	channels: CommunityChannelModel[];
+	archivedChannels: CommunityChannelModel[];
+};
+const { community, channels, archivedChannels } = defineProps<Props>();
 
 const emit = defineEmits<{
 	submit: [model: CommunityChannelModel];
 }>();
-
-const { community, channels, archivedChannels } = toRefs(props);
 
 const { user } = useCommonStore();
 
@@ -93,7 +83,7 @@ const form: FormController<FormModel> = createForm<FormModel>({
 	modelSaveHandler: $saveCommunityChannel,
 	resetOnSubmit: true,
 	onInit() {
-		form.formModel.community_id = community.value.id;
+		form.formModel.community_id = community.id;
 		form.formModel.type = 'post-feed';
 		form.formModel.permission_posting = 'all';
 		// Used to submit a default timezone for a competition when creating a competition channel.
@@ -105,7 +95,7 @@ const form: FormController<FormModel> = createForm<FormModel>({
 });
 
 function isTitleTaken(title: string) {
-	return [...channels.value, ...archivedChannels.value]
+	return [...channels, ...archivedChannels]
 		.map(i => i.title.toLowerCase().trim())
 		.includes(title.toLowerCase().trim());
 }

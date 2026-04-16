@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { PropType, useTemplateRef } from 'vue';
+import { useTemplateRef } from 'vue';
 
 import { styleTextOverflow } from '../../../../_styles/mixins';
 
@@ -7,27 +7,14 @@ export interface AppFormControlUploadFileInterface {
 	showFileSelect: () => void;
 }
 
-defineProps({
-	id: {
-		type: String,
-		required: true,
-	},
-	name: {
-		type: String,
-		required: true,
-	},
-	value: {
-		type: null as unknown as PropType<File | File[] | null>,
-		required: true,
-	},
-	multiple: {
-		type: Boolean,
-	},
-	accept: {
-		type: String,
-		default: null,
-	},
-});
+type Props = {
+	id: string;
+	name: string;
+	value: File | File[] | null;
+	multiple?: boolean;
+	accept?: string;
+};
+const { id, name, multiple, accept } = defineProps<Props>();
 
 const emit = defineEmits<{
 	input: [files: null | File[]];

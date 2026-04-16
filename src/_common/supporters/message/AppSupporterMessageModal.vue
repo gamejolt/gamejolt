@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
+import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
 
 import AppButton from '../../button/AppButton.vue';
@@ -12,19 +12,15 @@ import { $gettext } from '../../translate/translate.service';
 import AppUserAvatarImg from '../../user/user-avatar/AppUserAvatarImg.vue';
 import { SupporterActionModel } from '../action.model';
 
-const props = defineProps({
-	action: {
-		type: Object as PropType<SupporterActionModel>,
-		required: true,
-	},
-});
-
-const { action } = toRefs(props);
+type Props = {
+	action: SupporterActionModel;
+};
+const { action } = defineProps<Props>();
 
 const modal = useModal()!;
 
-const creator = computed(() => action.value.message?.from_user);
-const content = computed(() => action.value.message?.content);
+const creator = computed(() => action.message?.from_user);
+const content = computed(() => action.message?.content);
 </script>
 
 <template>

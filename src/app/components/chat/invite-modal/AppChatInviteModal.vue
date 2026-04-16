@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRefs } from 'vue';
+import { computed, ref } from 'vue';
 
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
@@ -18,35 +18,25 @@ import { addGroupMembers, addGroupRoom } from '../client';
 import { ChatRoomModel } from '../room';
 import { ChatUser } from '../user';
 
-const props = defineProps({
-	room: {
-		type: Object as PropType<ChatRoomModel>,
-		required: true,
-	},
-	friends: {
-		type: Array as PropType<ChatUser[]>,
-		required: true,
-	},
-	initialUser: {
-		type: Object as PropType<ChatUser>,
-		default: null,
-	},
-});
-
-const { room, friends, initialUser } = toRefs(props);
+type Props = {
+	room: ChatRoomModel;
+	friends: ChatUser[];
+	initialUser?: ChatUser | null;
+};
+const { room, friends, initialUser = null } = defineProps<Props>();
 const { chatUnsafe: chat } = useGridStore();
 const modal = useModal()!;
 
 const isLoading = ref(true);
 const filterQuery = ref('');
-const selectedUsers = ref(initialUser.value ? [initialUser.value] : []);
-const invitableFriends = ref(friends.value);
+const selectedUsers = ref(initialUser ? [initialUser] : []);
+const invitableFriends = ref(friends);
 
 run(async function () {
 	let filteredFriends = invitableFriends.value;
 
 	// Get which of the friends can be invited to this particular room.
-	const payload = await Api.sendRequest(`/web/chat/rooms/invitable-users/${room.value.id}`);
+	const payload = await Api.sendRequest(`/web/chat/rooms/invitable-users/${room.id}`);
 
 	if (payload.user_ids) {
 		// Filter the set of friends to only those that were allowed from backend.
@@ -57,10 +47,10 @@ run(async function () {
 	}
 
 	// We want to put the initial user at the top of the list.
-	if (initialUser.value) {
-		const initialUserId = initialUser.value.id;
+	if (initialUser) {
+		const initialUserId = initialUser.id;
 		filteredFriends = filteredFriends.filter(i => i.id !== initialUserId);
-		filteredFriends.unshift(initialUser.value);
+		filteredFriends.unshift(initialUser);
 	}
 
 	invitableFriends.value = filteredFriends;
@@ -83,10 +73,10 @@ const filteredUsers = computed(() => {
 function invite() {
 	const selectedUserIds = selectedUsers.value.map(chatUser => chatUser.id);
 
-	if (room.value.isPmRoom) {
+	if (room.isPmRoom) {
 		addGroupRoom(chat.value, selectedUserIds);
 	} else {
-		addGroupMembers(chat.value, room.value.id, selectedUserIds);
+		addGroupMembers(chat.value, room.id, selectedUserIds);
 	}
 	modal.resolve(true);
 }

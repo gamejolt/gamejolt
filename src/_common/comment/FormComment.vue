@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import './comment.styl';
 
-import { computed, nextTick, PropType, ref, toRefs } from 'vue';
+import { computed, nextTick, ref } from 'vue';
 
 import { kFontSizeSmall } from '../../_styles/variables';
 import AppAlertBox from '../alert/AppAlertBox.vue';
@@ -35,30 +35,15 @@ import {
 	saveComment,
 } from './comment-model';
 
-const props = defineProps({
-	comment: {
-		type: Object as PropType<CommentModel>,
-		default: undefined,
-	},
+type Props = {
+	comment?: CommentModel;
 	/** The model that the comment is attached to */
-	model: {
-		type: Object as PropType<CommentableModel & Model>,
-		required: true,
-	},
-	parentId: {
-		type: Number,
-		default: undefined,
-	},
-	autofocus: {
-		type: Boolean,
-	},
-	placeholder: {
-		type: String,
-		default: undefined,
-	},
-});
-
-const { comment, model, parentId, autofocus, placeholder } = toRefs(props);
+	model: CommentableModel & Model;
+	parentId?: number;
+	autofocus?: boolean;
+	placeholder?: string;
+};
+const { comment, model, parentId } = defineProps<Props>();
 
 const emit = defineEmits<{
 	submit: [model: CommentModel];
@@ -71,10 +56,10 @@ const lengthLimit = ref(5_000);
 const contentCapabilities = ref(ContextCapabilities.getPlaceholder());
 
 const loadUrl = computed(() => {
-	if (comment?.value?.id) {
-		return `/comments/save/${comment.value.id}`;
+	if (comment?.id) {
+		return `/comments/save/${comment.id}`;
 	} else {
-		return `/comments/save?resource=${getCommentModelResourceName(model.value)}`;
+		return `/comments/save?resource=${getCommentModelResourceName(model)}`;
 	}
 });
 
@@ -90,15 +75,15 @@ const form: FormController<FormModel> = createForm({
 	resetOnSubmit: true,
 	loadUrl,
 	async onInit() {
-		const _comment = comment?.value;
+		const _comment = comment;
 
 		form.method = _comment ? 'edit' : 'add';
 		form.formModel.id = _comment?.id;
 
 		form.formModel.comment_content = _comment?.comment_content ?? '';
-		form.formModel.resource = _comment?.resource ?? getCommentModelResourceName(model.value);
-		form.formModel.resource_id = _comment?.resource_id ?? model.value.id;
-		form.formModel.parent_id = _comment?.parent_id ?? parentId?.value ?? 0;
+		form.formModel.resource = _comment?.resource ?? getCommentModelResourceName(model);
+		form.formModel.resource_id = _comment?.resource_id ?? model.id;
+		form.formModel.parent_id = _comment?.parent_id ?? parentId ?? 0;
 
 		// Wait for errors, then clear them.
 		await nextTick();
@@ -139,7 +124,7 @@ const maxHeight = computed(() => {
 });
 
 const contentContext = computed((): ContentContext => {
-	switch (getCommentModelResourceName(model.value)) {
+	switch (getCommentModelResourceName(model)) {
 		case 'Fireside_Post':
 			return 'fireside-post-comment';
 		case 'Game':
@@ -153,13 +138,11 @@ const shouldShowGuidelines = computed(
 	() => !form.formModel.comment_content && !form.changed && form.method !== 'edit'
 );
 
-const contentModelId = computed(() => comment?.value?.id);
-const canComment = computed(() => canCommentOnModel(model.value));
+const contentModelId = computed(() => comment?.id);
+const canComment = computed(() => canCommentOnModel(model));
 
 /** If the model we're commenting on is a post, this will return it. */
-const postModel = computed(() =>
-	model.value instanceof FiresidePostModel ? model.value : undefined
-);
+const postModel = computed(() => (model instanceof FiresidePostModel ? model : undefined));
 
 /** Whether or not only friends can comment */
 const onlyFriends = computed(

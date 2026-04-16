@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-
 import AppFadeCollapse from '../../../../_common/AppFadeCollapse.vue';
 import AppContentViewer from '../../../../_common/content/content-viewer/AppContentViewer.vue';
 import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
@@ -9,16 +7,11 @@ import { styleTextOverflow } from '../../../../_styles/mixins';
 import { ChatClient } from '../client';
 import { ChatMessageModel } from '../message';
 
-defineProps({
-	chat: {
-		type: Object as PropType<ChatClient>,
-		required: true,
-	},
-	message: {
-		type: Object as PropType<ChatMessageModel>,
-		required: true,
-	},
-});
+type Props = {
+	chat: ChatClient;
+	message: ChatMessageModel;
+};
+const { message } = defineProps<Props>();
 </script>
 
 <template>

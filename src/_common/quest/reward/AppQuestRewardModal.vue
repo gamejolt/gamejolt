@@ -1,5 +1,5 @@
 <script lang="ts">
-import { nextTick, onMounted, onUnmounted, PropType, Ref, ref, toRefs, useTemplateRef } from 'vue';
+import { nextTick, onMounted, onUnmounted, Ref, ref, useTemplateRef } from 'vue';
 
 import { sleep } from '../../../utils/utils';
 import { illBackpackClosed, illBackpackOpen } from '../../img/ill/illustrations';
@@ -63,22 +63,12 @@ const DurationThumbnail = 3_000;
 <script lang="ts" setup>
 const modal = useModal<boolean>()!;
 
-const props = defineProps({
-	quest: {
-		type: Object as PropType<QuestModel>,
-		required: true,
-	},
-	rewards: {
-		type: Array as PropType<QuestRewardData[]>,
-		required: true,
-	},
-	title: {
-		type: String,
-		default: undefined,
-	},
-});
-
-const { quest, rewards, title } = toRefs(props);
+type Props = {
+	quest: QuestModel;
+	rewards: QuestRewardData[];
+	title?: string;
+};
+const { quest, rewards, title } = defineProps<Props>();
 
 const kettleController = createPopcornKettleController();
 
@@ -97,7 +87,7 @@ async function afterMount() {
 	_isMounted = true;
 
 	await nextTick();
-	if (rewards.value.length > 0) {
+	if (rewards.length > 0) {
 		await startBackpackFlow();
 	} else {
 		await startAvatarFlow();
@@ -121,7 +111,7 @@ async function startBackpackFlow() {
 	const radians = Math.asin(opposite / hypo);
 	const angle = radians / (Math.PI / 180);
 
-	for (const { amount, img_url, icon, isCondensed } of rewards.value) {
+	for (const { amount, img_url, icon, isCondensed } of rewards) {
 		const kernelCount = isCondensed ? 1 : amount;
 
 		for (let i = 0; i < kernelCount; i++) {

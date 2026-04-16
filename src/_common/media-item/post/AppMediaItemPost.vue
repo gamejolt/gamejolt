@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, CSSProperties, PropType, ref, toRefs, toValue } from 'vue';
+import { computed, CSSProperties, ref, toValue } from 'vue';
 
 import AppButton from '../../button/AppButton.vue';
 import { useContentFocusService } from '../../content-focus/content-focus.service';
@@ -19,38 +19,23 @@ import { getVideoPlayerFromSources } from '../../video/player/controller';
 import AppMediaItemBackdrop from '../backdrop/AppMediaItemBackdrop.vue';
 import { MediaItemModel } from '../media-item-model';
 
-const props = defineProps({
-	mediaItem: {
-		type: Object as PropType<MediaItemModel>,
-		required: true,
-	},
-	isPostHydrated: {
-		type: Boolean,
-		default: true,
-	},
-	isActive: {
-		type: Boolean,
-	},
-	restrictDeviceMaxHeight: {
-		type: Boolean,
-	},
-	inline: {
-		type: Boolean,
-	},
-	canPlaceSticker: {
-		type: Boolean,
-	},
-});
+type Props = {
+	mediaItem: MediaItemModel;
+	isPostHydrated?: boolean;
+	isActive?: boolean;
+	restrictDeviceMaxHeight?: boolean;
+	inline?: boolean;
+	canPlaceSticker?: boolean;
+};
+const { mediaItem, isPostHydrated = true, isActive, restrictDeviceMaxHeight, inline, canPlaceSticker } = defineProps<Props>();
 
 const emit = defineEmits<{
 	bootstrap: [];
 	fullscreen: [mediaItem: MediaItemModel];
 }>();
 
-const { mediaItem, isActive, restrictDeviceMaxHeight, inline, canPlaceSticker } = toRefs(props);
-
 const parentStickerTarget = useStickerTargetController();
-const stickerTargetController = createStickerTargetController(mediaItem.value, {
+const stickerTargetController = createStickerTargetController(mediaItem, {
 	parent: () => toValue(parentStickerTarget),
 	canReceiveCharge: () => stickerTargetController.parent.value?.canReceiveCharge.value === true,
 });
@@ -59,27 +44,27 @@ const isFilled = ref(false);
 
 const shouldShowFullscreenOption = computed(
 	() =>
-		restrictDeviceMaxHeight.value &&
-		mediaItem.value.height >= 100 &&
-		mediaItem.value.width >= 100
+		restrictDeviceMaxHeight &&
+		mediaItem.height >= 100 &&
+		mediaItem.width >= 100
 );
 
-const stickersDisabled = computed(() => !isActive.value || !canPlaceSticker.value);
+const stickersDisabled = computed(() => !isActive || !canPlaceSticker);
 
 const shouldVideoPlay = computed(
-	() => isActive.value && useContentFocusService().hasContentFocus.value
+	() => isActive && useContentFocusService().hasContentFocus.value
 );
 
 const videoController = computed(() => {
 	const sources = {
-		mp4: mediaItem.value.mediaserver_url_mp4,
-		webm: mediaItem.value.mediaserver_url_webm,
+		mp4: mediaItem.mediaserver_url_mp4,
+		webm: mediaItem.mediaserver_url_webm,
 	};
-	return getVideoPlayerFromSources(sources, 'gif', mediaItem.value.mediaserver_url);
+	return getVideoPlayerFromSources(sources, 'gif', mediaItem.mediaserver_url);
 });
 
 const itemRadius = computed(() => {
-	if (inline.value) {
+	if (inline) {
 		return isFilled.value ? undefined : 'lg';
 	}
 
@@ -87,7 +72,7 @@ const itemRadius = computed(() => {
 });
 
 const deviceMaxHeight = computed(() => {
-	if (import.meta.env.SSR || !restrictDeviceMaxHeight.value) {
+	if (import.meta.env.SSR || !restrictDeviceMaxHeight) {
 		return undefined;
 	}
 
@@ -111,16 +96,16 @@ function onClickImage() {
 	// Inline means we are in a feed, and we use the fullscreen button to go fullscreen.
 	// Clicking on the image in feed does nothing.
 	// In the post view however, we don't show the button and instead a click anywhere on the image goes fullscreen.
-	if (!inline.value) {
-		emit('fullscreen', mediaItem.value);
+	if (!inline) {
+		emit('fullscreen', mediaItem);
 	}
 }
 
 const itemStyling = import.meta.env.SSR
 	? {}
 	: ({
-			maxWidth: mediaItem.value.width + 'px',
-			maxHeight: mediaItem.value.height + 'px',
+			maxWidth: mediaItem.width + 'px',
+			maxHeight: mediaItem.height + 'px',
 	  } as const satisfies CSSProperties);
 </script>
 

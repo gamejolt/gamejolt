@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRefs } from 'vue';
+import { computed, ref } from 'vue';
 
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppCommentDisabledCheck from '../../../../_common/comment/AppCommentDisabledCheck.vue';
@@ -23,29 +23,17 @@ import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import AppCommentWidget from '../widget/AppCommentWidget.vue';
 
-const props = defineProps({
-	commentId: {
-		type: Number,
-		required: true,
-	},
-	model: {
-		type: Object as PropType<Model & CommentableModel>,
-		required: true,
-	},
-	displayMode: {
-		type: String,
-		required: true,
-	},
-	autofocus: {
-		type: Boolean,
-	},
-});
+type Props = {
+	commentId: number;
+	model: Model & CommentableModel;
+	displayMode: string;
+	autofocus?: boolean;
+};
+const { commentId, model } = defineProps<Props>();
 
 const emit = defineEmits<{
 	add: [comment: CommentModel];
 }>();
-
-const { commentId, model, autofocus } = toRefs(props);
 
 const { user } = useCommonStore();
 const commentManager = useCommentStoreManager()!;
@@ -57,11 +45,11 @@ const isEditorFocused = ref(false);
 const parent = computed(() => {
 	const store = getCommentStore(
 		commentManager,
-		getCommentModelResourceName(model.value),
-		model.value.id
+		getCommentModelResourceName(model),
+		model.id
 	);
 	if (store) {
-		const comment = store.comments.find(c => c.id === commentId.value);
+		const comment = store.comments.find(c => c.id === commentId);
 		if (comment && comment.parent_id) {
 			const parent = store.comments.find(c => c.id === comment.parent_id);
 			return parent;

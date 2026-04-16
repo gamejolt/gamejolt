@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { CSSProperties, ref, toRefs, watch } from 'vue';
+import { CSSProperties, ref, watch } from 'vue';
 import { RouterLink } from 'vue-router';
 
 import { styleChangeBg } from '../../../../_styles/mixins';
@@ -9,23 +9,20 @@ import AppUserCreatorBadge from '../../../user/creator/AppUserCreatorBadge.vue';
 import { UserModel } from '../../../user/user.model';
 import { useContentOwnerController } from '../../content-owner';
 
-const props = defineProps({
-	username: {
-		type: String,
-		required: true,
-	},
-});
+type Props = {
+	username: string;
+};
+const { username } = defineProps<Props>();
 
-const { username } = toRefs(props);
 const { hydrator } = useContentOwnerController()!;
 
 const user = ref<UserModel | null>(null);
 
-watch(username, () => _hydrateUser(), { immediate: true });
+watch(() => username, () => _hydrateUser(), { immediate: true });
 
 function _hydrateUser() {
 	// Make sure we never execute a promise if we don't have to, it would break SSR.
-	hydrator.useData<any>('username', username.value, data => {
+	hydrator.useData<any>('username', username, data => {
 		if (data !== null) {
 			user.value = new UserModel(data);
 		}

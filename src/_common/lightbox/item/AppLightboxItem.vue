@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, nextTick, onMounted, PropType, ref, toRef, toRefs, useTemplateRef, watch } from 'vue';
+import { computed, nextTick, onMounted, ref, toRef, useTemplateRef, watch } from 'vue';
 
 import { isInstance } from '../../../utils/utils';
 import { GameScreenshotModel } from '../../game/screenshot/screenshot.model';
@@ -16,22 +16,12 @@ import AppVideoEmbed from '../../video/embed/AppVideoEmbed.vue';
 import { getVideoPlayerFromSources } from '../../video/player/controller';
 import { LightboxConfig, LightboxMediaModel } from '../lightbox-helpers';
 
-const props = defineProps({
-	item: {
-		type: Object as PropType<LightboxMediaModel>,
-		required: true,
-	},
-	itemIndex: {
-		type: Number,
-		required: true,
-	},
-	activeIndex: {
-		type: Number,
-		required: true,
-	},
-});
-
-const { item, itemIndex, activeIndex } = toRefs(props);
+type Props = {
+	item: LightboxMediaModel;
+	itemIndex: number;
+	activeIndex: number;
+};
+const { item, itemIndex, activeIndex } = defineProps<Props>();
 
 const isActive = ref(false);
 const isNext = ref(false);
@@ -51,7 +41,7 @@ const isGifWithoutVideo = toRef(
 		!mediaItem.value.mediaserver_url_webm
 );
 
-const mediaItem = toRef(() => item.value.getMediaItem()!);
+const mediaItem = toRef(() => item.getMediaItem()!);
 
 const videoController = computed(() => {
 	const sources = {
@@ -63,7 +53,7 @@ const videoController = computed(() => {
 
 useEventSubscription(onScreenResize, () => calcDimensions());
 
-watch(activeIndex, () => calcActive());
+watch(() => activeIndex, () => calcActive());
 
 onMounted(async () => {
 	await calcActive();
@@ -87,8 +77,8 @@ async function calcDimensions() {
 		maxHeight.value -= caption.value.offsetHeight;
 	}
 
-	if (item.value.getMediaType() === 'image') {
-		const dimensions = item.value
+	if (item.getMediaType() === 'image') {
+		const dimensions = item
 			.getMediaItem()!
 			.getDimensions(maxWidth.value, maxHeight.value);
 		maxWidth.value = dimensions.width;
@@ -101,9 +91,9 @@ async function calcActive() {
 		return;
 	}
 
-	isActive.value = activeIndex.value === itemIndex.value;
-	isNext.value = activeIndex.value + 1 === itemIndex.value;
-	isPrev.value = activeIndex.value - 1 === itemIndex.value;
+	isActive.value = activeIndex === itemIndex;
+	isNext.value = activeIndex + 1 === itemIndex;
+	isPrev.value = activeIndex - 1 === itemIndex;
 
 	rootElem.value.classList.remove('active', 'next', 'prev');
 

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { formatDistanceToNow } from 'date-fns';
-import { computed, onUnmounted, PropType, type Ref, ref, shallowReactive, toRefs } from 'vue';
+import { computed, onUnmounted, type Ref, ref, shallowReactive, toRef } from 'vue';
 
 import { ContextCapabilities } from '../../../../_common/content/content-context';
 import { DogtagModel, DogtagType } from '../../../../_common/dogtag/dogtag-model';
@@ -35,14 +35,10 @@ type FormModel = UserModel & {
 	pronoun_dogtags: number[];
 };
 
-const props = defineProps({
-	user: {
-		type: Object as PropType<UserModel>,
-		required: true,
-	},
-});
-
-const { user } = toRefs(props);
+type Props = {
+	user: UserModel;
+};
+const { user } = defineProps<Props>();
 
 const emit = defineEmits<{
 	submit: [model: UserModel];
@@ -80,7 +76,7 @@ const mentionsSettingOptions = computed(() => {
 const form: FormController<FormModel> = createForm<FormModel>({
 	modelClass: UserModel as any,
 	modelSaveHandler: $saveUser,
-	model: user as Ref<FormModel | undefined>,
+	model: toRef(() => user) as Ref<FormModel | undefined>,
 	loadUrl: '/web/dash/profile/save',
 	reloadOnSubmit: true,
 	onLoad(payload) {

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
+import { computed } from 'vue';
 
 import { vAppAuthRequired } from '../../../../_common/auth/auth-required-directive';
 import { CommunityChannelModel } from '../../../../_common/community/channel/channel.model';
@@ -16,54 +16,44 @@ import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue
 import AppUserAvatarBubble from '../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
 import { showPostEditModal } from '../edit-modal/edit-modal-service';
 
-const props = defineProps({
-	game: {
-		type: Object as PropType<GameModel>,
-		default: undefined,
-	},
-	community: {
-		type: Object as PropType<CommunityModel>,
-		default: undefined,
-	},
-	channel: {
-		type: Object as PropType<CommunityChannelModel>,
-		default: undefined,
-	},
-	realm: {
-		type: Object as PropType<RealmModel>,
-		default: undefined,
-	},
-	placeholder: {
-		type: String,
-		default: '',
-	},
-	previewOnly: {
-		type: Boolean,
-	},
-});
+type Props = {
+	game?: GameModel;
+	community?: CommunityModel;
+	channel?: CommunityChannelModel;
+	realm?: RealmModel;
+	placeholder?: string;
+	previewOnly?: boolean;
+};
+const {
+	game,
+	community,
+	channel,
+	realm,
+	placeholder = '',
+	previewOnly,
+} = defineProps<Props>();
 
 const emit = defineEmits<{
 	add: [post: FiresidePostModel];
 }>();
 
-const { placeholder, previewOnly, game, community, channel, realm } = toRefs(props);
 const { user } = useCommonStore();
 
 const placeholderMessage = computed(
-	() => placeholder.value || $gettext(`So, what's on your mind?`)
+	() => placeholder || $gettext(`So, what's on your mind?`)
 );
 
 async function open() {
-	if (previewOnly.value) {
+	if (previewOnly) {
 		return;
 	}
 
-	const postProvider = $createFiresidePost(game?.value ? game.value.id : 0);
+	const postProvider = $createFiresidePost(game ? game.id : 0);
 
 	const post = await showPostEditModal(postProvider, {
-		community: community?.value,
-		channel: channel?.value,
-		realm: realm?.value,
+		community,
+		channel,
+		realm,
 	});
 
 	if (!post) {

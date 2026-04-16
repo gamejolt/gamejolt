@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRef, toRefs } from 'vue';
+import { computed, ref, toRef } from 'vue';
 import { useRoute } from 'vue-router';
 
 import { vAppAuthRequired } from '../../../../../_common/auth/auth-required-directive';
@@ -22,38 +22,16 @@ import { TranslateDirective as vTranslate } from '../../../../../_common/transla
 import { numberSort } from '../../../../../utils/array';
 import FormCommunityCompetitionVotingCast from '../../../forms/community/competition/voting/cast/FormCommunityCompetitionVotingCast.vue';
 
-const props = defineProps({
-	competition: {
-		type: Object as PropType<CommunityCompetitionModel>,
-		required: true,
-	},
-	entry: {
-		type: Object as PropType<CommunityCompetitionEntryModel>,
-		required: true,
-	},
-	votingCategories: {
-		type: Array as PropType<CommunityCompetitionVotingCategoryModel[]>,
-		required: true,
-	},
-	userVotes: {
-		type: Array as PropType<CommunityCompetitionEntryVoteModel[]>,
-		required: true,
-	},
-	isParticipant: {
-		type: Boolean,
-		required: true,
-	},
-	isArchived: {
-		type: Boolean,
-		required: true,
-	},
-	isBlocked: {
-		type: Boolean,
-		required: true,
-	},
-});
-
-const { competition, entry, votingCategories } = toRefs(props);
+type Props = {
+	competition: CommunityCompetitionModel;
+	entry: CommunityCompetitionEntryModel;
+	votingCategories: CommunityCompetitionVotingCategoryModel[];
+	userVotes: CommunityCompetitionEntryVoteModel[];
+	isParticipant: boolean;
+	isArchived: boolean;
+	isBlocked: boolean;
+};
+const { competition, entry, votingCategories } = defineProps<Props>();
 
 const { user } = useCommonStore();
 const route = useRoute();
@@ -65,7 +43,7 @@ const loginUrl = computed(() => {
 
 	// Append the current entry modal hash to open it back up if there isn't one on the current url.
 	if (!route.hash) {
-		const entryHash = '#entry-' + entry.value.id;
+		const entryHash = '#entry-' + entry.id;
 		url += encodeURIComponent(entryHash);
 	}
 
@@ -74,23 +52,23 @@ const loginUrl = computed(() => {
 
 const shouldShow = computed(
 	() =>
-		competition.value.is_voting_enabled &&
-		competition.value.has_community_voting &&
-		competition.value.periodNum >= CompetitionPeriodVoting
+		competition.is_voting_enabled &&
+		competition.has_community_voting &&
+		competition.periodNum >= CompetitionPeriodVoting
 );
 
-const votingActive = toRef(() => competition.value.period === 'voting');
+const votingActive = toRef(() => competition.period === 'voting');
 
 const votingCategoryError = toRef(
-	() => competition.value.voting_type === 'categories' && votingCategories.value.length === 0
+	() => competition.voting_type === 'categories' && votingCategories.length === 0
 );
 
-const isOwner = toRef(() => entry.value.author.id === user.value?.id);
+const isOwner = toRef(() => entry.author.id === user.value?.id);
 
-const hasNoVotes = toRef(() => !entry.value.vote_results || entry.value.vote_results.length === 0);
+const hasNoVotes = toRef(() => !entry.vote_results || entry.vote_results.length === 0);
 
 const overallRank = computed(() => {
-	const overallResult = entry.value.vote_results.find(
+	const overallResult = entry.vote_results.find(
 		i => i.community_competition_voting_category_id === null
 	);
 	if (overallResult) {
@@ -102,21 +80,21 @@ const overallRank = computed(() => {
 
 const sortedVoteResults = computed(() => {
 	// Sort the vote results in the same manner as the categories are sorted.
-	const categoryResults = entry.value.vote_results
+	const categoryResults = entry.vote_results
 		.filter(i => i.community_competition_voting_category_id !== null)
 		.sort((a, b) =>
 			numberSort(
-				votingCategories.value.find(
+				votingCategories.find(
 					i => i.id === a.community_competition_voting_category_id
 				)!.sort,
-				votingCategories.value.find(
+				votingCategories.find(
 					i => i.id === b.community_competition_voting_category_id
 				)!.sort
 			)
 		);
 
 	// Put the "overall" result last.
-	const overallResult = entry.value.vote_results.find(
+	const overallResult = entry.vote_results.find(
 		i => i.community_competition_voting_category_id === null
 	)!;
 
@@ -132,7 +110,7 @@ function getVotingCategoryDisplayName(votingCategoryId: number | null) {
 		return $gettext(`Overall`);
 	}
 
-	const category = votingCategories.value.find(i => i.id === votingCategoryId);
+	const category = votingCategories.find(i => i.id === votingCategoryId);
 	if (category) {
 		return category.name;
 	}
@@ -141,7 +119,7 @@ function getVotingCategoryDisplayName(votingCategoryId: number | null) {
 }
 
 function getVotingCategoryDescription(votingCategoryId: number | null) {
-	const category = votingCategories.value.find(i => i.id === votingCategoryId);
+	const category = votingCategories.find(i => i.id === votingCategoryId);
 	if (category) {
 		return category.description;
 	}

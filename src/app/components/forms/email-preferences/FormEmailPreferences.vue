@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, PropType, type Ref, ref, toRefs } from 'vue';
+import { computed, type Ref, ref, toRef } from 'vue';
 
 import AppButton from '../../../../_common/button/AppButton.vue';
 import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
@@ -27,21 +27,19 @@ type FormModel = UserModel & {
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	user: {
-		type: Object as PropType<UserModel>,
-		required: true,
-	},
-});
+type Props = {
+	user: UserModel;
+};
+const { user } = defineProps<Props>();
 
-const { user } = toRefs(props);
+const userRef = toRef(() => user);
 
 const isTogglingEmails = ref(false);
 
 const form: FormController<FormModel> = createForm<FormModel>({
 	modelClass: UserModel as any,
 	modelSaveHandler: $saveUserEmailPreferences,
-	model: user as Ref<FormModel | undefined>,
+	model: userRef as Ref<FormModel | undefined>,
 	onInit() {
 		const notifications = [];
 		for (const i of notificationTypes.value) {
@@ -112,12 +110,12 @@ const notificationTypes = computed(() => {
 });
 
 const emailsDisabled = computed(() => {
-	return user.value.newsletter === false;
+	return user.newsletter === false;
 });
 
 async function toggleEmails(state: boolean) {
 	isTogglingEmails.value = true;
-	await $toggleUserEmails(user.value, state);
+	await $toggleUserEmails(user, state);
 	isTogglingEmails.value = false;
 }
 </script>

@@ -1,30 +1,17 @@
 <script lang="ts" setup>
 import { formatDistanceStrict, formatDistanceToNow } from 'date-fns';
-import { onUnmounted, ref, toRefs, watch } from 'vue';
+import { onUnmounted, ref, watch } from 'vue';
 
 import { formatDate } from '../filters/date';
 import { $gettext } from '../translate/translate.service';
 
-const props = defineProps({
-	date: {
-		type: [Number, Date],
-		required: true,
-	},
-	withoutSuffix: {
-		type: Boolean,
-		required: false,
-	},
-	strict: {
-		type: Boolean,
-		required: false,
-	},
-	isFuture: {
-		type: Boolean,
-		required: false,
-	},
-});
-
-const { date, withoutSuffix, strict, isFuture } = toRefs(props);
+type Props = {
+	date: number | Date;
+	withoutSuffix?: boolean;
+	strict?: boolean;
+	isFuture?: boolean;
+};
+const { date, withoutSuffix = false, strict = false, isFuture = false } = defineProps<Props>();
 
 let timeout: number | undefined;
 const timeAgo = ref('');
@@ -36,26 +23,26 @@ onUnmounted(() => {
 	_clearTimeout();
 });
 
-watch(date, () => {
+watch(() => date, () => {
 	_clearTimeout();
 	_refresh();
 });
 
 function _refresh() {
-	const time = strict.value
-		? formatDistanceStrict(new Date(), date.value)
-		: formatDistanceToNow(date.value);
+	const time = strict
+		? formatDistanceStrict(new Date(), date)
+		: formatDistanceToNow(date);
 
-	if (withoutSuffix.value) {
+	if (withoutSuffix) {
 		timeAgo.value = time;
-	} else if (isFuture.value) {
+	} else if (isFuture) {
 		timeAgo.value = $gettext('%{ time } left', { time });
 	} else {
 		timeAgo.value = $gettext('%{ time } ago', { time });
 	}
 
 	// In minutes.
-	const input = date.value instanceof Date ? date.value.getTime() : date.value;
+	const input = date instanceof Date ? date.getTime() : date;
 	const diff = (Date.now() - input) / 1000 / 60;
 
 	let secondsUntilUpdate = 3600;
@@ -67,7 +54,7 @@ function _refresh() {
 		secondsUntilUpdate = 300;
 	}
 
-	fixedTime.value = formatDate(date.value, 'medium');
+	fixedTime.value = formatDate(date, 'medium');
 
 	if (!import.meta.env.SSR) {
 		timeout = window.setTimeout(() => _refresh(), secondsUntilUpdate * 1000);

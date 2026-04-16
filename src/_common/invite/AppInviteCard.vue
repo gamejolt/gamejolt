@@ -1,20 +1,14 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-
 import AppShareControl from '../share/AppShareControl.vue';
 import AppSpacer from '../spacer/AppSpacer.vue';
 import AppTranslate from '../translate/AppTranslate.vue';
 import { UserModel } from '../user/user.model';
 
-defineProps({
-	user: {
-		type: Object as PropType<UserModel>,
-		required: true,
-	},
-	elevate: {
-		type: Boolean,
-	},
-});
+type Props = {
+	user: UserModel;
+	elevate?: boolean;
+};
+const { user, elevate } = defineProps<Props>();
 </script>
 
 <template>

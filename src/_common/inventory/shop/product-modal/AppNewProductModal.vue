@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType, ref, toRaw, toRefs } from 'vue';
+import { CSSProperties, ref, toRaw } from 'vue';
 
 import {
 	styleAbsoluteFill,
@@ -23,14 +23,11 @@ import { useCommonStore } from '../../../store/common-store';
 import AppUserAvatarBubble from '../../../user/user-avatar/AppUserAvatarBubble.vue';
 import { UserAvatarFrameModel } from '../../../user/user-avatar/frame/frame.model';
 
-const props = defineProps({
-	product: {
-		type: Object as PropType<UserAvatarFrameModel | BackgroundModel>,
-		required: true,
-	},
-});
-
-const { product } = toRefs(props);
+type ProductModel = UserAvatarFrameModel | BackgroundModel;
+type Props = {
+	product: ProductModel;
+};
+const { product } = defineProps<Props>();
 
 const { user: myUser } = useCommonStore();
 const modal = useModal()!;
@@ -38,14 +35,14 @@ const modal = useModal()!;
 const equipFrameState = ref<'done' | 'processing' | 'standby'>('standby');
 
 async function equipAvatarFrame() {
-	if (equipFrameState.value !== 'standby' || !isUserAvatarFrame(product.value)) {
+	if (equipFrameState.value !== 'standby' || !isUserAvatarFrame(product)) {
 		return;
 	}
 	equipFrameState.value = 'processing';
 	try {
 		const response = await Api.sendRequest(
 			`/web/dash/profile/save`,
-			{ avatar_frame: product.value.avatar_frame.id },
+			{ avatar_frame: product.avatar_frame.id },
 			{ detach: true }
 		);
 
@@ -65,11 +62,11 @@ async function equipAvatarFrame() {
 	}
 }
 
-function isUserAvatarFrame(item: typeof props.product): item is UserAvatarFrameModel {
+function isUserAvatarFrame(item: ProductModel): item is UserAvatarFrameModel {
 	return toRaw(item) instanceof UserAvatarFrameModel;
 }
 
-function isBackground(item: typeof props.product): item is BackgroundModel {
+function isBackground(item: ProductModel): item is BackgroundModel {
 	return toRaw(item) instanceof BackgroundModel;
 }
 

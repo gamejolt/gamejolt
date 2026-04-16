@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, toRefs, useTemplateRef, watch } from 'vue';
+import { ref, useTemplateRef, watch } from 'vue';
 
 import { useResizeObserver } from '../../../utils/resize-observer';
 import AppImgResponsive from '../../img/AppImgResponsive.vue';
@@ -8,21 +8,12 @@ import { Screen } from '../../screen/screen-service';
 import AppMediaItemBackdrop from '../backdrop/AppMediaItemBackdrop.vue';
 import { MediaItemModel } from '../media-item-model';
 
-const props = defineProps({
-	mediaItem: {
-		type: MediaItemModel,
-		required: true,
-	},
-	maxHeight: {
-		type: Number,
-		default: undefined,
-	},
-	blur: {
-		type: Boolean,
-	},
-});
-
-const { mediaItem, maxHeight, blur } = toRefs(props);
+type Props = {
+	mediaItem: MediaItemModel;
+	maxHeight?: number;
+	blur?: boolean;
+};
+const { mediaItem, maxHeight, blur } = defineProps<Props>();
 
 const emit = defineEmits<{
 	loaded: [];
@@ -38,12 +29,12 @@ if (import.meta.env.SSR) {
 }
 
 useResizeObserver({ target: el, callback: recalcHeight });
-watch([mediaItem, maxHeight], recalcHeight);
+watch([() => mediaItem, () => maxHeight], recalcHeight);
 
 function recalcHeight() {
-	if (mediaItem.value) {
+	if (mediaItem) {
 		if (el.value) {
-			const newDimensions = mediaItem.value.getDimensions(Ruler.width(el.value), undefined, {
+			const newDimensions = mediaItem.getDimensions(Ruler.width(el.value), undefined, {
 				force: true,
 			});
 
@@ -54,8 +45,8 @@ function recalcHeight() {
 				newDimensions.height *= 1.4;
 			}
 
-			if (maxHeight?.value && newDimensions.height > maxHeight.value) {
-				newDimensions.height = maxHeight.value;
+			if (maxHeight && newDimensions.height > maxHeight) {
+				newDimensions.height = maxHeight;
 			}
 
 			height.value = newDimensions.height + 'px';

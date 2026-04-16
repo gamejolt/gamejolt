@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, PropType, ref, toRef, toRefs, watch } from 'vue';
+import { computed, ref, toRef, watch } from 'vue';
 import { RouteLocationNormalized, RouterLink, useRoute, useRouter } from 'vue-router';
 
 import { Api } from '../../../../../_common/api/api.service';
@@ -145,14 +145,11 @@ function makeRequest(route: RouteLocationNormalized) {
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	categories: {
-		type: Array as PropType<CommunityCompetitionVotingCategoryModel[]>,
-		required: true,
-	},
-});
+type Props = {
+	categories: CommunityCompetitionVotingCategoryModel[];
+};
+const { categories } = defineProps<Props>();
 
-const { categories } = toRefs(props);
 const routeStore = useCommunityRouteStore()!;
 const route = useRoute();
 const router = useRouter();
@@ -166,7 +163,7 @@ const ignoreAwards = ref<boolean | null>(null);
 let hashWatchDeregister: CommunityCompetitionEntryModalHashDeregister | undefined;
 
 const competition = toRef(() => routeStore.competition!);
-const hasCategories = toRef(() => categories.value.length > 0);
+const hasCategories = toRef(() => categories.length > 0);
 const shouldShowAwardsFirstOption = toRef(
 	() => competition.value.are_results_calculated && competition.value.has_awards
 );
@@ -223,7 +220,7 @@ const categoryOptions = computed(() => {
 		} as any,
 	];
 
-	for (const category of categories.value) {
+	for (const category of categories) {
 		options.push({
 			text: category.name,
 			category: category.name,
@@ -233,7 +230,7 @@ const categoryOptions = computed(() => {
 	return options;
 });
 
-const selectedCategory = computed(() => categories.value.find(i => i.name === category.value));
+const selectedCategory = computed(() => categories.find(i => i.name === category.value));
 
 // Watch the entry count change.
 // It does when the user adds/removes one of their entries.

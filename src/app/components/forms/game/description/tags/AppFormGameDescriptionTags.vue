@@ -1,33 +1,23 @@
 <script lang="ts" setup>
-import { PropType, toRef, toRefs } from 'vue';
+import { toRef } from 'vue';
 
 import { ContentDocument } from '../../../../../../_common/content/content-document';
 import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
 import AppTagSuggestion from '../../../../../../_common/tag/suggestion/AppTagSuggestion.vue';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
 
-const props = defineProps({
-	tags: {
-		type: Array as PropType<string[]>,
-		required: true,
-	},
-	text: {
-		type: String,
-		required: true,
-	},
-	content: {
-		type: Object as PropType<ContentDocument>,
-		required: true,
-	},
-});
+type Props = {
+	tags: string[];
+	text: string;
+	content: ContentDocument;
+};
+const { tags, text, content } = defineProps<Props>();
 
 const emit = defineEmits<{
 	tag: [tag: string];
 }>();
 
-const { content } = toRefs(props);
-
-const documents = toRef(() => [content.value]);
+const documents = toRef(() => [content]);
 </script>
 
 <template>

@@ -7,7 +7,6 @@ import {
 	ref,
 	shallowRef,
 	toRef,
-	toRefs,
 	watch,
 	watchEffect,
 } from 'vue';
@@ -47,18 +46,14 @@ import AppChatWindowSend from './send/AppChatWindowSend.vue';
 
 type SidebarTab = 'settings' | 'members';
 
-const props = defineProps({
-	roomId: {
-		type: Number,
-		required: true,
-	},
-});
+type Props = {
+	roomId: number;
+};
+const { roomId } = defineProps<Props>();
 
 const emit = defineEmits<{
 	'focus-change': [focused: boolean];
 }>();
-
-const { roomId } = toRefs(props);
 const { closeChatPane } = useAppStore();
 const { chatUnsafe: chat } = useGridStore();
 
@@ -79,7 +74,7 @@ const headerAvatarStyles: CSSProperties = {
 
 // Set up the room with connection logic.
 let destroyed = false;
-const room = shallowRef(getModel(ChatRoomModel, roomId.value));
+const room = shallowRef(getModel(ChatRoomModel, roomId));
 const roomChannel = shallowRef<ChatRoomChannel>();
 
 const contentCapabilities = ref(ContextCapabilities.getPlaceholder());
@@ -87,13 +82,13 @@ const maxContentLength = ref(1_000);
 
 async function joinChannel() {
 	roomChannel.value = createChatRoomChannel(chat.value, {
-		roomId: roomId.value,
+		roomId: roomId,
 		instanced: false,
 	});
 
 	const payloads = await Promise.all([
 		roomChannel.value.joinPromise,
-		Api.sendRequest(`/web/chat/rooms/get-message-content-capabilities/${roomId.value}`),
+		Api.sendRequest(`/web/chat/rooms/get-message-content-capabilities/${roomId}`),
 	]);
 
 	// Short circuit if this component is gone by the time the connection was

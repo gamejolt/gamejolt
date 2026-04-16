@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onMounted, PropType, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 
 import { styleAbsoluteFill, styleChangeBg } from '../../../../_styles/mixins';
 import { sleep } from '../../../../utils/utils';
@@ -13,12 +13,10 @@ import { useCommonStore } from '../../../store/common-store';
 import AppUserAvatarBubble from '../../../user/user-avatar/AppUserAvatarBubble.vue';
 import { CreatorExperienceLevelModel } from '../level.model';
 
-defineProps({
-	level: {
-		type: Object as PropType<CreatorExperienceLevelModel>,
-		required: true,
-	},
-});
+type Props = {
+	level: CreatorExperienceLevelModel;
+};
+const { level } = defineProps<Props>();
 
 const { user: myUser } = useCommonStore();
 

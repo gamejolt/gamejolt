@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, onUnmounted, PropType, ref, toRefs } from 'vue';
+import { computed, onUnmounted, ref } from 'vue';
 
 import {
 	Analytics,
@@ -44,40 +44,26 @@ import AppPostControlsMore from './more/AppPostControlsMore.vue';
 import AppPostControlsSaveProgress from './save-progress/AppPostControlsSaveProgress.vue';
 import AppPostControlsUserFollow from './user-follow/AppPostControlsUserFollow.vue';
 
-const props = defineProps({
-	post: {
-		type: Object as PropType<FiresidePostModel>,
-		required: true,
-	},
-	feed: {
-		type: Object as PropType<ActivityFeedView>,
-		default: undefined,
-	},
-	item: {
-		type: Object as PropType<ActivityFeedItem>,
-		default: undefined,
-	},
-	location: {
-		type: String as PropType<PostControlsLocation>,
-		required: true,
-	},
-	shouldShowFollow: {
-		type: Boolean,
-	},
-	showComments: {
-		type: Boolean,
-	},
-	overlay: {
-		type: Boolean,
-	},
-	eventLabel: {
-		type: String,
-		default: '',
-	},
-});
-
-const { post, feed, item, location, shouldShowFollow, showComments, overlay, eventLabel } =
-	toRefs(props);
+type Props = {
+	post: FiresidePostModel;
+	feed?: ActivityFeedView;
+	item?: ActivityFeedItem;
+	location: PostControlsLocation;
+	shouldShowFollow?: boolean;
+	showComments?: boolean;
+	overlay?: boolean;
+	eventLabel?: string;
+};
+const {
+	post,
+	feed,
+	item,
+	location,
+	shouldShowFollow,
+	showComments,
+	overlay,
+	eventLabel = '',
+} = defineProps<Props>();
 
 const emit = defineEmits<{
 	postEdit: [];
@@ -105,20 +91,20 @@ const { canChargeSticker } = stickerStore;
 // the activity feed item state so that if they click away from the feed and
 // back to it, it can initialize with the previous state.
 const shouldShowFollowState = ref(
-	item?.value && feed?.value ? feed.value.isItemShowingFollow(item.value) : false
+	item && feed ? feed.isItemShowingFollow(item) : false
 );
 
 const commentStore = ref<CommentStoreModel | null>(
-	lockCommentStore(commentManager, 'Fireside_Post', post.value.id)
+	lockCommentStore(commentManager, 'Fireside_Post', post.id)
 );
-commentStoreCount(commentStore.value!, post.value.comment_count);
+commentStoreCount(commentStore.value!, post.comment_count);
 
 const isShowingFollow = computed(() => {
-	if (!shouldShowFollow.value || !shouldShowFollowState.value || !post.value) {
+	if (!shouldShowFollow || !shouldShowFollowState.value || !post) {
 		return false;
 	}
 
-	if ((user.value && user.value.id === post.value.user.id) || post.value.user.is_following) {
+	if ((user.value && user.value.id === post.user.id) || post.user.is_following) {
 		return false;
 	}
 
@@ -129,29 +115,29 @@ const commentsCount = computed(() => (commentStore.value ? commentStore.value.to
 
 const canPublish = computed(
 	() =>
-		post.value.isDraft &&
-		!post.value.isScheduled &&
-		post.value.hasLead &&
-		post.value.canPublishToCommunities()
+		post.isDraft &&
+		!post.isScheduled &&
+		post.hasLead &&
+		post.canPublishToCommunities()
 );
 
-const showUserControls = computed(() => post.value.isActive && !post.value.is_processing);
+const showUserControls = computed(() => post.isActive && !post.is_processing);
 
 const hasPerms = computed(() => {
 	if (!user.value) {
 		return false;
 	}
-	return post.value.isEditableByUser(user.value);
+	return post.isEditableByUser(user.value);
 });
 
 const shouldShowEdit = computed(() => hasPerms.value);
 const shouldShowExtra = computed(() => user.value instanceof UserModel);
-const shouldShowCommentsButton = computed(() => showComments.value);
-const shouldShowStickersButton = computed(() => post.value.canPlaceSticker && !!stickerLayer);
-const shouldShowLike = computed(() => post.value.canLike);
+const shouldShowCommentsButton = computed(() => showComments);
+const shouldShowStickersButton = computed(() => post.canPlaceSticker && !!stickerLayer);
+const shouldShowLike = computed(() => post.canLike);
 
 const commentsButtonTooltip = computed(() =>
-	post.value.canViewComments ? $gettext(`View comments`) : $gettext(`Comments are disabled`)
+	post.canViewComments ? $gettext(`View comments`) : $gettext(`Comments are disabled`)
 );
 
 onUnmounted(() => {
@@ -162,24 +148,24 @@ onUnmounted(() => {
 });
 
 function openComments() {
-	Analytics.trackEvent('post-controls', 'comments', eventLabel.value);
+	Analytics.trackEvent('post-controls', 'comments', eventLabel);
 
 	showCommentModal({
-		model: post.value,
+		model: post,
 		displayMode: 'comments',
 	});
 }
 
 async function openEdit() {
-	Analytics.trackEvent('post-controls', 'edit', eventLabel.value);
-	if (await showPostEditModal(post.value)) {
+	Analytics.trackEvent('post-controls', 'edit', eventLabel);
+	if (await showPostEditModal(post)) {
 		emit('postEdit');
 	}
 }
 
 async function publish() {
 	trackPostPublish();
-	await $publishFiresidePost(post.value);
+	await $publishFiresidePost(post);
 	emit('postPublish');
 }
 
@@ -188,16 +174,16 @@ async function placeSticker() {
 		return;
 	}
 
-	Analytics.trackEvent('post-controls', 'sticker-place', eventLabel.value);
+	Analytics.trackEvent('post-controls', 'sticker-place', eventLabel);
 	openStickerDrawer(stickerStore, stickerLayer);
 	emit('sticker');
 }
 
 function setUserFollow(showing: boolean) {
-	if (showing && post.value) {
+	if (showing && post) {
 		// Do nothing if a post is liked and we recently suggested
 		// to follow that user - so we don't spam them.
-		if (!UserFollowSuggestion.canSuggest(post.value.user.id)) {
+		if (!UserFollowSuggestion.canSuggest(post.user.id)) {
 			return;
 		}
 
@@ -205,14 +191,14 @@ function setUserFollow(showing: boolean) {
 		// and stop suggesting to follow the user for 'X' amount
 		// of time - specified in UserFollowSuggestion.
 		Analytics.trackEvent('user-follow', 'show', 'fireside-post-like-widget');
-		UserFollowSuggestion.doNotSuggest(post.value.user.id);
+		UserFollowSuggestion.doNotSuggest(post.user.id);
 	}
 
 	shouldShowFollowState.value = showing;
 
 	// If we're part of the activity feed, synchronize it with that state as well.
-	if (item?.value && feed?.value) {
-		feed.value.setItemShowingFollow(item.value, showing);
+	if (item && feed) {
+		feed.setItemShowingFollow(item, showing);
 	}
 }
 

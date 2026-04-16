@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, CSSProperties, PropType, ref, toRefs } from 'vue';
+import { computed, CSSProperties, ref } from 'vue';
 
 import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
 import { $viewPostVideo } from '../../../../../_common/fireside/post/video/video-model';
@@ -14,18 +14,11 @@ import { kPostItemPaddingVertical, kPostItemPaddingXsVertical } from '../../../p
 import AppActivityFeedVideoPlayer from '../_video-player/AppActivityFeedVideoPlayer.vue';
 import { ActivityFeedItem } from '../item-service';
 
-const props = defineProps({
-	item: {
-		type: Object as PropType<ActivityFeedItem>,
-		required: true,
-	},
-	post: {
-		type: Object as PropType<FiresidePostModel>,
-		required: true,
-	},
-});
-
-const { post } = toRefs(props);
+type Props = {
+	item: ActivityFeedItem;
+	post: FiresidePostModel;
+};
+const { post } = defineProps<Props>();
 
 const emit = defineEmits<{
 	'query-param': [params: Record<string, string>];
@@ -34,7 +27,7 @@ const emit = defineEmits<{
 const hasVideoProcessingError = ref(false);
 const videoProcessingErrorMsg = ref('');
 
-const video = computed(() => post.value.videos[0]);
+const video = computed(() => post.videos[0]);
 
 function onTimeChange(time: number) {
 	emit('query-param', { t: `${time}` });

@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, nextTick, onMounted, PropType, ref, toRefs, useSlots, useTemplateRef, watch } from 'vue';
+import { computed, nextTick, onMounted, ref, useSlots, useTemplateRef, watch } from 'vue';
 
 import AppFadeCollapse from '../../../AppFadeCollapse.vue';
 import AppBackground from '../../../background/AppBackground.vue';
@@ -26,52 +26,33 @@ const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height}px` });
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	post: {
-		type: Object as PropType<FiresidePostModel>,
-		required: true,
-	},
+type Props = {
+	post: FiresidePostModel;
 	/**
 	 * Required to allow videos to be played. Uses just the video poster if this
 	 * isn't provided.
 	 */
-	videoContext: {
-		type: String as PropType<VideoPlayerControllerContext>,
-		default: undefined,
-	},
-	noElevateHover: {
-		type: Boolean,
-	},
-	noHover: {
-		type: Boolean,
-	},
-	aspectRatio: {
-		type: Number,
-		default: undefined,
-	},
+	videoContext?: VideoPlayerControllerContext;
+	noElevateHover?: boolean;
+	noHover?: boolean;
+	aspectRatio?: number;
 	/**
 	 * Allows slot content to be build in the #overlay slot. Adds a low
 	 * mid-opacity darkening overlay above the card content as well.
 	 */
-	hasOverlayContent: {
-		type: Boolean,
-	},
+	hasOverlayContent?: boolean;
 	/**
 	 * Blurs the media item content.
 	 */
-	blur: {
-		type: Boolean,
-	},
+	blur?: boolean;
 	/**
 	 * Adds a soft gradient overlay on top top 1/3rd of the post card in
 	 * addition to the default bottom 1/3rd.
 	 */
-	fullGradient: {
-		type: Boolean,
-	},
-});
+	fullGradient?: boolean;
+};
 
-const { post, videoContext, aspectRatio } = toRefs(props);
+const { post, videoContext, noElevateHover, noHover, aspectRatio, hasOverlayContent, blur, fullGradient } = defineProps<Props>();
 const { hasContentFocus } = useContentFocusService();
 useSlots();
 
@@ -94,7 +75,7 @@ const leadHeight = ref(0);
 const isBootstrapped = ref(import.meta.env.SSR);
 const isHydrated = ref(import.meta.env.SSR);
 
-const postCardRatio = computed(() => aspectRatio?.value ?? AppPostCardAspectRatio);
+const postCardRatio = computed(() => aspectRatio ?? AppPostCardAspectRatio);
 
 const shouldPlayVideo = computed(
 	() => Screen.isDesktop && !import.meta.env.SSR && isHydrated.value && hasContentFocus.value
@@ -106,23 +87,23 @@ watch(shouldPlayVideo, _initVideoController);
 watch(postCardRatio, calcData);
 
 const mediaItem = computed(() => {
-	if (post.value?.hasMedia) {
-		return post.value.media[0];
-	} else if (post.value?.hasVideo) {
-		return post.value.videos[0].posterMediaItem;
+	if (post?.hasMedia) {
+		return post.media[0];
+	} else if (post?.hasVideo) {
+		return post.videos[0].posterMediaItem;
 	}
 	return undefined;
 });
 
 const video = computed(() => {
-	if (!post.value?.hasVideo) {
+	if (!post?.hasVideo) {
 		return undefined;
 	}
 
-	return post.value?.videos[0].media.find(i => i.type === MediaItemType.TranscodedVideoCard);
+	return post?.videos[0].media.find(i => i.type === MediaItemType.TranscodedVideoCard);
 });
 
-const background = computed(() => post.value.background);
+const background = computed(() => post.background);
 const overlay = computed(() => !!background.value || !!mediaItem.value);
 
 async function calcData() {
@@ -209,14 +190,14 @@ function outView() {
 }
 
 function _initVideoController() {
-	if (!videoContext?.value || videoController.value) {
+	if (!videoContext || videoController.value) {
 		return;
 	}
 
-	if (post.value?.hasVideo && post.value.videos[0].postCardVideo) {
+	if (post?.hasVideo && post.videos[0].postCardVideo) {
 		videoController.value = createVideoPlayerController(
-			post.value.videos[0].postCardVideo,
-			videoContext.value
+			post.videos[0].postCardVideo,
+			videoContext
 		);
 
 		videoController.value.volume = 0;

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, toRef, toRefs } from 'vue';
+import { computed, toRef } from 'vue';
 
 import AppButton from '../../../../../../../../_common/button/AppButton.vue';
 import AppCardListItem from '../../../../../../../../_common/card/list/AppCardListItem.vue';
@@ -10,14 +10,10 @@ import { $gettext } from '../../../../../../../../_common/translate/translate.se
 import { showCommunityRemoveChannelModal } from '../../../../../../../components/community/remove-channel/modal/modal.service';
 import { useCommunityRouteStore } from '../../../../view.store';
 
-const props = defineProps({
-	channel: {
-		type: Object as PropType<CommunityChannelModel>,
-		required: true,
-	},
-});
-
-const { channel } = toRefs(props);
+type Props = {
+	channel: CommunityChannelModel;
+};
+const { channel } = defineProps<Props>();
 
 const routeStore = useCommunityRouteStore()!;
 const community = toRef(() => routeStore.community);
@@ -29,12 +25,12 @@ const canRemoveChannel = computed(() => {
 	}
 
 	// Draft channels can always be removed because they don't count towards the active channels.
-	if (channel.value.visibility === 'draft') {
+	if (channel.visibility === 'draft') {
 		return true;
 	}
 
 	// Same as Draft channels, archived channels don't count towards active channels.
-	if (channel.value.is_archived) {
+	if (channel.is_archived) {
 		return true;
 	}
 
@@ -44,7 +40,7 @@ const canRemoveChannel = computed(() => {
 const canEditChannel = computed(() => {
 	// When it's a competition channel, mods with competition perms can edit.
 	if (
-		channel.value.type === 'competition' &&
+		channel.type === 'competition' &&
 		community.value.hasPerms('community-competitions')
 	) {
 		return true;

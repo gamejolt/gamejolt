@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRefs } from 'vue';
+import { computed, ref } from 'vue';
 
 import { Api } from '../../../../../../_common/api/api.service';
 import AppButton from '../../../../../../_common/button/AppButton.vue';
@@ -46,14 +46,10 @@ type FormModel = {
 	input: string;
 };
 
-const props = defineProps({
-	sale: {
-		type: Object as PropType<InventoryShopProductSaleModel>,
-		required: true,
-	},
-});
-
-const { sale } = toRefs(props);
+type Props = {
+	sale: InventoryShopProductSaleModel;
+};
+const { sale } = defineProps<Props>();
 
 const modal = useModal()!;
 
@@ -85,7 +81,7 @@ const showSearchHint = computed(() => {
 	return giftableUsers.value.length >= limit;
 });
 
-const loadUrl = computed(() => `/mobile/shop-sale/${sale.value.id}`);
+const loadUrl = computed(() => `/mobile/shop-sale/${sale.id}`);
 
 async function fetchUsers() {
 	debounceSearch.cancel();

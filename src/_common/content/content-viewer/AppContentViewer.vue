@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, provide, ref, toRefs, watch } from 'vue';
+import { computed, provide, ref, watch } from 'vue';
 
 import { ContextCapabilities } from '../content-context';
 import { ContentDocument } from '../content-document';
@@ -12,27 +12,15 @@ import {
 import { ContentRules } from '../content-rules';
 import AppContentViewerBaseComponent from './components/AppContentViewerBaseComponent.vue';
 
-const props = defineProps({
-	source: {
-		type: String,
-		required: true,
-	},
-	disableLightbox: {
-		type: Boolean,
-	},
-	displayRules: {
-		type: Object as PropType<ContentRules>,
-		default: undefined,
-	},
-	parentBounds: {
-		type: Object as PropType<ContentOwnerParentBounds>,
-		default: undefined,
-	},
-});
+type Props = {
+	source: string;
+	disableLightbox?: boolean;
+	displayRules?: ContentRules;
+	parentBounds?: ContentOwnerParentBounds;
+};
+const { source, disableLightbox, displayRules, parentBounds } = defineProps<Props>();
 
-const { source, disableLightbox, displayRules, parentBounds } = toRefs(props);
-
-const doc = ref(source.value ? ContentDocument.fromJson(source.value) : null);
+const doc = ref(source ? ContentDocument.fromJson(source) : null);
 
 const viewerStyleClass = computed(() => {
 	if (!doc.value) {
@@ -44,26 +32,26 @@ const viewerStyleClass = computed(() => {
 const content = computed(() => (doc.value ? ([...doc.value.content] as any[]) : []));
 const context = computed(() => doc.value!.context);
 const capabilities = computed(() => ContextCapabilities.getPlaceholder());
-const contentRules = computed(() => displayRules?.value);
-const maybeParentBounds = computed(() => parentBounds?.value);
+const contentRules = computed(() => displayRules);
+const maybeParentBounds = computed(() => parentBounds);
 
 const controller = ref(
 	createContentOwnerController({
 		context: context.value,
 		capabilities: capabilities.value,
 		contentRules: contentRules.value,
-		disableLightbox: disableLightbox.value,
+		disableLightbox: disableLightbox,
 		parentBounds: maybeParentBounds.value,
 	})
 );
 
 provide(ContentOwnerControllerKey, controller.value);
 
-watch(source, updatedSource, { immediate: true });
+watch(() => source, updatedSource, { immediate: true });
 
 function updatedSource() {
-	if (source.value) {
-		const sourceDoc = ContentDocument.fromJson(source.value);
+	if (source) {
+		const sourceDoc = ContentDocument.fromJson(source);
 		setContent(sourceDoc);
 	} else {
 		doc.value = null;

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, toRefs } from 'vue';
+import { computed, toRef } from 'vue';
 
 import { arrayRemove } from '../../../../utils/array';
 import AppButton from '../../../button/AppButton.vue';
@@ -7,26 +7,23 @@ import { useForm } from '../../AppForm.vue';
 import {
 	createFormControl,
 	FormControlEmits,
-	defineFormControlProps,
 } from '../../AppFormControl.vue';
 import { useFormGroup } from '../../AppFormGroup.vue';
+import { FormValidator } from '../../validators';
 import { useFormControlToggleButtonGroup } from './AppFormControlToggleButtonGroup.vue';
 
-const props = defineProps({
-	...defineFormControlProps(),
+type Props = {
+	disabled?: boolean;
+	validators?: FormValidator[];
 	/**
 	 * Should be set to define what value the toggled button will set on the
 	 * form group.
 	 */
-	value: {
-		type: null,
-		required: true,
-	},
-});
+	value: any;
+};
+const { disabled, validators = [], value } = defineProps<Props>();
 
 const emit = defineEmits<FormControlEmits>();
-
-const { disabled, validators, value } = toRefs(props);
 
 const form = useForm()!;
 const { name } = useFormGroup()!;
@@ -34,7 +31,7 @@ const { multi, direction } = useFormControlToggleButtonGroup()!;
 
 const { applyValue } = createFormControl<any>({
 	initialValue: multi ? [] : null,
-	validators,
+	validators: toRef(() => validators),
 	onChange: val => emit('changed', val),
 	multi,
 });
@@ -51,14 +48,14 @@ const currentSelection = computed(() => {
 	}
 });
 
-const isSelected = computed(() => currentSelection.value.includes(value.value));
+const isSelected = computed(() => currentSelection.value.includes(value));
 
 function toggle() {
-	if (disabled.value) {
+	if (disabled) {
 		return;
 	}
 
-	const newValue = value.value;
+	const newValue = value;
 
 	// Single value toggles.
 	if (!multi) {

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, CSSProperties, PropType, ref, toRefs, watch } from 'vue';
+import { computed, CSSProperties, ref, watch } from 'vue';
 
 import { styleWhen } from '../../_styles/mixins';
 import { ImgHelper } from '../img/helper/helper-service';
@@ -8,57 +8,33 @@ import AppBackgroundFade from './AppBackgroundFade.vue';
 import AppBackgroundImg from './AppBackgroundImg.vue';
 import { BackgroundModel } from './background.model';
 
-const props = defineProps({
-	background: {
-		type: Object as PropType<BackgroundModel>,
-		default: undefined,
-	},
-	darken: {
-		type: Boolean,
-	},
-	bleed: {
-		type: Boolean,
-	},
-	backdropStyle: {
-		type: Object as PropType<CSSProperties>,
-		default: undefined,
-	},
-	backgroundStyle: {
-		type: Object as PropType<CSSProperties>,
-		default: undefined,
-	},
-	fadeOpacity: {
-		type: Number,
-		default: undefined,
-	},
+type Props = {
+	background?: BackgroundModel;
+	darken?: boolean;
+	bleed?: boolean;
+	backdropStyle?: CSSProperties;
+	backgroundStyle?: CSSProperties;
+	fadeOpacity?: number;
 	/**
 	 * Will scroll the background infinitely in the chosen direction.
 	 */
-	scrollDirection: {
-		type: String as PropType<'left' | 'up' | 'right' | 'down'>,
-		default: undefined,
-	},
+	scrollDirection?: 'left' | 'up' | 'right' | 'down';
 	/**
 	 * Removes the top/bottom gradients when {@link darken} is true.
 	 */
-	noEdges: {
-		type: Boolean,
-	},
-	enablePageScroll: {
-		type: Boolean,
-	},
-});
-
-const { background, bleed, backdropStyle, backgroundStyle, scrollDirection } = toRefs(props);
+	noEdges?: boolean;
+	enablePageScroll?: boolean;
+};
+const { background, darken, bleed, backdropStyle, backgroundStyle, fadeOpacity, scrollDirection, noEdges, enablePageScroll } = defineProps<Props>();
 
 const isLoaded = ref(false);
 const loadedBackground = ref<BackgroundModel>();
 
-const mediaItem = computed(() => background?.value?.media_item);
+const mediaItem = computed(() => background?.media_item);
 const hasMedia = computed(() => !!mediaItem.value);
 
 if (import.meta.env.SSR) {
-	loadedBackground.value = background?.value;
+	loadedBackground.value = background;
 } else {
 	watch(
 		() => mediaItem.value?.mediaserver_url,
@@ -67,7 +43,7 @@ if (import.meta.env.SSR) {
 				loadedBackground.value = undefined;
 				return;
 			}
-			const loadingBackground = background?.value;
+			const loadingBackground = background;
 			isLoaded.value = false;
 			await ImgHelper.loaded(imgUrl);
 			isLoaded.value = true;

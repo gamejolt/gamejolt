@@ -1,20 +1,16 @@
 <script lang="ts">
-import { computed, PropType, toRefs } from 'vue';
+import { computed } from 'vue';
 
 import { DogtagData } from '../dogtag/dogtag-data';
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	tag: {
-		type: Object as PropType<DogtagData>,
-		required: true,
-	},
-});
+type Props = {
+	tag: DogtagData;
+};
+const { tag } = defineProps<Props>();
 
-const { tag } = toRefs(props);
-
-const text = computed(() => tag.value.text);
+const text = computed(() => tag.text);
 
 const classes = computed(() => {
 	if (text.value.toLowerCase() === 'guy') {

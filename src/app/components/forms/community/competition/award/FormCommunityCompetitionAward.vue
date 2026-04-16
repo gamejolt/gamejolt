@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
+import { computed, toRef } from 'vue';
 
 import {
 	$saveCommunityCompetitionAward,
@@ -8,7 +8,6 @@ import {
 import { CommunityCompetitionModel } from '../../../../../../_common/community/competition/competition.model';
 import AppForm, {
 	createForm,
-	defineFormProps,
 	FormController,
 } from '../../../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../../../_common/form-vue/AppFormButton.vue';
@@ -23,24 +22,22 @@ import {
 
 type FormModel = CommunityCompetitionAwardModel;
 
-const props = defineProps({
-	competition: {
-		type: Object as PropType<CommunityCompetitionModel>,
-		required: true,
-	},
-	...defineFormProps<FormModel>(),
-});
+type Props = {
+	competition: CommunityCompetitionModel;
+	model?: FormModel;
+};
+const { competition, model } = defineProps<Props>();
 
 const emit = defineEmits<{
 	submit: [model: CommunityCompetitionAwardModel];
 }>();
 
-const { competition, model } = toRefs(props);
+const modelRef = toRef(() => model);
 
 const nameAvailabilityUrl = computed(() => {
 	let endpoint =
 		'/web/dash/communities/competitions/awards/check-field-availability/' +
-		competition.value.id;
+		competition.id;
 
 	if (form.formModel?.id) {
 		endpoint += '/' + form.formModel.id;
@@ -50,13 +47,13 @@ const nameAvailabilityUrl = computed(() => {
 });
 
 const form: FormController<FormModel> = createForm<FormModel>({
-	model,
+	model: modelRef,
 	modelClass: CommunityCompetitionAwardModel,
 	modelSaveHandler: $saveCommunityCompetitionAward,
 	onBeforeSubmit() {
 		// When creating a new award, this field isn't set yet.
 		if (!form.formModel.community_competition_id) {
-			form.formModel.community_competition_id = competition.value.id;
+			form.formModel.community_competition_id = competition.id;
 		}
 	},
 	onSubmitSuccess() {

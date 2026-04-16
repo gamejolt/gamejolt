@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
 import { RouterLink } from 'vue-router';
 
 import { formatDate } from '../filters/date';
@@ -10,42 +9,19 @@ import AppUserCardHover from '../user/card/AppUserCardHover.vue';
 import { UserModel } from '../user/user.model';
 import AppUserAvatarBubble from '../user/user-avatar/AppUserAvatarBubble.vue';
 
-defineProps({
-	user: {
-		type: [Object, null] as PropType<UserModel | null>,
-		required: true,
-	},
-	repliedTo: {
-		type: Object as PropType<UserModel>,
-		default: undefined,
-	},
-	date: {
-		type: Number,
-		required: true,
-	},
-	id: {
-		type: String,
-		default: undefined,
-	},
-	isActive: {
-		type: Boolean,
-	},
-	isNew: {
-		type: Boolean,
-	},
-	isReply: {
-		type: Boolean,
-	},
-	isLast: {
-		type: Boolean,
-	},
-	isShowingReplies: {
-		type: Boolean,
-	},
-	isBlocked: {
-		type: Boolean,
-	},
-});
+type Props = {
+	user: UserModel | null;
+	repliedTo?: UserModel;
+	date: number;
+	id?: string;
+	isActive?: boolean;
+	isNew?: boolean;
+	isReply?: boolean;
+	isLast?: boolean;
+	isShowingReplies?: boolean;
+	isBlocked?: boolean;
+};
+defineProps<Props>();
 </script>
 
 <template>

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { PropType, toRef, toRefs } from 'vue';
+import { toRef } from 'vue';
 
 import AppAdTakeoverFloat from '../../../../_common/ad/AppAdTakeoverFloat.vue';
 import AppButton from '../../../../_common/button/AppButton.vue';
@@ -14,17 +14,11 @@ import { useProfileRouteStore } from '../RouteProfile.vue';
 import AppProfileShortcutExtras from './shortcut/AppProfileShortcutExtras.vue';
 import { ProfileQuickLink } from './shortcut/AppProfileShortcuts.vue';
 
-const props = defineProps({
-	collapse: {
-		type: Boolean,
-	},
-	quickLinks: {
-		type: Array as PropType<ProfileQuickLink[]>,
-		default: undefined,
-	},
-});
-
-const { quickLinks } = toRefs(props);
+type Props = {
+	collapse?: boolean;
+	quickLinks?: ProfileQuickLink[];
+};
+const { collapse = false, quickLinks } = defineProps<Props>();
 
 const routeStore = useProfileRouteStore()!;
 const { user: routeUser, myUser, isMe, sendFriendRequest, userFriendship, isFriend } = routeStore;
@@ -66,7 +60,7 @@ function openMessaging() {
 }
 
 function showAboutModal() {
-	showProfileAboutModal({ routeStore, quickLinks: quickLinks?.value || [] });
+	showProfileAboutModal({ routeStore, quickLinks: quickLinks || [] });
 }
 </script>
 

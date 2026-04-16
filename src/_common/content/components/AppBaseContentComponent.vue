@@ -1,17 +1,12 @@
 <script lang="ts" setup>
 import AppButton from '../../button/AppButton.vue';
 
-const props = defineProps({
-	isEditing: {
-		type: Boolean,
-	},
-	showEdit: {
-		type: Boolean,
-	},
-	isDisabled: {
-		type: Boolean,
-	},
-});
+type Props = {
+	isEditing?: boolean;
+	showEdit?: boolean;
+	isDisabled?: boolean;
+};
+const { isDisabled } = defineProps<Props>();
 
 const emit = defineEmits<{
 	removed: [];
@@ -19,13 +14,13 @@ const emit = defineEmits<{
 }>();
 
 function onRemovedClicked() {
-	if (!props.isDisabled) {
+	if (!isDisabled) {
 		emit('removed');
 	}
 }
 
 function onEditClicked() {
-	if (!props.isDisabled) {
+	if (!isDisabled) {
 		emit('edit');
 	}
 }

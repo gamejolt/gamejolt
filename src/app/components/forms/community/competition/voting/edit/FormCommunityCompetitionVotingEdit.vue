@@ -33,12 +33,10 @@ type RadioOption<T> = {
 	helpText?: string;
 };
 
-const props = defineProps({
-	model: {
-		type: Object as () => CommunityCompetitionModel,
-		default: undefined,
-	},
-});
+type Props = {
+	model?: CommunityCompetitionModel;
+};
+const { model } = defineProps<Props>();
 
 const emit = defineEmits<{
 	cancel: [];
@@ -47,7 +45,7 @@ const emit = defineEmits<{
 
 const timezoneService = ref<FormTimezoneService<CommunityCompetitionModel> | null>(null);
 
-const isInitial = computed(() => !props.model?.isVotingSetUp);
+const isInitial = computed(() => !model?.isVotingSetUp);
 
 const votingUserRestrictionOptions = computed<RadioOption<VotingUserRestriction>[]>(() => [
 	{
@@ -86,12 +84,12 @@ const isValid = computed(() => {
 	return isVotingValid.value;
 });
 
-const canEditDetails = computed(() => props.model!.periodNum < CompetitionPeriodVoting);
+const canEditDetails = computed(() => model!.periodNum < CompetitionPeriodVoting);
 
 const form: FormController<FormModel> = createForm<FormModel>({
 	modelClass: CommunityCompetitionModel,
 	modelSaveHandler: $saveCommunityCompetitionVoting,
-	model: toRef(props, 'model'),
+	model: toRef(() => model),
 	async onInit() {
 		if (isInitial.value) {
 			// End date plus 1 day.

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRefs } from 'vue';
+import { computed, ref } from 'vue';
 
 import { RealmFollowSource } from '../analytics/analytics.service';
 import { vAppAuthRequired } from '../auth/auth-required-directive';
@@ -8,35 +8,20 @@ import { useCommonStore } from '../store/common-store';
 import AppTranslate from '../translate/AppTranslate.vue';
 import { $toggleRealmFollow, RealmModel } from './realm-model';
 
-const props = defineProps({
-	realm: {
-		type: Object as PropType<RealmModel>,
-		required: true,
-	},
-	source: {
-		type: String as PropType<RealmFollowSource>,
-		required: true,
-	},
-	block: {
-		type: Boolean,
-	},
-	overlay: {
-		type: Boolean,
-	},
-	forceHover: {
-		type: Boolean,
-	},
-	disabled: {
-		type: Boolean,
-	},
-});
-
-const { realm, source, disabled } = toRefs(props);
+type Props = {
+	realm: RealmModel;
+	source: RealmFollowSource;
+	block?: boolean;
+	overlay?: boolean;
+	forceHover?: boolean;
+	disabled?: boolean;
+};
+const { realm, source, disabled } = defineProps<Props>();
 const { user } = useCommonStore();
 
 const isProcessing = ref(false);
 
-const isDisabled = computed(() => disabled.value || isProcessing.value);
+const isDisabled = computed(() => disabled || isProcessing.value);
 
 async function onClick() {
 	if (!user.value || isDisabled.value) {
@@ -44,7 +29,7 @@ async function onClick() {
 	}
 
 	isProcessing.value = true;
-	await $toggleRealmFollow(realm.value, source.value);
+	await $toggleRealmFollow(realm, source);
 	isProcessing.value = false;
 }
 </script>

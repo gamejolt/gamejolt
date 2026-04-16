@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { PropType, toRefs } from 'vue';
+import { toRef } from 'vue';
 
 import {
 	$inviteCollaborator,
@@ -9,7 +9,6 @@ import {
 import { CommunityModel } from '../../../../../_common/community/community.model';
 import AppForm, {
 	createForm,
-	defineFormProps,
 	FormController,
 } from '../../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
@@ -26,30 +25,28 @@ import {
 
 type FormModel = CollaboratorModel;
 
-const props = defineProps({
-	community: {
-		type: Object as PropType<CommunityModel>,
-		required: true,
-	},
-	...defineFormProps<FormModel>(),
-});
+type Props = {
+	community: CommunityModel;
+	model?: FormModel;
+};
+const { community, model } = defineProps<Props>();
 
 const emit = defineEmits<{
 	submit: [model: CollaboratorModel];
 }>();
 
-const { community, model } = toRefs(props);
+const modelRef = toRef(() => model);
 
 const form: FormController<FormModel> = createForm<FormModel>({
-	model,
+	model: modelRef,
 	modelClass: CollaboratorModel,
 	modelSaveHandler: $inviteCollaborator,
 	resetOnSubmit: true,
 	onInit() {
 		form.formModel.resource = 'Community';
-		form.formModel.resource_id = community.value.id;
+		form.formModel.resource_id = community.id;
 
-		if (model?.value) {
+		if (model) {
 			form.formModel.username = form.formModel.user!.username;
 		}
 	},

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, provide } from 'vue';
+import { computed, provide } from 'vue';
 import { useRoute } from 'vue-router';
 
 import { isEditingCommunity } from '../../../../../_common/community/community.model';
@@ -10,14 +10,12 @@ import AppNavChannels from '../_nav/channels/AppNavChannels.vue';
 import AppNavEdit from '../_nav/edit/AppNavEdit.vue';
 import { CommunityRouteStore, CommunityRouteStoreKey } from '../view.store';
 
-const props = defineProps({
-	routeStore: {
-		type: Object as PropType<CommunityRouteStore>,
-		required: true,
-	},
-});
+type Props = {
+	routeStore: CommunityRouteStore;
+};
+const { routeStore } = defineProps<Props>();
 
-provide(CommunityRouteStoreKey, props.routeStore);
+provide(CommunityRouteStoreKey, routeStore);
 
 const { toggleLeftPane } = useAppStore();
 const route = useRoute();

@@ -3,7 +3,7 @@
 // display.
 import '../../../../../_common/comment/comment.styl';
 
-import { computed, PropType, ref, toRefs } from 'vue';
+import { computed, ref } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
 
 import AppFadeCollapse from '../../../../../_common/AppFadeCollapse.vue';
@@ -50,26 +50,22 @@ import { ActivityFeedItem } from '../item-service';
 import { useActivityFeed } from '../view';
 import { getNotificationRouteLocation, gotoNotification } from './notification-routing';
 
-const props = defineProps({
-	item: {
-		type: Object as PropType<ActivityFeedItem>,
-		required: true,
-	},
-});
+type Props = {
+	item: ActivityFeedItem;
+};
+const { item } = defineProps<Props>();
 
 const emit = defineEmits<{
 	clicked: [];
 }>();
-
-const { item } = toRefs(props);
 const feed = useActivityFeed()!;
 const appStore = useAppStore();
 const router = useRouter();
 
 const canToggleContent = ref(false);
 
-const notification = computed(() => item.value.feedItem as NotificationModel);
-const isNew = computed(() => feed.isItemUnread(item.value));
+const notification = computed(() => item.feedItem as NotificationModel);
+const isNew = computed(() => feed.isItemUnread(item));
 const showUserAvatar = computed(() => {
 	if (notification.value.type === NotificationType.ShopGiftReceived) {
 		return false;

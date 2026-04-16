@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, toRef, toRefs } from 'vue';
+import { computed, toRef } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
 
 import { trackGotoCommunity } from '../../analytics/analytics.service';
@@ -14,42 +14,30 @@ import { CommunityModel, isEditingCommunity } from '../community.model';
 import AppCommunityJoinWidget from '../join-widget/AppCommunityJoinWidget.vue';
 import AppCommunityVerifiedTick from '../verified-tick/AppCommunityVerifiedTick.vue';
 
-const props = defineProps({
-	community: {
-		type: Object as PropType<CommunityModel>,
-		required: true,
-	},
-	overflow: {
-		type: Boolean,
-	},
-	elevate: {
-		type: Boolean,
-	},
-	allowEdit: {
-		type: Boolean,
-		default: true,
-	},
-	trackGoto: {
-		type: Boolean,
-	},
-});
+type Props = {
+	community: CommunityModel;
+	overflow?: boolean;
+	elevate?: boolean;
+	allowEdit?: boolean;
+	trackGoto?: boolean;
+};
+const { community, trackGoto, allowEdit = true } = defineProps<Props>();
 
-const { community, trackGoto } = toRefs(props);
 const { user } = useCommonStore();
 const route = useRoute();
 
-const memberCount = toRef(() => community.value.member_count || 0);
+const memberCount = toRef(() => community.member_count || 0);
 
 const isEditing = computed(() => isEditingCommunity(route));
 
 const shouldShowModTools = toRef(() => user.value && user.value.isMod);
 
 function doTrackGotoCommunity() {
-	if (trackGoto.value) {
+	if (trackGoto) {
 		trackGotoCommunity({
 			source: 'card',
-			id: community.value.id,
-			path: community.value.path,
+			id: community.id,
+			path: community.path,
 		});
 	}
 }

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, toRef, toRefs } from 'vue';
+import { computed, toRef } from 'vue';
 
 import AppButton from '../button/AppButton.vue';
 import AppCard from '../card/AppCard.vue';
@@ -12,25 +12,14 @@ import {
 	LinkedAccountProvider,
 } from './linked-account.model';
 
-const props = defineProps({
-	provider: {
-		type: String as PropType<LinkedAccountProvider>,
-		required: true,
-	},
-	account: {
-		type: Object as PropType<LinkedAccountModel | null>,
-		default: null,
-	},
-	preview: {
-		type: Boolean,
-	},
-	spanWidth: {
-		type: Boolean,
-	},
-	disabled: {
-		type: Boolean,
-	},
-});
+type Props = {
+	provider: LinkedAccountProvider;
+	account?: LinkedAccountModel | null;
+	preview?: boolean;
+	spanWidth?: boolean;
+	disabled?: boolean;
+};
+const { provider, account = null, preview, disabled } = defineProps<Props>();
 
 const emit = defineEmits<{
 	sync: [provider: string];
@@ -38,9 +27,7 @@ const emit = defineEmits<{
 	link: [provider: string];
 }>();
 
-const { account, provider } = toRefs(props);
-
-const actualProvider = toRef(() => (account.value ? account.value.provider : provider.value));
+const actualProvider = toRef(() => (account ? account.provider : provider));
 
 const providerIcon = computed(() => {
 	const provider = actualProvider.value;
@@ -53,14 +40,14 @@ const providerName = computed(() => {
 });
 
 const platformLink = toRef(() => {
-	if (account.value) {
-		return account.value.platformLink;
+	if (account) {
+		return account.platformLink;
 	}
 	return undefined;
 });
 
 const isAccountSet = toRef(() => {
-	return !!account.value && account.value.provider_id && account.value.name;
+	return !!account && account.provider_id && account.name;
 });
 
 function onSync() {

@@ -1,20 +1,13 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-
 import AppButton from '../button/AppButton.vue';
 import AppTranslate from '../translate/AppTranslate.vue';
 import { CommentBlockReason, CommentModel } from './comment-model';
 
-defineProps({
-	comment: {
-		type: Object as PropType<CommentModel>,
-		required: true,
-	},
-	reason: {
-		type: String as PropType<CommentBlockReason>,
-		required: true,
-	},
-});
+type Props = {
+	comment: CommentModel;
+	reason: CommentBlockReason;
+};
+defineProps<Props>();
 
 const emit = defineEmits<{
 	show: [];

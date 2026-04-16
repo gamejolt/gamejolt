@@ -1,8 +1,5 @@
 <script lang="ts" setup>
-import { toRefs } from 'vue';
-
 import { AvatarFrameModel } from '../../../../../../_common/avatar/frame.model';
-import { defineFormProps } from '../../../../../../_common/form-vue/AppForm.vue';
 import AppLinkHelp from '../../../../../../_common/link/AppLinkHelp.vue';
 import { ShopProductResource } from '../../../../../../_common/shop/product/product-model';
 import { $gettext } from '../../../../../../_common/translate/translate.service';
@@ -10,18 +7,17 @@ import { ShopDashProductType, useShopDashStore } from '../../shop.store';
 import AppDashShopProductHeader from '../AppDashShopProductHeader.vue';
 import FormShopProductBase, { createShopProductBaseForm } from './FormShopProductBase.vue';
 
-const props = defineProps({
-	...defineFormProps<AvatarFrameModel>(),
-});
-
-const { model } = toRefs(props);
+type Props = {
+	model?: AvatarFrameModel;
+};
+const { model } = defineProps<Props>();
 
 const shopStore = useShopDashStore()!;
 
 const data = createShopProductBaseForm({
 	shopStore,
 	resource: ShopProductResource.AvatarFrame,
-	baseModel: model?.value,
+	baseModel: model,
 });
 
 const { productType, isEditing } = data;

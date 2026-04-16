@@ -3,7 +3,7 @@ import { computed, ref, toRef, watch } from 'vue';
 
 import { Api } from '../../../../_common/api/api.service';
 import AppButton from '../../../../_common/button/AppButton.vue';
-import AppForm, { createForm, defineFormProps } from '../../../../_common/form-vue/AppForm.vue';
+import AppForm, { createForm } from '../../../../_common/form-vue/AppForm.vue';
 import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
 import AppFormControlErrors from '../../../../_common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
@@ -26,16 +26,17 @@ type FormModel = UserModel & {
 	crop?: any;
 };
 
-const props = defineProps({
-	...defineFormProps<FormModel>(),
-});
+type Props = {
+	model?: FormModel;
+};
+const { model } = defineProps<Props>();
 
 const maxFilesize = ref(0);
 const minSize = ref(0);
 const maxSize = ref(0);
 
 const form = createForm<FormModel>({
-	model: toRef(() => props.model),
+	model: toRef(() => model),
 	modelClass: UserModel,
 	modelSaveHandler: $saveUserAvatar,
 	warnOnDiscard: false,

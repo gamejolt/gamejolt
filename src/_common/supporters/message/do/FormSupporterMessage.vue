@@ -1,12 +1,11 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRefs } from 'vue';
+import { computed, ref, toRef } from 'vue';
 
 import { Api } from '../../../api/api.service';
 import AppButton from '../../../button/AppButton.vue';
 import { ContextCapabilities } from '../../../content/content-context';
 import AppForm, {
 	createForm,
-	defineFormProps,
 	FormController,
 } from '../../../form-vue/AppForm.vue';
 import AppFormButton from '../../../form-vue/AppFormButton.vue';
@@ -26,28 +25,24 @@ import { $saveSupporterMessageTemplate, SupporterMessageModel } from '../../mess
 
 type FormModel = SupporterMessageModel;
 
-const props = defineProps({
-	action: {
-		type: Object as PropType<SupporterActionModel>,
-		default: undefined,
-	},
-	...defineFormProps<FormModel>(),
-});
-
-const { action, model } = toRefs(props);
+type Props = {
+	action?: SupporterActionModel;
+	model?: FormModel;
+};
+const { action, model } = defineProps<Props>();
 
 const modal = useModal()!;
 
 const lengthLimit = ref(300);
 const contentCapabilities = ref(ContextCapabilities.getPlaceholder());
 
-const isTemplate = computed(() => !action?.value);
+const isTemplate = computed(() => !action);
 
 const loadUrl = computed(() => `/web/dash/creators/supporters/save-template`);
-const sendUrl = computed(() => `/web/dash/creators/supporters/send-message/${action?.value?.id}`);
+const sendUrl = computed(() => `/web/dash/creators/supporters/send-message/${action?.id}`);
 
 const form: FormController<FormModel> = createForm<FormModel>({
-	model,
+	model: toRef(() => model),
 	modelClass: SupporterMessageModel,
 	loadUrl,
 	onLoad(response) {

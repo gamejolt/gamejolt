@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
+import { computed } from 'vue';
 
 import { vAppAuthRequired } from '../../../../_common/auth/auth-required-directive';
 import { CommentableModel } from '../../../../_common/comment/comment-model';
@@ -7,31 +7,21 @@ import { Model } from '../../../../_common/model/model.service';
 import { $gettext } from '../../../../_common/translate/translate.service';
 import { DisplayMode, showCommentModal } from '../modal/modal.service';
 
-const props = defineProps({
-	model: {
-		type: Object as PropType<Model & CommentableModel>,
-		required: true,
-	},
-	displayMode: {
-		type: String as PropType<DisplayMode>,
-		required: true,
-	},
-	placeholder: {
-		type: String,
-		default: undefined,
-	},
-});
-
-const { model, placeholder, displayMode } = toRefs(props);
+type Props = {
+	model: Model & CommentableModel;
+	displayMode: DisplayMode;
+	placeholder?: string;
+};
+const { model, placeholder, displayMode } = defineProps<Props>();
 
 const placeholderText = computed(() => {
-	return placeholder?.value ? placeholder.value : $gettext('What do you think?');
+	return placeholder ? placeholder : $gettext('What do you think?');
 });
 
 function open() {
 	showCommentModal({
-		model: model.value,
-		displayMode: displayMode.value,
+		model,
+		displayMode,
 	});
 }
 </script>

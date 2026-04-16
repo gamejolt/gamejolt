@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, CSSProperties, PropType, ref, toRefs } from 'vue';
+import { computed, CSSProperties, ref } from 'vue';
 
 import { styleBorderRadiusLg, styleChangeBg } from '../../../_styles/mixins';
 import { FiresidePostModel } from '../../fireside/post/post-model';
@@ -10,14 +10,10 @@ import AppProgressPoller from '../../progress/poller/AppProgressPoller.vue';
 import AppResponsiveDimensions from '../../responsive-dimensions/AppResponsiveDimensions.vue';
 import { $gettext } from '../../translate/translate.service';
 
-const props = defineProps({
-	post: {
-		type: Object as PropType<FiresidePostModel>,
-		required: true,
-	},
-});
-
-const { post } = toRefs(props);
+type Props = {
+	post: FiresidePostModel;
+};
+defineProps<Props>();
 
 const hasData = ref(false);
 const progress = ref(0);
