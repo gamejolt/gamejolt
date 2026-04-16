@@ -6,11 +6,11 @@ export type LinkData = {
 	title: string;
 };
 
-export async function showContentEditorLinkModal(selectedText: string) {
+export async function showContentEditorLinkModal(selectedText: string, hasLink = false) {
 	return await showModal<LinkData>({
 		modalId: 'ContentEditorLink',
 		component: AppContentEditorLinkModal,
 		size: 'sm',
-		props: { selectedText },
+		props: { selectedText, hasLink },
 	});
 }

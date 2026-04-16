@@ -150,18 +150,10 @@ owner.hydrator.useData('media-item-id', mediaItemId.toString(), data => {
 });
 
 async function onEdit() {
-	if (hasLink.value) {
-		removeLink();
-	} else {
-		const result = await showContentEditorLinkModal(href);
-		if (result !== undefined) {
-			onUpdateAttrs?.({ href: result.href });
-		}
+	const result = await showContentEditorLinkModal(href, hasLink.value);
+	if (result !== undefined) {
+		onUpdateAttrs?.({ href: result.href });
 	}
-}
-
-function removeLink() {
-	onUpdateAttrs?.({ href: '' });
 }
 
 function onImageLoad() {

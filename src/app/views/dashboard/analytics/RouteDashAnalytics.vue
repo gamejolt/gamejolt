@@ -581,7 +581,7 @@ function _metricChanged() {
 
 		<template v-if="metricData[selectedMetric.key]">
 			<AppExpand :when="period === 'monthly' && !!metricData[selectedMetric.key].graph">
-				<AppGraph :dataset="metricData[selectedMetric.key].graph" />
+				<AppGraph v-if="metricData[selectedMetric.key].graph" :dataset="metricData[selectedMetric.key].graph" />
 			</AppExpand>
 
 			<div ref="metricsElem" class="-metric-stats-wrapper">
@@ -632,7 +632,7 @@ function _metricChanged() {
 									</div>
 
 									<AppGraph
-										v-if="period === 'monthly' && metricData[metric.key]"
+										v-if="period === 'monthly' && metricData[metric.key]?.graph"
 										:dataset="metricData[metric.key].graph"
 										background-variant
 									/>

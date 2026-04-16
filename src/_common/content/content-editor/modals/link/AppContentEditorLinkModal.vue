@@ -9,8 +9,9 @@ import { LinkData } from './link-modal.service';
 
 type Props = {
 	selectedText: string;
+	hasLink?: boolean;
 };
-const { selectedText } = defineProps<Props>();
+const { selectedText, hasLink = false } = defineProps<Props>();
 const modal = useModal()!;
 
 const linkData = ref<LinkData>({
@@ -49,6 +50,10 @@ function onSubmit(data: LinkData) {
 
 	modal.resolve(data);
 }
+
+function onUnlink() {
+	modal.resolve({ href: '', title: '' });
+}
 </script>
 
 <template>
@@ -60,7 +65,13 @@ function onSubmit(data: LinkData) {
 		</div>
 
 		<div class="modal-body">
-			<AppFormContentEditorLink :model="linkData" @submit="onSubmit" />
+			<AppFormContentEditorLink :model="linkData" @submit="onSubmit">
+				<template #buttons>
+					<AppButton v-if="hasLink" trans @click="onUnlink">
+						{{ $gettext(`Remove link`) }}
+					</AppButton>
+				</template>
+			</AppFormContentEditorLink>
 		</div>
 	</AppModal>
 </template>

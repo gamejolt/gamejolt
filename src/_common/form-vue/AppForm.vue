@@ -17,6 +17,7 @@ import {
 import { useRouter } from 'vue-router';
 
 import { CancelToken } from '../../utils/cancel-token';
+import { MaybePromise } from '../../utils/utils';
 import { uuidv4 } from '../../utils/uuid';
 import { Api } from '../api/api.service';
 import AppLoading from '../loading/AppLoading.vue';
@@ -91,7 +92,7 @@ interface CreateFormOptions<T, SubmitResponse = any> {
 	onInit?: () => void;
 	onLoad?: (response: any) => void;
 	onBeforeSubmit?: () => void;
-	onSubmit?: () => Promise<SubmitResponse>;
+	onSubmit?: () => MaybePromise<SubmitResponse>;
 	onSubmitSuccess?: (response: SubmitResponse) => void;
 	onSubmitError?: (response: any) => void;
 	onChange?: (formModel: Readonly<T>) => void;

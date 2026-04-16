@@ -95,7 +95,7 @@ function isScalarLabel(val: any) {
 			</table>
 		</div>
 		<div
-			v-if="!Screen.isXs && reportData.hasData && reportData.graph !== null"
+			v-if="!Screen.isXs && reportData.hasData && reportData.graph"
 			class="col-sm-4"
 		>
 			<AppGraph type="doughnut" :dataset="reportData.graph" />

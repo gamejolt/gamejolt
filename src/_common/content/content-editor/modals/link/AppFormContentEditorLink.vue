@@ -25,7 +25,7 @@ const form: FormController<FormModel> = createForm<FormModel>({
 		form.formModel.href ??= form.formModel.href || '';
 		form.formModel.title ??= form.formModel.title || '';
 	},
-	onSubmitSuccess() {
+	onSubmit() {
 		emit('submit', form.formModel);
 	},
 });
@@ -41,8 +41,12 @@ const form: FormController<FormModel> = createForm<FormModel>({
 			/>
 		</AppFormGroup>
 
-		<AppFormButton :disabled="!form.valid">
-			{{ $gettext(`Insert link`) }}
-		</AppFormButton>
+		<div :style="{ flex: 'row', justifyContent: 'end' }">
+			<AppFormButton :disabled="!form.valid">
+				{{ $gettext(`Insert link`) }}
+			</AppFormButton>
+
+			<slot name="buttons" />
+		</div>
 	</AppForm>
 </template>
