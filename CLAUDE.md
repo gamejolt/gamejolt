@@ -75,6 +75,8 @@ onBeforeUnmount(() => { ... });
 const elRef = useTemplateRef('el');
 ```
 
+Always use `useTemplateRef` when possible. Do not specify the generic type — Vue infers it from the template.
+
 ---
 
 ## Directives
