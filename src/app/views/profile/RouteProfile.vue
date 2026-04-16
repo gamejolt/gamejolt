@@ -8,6 +8,7 @@ import {
 	Ref,
 	ref,
 	shallowReadonly,
+	useTemplateRef,
 } from 'vue';
 import { RouterLink, RouterView, useRoute } from 'vue-router';
 
@@ -59,7 +60,7 @@ function createProfileRouteStore({
 	chat,
 	myUser,
 }: {
-	header: Ref<HTMLElement | undefined>;
+	header: Readonly<Ref<HTMLElement | null>>;
 	chat: Ref<ChatClient | undefined>;
 	myUser: Ref<UserModel | null | undefined>;
 }) {
@@ -298,7 +299,7 @@ defineOptions(
 	})
 );
 
-const header = ref<HTMLElement>();
+const header = useTemplateRef('header');
 const { chat } = useGridStore();
 const { user: myUser } = useCommonStore();
 const { setPageTheme: setThemeStorePageTheme, clearPageTheme } = useThemeStore();

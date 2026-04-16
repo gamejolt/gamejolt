@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, toRefs, watch } from 'vue';
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, toRefs, useTemplateRef, watch } from 'vue';
 
 import { clampNumber } from '../../utils/number';
 import { Ruler } from '../ruler/ruler-service';
@@ -51,7 +51,7 @@ const thumbOffset = ref(0);
 const _sliderOffset = ref(0);
 const _percentFull = ref(0);
 
-const slider = ref<HTMLElement>();
+const slider = useTemplateRef('slider');
 
 const sliderFilledStyling = computed(() => {
 	if (vertical.value) {

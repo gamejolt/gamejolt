@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { type HTMLAttributes, nextTick, ref } from 'vue';
+import { type HTMLAttributes, nextTick, useTemplateRef } from 'vue';
 
 import { FocusToken } from '../../../utils/focus-token';
 
@@ -10,7 +10,7 @@ type Props = {
 
 const props = defineProps<Props>();
 
-const root = ref<HTMLInputElement>();
+const root = useTemplateRef('root');
 
 props.focusToken?.register({
 	focus: async () => {

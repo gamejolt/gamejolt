@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, TextareaHTMLAttributes, toRef } from 'vue';
+import { TextareaHTMLAttributes, toRef, useTemplateRef } from 'vue';
 
 import { createFormControl, FormControlEmits } from '../AppFormControl.vue';
 import { useFormGroup } from '../AppFormGroup.vue';
@@ -33,7 +33,7 @@ const { id, controlVal, applyValue, applyBlur } = createFormControl({
 	onChange: val => emit('changed', val),
 });
 
-const root = ref<HTMLTextAreaElement>();
+const root = useTemplateRef('root');
 
 function onChange() {
 	applyValue(root.value?.value || '', {

@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import { computed, PropType, Ref, ref, shallowRef, toRefs } from 'vue';
+import { computed, PropType, Ref, ref, shallowRef, toRefs, useTemplateRef } from 'vue';
 
 import { kFontSizeBase, kGridGutterWidth } from '../../../_styles/variables';
 import { Api } from '../../api/api.service';
 import AppButton from '../../button/AppButton.vue';
 import AppLoadingFade from '../../loading/AppLoadingFade.vue';
-import AppModal, { AppModalInterface } from '../../modal/AppModal.vue';
+import AppModal from '../../modal/AppModal.vue';
 import AppModalFloatingHeader from '../../modal/AppModalFloatingHeader.vue';
 import { useModal } from '../../modal/modal.service';
 import AppScrollAutoload from '../../scroll/AppScrollAutoload.vue';
@@ -42,7 +42,7 @@ const props = defineProps({
 const { model, initialReaction } = toRefs(props);
 
 const modal = useModal<void>()!;
-const rootModal = ref<AppModalInterface>();
+const rootModal = useTemplateRef('rootModal');
 
 const selectedReaction = ref(null) as Ref<ReactionCount | null>;
 const reactionFeeds = shallowRef(new Map<number, ReactionDetailsFeed>());

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType, ref, toRef, toRefs } from 'vue';
+import { CSSProperties, PropType, ref, toRef, toRefs, useTemplateRef } from 'vue';
 
 import { styleWhen } from '../../_styles/mixins';
 import { useResizeObserver } from '../../utils/resize-observer';
@@ -33,8 +33,8 @@ const props = defineProps({
 
 const { disabled, padding, anchor, offsetTop } = toRefs(props);
 
-const container = ref<HTMLElement>();
-const placeholder = ref<HTMLElement>();
+const container = useTemplateRef('container');
+const placeholder = useTemplateRef('placeholder');
 
 const shouldAffix = ref(false);
 const width = ref<number>();

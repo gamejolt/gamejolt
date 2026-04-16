@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, Ref, ref, watch } from 'vue';
+import { computed, Ref, ref, useTemplateRef, watch } from 'vue';
 
 import { useResizeObserver } from '../../utils/resize-observer';
 import { Ruler } from '../ruler/ruler-service';
@@ -12,8 +12,8 @@ defineProps({
 	},
 });
 
-const prefixElement = ref<HTMLSpanElement>();
-let inputElem: Ref<HTMLInputElement | undefined>;
+const prefixElement = useTemplateRef('prefixElement');
+let inputElem: Readonly<Ref<HTMLInputElement | null>>;
 
 const originalInputPaddingTop = ref(0);
 const originalInputPaddingLeft = ref(0);

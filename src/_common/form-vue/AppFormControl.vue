@@ -180,7 +180,7 @@ export interface FormControlController<T = any> {
 </script>
 
 <script lang="ts" setup>
-import { InputHTMLAttributes } from 'vue';
+import { InputHTMLAttributes, useTemplateRef } from 'vue';
 
 type Props = {
 	disabled?: boolean;
@@ -231,7 +231,7 @@ const c = createFormControl({
 
 const { id, applyValue, applyBlur, controlVal } = c;
 const controlType = computed(() => (type === 'currency' ? 'number' : type));
-const root = ref<HTMLInputElement>();
+const root = useTemplateRef('root');
 
 onMounted(() => {
 	if (hooks?.afterMount) {

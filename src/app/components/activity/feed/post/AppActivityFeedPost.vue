@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, HTMLAttributes, ref, toRef } from 'vue';
+import { computed, HTMLAttributes, ref, toRef, useTemplateRef } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import { trackPostOpen } from '../../../../../_common/analytics/analytics.service';
@@ -74,8 +74,8 @@ const hasBypassedBlock = ref(false);
 
 const queryParams = ref<Record<string, string>>();
 
-const root = ref<HTMLDivElement>();
-const stickerScroll = ref<HTMLDivElement>();
+const root = useTemplateRef('root');
+const stickerScroll = useTemplateRef('stickerScroll');
 
 const user = toRef(() => post.value.displayUser);
 

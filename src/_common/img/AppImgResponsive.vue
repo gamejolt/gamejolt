@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ImgHTMLAttributes, nextTick, onMounted, ref, watch } from 'vue';
+import { ImgHTMLAttributes, nextTick, onMounted, ref, useTemplateRef, watch } from 'vue';
 
 import { getMediaserverUrlForBounds } from '../../utils/image';
 import { sleep } from '../../utils/utils';
@@ -19,7 +19,7 @@ const emit = defineEmits<{
 	imgloadchange: [isLoaded: boolean];
 }>();
 
-const root = ref<HTMLElement>();
+const root = useTemplateRef('root');
 const initialized = ref(false);
 const processedSrc = ref(import.meta.env.SSR ? src : '');
 

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { ref, toRef } from 'vue';
+import { toRef, useTemplateRef } from 'vue';
+
 
 import {
 	createFormControl,
@@ -23,7 +24,7 @@ const { id, controlVal, applyValue } = createFormControl({
 	alwaysOptional: true,
 });
 
-const root = ref<HTMLSelectElement>();
+const root = useTemplateRef('root');
 
 function onChange() {
 	applyValue(root.value?.value || '');

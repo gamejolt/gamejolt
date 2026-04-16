@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, nextTick, onMounted, PropType, ref, toRef, toRefs, watch } from 'vue';
+import { computed, nextTick, onMounted, PropType, ref, toRef, toRefs, useTemplateRef, watch } from 'vue';
 
 import { isInstance } from '../../../utils/utils';
 import { GameScreenshotModel } from '../../game/screenshot/screenshot.model';
@@ -39,8 +39,8 @@ const isPrev = ref(false);
 const initialized = ref(false);
 const maxWidth = ref(0);
 const maxHeight = ref(0);
-const caption = ref<HTMLDivElement>();
-const rootElem = ref<HTMLDivElement>();
+const caption = useTemplateRef('caption');
+const rootElem = useTemplateRef('rootElem');
 
 const shouldVideoPlay = toRef(() => isActive.value);
 

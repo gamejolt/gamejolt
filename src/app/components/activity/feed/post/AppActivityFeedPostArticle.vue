@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, CSSProperties, PropType, ref, toRef, toRefs } from 'vue';
+import { computed, CSSProperties, PropType, ref, toRef, toRefs, useTemplateRef } from 'vue';
 
 import AppButton from '../../../../../_common/button/AppButton.vue';
 import AppContentViewer from '../../../../../_common/content/content-viewer/AppContentViewer.vue';
@@ -29,7 +29,7 @@ const props = defineProps({
 const { item, post } = toRefs(props);
 const feed = useActivityFeed()!;
 
-const rootElem = ref<HTMLDivElement>();
+const rootElem = useTemplateRef('rootElem');
 const isToggling = ref(false);
 const isLoaded = ref(!!post.value.article_content);
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-import { onMounted, onUnmounted, PropType, reactive, ref, watch } from 'vue';
+import { onMounted, onUnmounted, PropType, reactive, useTemplateRef, watch } from 'vue';
 
 import { useScrollInviewParent } from './AppScrollInviewParent.vue';
 
@@ -119,7 +119,7 @@ onUnmounted(() => {
 	props.controller._changeHandlers.delete(onChange);
 });
 
-const root = ref<HTMLElement | undefined>();
+const root = useTemplateRef<HTMLElement>('root');
 
 // The ref will be assigned to this once it's fully rendered.
 watch(root, newElement => {

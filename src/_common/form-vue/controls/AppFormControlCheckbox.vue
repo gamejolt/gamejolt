@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, ref, toRef } from 'vue';
+import { computed, toRef, useTemplateRef } from 'vue';
 
 import { useForm } from '../AppForm.vue';
 import {
@@ -35,7 +35,7 @@ const { controlVal, applyValue } = createFormControl<any>({
 	alwaysOptional: true,
 });
 
-const root = ref<HTMLInputElement>();
+const root = useTemplateRef('root');
 
 const currentOptions = computed(() => form.formModel[name.value] || []);
 

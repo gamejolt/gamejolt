@@ -7,7 +7,7 @@ type Props = {
 };
 const { definition, theme } = defineProps<Props>();
 
-const styleEl = useTemplateRef<HTMLStyleElement>('styleEl');
+const styleEl = useTemplateRef('styleEl');
 
 function refreshStyles(themeDefinition: any, currentTheme: any) {
 	const styles: string[] = [];

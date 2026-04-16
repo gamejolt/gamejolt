@@ -12,7 +12,7 @@ const props = defineProps({
 });
 
 let inputMask: any;
-let el: Ref<HTMLInputElement | undefined>;
+let el: Ref<HTMLInputElement | null | undefined>;
 
 provideFormControlHooks({
 	afterMount({ controlVal }, inputElem) {

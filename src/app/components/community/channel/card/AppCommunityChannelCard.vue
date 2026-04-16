@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, type HTMLAttributes, onMounted, ref } from 'vue';
+import { computed, type HTMLAttributes, onMounted, ref, useTemplateRef } from 'vue';
 import { RouterLink } from 'vue-router';
 
 import {
@@ -45,7 +45,7 @@ const {
 	channelType = undefined,
 } = defineProps<Props>();
 
-const rootElem = ref<HTMLDivElement>();
+const rootElem = useTemplateRef('rootElem');
 const cardHeight = ref<number>(CommunityChannelCardHeight);
 
 const linkTo = computed(() => {

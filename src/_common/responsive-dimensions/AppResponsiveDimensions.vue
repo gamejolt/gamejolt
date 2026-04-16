@@ -1,5 +1,5 @@
 <script lang="ts">
-import { onMounted, ref, toRefs, watch } from 'vue';
+import { onMounted, ref, toRefs, useTemplateRef, watch } from 'vue';
 
 import { useResizeObserver } from '../../utils/resize-observer';
 import { debounce } from '../../utils/utils';
@@ -38,7 +38,7 @@ const emit = defineEmits<{
 
 const { ratio, maxWidth, maxHeight, parentWidth } = toRefs(props);
 
-const root = ref<HTMLElement>();
+const root = useTemplateRef('root');
 const width = ref<string>();
 const height = ref('auto');
 

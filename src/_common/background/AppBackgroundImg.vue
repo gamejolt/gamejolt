@@ -1,5 +1,13 @@
 <script lang="ts" setup>
-import { computed, CSSProperties, PropType, ref, toRefs, watch, watchEffect } from 'vue';
+import {
+	computed,
+	CSSProperties,
+	PropType,
+	toRefs,
+	useTemplateRef,
+	watch,
+	watchEffect,
+} from 'vue';
 
 import { PageScrollSubscriptionTimeout, usePageScrollSubscription } from '../scroll/scroll.service';
 import { SettingParallaxBackgrounds } from '../settings/settings.service';
@@ -25,7 +33,7 @@ const props = defineProps({
 
 const { background, backgroundStyle, scrollDirection, enablePageScroll } = toRefs(props);
 
-const root = ref<HTMLElement>();
+const root = useTemplateRef('root');
 
 const shouldParallax = computed(() => enablePageScroll.value && SettingParallaxBackgrounds.get());
 

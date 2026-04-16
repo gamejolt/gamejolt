@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, ref, toRefs, watch } from 'vue';
+import { computed, ref, toRefs, useTemplateRef, watch } from 'vue';
 
 import { Ruler } from '../../ruler/ruler-service';
 import AppTouch, { AppTouchInput } from '../../touch/AppTouch.vue';
@@ -28,7 +28,7 @@ const timebarLeft = ref(0);
 const timebarWidth = ref(0);
 const scrubPos = ref(-1);
 
-const timebar = ref<HTMLElement>();
+const timebar = useTemplateRef('timebar');
 
 const unfilledRight = computed(() => {
 	if (scrubPos.value !== -1) {

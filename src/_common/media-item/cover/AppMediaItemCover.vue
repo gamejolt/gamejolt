@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, toRefs, watch } from 'vue';
+import { ref, toRefs, useTemplateRef, watch } from 'vue';
 
 import { useResizeObserver } from '../../../utils/resize-observer';
 import AppImgResponsive from '../../img/AppImgResponsive.vue';
@@ -30,7 +30,7 @@ const emit = defineEmits<{
 
 const isLoaded = ref(false);
 const height = ref('auto');
-const el = ref<HTMLElement>();
+const el = useTemplateRef('el');
 
 if (import.meta.env.SSR) {
 	recalcHeight();

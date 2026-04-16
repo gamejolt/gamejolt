@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, CSSProperties, ref, toRefs } from 'vue';
+import { computed, CSSProperties, ref, toRefs, useTemplateRef } from 'vue';
 import { RouterLink } from 'vue-router';
 
 import { routeLandingCreators } from '../../../app/views/landing/creators/creators.route';
@@ -58,8 +58,8 @@ const props = defineProps({
 
 const { elevate, headerCharge, allowFullyChargedText, paddingH, paddingV } = toRefs(props);
 
-const root = ref<HTMLElement>();
-const helpIcon = ref<HTMLElement>();
+const root = useTemplateRef('root');
+const helpIcon = useTemplateRef('helpIcon');
 
 const showTooltip = ref(false);
 

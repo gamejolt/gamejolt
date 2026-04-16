@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, useTemplateRef } from 'vue';
 
 import { arrayShuffle } from '../../../../utils/array';
 import { showErrorGrowl } from '../../../growls/growls.service';
@@ -38,7 +38,7 @@ const owner = useContentOwnerController()!;
 const loading = ref(false);
 const previewEmbeds = ref<any[]>([]);
 
-const inputElement = ref<HTMLInputElement>();
+const inputElement = useTemplateRef('inputElement');
 const hasContent = computed(() => props.type && props.source);
 const hasMoreEmbedPreviews = computed(
 	() => previewEmbeds.value.length < ContentEmbedService.previewSources.length

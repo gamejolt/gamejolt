@@ -13,9 +13,7 @@ import AppForm, { createForm, FormController } from '../../../../../_common/form
 import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
 import AppFormLegend from '../../../../../_common/form-vue/AppFormLegend.vue';
-import AppFormControlUpload, {
-	AppFormControlUploadInterface,
-} from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
+import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import { validateFilesize } from '../../../../../_common/form-vue/validators';
 import { showErrorGrowl, showSuccessGrowl } from '../../../../../_common/growls/growls.service';
 import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
@@ -73,7 +71,7 @@ let uploadCancelToken: AbortController | null = null;
 const hasVideoProcessingError = ref(false);
 const videoProcessingErrorMsg = ref('');
 
-const uploadRef = useTemplateRef<AppFormControlUploadInterface>('upload');
+const uploadRef = useTemplateRef('upload');
 
 const videos = computed(() => post.videos || []);
 

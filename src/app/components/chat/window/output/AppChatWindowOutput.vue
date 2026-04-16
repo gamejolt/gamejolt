@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, nextTick, onMounted, onUnmounted, PropType, ref, toRefs, watch } from 'vue';
+import { computed, nextTick, onMounted, onUnmounted, PropType, ref, toRefs, useTemplateRef, watch } from 'vue';
 
 import AppBackground from '../../../../../_common/background/AppBackground.vue';
 import { BackgroundModel } from '../../../../../_common/background/background.model';
@@ -52,7 +52,7 @@ const { room, background } = toRefs(props);
 const { user } = useCommonStore();
 const { chatUnsafe: chat } = useGridStore();
 
-const widthWatcher = ref<HTMLDivElement>();
+const widthWatcher = useTemplateRef('widthWatcher');
 
 /** Whether or not we reached the end of the historical messages. */
 const reachedEnd = ref(false);

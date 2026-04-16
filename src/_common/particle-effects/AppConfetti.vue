@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { nextTick, onMounted, ref, toRefs, watch } from 'vue';
+import { nextTick, onMounted, ref, toRefs, useTemplateRef, watch } from 'vue';
 
 import { useResizeObserver } from '../../utils/resize-observer.js';
 import { debounce } from '../../utils/utils.js';
@@ -21,7 +21,7 @@ const props = defineProps({
 
 const { density, colors, animationSpeed } = toRefs(props);
 
-const effects = ref<HTMLDivElement>();
+const effects = useTemplateRef('effects');
 
 useResizeObserver({
 	target: effects,

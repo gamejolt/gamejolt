@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, nextTick, onMounted, ref, watch } from 'vue';
+import { computed, nextTick, onMounted, ref, useTemplateRef, watch } from 'vue';
 
 import AppJolticon from '../../../jolticon/AppJolticon.vue';
 import { Screen } from '../../../screen/screen-service';
@@ -16,7 +16,7 @@ import { showContentEditorLinkModal } from '../modals/link/link-modal.service';
 
 const controller = useContentEditorController()!;
 
-const container = ref<HTMLElement>();
+const container = useTemplateRef('container');
 const containerWidth = ref(100);
 const left = ref('0px');
 const bottom = ref('0px');

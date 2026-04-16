@@ -1,13 +1,13 @@
 <script lang="ts" setup>
-import { computed, ref } from 'vue';
+import { computed, ref, useTemplateRef } from 'vue';
 
 import { Ruler } from '../../../../_common/ruler/ruler-service';
 import { styleWhen } from '../../../../_styles/mixins';
 import { buildCSSPixelValue } from '../../../../_styles/variables';
 import { useResizeObserver } from '../../../../utils/resize-observer';
 
-const root = ref<HTMLElement>();
-const child = ref<HTMLElement>();
+const root = useTemplateRef('root');
+const child = useTemplateRef('child');
 
 const sizeDiff = ref(0);
 

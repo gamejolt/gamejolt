@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, ComputedRef, onMounted, Ref, ref } from 'vue';
+import { computed, ComputedRef, onMounted, Ref, ref, useTemplateRef } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
 
 import { Api } from '../../../../_common/api/api.service';
@@ -109,7 +109,7 @@ const nextYear = ref(0);
 /** For iterating over the metrics available without worrying about undefined values */
 const availableMetricsBang = computed(() => availableMetrics.value as Required<MetricMap>);
 
-const metricsElem = ref<HTMLDivElement>();
+const metricsElem = useTemplateRef('metricsElem');
 const metricsHeight = ref('0');
 
 const { gems } = CurrencyType;

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue';
+import { computed, useTemplateRef, watch } from 'vue';
 
 import AppButton from '../../../../_common/button/AppButton.vue';
 import { ClientAutoStart } from '../../../../_common/client/safe-exports';
@@ -47,7 +47,7 @@ type FormModel = {
 
 const { setDark, setAlwaysOurs } = useThemeStore();
 
-const gameInstallDir = ref<HTMLInputElement>();
+const gameInstallDir = useTemplateRef('gameInstallDir');
 
 const canClientAutostart = computed(() => ClientAutoStart?.canAutoStart);
 const browserNotificationsDisabled = computed(() => (Notification as any).permission === 'denied');
@@ -120,7 +120,7 @@ function _onChange() {
 /**
  * Just opens a file location dialog.
  */
-function changeLocation(elem: HTMLInputElement | undefined) {
+function changeLocation(elem: HTMLInputElement | null) {
 	elem?.click();
 }
 

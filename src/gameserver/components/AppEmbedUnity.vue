@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, useTemplateRef } from 'vue';
 
 import AppLinkExternal from '../../_common/link/AppLinkExternal.vue';
 import AppTranslate from '../../_common/translate/AppTranslate.vue';
@@ -15,7 +15,7 @@ const isBroken = ref(false);
 const isUnsupported = ref(false);
 let unity: any;
 
-const root = ref<HTMLElement>();
+const root = useTemplateRef('root');
 
 onMounted(async () => {
 	await Promise.all([

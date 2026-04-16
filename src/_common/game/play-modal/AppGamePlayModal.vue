@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onMounted, onUnmounted, PropType, ref, toRefs } from 'vue';
+import { onMounted, onUnmounted, PropType, ref, toRefs, useTemplateRef } from 'vue';
 
 import AppButton from '../../button/AppButton.vue';
 import { addMinbarItem, removeMinbarItem } from '../../minbar/minbar.service';
@@ -26,7 +26,7 @@ const { game, url, canMinimize } = toRefs(props);
 const modal = useModal()!;
 
 const isMinimized = ref(false);
-const frameElem = ref<HTMLElement>();
+const frameElem = useTemplateRef('frame');
 
 onMounted(() => {
 	document.body.classList.add('game-play-modal-open');

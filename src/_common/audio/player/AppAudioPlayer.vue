@@ -13,7 +13,7 @@ const emit = defineEmits<{
 	duration: [payload: { currentTime: number; duration: number }];
 }>();
 
-const audioEl = useTemplateRef<HTMLAudioElement>('audio');
+const audioEl = useTemplateRef('audio');
 let timer: ReturnType<typeof setInterval> | undefined;
 
 watch(

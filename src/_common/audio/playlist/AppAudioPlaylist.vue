@@ -17,7 +17,7 @@ const emit = defineEmits<{
 	stop: [];
 }>();
 
-const playerRef = useTemplateRef<InstanceType<typeof AppAudioPlayer>>('player');
+const playerRef = useTemplateRef('player');
 
 const currentSong = ref<GameSongModel | null>(null);
 const duration = ref(0);

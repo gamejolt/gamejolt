@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, nextTick, PropType, ref, toRefs, watch } from 'vue';
+import { computed, nextTick, PropType, ref, toRefs, useTemplateRef, watch } from 'vue';
 
 import { Api } from '../../api/api.service';
 import { $gettext } from '../../translate/translate.service';
@@ -25,7 +25,7 @@ const emit = defineEmits<{
 
 const { modelValue } = toRefs(props);
 
-const list = ref<HTMLElement>();
+const list = useTemplateRef('list');
 const selectedFont = ref<FontDefinition | null>(null);
 
 const isSelectorShowing = ref(false);

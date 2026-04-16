@@ -24,7 +24,7 @@ const emit = defineEmits<{
 	expired: [];
 }>();
 
-const grecaptchaRef = useTemplateRef<HTMLDivElement>('grecaptcha');
+const grecaptchaRef = useTemplateRef('grecaptcha');
 
 const resetting = ref(false);
 const loaded = ref(false);

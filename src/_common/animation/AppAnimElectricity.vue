@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, CSSProperties, HTMLAttributes, ref } from 'vue';
+import { computed, CSSProperties, HTMLAttributes, ref, useTemplateRef } from 'vue';
 
 import { useResizeObserver } from '../../utils/resize-observer';
 import { Ruler } from '../ruler/ruler-service';
@@ -25,7 +25,7 @@ const { shockAnim = 'adaptive', disabled, ignoreAssetPadding } = defineProps<Pro
 const _squareSheet = sheetShockSquare;
 const _rectSheets = [sheetShockRectBL, sheetShockRectTR];
 
-const root = ref<HTMLDivElement>();
+const root = useTemplateRef('root');
 const size = ref({ width: 200, height: 200 });
 
 const chosenAsset = computed(() => {

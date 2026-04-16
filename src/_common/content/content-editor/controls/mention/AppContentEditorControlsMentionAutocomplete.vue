@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, CSSProperties, nextTick, onMounted, onUnmounted, ref, toRefs, watch } from 'vue';
+import { computed, CSSProperties, nextTick, onMounted, onUnmounted, ref, toRefs, useTemplateRef, watch } from 'vue';
 
 import { Api } from '../../../../api/api.service';
 import AppJolticon from '../../../../jolticon/AppJolticon.vue';
@@ -28,7 +28,7 @@ const isListening = ref(false); // If we are listening to the document keydown e
 const remoteSuggestionDebounceTimeout = ref<NodeJS.Timer | null>(null); // Timeout between requests to search backend
 const isLoading = ref(false); // Loading more users from backend
 const users = ref<UserModel[]>([]);
-const list = ref<HTMLDivElement>();
+const list = useTemplateRef('list');
 
 const emit = defineEmits<{
 	insert: [];

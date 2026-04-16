@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRefs } from 'vue';
+import { computed, PropType, ref, toRefs, useTemplateRef } from 'vue';
 
 import { styleWhen } from '../../_styles/mixins';
 import { useResizeObserver } from '../../utils/resize-observer';
@@ -28,7 +28,7 @@ const props = defineProps({
 
 const { sheet, overlay, pause, startOffset } = toRefs(props);
 
-const root = ref<HTMLDivElement>();
+const root = useTemplateRef('root');
 const size = ref({ width: 200, height: 200 });
 
 const sheetData = computed(() => getImgSlideshowData(sheet.value));

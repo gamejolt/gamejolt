@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { nextTick, onMounted, ref } from 'vue';
+import { nextTick, onMounted, ref, useTemplateRef } from 'vue';
 
 import { Ruler } from '../../_common/ruler/ruler-service';
 
@@ -8,7 +8,7 @@ const emit = defineEmits<{
 }>();
 
 const root = ref<HTMLElement>();
-const inner = ref<HTMLElement>();
+const inner = useTemplateRef('inner');
 const height = ref(0);
 const innerHeight = ref(0);
 const isCollapsed = ref(false);

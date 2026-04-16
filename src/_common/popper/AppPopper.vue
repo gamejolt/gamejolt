@@ -15,6 +15,7 @@ import {
 	onUnmounted,
 	ref,
 	useSlots,
+	useTemplateRef,
 	watch,
 } from 'vue';
 import { useRouter } from 'vue-router';
@@ -214,8 +215,8 @@ const isVisible = ref(false);
 const calculatedWidth = ref('');
 const maxWidth = ref('');
 
-const triggerElem = ref<HTMLElement>();
-const popperElem = ref<HTMLElement>();
+const triggerElem = useTemplateRef('triggerElem');
+const popperElem = useTemplateRef('popperElem');
 
 const popperIndex = PopperIndex++;
 const popperId = `popper-${popperIndex}`;

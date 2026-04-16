@@ -2,7 +2,7 @@
 import 'cropperjs/dist/cropper.css';
 
 import Cropper from 'cropperjs';
-import { onBeforeUnmount, onMounted, PropType, ref, toRefs, watch } from 'vue';
+import { onBeforeUnmount, onMounted, PropType, toRefs, useTemplateRef, watch } from 'vue';
 
 interface CropData {
 	x: number;
@@ -71,7 +71,7 @@ const {
 } = toRefs(props);
 
 let cropper: Cropper;
-const refImg = ref<HTMLImageElement>();
+const refImg = useTemplateRef('refImg');
 
 onMounted(() => {
 	const useAspectRatio =

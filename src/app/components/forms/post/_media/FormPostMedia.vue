@@ -7,9 +7,7 @@ import { FiresidePostModel } from '../../../../../_common/fireside/post/post-mod
 import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
 import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormControlUpload, {
-	AppFormControlUploadInterface,
-} from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
+import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
 import {
 	validateFilesize,
 	validateImageMaxDimensions,
@@ -46,7 +44,7 @@ const emit = defineEmits<{
 
 const isDropActive = ref(false);
 
-const uploadRef = useTemplateRef<AppFormControlUploadInterface>('upload');
+const uploadRef = useTemplateRef('upload');
 
 const isLoading = computed(() => form.isProcessing || loading);
 

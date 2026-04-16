@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { nextTick, onMounted, ref, toRefs, watch } from 'vue';
+import { nextTick, onMounted, ref, toRefs, useTemplateRef, watch } from 'vue';
 
 const props = defineProps({
 	when: {
@@ -16,7 +16,7 @@ const props = defineProps({
 
 const { when, animateInitial, expandHeight } = toRefs(props);
 
-const root = ref<HTMLElement>();
+const root = useTemplateRef('root');
 const inDom = ref(false);
 
 watch(

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { PropType, ref } from 'vue';
+import { PropType, useTemplateRef } from 'vue';
 
 import { styleTextOverflow } from '../../../../_styles/mixins';
 
@@ -33,7 +33,7 @@ const emit = defineEmits<{
 	input: [files: null | File[]];
 }>();
 
-const root = ref<HTMLInputElement>();
+const root = useTemplateRef('root');
 
 function onChange() {
 	if (!root.value) {

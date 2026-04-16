@@ -18,7 +18,7 @@ type Props = {
 };
 const { disabled, anchorKey } = defineProps<Props>();
 
-const rootEl = useTemplateRef<HTMLDivElement>('root');
+const rootEl = useTemplateRef('root');
 const router = useRouter();
 
 /**

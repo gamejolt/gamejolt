@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, toRefs, watch } from 'vue';
+import { toRefs, useTemplateRef, watch } from 'vue';
 
 const props = defineProps({
 	fontDefinitions: {
@@ -10,7 +10,7 @@ const props = defineProps({
 
 const { fontDefinitions } = toRefs(props);
 
-const styleElem = ref<HTMLStyleElement | null>(null);
+const styleElem = useTemplateRef('styleElem');
 
 watch(fontDefinitions, onDefinitionsChanged);
 

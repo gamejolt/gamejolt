@@ -1,5 +1,5 @@
 <script lang="ts">
-import { nextTick, onBeforeUnmount, onMounted, PropType, ref, toRefs, watch } from 'vue';
+import { nextTick, onBeforeUnmount, onMounted, PropType, ref, toRefs, useTemplateRef, watch } from 'vue';
 
 import AppLoading from '../loading/AppLoading.vue';
 import { setVideoMuted, trackVideoPlayerEvent, VideoPlayerController } from './player/controller';
@@ -45,7 +45,7 @@ const props = defineProps({
 
 const { player, showLoading, shouldPlay, initCallback, allowDegradedAutoplay } = toRefs(props);
 
-const root = ref<HTMLElement>();
+const root = useTemplateRef('root');
 const isLoaded = ref(false);
 
 let videoElem: HTMLVideoElement = null as any;

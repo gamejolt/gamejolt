@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, type HTMLAttributes, onMounted, ref } from 'vue';
+import { computed, type HTMLAttributes, onMounted, ref, useTemplateRef } from 'vue';
 
 import AppImgResponsive from '../../img/AppImgResponsive.vue';
 import { vAppTooltip } from '../../tooltip/tooltip-directive';
@@ -68,7 +68,7 @@ const {
 	noHighlight = false,
 } = defineProps<Props>();
 
-const thumbElem = ref<HTMLElement | null>(null);
+const thumbElem = useTemplateRef('thumb');
 const thumbWidth = ref(BaseWidth);
 
 const tooltip = computed(() => {

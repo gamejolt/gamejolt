@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, CSSProperties, PropType, ref, toRefs } from 'vue';
+import { computed, CSSProperties, PropType, toRefs, useTemplateRef } from 'vue';
 
 import { Ruler } from '../../ruler/ruler-service';
 import { Screen } from '../../screen/screen-service';
@@ -12,7 +12,7 @@ const props = defineProps({
 	 * offset and other positioning by itself.
 	 */
 	caretElement: {
-		type: Object as PropType<HTMLElement>,
+		type: Object as PropType<HTMLElement | null>,
 		required: true,
 	},
 	/**
@@ -27,8 +27,8 @@ const props = defineProps({
 	 * of the screen.
 	 */
 	widthTrackerElement: {
-		type: Object as PropType<HTMLElement>,
-		default: undefined,
+		type: Object as PropType<HTMLElement | null>,
+		default: null,
 	},
 	show: {
 		type: Boolean,
@@ -46,7 +46,7 @@ const { caretElement, widthTrackerElement, show, fixed } = toRefs(props);
 
 const { chargeCost } = useStickerStore();
 
-const root = ref<HTMLElement>();
+const root = useTemplateRef('root');
 
 const orbCostText = computed(() => {
 	if (chargeCost.value === 1) {
@@ -59,6 +59,9 @@ const tooltipPosition = computed<CSSProperties | null>(() => {
 	const widthElement = widthTrackerElement?.value;
 	const parent = root.value?.parentElement;
 
+	if (!caretElement.value) {
+		return null;
+	}
 	const anchorOffset = Ruler.offset(caretElement.value);
 
 	const widthTrackerOffset = widthElement ? Ruler.offset(widthElement) : null;

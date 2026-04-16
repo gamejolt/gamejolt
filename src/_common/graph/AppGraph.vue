@@ -12,7 +12,18 @@ import {
 	PointElement,
 	Tooltip,
 } from 'chart.js';
-import { computed, markRaw, onMounted, PropType, Ref, ref, toRaw, toRefs, watch } from 'vue';
+import {
+	computed,
+	markRaw,
+	onMounted,
+	PropType,
+	Ref,
+	ref,
+	toRaw,
+	toRefs,
+	useTemplateRef,
+	watch,
+} from 'vue';
 
 import { formatDate } from '../filters/date';
 import { useThemeStore } from '../theme/theme.store';
@@ -137,7 +148,7 @@ const chart = ref() as any;
 const graphData = ref({}) as Ref<any>;
 const chartOptions = ref({}) as Ref<any>;
 const ourColors = ref({}) as Ref<any>;
-const canvasElem = ref<HTMLCanvasElement>();
+const canvasElem = useTemplateRef('canvasElem');
 
 const globalColors = computed(() => {
 	let colors = ['#ffffff', '#ccff00', '#31d6ff', '#ff3fac', '#2f7f6f'];

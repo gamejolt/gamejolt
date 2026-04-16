@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRef, toRefs } from 'vue';
+import { computed, PropType, toRef, toRefs, useTemplateRef } from 'vue';
 import { RouterLink } from 'vue-router';
 
 import { styleWhen } from '../../../_styles/mixins';
@@ -38,7 +38,7 @@ const props = defineProps({
 
 const { user, isLoading, elevate } = toRefs(props);
 
-const headerElement = ref<HTMLElement>();
+const headerElement = useTemplateRef('headerElement');
 
 const { user: sessionUser } = useCommonStore();
 

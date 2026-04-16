@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { PropType, ref, toRefs, watch } from 'vue';
+import { PropType, ref, toRefs, useTemplateRef, watch } from 'vue';
 
 import { Screen } from '../../screen/screen-service';
 
@@ -25,7 +25,7 @@ const emit = defineEmits<{
 	hide: [];
 }>();
 
-const root = ref<HTMLDivElement>();
+const root = useTemplateRef<HTMLElement>('root');
 
 let canClearFocus = false;
 const isFocused = ref(false);

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { nextTick, onMounted, PropType, ref, toRefs, watch } from 'vue';
+import { nextTick, onMounted, PropType, ref, toRefs, useTemplateRef, watch } from 'vue';
 
 import { Ruler } from '../../ruler/ruler-service';
 import { onScreenResize } from '../../screen/screen-service';
@@ -34,7 +34,7 @@ const VIDEO_RATIO = 0.5625; // 16:9
 const embedUrl = ref('');
 const width = ref<number | 'auto'>('auto');
 const height = ref<number | 'auto'>('auto');
-const innerElem = ref<HTMLElement>();
+const innerElem = useTemplateRef('innerElem');
 
 useEventSubscription(onScreenResize, () => recalculateDimensions());
 

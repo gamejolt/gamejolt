@@ -23,9 +23,7 @@ import {
 import { UserModel } from '../../../../../_common/user/user.model';
 import { loadScript } from '../../../../../utils/utils';
 import AppFinancialsManagedAccountCompanyDetails from './AppFinancialsManagedAccountCompanyDetails.vue';
-import AppFinancialsManagedAccountPerson, {
-	AppFinancialsManagedAccountPersonInterface,
-} from './AppFinancialsManagedAccountPerson.vue';
+import AppFinancialsManagedAccountPerson from './AppFinancialsManagedAccountPerson.vue';
 
 export const StripeFileUploadUrl = 'https://uploads.stripe.com/v1/files';
 
@@ -221,9 +219,8 @@ let genericError = ref<boolean | string>(false);
 
 let stripeInst: stripe.Stripe = null as any;
 
-const individualRef = useTemplateRef<AppFinancialsManagedAccountPersonInterface>('individual');
-const representativeRef =
-	useTemplateRef<AppFinancialsManagedAccountPersonInterface>('representative');
+const individualRef = useTemplateRef('individual');
+const representativeRef = useTemplateRef('representative');
 
 const IndividualAccountType = UserStripeManagedAccountType.Individual;
 const CompanyAccountType = UserStripeManagedAccountType.Company;

@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, nextTick, onMounted, PropType, ref, toRefs, useSlots, watch } from 'vue';
+import { computed, nextTick, onMounted, PropType, ref, toRefs, useSlots, useTemplateRef, watch } from 'vue';
 
 import AppFadeCollapse from '../../../AppFadeCollapse.vue';
 import AppBackground from '../../../background/AppBackground.vue';
@@ -75,8 +75,8 @@ const { post, videoContext, aspectRatio } = toRefs(props);
 const { hasContentFocus } = useContentFocusService();
 useSlots();
 
-const root = ref<HTMLElement>();
-const message = ref<HTMLElement | undefined>();
+const root = useTemplateRef('root');
+const message = useTemplateRef('message');
 
 const videoController = ref<VideoPlayerController>();
 

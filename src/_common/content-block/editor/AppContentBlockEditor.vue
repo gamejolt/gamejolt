@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { PropType, ref, toRaw, toRefs, watch } from 'vue';
+import { PropType, ref, toRaw, toRefs, useTemplateRef, watch } from 'vue';
 
 import { Api } from '../../api/api.service';
 import AppButton from '../../button/AppButton.vue';
@@ -36,7 +36,7 @@ const { site, windowId, contentBlock } = toRefs(props);
 const isPreviewLoading = ref(false);
 const previewIndex = ref(0);
 const previewTimeout = ref<NodeJS.Timer | null>(null);
-const rootElem = ref<HTMLDivElement>();
+const rootElem = useTemplateRef('rootElem');
 
 watch(
 	() => contentBlock.value.content_markdown,

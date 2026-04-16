@@ -1,5 +1,5 @@
 <script lang="ts">
-import { nextTick, onMounted, ref, toRefs, watch } from 'vue';
+import { nextTick, onMounted, ref, toRefs, useTemplateRef, watch } from 'vue';
 
 import { Ruler } from '../../ruler/ruler-service';
 import { onScreenResize } from '../../screen/screen-service';
@@ -64,7 +64,7 @@ const { sketchfabId, maxWidth, maxHeight, autoplay } = toRefs(props);
 const embedUrl = ref('');
 const width = ref(0);
 const height = ref(0);
-const innerElem = ref<HTMLElement>();
+const innerElem = useTemplateRef('innerElem');
 
 useEventSubscription(onScreenResize, () => recalculateDimensions());
 

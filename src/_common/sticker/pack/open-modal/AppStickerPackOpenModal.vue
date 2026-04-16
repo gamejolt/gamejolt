@@ -8,6 +8,7 @@ import {
 	PropType,
 	ref,
 	toRefs,
+	useTemplateRef,
 } from 'vue';
 
 import { arrayRemove } from '../../../../utils/array';
@@ -140,9 +141,9 @@ const {
 	allStickers,
 } = useStickerStore();
 
-const root = ref<HTMLDivElement>();
-const packSlice = ref<HTMLDivElement>();
-const packTrash = ref<HTMLDivElement>();
+const root = useTemplateRef('root');
+const packSlice = useTemplateRef('packSlice');
+const packTrash = useTemplateRef('packTrash');
 
 const stage = ref<PackOpenStage>('confirm');
 const openedStickers = ref<StickerModel[]>([]);

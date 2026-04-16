@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, onMounted, onUnmounted, PropType, ref } from 'vue';
+import { computed, onMounted, onUnmounted, PropType, ref, useTemplateRef } from 'vue';
 import { isNavigationFailure, useRouter } from 'vue-router';
 
 import { Backdrop, BackdropController } from '../backdrop/backdrop.service';
@@ -56,7 +56,7 @@ const router = useRouter();
 const modal = useModal()!;
 const scroller = createScroller();
 
-const root = ref<HTMLElement>();
+const root = useTemplateRef('root');
 const isHoveringContent = ref(false);
 
 let _backdrop: BackdropController | undefined;

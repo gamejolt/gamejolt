@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, shallowRef, toRefs, watch } from 'vue';
+import { computed, PropType, ref, shallowRef, toRefs, useTemplateRef, watch } from 'vue';
 import { RouteLocationRaw, useRoute, useRouter } from 'vue-router';
 
 import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
@@ -67,7 +67,7 @@ const stickerTargetController = shallowRef<StickerTargetController>(
 
 provideStickerTargetController(stickerTargetController);
 
-const stickerScroll = ref<HTMLDivElement>();
+const stickerScroll = useTemplateRef('stickerScroll');
 
 const videoStartTime = ref(0);
 const hasVideoProcessingError = ref(false);

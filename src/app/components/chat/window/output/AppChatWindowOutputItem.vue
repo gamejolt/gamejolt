@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, CSSProperties, PropType, reactive, ref, toRefs } from 'vue';
+import { computed, CSSProperties, PropType, reactive, ref, toRefs, useTemplateRef } from 'vue';
 import { RouterLink } from 'vue-router';
 
 import { ContentOwnerParentBounds } from '../../../../../_common/content/content-owner';
@@ -86,7 +86,7 @@ const avatarSizeStyles: CSSProperties = {
 let canClearFocus = false;
 let isFocused = false;
 
-const itemWrapper = ref<HTMLElement>();
+const itemWrapper = useTemplateRef('itemWrapper');
 const isShowingAvatarPopper = ref(false);
 const popperHideTrigger = ref(0);
 

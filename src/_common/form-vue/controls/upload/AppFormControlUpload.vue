@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, ref } from 'vue';
+import { computed, ref, useTemplateRef } from 'vue';
 
 import { formatNumber } from '../../../filters/number';
 import AppJolticon from '../../../jolticon/AppJolticon.vue';
@@ -14,9 +14,7 @@ import {
 } from '../../AppFormControl.vue';
 import { useFormGroup } from '../../AppFormGroup.vue';
 import { FormValidator, validateFileAccept } from '../../validators';
-import AppFormControlUploadFile, {
-	AppFormControlUploadFileInterface,
-} from './AppFormControlUploadFile.vue';
+import AppFormControlUploadFile from './AppFormControlUploadFile.vue';
 
 export interface AppFormControlUploadInterface {
 	showFileSelect: () => void;
@@ -64,7 +62,7 @@ const { id, controlVal, applyValue } = createFormControl({
 	onChange: val => emit('changed', val),
 });
 
-const input = ref<AppFormControlUploadFileInterface>();
+const input = useTemplateRef('input');
 const isDropActive = ref(false);
 const clearKey = ref(0);
 

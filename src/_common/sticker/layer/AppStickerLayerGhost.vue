@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onUnmounted, ref, toRef } from 'vue';
+import { onUnmounted, ref, toRef, useTemplateRef } from 'vue';
 
 import { styleBorderRadiusLg, styleChangeBg, styleWhen } from '../../../_styles/mixins';
 import { Analytics } from '../../analytics/analytics.service';
@@ -18,7 +18,7 @@ const stickerStore = useStickerStore();
 const { ghostStickerSize, placedItem, isDragging, targetController, isChargingSticker } =
 	stickerStore;
 
-const root = ref<HTMLDivElement>();
+const root = useTemplateRef('root');
 
 /**
  * Used to hide the sticker until we get the proper positioning data. If we

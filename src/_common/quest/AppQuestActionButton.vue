@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, PropType, ref, toRefs, watch } from 'vue';
+import { computed, PropType, ref, toRefs, useTemplateRef, watch } from 'vue';
 
 import { getMediaserverUrlForBounds } from '../../utils/image';
 import { Api } from '../api/api.service';
@@ -39,7 +39,7 @@ const emit = defineEmits<{
 const { setChargeData, currentCharge, chargeLimit } = useStickerStore();
 const { coinBalance } = useCommonStore();
 
-const root = ref<HTMLElement>();
+const root = useTemplateRef('root');
 const isProcessingAction = ref(false);
 const hasError = ref(false);
 

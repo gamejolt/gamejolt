@@ -7,6 +7,7 @@ import {
 	onMounted,
 	ref,
 	toRef,
+	useTemplateRef,
 	watch,
 } from 'vue';
 
@@ -72,9 +73,9 @@ const _stickersPerRow = ref(5);
 const overflowTopBarText = ref(true);
 const isConfirmingPlacement = ref(false);
 
-const root = ref<HTMLDivElement>();
-const content = ref<HTMLDivElement>();
-const slider = ref<HTMLDivElement>();
+const root = useTemplateRef('root');
+const content = useTemplateRef('content');
+const slider = useTemplateRef('slider');
 
 const showPlaceButton = toRef(() => !!placedItem.value);
 const hasStickers = toRef(() => !!items.value.length);

@@ -1,5 +1,5 @@
 <script lang="ts">
-import { nextTick, onMounted, onUnmounted, PropType, Ref, ref, toRefs } from 'vue';
+import { nextTick, onMounted, onUnmounted, PropType, Ref, ref, toRefs, useTemplateRef } from 'vue';
 
 import { sleep } from '../../../utils/utils';
 import { illBackpackClosed, illBackpackOpen } from '../../img/ill/illustrations';
@@ -82,8 +82,8 @@ const { quest, rewards, title } = toRefs(props);
 
 const kettleController = createPopcornKettleController();
 
-const backpackEnter = ref<HTMLElement>();
-const backpackOpen = ref<HTMLElement>();
+const backpackEnter = useTemplateRef('backpackEnter');
+const backpackOpen = useTemplateRef('backpackOpen');
 
 const isClosing = ref(false);
 
@@ -173,7 +173,7 @@ async function closeBackpack() {
 }
 
 function playAnimation(
-	element: Ref<HTMLElement | undefined>,
+	element: Readonly<Ref<HTMLElement | null>>,
 	{ reverse }: { reverse?: boolean } = {}
 ) {
 	if (!element.value) {

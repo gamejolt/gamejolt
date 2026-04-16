@@ -7,7 +7,6 @@ import { showErrorGrowl } from '../../../../growls/growls.service';
 import AppJolticon from '../../../../jolticon/AppJolticon.vue';
 import AppLoading from '../../../../loading/AppLoading.vue';
 import AppModal from '../../../../modal/AppModal.vue';
-import { AppModalInterface } from '../../../../modal/AppModal.vue';
 import { useModal } from '../../../../modal/modal.service';
 import { Ruler } from '../../../../ruler/ruler-service';
 import { Screen } from '../../../../screen/screen-service';
@@ -22,8 +21,8 @@ let categoriesCache: Category[] | undefined;
 
 const modal = useModal()!;
 
-const modalComponentRef = useTemplateRef<AppModalInterface>('modalComponent');
-const searchInputRef = useTemplateRef<HTMLInputElement>('searchInput');
+const modalComponentRef = useTemplateRef('modalComponent');
+const searchInputRef = useTemplateRef('searchInput');
 
 const contentScroller = createScroller();
 

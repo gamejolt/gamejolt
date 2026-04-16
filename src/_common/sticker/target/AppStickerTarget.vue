@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, nextTick, onBeforeUnmount, PropType, ref, toRaw, toRefs, watch } from 'vue';
+import { computed, nextTick, onBeforeUnmount, PropType, toRaw, toRefs, useTemplateRef, watch } from 'vue';
 
 import { sleep } from '../../../utils/utils';
 import { Api } from '../../api/api.service';
@@ -39,7 +39,7 @@ const props = defineProps({
 
 const { controller, disabled } = toRefs(props);
 
-const root = ref<HTMLDivElement>();
+const root = useTemplateRef('root');
 
 const stickerStore = useStickerStore();
 const { isDragging, isDrawerOpen, sticker: storeSticker } = stickerStore;

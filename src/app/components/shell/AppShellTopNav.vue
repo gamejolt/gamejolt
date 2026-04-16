@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, defineAsyncComponent, ref } from 'vue';
+import { computed, defineAsyncComponent, ref, useTemplateRef } from 'vue';
 import { RouterLink } from 'vue-router';
 
 import {
@@ -41,8 +41,8 @@ const { isUserTimedOut, user, userBootstrapped, showInitialPackWatermark } = use
 const { chat } = useGridStore();
 const { questActivityIds } = useQuestStore();
 
-const left = ref<HTMLDivElement>();
-const right = ref<HTMLDivElement>();
+const left = useTemplateRef('left');
+const right = useTemplateRef('right');
 const baseMinColWidth = ref<number>();
 
 const shouldShowSearch = computed(() => !Screen.isXs && !isUserTimedOut.value);

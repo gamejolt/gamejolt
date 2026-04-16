@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onMounted, PropType, ref, toRefs, watch } from 'vue';
+import { onMounted, PropType, ref, toRefs, useTemplateRef, watch } from 'vue';
 
 import { sleep } from '../utils/utils';
 import { Screen } from './screen/screen-service';
@@ -48,7 +48,7 @@ const frameRequestHandle = ref<number | undefined>();
 let isRequired = false;
 let isPrimed = false;
 
-const root = ref<HTMLDivElement>();
+const root = useTemplateRef('root');
 
 onMounted(async () => {
 	// Let it compile DOM and wait for any images to be resized.

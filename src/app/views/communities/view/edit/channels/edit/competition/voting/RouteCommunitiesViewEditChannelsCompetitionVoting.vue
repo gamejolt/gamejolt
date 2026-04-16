@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, ref, toRef } from 'vue';
+import { computed, ref, toRef, useTemplateRef } from 'vue';
 
 import { Api } from '../../../../../../../../../_common/api/api.service';
 import AppButton from '../../../../../../../../../_common/button/AppButton.vue';
@@ -62,7 +62,7 @@ const activeVotingCategory = ref<CommunityCompetitionVotingCategoryModel | undef
 const isShowingAwardAdd = ref(false);
 const isShowingVotingCategoryAdd = ref(false);
 const isEditing = ref(false);
-const toggleForm = ref<InstanceType<typeof FormCommunityCompetitionVotingToggle>>();
+const toggleForm = useTemplateRef('toggleForm');
 
 const hasVotingCategories = toRef(() => votingCategories.value.length > 0);
 const hasAwards = toRef(() => awards.value.length > 0);
