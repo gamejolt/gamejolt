@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-
 import { $gettext } from '../../translate/translate.service';
 import FormThemeEditorImage from './FormThemeEditorImage.vue';
 
@@ -13,22 +11,16 @@ defineProps({
 		type: Number,
 		required: true,
 	},
-	modelValue: {
-		type: Object as PropType<any>,
-		required: true,
-	},
 });
 
-const emit = defineEmits<{
-	'update:modelValue': [modelValue?: any];
-}>();
+const modelValue = defineModel<any>({ required: true });
 
 function onImageAdded(_model: any, response: any) {
-	emit('update:modelValue', response.mediaItem);
+	modelValue.value = response.mediaItem;
 }
 
 function clear() {
-	emit('update:modelValue', undefined);
+	modelValue.value = undefined;
 }
 </script>
 

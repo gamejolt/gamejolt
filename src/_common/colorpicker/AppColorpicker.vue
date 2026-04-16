@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 // @ts-expect-error no types for @ckpack/vue-color
 import { Sketch as VuePicker } from '@ckpack/vue-color';
-import { ref, toRefs, watch } from 'vue';
+import { ref, watch } from 'vue';
 
 import AppButton from '../button/AppButton.vue';
 import AppPopper from '../popper/AppPopper.vue';
@@ -12,18 +12,8 @@ type VueTouch = {
 	hex: string | null;
 };
 
-const props = defineProps({
-	modelValue: {
-		type: String,
-		required: true,
-	},
-});
+const modelValue = defineModel<string>({ required: true });
 
-const emit = defineEmits<{
-	'update:modelValue': [modelValue: string];
-}>();
-
-const { modelValue } = toRefs(props);
 const colors = ref<VueTouch>({
 	hex: null,
 });
@@ -32,7 +22,7 @@ watch(
 	modelValue,
 	() => {
 		colors.value = {
-			hex: modelValue?.value ?? '',
+			hex: modelValue.value ?? '',
 		};
 	},
 	{ immediate: true }
@@ -43,13 +33,13 @@ function onChange(value: VueTouch) {
 }
 
 function accept() {
-	emit('update:modelValue', colors.value.hex!);
+	modelValue.value = colors.value.hex!;
 	Popper.hideAll();
 }
 
 function cancel() {
 	colors.value = {
-		hex: modelValue?.value ?? '',
+		hex: modelValue.value ?? '',
 	};
 	Popper.hideAll();
 }

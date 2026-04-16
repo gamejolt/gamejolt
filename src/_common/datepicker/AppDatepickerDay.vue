@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, reactive, toRefs } from 'vue';
+import { computed, reactive } from 'vue';
 
 import { arrayChunk } from '../../utils/array';
 import { formatDate } from '../filters/date';
@@ -12,19 +12,12 @@ import {
 	useDatepicker,
 } from './AppDatepicker.vue';
 
-const props = defineProps({
-	modelValue: {
-		type: Date,
-		required: true,
-	},
-});
+const modelValue = defineModel<Date>({ required: true });
 
 const emit = defineEmits<{
-	'update:modelValue': [modelValue: Date];
 	selected: [date: Date];
 }>();
 
-const { modelValue } = toRefs(props);
 const { createDate, toggleMode } = useDatepicker();
 
 const title = computed(() => formatDate(modelValue.value, DatepickerFormatDayTitle));
@@ -78,7 +71,7 @@ function _getDates(startDate: Date, n: number) {
 function move(direction: number) {
 	const newValue = new Date(modelValue.value);
 	newValue.setMonth(newValue.getMonth() + direction);
-	emit('update:modelValue', newValue);
+	modelValue.value = newValue;
 }
 
 function select(date: Date) {

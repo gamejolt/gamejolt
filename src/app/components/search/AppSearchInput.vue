@@ -4,15 +4,15 @@ import { type HTMLAttributes, nextTick, useTemplateRef } from 'vue';
 import { FocusToken } from '../../../utils/focus-token';
 
 type Props = {
-	modelValue: string;
 	focusToken: FocusToken;
 } & /* @vue-ignore */ Pick<HTMLAttributes, 'onFocus' | 'onBlur' | 'onKeydown'>;
 
-const props = defineProps<Props>();
+const { focusToken } = defineProps<Props>();
+const modelValue = defineModel<string>({ required: true });
 
 const root = useTemplateRef('root');
 
-props.focusToken?.register({
+focusToken?.register({
 	focus: async () => {
 		await nextTick();
 		root.value?.focus();
@@ -23,13 +23,9 @@ props.focusToken?.register({
 	},
 });
 
-const emit = defineEmits<{
-	'update:modelValue': [modelValue: string];
-}>();
-
 function onChange(event: InputEvent) {
 	const target = event.target as HTMLInputElement | null;
-	emit('update:modelValue', target?.value ?? '');
+	modelValue.value = target?.value ?? '';
 }
 </script>
 

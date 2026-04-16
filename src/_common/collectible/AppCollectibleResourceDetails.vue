@@ -43,17 +43,11 @@ const props = defineProps({
 		type: Object as PropType<CollectibleResourceItem>,
 		required: true,
 	},
-	packs: {
-		type: Array as PropType<StickerPackModel[]>,
-		required: true,
-	},
 });
 
 const { item } = toRefs(props);
 
-const emit = defineEmits<{
-	'update:packs': [packs: StickerPackModel[]];
-}>();
+const packs = defineModel<StickerPackModel[]>('packs', { required: true });
 
 const isLoading = ref(true);
 const collectible = ref<CollectibleModel>();
@@ -207,9 +201,9 @@ onMounted(async () => {
 			AcquisitionMethod.PackOpen
 		).map(i => i.sticker_pack_id);
 
-		const packs: StickerPackModel[] = [];
+		const newPacks: StickerPackModel[] = [];
 
-		if (packIds.length && !props.packs.length) {
+		if (packIds.length && !packs.value.length) {
 			const packsResponse = await Api.sendFieldsRequest(
 				'/mobile/sticker',
 				{
@@ -219,14 +213,14 @@ onMounted(async () => {
 				},
 				{ detach: true }
 			);
-			arrayAssignAll(packs, storeModelList(StickerPackModel, packsResponse.packs));
-			emit('update:packs', packs);
+			arrayAssignAll(newPacks, storeModelList(StickerPackModel, packsResponse.packs));
+			packs.value = newPacks;
 		}
 
 		collectible.value = newCollectible;
 	} catch {
 		collectible.value = undefined;
-		emit('update:packs', []);
+		packs.value = [];
 	}
 	isLoading.value = false;
 });

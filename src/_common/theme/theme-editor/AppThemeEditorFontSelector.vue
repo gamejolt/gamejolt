@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, nextTick, PropType, ref, toRefs, useTemplateRef, watch } from 'vue';
+import { computed, nextTick, ref, useTemplateRef, watch } from 'vue';
 
 import { Api } from '../../api/api.service';
 import { $gettext } from '../../translate/translate.service';
@@ -12,18 +12,7 @@ interface FontDefinition {
 	};
 }
 
-const props = defineProps({
-	modelValue: {
-		type: Object as PropType<FontDefinition>,
-		default: undefined,
-	},
-});
-
-const emit = defineEmits<{
-	'update:modelValue': [font?: FontDefinition];
-}>();
-
-const { modelValue } = toRefs(props);
+const modelValue = defineModel<FontDefinition>();
 
 const list = useTemplateRef('list');
 const selectedFont = ref<FontDefinition | null>(null);
@@ -48,9 +37,9 @@ const fontListFiltered = computed(() => {
 
 // Copy to our value when the model changes.
 watch(
-	() => modelValue?.value,
+	modelValue,
 	() => {
-		selectedFont.value = modelValue?.value || null;
+		selectedFont.value = modelValue.value || null;
 		updateFontDefinitions();
 	},
 	{ immediate: true }
@@ -109,7 +98,7 @@ function clearSelectedFont() {
 }
 
 function updateValue(font?: FontDefinition) {
-	emit('update:modelValue', font);
+	modelValue.value = font;
 }
 
 async function getFontList(): Promise<FontDefinition[]> {

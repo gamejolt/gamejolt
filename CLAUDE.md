@@ -39,6 +39,24 @@ const emit = defineEmits<{
 
 ---
 
+## v-model
+
+Use `defineModel()` — never declare a `modelValue` prop + `update:modelValue` emit by hand.
+
+```ts
+// Default v-model
+const modelValue = defineModel<string>({ required: true });
+
+// Named v-model (v-model:packs)
+const packs = defineModel<StickerPackModel[]>('packs', { required: true });
+```
+
+- The returned ref is two-way bound: reading `modelValue.value` gets the prop, assigning `modelValue.value = x` emits `update:modelValue`.
+- Do **not** also declare the model name in `defineProps` — `defineModel` registers the prop and emit internally.
+- In templates, refs auto-unwrap at the top level of expressions, so `@click="modelValue = foo"` works and compiles to a `.value` assignment that triggers the update emit.
+
+---
+
 ## Reactive State
 
 - `ref()` for reactive values, `computed()` for derived values

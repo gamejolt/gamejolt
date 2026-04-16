@@ -6,24 +6,14 @@ import AppProfileSocialLinks from '../AppProfileSocialLinks.vue';
 import { useProfileRouteStore } from '../RouteProfile.vue';
 
 defineProps({
-	showFullDescription: {
-		type: Boolean,
-		required: true,
-	},
-	canToggleDescription: {
-		type: Boolean,
-		required: true,
-	},
 	noBioText: {
 		type: String,
 		default: '',
 	},
 });
 
-const emit = defineEmits<{
-	'update:canToggleDescription': [value: boolean];
-	'update:showFullDescription': [value: boolean];
-}>();
+const showFullDescription = defineModel<boolean>('showFullDescription', { required: true });
+const canToggleDescription = defineModel<boolean>('canToggleDescription', { required: true });
 
 const { user: routeUser, isOverviewLoaded } = useProfileRouteStore()!;
 </script>
@@ -48,8 +38,8 @@ const { user: routeUser, isOverviewLoaded } = useProfileRouteStore()!;
 			:collapse-height="200"
 			:is-open="showFullDescription"
 			:animate="false"
-			@require-change="emit('update:canToggleDescription', $event)"
-			@expand="emit('update:showFullDescription', true)"
+			@require-change="canToggleDescription = $event"
+			@expand="showFullDescription = true"
 		>
 			<AppContentViewer v-if="routeUser.hasBio" :source="routeUser.bio_content" />
 			<div v-else-if="noBioText.length" class="small text-muted">
@@ -64,7 +54,7 @@ const { user: routeUser, isOverviewLoaded } = useProfileRouteStore()!;
 		<a
 			v-if="canToggleDescription"
 			class="hidden-text-expander"
-			@click="emit('update:showFullDescription', !showFullDescription)"
+			@click="showFullDescription = !showFullDescription"
 		/>
 	</template>
 </template>
