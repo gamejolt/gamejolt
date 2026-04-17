@@ -5,9 +5,7 @@ import { RouterLink } from 'vue-router';
 import AppButton from '~common/button/AppButton.vue';
 import AppCard from '~common/card/AppCard.vue';
 import { Screen } from '~common/screen/screen-service';
-import AppScrollInview, {
-	ScrollInviewConfig,
-} from '~common/scroll/inview/AppScrollInview.vue';
+import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
 import { useCommonStore } from '~common/store/common-store';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import AppUserVerifiedTick from '~common/user/AppUserVerifiedTick.vue';

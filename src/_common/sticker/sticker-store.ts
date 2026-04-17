@@ -18,7 +18,10 @@ import { ModelData } from '~common/model/model.service';
 import { storeModel, storeModelList } from '~common/model/model-store.service';
 import { Screen } from '~common/screen/screen-service';
 import AppStickerLayer from '~common/sticker/layer/AppStickerLayer.vue';
-import { getCollidingStickerTarget, StickerLayerController } from '~common/sticker/layer/layer-controller';
+import {
+	getCollidingStickerTarget,
+	StickerLayerController,
+} from '~common/sticker/layer/layer-controller';
 import { UserStickerPackModel } from '~common/sticker/pack/user-pack.model';
 import { StickerPlacementModel } from '~common/sticker/placement/placement.model';
 import { StickerModel, StickerStack } from '~common/sticker/sticker.model';

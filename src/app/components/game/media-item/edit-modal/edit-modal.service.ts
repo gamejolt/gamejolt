@@ -13,7 +13,9 @@ export async function showGameMediaItemEditModal(
 ) {
 	return await showModal<Media>({
 		modalId: 'GameMediaItemEdit',
-		component: defineAsyncComponent(() => import('~app/components/game/media-item/edit-modal/AppGameMediaItemEditModal.vue')),
+		component: defineAsyncComponent(
+			() => import('~app/components/game/media-item/edit-modal/AppGameMediaItemEditModal.vue')
+		),
 		props: {
 			game,
 			item,

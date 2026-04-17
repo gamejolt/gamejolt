@@ -44,8 +44,7 @@ let cropper: Cropper;
 const refImg = useTemplateRef('refImg');
 
 onMounted(() => {
-	const useAspectRatio =
-		minAspectRatio && maxAspectRatio ? undefined : aspectRatio;
+	const useAspectRatio = minAspectRatio && maxAspectRatio ? undefined : aspectRatio;
 
 	cropper = new Cropper(refImg.value!, {
 		aspectRatio: useAspectRatio,
@@ -92,10 +91,8 @@ onMounted(() => {
 					(e.detail.width < minWidth && widthDiff > 0.5) ||
 					(e.detail.height < minHeight && heightDiff > 0.5)
 				) {
-					const targetWidth =
-						e.detail.width < minWidth ? minWidth : e.detail.width;
-					const targetHeight =
-						e.detail.height < minHeight ? minHeight : e.detail.height;
+					const targetWidth = e.detail.width < minWidth ? minWidth : e.detail.width;
+					const targetHeight = e.detail.height < minHeight ? minHeight : e.detail.height;
 					cropper!.setData(
 						Object.assign({}, e.detail, {
 							width: targetWidth,
@@ -112,10 +109,7 @@ onMounted(() => {
 				const containerData = cropper!.getContainerData();
 				const aspectRatio = cropBoxData.width / cropBoxData.height;
 
-				if (
-					aspectRatio < minAspectRatio &&
-					Math.abs(aspectRatio - minAspectRatio) > 0.01
-				) {
+				if (aspectRatio < minAspectRatio && Math.abs(aspectRatio - minAspectRatio) > 0.01) {
 					let targetWidth = cropBoxData.height * minAspectRatio;
 					let targetHeight = cropBoxData.height;
 					if (targetWidth > containerData.width) {
@@ -158,13 +152,19 @@ watch(
 	}
 );
 
-watch(() => src, () => {
-	cropper?.replace(src);
-});
+watch(
+	() => src,
+	() => {
+		cropper?.replace(src);
+	}
+);
 
-watch(() => disabled, () => {
-	onDisabledChange();
-});
+watch(
+	() => disabled,
+	() => {
+		onDisabledChange();
+	}
+);
 
 /**
  * This gets called when bootstrapping the component with data, and when

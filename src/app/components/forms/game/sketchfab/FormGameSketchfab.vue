@@ -8,10 +8,7 @@ import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
 import { validatePattern } from '~common/form-vue/validators';
 import { GameModel } from '~common/game/game.model';
-import {
-	$saveGameSketchfab,
-	GameSketchfabModel,
-} from '~common/game/sketchfab/sketchfab.model';
+import { $saveGameSketchfab, GameSketchfabModel } from '~common/game/sketchfab/sketchfab.model';
 import AppSketchfabEmbed, {
 	getSketchfabIdFromInput,
 	SKETCHFAB_FIELD_VALIDATION_REGEX,

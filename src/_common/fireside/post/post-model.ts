@@ -25,7 +25,7 @@ import { storeModel } from '~common/model/model-store.service';
 import { PollModel } from '~common/poll/poll.model';
 import { Registry } from '~common/registry/registry.service';
 import { StickerPlacementModel } from '~common/sticker/placement/placement.model';
-import { constructStickerCounts,StickerCount } from '~common/sticker/sticker-count';
+import { constructStickerCounts, StickerCount } from '~common/sticker/sticker-count';
 import { $gettext } from '~common/translate/translate.service';
 import { UserModel } from '~common/user/user.model';
 import { RouteLocationDefinition } from '~utils/router';

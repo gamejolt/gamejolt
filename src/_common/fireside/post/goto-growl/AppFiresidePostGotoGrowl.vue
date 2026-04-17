@@ -25,12 +25,8 @@ const route = useRoute();
 const router = useRouter();
 
 const isActive = toRef(() => post.status === FiresidePostStatus.Active);
-const isScheduled = toRef(
-	() => post.isScheduled && post.status === FiresidePostStatus.Draft
-);
-const isDraft = toRef(
-	() => !post.isScheduled && post.status === FiresidePostStatus.Draft
-);
+const isScheduled = toRef(() => post.isScheduled && post.status === FiresidePostStatus.Draft);
+const isDraft = toRef(() => !post.isScheduled && post.status === FiresidePostStatus.Draft);
 
 const draftsLocation = computed<RouteLocationRaw>(() => getFeedLocation('draft'));
 const scheduledLocation = computed<RouteLocationRaw>(() => getFeedLocation('scheduled'));

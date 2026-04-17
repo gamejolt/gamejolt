@@ -19,9 +19,7 @@ import { storeModelList } from '~common/model/model-store.service';
 import AppPopper from '~common/popper/AppPopper.vue';
 import { Popper } from '~common/popper/popper.service';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
-import AppStickerPack, {
-	StickerPackExpiryStyles,
-} from '~common/sticker/pack/AppStickerPack.vue';
+import AppStickerPack, { StickerPackExpiryStyles } from '~common/sticker/pack/AppStickerPack.vue';
 import { showStickerPackOpenModal } from '~common/sticker/pack/open-modal/modal.service';
 import { UserStickerPackModel } from '~common/sticker/pack/user-pack.model';
 import {

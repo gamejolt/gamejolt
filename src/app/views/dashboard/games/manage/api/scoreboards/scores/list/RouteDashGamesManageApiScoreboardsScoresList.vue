@@ -6,10 +6,7 @@ import AppListScores from '~app/views/dashboard/games/manage/api/scoreboards/_li
 import { useGameDashRouteController } from '~app/views/dashboard/games/manage/manage.store';
 import { Api } from '~common/api/api.service';
 import { GameScoreTableModel } from '~common/game/score-table/score-table.model';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { Scroll } from '~common/scroll/scroll.service';
 import { $gettext } from '~common/translate/translate.service';
 import { UserGameScoreModel } from '~common/user/game-score/game-score.model';

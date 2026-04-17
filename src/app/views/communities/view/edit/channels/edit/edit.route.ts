@@ -5,7 +5,10 @@ import { routeCommunitiesViewEditChannelsOverview } from '~app/views/communities
 
 export const routeCommunitiesViewEditChannelsEdit: RouteRecordRaw = {
 	path: ':channel',
-	component: () => import('~app/views/communities/view/edit/channels/edit/RouteCommunitiesViewEditChannelsEdit.vue'),
+	component: () =>
+		import(
+			'~app/views/communities/view/edit/channels/edit/RouteCommunitiesViewEditChannelsEdit.vue'
+		),
 	children: [
 		routeCommunitiesViewEditChannelsOverview,
 		routeCommunitiesViewEditChannelsCompetition,

@@ -5,10 +5,7 @@ import { RouterLink, useRouter } from 'vue-router';
 import { showCommentModal } from '~app/components/comment/modal/modal.service';
 import AppGamePerms from '~app/components/game/perms/AppGamePerms.vue';
 import { useGameRouteController } from '~app/views/discover/games/view/RouteDiscoverGamesView.vue';
-import {
-	getCommentStore,
-	useCommentStoreManager,
-} from '~common/comment/comment-store';
+import { getCommentStore, useCommentStoreManager } from '~common/comment/comment-store';
 import { formatNumber } from '~common/filters/number';
 import AppGameModLinks from '~common/game/mod-links/AppGameModLinks.vue';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';

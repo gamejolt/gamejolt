@@ -3,10 +3,7 @@ import { computed, toRef } from 'vue';
 
 import AppButton from '~common/button/AppButton.vue';
 import { useForm } from '~common/form-vue/AppForm.vue';
-import {
-	createFormControl,
-	FormControlEmits,
-} from '~common/form-vue/AppFormControl.vue';
+import { createFormControl, FormControlEmits } from '~common/form-vue/AppFormControl.vue';
 import { useFormGroup } from '~common/form-vue/AppFormGroup.vue';
 import { useFormControlToggleButtonGroup } from '~common/form-vue/controls/toggle-button/AppFormControlToggleButtonGroup.vue';
 import { FormValidator } from '~common/form-vue/validators';

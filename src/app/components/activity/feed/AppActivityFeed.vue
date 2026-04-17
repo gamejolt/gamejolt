@@ -3,8 +3,15 @@ import { computed, inject, provide, reactive, ref } from 'vue';
 
 import AppActivityFeedItem from '~app/components/activity/feed/item/AppActivityFeedItem.vue';
 import AppActivityFeedNewButton from '~app/components/activity/feed/new-button/AppActivityFeedNewButton.vue';
-import { ActivityFeedInterfaceKey, ActivityFeedKey, ActivityFeedView } from '~app/components/activity/feed/view';
-import { kPostItemPaddingVertical, kPostItemPaddingXsVertical } from '~app/components/post/post-styles';
+import {
+	ActivityFeedInterfaceKey,
+	ActivityFeedKey,
+	ActivityFeedView,
+} from '~app/components/activity/feed/view';
+import {
+	kPostItemPaddingVertical,
+	kPostItemPaddingXsVertical,
+} from '~app/components/post/post-styles';
 import { useAdStore } from '~common/ad/ad-store';
 import AppAdFeedParent from '~common/ad/AppAdFeedParent.vue';
 import AppAdWidget from '~common/ad/widget/AppAdWidget.vue';
@@ -19,9 +26,7 @@ import { illEndOfFeed } from '~common/illustration/illustrations';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppLoading from '~common/loading/AppLoading.vue';
 import { Screen } from '~common/screen/screen-service';
-import AppScrollInview, {
-	ScrollInviewConfig,
-} from '~common/scroll/inview/AppScrollInview.vue';
+import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
 import { Scroll } from '~common/scroll/scroll.service';
 import { $gettext } from '~common/translate/translate.service';
 import { styleWhen } from '~styles/mixins';
@@ -93,9 +98,7 @@ provide(
 
 const isNewButtonInview = ref(false);
 
-const shouldShowLoadMore = computed(
-	() => !feed.reachedEnd && !feed.isLoadingMore && feed.hasItems
-);
+const shouldShowLoadMore = computed(() => !feed.reachedEnd && !feed.isLoadingMore && feed.hasItems);
 const lastPostScrollId = computed(() => feed.state.endScrollId);
 const newCount = computed(() => feed.newCount);
 const shouldShowAds = computed(() => showAds && globalShouldShowAds.value);

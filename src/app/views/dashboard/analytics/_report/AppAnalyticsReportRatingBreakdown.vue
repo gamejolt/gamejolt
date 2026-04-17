@@ -59,4 +59,8 @@ defineProps<Props>();
 	</div>
 </template>
 
-<style lang="stylus" src="~app/views/dashboard/analytics/_report/report-percentage.styl" scoped></style>
+<style
+	lang="stylus"
+	src="~app/views/dashboard/analytics/_report/report-percentage.styl"
+	scoped
+></style>

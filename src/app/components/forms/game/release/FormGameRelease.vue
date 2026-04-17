@@ -124,7 +124,6 @@ const scheduledTimezoneOffset = computed(() => {
 const isScheduling = computed(() => form.formModel.isScheduled);
 
 function onBuildAdded(build: GameBuildModel) {
-	 
 	builds.push(build);
 }
 
@@ -142,7 +141,6 @@ function updateBuildLaunchOptions(
 
 	const newLaunchOptions = GameBuildLaunchOptionModel.populate(responseLaunchOptions);
 	for (const launchOption of newLaunchOptions) {
-		 
 		launchOptions.push(launchOption);
 	}
 }

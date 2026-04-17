@@ -14,11 +14,7 @@ import AppFormControl from '~common/form-vue/AppFormControl.vue';
 import AppFormControlError from '~common/form-vue/AppFormControlError.vue';
 import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
-import {
-	validateMaxValue,
-	validateMinValue,
-	validatePattern,
-} from '~common/form-vue/validators';
+import { validateMaxValue, validateMinValue, validatePattern } from '~common/form-vue/validators';
 import { showErrorGrowl } from '~common/growls/growls.service';
 import { Navigate } from '~common/navigate/navigate.service';
 import { useCommonStore } from '~common/store/common-store';
@@ -195,9 +191,9 @@ async function linkPayPal() {
 						</legend>
 
 						<AppTranslate tag="p" class="small">
-							You decide what percentage of your sale revenue to give to Game
-							Jolt. We won't let you give us more than 10% because we'd rather
-							have you support other developers by buying their games.
+							You decide what percentage of your sale revenue to give to Game Jolt. We
+							won't let you give us more than 10% because we'd rather have you support
+							other developers by buying their games.
 						</AppTranslate>
 
 						<AppFormGroup name="percentage_split" hide-label optional>

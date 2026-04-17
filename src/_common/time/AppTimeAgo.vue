@@ -23,15 +23,16 @@ onUnmounted(() => {
 	_clearTimeout();
 });
 
-watch(() => date, () => {
-	_clearTimeout();
-	_refresh();
-});
+watch(
+	() => date,
+	() => {
+		_clearTimeout();
+		_refresh();
+	}
+);
 
 function _refresh() {
-	const time = strict
-		? formatDistanceStrict(new Date(), date)
-		: formatDistanceToNow(date);
+	const time = strict ? formatDistanceStrict(new Date(), date) : formatDistanceToNow(date);
 
 	if (withoutSuffix) {
 		timeAgo.value = time;

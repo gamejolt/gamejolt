@@ -13,10 +13,7 @@ import { formatCurrency, formatGemsCurrency } from '~common/filters/currency';
 import { imageGems } from '~common/img/images';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppProgressBar from '~common/progress/AppProgressBar.vue';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import AppTranslate from '~common/translate/AppTranslate.vue';
@@ -344,7 +341,9 @@ async function withdraw() {
 			<AppAlertBox v-if="marketplaceRevenuePendingWithdraw > 0" color="primary">
 				<AppTranslate
 					tag="div"
-					:translate-params="{ amount: formatCurrency(marketplaceRevenuePendingWithdraw) }"
+					:translate-params="{
+						amount: formatCurrency(marketplaceRevenuePendingWithdraw),
+					}"
 				>
 					You have pending withdrawals amounting to %{ amount }.
 				</AppTranslate>

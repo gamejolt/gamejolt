@@ -7,19 +7,13 @@ import {
 	$saveCommunityChannelBackground,
 	CommunityChannelModel,
 } from '~common/community/channel/channel.model';
-import AppForm, {
-	createForm,
-	FormController,
-} from '~common/form-vue/AppForm.vue';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
 import AppFormButton from '~common/form-vue/AppFormButton.vue';
 import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
 import AppFormControlCrop from '~common/form-vue/controls/AppFormControlCrop.vue';
 import AppFormControlUpload from '~common/form-vue/controls/upload/AppFormControlUpload.vue';
-import {
-	validateFilesize,
-	validateImageMaxDimensions,
-} from '~common/form-vue/validators';
+import { validateFilesize, validateImageMaxDimensions } from '~common/form-vue/validators';
 import { showModalConfirm } from '~common/modal/confirm/confirm-service';
 import { $gettext } from '~common/translate/translate.service';
 

@@ -26,7 +26,11 @@ import AppStickerPack from '~common/sticker/pack/AppStickerPack.vue';
 import { showStickerPackContentsModal } from '~common/sticker/pack/contents-modal/modal.service';
 import { UserStickerPackModel } from '~common/sticker/pack/user-pack.model';
 import { StickerModel, StickerStack } from '~common/sticker/sticker.model';
-import { CreatorStickersMap, sortStickerStacks, useStickerStore } from '~common/sticker/sticker-store';
+import {
+	CreatorStickersMap,
+	sortStickerStacks,
+	useStickerStore,
+} from '~common/sticker/sticker-store';
 import AppThemeSvg from '~common/theme/svg/AppThemeSvg.vue';
 import { $gettext } from '~common/translate/translate.service';
 import { arrayRemove } from '~utils/array';

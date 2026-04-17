@@ -1,7 +1,11 @@
 <script lang="ts" setup>
 import { computed, nextTick, onUnmounted, ref, watch } from 'vue';
 
-import { editMessage as chatEditMessage, queueChatMessage, tryGetRoomRole } from '~app/components/chat/client';
+import {
+	editMessage as chatEditMessage,
+	queueChatMessage,
+	tryGetRoomRole,
+} from '~app/components/chat/client';
 import { ChatMessageModel } from '~app/components/chat/message';
 import { ChatRoomModel } from '~app/components/chat/room';
 import { ChatWindowLeftGutterSize } from '~app/components/chat/window/variables';
@@ -10,10 +14,7 @@ import AppButton from '~common/button/AppButton.vue';
 import { ContextCapabilities } from '~common/content/content-context';
 import { ContentDocument } from '~common/content/content-document';
 import { ContentRules } from '~common/content/content-rules';
-import {
-	EscapeStack,
-	EscapeStackCallback,
-} from '~common/escape-stack/escape-stack.service';
+import { EscapeStack, EscapeStackCallback } from '~common/escape-stack/escape-stack.service';
 import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
 import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
@@ -205,7 +206,6 @@ watch(
 );
 
 function editMessage({ content, id }: FormModel) {
-	 
 	room.messageEditing = null;
 	// This shouldn't happen, but typescript complains without this.
 	if (!id) {
@@ -270,7 +270,10 @@ async function onSubmit() {
 	applyNextMessageTimeout({ ignoreLastMessageTimestamp: true });
 }
 
-watch(() => slowmodeDuration, () => applyNextMessageTimeout({ ignoreLastMessageTimestamp: false }));
+watch(
+	() => slowmodeDuration,
+	() => applyNextMessageTimeout({ ignoreLastMessageTimestamp: false })
+);
 
 function applyNextMessageTimeout(options: { ignoreLastMessageTimestamp: boolean }) {
 	if (!slowmodeDuration) {
@@ -368,13 +371,11 @@ function onUpKeyPressed(event: KeyboardEvent) {
 		// of the content. This prevents it jump to the beginning of the line.
 		event.preventDefault();
 
-		 
 		room.messageEditing = lastMessage;
 	}
 }
 
 async function cancelEditing() {
-	 
 	room.messageEditing = null;
 	clearMsg();
 

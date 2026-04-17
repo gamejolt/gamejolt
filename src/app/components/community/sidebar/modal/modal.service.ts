@@ -14,7 +14,9 @@ export async function showCommunitySidebarModal(options: Options) {
 
 	return await showModal<void>({
 		modalId: 'CommunitySidebarModal-' + community.id,
-		component: defineAsyncComponent(() => import('~app/components/community/sidebar/modal/AppCommunitySidebarModal.vue')),
+		component: defineAsyncComponent(
+			() => import('~app/components/community/sidebar/modal/AppCommunitySidebarModal.vue')
+		),
 		props: {
 			sidebarData,
 			community,

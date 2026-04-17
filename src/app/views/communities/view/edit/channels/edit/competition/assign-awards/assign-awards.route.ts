@@ -5,6 +5,9 @@ import { routeCommunitiesViewEditChannelsCompetitionAssignAwardsAward } from '~a
 export const routeCommunitiesViewEditChannelsCompetitionAssignAwards: RouteRecordRaw = {
 	name: 'communities.view.edit.channels.competition.assign-awards',
 	path: 'assign-awards',
-	component: () => import('~app/views/communities/view/edit/channels/edit/competition/assign-awards/RouteCommunitiesViewEditChannelsCompetitionAssignAwards.vue'),
+	component: () =>
+		import(
+			'~app/views/communities/view/edit/channels/edit/competition/assign-awards/RouteCommunitiesViewEditChannelsCompetitionAssignAwards.vue'
+		),
 	children: [routeCommunitiesViewEditChannelsCompetitionAssignAwardsAward],
 };

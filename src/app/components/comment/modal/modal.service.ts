@@ -1,6 +1,6 @@
 import { defineAsyncComponent } from 'vue';
 
-import { CommentableModel,CommentSort } from '~common/comment/comment-model';
+import { CommentableModel, CommentSort } from '~common/comment/comment-model';
 import { showModal } from '~common/modal/modal.service';
 import { Model } from '~common/model/model.service';
 
@@ -17,7 +17,9 @@ export async function showCommentModal(options: CommentModalOptions) {
 
 	return await showModal<void>({
 		modalId: 'Comment-' + [model.constructor.name, model.id].join('-'),
-		component: defineAsyncComponent(() => import('~app/components/comment/modal/AppCommentModal.vue')),
+		component: defineAsyncComponent(
+			() => import('~app/components/comment/modal/AppCommentModal.vue')
+		),
 		props: {
 			displayMode,
 			model,

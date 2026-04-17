@@ -7,10 +7,7 @@ import { useGameDashRouteController } from '~app/views/dashboard/games/manage/ma
 import { GamePackageModel } from '~common/game/package/package.model';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppLinkHelp from '~common/link/AppLinkHelp.vue';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { $gettext } from '~common/translate/translate.service';
 
 export default {

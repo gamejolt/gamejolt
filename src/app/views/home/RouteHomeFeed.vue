@@ -13,7 +13,11 @@ import AppShellPageBackdrop from '~app/components/shell/AppShellPageBackdrop.vue
 import { fetchDailyQuests, useQuestStore } from '~app/store/quest';
 import AppHomeFeaturedBanner from '~app/views/home/AppHomeFeaturedBanner.vue';
 import AppHomeFeedMenu from '~app/views/home/AppHomeFeedMenu.vue';
-import { HOME_FEED_ACTIVITY, HOME_FEED_FYP, HomeFeedService } from '~app/views/home/home-feed.service';
+import {
+	HOME_FEED_ACTIVITY,
+	HOME_FEED_FYP,
+	HomeFeedService,
+} from '~app/views/home/home-feed.service';
 import AppAdTakeoverBackground from '~common/ad/AppAdTakeoverBackground.vue';
 import AppAdTakeoverFloat from '~common/ad/AppAdTakeoverFloat.vue';
 import AppAdWidget from '~common/ad/widget/AppAdWidget.vue';

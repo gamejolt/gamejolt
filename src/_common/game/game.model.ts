@@ -8,7 +8,7 @@ import { ContentContainerModel } from '~common/content/content-container-model';
 import { ContentContext } from '~common/content/content-context';
 import { ContentSetCache } from '~common/content/content-set-cache';
 import { DeviceArch, DeviceOs } from '~common/device/device.service';
-import { canInstallGameBuild,GameBuildModel, GameBuildType } from '~common/game/build/build.model';
+import { canInstallGameBuild, GameBuildModel, GameBuildType } from '~common/game/build/build.model';
 import { GamePackageModel } from '~common/game/package/package.model';
 import { showErrorGrowl } from '~common/growls/growls.service';
 import { MediaItemModel } from '~common/media-item/media-item-model';

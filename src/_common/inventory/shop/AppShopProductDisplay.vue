@@ -32,10 +32,7 @@ const { productData, avatarFrameUser } = defineProps<Props>();
 const { user: authUser } = useCommonStore();
 
 const frameOverride = computed(() => {
-	if (
-		!productData.imgUrl ||
-		productData.resource !== PurchasableProductType.AvatarFrame
-	) {
+	if (!productData.imgUrl || productData.resource !== PurchasableProductType.AvatarFrame) {
 		return undefined;
 	}
 	return {

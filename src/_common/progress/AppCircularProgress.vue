@@ -17,7 +17,11 @@ type Props = {
 	strokeWidth?: number;
 	transitionMs?: number;
 };
-const { percent, strokeWidth = kBorderWidthLg.value * 2, transitionMs = 500 } = defineProps<Props>();
+const {
+	percent,
+	strokeWidth = kBorderWidthLg.value * 2,
+	transitionMs = 500,
+} = defineProps<Props>();
 
 const emit = defineEmits<{
 	'after-transition': [];

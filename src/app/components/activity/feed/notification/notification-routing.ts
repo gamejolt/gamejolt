@@ -21,10 +21,7 @@ import { showErrorGrowl } from '~common/growls/growls.service';
 import { InventoryShopGiftModel } from '~common/inventory/shop/inventory-shop-gift.model';
 import { MentionModel } from '~common/mention/mention.model';
 import { Navigate } from '~common/navigate/navigate.service';
-import {
-	NotificationModel,
-	NotificationType,
-} from '~common/notification/notification-model';
+import { NotificationModel, NotificationType } from '~common/notification/notification-model';
 import { QuestNotificationModel } from '~common/quest/quest-notification-model';
 import { SupporterActionModel } from '~common/supporters/action.model';
 import { showSupporterMessageModal } from '~common/supporters/message/modal.service';
@@ -32,7 +29,7 @@ import { $gettext } from '~common/translate/translate.service';
 import { showTrophyModal } from '~common/trophy/modal/modal.service';
 import { UserBaseTrophyModel } from '~common/user/trophy/user-base-trophy.model';
 import { UserModel } from '~common/user/user.model';
-import { isKnownRoute,RouteLocationDefinition } from '~utils/router';
+import { isKnownRoute, RouteLocationDefinition } from '~utils/router';
 import { assertNever } from '~utils/utils';
 
 function getRouteLocationForModel(

@@ -7,7 +7,10 @@ import { computed, ref } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
 
 import { ActivityFeedItem } from '~app/components/activity/feed/item-service';
-import { getNotificationRouteLocation, gotoNotification } from '~app/components/activity/feed/notification/notification-routing';
+import {
+	getNotificationRouteLocation,
+	gotoNotification,
+} from '~app/components/activity/feed/notification/notification-routing';
 import { useActivityFeed } from '~app/components/activity/feed/view';
 import { useAppStore } from '~app/store/index';
 import AppFadeCollapse from '~common/AppFadeCollapse.vue';
@@ -245,9 +248,10 @@ function onMarkRead() {
 
 							<div class="-container">
 								<div class="-main">
-									<!-- prettier-ignore -->
-									<!-- eslint-disable-next-line vue/no-v-html -->
-									<div class="timeline-list-item-title timeline-list-item-title-small" v-html="titleText" />
+									<div
+										class="timeline-list-item-title timeline-list-item-title-small"
+										v-html="titleText"
+									/>
 
 									<div v-if="showTime" class="timeline-list-item-meta">
 										<AppTimeAgo :date="notification.added_on" />

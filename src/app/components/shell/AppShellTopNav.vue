@@ -27,14 +27,18 @@ import AppThemeSvg from '~common/theme/svg/AppThemeSvg.vue';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import { styleWhen } from '~styles/mixins';
 
-const AppShellAccountPopover = defineAsyncComponent(() => import('~app/components/shell/AppShellAccountPopover.vue'));
+const AppShellAccountPopover = defineAsyncComponent(
+	() => import('~app/components/shell/AppShellAccountPopover.vue')
+);
 const AppShellFriendRequestPopover = defineAsyncComponent(
 	() => import('~app/components/shell/friend-request-popover/AppShellFriendRequestPopover.vue')
 );
 const AppShellNotificationPopover = defineAsyncComponent(
 	() => import('~app/components/shell/notification-popover/AppShellNotificationPopover.vue')
 );
-const AppShellAltMenuPopover = defineAsyncComponent(() => import('~app/components/shell/AppShellAltMenuPopover.vue'));
+const AppShellAltMenuPopover = defineAsyncComponent(
+	() => import('~app/components/shell/AppShellAltMenuPopover.vue')
+);
 
 const { visibleLeftPane, hasCbar, unreadActivityCount, toggleCbarMenu } = useAppStore();
 const { isUserTimedOut, user, userBootstrapped, showInitialPackWatermark } = useCommonStore();

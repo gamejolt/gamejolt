@@ -17,10 +17,7 @@ import AppIllustration from '~common/illustration/AppIllustration.vue';
 import { illNoComments } from '~common/illustration/illustrations';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppNavTabList from '~common/nav/tab-list/AppNavTabList.vue';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { useCommonStore } from '~common/store/common-store';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import { $gettext } from '~common/translate/translate.service';

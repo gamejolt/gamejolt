@@ -12,7 +12,9 @@ export async function showNotificationsFilterModal(options: NotificationsFilterM
 
 	return await showModal<void>({
 		modalId: 'NotificationsFilter',
-		component: defineAsyncComponent(() => import('~app/views/notifications/filter/NotificationsFilter.vue')),
+		component: defineAsyncComponent(
+			() => import('~app/views/notifications/filter/NotificationsFilter.vue')
+		),
 		props: {
 			filters,
 			replaceRoute,

@@ -5,10 +5,7 @@ import {
 	$setVotingEnabledOnCommunityCompetition,
 	CommunityCompetitionModel,
 } from '~common/community/competition/competition.model';
-import AppForm, {
-	createForm,
-	FormController,
-} from '~common/form-vue/AppForm.vue';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
 import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
 import AppFormControlToggle from '~common/form-vue/controls/AppFormControlToggle.vue';
 import { TranslateDirective as vTranslate } from '~common/translate/translate-directive';

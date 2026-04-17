@@ -23,10 +23,7 @@ import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppLoading from '~common/loading/AppLoading.vue';
 import { showModalConfirm } from '~common/modal/confirm/confirm-service';
 import AppPagination from '~common/pagination/AppPagination.vue';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { vAppNoAutoscroll } from '~common/scroll/auto-scroll/no-autoscroll.directive';
 import AppTimeAgo from '~common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';

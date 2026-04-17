@@ -10,7 +10,12 @@ export async function showCommunityRemoveChannelModal(
 ) {
 	return await showModal<CommunityChannelModel | null>({
 		modalId: 'CommunityRemoveChannel',
-		component: defineAsyncComponent(() => import('~app/components/community/remove-channel/modal/AppCommunityRemoveChannelModal.vue')),
+		component: defineAsyncComponent(
+			() =>
+				import(
+					'~app/components/community/remove-channel/modal/AppCommunityRemoveChannelModal.vue'
+				)
+		),
 		props: { community, channel },
 		size: 'sm',
 	});

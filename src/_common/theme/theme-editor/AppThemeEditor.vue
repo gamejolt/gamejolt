@@ -84,7 +84,6 @@ async function refresh(initial = false) {
 }
 
 function updateField(field: string, content?: unknown) {
-	 
 	theme[field] = content;
 	refresh();
 }

@@ -1,5 +1,5 @@
 import type { PatchEvents, PatchInstance } from 'client-voodoo';
-import { ComputedRef, markRaw, reactive,Ref } from 'vue';
+import { ComputedRef, markRaw, reactive, Ref } from 'vue';
 
 import { LocalDbGame } from '~app/components/client/local-db/game/game.model';
 import { LocalDb } from '~app/components/client/local-db/local-db.service';
@@ -10,7 +10,10 @@ import {
 	LocalDbPackageRemoveState,
 } from '~app/components/client/local-db/package/package.model';
 import type { ClientVoodooOperation } from '~app/store/client-library/client-voodoo';
-import { handleClientVoodooError, trackClientVoodooOperation } from '~app/store/client-library/client-voodoo';
+import {
+	handleClientVoodooError,
+	trackClientVoodooOperation,
+} from '~app/store/client-library/client-voodoo';
 import type ClientLibraryGameDataMutations from '~app/store/client-library/game-data-mutations';
 import type ClientLibraryPackageDataMutations from '~app/store/client-library/package-data-mutations';
 import { Api } from '~common/api/api.service';

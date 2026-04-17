@@ -3,10 +3,7 @@ import { ref, watch } from 'vue';
 
 import { Api } from '~common/api/api.service';
 import { Environment } from '~common/environment/environment.service';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { Screen } from '~common/screen/screen-service';
 import { SellableModel } from '~common/sellable/sellable.model';
 import AppTranslate from '~common/translate/AppTranslate.vue';

@@ -7,10 +7,7 @@ import AppFormControl from '~common/form-vue/AppFormControl.vue';
 import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
 import { validateMaxLength } from '~common/form-vue/validators';
-import {
-	$saveGamePlaylist,
-	GamePlaylistModel,
-} from '~common/game-playlist/game-playlist.model';
+import { $saveGamePlaylist, GamePlaylistModel } from '~common/game-playlist/game-playlist.model';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 
 type FormModel = GamePlaylistModel;

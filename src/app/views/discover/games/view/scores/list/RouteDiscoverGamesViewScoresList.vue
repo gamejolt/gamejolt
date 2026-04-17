@@ -10,10 +10,7 @@ import { GameScoreTableModel } from '~common/game/score-table/score-table.model'
 import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
 import AppNavTabList from '~common/nav/tab-list/AppNavTabList.vue';
 import { Popper } from '~common/popper/popper.service';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { Screen } from '~common/screen/screen-service';
 import AppScrollAffix from '~common/scroll/AppScrollAffix.vue';
 import { vAppNoAutoscroll } from '~common/scroll/auto-scroll/no-autoscroll.directive';

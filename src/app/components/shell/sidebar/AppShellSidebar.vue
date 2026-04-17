@@ -5,13 +5,27 @@ import { useAppStore } from '~app/store';
 import { Screen } from '~common/screen/screen-service';
 import AppScrollScroller from '~common/scroll/AppScrollScroller.vue';
 
-const AppShellSidebarBackpack = defineAsyncComponent(() => import('~app/components/shell/sidebar/AppShellSidebarBackpack.vue'));
-const AppShellSidebarContext = defineAsyncComponent(() => import('~app/components/shell/sidebar/AppShellSidebarContext.vue'));
-const AppShellSidebarLibrary = defineAsyncComponent(() => import('~app/components/shell/sidebar/AppShellSidebarLibrary.vue'));
-const AppShellSidebarMobile = defineAsyncComponent(() => import('~app/components/shell/sidebar/AppShellSidebarMobile.vue'));
-const AppShellSidebarQuests = defineAsyncComponent(() => import('~app/components/shell/sidebar/AppShellSidebarQuests.vue'));
-const AppShellSidebarChat = defineAsyncComponent(() => import('~app/components/shell/sidebar/AppShellSidebarChat.vue'));
-const AppShellSidebarJoltydex = defineAsyncComponent(() => import('~app/components/shell/sidebar/AppShellSidebarJoltydex.vue'));
+const AppShellSidebarBackpack = defineAsyncComponent(
+	() => import('~app/components/shell/sidebar/AppShellSidebarBackpack.vue')
+);
+const AppShellSidebarContext = defineAsyncComponent(
+	() => import('~app/components/shell/sidebar/AppShellSidebarContext.vue')
+);
+const AppShellSidebarLibrary = defineAsyncComponent(
+	() => import('~app/components/shell/sidebar/AppShellSidebarLibrary.vue')
+);
+const AppShellSidebarMobile = defineAsyncComponent(
+	() => import('~app/components/shell/sidebar/AppShellSidebarMobile.vue')
+);
+const AppShellSidebarQuests = defineAsyncComponent(
+	() => import('~app/components/shell/sidebar/AppShellSidebarQuests.vue')
+);
+const AppShellSidebarChat = defineAsyncComponent(
+	() => import('~app/components/shell/sidebar/AppShellSidebarChat.vue')
+);
+const AppShellSidebarJoltydex = defineAsyncComponent(
+	() => import('~app/components/shell/sidebar/AppShellSidebarJoltydex.vue')
+);
 
 const { visibleLeftPane, checkBackdrop } = useAppStore();
 

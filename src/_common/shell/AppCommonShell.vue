@@ -11,11 +11,17 @@ export default {
 
 <script lang="ts" setup>
 const AppLoadingBar = defineAsyncComponent(() => import('~common/loading/AppLoadingBar.vue'));
-const AppBackdropPortal = defineAsyncComponent(() => import('~common/backdrop/AppBackdropPortal.vue'));
-const AppLightboxPortal = defineAsyncComponent(() => import('~common/lightbox/AppLightboxPortal.vue'));
+const AppBackdropPortal = defineAsyncComponent(
+	() => import('~common/backdrop/AppBackdropPortal.vue')
+);
+const AppLightboxPortal = defineAsyncComponent(
+	() => import('~common/lightbox/AppLightboxPortal.vue')
+);
 const AppModalPortal = defineAsyncComponent(() => import('~common/modal/AppModalPortal.vue'));
 const AppTooltipPortal = defineAsyncComponent(() => import('~common/tooltip/AppTooltipPortal.vue'));
-const AppShellNotice = defineAsyncComponent(() => import('~common/shell/notice/AppShellNotice.vue'));
+const AppShellNotice = defineAsyncComponent(
+	() => import('~common/shell/notice/AppShellNotice.vue')
+);
 </script>
 
 <template>

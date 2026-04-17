@@ -1,4 +1,4 @@
-import { inject,InjectionKey } from 'vue';
+import { inject, InjectionKey } from 'vue';
 
 import { Api } from '~common/api/api.service';
 import {

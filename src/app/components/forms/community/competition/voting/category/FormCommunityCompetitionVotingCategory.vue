@@ -6,19 +6,13 @@ import {
 	$saveCommunityCompetitionVotingCategory,
 	CommunityCompetitionVotingCategoryModel,
 } from '~common/community/competition/voting-category/voting-category.model';
-import AppForm, {
-	createForm,
-	FormController,
-} from '~common/form-vue/AppForm.vue';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
 import AppFormButton from '~common/form-vue/AppFormButton.vue';
 import AppFormControl from '~common/form-vue/AppFormControl.vue';
 import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
 import AppFormControlTextarea from '~common/form-vue/controls/AppFormControlTextarea.vue';
-import {
-	validateAvailability,
-	validateMaxLength,
-} from '~common/form-vue/validators';
+import { validateAvailability, validateMaxLength } from '~common/form-vue/validators';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 import { $gettext } from '~common/translate/translate.service';
 

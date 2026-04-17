@@ -1,7 +1,10 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import { StripeFileUploadUrl, useFormManagedAccount } from '~app/components/forms/financials/managed-account/FormFinancialsManagedAccount.vue';
+import {
+	StripeFileUploadUrl,
+	useFormManagedAccount,
+} from '~app/components/forms/financials/managed-account/FormFinancialsManagedAccount.vue';
 import { useForm } from '~common/form-vue/AppForm.vue';
 import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '~common/form-vue/AppFormGroup.vue';

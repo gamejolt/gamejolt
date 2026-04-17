@@ -40,9 +40,7 @@ onUnmounted(async () => {
 
 let isLoadingSales = false;
 const userWithSales = ref<number>();
-const hasSale = computed(
-	() => !!userWithSales.value && userWithSales.value === selectedUser.id
-);
+const hasSale = computed(() => !!userWithSales.value && userWithSales.value === selectedUser.id);
 
 watch(
 	() => selectedUser,

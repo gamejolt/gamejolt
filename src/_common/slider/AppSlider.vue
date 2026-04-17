@@ -199,15 +199,18 @@ function _setThumbOffset(stage: ScrubberStage, event?: Event) {
 	emit('scrub', { percent: scaledPercent, stage: stage });
 }
 
-watch(() => percent, () => {
-	if (isDragging.value) {
-		return;
-	}
+watch(
+	() => percent,
+	() => {
+		if (isDragging.value) {
+			return;
+		}
 
-	// If the slider percent changed by external means, set the thumb offset
-	// to match the current slider level.
-	_setThumbOffset('end');
-});
+		// If the slider percent changed by external means, set the thumb offset
+		// to match the current slider level.
+		_setThumbOffset('end');
+	}
+);
 </script>
 
 <template>

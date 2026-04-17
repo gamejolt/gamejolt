@@ -11,30 +11,21 @@ import AppButton from '~common/button/AppButton.vue';
 import AppCard from '~common/card/AppCard.vue';
 import { formatNumber } from '~common/filters/number';
 import AppGamePackageCard from '~common/game/package/card/AppGamePackageCard.vue';
-import {
-	GamePackageModel,
-	GamePackageVisibility,
-} from '~common/game/package/package.model';
+import { GamePackageModel, GamePackageVisibility } from '~common/game/package/package.model';
 import { GamePackagePayloadModel } from '~common/game/package/package-payload.model';
 import {
 	$removeGameRelease,
 	GameReleaseModel,
 	GameReleaseStatus,
 } from '~common/game/release/release.model';
-import {
-	showErrorGrowl,
-	showSuccessGrowl,
-} from '~common/growls/growls.service';
+import { showErrorGrowl, showSuccessGrowl } from '~common/growls/growls.service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppLinkHelp from '~common/link/AppLinkHelp.vue';
 import AppLoading from '~common/loading/AppLoading.vue';
 import { showModalConfirm } from '~common/modal/confirm/confirm-service';
 import AppNavTabList from '~common/nav/tab-list/AppNavTabList.vue';
 import AppProgressPoller from '~common/progress/poller/AppProgressPoller.vue';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { SellableModel } from '~common/sellable/sellable.model';
 import AppTimeAgo from '~common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';

@@ -5,10 +5,7 @@ import FormGameDescription from '~app/components/forms/game/description/FormGame
 import { useGameDashRouteController } from '~app/views/dashboard/games/manage/manage.store';
 import { Api } from '~common/api/api.service';
 import { showSuccessGrowl } from '~common/growls/growls.service';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { Scroll } from '~common/scroll/scroll.service';
 import { $gettext } from '~common/translate/translate.service';
 

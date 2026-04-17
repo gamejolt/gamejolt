@@ -1,8 +1,20 @@
 <script lang="ts" setup>
-import { computed, CSSProperties, nextTick, onMounted, onUnmounted, ref, useTemplateRef, watch } from 'vue';
+import {
+	computed,
+	CSSProperties,
+	nextTick,
+	onMounted,
+	onUnmounted,
+	ref,
+	useTemplateRef,
+	watch,
+} from 'vue';
 
 import { Api } from '~common/api/api.service';
-import { editorInsertMention, useContentEditorController } from '~common/content/content-editor/content-editor-controller';
+import {
+	editorInsertMention,
+	useContentEditorController,
+} from '~common/content/content-editor/content-editor-controller';
 import ContentEditorMentionCache from '~common/content/content-editor/controls/mention/cache.service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppLoading from '~common/loading/AppLoading.vue';

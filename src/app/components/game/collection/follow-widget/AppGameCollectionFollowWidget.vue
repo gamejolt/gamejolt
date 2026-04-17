@@ -1,7 +1,10 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import { GameCollectionModel, GameCollectionType } from '~app/components/game/collection/collection.model';
+import {
+	GameCollectionModel,
+	GameCollectionType,
+} from '~app/components/game/collection/collection.model';
 import {
 	libraryFollowCollection,
 	libraryUnfollowCollection,

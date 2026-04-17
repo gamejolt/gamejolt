@@ -133,16 +133,8 @@ type Props = {
 	small?: boolean;
 	tinyLabelMargin?: boolean;
 };
-const {
-	name,
-	label,
-	optional,
-	hideLabel,
-	labelClass,
-	icon,
-	small,
-	tinyLabelMargin,
-} = defineProps<Props>();
+const { name, label, optional, hideLabel, labelClass, icon, small, tinyLabelMargin } =
+	defineProps<Props>();
 
 const slots = useSlots();
 

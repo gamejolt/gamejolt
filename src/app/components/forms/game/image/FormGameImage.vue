@@ -13,10 +13,7 @@ import {
 	validateMaxLength,
 } from '~common/form-vue/validators';
 import { GameModel } from '~common/game/game.model';
-import {
-	$saveGameScreenshot,
-	GameScreenshotModel,
-} from '~common/game/screenshot/screenshot.model';
+import { $saveGameScreenshot, GameScreenshotModel } from '~common/game/screenshot/screenshot.model';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 import { TranslateDirective as vTranslate } from '~common/translate/translate-directive';
 

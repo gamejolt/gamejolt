@@ -129,8 +129,8 @@ async function onClickSubmit() {
 			<div v-else class="alert">
 				<p>{{ $gettext(`You have no games available to be submitted.`) }}</p>
 				<AppTranslate tag="p">
-					To enter a game into the jam, upload it to Game Jolt first, make
-					sure it is published, then return to this page.
+					To enter a game into the jam, upload it to Game Jolt first, make sure it is
+					published, then return to this page.
 				</AppTranslate>
 				<AppButton :to="{ name: 'dash.games.add' }">
 					{{ $gettext(`Add Game`) }}

@@ -4,9 +4,7 @@ import { ref } from 'vue';
 import { useJoltydexStore } from '~app/store/joltydex';
 import AppOnHover from '~common/on/AppOnHover.vue';
 import { Screen } from '~common/screen/screen-service';
-import AppScrollInview, {
-	ScrollInviewConfig,
-} from '~common/scroll/inview/AppScrollInview.vue';
+import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
 import { kThemeFg10 } from '~common/theme/variables';
 import { UserModel } from '~common/user/user.model';
 import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';

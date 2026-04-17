@@ -6,11 +6,7 @@ import AppSpacer from '~common/spacer/AppSpacer.vue';
 import { $gettext } from '~common/translate/translate.service';
 import { UserModel } from '~common/user/user.model';
 import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
-import {
-	styleBorderRadiusLg,
-	styleChangeBg,
-	styleFlexCenter,
-} from '~styles/mixins';
+import { styleBorderRadiusLg, styleChangeBg, styleFlexCenter } from '~styles/mixins';
 import { kFontSizeLarge, kFontSizeSmall } from '~styles/variables';
 
 type Props = {

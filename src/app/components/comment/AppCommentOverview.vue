@@ -41,11 +41,7 @@ const displayComments = computed(() => {
 });
 
 const hasComments = computed(() => {
-	const store = getCommentStore(
-		commentManager,
-		getCommentModelResourceName(model),
-		model.id
-	);
+	const store = getCommentStore(commentManager, getCommentModelResourceName(model), model.id);
 	if (store instanceof CommentStoreModel) {
 		return store.totalCount > 0;
 	}
@@ -54,11 +50,7 @@ const hasComments = computed(() => {
 });
 
 const commentStoreDirtyState = computed(() => {
-	const store = getCommentStore(
-		commentManager,
-		getCommentModelResourceName(model),
-		model.id
-	);
+	const store = getCommentStore(commentManager, getCommentModelResourceName(model), model.id);
 	if (store instanceof CommentStoreModel) {
 		return store.overviewNeedsRefresh;
 	}
@@ -67,11 +59,7 @@ const commentStoreDirtyState = computed(() => {
 
 watch(commentStoreDirtyState, dirtyState => {
 	if (dirtyState) {
-		const store = getCommentStore(
-			commentManager,
-			getCommentModelResourceName(model),
-			model.id
-		);
+		const store = getCommentStore(commentManager, getCommentModelResourceName(model), model.id);
 		if (store instanceof CommentStoreModel) {
 			store.overviewNeedsRefresh = false;
 		}

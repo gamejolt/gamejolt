@@ -1,14 +1,11 @@
 <script lang="ts" setup>
-import {
-	computed,
-	CSSProperties,
-	useTemplateRef,
-	watch,
-	watchEffect,
-} from 'vue';
+import { computed, CSSProperties, useTemplateRef, watch, watchEffect } from 'vue';
 
 import { BackgroundModel, getBackgroundCSSProperties } from '~common/background/background.model';
-import { PageScrollSubscriptionTimeout, usePageScrollSubscription } from '~common/scroll/scroll.service';
+import {
+	PageScrollSubscriptionTimeout,
+	usePageScrollSubscription,
+} from '~common/scroll/scroll.service';
 import { SettingParallaxBackgrounds } from '~common/settings/settings.service';
 
 type Props = {

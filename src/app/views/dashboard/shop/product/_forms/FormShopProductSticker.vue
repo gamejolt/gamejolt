@@ -1,7 +1,9 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 
-import FormShopProductBase, { createShopProductBaseForm } from '~app/views/dashboard/shop/product/_forms/FormShopProductBase.vue';
+import FormShopProductBase, {
+	createShopProductBaseForm,
+} from '~app/views/dashboard/shop/product/_forms/FormShopProductBase.vue';
 import AppDashShopProductHeader from '~app/views/dashboard/shop/product/AppDashShopProductHeader.vue';
 import { ShopDashProductType, useShopDashStore } from '~app/views/dashboard/shop/shop.store';
 import AppFormControl from '~common/form-vue/AppFormControl.vue';

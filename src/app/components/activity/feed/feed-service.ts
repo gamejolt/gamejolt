@@ -5,10 +5,7 @@ import { ActivityFeedState, ActivityFeedStateOptions } from '~app/components/act
 import { ActivityFeedView, ActivityFeedViewOptions } from '~app/components/activity/feed/view';
 import { EventItemModel } from '~common/event-item/event-item.model';
 import { FiresidePostGotoGrowl } from '~common/fireside/post/goto-growl/goto-growl.service';
-import {
-	FiresidePostModel,
-	FiresidePostStatus,
-} from '~common/fireside/post/post-model';
+import { FiresidePostModel, FiresidePostStatus } from '~common/fireside/post/post-model';
 import { GameModel } from '~common/game/game.model';
 import { HistoryCache } from '~common/history/cache/cache.service';
 import { NotificationModel } from '~common/notification/notification-model';

@@ -7,10 +7,7 @@ import {
 	CommunityCompetitionModel,
 	CompetitionPeriodVoting,
 } from '~common/community/competition/competition.model';
-import AppForm, {
-	createForm,
-	FormController,
-} from '~common/form-vue/AppForm.vue';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
 import AppFormButton from '~common/form-vue/AppFormButton.vue';
 import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
@@ -56,9 +53,8 @@ const form: FormController<FormModel> = createForm<FormModel>({
 					<AppFormGroup name="timezone" :label="$gettext(`Select a Timezone`)">
 						<p class="help-block">
 							<AppTranslate>
-								All time selection below will use this timezone. You can't
-								change this once the jam starts, so make sure you've set it
-								correctly.
+								All time selection below will use this timezone. You can't change
+								this once the jam starts, so make sure you've set it correctly.
 							</AppTranslate>
 						</p>
 
@@ -104,8 +100,8 @@ const form: FormController<FormModel> = createForm<FormModel>({
 					<template v-if="!model.hasStarted">
 						<p class="help-block">
 							<AppTranslate>
-								Your jam begins on this date and time. You can change this
-								anytime before the jam starts.
+								Your jam begins on this date and time. You can change this anytime
+								before the jam starts.
 							</AppTranslate>
 						</p>
 
@@ -133,8 +129,8 @@ const form: FormController<FormModel> = createForm<FormModel>({
 					<template v-if="!model.hasEnded">
 						<p class="help-block">
 							<AppTranslate>
-								Your jam ends on this date and time. You can change this
-								anytime before the jam ends.
+								Your jam ends on this date and time. You can change this anytime
+								before the jam ends.
 							</AppTranslate>
 						</p>
 

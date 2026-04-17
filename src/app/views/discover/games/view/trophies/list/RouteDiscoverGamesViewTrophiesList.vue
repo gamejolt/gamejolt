@@ -6,10 +6,7 @@ import { Api } from '~common/api/api.service';
 import { formatNumber } from '~common/filters/number';
 import { GameTrophyModel } from '~common/game/trophy/trophy.model';
 import AppNavTabList from '~common/nav/tab-list/AppNavTabList.vue';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { useCommonStore } from '~common/store/common-store';
 import { $gettext } from '~common/translate/translate.service';
 import AppTrophyCompletion from '~common/trophy/AppTrophyCompletion.vue';

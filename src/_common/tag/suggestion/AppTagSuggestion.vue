@@ -84,9 +84,7 @@ const otherTags = computed(() => {
 		for (const contentDocument of content) {
 			contentTags.push(...contentDocument.getMarks('tag').map(i => i.attrs.tag));
 		}
-		return tags.filter(
-			t => recommended!.indexOf(t) === -1 && contentTags!.indexOf(t) === -1
-		);
+		return tags.filter(t => recommended!.indexOf(t) === -1 && contentTags!.indexOf(t) === -1);
 	} else {
 		return tags.filter(
 			t =>

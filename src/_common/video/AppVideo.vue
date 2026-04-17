@@ -2,7 +2,11 @@
 import { nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue';
 
 import AppLoading from '~common/loading/AppLoading.vue';
-import { setVideoMuted, trackVideoPlayerEvent, VideoPlayerController } from '~common/video/player/controller';
+import {
+	setVideoMuted,
+	trackVideoPlayerEvent,
+	VideoPlayerController,
+} from '~common/video/player/controller';
 
 export type VideoSourceArray = Array<VideoSourceObject>;
 type VideoSourceObject = {
@@ -29,7 +33,13 @@ type Props = {
 	 */
 	allowDegradedAutoplay?: boolean;
 };
-const { player, showLoading, shouldPlay = true, initCallback, allowDegradedAutoplay } = defineProps<Props>();
+const {
+	player,
+	showLoading,
+	shouldPlay = true,
+	initCallback,
+	allowDegradedAutoplay,
+} = defineProps<Props>();
 
 const root = useTemplateRef('root');
 const isLoaded = ref(false);
@@ -93,13 +103,16 @@ onBeforeUnmount(() => {
 	}
 });
 
-watch(() => shouldPlay, () => {
-	if (shouldPlay) {
-		tryPlayingVideo();
-	} else {
-		videoElem.pause();
+watch(
+	() => shouldPlay,
+	() => {
+		if (shouldPlay) {
+			tryPlayingVideo();
+		} else {
+			videoElem.pause();
+		}
 	}
-});
+);
 
 watch(() => player.muted, syncMuted, { immediate: true });
 watch(() => player.volume, syncVolume, { immediate: true });

@@ -8,7 +8,10 @@ import {
 	createGridCommentChannel,
 	GridCommentChannel,
 } from '~app/components/grid/comment-channel';
-import { createGridNotificationChannel,GridNotificationChannel } from '~app/components/grid/notification-channel';
+import {
+	createGridNotificationChannel,
+	GridNotificationChannel,
+} from '~app/components/grid/notification-channel';
 import { AppStore } from '~app/store/index';
 import { router } from '~app/views';
 import { Analytics } from '~common/analytics/analytics.service';
@@ -19,18 +22,12 @@ import { FiresidePostCommunityModel } from '~common/fireside/post/community/comm
 import { FiresidePostModel } from '~common/fireside/post/post-model';
 import { GameTrophyModel } from '~common/game/trophy/trophy.model';
 import { showInfoGrowl } from '~common/growls/growls.service';
-import {
-	NotificationModel,
-	NotificationType,
-} from '~common/notification/notification-model';
+import { NotificationModel, NotificationType } from '~common/notification/notification-model';
 import { NotificationText } from '~common/notification/notification-text.service';
 import Onboarding from '~common/onboarding/onboarding.service';
 import { SettingFeedNotifications } from '~common/settings/settings.service';
 import { SiteTrophyModel } from '~common/site/trophy/trophy.model';
-import {
-	createSocketController,
-	SocketController,
-} from '~common/socket/socket-controller';
+import { createSocketController, SocketController } from '~common/socket/socket-controller';
 import { commonStore } from '~common/store/common-store';
 import { $gettext } from '~common/translate/translate.service';
 import { getTrophyImg } from '~common/trophy/thumbnail/AppTrophyThumbnail.vue';

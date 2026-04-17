@@ -5,16 +5,16 @@ import AppGamePerms from '~app/components/game/perms/AppGamePerms.vue';
 import { IntentService } from '~app/components/intent/intent.service';
 import AppPageHeader from '~app/components/page-header/AppPageHeader.vue';
 import AppShellPageBackdrop from '~app/components/shell/AppShellPageBackdrop.vue';
-import { createGameDashRouteController, ManageGameThemeKey } from '~app/views/dashboard/games/manage/manage.store';
+import {
+	createGameDashRouteController,
+	ManageGameThemeKey,
+} from '~app/views/dashboard/games/manage/manage.store';
 import { Api } from '~common/api/api.service';
 import AppButton from '~common/button/AppButton.vue';
 import AppExpand from '~common/expand/AppExpand.vue';
 import { GameLockedStatus } from '~common/game/game.model';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { useCommonStore } from '~common/store/common-store';
 import { useThemeStore } from '~common/theme/theme.store';
 import AppTimeAgo from '~common/time/AppTimeAgo.vue';

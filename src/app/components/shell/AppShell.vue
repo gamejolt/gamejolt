@@ -23,8 +23,12 @@ import AppMobileAppPromotionBanner from '~common/mobile-app/AppMobileAppPromotio
 import { Screen, triggerOnScreenResize } from '~common/screen/screen-service';
 import AppStickerLayer from '~common/sticker/layer/AppStickerLayer.vue';
 
-const AppQuestWindow = defineAsyncComponent(() => import('~app/components/quest/window/AppQuestWindow.vue'));
-const AppChatWindow = defineAsyncComponent(() => import('~app/components/chat/window/AppChatWindow.vue'));
+const AppQuestWindow = defineAsyncComponent(
+	() => import('~app/components/quest/window/AppQuestWindow.vue')
+);
+const AppChatWindow = defineAsyncComponent(
+	() => import('~app/components/chat/window/AppChatWindow.vue')
+);
 const AppJoltydexWindow = defineAsyncComponent(
 	() => import('~app/components/joltydex/window/AppJoltydexWindow.vue')
 );

@@ -75,9 +75,7 @@ const providerIcons = {
 const metaComponent = _metaComponent;
 const buttonsComponent = _buttonsComponent ?? AppGamePackageCardButtons;
 
-const card = computed(
-	() => new GamePackageCardModel(sellable, releases, builds, linkedKeys.value)
-);
+const card = computed(() => new GamePackageCardModel(sellable, releases, builds, linkedKeys.value));
 
 const isOwned = computed(() => {
 	// If there is a key on the package, then we should show it as being

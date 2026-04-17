@@ -11,21 +11,10 @@ import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
 import AppFormControlCheckbox from '~common/form-vue/controls/AppFormControlCheckbox.vue';
 import AppFormControlRadio from '~common/form-vue/controls/AppFormControlRadio.vue';
 import AppFormControlTextarea from '~common/form-vue/controls/AppFormControlTextarea.vue';
-import {
-	validateMaxLength,
-	validateMaxValue,
-	validateMinValue,
-} from '~common/form-vue/validators';
+import { validateMaxLength, validateMaxValue, validateMinValue } from '~common/form-vue/validators';
 import { GameModel } from '~common/game/game.model';
-import {
-	GamePackageModel,
-	GamePackageVisibility,
-} from '~common/game/package/package.model';
-import {
-	$saveKeyGroup,
-	KeyGroupModel,
-	KeyGroupType,
-} from '~common/key-group/key-group.model';
+import { GamePackageModel, GamePackageVisibility } from '~common/game/package/package.model';
+import { $saveKeyGroup, KeyGroupModel, KeyGroupType } from '~common/key-group/key-group.model';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 

@@ -1,4 +1,4 @@
-import { defineAsyncComponent,Ref } from 'vue';
+import { defineAsyncComponent, Ref } from 'vue';
 
 import { trackGiftAction } from '~common/analytics/analytics.service';
 import { Api } from '~common/api/api.service';
@@ -27,7 +27,9 @@ export async function showGiftActionModal({
 }) {
 	const result = await showModal<GiftAction>({
 		modalId: 'GiftAction',
-		component: defineAsyncComponent(() => import('~app/components/gift/AppGiftActionModal.vue')),
+		component: defineAsyncComponent(
+			() => import('~app/components/gift/AppGiftActionModal.vue')
+		),
 		size: 'sm',
 		props: {
 			gift,

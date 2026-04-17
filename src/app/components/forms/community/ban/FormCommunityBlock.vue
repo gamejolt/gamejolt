@@ -12,19 +12,12 @@ import AppFormControlPrefix from '~common/form-vue/AppFormControlPrefix.vue';
 import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
 import AppFormControlRadio from '~common/form-vue/controls/AppFormControlRadio.vue';
 import AppFormControlToggle from '~common/form-vue/controls/AppFormControlToggle.vue';
-import {
-	validateAvailability,
-	validateMaxLength,
-} from '~common/form-vue/validators';
+import { validateAvailability, validateMaxLength } from '~common/form-vue/validators';
 import { showErrorGrowl, showSuccessGrowl } from '~common/growls/growls.service';
 import { getDatalistOptions } from '~common/settings/datalist-options.service';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 import { $gettext } from '~common/translate/translate.service';
-import {
-	getCommunityBlockReasons,
-	REASON_OTHER,
-	REASON_SPAM,
-} from '~common/user/action-reasons';
+import { getCommunityBlockReasons, REASON_OTHER, REASON_SPAM } from '~common/user/action-reasons';
 import { UserModel } from '~common/user/user.model';
 
 type FormModel = {
@@ -95,10 +88,7 @@ const form: FormController<FormModel> = createForm<FormModel>({
 		} else {
 			// Add custom options entry to list of options.
 			if (form.formModel.reasonType === REASON_OTHER && form.formModel.reason) {
-				const options = getDatalistOptions(
-					'community-user-block',
-					community.id.toString()
-				);
+				const options = getDatalistOptions('community-user-block', community.id.toString());
 				options.unshiftItem(form.formModel.reason);
 			}
 

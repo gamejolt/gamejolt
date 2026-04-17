@@ -14,14 +14,15 @@ import {
 } from '~app/views/communities/view/_feed/feed-helpers';
 import AppCommunityPageContainer from '~app/views/communities/view/_page-container/AppCommunityPageContainer.vue';
 import { CommunitiesViewChannelDeps } from '~app/views/communities/view/channel/RouteCommunitiesViewChannel.vue';
-import { isVirtualChannel, setCommunityMeta, useCommunityRouteStore } from '~app/views/communities/view/view.store';
+import {
+	isVirtualChannel,
+	setCommunityMeta,
+	useCommunityRouteStore,
+} from '~app/views/communities/view/view.store';
 import { FiresidePostModel } from '~common/fireside/post/post-model';
 import AppIllustration from '~common/illustration/AppIllustration.vue';
 import { illNoComments } from '~common/illustration/illustrations';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { Screen } from '~common/screen/screen-service';
 import { useCommonStore } from '~common/store/common-store';
 import { $gettext } from '~common/translate/translate.service';

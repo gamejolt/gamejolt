@@ -5,10 +5,7 @@ import AppSitesLinkCard from '~app/components/sites/link-card/AppSitesLinkCard.v
 import AppSitesManagePage from '~app/components/sites/manage-page/AppSitesManagePage.vue';
 import { useAccountRouteController } from '~app/views/dashboard/account/RouteDashAccount.vue';
 import { Api } from '~common/api/api.service';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { SiteModel } from '~common/site/site-model';
 import { $gettext } from '~common/translate/translate.service';
 export default {

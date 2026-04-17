@@ -9,10 +9,7 @@ import AppPostAddButton from '~app/components/post/add-button/AppPostAddButton.v
 import { useRealmRouteStore } from '~app/views/realms/view/view.store';
 import { Api } from '~common/api/api.service';
 import { FiresidePostModel } from '~common/fireside/post/post-model';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { $gettext } from '~common/translate/translate.service';
 
 export default {

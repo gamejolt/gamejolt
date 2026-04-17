@@ -1,7 +1,10 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 
-import { PostContentContainerStyles, PostContentLeadStyles } from '~app/components/post/post-styles';
+import {
+	PostContentContainerStyles,
+	PostContentLeadStyles,
+} from '~app/components/post/post-styles';
 import AppFadeCollapse from '~common/AppFadeCollapse.vue';
 import { ComponentProps } from '~common/component-helpers';
 import { ContentRules } from '~common/content/content-rules';

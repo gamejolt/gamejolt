@@ -7,9 +7,7 @@ import AppActivityFeedNotification from '~app/components/activity/feed/notificat
 import AppActivityFeedPost from '~app/components/activity/feed/post/AppActivityFeedPost.vue';
 import { useActivityFeed } from '~app/components/activity/feed/view';
 import { Screen } from '~common/screen/screen-service';
-import AppScrollInview, {
-	ScrollInviewConfig,
-} from '~common/scroll/inview/AppScrollInview.vue';
+import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
 
 const InviewConfig = new ScrollInviewConfig();
 const InviewConfigHydration = new ScrollInviewConfig({ margin: `${Screen.height}px` });

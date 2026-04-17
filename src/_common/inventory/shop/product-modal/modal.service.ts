@@ -11,7 +11,9 @@ interface NewProductOptions {
 export async function showNewProductModal(options: NewProductOptions) {
 	return await showModal<void>({
 		modalId: 'NewProductModal',
-		component: defineAsyncComponent(() => import('~common/inventory/shop/product-modal/AppNewProductModal.vue')),
+		component: defineAsyncComponent(
+			() => import('~common/inventory/shop/product-modal/AppNewProductModal.vue')
+		),
 		props: options,
 		noBackdrop: true,
 		noBackdropClose: true,

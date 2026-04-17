@@ -8,7 +8,6 @@ import AppScrollAffix from '~common/scroll/AppScrollAffix.vue';
 import AppScrollScroller, { createScroller } from '~common/scroll/AppScrollScroller.vue';
 import { styleWhen } from '~styles/mixins';
 import { kGridGutterWidth } from '~styles/variables';
-
 </script>
 
 <script lang="ts" setup>

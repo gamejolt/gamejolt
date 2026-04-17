@@ -8,7 +8,10 @@ import { routeCommunitiesViewEditChannelsCompetitionVoting } from '~app/views/co
 
 export const routeCommunitiesViewEditChannelsCompetition: RouteRecordRaw = {
 	path: 'jam',
-	component: () => import('~app/views/communities/view/edit/channels/edit/competition/RouteCommunitiesViewEditChannelsCompetition.vue'),
+	component: () =>
+		import(
+			'~app/views/communities/view/edit/channels/edit/competition/RouteCommunitiesViewEditChannelsCompetition.vue'
+		),
 	children: [
 		routeCommunitiesViewEditChannelsCompetitionSettings,
 		routeCommunitiesViewEditChannelsCompetitionOverview,

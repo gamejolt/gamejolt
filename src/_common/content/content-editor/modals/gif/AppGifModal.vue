@@ -3,7 +3,10 @@ import { computed, nextTick, onMounted, ref, useTemplateRef } from 'vue';
 
 import { Api } from '~common/api/api.service';
 import AppButton from '~common/button/AppButton.vue';
-import { Category, SearchResult } from '~common/content/content-editor/modals/gif/gif-modal.service';
+import {
+	Category,
+	SearchResult,
+} from '~common/content/content-editor/modals/gif/gif-modal.service';
 import mascotImage from '~common/content/content-editor/modals/gif/mascot-complete.png';
 import { showErrorGrowl } from '~common/growls/growls.service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';

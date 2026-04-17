@@ -44,7 +44,9 @@ export async function showStickerEditModal({
 }) {
 	return await showModal<void>({
 		modalId: 'StickerEdit',
-		component: defineAsyncComponent(() => import('~app/components/forms/sticker/StickerEditModal.vue')),
+		component: defineAsyncComponent(
+			() => import('~app/components/forms/sticker/StickerEditModal.vue')
+		),
 		props: {
 			sticker,
 			stickers,

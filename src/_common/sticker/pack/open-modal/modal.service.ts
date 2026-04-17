@@ -11,7 +11,9 @@ interface StickerPackOpenModalOptions {
 export async function showStickerPackOpenModal(props: StickerPackOpenModalOptions) {
 	return await showModal<void>({
 		modalId: 'StickerPackOpen',
-		component: defineAsyncComponent(() => import('~common/sticker/pack/open-modal/AppStickerPackOpenModal.vue')),
+		component: defineAsyncComponent(
+			() => import('~common/sticker/pack/open-modal/AppStickerPackOpenModal.vue')
+		),
 		props,
 		noBackdrop: true,
 		size: 'full',

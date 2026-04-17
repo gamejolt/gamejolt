@@ -17,10 +17,7 @@ import AppButton from '~common/button/AppButton.vue';
 import { Connection } from '~common/connection/connection-service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppLoading from '~common/loading/AppLoading.vue';
-import {
-	NotificationFeedTypes,
-	NotificationModel,
-} from '~common/notification/notification-model';
+import { NotificationFeedTypes, NotificationModel } from '~common/notification/notification-model';
 import AppPopper from '~common/popper/AppPopper.vue';
 import { Screen } from '~common/screen/screen-service';
 import { kThemeDarkest } from '~common/theme/variables';

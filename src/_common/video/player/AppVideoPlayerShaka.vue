@@ -117,12 +117,7 @@ function setupShakaEvents() {
 				return;
 			}
 
-			trackVideoPlayerEvent(
-				player,
-				'bitrate-change',
-				eventAction,
-				`${next.videoBandwidth}`
-			);
+			trackVideoPlayerEvent(player, 'bitrate-change', eventAction, `${next.videoBandwidth}`);
 		}
 	});
 	return true;

@@ -7,10 +7,7 @@ import mobileImage from '~app/views/landing/app/mobile.webp';
 import footerImage from '~app/views/landing/app/peek-jelly.png';
 import qrImage from '~app/views/landing/app/qr.png';
 import socialImage from '~app/views/landing/app/social.jpg';
-import {
-	trackAppDownload,
-	trackAppPromotionClick,
-} from '~common/analytics/analytics.service';
+import { trackAppDownload, trackAppPromotionClick } from '~common/analytics/analytics.service';
 import { Api } from '~common/api/api.service';
 import AppBackground from '~common/background/AppBackground.vue';
 import { BackgroundModel } from '~common/background/background.model';
@@ -18,10 +15,7 @@ import AppBean from '~common/bean/AppBean.vue';
 import AppButton from '~common/button/AppButton.vue';
 import AppContactLink from '~common/contact-link/AppContactLink.vue';
 import { DeviceArch, DeviceOs, getDeviceOS } from '~common/device/device.service';
-import {
-	chooseBestGameBuild,
-	pluckInstallableGameBuilds,
-} from '~common/game/game.model';
+import { chooseBestGameBuild, pluckInstallableGameBuilds } from '~common/game/game.model';
 import { GamePackagePayloadModel } from '~common/game/package/package-payload.model';
 import { HistoryTick } from '~common/history-tick/history-tick-service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';

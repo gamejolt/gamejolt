@@ -7,11 +7,7 @@ import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
 import AppFormControlUpload from '~common/form-vue/controls/upload/AppFormControlUpload.vue';
 import { validateFilesize } from '~common/form-vue/validators';
-import {
-	$saveGameBuild,
-	GameBuildModel,
-	GameBuildType,
-} from '~common/game/build/build.model';
+import { $saveGameBuild, GameBuildModel, GameBuildType } from '~common/game/build/build.model';
 import { GameModel } from '~common/game/game.model';
 import { GamePackageModel } from '~common/game/package/package.model';
 import { GameReleaseModel } from '~common/game/release/release.model';

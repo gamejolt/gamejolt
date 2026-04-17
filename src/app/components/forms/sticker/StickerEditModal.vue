@@ -31,7 +31,7 @@ function onFormChanged(data: UnknownModelData | ModelData<StickerModel>) {
 		storeModel(StickerModel, data);
 	} else {
 		newSticker.value = storeModel(StickerModel, data);
-		 
+
 		stickers?.unshift(newSticker.value);
 	}
 }

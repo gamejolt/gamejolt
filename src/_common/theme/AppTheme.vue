@@ -73,12 +73,7 @@ type AppThemeProps = {
 	forceLight?: boolean;
 } & /* @vue-ignore */ Pick<HTMLAttributes, 'onMouseover' | 'onMouseout'>;
 
-const {
-	isRoot,
-	theme: propTheme = null,
-	forceDark,
-	forceLight,
-} = defineProps<AppThemeProps>();
+const { isRoot, theme: propTheme = null, forceDark, forceLight } = defineProps<AppThemeProps>();
 
 const { theme: storeTheme, isDark: storeIsDark } = useThemeStore();
 

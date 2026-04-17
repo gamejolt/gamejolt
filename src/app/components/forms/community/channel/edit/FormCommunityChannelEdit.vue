@@ -9,10 +9,7 @@ import {
 	CommunityChannelModel,
 } from '~common/community/channel/channel.model';
 import { CommunityModel } from '~common/community/community.model';
-import AppForm, {
-	createForm,
-	FormController,
-} from '~common/form-vue/AppForm.vue';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
 import AppFormButton from '~common/form-vue/AppFormButton.vue';
 import AppFormControl from '~common/form-vue/AppFormControl.vue';
 import AppFormControlError from '~common/form-vue/AppFormControlError.vue';
@@ -43,10 +40,7 @@ const emit = defineEmits<{
 const modelRef = toRef(() => model);
 
 const titleAvailabilityUrl = toRef(
-	() =>
-		`/web/dash/communities/channels/check-field-availability/${community.id}/${
-			model!.id
-		}`
+	() => `/web/dash/communities/channels/check-field-availability/${community.id}/${model!.id}`
 );
 const loadUrl = toRef(
 	() => `/web/dash/communities/channels/save/${community.id}/${form.formModel.id}`

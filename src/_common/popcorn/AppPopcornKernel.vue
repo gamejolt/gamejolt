@@ -1,7 +1,10 @@
 <script lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, toRaw } from 'vue';
 
-import { PopcornKernelData, usePopcornKettleController } from '~common/popcorn/popcorn-kettle-controller';
+import {
+	PopcornKernelData,
+	usePopcornKettleController,
+} from '~common/popcorn/popcorn-kettle-controller';
 import { arrayRemove } from '~utils/array';
 </script>
 
@@ -24,9 +27,7 @@ const styleData = ref({
 	offsetY: 0,
 });
 
-const canShow = computed(
-	() => !!kernelData.kernelImage || !!kernelData.kernelComponent
-);
+const canShow = computed(() => !!kernelData.kernelImage || !!kernelData.kernelComponent);
 
 onMounted(() => kernelFrameCallbacks.value.push(calcData));
 

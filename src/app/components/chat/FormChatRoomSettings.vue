@@ -1,7 +1,11 @@
 <script lang="ts" setup>
 import { computed, ref, toRef, watch } from 'vue';
 
-import { editChatRoomBackground, editChatRoomTitle, leaveGroupRoom } from '~app/components/chat/client';
+import {
+	editChatRoomBackground,
+	editChatRoomTitle,
+	leaveGroupRoom,
+} from '~app/components/chat/client';
 import FormChatRoomSettingsMemberPreview from '~app/components/chat/FormChatRoomSettingsMemberPreview.vue';
 import { ChatRoomModel } from '~app/components/chat/room';
 import { useGridStore } from '~app/components/grid/grid-store';
@@ -96,11 +100,7 @@ const backgroundForm: FormController<BackgroundFormModel> = createForm({
 		backgroundForm.formModel.background_id = roomBackgroundId.value;
 	},
 	onSubmit: () =>
-		editChatRoomBackground(
-			chat.value,
-			room,
-			backgroundForm.formModel.background_id || null
-		),
+		editChatRoomBackground(chat.value, room, backgroundForm.formModel.background_id || null),
 });
 
 type NotificationLevelFormModel = {
@@ -124,8 +124,7 @@ const notificationLevelForm: FormController<NotificationLevelFormModel> = create
 });
 
 const isOwner = toRef(
-	() =>
-		room && !!chat.value.currentUser && room.owner_id === chat.value.currentUser.id
+	() => room && !!chat.value.currentUser && room.owner_id === chat.value.currentUser.id
 );
 
 const canEditTitle = toRef(() => !room.isPmRoom && isOwner.value);
@@ -175,7 +174,7 @@ async function reloadBackgroundForm(retryOnDesync: boolean) {
 			// expected background in our list of backgrounds and manually
 			// assign that to our room.
 			const background = backgrounds.value.find(i => i.id === expectedBgId);
-			 
+
 			room.background = background;
 			isLoadingBackgrounds.value = false;
 		}

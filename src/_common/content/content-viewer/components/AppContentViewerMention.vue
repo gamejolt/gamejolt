@@ -18,7 +18,11 @@ const { hydrator } = useContentOwnerController()!;
 
 const user = ref<UserModel | null>(null);
 
-watch(() => username, () => _hydrateUser(), { immediate: true });
+watch(
+	() => username,
+	() => _hydrateUser(),
+	{ immediate: true }
+);
 
 function _hydrateUser() {
 	// Make sure we never execute a promise if we don't have to, it would break SSR.

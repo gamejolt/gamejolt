@@ -19,7 +19,15 @@ type Props = {
 	category?: CommunityCompetitionVotingCategoryModel;
 	showRemove?: boolean;
 };
-const { competition, entries, currentPage = 0, pageCount = 0, numPlaceholders = 6, category, showRemove } = defineProps<Props>();
+const {
+	competition,
+	entries,
+	currentPage = 0,
+	pageCount = 0,
+	numPlaceholders = 6,
+	category,
+	showRemove,
+} = defineProps<Props>();
 
 const emit = defineEmits<{
 	remove: [entry: CommunityCompetitionEntryModel];
@@ -96,4 +104,8 @@ function emitRemove(entry: CommunityCompetitionEntryModel) {
 	</div>
 </template>
 
-<style lang="stylus" src="~app/components/community/competition/entry/grid/grid.styl" scoped></style>
+<style
+	lang="stylus"
+	src="~app/components/community/competition/entry/grid/grid.styl"
+	scoped
+></style>

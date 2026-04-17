@@ -34,10 +34,7 @@ import { Api } from '~common/api/api.service';
 import AppFadeCollapse from '~common/AppFadeCollapse.vue';
 import AppButton from '~common/button/AppButton.vue';
 import { canCommentOnModel, CommentModel } from '~common/comment/comment-model';
-import {
-	getCommentStore,
-	useCommentStoreManager,
-} from '~common/comment/comment-store';
+import { getCommentStore, useCommentStoreManager } from '~common/comment/comment-store';
 import { configGuestNoAuthRequired } from '~common/config/config.service';
 import AppContentViewer from '~common/content/content-viewer/AppContentViewer.vue';
 import { formatNumber } from '~common/filters/number';
@@ -53,10 +50,7 @@ import AppLazyPlaceholder from '~common/lazy/placeholder/AppLazyPlaceholder.vue'
 import { Meta } from '~common/meta/meta-service';
 import { storeModelList } from '~common/model/model-store.service';
 import { PartnerReferral } from '~common/partner-referral/partner-referral-service';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { Screen } from '~common/screen/screen-service';
 import AppScrollAffix from '~common/scroll/AppScrollAffix.vue';
 import AppShareCard from '~common/share/card/AppShareCard.vue';
@@ -65,12 +59,7 @@ import { kThemeBgSubtle } from '~common/theme/variables';
 import { $gettext } from '~common/translate/translate.service';
 import { TranslateDirective as vTranslate } from '~common/translate/translate-directive';
 import { styleChangeBg, styleElevate, styleWhen } from '~styles/mixins';
-import {
-	kBorderRadiusLg,
-	kBorderWidthSm,
-	kLayerAds,
-	kLineHeightComputed,
-} from '~styles/variables';
+import { kBorderRadiusLg, kBorderWidthSm, kLayerAds, kLineHeightComputed } from '~styles/variables';
 import { getAbsoluteLink } from '~utils/router';
 
 export default {

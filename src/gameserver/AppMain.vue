@@ -7,9 +7,15 @@ import AppCommonShell from '~common/shell/AppCommonShell.vue';
 import { useGameserverStore } from '~gameserver/store/index';
 
 const AppEmbedHtml = defineAsyncComponent(() => import('~gameserver/components/AppEmbedHtml.vue'));
-const AppEmbedFlash = defineAsyncComponent(() => import('~gameserver/components/AppEmbedFlash.vue'));
-const AppEmbedUnity = defineAsyncComponent(() => import('~gameserver/components/AppEmbedUnity.vue'));
-const AppEmbedApplet = defineAsyncComponent(() => import('~gameserver/components/AppEmbedApplet.vue'));
+const AppEmbedFlash = defineAsyncComponent(
+	() => import('~gameserver/components/AppEmbedFlash.vue')
+);
+const AppEmbedUnity = defineAsyncComponent(
+	() => import('~gameserver/components/AppEmbedUnity.vue')
+);
+const AppEmbedApplet = defineAsyncComponent(
+	() => import('~gameserver/components/AppEmbedApplet.vue')
+);
 const AppEmbedRom = defineAsyncComponent(() => import('~gameserver/components/AppEmbedRom.vue'));
 const AppEmbedSilverlight = defineAsyncComponent(
 	() => import('~gameserver/components/AppEmbedSilverlight.vue')

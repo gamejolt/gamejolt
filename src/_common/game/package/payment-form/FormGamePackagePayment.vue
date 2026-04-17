@@ -99,10 +99,7 @@ const hasSufficientWalletFunds = computed(() => {
 	const currentAmount = form.formModel.amount * 100; // The formModel amount is a decimal.
 
 	// Paid games have to be more than the amount of the game base price.
-	if (
-		sellable.type === SellableType.Paid &&
-		walletBalance.value < sellableAmount + taxAmount
-	) {
+	if (sellable.type === SellableType.Paid && walletBalance.value < sellableAmount + taxAmount) {
 		return false;
 	}
 

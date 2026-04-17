@@ -23,7 +23,9 @@ export async function showDoSupporterMessageModal(options: DoSupporterMessageMod
 
 	return await showModal<SupporterMessageModel>({
 		modalId: 'DoSupporterMessage',
-		component: defineAsyncComponent(() => import('~common/supporters/message/do/FormSupporterMessage.vue')),
+		component: defineAsyncComponent(
+			() => import('~common/supporters/message/do/FormSupporterMessage.vue')
+		),
 		props: {
 			action,
 			model,

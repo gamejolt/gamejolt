@@ -12,10 +12,7 @@ import AppMicrotransactionItem from '~common/microtransaction/AppMicrotransactio
 import { MicrotransactionProductModel } from '~common/microtransaction/product.model';
 import { OrderModel } from '~common/order/order.model';
 import { OrderPaymentMethod } from '~common/order/payment/payment.model';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { Screen } from '~common/screen/screen-service';
 import { $gettext } from '~common/translate/translate.service';
 

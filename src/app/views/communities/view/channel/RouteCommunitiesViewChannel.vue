@@ -2,7 +2,10 @@
 import { defineAsyncComponent, toRef } from 'vue';
 
 import { router } from '~app/views';
-import { getChannelPathFromRoute, useCommunityRouteStore } from '~app/views/communities/view/view.store';
+import {
+	getChannelPathFromRoute,
+	useCommunityRouteStore,
+} from '~app/views/communities/view/view.store';
 import { Api } from '~common/api/api.service';
 import { CommunityChannelModel } from '~common/community/channel/channel.model';
 import {
@@ -12,10 +15,16 @@ import {
 } from '~common/route/route-component';
 
 const RouteCommunitiesViewChannelFeed = defineAsyncComponent(() =>
-	asyncRouteLoader(router, import('~app/views/communities/view/channel/RouteCommunitiesViewChannelFeed.vue'))
+	asyncRouteLoader(
+		router,
+		import('~app/views/communities/view/channel/RouteCommunitiesViewChannelFeed.vue')
+	)
 );
 const RouteCommunitiesViewChannelJam = defineAsyncComponent(() =>
-	asyncRouteLoader(router, import('~app/views/communities/view/channel/RouteCommunitiesViewChannelJam.vue'))
+	asyncRouteLoader(
+		router,
+		import('~app/views/communities/view/channel/RouteCommunitiesViewChannelJam.vue')
+	)
 );
 
 /**

@@ -35,10 +35,13 @@ const root = useTemplateRef('root');
 const isProcessingAction = ref(false);
 const hasError = ref(false);
 
-watch(() => quest, _ => {
-	// Reset our error state if the quest was updated from something.
-	hasError.value = false;
-});
+watch(
+	() => quest,
+	_ => {
+		// Reset our error state if the quest was updated from something.
+		hasError.value = false;
+	}
+);
 
 const shouldShow = computed(() => show && !hasError.value);
 

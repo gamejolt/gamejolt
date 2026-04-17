@@ -12,7 +12,9 @@ export async function showGamePackageEditModal(
 ) {
 	return await showModal<GamePackageModel>({
 		modalId: 'GamePackageEdit',
-		component: defineAsyncComponent(() => import('~app/components/game/package/edit-modal/AppGamePackageEditModal.vue')),
+		component: defineAsyncComponent(
+			() => import('~app/components/game/package/edit-modal/AppGamePackageEditModal.vue')
+		),
 		noBackdropClose: true,
 		noEscClose: true,
 		size: 'sm',

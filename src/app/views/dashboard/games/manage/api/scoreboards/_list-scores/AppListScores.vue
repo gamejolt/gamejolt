@@ -7,10 +7,7 @@ import { showModalConfirm } from '~common/modal/confirm/confirm-service';
 import AppPopper from '~common/popper/AppPopper.vue';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 import { $gettext } from '~common/translate/translate.service';
-import {
-	$removeUserGameScore,
-	UserGameScoreModel,
-} from '~common/user/game-score/game-score.model';
+import { $removeUserGameScore, UserGameScoreModel } from '~common/user/game-score/game-score.model';
 
 type Props = {
 	scoreTable: GameScoreTableModel;

@@ -24,13 +24,9 @@ const emit = defineEmits<{
 
 const leftTo = computed(() => (hasLinks ? community.routeLocation : undefined));
 const rightTo = computed(() =>
-	hasLinks && channel
-		? community.channelRouteLocation(channel)
-		: undefined
+	hasLinks && channel ? community.channelRouteLocation(channel) : undefined
 );
-const to = computed(() =>
-	hasLinks && !channel ? community.routeLocation : undefined
-);
+const to = computed(() => (hasLinks && !channel ? community.routeLocation : undefined));
 </script>
 
 <template>

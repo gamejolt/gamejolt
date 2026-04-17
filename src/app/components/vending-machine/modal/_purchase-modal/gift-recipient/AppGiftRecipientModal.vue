@@ -3,18 +3,12 @@ import { computed, ref } from 'vue';
 
 import { Api } from '~common/api/api.service';
 import AppButton from '~common/button/AppButton.vue';
-import AppForm, {
-	createForm,
-	FormController,
-} from '~common/form-vue/AppForm.vue';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
 import AppFormControl from '~common/form-vue/AppFormControl.vue';
 import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
 import { showErrorGrowl } from '~common/growls/growls.service';
 import AppIllustration from '~common/illustration/AppIllustration.vue';
-import {
-	illExtremeSadness,
-	illNoComments,
-} from '~common/illustration/illustrations';
+import { illExtremeSadness, illNoComments } from '~common/illustration/illustrations';
 import { InventoryShopProductSaleModel } from '~common/inventory/shop/inventory-shop-product-sale.model';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppLoading from '~common/loading/AppLoading.vue';
@@ -23,12 +17,7 @@ import AppModal from '~common/modal/AppModal.vue';
 import AppModalFloatingHeader from '~common/modal/AppModalFloatingHeader.vue';
 import { useModal } from '~common/modal/modal.service';
 import AppOnHover from '~common/on/AppOnHover.vue';
-import {
-	kThemeBg,
-	kThemeBgOffset,
-	kThemeFg,
-	kThemeFg10,
-} from '~common/theme/variables';
+import { kThemeBg, kThemeBgOffset, kThemeFg, kThemeFg10 } from '~common/theme/variables';
 import { $gettext } from '~common/translate/translate.service';
 import { UserModel } from '~common/user/user.model';
 import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';

@@ -9,11 +9,7 @@ import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
 import AppFormControlTextarea from '~common/form-vue/controls/AppFormControlTextarea.vue';
 import { validateMaxLength, validatePattern } from '~common/form-vue/validators';
 import { GameModel } from '~common/game/game.model';
-import {
-	$saveGameVideo,
-	GameVideoModel,
-	GameVideoType,
-} from '~common/game/video/video.model';
+import { $saveGameVideo, GameVideoModel, GameVideoType } from '~common/game/video/video.model';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 import { TranslateDirective as vTranslate } from '~common/translate/translate-directive';
 import AppVideoEmbed from '~common/video/embed/AppVideoEmbed.vue';

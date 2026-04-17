@@ -5,12 +5,7 @@ import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
 import AppImgResponsive from '~common/img/AppImgResponsive.vue';
 import AppMediaItemBackdrop from '~common/media-item/backdrop/AppMediaItemBackdrop.vue';
 import { StickerPackModel } from '~common/sticker/pack/pack.model';
-import {
-	styleBorderRadiusLg,
-	styleChangeBgRgba,
-	styleElevate,
-	styleWhen,
-} from '~styles/mixins';
+import { styleBorderRadiusLg, styleChangeBgRgba, styleElevate, styleWhen } from '~styles/mixins';
 import { kFontSizeSmall } from '~styles/variables';
 
 export const StickerPackRatio = 2 / 3;

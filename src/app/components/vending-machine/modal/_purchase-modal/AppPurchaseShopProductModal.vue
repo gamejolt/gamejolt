@@ -11,17 +11,10 @@ import { vAppAuthRequired } from '~common/auth/auth-required-directive';
 import { AvatarFrameModel } from '~common/avatar/frame.model';
 import { BackgroundModel } from '~common/background/background.model';
 import AppButton from '~common/button/AppButton.vue';
-import {
-	AcquisitionMethod,
-	AcquisitionModel,
-} from '~common/collectible/acquisition.model';
+import { AcquisitionMethod, AcquisitionModel } from '~common/collectible/acquisition.model';
 import AppCurrencyImg from '~common/currency/AppCurrencyImg.vue';
 import AppCurrencyPillList from '~common/currency/AppCurrencyPillList.vue';
-import {
-	canAffordCurrency,
-	Currency,
-	CurrencyType,
-} from '~common/currency/currency-type';
+import { canAffordCurrency, Currency, CurrencyType } from '~common/currency/currency-type';
 import { shorthandReadableTime } from '~common/filters/duration';
 import { formatNumber } from '~common/filters/number';
 import { showInfoGrowl } from '~common/growls/growls.service';
@@ -51,12 +44,7 @@ import { StickerPackModel } from '~common/sticker/pack/pack.model';
 import { StickerModel } from '~common/sticker/sticker.model';
 import { useStickerStore } from '~common/sticker/sticker-store';
 import { useCommonStore } from '~common/store/common-store';
-import {
-	kThemeBgOffset,
-	kThemeFg,
-	kThemeFgMuted,
-	kThemePrimary,
-} from '~common/theme/variables';
+import { kThemeBgOffset, kThemeFg, kThemeFgMuted, kThemePrimary } from '~common/theme/variables';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import { $gettext } from '~common/translate/translate.service';
 import { UserModel } from '~common/user/user.model';

@@ -7,7 +7,11 @@ import AppCollectibleThumb from '~common/collectible/AppCollectibleThumb.vue';
 import { CollectibleType } from '~common/collectible/collectible.model';
 import AppIllustration from '~common/illustration/AppIllustration.vue';
 import { illExtremeSadness } from '~common/illustration/illustrations';
-import { applyPayloadToJoltydexFeed, loadJoltydexFeed, makeJoltydexFeed } from '~common/joltydex/joltydex-feed';
+import {
+	applyPayloadToJoltydexFeed,
+	loadJoltydexFeed,
+	makeJoltydexFeed,
+} from '~common/joltydex/joltydex-feed';
 import AppCircularProgress from '~common/progress/AppCircularProgress.vue';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 import { useCommonStore } from '~common/store/common-store';

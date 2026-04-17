@@ -20,7 +20,9 @@ import AppTranslate from '~common/translate/AppTranslate.vue';
 import { arrayRemove } from '~utils/array';
 import { createFocusToken } from '~utils/focus-token';
 
-const AppSearchAutocomplete = defineAsyncComponent(() => import('~app/components/search/AppSearchAutocomplete.vue'));
+const AppSearchAutocomplete = defineAsyncComponent(
+	() => import('~app/components/search/AppSearchAutocomplete.vue')
+);
 
 const KEYCODE_UP = 38;
 const KEYCODE_DOWN = 40;

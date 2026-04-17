@@ -9,18 +9,11 @@ import AppCardList from '~common/card/list/AppCardList.vue';
 import AppCardListAdd from '~common/card/list/AppCardListAdd.vue';
 import AppCardListDraggable from '~common/card/list/AppCardListDraggable.vue';
 import AppCardListItem from '~common/card/list/AppCardListItem.vue';
-import {
-	$removeGameSong,
-	$saveGameSongSort,
-	GameSongModel,
-} from '~common/game/song/song.model';
+import { $removeGameSong, $saveGameSongSort, GameSongModel } from '~common/game/song/song.model';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
 import { showModalConfirm } from '~common/modal/confirm/confirm-service';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { $gettext } from '~common/translate/translate.service';
 import { arrayRemove } from '~utils/array';
 

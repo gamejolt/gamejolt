@@ -13,11 +13,7 @@ import {
 	validateImageMaxDimensions,
 	validateImageMinDimensions,
 } from '~common/form-vue/validators';
-import {
-	$clearGameHeader,
-	$saveGameHeader,
-	GameModel,
-} from '~common/game/game.model';
+import { $clearGameHeader, $saveGameHeader, GameModel } from '~common/game/game.model';
 import AppLinkHelp from '~common/link/AppLinkHelp.vue';
 import { showModalConfirm } from '~common/modal/confirm/confirm-service';
 import AppTranslate from '~common/translate/AppTranslate.vue';

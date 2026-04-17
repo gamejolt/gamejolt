@@ -1,10 +1,7 @@
 <script lang="ts" setup>
 import { toRef } from 'vue';
 
-import {
-	createFormControl,
-	FormControlEmits,
-} from '~common/form-vue/AppFormControl.vue';
+import { createFormControl, FormControlEmits } from '~common/form-vue/AppFormControl.vue';
 import { FormValidator } from '~common/form-vue/validators';
 import { MaybePromise } from '~utils/utils';
 

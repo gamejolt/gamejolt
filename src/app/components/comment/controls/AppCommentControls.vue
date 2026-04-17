@@ -6,11 +6,7 @@ import { showCommentThreadModal } from '~app/components/comment/thread/modal.ser
 import { useCommentWidget } from '~app/components/comment/widget/AppCommentWidget.vue';
 import { vAppAuthRequired } from '~common/auth/auth-required-directive';
 import AppButton from '~common/button/AppButton.vue';
-import {
-	$unvoteOnComment,
-	$voteOnComment,
-	CommentModel,
-} from '~common/comment/comment-model';
+import { $unvoteOnComment, $voteOnComment, CommentModel } from '~common/comment/comment-model';
 import { CommentVoteType } from '~common/comment/vote/vote-model';
 import { formatFuzzynumber } from '~common/filters/fuzzynumber';
 import AppJolticon, { Jolticon } from '~common/jolticon/AppJolticon.vue';
@@ -84,9 +80,7 @@ const hasDownvote = toRef(
 	() => comment.user_vote && comment.user_vote.vote === CommentVoteType.Downvote
 );
 
-const showOwnerInteraction = toRef(
-	() => comment.has_owner_like || comment.has_owner_reply
-);
+const showOwnerInteraction = toRef(() => comment.has_owner_like || comment.has_owner_reply);
 
 const ownerIndicatorTooltipText = computed(() => {
 	const isOwner = !!user.value?.id && user.value?.id === resourceOwner.value?.id;

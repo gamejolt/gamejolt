@@ -25,7 +25,17 @@ type Props = {
 	noEdges?: boolean;
 	enablePageScroll?: boolean;
 };
-const { background, darken, bleed, backdropStyle, backgroundStyle, fadeOpacity, scrollDirection, noEdges, enablePageScroll } = defineProps<Props>();
+const {
+	background,
+	darken,
+	bleed,
+	backdropStyle,
+	backgroundStyle,
+	fadeOpacity,
+	scrollDirection,
+	noEdges,
+	enablePageScroll,
+} = defineProps<Props>();
 
 const isLoaded = ref(false);
 const loadedBackground = ref<BackgroundModel>();

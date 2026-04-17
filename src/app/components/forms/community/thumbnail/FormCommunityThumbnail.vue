@@ -1,10 +1,7 @@
 <script lang="ts" setup>
 import { computed, ref, toRef, watch } from 'vue';
 
-import {
-	$saveCommunityThumbnail,
-	CommunityModel,
-} from '~common/community/community.model';
+import { $saveCommunityThumbnail, CommunityModel } from '~common/community/community.model';
 import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
 import AppFormButton from '~common/form-vue/AppFormButton.vue';
 import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';

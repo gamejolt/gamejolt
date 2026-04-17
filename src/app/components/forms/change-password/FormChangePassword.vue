@@ -6,11 +6,7 @@ import AppFormControl from '~common/form-vue/AppFormControl.vue';
 import AppFormControlError from '~common/form-vue/AppFormControlError.vue';
 import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
-import {
-	validateMatch,
-	validateMaxLength,
-	validateMinLength,
-} from '~common/form-vue/validators';
+import { validateMatch, validateMaxLength, validateMinLength } from '~common/form-vue/validators';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 
 type Props = {

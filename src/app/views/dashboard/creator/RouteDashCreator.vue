@@ -10,7 +10,10 @@ import { routeDashAnalytics } from '~app/views/dashboard/analytics/analytics.rou
 import { routeDashShopOverview } from '~app/views/dashboard/shop/overview/overview.route';
 import { routeDashSupporters } from '~app/views/dashboard/supporters/supporters.route';
 import { routeLandingCreators } from '~app/views/landing/creators/creators.route';
-import { routeLandingHelpCategory, routeLandingHelpRedirect } from '~app/views/landing/help/help.route';
+import {
+	routeLandingHelpCategory,
+	routeLandingHelpRedirect,
+} from '~app/views/landing/help/help.route';
 import { Api } from '~common/api/api.service';
 import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
 import { CreatorExperienceModel } from '~common/creator/experience/experience.model';

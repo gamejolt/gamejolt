@@ -4,10 +4,7 @@ import { computed, ref, useTemplateRef, watch } from 'vue';
 import { Api, ApiProgressEvent } from '~common/api/api.service';
 import AppButton from '~common/button/AppButton.vue';
 import { formatNumber } from '~common/filters/number';
-import {
-	$removeFiresidePostVideo,
-	FiresidePostModel,
-} from '~common/fireside/post/post-model';
+import { $removeFiresidePostVideo, FiresidePostModel } from '~common/fireside/post/post-model';
 import { FiresidePostVideoModel } from '~common/fireside/post/video/video-model';
 import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
 import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';

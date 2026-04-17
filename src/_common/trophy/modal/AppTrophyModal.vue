@@ -40,9 +40,7 @@ const trophy = computed(() => userTrophy.trophy!);
 
 const bgClass = computed(() => '-trophy-difficulty-' + trophy.value.difficulty);
 
-const canReceiveExp = computed(() =>
-	!userTrophy.trophy ? false : !userTrophy.trophy.is_owner
-);
+const canReceiveExp = computed(() => (!userTrophy.trophy ? false : !userTrophy.trophy.is_owner));
 
 const completionPercentageForDisplay = computed(() => {
 	if (completionPercentage.value) {
@@ -59,9 +57,7 @@ const completionPercentageForDisplay = computed(() => {
 const shouldShowFriends = computed(() => Boolean(friends.value && friends.value.length > 0));
 
 const game = computed(() =>
-	userTrophy instanceof UserGameTrophyModel && userTrophy.game
-		? userTrophy.game
-		: undefined
+	userTrophy instanceof UserGameTrophyModel && userTrophy.game ? userTrophy.game : undefined
 );
 
 const isGame = computed(() => !!game.value);

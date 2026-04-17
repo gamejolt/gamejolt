@@ -10,8 +10,15 @@ import AppStickerLayerDrawer from '~common/sticker/layer/AppStickerLayerDrawer.v
 import AppStickerLayerGhost from '~common/sticker/layer/AppStickerLayerGhost.vue';
 import AppStickerLayerPlacementMaskItem from '~common/sticker/layer/AppStickerLayerPlacementMaskItem.vue';
 import AppStickerLayerPlacementMaskTarget from '~common/sticker/layer/AppStickerLayerPlacementMaskTarget.vue';
-import { calculateStickerTargetRects, StickerLayerController } from '~common/sticker/layer/layer-controller';
-import { closeStickerDrawer, isStickerTargetMine, useStickerStore } from '~common/sticker/sticker-store';
+import {
+	calculateStickerTargetRects,
+	StickerLayerController,
+} from '~common/sticker/layer/layer-controller';
+import {
+	closeStickerDrawer,
+	isStickerTargetMine,
+	useStickerStore,
+} from '~common/sticker/sticker-store';
 
 type Props = {
 	layer: StickerLayerController;

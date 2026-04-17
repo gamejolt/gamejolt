@@ -53,7 +53,10 @@ const videoController = computed(() => {
 
 useEventSubscription(onScreenResize, () => calcDimensions());
 
-watch(() => activeIndex, () => calcActive());
+watch(
+	() => activeIndex,
+	() => calcActive()
+);
 
 onMounted(async () => {
 	await calcActive();
@@ -78,9 +81,7 @@ async function calcDimensions() {
 	}
 
 	if (item.getMediaType() === 'image') {
-		const dimensions = item
-			.getMediaItem()!
-			.getDimensions(maxWidth.value, maxHeight.value);
+		const dimensions = item.getMediaItem()!.getDimensions(maxWidth.value, maxHeight.value);
 		maxWidth.value = dimensions.width;
 		maxHeight.value = dimensions.height;
 	}

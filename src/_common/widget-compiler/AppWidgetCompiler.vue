@@ -1,7 +1,10 @@
 <script lang="ts">
 import { defineComponent, h } from 'vue';
 
-import { WidgetCompiler, WidgetCompilerContext } from '~common/widget-compiler/widget-compiler.service';
+import {
+	WidgetCompiler,
+	WidgetCompilerContext,
+} from '~common/widget-compiler/widget-compiler.service';
 
 /**
  * Compiles widget markup (e.g. {% youtube id %}) into live VNodes. Uses a

@@ -2,10 +2,7 @@
 import { computed } from 'vue';
 
 import AppDatetimePicker from '~common/datetime-picker/AppDatetimePicker.vue';
-import {
-	createFormControl,
-	FormControlEmits,
-} from '~common/form-vue/AppFormControl.vue';
+import { createFormControl, FormControlEmits } from '~common/form-vue/AppFormControl.vue';
 import { FormValidator, validateMaxDate, validateMinDate } from '~common/form-vue/validators';
 
 type Props = {

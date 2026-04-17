@@ -28,15 +28,10 @@ const isNew = computed(() => {
 
 const bgClass = computed(() => '-trophy-difficulty-' + trophy.value.difficulty);
 
-const isGame = computed(
-	() => userTrophy instanceof UserGameTrophyModel && !!userTrophy.game
-);
+const isGame = computed(() => userTrophy instanceof UserGameTrophyModel && !!userTrophy.game);
 
 const gameTitle = computed(() => {
-	if (
-		userTrophy instanceof UserGameTrophyModel &&
-		userTrophy.game instanceof GameModel
-	) {
+	if (userTrophy instanceof UserGameTrophyModel && userTrophy.game instanceof GameModel) {
 		return userTrophy.game.title;
 	}
 	return $gettext(`Game Trophy`);

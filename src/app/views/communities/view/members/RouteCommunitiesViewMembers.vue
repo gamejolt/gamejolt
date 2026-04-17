@@ -6,10 +6,7 @@ import AppFollowerList from '~app/components/follower/list/AppFollowerList.vue';
 import AppCommunityPageContainer from '~app/views/communities/view/_page-container/AppCommunityPageContainer.vue';
 import { useCommunityRouteStore } from '~app/views/communities/view/view.store';
 import { Api } from '~common/api/api.service';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { UserModel } from '~common/user/user.model';
 
 function getFetchUrl(route: RouteLocationNormalized) {

@@ -13,10 +13,7 @@ import {
 	LinkedAccountProvider,
 } from '~common/linked-account/linked-account.model';
 import { LinkedAccounts } from '~common/linked-account/linked-accounts.service';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { useCommonStore } from '~common/store/common-store';
 import { $gettext } from '~common/translate/translate.service';
 export default {

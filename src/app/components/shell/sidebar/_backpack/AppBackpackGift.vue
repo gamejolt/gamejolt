@@ -3,10 +3,7 @@ import { computed } from 'vue';
 
 import { showGiftActionModal } from '~app/components/gift/modal.service';
 import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
-import {
-	AvatarFrameModel,
-	DefaultAvatarFrameScale,
-} from '~common/avatar/frame.model';
+import { AvatarFrameModel, DefaultAvatarFrameScale } from '~common/avatar/frame.model';
 import AppBackground from '~common/background/AppBackground.vue';
 import { BackgroundModel } from '~common/background/background.model';
 import AppHoverCard from '~common/card/AppHoverCard.vue';
@@ -16,19 +13,13 @@ import {
 	InventoryShopProduct,
 } from '~common/inventory/shop/product-owner-helpers';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
-import AppStickerPack, {
-	StickerPackRatio,
-} from '~common/sticker/pack/AppStickerPack.vue';
+import AppStickerPack, { StickerPackRatio } from '~common/sticker/pack/AppStickerPack.vue';
 import { StickerPackModel } from '~common/sticker/pack/pack.model';
 import { useStickerStore } from '~common/sticker/sticker-store';
 import { useCommonStore } from '~common/store/common-store';
 import { kThemeFg10, kThemeFgMuted } from '~common/theme/variables';
 import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
-import {
-	styleFlexCenter,
-	styleMaxWidthForOptions,
-	styleTextOverflow,
-} from '~styles/mixins';
+import { styleFlexCenter, styleMaxWidthForOptions, styleTextOverflow } from '~styles/mixins';
 import { kFontSizeH2, kFontSizeSmall } from '~styles/variables';
 import { isInstance } from '~utils/utils';
 
@@ -47,9 +38,7 @@ const { stickerPacks } = useStickerStore();
 
 let isHandlingClick = false;
 
-const readableProductType = computed(() =>
-	getReadablePurchasableProductType(gift.product_type)
-);
+const readableProductType = computed(() => getReadablePurchasableProductType(gift.product_type));
 
 const leadingData = computed(() => {
 	if (isInstance(product, StickerPackModel)) {

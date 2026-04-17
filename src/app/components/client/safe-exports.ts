@@ -38,10 +38,12 @@ export async function initSafeExportsForClient(router: Router) {
 		async () => (await import('~app/components/client/AppClientShell.vue')).default
 	);
 	AppClientStatusBar = defineAsyncComponent(
-		async () => (await import('~app/components/client/status-bar/AppClientStatusBar.vue')).default
+		async () =>
+			(await import('~app/components/client/status-bar/AppClientStatusBar.vue')).default
 	);
 	AppClientPackageCardButtons = defineAsyncComponent(
-		async () => (await import('~app/components/client/hooks/AppClientPackageCardButtons.vue')).default
+		async () =>
+			(await import('~app/components/client/hooks/AppClientPackageCardButtons.vue')).default
 	);
 
 	// Vue routes
@@ -51,7 +53,8 @@ export async function initSafeExportsForClient(router: Router) {
 	router.addRoute('library', routeLibraryInstalled);
 
 	// Misc
-	ClientSystemReportModal = (await import('~app/components/client/system-report-modal/system-report-modal.service'))
-		.ClientSystemReportModal;
+	ClientSystemReportModal = (
+		await import('~app/components/client/system-report-modal/system-report-modal.service')
+	).ClientSystemReportModal;
 	LocalDbGame = (await import('~app/components/client/local-db/game/game.model')).LocalDbGame;
 }

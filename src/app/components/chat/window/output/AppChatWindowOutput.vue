@@ -15,9 +15,7 @@ import { illNoChat } from '~common/illustration/illustrations';
 import AppLoading from '~common/loading/AppLoading.vue';
 import { vAppObserveDimensions } from '~common/observe-dimensions/observe-dimensions.directive';
 import { PopperPlacementType } from '~common/popper/AppPopper.vue';
-import AppScrollScroller, {
-	createScroller,
-} from '~common/scroll/AppScrollScroller.vue';
+import AppScrollScroller, { createScroller } from '~common/scroll/AppScrollScroller.vue';
 import { useCommonStore } from '~common/store/common-store';
 import { useEventSubscription } from '~common/system/event/event-topic';
 import { useResizeObserver } from '~utils/resize-observer';

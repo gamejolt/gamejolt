@@ -1,13 +1,5 @@
 <script lang="ts" setup>
-import {
-	computed,
-	CSSProperties,
-	nextTick,
-	onMounted,
-	onUnmounted,
-	Ref,
-	ref,
-} from 'vue';
+import { computed, CSSProperties, nextTick, onMounted, onUnmounted, Ref, ref } from 'vue';
 
 import { Api } from '~common/api/api.service';
 import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';

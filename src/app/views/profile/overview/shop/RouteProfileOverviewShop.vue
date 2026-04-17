@@ -4,10 +4,7 @@ import { useRoute, useRouter } from 'vue-router';
 
 import { showVendingMachineModal } from '~app/components/vending-machine/modal/modal.service';
 import { useProfileRouteStore } from '~app/views/profile/RouteProfile.vue';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { $gettext } from '~common/translate/translate.service';
 
 defineOptions(

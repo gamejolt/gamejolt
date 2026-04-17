@@ -6,7 +6,12 @@ export class ClientSystemReportModal {
 	static async show() {
 		return await showModal<void>({
 			modalId: 'ClientSystemReport',
-			component: defineAsyncComponent(() => import('~app/components/client/system-report-modal/AppClientSystemReportModal.vue')),
+			component: defineAsyncComponent(
+				() =>
+					import(
+						'~app/components/client/system-report-modal/AppClientSystemReportModal.vue'
+					)
+			),
 			size: 'sm',
 		});
 	}

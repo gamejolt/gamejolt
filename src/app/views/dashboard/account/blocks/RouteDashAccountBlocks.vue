@@ -11,10 +11,7 @@ import { showErrorGrowl, showSuccessGrowl } from '~common/growls/growls.service'
 import AppLinkHelp from '~common/link/AppLinkHelp.vue';
 import AppLoading from '~common/loading/AppLoading.vue';
 import { showModalConfirm } from '~common/modal/confirm/confirm-service';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import AppTimeAgo from '~common/time/AppTimeAgo.vue';
 import { $gettext } from '~common/translate/translate.service';
 import AppUserVerifiedTick from '~common/user/AppUserVerifiedTick.vue';

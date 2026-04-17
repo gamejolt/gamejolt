@@ -9,10 +9,7 @@ import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vu
 import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
 import AppFormControlUpload from '~common/form-vue/controls/upload/AppFormControlUpload.vue';
-import {
-	validateFilesize,
-	validateImageMaxDimensions,
-} from '~common/form-vue/validators';
+import { validateFilesize, validateImageMaxDimensions } from '~common/form-vue/validators';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
 import { MediaItemModel } from '~common/media-item/media-item-model';

@@ -44,18 +44,24 @@ function initAnimator(fromStart: boolean) {
 	}, 1_000 / sheet.fps);
 }
 
-watch(() => sheet, () => initAnimator(true));
+watch(
+	() => sheet,
+	() => initAnimator(true)
+);
 
-watch(() => pause, shouldPause => {
-	if (shouldPause) {
-		if (timer) {
-			clearInterval(timer);
-			timer = null;
+watch(
+	() => pause,
+	shouldPause => {
+		if (shouldPause) {
+			if (timer) {
+				clearInterval(timer);
+				timer = null;
+			}
+		} else if (!timer) {
+			initAnimator(false);
 		}
-	} else if (!timer) {
-		initAnimator(false);
 	}
-});
+);
 
 onMounted(() => {
 	initAnimator(true);

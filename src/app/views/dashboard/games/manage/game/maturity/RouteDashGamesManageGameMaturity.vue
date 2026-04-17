@@ -7,10 +7,7 @@ import { useGameDashRouteController } from '~app/views/dashboard/games/manage/ma
 import { GameModel } from '~common/game/game.model';
 import { showSuccessGrowl } from '~common/growls/growls.service';
 import AppLinkHelp from '~common/link/AppLinkHelp.vue';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { Screen } from '~common/screen/screen-service';
 import AppScrollAffix from '~common/scroll/AppScrollAffix.vue';
 import { Scroll } from '~common/scroll/scroll.service';

@@ -84,12 +84,10 @@ const sortedVoteResults = computed(() => {
 		.filter(i => i.community_competition_voting_category_id !== null)
 		.sort((a, b) =>
 			numberSort(
-				votingCategories.find(
-					i => i.id === a.community_competition_voting_category_id
-				)!.sort,
-				votingCategories.find(
-					i => i.id === b.community_competition_voting_category_id
-				)!.sort
+				votingCategories.find(i => i.id === a.community_competition_voting_category_id)!
+					.sort,
+				votingCategories.find(i => i.id === b.community_competition_voting_category_id)!
+					.sort
 			)
 		);
 
@@ -142,24 +140,22 @@ function getVotingCategoryDescription(votingCategoryId: number | null) {
 			<template v-else-if="isBlocked">
 				<div class="alert alert-notice">
 					<AppTranslate tag="p">
-						You have been blocked from this community and cannot vote on jam
-						entries.
+						You have been blocked from this community and cannot vote on jam entries.
 					</AppTranslate>
 				</div>
 			</template>
 			<template v-else-if="isArchived">
 				<div class="alert">
 					<AppTranslate tag="p">
-						The channel for this jam is archived and voting is therefore
-						disabled.
+						The channel for this jam is archived and voting is therefore disabled.
 					</AppTranslate>
 				</div>
 			</template>
 			<template v-else-if="votingCategoryError">
 				<div class="alert">
 					<AppTranslate tag="p">
-						Oops! The Jam organizers wanted you to vote on multiple categories,
-						but they did not add any categories to vote on.
+						Oops! The Jam organizers wanted you to vote on multiple categories, but they
+						did not add any categories to vote on.
 					</AppTranslate>
 				</div>
 			</template>
@@ -262,14 +258,14 @@ function getVotingCategoryDescription(votingCategoryId: number | null) {
 							entryCount: competition.entry_count,
 						}"
 					>
-						This entry was voted on by %{ voteCount } person and its final
-						ranking is #%{ rank } out of %{ entryCount } entries.
+						This entry was voted on by %{ voteCount } person and its final ranking is
+						#%{ rank } out of %{ entryCount } entries.
 					</AppTranslate>
 				</p>
 				<p>
 					<AppTranslate>
-						Overall rank is based on the weighted average, which takes into
-						account all ratings for all entries.
+						Overall rank is based on the weighted average, which takes into account all
+						ratings for all entries.
 					</AppTranslate>
 					<small v-if="!moreVoteResultInfoVisible">
 						[

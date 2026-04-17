@@ -27,7 +27,14 @@ type Props = {
 	inline?: boolean;
 	canPlaceSticker?: boolean;
 };
-const { mediaItem, isPostHydrated = true, isActive, restrictDeviceMaxHeight, inline, canPlaceSticker } = defineProps<Props>();
+const {
+	mediaItem,
+	isPostHydrated = true,
+	isActive,
+	restrictDeviceMaxHeight,
+	inline,
+	canPlaceSticker,
+} = defineProps<Props>();
 
 const emit = defineEmits<{
 	bootstrap: [];
@@ -43,17 +50,12 @@ const stickerTargetController = createStickerTargetController(mediaItem, {
 const isFilled = ref(false);
 
 const shouldShowFullscreenOption = computed(
-	() =>
-		restrictDeviceMaxHeight &&
-		mediaItem.height >= 100 &&
-		mediaItem.width >= 100
+	() => restrictDeviceMaxHeight && mediaItem.height >= 100 && mediaItem.width >= 100
 );
 
 const stickersDisabled = computed(() => !isActive || !canPlaceSticker);
 
-const shouldVideoPlay = computed(
-	() => isActive && useContentFocusService().hasContentFocus.value
-);
+const shouldVideoPlay = computed(() => isActive && useContentFocusService().hasContentFocus.value);
 
 const videoController = computed(() => {
 	const sources = {

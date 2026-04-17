@@ -4,10 +4,7 @@ import { ActivityFeedService } from '~app/components/activity/feed/feed-service'
 import { ActivityFeedView } from '~app/components/activity/feed/view';
 import { getChannelPathFromRoute } from '~app/views/communities/view/view.store';
 import { Api } from '~common/api/api.service';
-import {
-	CommunityModel,
-	CommunityPresetChannelType,
-} from '~common/community/community.model';
+import { CommunityModel, CommunityPresetChannelType } from '~common/community/community.model';
 import { configCommunityFrontpageFeedType } from '~common/config/config.service';
 
 /**

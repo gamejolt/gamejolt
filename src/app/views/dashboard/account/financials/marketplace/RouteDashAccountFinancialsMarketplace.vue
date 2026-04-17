@@ -1,9 +1,6 @@
 <script lang="ts">
 import FormFinancialsMarketplace from '~app/components/forms/financials/FormFinancialsMarketplace.vue';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 
 export default {
 	...defineAppRouteOptions({

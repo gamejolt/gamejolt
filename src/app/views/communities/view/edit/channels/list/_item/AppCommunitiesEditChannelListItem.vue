@@ -39,10 +39,7 @@ const canRemoveChannel = computed(() => {
 
 const canEditChannel = computed(() => {
 	// When it's a competition channel, mods with competition perms can edit.
-	if (
-		channel.type === 'competition' &&
-		community.value.hasPerms('community-competitions')
-	) {
+	if (channel.type === 'competition' && community.value.hasPerms('community-competitions')) {
 		return true;
 	}
 

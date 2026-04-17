@@ -3,10 +3,7 @@ import { computed, CSSProperties, onUnmounted, Ref, ref, toRaw } from 'vue';
 
 import { Api } from '~common/api/api.service';
 import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
-import AppForm, {
-	createForm,
-	FormController,
-} from '~common/form-vue/AppForm.vue';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
 import AppFormButton from '~common/form-vue/AppFormButton.vue';
 import AppFormControl from '~common/form-vue/AppFormControl.vue';
 import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
@@ -107,8 +104,7 @@ const form: FormController<FormModel> = createForm({
 		if (payload.sticker) {
 			storeModel(StickerModel, payload.sticker);
 			emojiPrefix.value = model?.emoji?.prefix ?? emojiPrefix.value;
-			form.formModel.emoji_name =
-				model?.emoji?.short_name ?? form.formModel.emoji_name;
+			form.formModel.emoji_name = model?.emoji?.short_name ?? form.formModel.emoji_name;
 
 			form.formModel.is_active = (model?.is_active ?? payload.is_active) === true;
 		}

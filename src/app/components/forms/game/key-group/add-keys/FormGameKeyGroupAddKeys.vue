@@ -2,20 +2,13 @@
 import { Api } from '~common/api/api.service';
 import AppExpand from '~common/expand/AppExpand.vue';
 import { formatNumber } from '~common/filters/number';
-import AppForm, {
-	createForm,
-	FormController,
-} from '~common/form-vue/AppForm.vue';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
 import AppFormButton from '~common/form-vue/AppFormButton.vue';
 import AppFormControl from '~common/form-vue/AppFormControl.vue';
 import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
 import AppFormControlTextarea from '~common/form-vue/controls/AppFormControlTextarea.vue';
-import {
-	validateMaxLength,
-	validateMaxValue,
-	validateMinValue,
-} from '~common/form-vue/validators';
+import { validateMaxLength, validateMaxValue, validateMinValue } from '~common/form-vue/validators';
 import { KeyGroupModel, KeyGroupType } from '~common/key-group/key-group.model';
 import { $gettext } from '~common/translate/translate.service';
 

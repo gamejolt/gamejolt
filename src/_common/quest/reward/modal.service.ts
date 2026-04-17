@@ -15,7 +15,9 @@ export async function showQuestRewardModal(options: QuestRewardModalOptions) {
 
 	return await showModal({
 		modalId: 'QuestRewards',
-		component: defineAsyncComponent(() => import('~common/quest/reward/AppQuestRewardModal.vue')),
+		component: defineAsyncComponent(
+			() => import('~common/quest/reward/AppQuestRewardModal.vue')
+		),
 		props: {
 			quest,
 			rewards,

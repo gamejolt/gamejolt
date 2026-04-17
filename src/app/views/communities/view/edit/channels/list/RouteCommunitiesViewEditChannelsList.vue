@@ -6,7 +6,11 @@ import FormCommunityChannelAdd from '~app/components/forms/community/channel/add
 import AppCommunityPageContainer from '~app/views/communities/view/_page-container/AppCommunityPageContainer.vue';
 import AppCommunitiesEditChannelListItem from '~app/views/communities/view/edit/channels/list/_item/AppCommunitiesEditChannelListItem.vue';
 import AppChannelPresetItem from '~app/views/communities/view/edit/channels/list/_preset-item/AppChannelPresetItem.vue';
-import { loadArchivedChannels, updateCommunity, useCommunityRouteStore } from '~app/views/communities/view/view.store';
+import {
+	loadArchivedChannels,
+	updateCommunity,
+	useCommunityRouteStore,
+} from '~app/views/communities/view/view.store';
 import AppCardList from '~common/card/list/AppCardList.vue';
 import AppCardListAdd from '~common/card/list/AppCardListAdd.vue';
 import AppCardListDraggable from '~common/card/list/AppCardListDraggable.vue';
@@ -15,17 +19,11 @@ import {
 	$saveCommunityChannelSortArchived,
 	CommunityChannelModel,
 } from '~common/community/channel/channel.model';
-import {
-	CommunityModel,
-	CommunityPresetChannelType,
-} from '~common/community/community.model';
+import { CommunityModel, CommunityPresetChannelType } from '~common/community/community.model';
 import { showErrorGrowl } from '~common/growls/growls.service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppLoading from '~common/loading/AppLoading.vue';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { $gettext } from '~common/translate/translate.service';
 
 const communityPresetChannels = [

@@ -75,7 +75,9 @@ export async function showGamePlayModal(
 
 	await showModal({
 		modalId: 'GamePlay',
-		component: defineAsyncComponent(() => import('~common/game/play-modal/AppGamePlayModal.vue')),
+		component: defineAsyncComponent(
+			() => import('~common/game/play-modal/AppGamePlayModal.vue')
+		),
 		props: { game, build, url, canMinimize },
 		noBackdrop: true,
 		noBackdropClose: true,

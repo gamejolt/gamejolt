@@ -18,10 +18,7 @@ const { message, timestampMarginLeft = 0, showAmPm } = defineProps<Props>();
 
 const loggedOn = computed(() => {
 	return {
-		template: formatDate(
-			message.logged_on,
-			showAmPm ? 'shortTime' : 'shortTimeNoMeridiem'
-		),
+		template: formatDate(message.logged_on, showAmPm ? 'shortTime' : 'shortTimeNoMeridiem'),
 		tooltip: formatDate(message.logged_on, 'medium'),
 	};
 });

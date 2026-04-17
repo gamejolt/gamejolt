@@ -137,8 +137,7 @@ function onSubmit() {
 				</template>
 				<template v-if="resourceTitle">
 					<AppTranslate :translate-params="{ resource: resourceTitle }">
-						Please enter your email address to retrieve your keys for
-						%{ resource }.
+						Please enter your email address to retrieve your keys for %{ resource }.
 					</AppTranslate>
 				</template>
 				{{ ' ' }}

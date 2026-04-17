@@ -21,9 +21,7 @@ import { $readNotification } from '~common/notification/notification-model';
 import AppPopper from '~common/popper/AppPopper.vue';
 import { Popper } from '~common/popper/popper.service';
 import { showReportModal } from '~common/report/modal/modal.service';
-import AppScrollInview, {
-	ScrollInviewConfig,
-} from '~common/scroll/inview/AppScrollInview.vue';
+import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
 import { Scroll } from '~common/scroll/scroll.service';
 import { useCommonStore } from '~common/store/common-store';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
@@ -139,7 +137,7 @@ function report() {
 function onInviewChange(isInView: boolean) {
 	if (isInView && post.notification) {
 		$readNotification(post.notification);
-		 
+
 		post.notification = undefined;
 	}
 }

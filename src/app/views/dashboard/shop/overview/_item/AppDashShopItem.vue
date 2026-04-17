@@ -3,7 +3,10 @@ import { computed } from 'vue';
 
 import AppDashShopItemImpl from '~app/views/dashboard/shop/overview/_item/AppDashShopItemImpl.vue';
 import { routeDashShopProduct } from '~app/views/dashboard/shop/product/product.route';
-import { getShopDashProductResourceParam, useShopDashStore } from '~app/views/dashboard/shop/shop.store';
+import {
+	getShopDashProductResourceParam,
+	useShopDashStore,
+} from '~app/views/dashboard/shop/shop.store';
 import AppHoverCard from '~common/card/AppHoverCard.vue';
 import { ShopProductModel } from '~common/shop/product/product-model';
 import { kThemeFgRgb } from '~common/theme/variables';

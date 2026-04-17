@@ -2,7 +2,10 @@
 import { computed, onMounted, ref } from 'vue';
 
 import AppStickerReactionsItem from '~common/sticker/reactions/AppStickerReactionsItem.vue';
-import { StickerTargetController, toggleStickersShouldShow } from '~common/sticker/target/target-controller';
+import {
+	StickerTargetController,
+	toggleStickersShouldShow,
+} from '~common/sticker/target/target-controller';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import { numberSort } from '~utils/array';
 

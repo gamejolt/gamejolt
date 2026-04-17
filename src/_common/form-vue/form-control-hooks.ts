@@ -5,10 +5,7 @@ import { FormControlController } from '~common/form-vue/AppFormControl.vue';
 const Key: InjectionKey<FormControlHooks> = Symbol('form-control-hooks');
 
 interface FormControlHooks {
-	afterMount?: (
-		c: FormControlController,
-		el: Readonly<Ref<HTMLInputElement | null>>
-	) => void;
+	afterMount?: (c: FormControlController, el: Readonly<Ref<HTMLInputElement | null>>) => void;
 	beforeApplyValue?: <T>(c: FormControlController, value: T) => T;
 }
 

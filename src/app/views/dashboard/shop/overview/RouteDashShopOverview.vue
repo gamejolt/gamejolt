@@ -5,14 +5,8 @@ import AppDashShopItem from '~app/views/dashboard/shop/overview/_item/AppDashSho
 import AppDashShopItemAdd from '~app/views/dashboard/shop/overview/_item/AppDashShopItemAdd.vue';
 import { useShopDashStore } from '~app/views/dashboard/shop/shop.store';
 import AppLinkHelp from '~common/link/AppLinkHelp.vue';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
-import {
-	ShopProductModel,
-	ShopProductResource,
-} from '~common/shop/product/product-model';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { ShopProductModel, ShopProductResource } from '~common/shop/product/product-model';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 import { StickerPackRatio } from '~common/sticker/pack/AppStickerPack.vue';
 import { StickerPackModel } from '~common/sticker/pack/pack.model';

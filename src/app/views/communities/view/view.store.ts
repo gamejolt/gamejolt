@@ -1,4 +1,4 @@
-import { inject,InjectionKey } from 'vue';
+import { inject, InjectionKey } from 'vue';
 import { RouteLocationNormalized } from 'vue-router';
 
 import { CommunitySidebarData } from '~app/components/community/sidebar/sidebar-data';
@@ -10,10 +10,7 @@ import {
 	CollaboratorModel,
 } from '~common/collaborator/collaborator.model';
 import { CommunityChannelModel } from '~common/community/channel/channel.model';
-import {
-	CommunityModel,
-	CommunityPresetChannelType,
-} from '~common/community/community.model';
+import { CommunityModel, CommunityPresetChannelType } from '~common/community/community.model';
 import { Meta } from '~common/meta/meta-service';
 import { Screen } from '~common/screen/screen-service';
 import { $gettext } from '~common/translate/translate.service';

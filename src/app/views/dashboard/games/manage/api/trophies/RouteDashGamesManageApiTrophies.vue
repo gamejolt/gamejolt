@@ -16,17 +16,11 @@ import {
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppLinkHelp from '~common/link/AppLinkHelp.vue';
 import { showModalConfirm } from '~common/modal/confirm/confirm-service';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { Scroll } from '~common/scroll/scroll.service';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import { $gettext } from '~common/translate/translate.service';
-import {
-	BaseTrophyDifficulties,
-	BaseTrophyDifficulty,
-} from '~common/trophy/base-trophy.model';
+import { BaseTrophyDifficulties, BaseTrophyDifficulty } from '~common/trophy/base-trophy.model';
 import AppTrophyThumbnail from '~common/trophy/thumbnail/AppTrophyThumbnail.vue';
 
 const trophyLabels = {

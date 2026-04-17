@@ -1,4 +1,4 @@
-import { type Component,computed, inject, InjectionKey, markRaw, ref } from 'vue';
+import { type Component, computed, inject, InjectionKey, markRaw, ref } from 'vue';
 
 import { arrayRemove } from '~utils/array';
 

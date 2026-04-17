@@ -6,10 +6,7 @@ import { Api } from '~common/api/api.service';
 import AppButton from '~common/button/AppButton.vue';
 import { GameModel } from '~common/game/game.model';
 import AppGameThumbnail from '~common/game/thumbnail/AppGameThumbnail.vue';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { useCommonStore } from '~common/store/common-store';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 import { $gettext } from '~common/translate/translate.service';

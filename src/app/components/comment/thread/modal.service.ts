@@ -20,7 +20,9 @@ export async function showCommentThreadModal(options: CommentThreadModalOptions)
 
 	return await showModal<void>({
 		modalId: 'CommentThread-' + [model.constructor.name, model.id, commentId].join('-'),
-		component: defineAsyncComponent(() => import('~app/components/comment/thread/AppCommentThreadModal.vue')),
+		component: defineAsyncComponent(
+			() => import('~app/components/comment/thread/AppCommentThreadModal.vue')
+		),
 		props: {
 			model,
 			commentId,

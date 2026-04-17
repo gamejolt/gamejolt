@@ -15,7 +15,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '16.20.0'
+          node-version: "16.20.0"
           cache: yarn
 
       - run: yarn install --frozen-lockfile
@@ -30,8 +30,9 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '16.20.0'
+          node-version: "16.20.0"
           cache: yarn
 
       - run: yarn install --frozen-lockfile
-      - run: yarn lint
+      - run: yarn lint:check
+      - run: yarn format:check

@@ -5,10 +5,7 @@ import { showPostEditModal } from '~app/components/post/edit-modal/edit-modal-se
 import { vAppAuthRequired } from '~common/auth/auth-required-directive';
 import { CommunityChannelModel } from '~common/community/channel/channel.model';
 import { CommunityModel } from '~common/community/community.model';
-import {
-	$createFiresidePost,
-	FiresidePostModel,
-} from '~common/fireside/post/post-model';
+import { $createFiresidePost, FiresidePostModel } from '~common/fireside/post/post-model';
 import { GameModel } from '~common/game/game.model';
 import { RealmModel } from '~common/realm/realm-model';
 import { useCommonStore } from '~common/store/common-store';
@@ -24,14 +21,7 @@ type Props = {
 	placeholder?: string;
 	previewOnly?: boolean;
 };
-const {
-	game,
-	community,
-	channel,
-	realm,
-	placeholder = '',
-	previewOnly,
-} = defineProps<Props>();
+const { game, community, channel, realm, placeholder = '', previewOnly } = defineProps<Props>();
 
 const emit = defineEmits<{
 	add: [post: FiresidePostModel];
@@ -39,9 +29,7 @@ const emit = defineEmits<{
 
 const { user } = useCommonStore();
 
-const placeholderMessage = computed(
-	() => placeholder || $gettext(`So, what's on your mind?`)
-);
+const placeholderMessage = computed(() => placeholder || $gettext(`So, what's on your mind?`));
 
 async function open() {
 	if (previewOnly) {

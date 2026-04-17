@@ -1,5 +1,7 @@
 <script lang="ts" setup>
-import FormShopProductBase, { createShopProductBaseForm } from '~app/views/dashboard/shop/product/_forms/FormShopProductBase.vue';
+import FormShopProductBase, {
+	createShopProductBaseForm,
+} from '~app/views/dashboard/shop/product/_forms/FormShopProductBase.vue';
 import AppDashShopProductHeader from '~app/views/dashboard/shop/product/AppDashShopProductHeader.vue';
 import { ShopDashProductType, useShopDashStore } from '~app/views/dashboard/shop/shop.store';
 import { BackgroundModel } from '~common/background/background.model';

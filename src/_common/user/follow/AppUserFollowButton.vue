@@ -56,9 +56,7 @@ const shouldShow = computed(() => {
 });
 
 const badge = computed(() => {
-	return !hideCount && user.follower_count
-		? formatNumber(user.follower_count)
-		: '';
+	return !hideCount && user.follower_count ? formatNumber(user.follower_count) : '';
 });
 
 const tooltip = computed(() => {

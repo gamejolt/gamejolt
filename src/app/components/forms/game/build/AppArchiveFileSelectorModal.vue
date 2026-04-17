@@ -35,14 +35,7 @@ const filteredFiles = computed(() => {
 
 run(async () => {
 	try {
-		const params = [
-			gameId,
-			packageId,
-			releaseId,
-			buildId,
-			primaryFileId,
-			platform,
-		];
+		const params = [gameId, packageId, releaseId, buildId, primaryFileId, platform];
 
 		const response = await Api.sendRequest(
 			'/web/dash/developer/games/builds/files/archive-file-list/' + params.join('/')

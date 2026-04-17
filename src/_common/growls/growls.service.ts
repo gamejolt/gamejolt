@@ -1,4 +1,4 @@
-import { type Component,markRaw, reactive } from 'vue';
+import { type Component, markRaw, reactive } from 'vue';
 
 import { Client } from '~common/client/safe-exports';
 import { $gettext } from '~common/translate/translate.service';

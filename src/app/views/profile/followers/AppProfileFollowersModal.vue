@@ -29,11 +29,7 @@ onMounted(async () => {
 		const payload = await Api.sendRequest(loadUrl.value, undefined, { detach: true });
 		users.value = UserModel.populate(payload.users);
 	} catch (e) {
-		console.error(
-			'Something went wrong fetching followers for this user',
-			user.username,
-			e
-		);
+		console.error('Something went wrong fetching followers for this user', user.username, e);
 	} finally {
 		isBootstrapped.value = true;
 	}

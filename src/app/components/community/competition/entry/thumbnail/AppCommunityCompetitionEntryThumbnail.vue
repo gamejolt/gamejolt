@@ -45,10 +45,7 @@ const hasAwards = toRef(() => entry.awards && entry.awards.length > 0);
 const shouldShowAwards = toRef(() => showAwards && hasAwards.value);
 
 const shouldShowNoVotes = toRef(
-	() =>
-		showRank &&
-		!votingCategory &&
-		(!entry.vote_results || entry.vote_results.length === 0)
+	() => showRank && !votingCategory && (!entry.vote_results || entry.vote_results.length === 0)
 );
 
 const shouldShowRank = computed(() => {

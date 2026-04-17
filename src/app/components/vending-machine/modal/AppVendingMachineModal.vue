@@ -10,10 +10,7 @@ import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
 import AppButton from '~common/button/AppButton.vue';
 import AppCurrencyPillList from '~common/currency/AppCurrencyPillList.vue';
 import { CurrencyType } from '~common/currency/currency-type';
-import {
-	featureMicrotransactions,
-	fetchFeatureToggles,
-} from '~common/features/features.service';
+import { featureMicrotransactions, fetchFeatureToggles } from '~common/features/features.service';
 import AppIllustration from '~common/illustration/AppIllustration.vue';
 import { illNoCommentsSmall } from '~common/illustration/illustrations';
 import { InventoryShopProductSaleModel } from '~common/inventory/shop/inventory-shop-product-sale.model';

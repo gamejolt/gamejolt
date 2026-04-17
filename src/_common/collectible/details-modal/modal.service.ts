@@ -13,7 +13,9 @@ export async function showCollectibleDetailsModal({
 }) {
 	return await showModal<void>({
 		modalId: 'CollectibleDetails',
-		component: defineAsyncComponent(() => import('~common/collectible/details-modal/AppCollectibleDetailsModal.vue')),
+		component: defineAsyncComponent(
+			() => import('~common/collectible/details-modal/AppCollectibleDetailsModal.vue')
+		),
 		props: {
 			collectible,
 			feed,

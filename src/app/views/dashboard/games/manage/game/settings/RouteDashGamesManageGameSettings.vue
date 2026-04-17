@@ -7,10 +7,7 @@ import { Api } from '~common/api/api.service';
 import AppButton from '~common/button/AppButton.vue';
 import { GameStatus } from '~common/game/game.model';
 import { showSuccessGrowl } from '~common/growls/growls.service';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { Scroll } from '~common/scroll/scroll.service';
 import { useCommonStore } from '~common/store/common-store';
 import AppTranslate from '~common/translate/AppTranslate.vue';
@@ -103,8 +100,8 @@ createAppRoute({
 								</AppTranslate>
 							</p>
 							<AppTranslate v-if="hasCompetitionEntries" tag="p">
-								Warning: This will remove your game from any jams that you
-								have entered it into.
+								Warning: This will remove your game from any jams that you have
+								entered it into.
 							</AppTranslate>
 						</div>
 
@@ -146,12 +143,12 @@ createAppRoute({
 
 					<div class="page-help">
 						<AppTranslate tag="p">
-							Removing your game page will remove it from the site completely.
-							This is permanent!
+							Removing your game page will remove it from the site completely. This is
+							permanent!
 						</AppTranslate>
 						<AppTranslate v-if="hasCompetitionEntries" tag="p">
-							Warning: This will also remove your game from any jams that you
-							have entered it into.
+							Warning: This will also remove your game from any jams that you have
+							entered it into.
 						</AppTranslate>
 					</div>
 

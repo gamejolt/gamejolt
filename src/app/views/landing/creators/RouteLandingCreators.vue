@@ -2,7 +2,11 @@
 import { computed, onMounted, ref } from 'vue';
 import { RouterLink } from 'vue-router';
 
-import { creatorApplyDesktop, creatorApplySm, creatorApplyXs } from '~app/views/landing/creators/_backgrounds/backgrounds';
+import {
+	creatorApplyDesktop,
+	creatorApplySm,
+	creatorApplyXs,
+} from '~app/views/landing/creators/_backgrounds/backgrounds';
 import AppCreatorMooMoo from '~app/views/landing/creators/AppCreatorMooMoo.vue';
 import socialImage from '~app/views/landing/creators/social.png';
 import { trackCreatorApply } from '~common/analytics/analytics.service';

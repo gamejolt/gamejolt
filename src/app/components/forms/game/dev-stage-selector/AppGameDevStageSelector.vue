@@ -1,11 +1,7 @@
 <script lang="ts" setup>
 import { showGameDevStageSelectorConfirmModal } from '~app/components/forms/game/dev-stage-selector/confirm-service';
 import AppCard from '~common/card/AppCard.vue';
-import {
-	$setGameDevStage,
-	GameDevelopmentStatus,
-	GameModel,
-} from '~common/game/game.model';
+import { $setGameDevStage, GameDevelopmentStatus, GameModel } from '~common/game/game.model';
 import { showSuccessGrowl } from '~common/growls/growls.service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import { $gettext } from '~common/translate/translate.service';

@@ -7,10 +7,7 @@ import { Api } from '~common/api/api.service';
 import { formatCurrency } from '~common/filters/currency';
 import { formatDate } from '~common/filters/date';
 import { OrderModel } from '~common/order/order.model';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { $gettext } from '~common/translate/translate.service';
 export default {
 	...defineAppRouteOptions({

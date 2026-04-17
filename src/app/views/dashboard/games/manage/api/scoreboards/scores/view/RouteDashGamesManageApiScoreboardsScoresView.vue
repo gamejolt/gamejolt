@@ -9,15 +9,9 @@ import { formatDate } from '~common/filters/date';
 import { formatNumber } from '~common/filters/number';
 import { GameScoreTableModel } from '~common/game/score-table/score-table.model';
 import { showModalConfirm } from '~common/modal/confirm/confirm-service';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { $gettext } from '~common/translate/translate.service';
-import {
-	$removeUserGameScore,
-	UserGameScoreModel,
-} from '~common/user/game-score/game-score.model';
+import { $removeUserGameScore, UserGameScoreModel } from '~common/user/game-score/game-score.model';
 
 export default {
 	...defineAppRouteOptions({

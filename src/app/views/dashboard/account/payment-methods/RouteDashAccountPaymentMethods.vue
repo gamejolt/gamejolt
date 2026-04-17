@@ -5,10 +5,7 @@ import AppUserPaymentSourceCard from '~app/components/user/payment-source/AppUse
 import { useAccountRouteController } from '~app/views/dashboard/account/RouteDashAccount.vue';
 import { Api } from '~common/api/api.service';
 import { PaymentSourceModel } from '~common/payment-source/payment-source.model';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { $gettext } from '~common/translate/translate.service';
 import { arrayRemove } from '~utils/array';
 export default {

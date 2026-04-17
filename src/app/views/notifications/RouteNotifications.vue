@@ -13,10 +13,7 @@ import { routeNotifications } from '~app/views/notifications/notifications.route
 import { Api } from '~common/api/api.service';
 import AppButton from '~common/button/AppButton.vue';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
-import {
-	NotificationFeedTypes,
-	NotificationType,
-} from '~common/notification/notification-model';
+import { NotificationFeedTypes, NotificationType } from '~common/notification/notification-model';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 import { $gettext } from '~common/translate/translate.service';

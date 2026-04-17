@@ -2,7 +2,9 @@
 import { ref } from 'vue';
 
 import AppShellPageBackdrop from '~app/components/shell/AppShellPageBackdrop.vue';
-import AppProfileTrophiesNav, { TrophyNavGame } from '~app/views/profile/trophies/_nav/AppProfileTrophiesNav.vue';
+import AppProfileTrophiesNav, {
+	TrophyNavGame,
+} from '~app/views/profile/trophies/_nav/AppProfileTrophiesNav.vue';
 import { Api } from '~common/api/api.service';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { Screen } from '~common/screen/screen-service';

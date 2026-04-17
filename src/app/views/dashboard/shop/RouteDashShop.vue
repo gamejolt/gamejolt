@@ -2,7 +2,10 @@
 import { computed } from 'vue';
 
 import AppShellPageBackdrop from '~app/components/shell/AppShellPageBackdrop.vue';
-import { createShopDashStore, populateShopDashStoreGroup } from '~app/views/dashboard/shop/shop.store';
+import {
+	createShopDashStore,
+	populateShopDashStoreGroup,
+} from '~app/views/dashboard/shop/shop.store';
 import RouteLandingCreators from '~app/views/landing/creators/RouteLandingCreators.vue';
 import { Api } from '~common/api/api.service';
 import { AvatarFrameModel } from '~common/avatar/frame.model';

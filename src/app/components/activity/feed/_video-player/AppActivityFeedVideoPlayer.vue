@@ -4,9 +4,7 @@ import { computed, onBeforeUnmount, Ref, ref, watch } from 'vue';
 import { InviewConfigFocused } from '~app/components/activity/feed/view';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import { MediaItemModel } from '~common/media-item/media-item-model';
-import AppScrollInview, {
-	createScrollInview,
-} from '~common/scroll/inview/AppScrollInview.vue';
+import AppScrollInview, { createScrollInview } from '~common/scroll/inview/AppScrollInview.vue';
 import { SettingVideoPlayerFeedAutoplay } from '~common/settings/settings.service';
 import { VideoSourceArray } from '~common/video/AppVideo.vue';
 import AppVideoPlayer, {

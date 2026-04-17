@@ -8,10 +8,7 @@ import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import { showModalConfirm } from '~common/modal/confirm/confirm-service';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 import { $gettext } from '~common/translate/translate.service';
-import {
-	$removeUserAddress,
-	UserAddressModel,
-} from '~common/user/address/address.model';
+import { $removeUserAddress, UserAddressModel } from '~common/user/address/address.model';
 
 type Props = {
 	address: UserAddressModel;

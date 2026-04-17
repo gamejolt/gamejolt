@@ -94,13 +94,14 @@ function isScalarLabel(val: any) {
 				</tbody>
 			</table>
 		</div>
-		<div
-			v-if="!Screen.isXs && reportData.hasData && reportData.graph"
-			class="col-sm-4"
-		>
+		<div v-if="!Screen.isXs && reportData.hasData && reportData.graph" class="col-sm-4">
 			<AppGraph type="doughnut" :dataset="reportData.graph" />
 		</div>
 	</div>
 </template>
 
-<style lang="stylus" src="~app/views/dashboard/analytics/_report/report-percentage.styl" scoped></style>
+<style
+	lang="stylus"
+	src="~app/views/dashboard/analytics/_report/report-percentage.styl"
+	scoped
+></style>

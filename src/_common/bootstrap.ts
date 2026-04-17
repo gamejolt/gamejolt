@@ -1,4 +1,4 @@
-import { AsyncComponentLoader, type Component,createApp, createSSRApp } from 'vue';
+import { AsyncComponentLoader, type Component, createApp, createSSRApp } from 'vue';
 import { Router } from 'vue-router';
 
 import { initAnalytics, initAnalyticsRouter } from '~common/analytics/analytics.service';
@@ -14,8 +14,8 @@ import { initMetaService } from '~common/meta/meta-service';
 import { Payload } from '~common/payload/payload-service';
 import { Referrer } from '~common/referrer/referrer.service';
 import { initScreenService } from '~common/screen/screen-service';
-import { commonStore,CommonStoreKey } from '~common/store/common-store';
-import { createThemeStore,ThemeStoreKey } from '~common/theme/theme.store';
+import { commonStore, CommonStoreKey } from '~common/store/common-store';
+import { createThemeStore, ThemeStoreKey } from '~common/theme/theme.store';
 import { initTranslations } from '~common/translate/translate.service';
 import { hijackLinks } from '~utils/router';
 

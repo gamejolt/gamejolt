@@ -7,10 +7,7 @@ import {
 	CollaboratorRole,
 } from '~common/collaborator/collaborator.model';
 import { CommunityModel } from '~common/community/community.model';
-import AppForm, {
-	createForm,
-	FormController,
-} from '~common/form-vue/AppForm.vue';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
 import AppFormButton from '~common/form-vue/AppFormButton.vue';
 import AppFormControl from '~common/form-vue/AppFormControl.vue';
 import AppFormControlError from '~common/form-vue/AppFormControlError.vue';
@@ -18,10 +15,7 @@ import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
 import AppFormControlPrefix from '~common/form-vue/AppFormControlPrefix.vue';
 import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
 import AppFormControlRadio from '~common/form-vue/controls/AppFormControlRadio.vue';
-import {
-	validateAvailability,
-	validateMaxLength,
-} from '~common/form-vue/validators';
+import { validateAvailability, validateMaxLength } from '~common/form-vue/validators';
 
 type FormModel = CollaboratorModel;
 

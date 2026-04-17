@@ -8,10 +8,7 @@ import AppAlertDismissable from '~common/alert/dismissable/AppAlertDismissable.v
 import AppButton from '~common/button/AppButton.vue';
 import { ContentDocument } from '~common/content/content-document';
 import { ContentWriter } from '~common/content/content-writer';
-import {
-	$createFiresidePost,
-	FiresidePostModel,
-} from '~common/fireside/post/post-model';
+import { $createFiresidePost, FiresidePostModel } from '~common/fireside/post/post-model';
 import { useCommonStore } from '~common/store/common-store';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 import { TranslateDirective as vTranslate } from '~common/translate/translate-directive';

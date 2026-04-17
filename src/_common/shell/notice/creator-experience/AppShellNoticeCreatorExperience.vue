@@ -82,9 +82,7 @@ const subtext = computed(() => {
 			$gettext(`Check your dashboard later for more rewards!`)
 		);
 	} else if (data.experience.ability_on_level_up_display) {
-		messages.push(
-			$gettext(`Next reward`) + `: ${data.experience.ability_on_level_up_display}`
-		);
+		messages.push($gettext(`Next reward`) + `: ${data.experience.ability_on_level_up_display}`);
 	}
 
 	return messages;

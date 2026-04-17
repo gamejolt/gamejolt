@@ -3,10 +3,7 @@ import { computed } from 'vue';
 
 import { useGameDashRouteController } from '~app/views/dashboard/games/manage/manage.store';
 import AppButton from '~common/button/AppButton.vue';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 import { $gettext } from '~common/translate/translate.service';
 

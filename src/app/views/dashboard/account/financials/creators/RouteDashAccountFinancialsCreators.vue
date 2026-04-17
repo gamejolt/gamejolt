@@ -8,10 +8,7 @@ import AppAlertBox from '~common/alert/AppAlertBox.vue';
 import AppContactLink from '~common/contact-link/AppContactLink.vue';
 import AppIllustration from '~common/illustration/AppIllustration.vue';
 import { illEndOfFeed } from '~common/illustration/illustrations';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 import { useCommonStore } from '~common/store/common-store';
 import { userCanAccessCreatorForm } from '~common/user/user.model';

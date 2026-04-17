@@ -17,11 +17,7 @@ import AppSpacer from '~common/spacer/AppSpacer.vue';
 import { useCommonStore } from '~common/store/common-store';
 import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
 import { UserAvatarFrameModel } from '~common/user/user-avatar/frame/frame.model';
-import {
-	styleAbsoluteFill,
-	styleFlexCenter,
-	styleMaxWidthForOptions,
-} from '~styles/mixins';
+import { styleAbsoluteFill, styleFlexCenter, styleMaxWidthForOptions } from '~styles/mixins';
 
 type ProductModel = UserAvatarFrameModel | BackgroundModel;
 type Props = {

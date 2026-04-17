@@ -22,10 +22,7 @@ import { formatFuzzynumber } from '~common/filters/fuzzynumber';
 import AppGameAddBanner from '~common/game/add-banner/AppGameAddBanner.vue';
 import { HistoryCache } from '~common/history/cache/cache.service';
 import { Meta } from '~common/meta/meta-service';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { Screen } from '~common/screen/screen-service';
 import { $gettext } from '~common/translate/translate.service';
 import { arrayShuffle } from '~utils/array';

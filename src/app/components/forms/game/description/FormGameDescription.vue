@@ -8,10 +8,7 @@ import { ContextCapabilities } from '~common/content/content-context';
 import { ContentDocument } from '~common/content/content-document';
 import { ContentWriter } from '~common/content/content-writer';
 import AppExpand from '~common/expand/AppExpand.vue';
-import AppForm, {
-	createForm,
-	FormController,
-} from '~common/form-vue/AppForm.vue';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
 import AppFormButton from '~common/form-vue/AppFormButton.vue';
 import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '~common/form-vue/AppFormGroup.vue';

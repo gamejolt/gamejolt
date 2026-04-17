@@ -16,7 +16,9 @@ function _key() {
 async function _show(posts: FiresidePostModel[]) {
 	await showModal({
 		modalId: 'Broadcast',
-		component: defineAsyncComponent(() => import('~app/components/broadcast-modal/AppBroadcastModal.vue')),
+		component: defineAsyncComponent(
+			() => import('~app/components/broadcast-modal/AppBroadcastModal.vue')
+		),
 		props: { posts },
 		noBackdropClose: true,
 		size: 'sm',

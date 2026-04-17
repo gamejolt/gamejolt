@@ -6,7 +6,12 @@ import { showModal } from '~common/modal/modal.service';
 export async function showCreatorExperienceLevelUpModal(level: CreatorExperienceLevelModel) {
 	return await showModal<CreatorExperienceLevelModel>({
 		modalId: 'CreatorExperienceLevelUp',
-		component: defineAsyncComponent(() => import('~common/creator/experience/level-up-modal/AppCreatorExperienceLevelUpModal.vue')),
+		component: defineAsyncComponent(
+			() =>
+				import(
+					'~common/creator/experience/level-up-modal/AppCreatorExperienceLevelUpModal.vue'
+				)
+		),
 		props: {
 			level,
 		},

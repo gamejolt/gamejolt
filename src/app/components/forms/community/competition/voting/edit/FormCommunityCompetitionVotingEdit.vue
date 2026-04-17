@@ -9,10 +9,7 @@ import {
 	VotingType,
 	VotingUserRestriction,
 } from '~common/community/competition/competition.model';
-import AppForm, {
-	createForm,
-	FormController,
-} from '~common/form-vue/AppForm.vue';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
 import AppFormButton from '~common/form-vue/AppFormButton.vue';
 import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
@@ -124,9 +121,8 @@ function onClickCancel() {
 				<AppFormGroup name="voting_ends_on" :label="$gettext(`Voting End Date and Time`)">
 					<p class="help-block">
 						<AppTranslate>
-							Voting starts when the jam ends and continues until the date
-							and time you choose below. You can change this anytime before
-							voting ends.
+							Voting starts when the jam ends and continues until the date and time
+							you choose below. You can change this anytime before voting ends.
 						</AppTranslate>
 					</p>
 

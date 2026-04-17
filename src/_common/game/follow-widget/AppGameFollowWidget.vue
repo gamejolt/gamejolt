@@ -47,10 +47,7 @@ const shouldShowFollow = computed(() => {
 		return false;
 	}
 
-	if (
-		(user.value && user.value.id === game.developer.id) ||
-		game.developer.is_following
-	) {
+	if ((user.value && user.value.id === game.developer.id) || game.developer.is_following) {
 		return false;
 	}
 
@@ -60,9 +57,7 @@ const shouldShowFollow = computed(() => {
 const widgetId = toRef(() => `game-follow-widget-${game.id}`);
 
 const badge = computed(() =>
-	!circle && !hideCount && game.follower_count
-		? formatNumber(game.follower_count)
-		: ''
+	!circle && !hideCount && game.follower_count ? formatNumber(game.follower_count) : ''
 );
 
 const tooltip = computed(() =>

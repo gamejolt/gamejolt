@@ -4,10 +4,7 @@ import { RouterView } from 'vue-router';
 import AppCommunityPageContainer from '~app/views/communities/view/_page-container/AppCommunityPageContainer.vue';
 import AppCompetitionNav from '~app/views/communities/view/edit/channels/edit/competition/_nav/AppCompetitionNav.vue';
 import AppNavTabList from '~common/nav/tab-list/AppNavTabList.vue';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { Timezone } from '~common/timezone/timezone.service';
 
 export default {

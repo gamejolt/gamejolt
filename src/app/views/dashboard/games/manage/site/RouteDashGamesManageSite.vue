@@ -6,10 +6,7 @@ import AppSitesManagePage from '~app/components/sites/manage-page/AppSitesManage
 import { useGameDashRouteController } from '~app/views/dashboard/games/manage/manage.store';
 import { Api } from '~common/api/api.service';
 import AppButton from '~common/button/AppButton.vue';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { SiteModel } from '~common/site/site-model';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 import { $gettext } from '~common/translate/translate.service';

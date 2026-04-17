@@ -2,10 +2,7 @@
 import { computed, type HTMLAttributes, onMounted, ref, useTemplateRef } from 'vue';
 import { RouterLink } from 'vue-router';
 
-import {
-	CommunityModel,
-	CommunityPresetChannelType,
-} from '~common/community/community.model';
+import { CommunityModel, CommunityPresetChannelType } from '~common/community/community.model';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppMediaItemBackdrop from '~common/media-item/backdrop/AppMediaItemBackdrop.vue';
 import { MediaItemModel } from '~common/media-item/media-item-model';

@@ -3,10 +3,7 @@ import { toRef } from 'vue';
 
 import { Environment } from '~common/environment/environment.service';
 import { useForm } from '~common/form-vue/AppForm.vue';
-import {
-	createFormControl,
-	FormControlEmits,
-} from '~common/form-vue/AppFormControl.vue';
+import { createFormControl, FormControlEmits } from '~common/form-vue/AppFormControl.vue';
 import { useFormGroup } from '~common/form-vue/AppFormGroup.vue';
 import { vAppFormAutosize } from '~common/form-vue/autosize.directive';
 import AppFormControlMarkdownMediaItems from '~common/form-vue/controls/markdown/AppFormControlMarkdownMediaItems.vue';

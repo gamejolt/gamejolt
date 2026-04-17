@@ -8,9 +8,13 @@ import { showProfileFollowersModal } from '~app/views/profile/followers/modal.se
 import { showProfileFollowingModal } from '~app/views/profile/following/modal.service';
 import AppProfileActionButtons from '~app/views/profile/overview/AppProfileActionButtons.vue';
 import AppProfileBio from '~app/views/profile/overview/AppProfileBio.vue';
-import AppProfileShortcuts, { ProfileQuickLink } from '~app/views/profile/overview/shortcut/AppProfileShortcuts.vue';
+import AppProfileShortcuts, {
+	ProfileQuickLink,
+} from '~app/views/profile/overview/shortcut/AppProfileShortcuts.vue';
 import AppProfileStat from '~app/views/profile/overview/stats/AppProfileStat.vue';
-import AppProfileStats, { ProfileStat } from '~app/views/profile/overview/stats/AppProfileStats.vue';
+import AppProfileStats, {
+	ProfileStat,
+} from '~app/views/profile/overview/stats/AppProfileStats.vue';
 import { useProfileRouteStore } from '~app/views/profile/RouteProfile.vue';
 import { Screen } from '~common/screen/screen-service';
 import AppSpacer from '~common/spacer/AppSpacer.vue';

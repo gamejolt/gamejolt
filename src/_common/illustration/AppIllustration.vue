@@ -30,14 +30,7 @@ type Props = {
 	noMargin?: boolean;
 	illStyles?: CSSProperties;
 };
-const {
-	asset,
-	sm,
-	maxWidth,
-	maxTextWidth = 500,
-	noMargin,
-	illStyles,
-} = defineProps<Props>();
+const { asset, sm, maxWidth, maxTextWidth = 500, noMargin, illStyles } = defineProps<Props>();
 
 const slots = useSlots();
 

@@ -3,7 +3,10 @@ import { computed, HTMLAttributes, ref, toRef } from 'vue';
 
 import AppCommunityChannelCard from '~app/components/community/channel/card/AppCommunityChannelCard.vue';
 import { useAppStore } from '~app/store';
-import { loadArchivedChannels, useCommunityRouteStore } from '~app/views/communities/view/view.store';
+import {
+	loadArchivedChannels,
+	useCommunityRouteStore,
+} from '~app/views/communities/view/view.store';
 import { CommunityChannelModel } from '~common/community/channel/channel.model';
 import { CommunityModel } from '~common/community/community.model';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';

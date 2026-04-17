@@ -14,7 +14,9 @@ export async function showEmojiSelectorModal(options: EmojiSelectorModalOptions)
 
 	return await showModal<EmojiModel>({
 		modalId: 'EmojiSelector',
-		component: defineAsyncComponent(() => import('~common/emoji/selector-modal/AppEmojiSelectorModal.vue')),
+		component: defineAsyncComponent(
+			() => import('~common/emoji/selector-modal/AppEmojiSelectorModal.vue')
+		),
 		props: {
 			type,
 			modelData,

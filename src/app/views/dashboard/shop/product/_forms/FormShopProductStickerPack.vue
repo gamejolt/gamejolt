@@ -2,7 +2,9 @@
 import { computed, Ref, ref, watch } from 'vue';
 
 import { showFormStickerSelectorModal } from '~app/views/dashboard/shop/product/_forms/_sticker-selector/modal.service';
-import FormShopProductBase, { createShopProductBaseForm } from '~app/views/dashboard/shop/product/_forms/FormShopProductBase.vue';
+import FormShopProductBase, {
+	createShopProductBaseForm,
+} from '~app/views/dashboard/shop/product/_forms/FormShopProductBase.vue';
 import AppDashShopProductHeader from '~app/views/dashboard/shop/product/AppDashShopProductHeader.vue';
 import { ShopDashProductType, useShopDashStore } from '~app/views/dashboard/shop/shop.store';
 import AppAlertBox from '~common/alert/AppAlertBox.vue';
@@ -19,12 +21,7 @@ import { StickerPackModel } from '~common/sticker/pack/pack.model';
 import { StickerModel } from '~common/sticker/sticker.model';
 import { kThemeBg, kThemeBgOffset, kThemeFg } from '~common/theme/variables';
 import { $gettext } from '~common/translate/translate.service';
-import {
-	styleBorderRadiusLg,
-	styleFlexCenter,
-	styleTyped,
-	styleWhen,
-} from '~styles/mixins';
+import { styleBorderRadiusLg, styleFlexCenter, styleTyped, styleWhen } from '~styles/mixins';
 import { kStrongEaseOut } from '~styles/variables';
 
 type Props = {

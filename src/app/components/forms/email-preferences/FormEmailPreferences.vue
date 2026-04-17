@@ -15,11 +15,7 @@ import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 import { $gettext } from '~common/translate/translate.service';
-import {
-	$saveUserEmailPreferences,
-	$toggleUserEmails,
-	UserModel,
-} from '~common/user/user.model';
+import { $saveUserEmailPreferences, $toggleUserEmails, UserModel } from '~common/user/user.model';
 
 type FormModel = UserModel & {
 	notifications: string[];

@@ -43,8 +43,7 @@ onMounted(async () => {
 
 	// Take threshold into account only if our collapse height is big enough
 	// for threshold to matter.
-	const threshold =
-		!ignoreThreshold && collapseHeight > Threshold * 2 ? Threshold : 0;
+	const threshold = !ignoreThreshold && collapseHeight > Threshold * 2 ? Threshold : 0;
 
 	if (collapseHeight && root.value.scrollHeight - threshold > collapseHeight) {
 		isRequired = true;

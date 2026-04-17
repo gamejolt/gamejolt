@@ -1,4 +1,6 @@
-import AppFiresidePostGotoGrowl, { Action } from '~common/fireside/post/goto-growl/AppFiresidePostGotoGrowl.vue';
+import AppFiresidePostGotoGrowl, {
+	Action,
+} from '~common/fireside/post/goto-growl/AppFiresidePostGotoGrowl.vue';
 import { FiresidePostModel } from '~common/fireside/post/post-model';
 import { showSuccessGrowl } from '~common/growls/growls.service';
 

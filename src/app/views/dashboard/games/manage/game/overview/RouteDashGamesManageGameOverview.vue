@@ -13,10 +13,7 @@ import AppGraphWidget from '~common/graph/AppGraphWidget.vue';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppProgressBar from '~common/progress/AppProgressBar.vue';
 import AppProgressPoller from '~common/progress/poller/AppProgressPoller.vue';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import { $gettext } from '~common/translate/translate.service';
 

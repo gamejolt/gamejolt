@@ -10,10 +10,7 @@ import { formatDate } from '~common/filters/date';
 import { imageGems } from '~common/img/images';
 import AppInviteCard from '~common/invite/AppInviteCard.vue';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 import { useCommonStore } from '~common/store/common-store';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';

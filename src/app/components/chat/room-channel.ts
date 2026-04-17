@@ -17,10 +17,7 @@ import { ContentObject } from '~common/content/content-object';
 import { MarkObject } from '~common/content/mark-object';
 import { UnknownModelData } from '~common/model/model.service';
 import { getModel, storeModel, storeModelList } from '~common/model/model-store.service';
-import {
-	RealtimeReactionsPayload,
-	updateReactionCount,
-} from '~common/reaction/reaction-count';
+import { RealtimeReactionsPayload, updateReactionCount } from '~common/reaction/reaction-count';
 import { createSocketChannelController } from '~common/socket/socket-controller';
 import { StickerPlacementModel } from '~common/sticker/placement/placement.model';
 import { arrayRemove } from '~utils/array';

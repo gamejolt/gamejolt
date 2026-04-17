@@ -8,7 +8,10 @@ import {
 	showCommunityCompetitionEntryModalIdFromHash,
 	watchCommunityCompetitionEntryModalForHash,
 } from '~app/components/community/competition/entry/modal/modal.service';
-import { getChannelPathFromRoute, useCommunityRouteStore } from '~app/views/communities/view/view.store';
+import {
+	getChannelPathFromRoute,
+	useCommunityRouteStore,
+} from '~app/views/communities/view/view.store';
 import { Api } from '~common/api/api.service';
 import AppButton from '~common/button/AppButton.vue';
 import { CommunityCompetitionEntryModel } from '~common/community/competition/entry/entry.model';
@@ -18,10 +21,7 @@ import { illNoComments } from '~common/illustration/illustrations';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppPagination from '~common/pagination/AppPagination.vue';
 import AppPopper from '~common/popper/AppPopper.vue';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { vAppNoAutoscroll } from '~common/scroll/auto-scroll/no-autoscroll.directive';
 import { Scroll } from '~common/scroll/scroll.service';
 import { $gettext, $ngettext } from '~common/translate/translate.service';

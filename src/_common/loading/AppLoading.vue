@@ -25,10 +25,7 @@ const {
 
 const img = computed(() => {
 	const img =
-		'loading' +
-		(stationary ? '-stationary' : '') +
-		(noColor ? '-bw' : '') +
-		(big ? '-2x' : '');
+		'loading' + (stationary ? '-stationary' : '') + (noColor ? '-bw' : '') + (big ? '-2x' : '');
 
 	return images[`./${img}.gif`];
 });

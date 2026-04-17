@@ -55,9 +55,7 @@ if (
 	customGameMessages.value = payload.customMessages;
 
 	packagePayload.value =
-		payload.packages && payload.packages.length
-			? new GamePackagePayloadModel(payload)
-			: null;
+		payload.packages && payload.packages.length ? new GamePackagePayloadModel(payload) : null;
 }
 
 setPageTheme({

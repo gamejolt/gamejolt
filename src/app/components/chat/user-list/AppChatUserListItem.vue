@@ -23,9 +23,7 @@ const { item } = defineProps<Props>();
 
 const { chatUnsafe: chat } = useGridStore();
 
-const roomId = computed(() =>
-	item instanceof ChatUser ? item.room_id : item.id
-);
+const roomId = computed(() => (item instanceof ChatUser ? item.room_id : item.id));
 
 const user = computed(() => (item instanceof ChatUser ? item : null));
 const isActive = computed(() => chat.value.activeRoomId === roomId.value);

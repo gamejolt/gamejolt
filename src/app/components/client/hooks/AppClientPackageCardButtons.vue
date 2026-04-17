@@ -163,7 +163,6 @@ if (
 ) {
 	const _build = card.browserBuild;
 
-	 
 	card.extraBuilds.unshift({
 		type: _build.type,
 		icon: card.platformSupportInfo[_build.type].icon,
@@ -173,7 +172,7 @@ if (
 	});
 
 	// Clear out the browser build since it's not quick playable.
-	 
+
 	card.browserBuild = null;
 }
 

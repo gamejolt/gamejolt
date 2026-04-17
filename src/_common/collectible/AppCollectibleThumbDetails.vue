@@ -5,7 +5,11 @@ import { showPurchaseShopProductModal } from '~app/components/vending-machine/mo
 import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
 import AppButton from '~common/button/AppButton.vue';
 import { AcquisitionMethod } from '~common/collectible/acquisition.model';
-import { CollectibleModel, CollectibleType, getCollectibleResourceId } from '~common/collectible/collectible.model';
+import {
+	CollectibleModel,
+	CollectibleType,
+	getCollectibleResourceId,
+} from '~common/collectible/collectible.model';
 import { PurchasableProductType } from '~common/inventory/shop/product-owner-helpers';
 import { JoltydexFeed } from '~common/joltydex/joltydex-feed';
 import AppCircularProgress from '~common/progress/AppCircularProgress.vue';

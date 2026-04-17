@@ -3,10 +3,7 @@ import { computed, ref } from 'vue';
 
 import { useProfileRouteStore } from '~app/views/profile/RouteProfile.vue';
 import { Api } from '~common/api/api.service';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 import { $gettext } from '~common/translate/translate.service';
 import AppTrophyListPaged from '~common/trophy/list/AppTrophyListPaged.vue';

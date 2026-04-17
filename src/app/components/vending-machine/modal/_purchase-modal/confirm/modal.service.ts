@@ -6,7 +6,12 @@ import { UserModel } from '~common/user/user.model';
 export async function showPurchaseShopProductConfirmModal({ giftUser }: { giftUser: UserModel }) {
 	return await showModal<boolean>({
 		modalId: 'PurchaseShopProductConfirm',
-		component: defineAsyncComponent(() => import('~app/components/vending-machine/modal/_purchase-modal/confirm/AppPurchaseShopProductConfirmModal.vue')),
+		component: defineAsyncComponent(
+			() =>
+				import(
+					'~app/components/vending-machine/modal/_purchase-modal/confirm/AppPurchaseShopProductConfirmModal.vue'
+				)
+		),
 		size: 'sm',
 		props: {
 			giftUser,

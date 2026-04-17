@@ -24,10 +24,7 @@ type Props = {
 	small?: boolean;
 	tiny?: boolean;
 };
-const {
-	position = 'bottom-right',
-	tickOffset = 20,
-} = defineProps<Props>();
+const { position = 'bottom-right', tickOffset = 20 } = defineProps<Props>();
 
 const floatingTickPositionStyles = computed(() => {
 	const result: CSSProperties = {

@@ -6,10 +6,7 @@ import { useGridStore } from '~app/components/grid/grid-store';
 import AppPostAddButtonFormControl from '~app/components/post/add-button/AppPostAddButtonFormControl.vue';
 import { useAppStore } from '~app/store';
 import { $saveCommunity, CommunityModel } from '~common/community/community.model';
-import AppForm, {
-	createForm,
-	FormController,
-} from '~common/form-vue/AppForm.vue';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
 import AppFormButton from '~common/form-vue/AppFormButton.vue';
 import AppFormControl from '~common/form-vue/AppFormControl.vue';
 import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';

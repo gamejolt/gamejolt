@@ -61,9 +61,7 @@ const emit = defineEmits<{
 
 const canEdit = toRef(() => post.isEditableByUser(sessionUser.value));
 const shouldShowManageCommunities = toRef(
-	() =>
-		post.status === FiresidePostStatus.Active &&
-		post.manageableCommunities.length !== 0
+	() => post.status === FiresidePostStatus.Active && post.manageableCommunities.length !== 0
 );
 const shouldShowModTools = toRef(() => sessionUser.value && sessionUser.value.isMod);
 const siteModerateLink = toRef(
@@ -128,12 +126,7 @@ async function movePostFromCommunityChannel(postCommunity: FiresidePostCommunity
 	}
 
 	try {
-		await $moveFiresidePostToChannel(
-			post,
-			postCommunity.community,
-			result.channel,
-			result
-		);
+		await $moveFiresidePostToChannel(post, postCommunity.community, result.channel, result);
 		emit('move-channel', result.channel);
 	} catch (e) {
 		console.error('Failed to move community post to a channel');
@@ -222,7 +215,7 @@ async function togglePin() {
 
 	const { resourceName, resourceId } = _getPinTarget();
 	await $togglePinOnFiresidePost(post, resourceName, resourceId);
-	 
+
 	post.is_pinned = !wasPinned;
 
 	if (wasPinned) {

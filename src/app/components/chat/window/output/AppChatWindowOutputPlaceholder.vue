@@ -1,5 +1,8 @@
 <script lang="ts" setup>
-import { ChatWindowAvatarSize, ChatWindowLeftGutterSize } from '~app/components/chat/window/variables';
+import {
+	ChatWindowAvatarSize,
+	ChatWindowLeftGutterSize,
+} from '~app/components/chat/window/variables';
 import { kChatRoomWindowPadding } from '~app/styles/variables';
 import { kThemeBg, kThemeBgSubtle } from '~common/theme/variables';
 import { styleBorderRadiusLg } from '~styles/mixins';

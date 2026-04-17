@@ -1,7 +1,9 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import AppContentTarget, { CONTENT_TARGET_HEIGHT } from '~app/components/content/target/AppContentTarget.vue';
+import AppContentTarget, {
+	CONTENT_TARGET_HEIGHT,
+} from '~app/components/content/target/AppContentTarget.vue';
 import AppImgResponsive from '~common/img/AppImgResponsive.vue';
 import AppMediaItemBackdrop from '~common/media-item/backdrop/AppMediaItemBackdrop.vue';
 import { REALM_CARD_RATIO } from '~common/realm/AppRealmFullCard.vue';

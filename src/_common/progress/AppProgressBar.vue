@@ -11,7 +11,10 @@ type Props = {
 	hideZero?: boolean;
 	bgSubtle?: boolean;
 	primary?: boolean;
-} & /* @vue-ignore */ Pick<HTMLAttributes, 'role' | 'aria-valuenow' | 'aria-valuemin' | 'aria-valuemax'>;
+} & /* @vue-ignore */ Pick<
+	HTMLAttributes,
+	'role' | 'aria-valuenow' | 'aria-valuemin' | 'aria-valuemax'
+>;
 
 const {
 	percent,

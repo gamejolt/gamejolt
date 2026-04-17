@@ -6,19 +6,13 @@ import {
 	CommunityCompetitionAwardModel,
 } from '~common/community/competition/award/award.model';
 import { CommunityCompetitionModel } from '~common/community/competition/competition.model';
-import AppForm, {
-	createForm,
-	FormController,
-} from '~common/form-vue/AppForm.vue';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
 import AppFormButton from '~common/form-vue/AppFormButton.vue';
 import AppFormControl from '~common/form-vue/AppFormControl.vue';
 import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
 import AppFormControlTextarea from '~common/form-vue/controls/AppFormControlTextarea.vue';
-import {
-	validateAvailability,
-	validateMaxLength,
-} from '~common/form-vue/validators';
+import { validateAvailability, validateMaxLength } from '~common/form-vue/validators';
 
 type FormModel = CommunityCompetitionAwardModel;
 
@@ -36,8 +30,7 @@ const modelRef = toRef(() => model);
 
 const nameAvailabilityUrl = computed(() => {
 	let endpoint =
-		'/web/dash/communities/competitions/awards/check-field-availability/' +
-		competition.id;
+		'/web/dash/communities/competitions/awards/check-field-availability/' + competition.id;
 
 	if (form.formModel?.id) {
 		endpoint += '/' + form.formModel.id;

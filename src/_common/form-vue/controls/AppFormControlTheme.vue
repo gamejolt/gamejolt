@@ -5,10 +5,7 @@ import { computed, ref, toRef } from 'vue';
 
 import { Api } from '~common/api/api.service';
 import AppButton from '~common/button/AppButton.vue';
-import {
-	createFormControl,
-	FormControlEmits,
-} from '~common/form-vue/AppFormControl.vue';
+import { createFormControl, FormControlEmits } from '~common/form-vue/AppFormControl.vue';
 import { FormValidator } from '~common/form-vue/validators';
 import AppLoading from '~common/loading/AppLoading.vue';
 import AppPopper from '~common/popper/AppPopper.vue';

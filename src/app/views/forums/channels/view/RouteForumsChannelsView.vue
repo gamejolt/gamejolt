@@ -11,10 +11,7 @@ import { ForumChannelModel } from '~common/forum/channel/channel.model';
 import { ForumTopicModel } from '~common/forum/topic/topic.model';
 import AppNavTabList from '~common/nav/tab-list/AppNavTabList.vue';
 import AppPagination from '~common/pagination/AppPagination.vue';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { Screen } from '~common/screen/screen-service';
 import { Scroll } from '~common/scroll/scroll.service';
 import { $gettext, $ngettext } from '~common/translate/translate.service';

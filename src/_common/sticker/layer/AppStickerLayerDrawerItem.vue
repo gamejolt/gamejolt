@@ -9,12 +9,7 @@ import AppStickerMastery from '~common/sticker/AppStickerMastery.vue';
 import { StickerModel } from '~common/sticker/sticker.model';
 import { useStickerStore } from '~common/sticker/sticker-store';
 import AppUserAvatar from '~common/user/user-avatar/AppUserAvatar.vue';
-import {
-	styleBorderRadiusLg,
-	styleChangeBg,
-	styleElevate,
-	styleWhen,
-} from '~styles/mixins';
+import { styleBorderRadiusLg, styleChangeBg, styleElevate, styleWhen } from '~styles/mixins';
 import { kBorderWidthLg } from '~styles/variables';
 
 type Props = {
@@ -78,9 +73,7 @@ const itemStyling = computed(() => {
 });
 
 const isPeeled = computed(
-	() =>
-		storeSticker.value?.id === sticker.id ||
-		(typeof count === 'number' && count < 1)
+	() => storeSticker.value?.id === sticker.id || (typeof count === 'number' && count < 1)
 );
 
 // NOTE: Says unused for me, but it's in the template. Check before deleting.

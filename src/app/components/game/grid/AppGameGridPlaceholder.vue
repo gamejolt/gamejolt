@@ -1,7 +1,11 @@
 <script lang="ts" setup>
 import { computed, toRef } from 'vue';
 
-import { GameGridRowSizeLg, GameGridRowSizeMd, GameGridRowSizeSm } from '~app/components/game/grid/AppGameGrid.vue';
+import {
+	GameGridRowSizeLg,
+	GameGridRowSizeMd,
+	GameGridRowSizeSm,
+} from '~app/components/game/grid/AppGameGrid.vue';
 import AppGameThumbnailPlaceholder from '~common/game/thumbnail/AppGameThumbnailPlaceholder.vue';
 import { Screen } from '~common/screen/screen-service';
 

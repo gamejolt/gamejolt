@@ -8,7 +8,12 @@ import { showModal } from '~common/modal/modal.service';
 export async function showGetCoinsRedirectModal() {
 	return await showModal<boolean>({
 		modalId: 'GetCoinsRedirect',
-		component: defineAsyncComponent(() => import('~app/components/vending-machine/modal/_get-coins-redirect-modal/AppGetCoinsRedirectModal.vue')),
+		component: defineAsyncComponent(
+			() =>
+				import(
+					'~app/components/vending-machine/modal/_get-coins-redirect-modal/AppGetCoinsRedirectModal.vue'
+				)
+		),
 		size: 'sm',
 	});
 }

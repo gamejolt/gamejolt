@@ -6,7 +6,9 @@ import { showModal } from '~common/modal/modal.service';
 export async function showGameHeaderModal(game: GameModel) {
 	return await showModal<GameModel>({
 		modalId: 'GameHeader',
-		component: defineAsyncComponent(() => import('~app/components/game/header-modal/AppGameHeaderModal.vue')),
+		component: defineAsyncComponent(
+			() => import('~app/components/game/header-modal/AppGameHeaderModal.vue')
+		),
 		props: {
 			game,
 		},

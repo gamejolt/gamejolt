@@ -56,10 +56,13 @@ const {
 const isLoadingPackageData = ref(false);
 const packageDataPromise = ref<Promise<GamePackagePayloadModel> | null>(null);
 
-watch(() => game, () => {
-	isLoadingPackageData.value = false;
-	packageDataPromise.value = null;
-});
+watch(
+	() => game,
+	() => {
+		isLoadingPackageData.value = false;
+		packageDataPromise.value = null;
+	}
+);
 
 // We try to pull a package with some action on it.
 // For example, if a package is installing, we want to pull that one to show.
@@ -108,13 +111,7 @@ async function install() {
 		return;
 	}
 
-	return packageInstall(
-		game,
-		build._package!,
-		build._release!,
-		build,
-		build._launch_options!
-	);
+	return packageInstall(game, build._package!, build._release!, build, build._launch_options!);
 }
 
 async function fetchPackageData() {

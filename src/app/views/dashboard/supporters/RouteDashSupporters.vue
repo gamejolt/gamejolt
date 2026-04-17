@@ -15,9 +15,7 @@ import AppLoading from '~common/loading/AppLoading.vue';
 import { showModalConfirm } from '~common/modal/confirm/confirm-service';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { Screen } from '~common/screen/screen-service';
-import AppScrollInview, {
-	ScrollInviewConfig,
-} from '~common/scroll/inview/AppScrollInview.vue';
+import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 import { SupporterActionModel } from '~common/supporters/action.model';
 import { SupporterMessageModel } from '~common/supporters/message.model';

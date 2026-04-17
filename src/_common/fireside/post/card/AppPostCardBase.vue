@@ -52,7 +52,16 @@ type Props = {
 	fullGradient?: boolean;
 };
 
-const { post, videoContext, noElevateHover, noHover, aspectRatio, hasOverlayContent, blur, fullGradient } = defineProps<Props>();
+const {
+	post,
+	videoContext,
+	noElevateHover,
+	noHover,
+	aspectRatio,
+	hasOverlayContent,
+	blur,
+	fullGradient,
+} = defineProps<Props>();
 const { hasContentFocus } = useContentFocusService();
 useSlots();
 

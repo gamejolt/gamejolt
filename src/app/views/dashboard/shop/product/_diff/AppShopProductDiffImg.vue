@@ -3,23 +3,13 @@ import { computed, CSSProperties } from 'vue';
 
 import { ShopProductBaseForm } from '~app/views/dashboard/shop/product/_forms/FormShopProductBase.vue';
 import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
-import {
-	AvatarFrameModel,
-	DefaultAvatarFrameScale,
-} from '~common/avatar/frame.model';
+import { AvatarFrameModel, DefaultAvatarFrameScale } from '~common/avatar/frame.model';
 import { Screen } from '~common/screen/screen-service';
 import AppScrollScroller from '~common/scroll/AppScrollScroller.vue';
-import {
-	ShopProductModel,
-	ShopProductResource,
-} from '~common/shop/product/product-model';
+import { ShopProductModel, ShopProductResource } from '~common/shop/product/product-model';
 import { StickerPackRatio } from '~common/sticker/pack/AppStickerPack.vue';
 import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
-import {
-	styleFlexCenter,
-	styleMaxWidthForOptions,
-	styleWhen,
-} from '~styles/mixins';
+import { styleFlexCenter, styleMaxWidthForOptions, styleWhen } from '~styles/mixins';
 import { kBorderRadiusBase, kBorderRadiusLg } from '~styles/variables';
 import { isInstance } from '~utils/utils';
 

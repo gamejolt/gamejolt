@@ -3,10 +3,7 @@ import { RouterView } from 'vue-router';
 
 import AppManageGameApiNav from '~app/views/dashboard/games/manage/api/AppManageGameApiNav.vue';
 import AppNavTabList from '~common/nav/tab-list/AppNavTabList.vue';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { Screen } from '~common/screen/screen-service';
 export default {
 	...defineAppRouteOptions({

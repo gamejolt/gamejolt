@@ -13,7 +13,9 @@ export async function showReactionDetailsModal(options: ReactionDetailsModalOpti
 
 	return await showModal<void>({
 		modalId: 'ReactionDetails',
-		component: defineAsyncComponent(() => import('~common/reaction/details-modal/AppReactionDetailsModal.vue')),
+		component: defineAsyncComponent(
+			() => import('~common/reaction/details-modal/AppReactionDetailsModal.vue')
+		),
 		props: {
 			model,
 			initialReaction,

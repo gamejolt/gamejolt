@@ -5,7 +5,10 @@ import AppAnimElectricity from '~common/animation/AppAnimElectricity.vue';
 import { ComponentProps } from '~common/component-helpers';
 import AppStickerImg from '~common/sticker/AppStickerImg.vue';
 import { StickerPlacementModel } from '~common/sticker/placement/placement.model';
-import { removeStickerFromTarget, StickerTargetController } from '~common/sticker/target/target-controller';
+import {
+	removeStickerFromTarget,
+	StickerTargetController,
+} from '~common/sticker/target/target-controller';
 import { styleWhen } from '~styles/mixins';
 
 type Props = {
@@ -18,12 +21,7 @@ type Props = {
 	showCharged?: boolean;
 } & /* @vue-ignore */ Pick<HTMLAttributes, 'onMousedown' | 'onTouchstart'>;
 
-const {
-	sticker,
-	controller = null,
-	isClickable = true,
-	showCharged,
-} = defineProps<Props>();
+const { sticker, controller = null, isClickable = true, showCharged } = defineProps<Props>();
 
 const emit = defineEmits<{
 	click: [];

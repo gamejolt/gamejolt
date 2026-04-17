@@ -1,7 +1,10 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import { editorInsertGif, useContentEditorController } from '~common/content/content-editor/content-editor-controller';
+import {
+	editorInsertGif,
+	useContentEditorController,
+} from '~common/content/content-editor/content-editor-controller';
 import { showContentEditorGifModal } from '~common/content/content-editor/modals/gif/gif-modal.service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';

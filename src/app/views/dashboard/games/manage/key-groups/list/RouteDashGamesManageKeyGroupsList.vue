@@ -11,15 +11,9 @@ import AppCardListAdd from '~common/card/list/AppCardListAdd.vue';
 import AppCardListItem from '~common/card/list/AppCardListItem.vue';
 import { formatNumber } from '~common/filters/number';
 import { GamePackageModel } from '~common/game/package/package.model';
-import {
-	KeyGroupModel,
-	KeyGroupType,
-} from '~common/key-group/key-group.model';
+import { KeyGroupModel, KeyGroupType } from '~common/key-group/key-group.model';
 import AppProgressBar from '~common/progress/AppProgressBar.vue';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 import { $gettext } from '~common/translate/translate.service';
 import { TranslateDirective as vTranslate } from '~common/translate/translate-directive';

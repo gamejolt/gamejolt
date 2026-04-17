@@ -1,4 +1,4 @@
-import { computed, ComputedRef, onUnmounted, reactive, readonly, Ref,ref } from 'vue';
+import { computed, ComputedRef, onUnmounted, reactive, readonly, Ref, ref } from 'vue';
 
 import { MediaItemModel } from '~common/media-item/media-item-model';
 

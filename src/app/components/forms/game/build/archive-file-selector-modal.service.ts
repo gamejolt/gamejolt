@@ -12,7 +12,9 @@ export async function showArchiveFileSelectorModal(
 ) {
 	return await showModal<string>({
 		modalId: 'ArchiveFileSelector',
-		component: defineAsyncComponent(() => import('~app/components/forms/game/build/AppArchiveFileSelectorModal.vue')),
+		component: defineAsyncComponent(
+			() => import('~app/components/forms/game/build/AppArchiveFileSelectorModal.vue')
+		),
 		props: { gameId, packageId, releaseId, buildId, primaryFileId, platform },
 	});
 }

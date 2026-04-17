@@ -14,17 +14,11 @@ import AppLoading from '~common/loading/AppLoading.vue';
 import AppModal from '~common/modal/AppModal.vue';
 import AppModalFloatingHeader from '~common/modal/AppModalFloatingHeader.vue';
 import { useModal } from '~common/modal/modal.service';
-import AppRealmFullCard, {
-	REALM_CARD_RATIO,
-} from '~common/realm/AppRealmFullCard.vue';
+import AppRealmFullCard, { REALM_CARD_RATIO } from '~common/realm/AppRealmFullCard.vue';
 import { RealmModel } from '~common/realm/realm-model';
 import { Screen } from '~common/screen/screen-service';
-import AppScrollScroller, {
-	createScroller,
-} from '~common/scroll/AppScrollScroller.vue';
-import AppScrollInview, {
-	ScrollInviewConfig,
-} from '~common/scroll/inview/AppScrollInview.vue';
+import AppScrollScroller, { createScroller } from '~common/scroll/AppScrollScroller.vue';
+import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 import { arrayRemove } from '~utils/array';
 import { debounce } from '~utils/utils';
@@ -200,7 +194,6 @@ async function selectRealm(realm: RealmModel) {
 		return;
 	}
 
-	 
 	selectedRealms.push(realm);
 	await nextTick();
 	const offset = scrollController.element.value?.scrollWidth;

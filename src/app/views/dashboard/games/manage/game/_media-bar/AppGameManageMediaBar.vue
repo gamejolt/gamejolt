@@ -97,4 +97,8 @@ async function open(item: Media) {
 	</AppScrollScroller>
 </template>
 
-<style lang="stylus" src="~app/views/dashboard/games/manage/game/_media-bar/AppGameManageMediaBar.styl" scoped></style>
+<style
+	lang="stylus"
+	src="~app/views/dashboard/games/manage/game/_media-bar/AppGameManageMediaBar.styl"
+	scoped
+></style>

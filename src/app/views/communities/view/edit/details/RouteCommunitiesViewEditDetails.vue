@@ -16,10 +16,7 @@ import { $removeCollaboratorInvite } from '~common/collaborator/collaborator.mod
 import { $removeCommunity } from '~common/community/community.model';
 import { showInfoGrowl, showSuccessGrowl } from '~common/growls/growls.service';
 import { showModalConfirm } from '~common/modal/confirm/confirm-service';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { Screen } from '~common/screen/screen-service';
 import { useThemeStore } from '~common/theme/theme.store';
 import { $gettext } from '~common/translate/translate.service';

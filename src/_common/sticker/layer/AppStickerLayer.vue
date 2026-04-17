@@ -4,8 +4,15 @@ import { computed, onBeforeUnmount, onMounted, toRaw, watchEffect } from 'vue';
 import { registerContentFocusWatcher } from '~common/content-focus/content-focus.service';
 import { useScroller } from '~common/scroll/AppScrollScroller.vue';
 import AppStickerLayerPlacementMask from '~common/sticker/layer/AppStickerLayerPlacementMask.vue';
-import { createStickerLayerController, provideStickerLayer } from '~common/sticker/layer/layer-controller';
-import { registerStickerLayer, unregisterStickerLayer, useStickerStore } from '~common/sticker/sticker-store';
+import {
+	createStickerLayerController,
+	provideStickerLayer,
+} from '~common/sticker/layer/layer-controller';
+import {
+	registerStickerLayer,
+	unregisterStickerLayer,
+	useStickerStore,
+} from '~common/sticker/sticker-store';
 
 type Props = {
 	/**

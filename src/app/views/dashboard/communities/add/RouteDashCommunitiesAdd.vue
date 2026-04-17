@@ -3,10 +3,7 @@ import { computed } from 'vue';
 
 import FormCommunity from '~app/components/forms/community/FormCommunity.vue';
 import AppPageContainer from '~app/components/page-container/AppPageContainer.vue';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { $gettext } from '~common/translate/translate.service';
 import { touchUser } from '~common/user/user.model';
 

@@ -30,7 +30,8 @@ export async function initSafeExportsForClient() {
 
 	// Vue components
 	AppClientHistoryNavigator = defineAsyncComponent(
-		async () => (await import('~common/client/history-navigator/AppClientHistoryNavigator.vue')).default
+		async () =>
+			(await import('~common/client/history-navigator/AppClientHistoryNavigator.vue')).default
 	);
 	AppClientBase = defineAsyncComponent(
 		async () => (await import('~common/client/base/AppClientBase.vue')).default
@@ -38,7 +39,8 @@ export async function initSafeExportsForClient() {
 
 	// Misc
 	Client = (await import('~common/client/client.service')).Client;
-	ClientHistoryNavigator = (await import('~common/client/history-navigator/history-navigator.service'))
-		.ClientHistoryNavigator;
+	ClientHistoryNavigator = (
+		await import('~common/client/history-navigator/history-navigator.service')
+	).ClientHistoryNavigator;
 	ClientAutoStart = (await import('~common/client/autostart/autostart.service')).ClientAutoStart;
 }

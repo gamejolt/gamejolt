@@ -22,12 +22,7 @@ import { $gettext } from '~common/translate/translate.service';
 import AppUserVerifiedTick from '~common/user/AppUserVerifiedTick.vue';
 import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
 import { styleWhen } from '~styles/mixins';
-import {
-	kBorderWidthLg,
-	kFontFamilyTiny,
-	kFontSizeSmall,
-	kFontSizeTiny,
-} from '~styles/variables';
+import { kBorderWidthLg, kFontFamilyTiny, kFontSizeSmall, kFontSizeTiny } from '~styles/variables';
 
 type Props = {
 	user: ChatUser;

@@ -1,6 +1,9 @@
 import { EditorView } from 'prosemirror-view';
 
-import { ContentEditorController, editorUploadImageFile } from '~common/content/content-editor/content-editor-controller';
+import {
+	ContentEditorController,
+	editorUploadImageFile,
+} from '~common/content/content-editor/content-editor-controller';
 import { dropEventHandler } from '~common/content/content-editor/events/drop-event-handler';
 import { focusEventHandler } from '~common/content/content-editor/events/focus-event-handler';
 import { keydownEventHandler } from '~common/content/content-editor/events/keydown-event-handler';

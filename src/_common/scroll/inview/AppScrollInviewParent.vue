@@ -1,7 +1,10 @@
 <script lang="ts">
 import { inject, InjectionKey, provide, ref } from 'vue';
 
-import { ScrollInviewConfig, ScrollInviewController } from '~common/scroll/inview/AppScrollInview.vue';
+import {
+	ScrollInviewConfig,
+	ScrollInviewController,
+} from '~common/scroll/inview/AppScrollInview.vue';
 
 const Key: InjectionKey<ScrollInviewParentController> = Symbol('scroll-inview-parent');
 

@@ -10,10 +10,7 @@ import {
 	redirectToOnboarding,
 } from '~common/auth/auth.service';
 import { showErrorGrowl } from '~common/growls/growls.service';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { $gettext } from '~common/translate/translate.service';
 
 export default {

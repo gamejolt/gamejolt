@@ -3,7 +3,9 @@ import { nextTick, onUpdated, ref, toRef, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { Analytics } from '~common/analytics/analytics.service';
-import AppGameMediaBarItem, { MediaBarItemMaxHeight } from '~common/game/media-bar/item/AppGameMediaBarItem.vue';
+import AppGameMediaBarItem, {
+	MediaBarItemMaxHeight,
+} from '~common/game/media-bar/item/AppGameMediaBarItem.vue';
 import { GameScreenshotModel } from '~common/game/screenshot/screenshot.model';
 import { GameSketchfabModel } from '~common/game/sketchfab/sketchfab.model';
 import { GameVideoModel } from '~common/game/video/video.model';

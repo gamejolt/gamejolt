@@ -2,7 +2,10 @@
 import { computed, toRef } from 'vue';
 import { RouteLocationRaw } from 'vue-router';
 
-import { CommunityActivityItemModel, CommunityActivityItemType } from '~common/community/activity-item/activity-item.model';
+import {
+	CommunityActivityItemModel,
+	CommunityActivityItemType,
+} from '~common/community/activity-item/activity-item.model';
 import { CommunityChannelModel } from '~common/community/channel/channel.model';
 import { CommunityCompetitionModel } from '~common/community/competition/competition.model';
 import { CommunityCompetitionEntryModel } from '~common/community/competition/entry/entry.model';
@@ -36,8 +39,7 @@ const isToday = computed(
 const isYesterday = computed(() => {
 	const oneDay = 24 * 60 * 60 * 1000;
 	return (
-		formatDate(item.added_on, 'mediumDate') ===
-		formatDate(Date.now() - oneDay, 'mediumDate')
+		formatDate(item.added_on, 'mediumDate') === formatDate(Date.now() - oneDay, 'mediumDate')
 	);
 });
 

@@ -43,11 +43,7 @@ const hasError = ref(false);
 const isEditorFocused = ref(false);
 
 const parent = computed(() => {
-	const store = getCommentStore(
-		commentManager,
-		getCommentModelResourceName(model),
-		model.id
-	);
+	const store = getCommentStore(commentManager, getCommentModelResourceName(model), model.id);
 	if (store) {
 		const comment = store.comments.find(c => c.id === commentId);
 		if (comment && comment.parent_id) {

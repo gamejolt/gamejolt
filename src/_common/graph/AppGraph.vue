@@ -12,16 +12,7 @@ import {
 	PointElement,
 	Tooltip,
 } from 'chart.js';
-import {
-	computed,
-	markRaw,
-	onMounted,
-	Ref,
-	ref,
-	toRaw,
-	useTemplateRef,
-	watch,
-} from 'vue';
+import { computed, markRaw, onMounted, Ref, ref, toRaw, useTemplateRef, watch } from 'vue';
 
 import { formatDate } from '~common/filters/date';
 import { useThemeStore } from '~common/theme/theme.store';

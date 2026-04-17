@@ -6,10 +6,7 @@ import FormGame from '~app/components/forms/game/FormGame.vue';
 import { startWizard } from '~app/views/dashboard/games/manage/manage.store';
 import { Api } from '~common/api/api.service';
 import { GameModel, handleGameAddFailure } from '~common/game/game.model';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { useCommonStore } from '~common/store/common-store';
 import { $gettext } from '~common/translate/translate.service';
 

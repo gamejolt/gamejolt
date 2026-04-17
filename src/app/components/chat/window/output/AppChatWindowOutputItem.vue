@@ -12,7 +12,10 @@ import { ChatRoomModel } from '~app/components/chat/room';
 import { getChatUserRoleData } from '~app/components/chat/user';
 import AppChatUserPopover from '~app/components/chat/user-popover/AppChatUserPopover.vue';
 import AppChatWindowOutputItemTime from '~app/components/chat/window/output/AppChatWindowOutputItemTime.vue';
-import { ChatWindowAvatarSize, ChatWindowLeftGutterSize } from '~app/components/chat/window/variables';
+import {
+	ChatWindowAvatarSize,
+	ChatWindowLeftGutterSize,
+} from '~app/components/chat/window/variables';
 import { useGridStore } from '~app/components/grid/grid-store';
 import { kChatRoomWindowPaddingH } from '~app/styles/variables';
 import { ContentOwnerParentBounds } from '~common/content/content-owner';
@@ -25,9 +28,7 @@ import AppPopper, { PopperPlacementType } from '~common/popper/AppPopper.vue';
 import { Popper } from '~common/popper/popper.service';
 import AppReactionList from '~common/reaction/list/AppReactionList.vue';
 import { selectReactionForResource } from '~common/reaction/reaction-count';
-import AppScrollInview, {
-	ScrollInviewConfig,
-} from '~common/scroll/inview/AppScrollInview.vue';
+import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 import { $gettext } from '~common/translate/translate.service';
@@ -199,9 +200,7 @@ const roleData = computed(() =>
 	})
 );
 
-const shouldShowAvatar = computed(
-	() => message.showAvatar === true || isShowingAvatarPopper.value
-);
+const shouldShowAvatar = computed(() => message.showAvatar === true || isShowingAvatarPopper.value);
 
 function onAvatarPopperVisible(isShowing: boolean) {
 	isShowingAvatarPopper.value = isShowing;

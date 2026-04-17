@@ -3,10 +3,7 @@ import { shallowReadonly } from 'vue';
 import { GridClient } from '~app/components/grid/client.service';
 import { CommentModel } from '~common/comment/comment-model';
 import { getModel } from '~common/model/model-store.service';
-import {
-	RealtimeReactionsPayload,
-	updateReactionCount,
-} from '~common/reaction/reaction-count';
+import { RealtimeReactionsPayload, updateReactionCount } from '~common/reaction/reaction-count';
 import { createSocketChannelController } from '~common/socket/socket-controller';
 
 export type GridCommentChannel = ReturnType<typeof createGridCommentChannel>;

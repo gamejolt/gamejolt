@@ -12,10 +12,7 @@ import {
 import AppCommunityActivityItem from '~common/community/activity-item/AppCommunityActivityItem.vue';
 import { formatDate } from '~common/filters/date';
 import AppLoading from '~common/loading/AppLoading.vue';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { $gettext } from '~common/translate/translate.service';
 
 export default {

@@ -7,10 +7,7 @@ import { Api } from '~common/api/api.service';
 import { ForumCategoryModel } from '~common/forum/category/category.model';
 import { ForumChannelModel } from '~common/forum/channel/channel.model';
 import { ForumPostModel } from '~common/forum/post/post.model';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { $gettext } from '~common/translate/translate.service';
 
 export default {

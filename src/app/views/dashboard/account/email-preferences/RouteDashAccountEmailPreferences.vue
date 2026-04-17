@@ -5,10 +5,7 @@ import FormEmailPreferences from '~app/components/forms/email-preferences/FormEm
 import { IntentService } from '~app/components/intent/intent.service';
 import { useAccountRouteController } from '~app/views/dashboard/account/RouteDashAccount.vue';
 import { Api } from '~common/api/api.service';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { $gettext } from '~common/translate/translate.service';
 import { UserModel } from '~common/user/user.model';
 

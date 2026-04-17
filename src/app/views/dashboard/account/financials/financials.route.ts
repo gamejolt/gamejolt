@@ -6,6 +6,7 @@ import { routeDashAccountFinancialsMarketplace } from '~app/views/dashboard/acco
 export const routeDashAccountFinancials: RouteRecordRaw = {
 	name: 'dash.account.financials',
 	path: 'financials',
-	component: () => import('~app/views/dashboard/account/financials/RouteDashAccountFinancials.vue'),
+	component: () =>
+		import('~app/views/dashboard/account/financials/RouteDashAccountFinancials.vue'),
 	children: [routeDashAccountFinancialsCreators, routeDashAccountFinancialsMarketplace],
 };

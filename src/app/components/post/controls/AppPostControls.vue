@@ -28,10 +28,7 @@ import { CommunityChannelModel } from '~common/community/channel/channel.model';
 import { CommunityModel } from '~common/community/community.model';
 import { formatFuzzynumber } from '~common/filters/fuzzynumber';
 import AppFiresidePostLikeWidget from '~common/fireside/post/like/widget/AppFiresidePostLikeWidget.vue';
-import {
-	$publishFiresidePost,
-	FiresidePostModel,
-} from '~common/fireside/post/post-model';
+import { $publishFiresidePost, FiresidePostModel } from '~common/fireside/post/post-model';
 import { Screen } from '~common/screen/screen-service';
 import AppStickerControlsOverlay from '~common/sticker/AppStickerControlsOverlay.vue';
 import { useStickerLayer } from '~common/sticker/layer/layer-controller';
@@ -90,9 +87,7 @@ const { canChargeSticker } = stickerStore;
 // activity feed. If that's the case, we need to make sure we synchronize with
 // the activity feed item state so that if they click away from the feed and
 // back to it, it can initialize with the previous state.
-const shouldShowFollowState = ref(
-	item && feed ? feed.isItemShowingFollow(item) : false
-);
+const shouldShowFollowState = ref(item && feed ? feed.isItemShowingFollow(item) : false);
 
 const commentStore = ref<CommentStoreModel | null>(
 	lockCommentStore(commentManager, 'Fireside_Post', post.id)
@@ -114,11 +109,7 @@ const isShowingFollow = computed(() => {
 const commentsCount = computed(() => (commentStore.value ? commentStore.value.totalCount : 0));
 
 const canPublish = computed(
-	() =>
-		post.isDraft &&
-		!post.isScheduled &&
-		post.hasLead &&
-		post.canPublishToCommunities()
+	() => post.isDraft && !post.isScheduled && post.hasLead && post.canPublishToCommunities()
 );
 
 const showUserControls = computed(() => post.isActive && !post.is_processing);

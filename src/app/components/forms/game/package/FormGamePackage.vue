@@ -345,8 +345,8 @@ async function cancelSale() {
 						<AppTranslate>Private</AppTranslate>
 						&mdash;
 						<AppTranslate class="help-inline">
-							Only you can access this package, as well as any keys you
-							assign. You can assign keys in your Keys/Access page.
+							Only you can access this package, as well as any keys you assign. You
+							can assign keys in your Keys/Access page.
 						</AppTranslate>
 					</label>
 				</div>

@@ -82,7 +82,11 @@ defineExpose({
 		<!--
 			SSN
 		-->
-		<AppFinancialsManagedAccountSsn v-if="countryCode" :name-prefix="namePrefix" :country-code="countryCode" />
+		<AppFinancialsManagedAccountSsn
+			v-if="countryCode"
+			:name-prefix="namePrefix"
+			:country-code="countryCode"
+		/>
 
 		<!--
 			Personal ID Verification

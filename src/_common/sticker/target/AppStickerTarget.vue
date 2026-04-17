@@ -18,7 +18,10 @@ import {
 	PointerPosition,
 	useStickerStore,
 } from '~common/sticker/sticker-store';
-import { getStickerModelResourceName, StickerTargetController } from '~common/sticker/target/target-controller';
+import {
+	getStickerModelResourceName,
+	StickerTargetController,
+} from '~common/sticker/target/target-controller';
 import { sleep } from '~utils/utils';
 
 export type ValidStickerResource = 'Comment' | 'Fireside_Post' | 'MediaItem' | 'Fireside';
@@ -54,11 +57,7 @@ const stickers = computed(() => {
 });
 
 const isShowingStickers = computed(() => {
-	return (
-		controller.shouldShow.value &&
-		controller.isInview.value &&
-		stickers.value.length > 0
-	);
+	return controller.shouldShow.value && controller.isInview.value && stickers.value.length > 0;
 });
 
 const shouldFade = computed(() => isDrawerOpen.value);
@@ -77,8 +76,7 @@ checkDisabledState();
 onBeforeUnmount(() => {
 	unregisterStickerTarget(layer, layerItem);
 
-	const wasAttemptingPlacement =
-		toRaw(stickerStore.targetController.value) === toRaw(controller);
+	const wasAttemptingPlacement = toRaw(stickerStore.targetController.value) === toRaw(controller);
 	const hasOtherLayers = (stickerStore.activeLayer.value?.layerItems.value.length || 0) > 0;
 
 	// Close the sticker drawer if the placement (or drawer itself) has become

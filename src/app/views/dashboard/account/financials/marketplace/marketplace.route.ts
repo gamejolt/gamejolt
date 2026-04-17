@@ -3,5 +3,8 @@ import { RouteRecordRaw } from 'vue-router';
 export const routeDashAccountFinancialsMarketplace: RouteRecordRaw = {
 	name: 'dash.account.financials.marketplace',
 	path: 'marketplace',
-	component: () => import('~app/views/dashboard/account/financials/marketplace/RouteDashAccountFinancialsMarketplace.vue'),
+	component: () =>
+		import(
+			'~app/views/dashboard/account/financials/marketplace/RouteDashAccountFinancialsMarketplace.vue'
+		),
 };

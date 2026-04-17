@@ -1,7 +1,11 @@
 <script lang="ts" setup>
 import { computed, ref, useSlots } from 'vue';
 
-import { getTranslation, interpolateTranslation, TranslationContext } from '~common/translate/translate.service';
+import {
+	getTranslation,
+	interpolateTranslation,
+	TranslationContext,
+} from '~common/translate/translate.service';
 import { uuidv4 } from '~utils/uuid';
 
 type Props = {
@@ -11,12 +15,7 @@ type Props = {
 	translateParams?: TranslationContext;
 	translateComment?: string;
 };
-const {
-	tag = 'span',
-	translateN,
-	translatePlural,
-	translateParams,
-} = defineProps<Props>();
+const { tag = 'span', translateN, translatePlural, translateParams } = defineProps<Props>();
 
 const slots = useSlots();
 
@@ -24,9 +23,7 @@ const slots = useSlots();
 const slotContent = slots.default?.()?.[0].children?.toString().trim();
 const msgid = ref(slotContent ?? '');
 
-const isPlural = computed(
-	() => translateN !== undefined && translatePlural !== undefined
-);
+const isPlural = computed(() => translateN !== undefined && translatePlural !== undefined);
 
 if (!isPlural.value && (translateN !== undefined || translatePlural)) {
 	throw new Error(
@@ -35,11 +32,7 @@ if (!isPlural.value && (translateN !== undefined || translatePlural)) {
 }
 
 const translation = computed(() => {
-	const str = getTranslation(
-		msgid.value,
-		translateN,
-		isPlural.value ? translatePlural : null
-	);
+	const str = getTranslation(msgid.value, translateN, isPlural.value ? translatePlural : null);
 
 	if (!translateParams) {
 		return str;

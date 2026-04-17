@@ -9,11 +9,7 @@ import AppQuestProgress from '~common/quest/AppQuestProgress.vue';
 import AppQuestThumbnail from '~common/quest/AppQuestThumbnail.vue';
 import { QuestModel } from '~common/quest/quest-model';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
-import {
-	styleBorderRadiusLg,
-	styleChangeBgRgba,
-	styleFlexCenter,
-} from '~styles/mixins';
+import { styleBorderRadiusLg, styleChangeBgRgba, styleFlexCenter } from '~styles/mixins';
 import { kFontSizeBase, kFontSizeLarge, kFontSizeSmall } from '~styles/variables';
 
 type Props = {

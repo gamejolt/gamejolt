@@ -10,7 +10,10 @@ const { when } = defineProps<Props>();
 
 const scrollParent = useScroller();
 
-watch(() => when, () => scrollParent?.scrollTo(0));
+watch(
+	() => when,
+	() => scrollParent?.scrollTo(0)
+);
 </script>
 
 <template>

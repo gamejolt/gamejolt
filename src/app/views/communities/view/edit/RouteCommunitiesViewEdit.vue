@@ -5,10 +5,7 @@ import { RouterView } from 'vue-router';
 import { updateCommunity, useCommunityRouteStore } from '~app/views/communities/view/view.store';
 import { Api } from '~common/api/api.service';
 import { CollaboratorModel } from '~common/collaborator/collaborator.model';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { $gettext } from '~common/translate/translate.service';
 import { enforceLocation } from '~utils/router';
 

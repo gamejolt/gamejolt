@@ -128,14 +128,17 @@ const form: FormController<FormModel> = createForm({
 			};
 
 			const response = await new Promise<any>((resolve, reject) => {
-				(window as any).Stripe.card.createToken(formData, (_status: any, stripeResponse: any) => {
-					if (stripeResponse.error) {
-						stripeError.value = stripeResponse.error.message;
-						reject(stripeResponse);
-					} else {
-						resolve(stripeResponse);
+				(window as any).Stripe.card.createToken(
+					formData,
+					(_status: any, stripeResponse: any) => {
+						if (stripeResponse.error) {
+							stripeError.value = stripeResponse.error.message;
+							reject(stripeResponse);
+						} else {
+							resolve(stripeResponse);
+						}
 					}
-				});
+				);
 			});
 			const data = {
 				save_card: false,

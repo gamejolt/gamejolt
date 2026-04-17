@@ -6,18 +6,30 @@ import { inject, InjectionKey, markRaw, MaybeRef, nextTick, reactive, unref, wat
 
 import { ContentContext, ContextCapabilities } from '~common/content/content-context';
 import { ContentDocument } from '~common/content/content-document';
-import { ContentEditorAppAdapterMessage, editorGetAppAdapter } from '~common/content/content-editor/app-adapter';
+import {
+	ContentEditorAppAdapterMessage,
+	editorGetAppAdapter,
+} from '~common/content/content-editor/app-adapter';
 import { ContentEditorService } from '~common/content/content-editor/content-editor.service';
 import buildEditorEvents from '~common/content/content-editor/events/build-events';
-import { createMediaUploadTask,MediaUploadTask } from '~common/content/content-editor/media-upload-task';
+import {
+	createMediaUploadTask,
+	MediaUploadTask,
+} from '~common/content/content-editor/media-upload-task';
 import { CustomButtonData } from '~common/content/content-editor/modals/custom-button/custom-button-modal.service';
 import { SearchResult } from '~common/content/content-editor/modals/gif/gif-modal.service';
 import { NodeViewRenderData } from '~common/content/content-editor/node-views/base';
 import { buildEditorNodeViews } from '~common/content/content-editor/node-views/node-view-builder';
 import { BasicMentionRegex } from '~common/content/content-editor/plugins/input-rules';
 import { createEditorPlugins } from '~common/content/content-editor/plugins/plugins';
-import { ContentEditorSchema, generateEditorSchema } from '~common/content/content-editor/schemas/content-editor-schema';
-import { ContentFormatAdapter, ProsemirrorEditorFormat } from '~common/content/content-format-adapter';
+import {
+	ContentEditorSchema,
+	generateEditorSchema,
+} from '~common/content/content-editor/schemas/content-editor-schema';
+import {
+	ContentFormatAdapter,
+	ProsemirrorEditorFormat,
+} from '~common/content/content-format-adapter';
 import { ContentOwnerController } from '~common/content/content-owner';
 import { GJ_EMOJIS } from '~common/emoji/AppEmoji.vue';
 import { EmojiModel } from '~common/emoji/emoji.model';

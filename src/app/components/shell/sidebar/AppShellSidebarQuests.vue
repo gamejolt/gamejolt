@@ -9,12 +9,7 @@ import { useEscapeStack } from '~common/escape-stack/escape-stack.service';
 import AppIllustration from '~common/illustration/AppIllustration.vue';
 import { illNoComments, illNoCommentsSmall } from '~common/illustration/illustrations';
 import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
-import {
-	QuestModel,
-	QuestPriority,
-	QuestRepeatType,
-	QuestSeries,
-} from '~common/quest/quest-model';
+import { QuestModel, QuestPriority, QuestRepeatType, QuestSeries } from '~common/quest/quest-model';
 import { Screen } from '~common/screen/screen-service';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 import { $gettext } from '~common/translate/translate.service';

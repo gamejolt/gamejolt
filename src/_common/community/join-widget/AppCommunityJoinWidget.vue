@@ -38,9 +38,7 @@ const { grid } = useGridStore();
 const isProcessing = ref(false);
 
 const badge = computed(() =>
-	!hideCount && community.member_count
-		? formatNumber(community.member_count)
-		: ''
+	!hideCount && community.member_count ? formatNumber(community.member_count) : ''
 );
 
 // Guests should always be allowed to attempt to join stuff.

@@ -2,7 +2,10 @@
 import { computed, CSSProperties } from 'vue';
 
 import AppDashShopProductType from '~app/views/dashboard/shop/AppDashShopProductType.vue';
-import { getShopDashProductType, ShopDashProductStates } from '~app/views/dashboard/shop/shop.store';
+import {
+	getShopDashProductType,
+	ShopDashProductStates,
+} from '~app/views/dashboard/shop/shop.store';
 import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
 import { AvatarFrameModel } from '~common/avatar/frame.model';
 import AppBackground from '~common/background/AppBackground.vue';
@@ -21,12 +24,7 @@ import {
 	kThemeGjOverlayNotice,
 } from '~common/theme/variables';
 import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
-import {
-	styleBorderRadiusLg,
-	styleFlexCenter,
-	styleLineClamp,
-	styleWhen,
-} from '~styles/mixins';
+import { styleBorderRadiusLg, styleFlexCenter, styleLineClamp, styleWhen } from '~styles/mixins';
 import { kFontSizeTiny } from '~styles/variables';
 import { isInstance } from '~utils/utils';
 

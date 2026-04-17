@@ -7,10 +7,7 @@ import AppButton from '~common/button/AppButton.vue';
 import { GameModel } from '~common/game/game.model';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppLinkHelp from '~common/link/AppLinkHelp.vue';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { useCommonStore } from '~common/store/common-store';
 import AppTimeAgo from '~common/time/AppTimeAgo.vue';
 import AppTimelineList from '~common/timeline-list/AppTimelineList.vue';

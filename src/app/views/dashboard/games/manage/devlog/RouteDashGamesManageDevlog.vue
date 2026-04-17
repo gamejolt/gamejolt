@@ -13,10 +13,7 @@ import { Api } from '~common/api/api.service';
 import { EventItemModel } from '~common/event-item/event-item.model';
 import { FiresidePostModel } from '~common/fireside/post/post-model';
 import AppNavTabList from '~common/nav/tab-list/AppNavTabList.vue';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { $gettext } from '~common/translate/translate.service';
 
 function getFetchUrl(route: RouteLocationNormalized) {

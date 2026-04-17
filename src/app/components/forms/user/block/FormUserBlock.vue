@@ -8,10 +8,7 @@ import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
 import AppFormControlPrefix from '~common/form-vue/AppFormControlPrefix.vue';
 import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
 import AppFormControlToggle from '~common/form-vue/controls/AppFormControlToggle.vue';
-import {
-	validateAvailability,
-	validateMaxLength,
-} from '~common/form-vue/validators';
+import { validateAvailability, validateMaxLength } from '~common/form-vue/validators';
 import { showInfoGrowl } from '~common/growls/growls.service';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 import { $gettext } from '~common/translate/translate.service';

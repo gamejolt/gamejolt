@@ -1,7 +1,11 @@
 <script lang="ts" setup>
 import { computed, reactive } from 'vue';
 
-import { DatepickerDate, DatepickerFormatMonthTitle, useDatepicker } from '~common/datepicker/AppDatepicker.vue';
+import {
+	DatepickerDate,
+	DatepickerFormatMonthTitle,
+	useDatepicker,
+} from '~common/datepicker/AppDatepicker.vue';
 import { formatDate } from '~common/filters/date';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import { arrayChunk } from '~utils/array';

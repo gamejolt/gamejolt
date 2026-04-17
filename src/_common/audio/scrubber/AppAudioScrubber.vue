@@ -41,11 +41,14 @@ const unfilledRight = computed(() => {
  * that the scrub pos override will go back to normal as soon as a new time
  * change comes in.
  */
-watch(() => currentTime, () => {
-	if (!isDragging.value) {
-		scrubPos.value = -1;
+watch(
+	() => currentTime,
+	() => {
+		if (!isDragging.value) {
+			scrubPos.value = -1;
+		}
 	}
-});
+);
 
 function tap(event: AppTouchInput) {
 	panStart(event);

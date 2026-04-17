@@ -3,7 +3,8 @@ import { RouteRecordRaw } from 'vue-router';
 export const routeDashGamesManageGameMusic: RouteRecordRaw = {
 	name: 'dash.games.manage.game.music',
 	path: 'music',
-	component: () => import('~app/views/dashboard/games/manage/game/music/RouteDashGamesManageGameMusic.vue'),
+	component: () =>
+		import('~app/views/dashboard/games/manage/game/music/RouteDashGamesManageGameMusic.vue'),
 	children: [
 		{
 			path: '/dashboard/developer/games/soundtracks/:id(\\d+)/',

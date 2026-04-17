@@ -19,9 +19,7 @@ import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
 import AppButton from '~common/button/AppButton.vue';
 import AppImgResponsive from '~common/img/AppImgResponsive.vue';
 import { Screen } from '~common/screen/screen-service';
-import AppScrollInview, {
-	ScrollInviewConfig,
-} from '~common/scroll/inview/AppScrollInview.vue';
+import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
 import { $gettext } from '~common/translate/translate.service';
 import { styleAbsoluteFill } from '~styles/mixins';
 import { kBorderRadiusLg } from '~styles/variables';

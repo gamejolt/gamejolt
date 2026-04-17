@@ -9,12 +9,7 @@ type Props = {
 	isThread?: boolean;
 	isLast?: boolean;
 };
-const {
-	isActive = false,
-	isNew = false,
-	isThread = false,
-	isLast = false,
-} = defineProps<Props>();
+const { isActive = false, isNew = false, isThread = false, isLast = false } = defineProps<Props>();
 
 const slots = useSlots();
 

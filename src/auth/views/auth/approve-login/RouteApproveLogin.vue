@@ -2,11 +2,7 @@
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
-import {
-	authOnLogin,
-	getRedirectUrl,
-	redirectToDashboard,
-} from '~common/auth/auth.service';
+import { authOnLogin, getRedirectUrl, redirectToDashboard } from '~common/auth/auth.service';
 import AppButton from '~common/button/AppButton.vue';
 import { Navigate } from '~common/navigate/navigate.service';
 import AppProgressPoller from '~common/progress/poller/AppProgressPoller.vue';

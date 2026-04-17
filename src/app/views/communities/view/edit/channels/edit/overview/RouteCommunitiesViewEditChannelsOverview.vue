@@ -12,15 +12,9 @@ import {
 	$unarchiveCommunityChannel,
 	CommunityChannelModel,
 } from '~common/community/channel/channel.model';
-import {
-	showErrorGrowl,
-	showSuccessGrowl,
-} from '~common/growls/growls.service';
+import { showErrorGrowl, showSuccessGrowl } from '~common/growls/growls.service';
 import { showModalConfirm } from '~common/modal/confirm/confirm-service';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { Scroll } from '~common/scroll/scroll.service';
 import { $gettext } from '~common/translate/translate.service';
 import { arrayRemove } from '~utils/array';

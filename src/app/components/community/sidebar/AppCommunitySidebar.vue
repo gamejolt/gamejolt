@@ -55,8 +55,7 @@ watch(
 );
 
 const shouldShowKnownMembers = computed(
-	() =>
-		!!user.value && sidebarData.knownMembers && sidebarData.knownMembers.length > 0
+	() => !!user.value && sidebarData.knownMembers && sidebarData.knownMembers.length > 0
 );
 
 const shareUrl = computed(() => getAbsoluteLink(router, community.routeLocation));
@@ -72,9 +71,7 @@ const moderators = computed<UserModel[]>(() => {
 	}
 	if (currentCollaborators.value) {
 		if (collaboratorListCollapsed.value) {
-			mods.push(
-				...currentCollaborators.value.slice(0, sidebarData.initialCollaboratorCount)
-			);
+			mods.push(...currentCollaborators.value.slice(0, sidebarData.initialCollaboratorCount));
 		} else {
 			mods.push(...currentCollaborators.value);
 		}

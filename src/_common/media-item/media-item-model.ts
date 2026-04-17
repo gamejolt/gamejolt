@@ -1,6 +1,6 @@
 import { LightboxMediaModel, LightboxMediaType } from '~common/lightbox/lightbox-helpers';
 import { Model } from '~common/model/model.service';
-import { constructStickerCounts,StickerCount } from '~common/sticker/sticker-count';
+import { constructStickerCounts, StickerCount } from '~common/sticker/sticker-count';
 
 export const enum MediaItemType {
 	GameThumbnail = 'game-thumbnail',

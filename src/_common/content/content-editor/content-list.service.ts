@@ -1,6 +1,6 @@
 import { Fragment, NodeRange, NodeType, Slice } from 'prosemirror-model';
 import { EditorState, Transaction } from 'prosemirror-state';
-import { liftTarget,ReplaceAroundStep } from 'prosemirror-transform';
+import { liftTarget, ReplaceAroundStep } from 'prosemirror-transform';
 
 import { ContentEditorSchema } from '~common/content/content-editor/schemas/content-editor-schema';
 

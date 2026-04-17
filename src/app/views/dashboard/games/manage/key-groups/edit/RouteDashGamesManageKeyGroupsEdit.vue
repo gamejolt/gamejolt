@@ -12,23 +12,13 @@ import { Environment } from '~common/environment/environment.service';
 import AppExpand from '~common/expand/AppExpand.vue';
 import { formatNumber } from '~common/filters/number';
 import { GamePackageModel } from '~common/game/package/package.model';
-import {
-	showErrorGrowl,
-	showSuccessGrowl,
-} from '~common/growls/growls.service';
+import { showErrorGrowl, showSuccessGrowl } from '~common/growls/growls.service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import { $removeKey, KeyModel } from '~common/key/key-model';
-import {
-	$removeKeyGroup,
-	KeyGroupModel,
-	KeyGroupType,
-} from '~common/key-group/key-group.model';
+import { $removeKeyGroup, KeyGroupModel, KeyGroupType } from '~common/key-group/key-group.model';
 import { showModalConfirm } from '~common/modal/confirm/confirm-service';
 import AppProgressBar from '~common/progress/AppProgressBar.vue';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import AppTimeAgo from '~common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import AppTranslate from '~common/translate/AppTranslate.vue';
@@ -179,11 +169,11 @@ const appRoute = createAppRoute({
 					</div>
 					<div v-else-if="keyGroup.type === KeyGroupTypeUser" class="alert">
 						<AppTranslate tag="p">
-							Not so fast! In order for the users in this key group to gain
-							access, you'll need to email or message their keys to them. Copy
-							each key page individually below, or export the full set to a
-							CSV. Once they've received and claimed the key into their
-							library, their claim date will appear in the table below.
+							Not so fast! In order for the users in this key group to gain access,
+							you'll need to email or message their keys to them. Copy each key page
+							individually below, or export the full set to a CSV. Once they've
+							received and claimed the key into their library, their claim date will
+							appear in the table below.
 						</AppTranslate>
 					</div>
 

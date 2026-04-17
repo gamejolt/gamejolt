@@ -122,11 +122,7 @@ const imageUrl = computed(() => {
 	if ('media_item' in item && item.media_item) {
 		return getMediaItemImageSrc(item.media_item).src;
 	}
-	return 'img_url' in item
-		? item.img_url
-		: 'image_url' in item
-		? item.image_url
-		: '';
+	return 'img_url' in item ? item.img_url : 'image_url' in item ? item.image_url : '';
 });
 
 const collectibleResourceAcquisition = computed(() => {

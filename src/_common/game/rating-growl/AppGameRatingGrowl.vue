@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import { GameModel } from '~common/game/game.model';
-import AppGameRatingWidget, { onRatingWidgetChange } from '~common/game/rating/AppGameRatingWidget.vue';
+import AppGameRatingWidget, {
+	onRatingWidgetChange,
+} from '~common/game/rating/AppGameRatingWidget.vue';
 import { useEventSubscription } from '~common/system/event/event-topic';
 
 type Props = {

@@ -8,7 +8,10 @@ import AppCommunitySidebar from '~app/components/community/sidebar/AppCommunityS
 import { useGridStore } from '~app/components/grid/grid-store';
 import { useAppStore } from '~app/store/index';
 import AppCommunitiesViewFeed from '~app/views/communities/view/_feed/AppCommunitiesViewFeed.vue';
-import { doFeedChannelPayload, resolveFeedChannelPayload } from '~app/views/communities/view/_feed/feed-helpers';
+import {
+	doFeedChannelPayload,
+	resolveFeedChannelPayload,
+} from '~app/views/communities/view/_feed/feed-helpers';
 import AppCommunityPageContainer from '~app/views/communities/view/_page-container/AppCommunityPageContainer.vue';
 import { CommunitiesViewChannelDeps } from '~app/views/communities/view/channel/RouteCommunitiesViewChannel.vue';
 import {
@@ -20,10 +23,7 @@ import {
 import AppButton from '~common/button/AppButton.vue';
 import { FiresidePostModel } from '~common/fireside/post/post-model';
 import { showSuccessGrowl } from '~common/growls/growls.service';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { useCommonStore } from '~common/store/common-store';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import { $gettext } from '~common/translate/translate.service';

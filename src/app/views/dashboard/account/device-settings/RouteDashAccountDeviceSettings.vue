@@ -3,10 +3,7 @@ import { computed, defineAsyncComponent } from 'vue';
 
 import FormSettings from '~app/components/forms/settings/FormSettings.vue';
 import { useAccountRouteController } from '~app/views/dashboard/account/RouteDashAccount.vue';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { useCommonStore } from '~common/store/common-store';
 import { $gettext } from '~common/translate/translate.service';
 import { touchUser } from '~common/user/user.model';

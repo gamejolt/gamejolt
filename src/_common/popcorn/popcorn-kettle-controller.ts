@@ -1,4 +1,4 @@
-import { type Component,inject, InjectionKey, markRaw, provide, ref, watch } from 'vue';
+import { type Component, inject, InjectionKey, markRaw, provide, ref, watch } from 'vue';
 
 import { ComponentProps } from '~common/component-helpers';
 

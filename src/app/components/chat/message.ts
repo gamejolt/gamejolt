@@ -1,6 +1,6 @@
 import { ChatUser } from '~app/components/chat/user';
 import { ModelStoreModel, storeModel } from '~common/model/model-store.service';
-import { ReactionableModel,ReactionCount } from '~common/reaction/reaction-count';
+import { ReactionableModel, ReactionCount } from '~common/reaction/reaction-count';
 
 export const TIMEOUT_CONSIDER_QUEUED = 1500; // Time in ms until a queued message should be displayed as such.
 

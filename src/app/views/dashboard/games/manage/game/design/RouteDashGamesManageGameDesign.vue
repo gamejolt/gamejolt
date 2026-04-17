@@ -2,12 +2,12 @@
 import { computed } from 'vue';
 
 import FormGameDesign from '~app/components/forms/game/design/FormGameDesign.vue';
-import { ManageGameThemeKey, useGameDashRouteController } from '~app/views/dashboard/games/manage/manage.store';
-import { Api } from '~common/api/api.service';
 import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+	ManageGameThemeKey,
+	useGameDashRouteController,
+} from '~app/views/dashboard/games/manage/manage.store';
+import { Api } from '~common/api/api.service';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { useThemeStore } from '~common/theme/theme.store';
 import { $gettext } from '~common/translate/translate.service';
 

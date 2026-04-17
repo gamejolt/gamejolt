@@ -1,4 +1,4 @@
-import { AllowedComponentProps, type Component,computed, PropType, Ref, VNodeProps } from 'vue';
+import { AllowedComponentProps, type Component, computed, PropType, Ref, VNodeProps } from 'vue';
 
 /**
  * Allows us to get prop typing for a component while excluding internal Vue

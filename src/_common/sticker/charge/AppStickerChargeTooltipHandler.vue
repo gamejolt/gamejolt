@@ -22,11 +22,14 @@ const root = useTemplateRef('root');
 let canClearFocus = false;
 const isFocused = ref(false);
 
-watch(() => disabled, isDisabled => {
-	if (isDisabled) {
-		onBlur();
+watch(
+	() => disabled,
+	isDisabled => {
+		if (isDisabled) {
+			onBlur();
+		}
 	}
-});
+);
 
 // Reset our state when this changes. Otherwise there may be issues syncing
 // state between hover/focus states.

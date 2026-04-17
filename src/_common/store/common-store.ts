@@ -1,6 +1,6 @@
 import '~common/model/model.service';
 
-import { computed, inject, InjectionKey, Ref,ref } from 'vue';
+import { computed, inject, InjectionKey, Ref, ref } from 'vue';
 
 import { isDynamicGoogleBot } from '~common/device/device.service';
 import { EmojiGroupModel } from '~common/emoji/emoji-group.model';

@@ -15,9 +15,7 @@ import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
 import AppNavTabList from '~common/nav/tab-list/AppNavTabList.vue';
 import AppPagination from '~common/pagination/AppPagination.vue';
 import { vAppNoAutoscroll } from '~common/scroll/auto-scroll/no-autoscroll.directive';
-import AppScrollInview, {
-	ScrollInviewConfig,
-} from '~common/scroll/inview/AppScrollInview.vue';
+import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
 import { Scroll } from '~common/scroll/scroll.service';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 

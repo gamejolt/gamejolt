@@ -4,7 +4,11 @@ import { computed } from 'vue';
 import { ComponentProps } from '~common/component-helpers';
 import { showReactionDetailsModal } from '~common/reaction/details-modal/modal.service';
 import AppReactionListItem from '~common/reaction/list/AppReactionListItem.vue';
-import { ReactionableModel, ReactionCount, toggleReactionOnResource } from '~common/reaction/reaction-count';
+import {
+	ReactionableModel,
+	ReactionCount,
+	toggleReactionOnResource,
+} from '~common/reaction/reaction-count';
 import { Screen } from '~common/screen/screen-service';
 import AppScrollScroller, { createScroller } from '~common/scroll/AppScrollScroller.vue';
 import { styleWhen } from '~styles/mixins';

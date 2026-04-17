@@ -6,7 +6,12 @@ import { showModal } from '~common/modal/modal.service';
 export async function showCommunityChannelBackgroundModal(channel: CommunityChannelModel) {
 	return await showModal<CommunityChannelModel>({
 		modalId: 'CommunityChannelBackground',
-		component: defineAsyncComponent(() => import('~app/components/community/channel/background-modal/AppCommunityChannelBackgroundModal.vue')),
+		component: defineAsyncComponent(
+			() =>
+				import(
+					'~app/components/community/channel/background-modal/AppCommunityChannelBackgroundModal.vue'
+				)
+		),
 		props: {
 			channel,
 		},

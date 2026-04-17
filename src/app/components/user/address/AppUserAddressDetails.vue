@@ -18,9 +18,7 @@ const country = computed(() => {
 
 const region = computed(() => {
 	if (address) {
-		return (
-			Geo.getRegionName(address.country, address.region) || address.region
-		);
+		return Geo.getRegionName(address.country, address.region) || address.region;
 	}
 	return undefined;
 });

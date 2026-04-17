@@ -8,10 +8,7 @@ import { importNoSSR } from '~common/code-splitting';
 import { CurrencyType } from '~common/currency/currency-type';
 import { FiresidePostGotoGrowl } from '~common/fireside/post/goto-growl/goto-growl.service';
 import { FiresidePostModel } from '~common/fireside/post/post-model';
-import {
-	NotificationModel,
-	NotificationType,
-} from '~common/notification/notification-model';
+import { NotificationModel, NotificationType } from '~common/notification/notification-model';
 import { QuestNotificationModel } from '~common/quest/quest-notification-model';
 import { createSocketChannelController } from '~common/socket/socket-controller';
 import { commonStore } from '~common/store/common-store';

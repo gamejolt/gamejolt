@@ -4,10 +4,7 @@ import { computed, ref, toRef } from 'vue';
 import { Api } from '~common/api/api.service';
 import AppButton from '~common/button/AppButton.vue';
 import { ContextCapabilities } from '~common/content/content-context';
-import AppForm, {
-	createForm,
-	FormController,
-} from '~common/form-vue/AppForm.vue';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
 import AppFormButton from '~common/form-vue/AppFormButton.vue';
 import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
@@ -19,7 +16,10 @@ import AppModal from '~common/modal/AppModal.vue';
 import { useModal } from '~common/modal/modal.service';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 import { SupporterActionModel } from '~common/supporters/action.model';
-import { $saveSupporterMessageTemplate, SupporterMessageModel } from '~common/supporters/message.model';
+import {
+	$saveSupporterMessageTemplate,
+	SupporterMessageModel,
+} from '~common/supporters/message.model';
 import { $gettext } from '~common/translate/translate.service';
 import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
 

@@ -11,7 +11,9 @@ import { SupporterMessageModel } from '~common/supporters/message.model';
 export async function showSupporterMessageModal(action: SupporterActionModel) {
 	return await showModal<SupporterMessageModel>({
 		modalId: 'SupporterMessage',
-		component: defineAsyncComponent(() => import('~common/supporters/message/AppSupporterMessageModal.vue')),
+		component: defineAsyncComponent(
+			() => import('~common/supporters/message/AppSupporterMessageModal.vue')
+		),
 		props: {
 			action,
 		},

@@ -25,10 +25,7 @@ import {
 } from '~common/fireside/post/post-model';
 import { FiresidePostRealmModel } from '~common/fireside/post/realm/realm.model';
 import { FiresidePostVideoModel } from '~common/fireside/post/video/video-model';
-import AppForm, {
-	createForm,
-	FormController,
-} from '~common/form-vue/AppForm.vue';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
 import AppFormButton from '~common/form-vue/AppFormButton.vue';
 import AppFormControl from '~common/form-vue/AppFormControl.vue';
 import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
@@ -106,7 +103,13 @@ type Props = {
 	overlay?: boolean;
 	model: FiresidePostModel;
 };
-const { defaultCommunity = null, defaultChannel = null, defaultRealm = null, overlay = false, model } = defineProps<Props>();
+const {
+	defaultCommunity = null,
+	defaultChannel = null,
+	defaultRealm = null,
+	overlay = false,
+	model,
+} = defineProps<Props>();
 
 const emit = defineEmits<{
 	submit: [data: FiresidePostModel];

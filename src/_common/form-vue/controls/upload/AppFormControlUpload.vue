@@ -3,10 +3,7 @@ import { computed, ref, useTemplateRef } from 'vue';
 
 import { formatNumber } from '~common/filters/number';
 import { useForm } from '~common/form-vue/AppForm.vue';
-import {
-	createFormControl,
-	FormControlEmits,
-} from '~common/form-vue/AppFormControl.vue';
+import { createFormControl, FormControlEmits } from '~common/form-vue/AppFormControl.vue';
 import { useFormGroup } from '~common/form-vue/AppFormGroup.vue';
 import AppFormControlUploadFile from '~common/form-vue/controls/upload/AppFormControlUploadFile.vue';
 import { FormValidator, validateFileAccept } from '~common/form-vue/validators';
@@ -29,12 +26,7 @@ type Props = {
 	uploadLinkLabel?: string;
 	accept?: string;
 };
-const {
-	validators = [],
-	multiple,
-	uploadLinkLabel,
-	accept,
-} = defineProps<Props>();
+const { validators = [], multiple, uploadLinkLabel, accept } = defineProps<Props>();
 
 const emit = defineEmits<FormControlEmits<File | File[] | null>>();
 

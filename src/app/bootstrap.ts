@@ -3,12 +3,12 @@ import '~app/main.styl';
 import { defineAsyncComponent } from 'vue';
 
 import { initSafeExportsForClient } from '~app/components/client/safe-exports';
-import { createGridStore,GridStoreKey } from '~app/components/grid/grid-store';
+import { createGridStore, GridStoreKey } from '~app/components/grid/grid-store';
 import { BannerStoreKey, createBannerStore } from '~app/store/banner';
 import { AppStoreKey, createAppStore } from '~app/store/index';
-import { createJoltydexStore,JoltydexStoreKey } from '~app/store/joltydex';
-import { createLibraryStore,LibraryStoreKey } from '~app/store/library';
-import { createQuestStore,QuestStoreKey } from '~app/store/quest';
+import { createJoltydexStore, JoltydexStoreKey } from '~app/store/joltydex';
+import { createLibraryStore, LibraryStoreKey } from '~app/store/library';
+import { createQuestStore, QuestStoreKey } from '~app/store/quest';
 import { router } from '~app/views/index';
 import { bootstrapCommon } from '~common/bootstrap';
 import { setContentEmojiWrapper } from '~common/content/components/AppContentEmoji.vue';
@@ -19,8 +19,8 @@ import handlePayloadActions from '~common/payload/payload-actions.service';
 import { Payload } from '~common/payload/payload-service';
 import { Registry } from '~common/registry/registry.service';
 import { Scroll } from '~common/scroll/scroll.service';
-import { createSidebarStore,SidebarStoreKey } from '~common/sidebar/sidebar.store';
-import { createStickerStore,StickerStoreKey } from '~common/sticker/sticker-store';
+import { createSidebarStore, SidebarStoreKey } from '~common/sidebar/sidebar.store';
+import { createStickerStore, StickerStoreKey } from '~common/sticker/sticker-store';
 
 export async function createApp() {
 	const { app, commonStore } = await bootstrapCommon({

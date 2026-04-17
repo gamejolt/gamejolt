@@ -19,7 +19,7 @@ import {
 	saveModel,
 	storeModel,
 } from '~common/model/model-store.service';
-import { ReactionableModel,ReactionCount } from '~common/reaction/reaction-count';
+import { ReactionableModel, ReactionCount } from '~common/reaction/reaction-count';
 import {
 	$createSubscription,
 	$removeSubscription,

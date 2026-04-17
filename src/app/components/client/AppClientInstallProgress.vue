@@ -1,7 +1,10 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import { LocalDbPackage, LocalDbPackagePatchState } from '~app/components/client/local-db/package/package.model';
+import {
+	LocalDbPackage,
+	LocalDbPackagePatchState,
+} from '~app/components/client/local-db/package/package.model';
 import { formatDuration } from '~common/filters/duration';
 import AppProgressBar from '~common/progress/AppProgressBar.vue';
 import { TranslateDirective as vTranslate } from '~common/translate/translate-directive';

@@ -12,11 +12,7 @@ import {
 } from '~common/theme/variables';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import { UserAvatarFrameModel } from '~common/user/user-avatar/frame/frame.model';
-import {
-	styleBorderRadiusBase,
-	styleBorderRadiusLg,
-	styleLineClamp,
-} from '~styles/mixins';
+import { styleBorderRadiusBase, styleBorderRadiusLg, styleLineClamp } from '~styles/mixins';
 import { kBorderWidthLg, kFontSizeSmall, kStrongEaseOut } from '~styles/variables';
 
 type Props = {

@@ -24,10 +24,7 @@ import AppMessageThreadPagination from '~common/message-thread/pagination/AppMes
 import AppPopper from '~common/popper/AppPopper.vue';
 import { Popper } from '~common/popper/popper.service';
 import { showReportModal } from '~common/report/modal/modal.service';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { Screen } from '~common/screen/screen-service';
 import AppScrollAffix from '~common/scroll/AppScrollAffix.vue';
 import { Scroll } from '~common/scroll/scroll.service';

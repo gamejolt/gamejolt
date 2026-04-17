@@ -13,7 +13,9 @@ export async function showProfileAboutModal({
 }) {
 	return await showModal<void>({
 		modalId: 'ProfileAbout',
-		component: defineAsyncComponent(() => import('~app/views/profile/about/AppProfileAboutModal.vue')),
+		component: defineAsyncComponent(
+			() => import('~app/views/profile/about/AppProfileAboutModal.vue')
+		),
 		size: 'sm',
 		props: {
 			// Don't let Vue automatically unwrap this.

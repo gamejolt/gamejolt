@@ -17,11 +17,7 @@ type Props = {
 	initialCommunity?: CommunityModel | null;
 	noChannel?: boolean;
 };
-const {
-	communities,
-	initialCommunity = null,
-	noChannel = false,
-} = defineProps<Props>();
+const { communities, initialCommunity = null, noChannel = false } = defineProps<Props>();
 
 const emit = defineEmits<{
 	selectCommunity: [community: CommunityModel];

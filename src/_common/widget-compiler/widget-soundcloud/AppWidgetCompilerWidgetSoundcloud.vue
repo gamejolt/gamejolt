@@ -8,8 +8,7 @@ type Props = {
 const { trackId = '', color = '' } = defineProps<Props>();
 
 const embedSrc = computed(() => {
-	let src =
-		'https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/' + trackId;
+	let src = 'https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/' + trackId;
 
 	if (color) {
 		src += '&amp;color=' + color;

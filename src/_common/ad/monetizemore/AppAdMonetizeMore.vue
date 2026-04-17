@@ -2,8 +2,12 @@
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 
 import { AdAdapterComponentProps } from '~common/ad/adapter-base';
-import AppAdMonetizeMoreNativePost, { AdNativePostProps } from '~common/ad/monetizemore/AppAdMonetizeMoreNativePost.vue';
-import AppAdMonetizeMoreTakeover, { AdTakeoverProps } from '~common/ad/monetizemore/AppAdMonetizeMoreTakeover.vue';
+import AppAdMonetizeMoreNativePost, {
+	AdNativePostProps,
+} from '~common/ad/monetizemore/AppAdMonetizeMoreNativePost.vue';
+import AppAdMonetizeMoreTakeover, {
+	AdTakeoverProps,
+} from '~common/ad/monetizemore/AppAdMonetizeMoreTakeover.vue';
 import { AdMonetizeMoreAdapter } from '~common/ad/monetizemore/monetizemore-adapter';
 import { Screen } from '~common/screen/screen-service';
 
@@ -76,7 +80,6 @@ function showTakeover(event: MessageEvent) {
 		sizing: data.sizing === 'cover' || data.sizing === 'contain' ? data.sizing : undefined,
 	};
 
-	 
 	adSlot.showingCustom = true;
 }
 
@@ -119,7 +122,6 @@ function showNativePost(event: MessageEvent) {
 		actionText: typeof data.actionText === 'string' ? data.actionText : undefined,
 	};
 
-	 
 	adSlot.showingCustom = true;
 }
 </script>

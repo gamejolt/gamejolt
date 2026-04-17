@@ -10,9 +10,7 @@ import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import { Navigate } from '~common/navigate/navigate.service';
 import AppResponsiveDimensions from '~common/responsive-dimensions/AppResponsiveDimensions.vue';
 import { Screen } from '~common/screen/screen-service';
-import AppScrollInview, {
-	ScrollInviewConfig,
-} from '~common/scroll/inview/AppScrollInview.vue';
+import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
 import AppSketchfabEmbed from '~common/sketchfab/embed/AppSketchfabEmbed.vue';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import { $gettext } from '~common/translate/translate.service';
@@ -32,9 +30,7 @@ const isOpen = ref(false);
 const shouldAutoplay = ref(true);
 const isInview = ref(true);
 
-const shouldShow = toRef(
-	() => embed.type === TYPE_YOUTUBE || embed.type === TYPE_SKETCHFAB
-);
+const shouldShow = toRef(() => embed.type === TYPE_YOUTUBE || embed.type === TYPE_SKETCHFAB);
 
 const thumbUrl = computed(() => {
 	if (embed.metadata && embed.metadata.image_media_item) {
@@ -75,10 +71,7 @@ const website = computed(() => {
 
 		const url = new URL(embed.metadata.site_url);
 		let website = url.hostname;
-		if (
-			embed.metadata.site_name &&
-			embed.metadata.site_name !== embed.metadata.url
-		) {
+		if (embed.metadata.site_name && embed.metadata.site_name !== embed.metadata.url) {
 			website = embed.metadata.site_name + ' | ' + website;
 		}
 		return website;

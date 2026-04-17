@@ -6,7 +6,11 @@ import AppCommunityCompetitionEntryGrid from '~app/components/community/competit
 import AppCommunityPerms from '~app/components/community/perms/AppCommunityPerms.vue';
 import { router } from '~app/views';
 import AppCommunityPageContainer from '~app/views/communities/view/_page-container/AppCommunityPageContainer.vue';
-import { getChannelPathFromRoute, setCommunityMeta, useCommunityRouteStore } from '~app/views/communities/view/view.store';
+import {
+	getChannelPathFromRoute,
+	setCommunityMeta,
+	useCommunityRouteStore,
+} from '~app/views/communities/view/view.store';
 import { Api } from '~common/api/api.service';
 import AppFadeCollapse from '~common/AppFadeCollapse.vue';
 import AppButton from '~common/button/AppButton.vue';
@@ -28,7 +32,10 @@ import { $gettext } from '~common/translate/translate.service';
 import { arrayRemove } from '~utils/array';
 
 const RouteCommunitiesViewChannelJamEntries = defineAsyncComponent(() =>
-	asyncRouteLoader(router, import('~app/views/communities/view/channel/RouteCommunitiesViewChannelJamEntries.vue'))
+	asyncRouteLoader(
+		router,
+		import('~app/views/communities/view/channel/RouteCommunitiesViewChannelJamEntries.vue')
+	)
 );
 
 export default {

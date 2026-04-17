@@ -3,8 +3,10 @@
 	"version": "1.39.4",
 	"scripts": {
 		"typecheck": "vue-tsc --noEmit",
-		"lint": "eslint --ext .js,.ts,.vue src",
+		"lint:check": "eslint --ext .js,.ts,.vue src",
 		"lint:fix": "yarn lint --fix",
+		"format:check": "prettier --check \"src/**/*.{js,ts,vue}\"",
+		"format:fix": "prettier --write \"src/**/*.{js,ts,vue}\"",
 		"tsscript": "ts-node -P scripts/script.tsconfig.json",
 		"client-release": "yarn tsscript scripts/client-release.ts",
 		"vite": "yarn tsscript scripts/build/vite-wrapper.ts",

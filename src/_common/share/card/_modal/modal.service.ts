@@ -13,7 +13,9 @@ export async function showShareModal(options: ShareModalOptions) {
 
 	return await showModal<void>({
 		modalId: 'Share',
-		component: defineAsyncComponent(() => import('~common/share/card/_modal/AppShareCardModal.vue')),
+		component: defineAsyncComponent(
+			() => import('~common/share/card/_modal/AppShareCardModal.vue')
+		),
 		props: {
 			resource,
 			url,

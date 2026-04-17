@@ -1,7 +1,10 @@
 <script lang="ts" setup>
 import { computed, onMounted, onUnmounted, ref } from 'vue';
 
-import { editorInsertEmoji, useContentEditorController } from '~common/content/content-editor/content-editor-controller';
+import {
+	editorInsertEmoji,
+	useContentEditorController,
+} from '~common/content/content-editor/content-editor-controller';
 import AppEmoji, { GJ_EMOJIS } from '~common/emoji/AppEmoji.vue';
 import { showEmojiSelectorModal } from '~common/emoji/selector-modal/modal.service';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';

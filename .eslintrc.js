@@ -28,6 +28,7 @@ module.exports = {
 		'@typescript-eslint/no-unused-vars': 'off',
 		'@typescript-eslint/no-var-requires': 'off',
 		'vue/no-mutating-props': ['error', { shallowOnly: true }],
+		'vue/no-v-html': 'off',
 		'vue/component-tags-order': [
 			'warn',
 			{
@@ -35,6 +36,7 @@ module.exports = {
 			},
 		],
 		'vue/html-indent': 'off',
+		'vue/html-closing-bracket-newline': 'off',
 		'vue/html-self-closing': [
 			'warn',
 			{

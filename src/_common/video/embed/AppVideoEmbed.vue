@@ -12,7 +12,13 @@ type Props = {
 	maxVideoWidth?: number;
 	autoplay?: boolean;
 };
-const { videoProvider, videoId, maxVideoHeight = 0, maxVideoWidth = 0, autoplay } = defineProps<Props>();
+const {
+	videoProvider,
+	videoId,
+	maxVideoHeight = 0,
+	maxVideoWidth = 0,
+	autoplay,
+} = defineProps<Props>();
 
 const VIDEO_RATIO = 0.5625; // 16:9
 

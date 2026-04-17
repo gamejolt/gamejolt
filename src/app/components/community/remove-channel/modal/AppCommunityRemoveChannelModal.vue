@@ -43,9 +43,9 @@ function onRemoved(postsMovedTo?: CommunityChannelModel) {
 					</h4>
 					<p>
 						<AppTranslate>
-							This channel contains a Jam, which gets removed when this
-							channel gets removed. That includes all entries, votes, awards
-							and results that belong to the jam.
+							This channel contains a Jam, which gets removed when this channel gets
+							removed. That includes all entries, votes, awards and results that
+							belong to the jam.
 						</AppTranslate>
 					</p>
 					<p>

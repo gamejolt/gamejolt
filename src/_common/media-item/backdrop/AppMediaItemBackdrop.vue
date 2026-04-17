@@ -14,12 +14,7 @@ type Props = {
 	fallbackColor?: string;
 	colorOpacity?: number;
 };
-const {
-	mediaItem,
-	radius,
-	fallbackColor = '',
-	colorOpacity = 1,
-} = defineProps<Props>();
+const { mediaItem, radius, fallbackColor = '', colorOpacity = 1 } = defineProps<Props>();
 
 const radiusClass = computed(() => {
 	if (!radius) {

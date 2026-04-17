@@ -4,10 +4,7 @@ import { computed, ref } from 'vue';
 import AppForumTopicList from '~app/components/forum/topic-list/AppForumTopicList.vue';
 import { Api } from '~common/api/api.service';
 import { ForumTopicModel } from '~common/forum/topic/topic.model';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { $gettext } from '~common/translate/translate.service';
 
 export default {

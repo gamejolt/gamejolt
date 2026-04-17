@@ -18,7 +18,14 @@ type Props = {
 	/** Shows an overlay-notice blip instead of count. */
 	showBlip?: boolean;
 };
-const { isControl, isActive, isUnread, highlight, notificationCount = 0, showBlip } = defineProps<Props>();
+const {
+	isControl,
+	isActive,
+	isUnread,
+	highlight,
+	notificationCount = 0,
+	showBlip,
+} = defineProps<Props>();
 const { visibleLeftPane } = useAppStore();
 const { activeContextPane } = useSidebarStore();
 

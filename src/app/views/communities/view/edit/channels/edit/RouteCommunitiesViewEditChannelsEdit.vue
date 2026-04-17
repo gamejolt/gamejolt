@@ -9,10 +9,7 @@ import { useCommunityRouteStore } from '~app/views/communities/view/view.store';
 import { Api } from '~common/api/api.service';
 import AppButton from '~common/button/AppButton.vue';
 import { CommunityChannelModel } from '~common/community/channel/channel.model';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import { $gettext } from '~common/translate/translate.service';
 

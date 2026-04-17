@@ -57,10 +57,7 @@ import { HistoryTick } from '~common/history-tick/history-tick-service';
 import { LinkedAccountModel } from '~common/linked-account/linked-account.model';
 import { storeModelList } from '~common/model/model-store.service';
 import { Registry } from '~common/registry/registry.service';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '~common/route/route-component';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { Screen } from '~common/screen/screen-service';
 import { useCommonStore } from '~common/store/common-store';
 import { EventSubscription } from '~common/system/event/event-topic';

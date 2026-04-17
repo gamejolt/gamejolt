@@ -2,7 +2,11 @@
 import { computed, ref } from 'vue';
 
 import { Navigate } from '~common/navigate/navigate.service';
-import { getTranslationLang, setTranslationLang, TranslationLangs } from '~common/translate/translate.service';
+import {
+	getTranslationLang,
+	setTranslationLang,
+	TranslationLangs,
+} from '~common/translate/translate.service';
 import { stringSort } from '~utils/array';
 
 const lang = ref(getTranslationLang());

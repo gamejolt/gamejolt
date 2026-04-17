@@ -9,19 +9,13 @@ import {
 	CommunityPresetChannelType,
 	getCommunityChannelBackground,
 } from '~common/community/community.model';
-import AppForm, {
-	createForm,
-	FormController,
-} from '~common/form-vue/AppForm.vue';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
 import AppFormButton from '~common/form-vue/AppFormButton.vue';
 import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
 import AppFormControlCrop from '~common/form-vue/controls/AppFormControlCrop.vue';
 import AppFormControlUpload from '~common/form-vue/controls/upload/AppFormControlUpload.vue';
-import {
-	validateFilesize,
-	validateImageMaxDimensions,
-} from '~common/form-vue/validators';
+import { validateFilesize, validateImageMaxDimensions } from '~common/form-vue/validators';
 import { showModalConfirm } from '~common/modal/confirm/confirm-service';
 import { $gettext } from '~common/translate/translate.service';
 
@@ -56,9 +50,7 @@ const crop = computed(() => background.value?.getCrop());
 const form: FormController<FormModel> = createForm({
 	model: modelRef,
 	modelClass: CommunityModel,
-	loadUrl: computed(
-		() => `/web/dash/communities/channels/save-preset-background/${model.id}`
-	),
+	loadUrl: computed(() => `/web/dash/communities/channels/save-preset-background/${model.id}`),
 	onLoad(payload: any) {
 		maxFilesize.value = payload.maxFilesize;
 		aspectRatio.value = payload.aspectRatio;
@@ -71,10 +63,7 @@ const form: FormController<FormModel> = createForm({
 		form.formModel.crop = form.formModel.background_crop;
 	},
 	async onSubmit() {
-		const response = await $saveCommunityPresetChannelBackground(
-			form.formModel,
-			presetType
-		);
+		const response = await $saveCommunityPresetChannelBackground(form.formModel, presetType);
 
 		if (model) {
 			Object.assign(model, form.formModel);
