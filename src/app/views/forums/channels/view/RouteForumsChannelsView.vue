@@ -111,7 +111,7 @@ createAppRoute({
 
 				<template v-if="stickyTopics.length">
 					<AppForumTopicList
-						:topics="(stickyTopics as any)"
+						:topics="stickyTopics as any"
 						:sort="sort"
 						:use-upvotes="channel.type === 'voting'"
 						:post-count-per-page="postCountPerPage"

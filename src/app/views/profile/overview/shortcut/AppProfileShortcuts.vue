@@ -30,12 +30,12 @@ const { items, centered = false } = defineProps<Props>();
 						display: `flex`,
 						flexWrap: `wrap`,
 						justifyContent: `center`,
-				  }
+					}
 				: {
 						display: `grid`,
 						gridTemplateColumns: `repeat(auto-fit, ${itemWidth}px)`,
 						justifyContent: `space-around`,
-				  }),
+					}),
 		}"
 	>
 		<AppProfileShortcut

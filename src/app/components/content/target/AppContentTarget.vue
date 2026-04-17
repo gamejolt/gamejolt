@@ -44,10 +44,10 @@ const componentProps = computed(() => {
 					leftTo: leftTo,
 					rightTo: rightTo,
 					noHover: noHover,
-			  } satisfies ComponentProps<typeof AppPillBi>)
+				} satisfies ComponentProps<typeof AppPillBi>)
 			: ({
 					to: to,
-			  } satisfies ComponentProps<typeof AppPill>)),
+				} satisfies ComponentProps<typeof AppPill>)),
 	};
 });
 

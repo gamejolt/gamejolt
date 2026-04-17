@@ -36,7 +36,10 @@ export function createChatClient({ grid, appStore }: { grid: GridClient; appStor
 }
 
 export class ChatClient {
-	constructor(private readonly grid: GridClient, public readonly appStore: AppStore) {}
+	constructor(
+		private readonly grid: GridClient,
+		public readonly appStore: AppStore
+	) {}
 
 	readonly logger = createLogger('Chat');
 

@@ -6,8 +6,6 @@ export const routeCommunitiesViewEditChannelsCompetitionAssignAwards: RouteRecor
 	name: 'communities.view.edit.channels.competition.assign-awards',
 	path: 'assign-awards',
 	component: () =>
-		import(
-			'~app/views/communities/view/edit/channels/edit/competition/assign-awards/RouteCommunitiesViewEditChannelsCompetitionAssignAwards.vue'
-		),
+		import('~app/views/communities/view/edit/channels/edit/competition/assign-awards/RouteCommunitiesViewEditChannelsCompetitionAssignAwards.vue'),
 	children: [routeCommunitiesViewEditChannelsCompetitionAssignAwardsAward],
 };

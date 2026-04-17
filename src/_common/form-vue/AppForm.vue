@@ -279,7 +279,7 @@ export function createForm<T, SubmitResponse = any>(options: CreateFormOptions<T
 			? await Api.sendRequest(loadUrl.value, loadData.value || undefined, {
 					detach: true,
 					sanitizeComplexData,
-			  })
+				})
 			: {};
 
 		isLoaded.value = true;

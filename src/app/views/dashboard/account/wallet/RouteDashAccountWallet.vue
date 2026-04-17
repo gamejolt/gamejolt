@@ -60,7 +60,7 @@ const gemsProgress = computed(() => {
 		? Math.min(
 				(gemWallet.value.available_balance / gemWallet.value.minimum_payout_balance) * 100,
 				100
-		  )
+			)
 		: 0;
 });
 

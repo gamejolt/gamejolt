@@ -8,9 +8,7 @@ export async function showCommunityCompetitionHeaderModal(competition: Community
 		modalId: 'CommunityCompetitionHeader',
 		component: defineAsyncComponent(
 			() =>
-				import(
-					'~app/components/community/competition/header-modal/AppCommunityCompetitionHeaderModal.vue'
-				)
+				import('~app/components/community/competition/header-modal/AppCommunityCompetitionHeaderModal.vue')
 		),
 		props: {
 			competition,

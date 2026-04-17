@@ -4,7 +4,5 @@ export const routeCommunitiesViewEditChannelsCompetitionOverview: RouteRecordRaw
 	name: 'communities.view.edit.channels.competition.overview',
 	path: '',
 	component: () =>
-		import(
-			'~app/views/communities/view/edit/channels/edit/competition/overview/RouteCommunitiesViewEditChannelsCompetitionOverview.vue'
-		),
+		import('~app/views/communities/view/edit/channels/edit/competition/overview/RouteCommunitiesViewEditChannelsCompetitionOverview.vue'),
 };

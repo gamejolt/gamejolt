@@ -90,7 +90,7 @@ function onSubmittedBlock() {
 		<div class="modal-body">
 			<AppBlockForm
 				v-if="page === 'block'"
-				:user="(resource as UserModel)"
+				:user="resource as UserModel"
 				@submit="onSubmittedBlock"
 			/>
 			<AppReportForm v-else :type="type" :resource="resource" @submit="onSubmittedReport" />

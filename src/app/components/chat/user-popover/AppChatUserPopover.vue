@@ -91,11 +91,11 @@ async function onClickKick() {
 	const message = canMessage.value
 		? $gettext(`Are you sure you want to kick %{ user } from the room?`, {
 				user: user.display_name,
-		  })
+			})
 		: $gettext(
 				`Are you sure you want to kick @%{ username } from this room? You're not friends with this user, so you won't be able to invite them back into this room.`,
 				{ username: user.username }
-		  );
+			);
 	const confirm = await showModalConfirm(
 		message,
 		$gettext(`Kick @%{ username }`, { username: user.username })

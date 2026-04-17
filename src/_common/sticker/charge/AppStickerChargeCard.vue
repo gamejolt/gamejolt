@@ -87,7 +87,7 @@ const showFullyChargedText = computed(() => allowFullyChargedText && canChargeSt
 					: {
 							_elevate: elevate,
 							_decorator: true,
-					  }
+						}
 			"
 		>
 			<div class="_content" :class="{ _col: headerCharge }">
@@ -138,7 +138,7 @@ const showFullyChargedText = computed(() => allowFullyChargedText && canChargeSt
 								: {
 										_elevate: elevate,
 										_decorator: true,
-								  }
+									}
 						"
 					>
 						<AppAnimElectricity

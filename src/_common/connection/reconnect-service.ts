@@ -10,7 +10,10 @@ export class ConnectionReconnect {
 	private timeoutMs = TIMEOUT_INITIAL;
 	private timeoutHandle?: NodeJS.Timeout;
 
-	constructor(private failFn: () => void, private successFn: () => void) {}
+	constructor(
+		private failFn: () => void,
+		private successFn: () => void
+	) {}
 
 	async check() {
 		try {

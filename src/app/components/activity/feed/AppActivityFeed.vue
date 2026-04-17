@@ -226,11 +226,11 @@ function shouldShowAd(index: number) {
 								? {
 										marginTop: `-${kPostItemPaddingXsVertical.px}`,
 										marginBottom: 0,
-								  }
+									}
 								: {
 										marginTop: 0,
 										marginBottom: kPostItemPaddingVertical.px,
-								  }
+									}
 						"
 					/>
 				</template>

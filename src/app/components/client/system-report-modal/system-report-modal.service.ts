@@ -8,9 +8,7 @@ export class ClientSystemReportModal {
 			modalId: 'ClientSystemReport',
 			component: defineAsyncComponent(
 				() =>
-					import(
-						'~app/components/client/system-report-modal/AppClientSystemReportModal.vue'
-					)
+					import('~app/components/client/system-report-modal/AppClientSystemReportModal.vue')
 			),
 			size: 'sm',
 		});

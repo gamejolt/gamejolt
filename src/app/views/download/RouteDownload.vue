@@ -101,10 +101,10 @@ const { isBootstrapped } = createAppRoute({
 			return type.value === 'build'
 				? $gettext(`Downloading %{ game }`, {
 						game: game.value.title,
-				  })
+					})
 				: $gettext(`Downloading soundtrack for %{ game }`, {
 						game: game.value.title,
-				  });
+					});
 		}
 		return null;
 	}),
@@ -128,7 +128,7 @@ const { isBootstrapped } = createAppRoute({
 			type.value === 'build'
 				? build.value!.getDownloadUrl({
 						forceDownload: true,
-				  })
+					})
 				: GameSongModel.getSoundtrackDownloadUrl(game.value.id),
 
 			// Wait at least this long before spawning the download.

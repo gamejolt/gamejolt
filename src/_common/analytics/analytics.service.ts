@@ -271,8 +271,8 @@ function _getExperimentValue(option: ConfigOption) {
 	const value = option.isOverridden
 		? `overridden-${option.value}`
 		: option.isExcluded
-		? 'excluded'
-		: `${option.value}`;
+			? 'excluded'
+			: `${option.value}`;
 
 	// Limits:
 	// https://support.google.com/analytics/answer/9267744?hl=en

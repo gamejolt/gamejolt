@@ -4,7 +4,5 @@ export const routeCommunitiesViewEditChannelsCompetitionAssignAwardsAward: Route
 	name: 'communities.view.edit.channels.competition.assign-awards.award',
 	path: ':awardId(\\d+)',
 	component: () =>
-		import(
-			'~app/views/communities/view/edit/channels/edit/competition/assign-awards/award/RouteCommunitiesViewEditChannelsCompetitionAssignAwardsAward.vue'
-		),
+		import('~app/views/communities/view/edit/channels/edit/competition/assign-awards/award/RouteCommunitiesViewEditChannelsCompetitionAssignAwardsAward.vue'),
 };

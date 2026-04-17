@@ -13,6 +13,20 @@ const { url, embedWidth, embedHeight } = useGameserverStore();
 		frameborder="0"
 		scrolling="no"
 		allowfullscreen
-		allow="autoplay; fullscreen *; geolocation; microphone; camera; midi; monetization; xr-spatial-tracking; gamepad; gyroscope; magnetometer; accelerometer; picture-in-picture"
+		allow="
+			autoplay;
+			fullscreen *;
+			geolocation;
+			microphone;
+			camera;
+			midi;
+			monetization;
+			xr-spatial-tracking;
+			gamepad;
+			gyroscope;
+			magnetometer;
+			accelerometer;
+			picture-in-picture;
+		"
 	/>
 </template>

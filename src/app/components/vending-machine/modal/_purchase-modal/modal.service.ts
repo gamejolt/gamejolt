@@ -21,9 +21,7 @@ export async function showPurchaseShopProductModal({
 		modalId: 'PurchaseShopProduct',
 		component: defineAsyncComponent(
 			() =>
-				import(
-					'~app/components/vending-machine/modal/_purchase-modal/AppPurchaseShopProductModal.vue'
-				)
+				import('~app/components/vending-machine/modal/_purchase-modal/AppPurchaseShopProductModal.vue')
 		),
 		props: {
 			initialProductData: {

@@ -8,9 +8,7 @@ export async function showCommunityThumbnailModal(community: CommunityModel) {
 		modalId: 'CommunityThumbnail',
 		component: defineAsyncComponent(
 			() =>
-				import(
-					'~app/components/forms/community/thumbnail/modal/FormCommunityThumbnailModal.vue'
-				)
+				import('~app/components/forms/community/thumbnail/modal/FormCommunityThumbnailModal.vue')
 		),
 		props: {
 			community,

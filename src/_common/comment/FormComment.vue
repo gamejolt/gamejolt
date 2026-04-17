@@ -184,12 +184,12 @@ const onlyFriends = computed(
 								type: 'resource',
 								resource: 'Comment',
 								resourceId: comment.id,
-						  }
+							}
 						: {
 								type: 'commentingOnResource',
 								resource: getCommentModelResourceName(model),
 								resourceId: model.id,
-						  }
+							}
 				"
 				:model-id="contentModelId"
 				focus-end

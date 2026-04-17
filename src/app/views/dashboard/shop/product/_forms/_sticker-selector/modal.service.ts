@@ -13,9 +13,7 @@ export async function showFormStickerSelectorModal(props: {
 		modalId: 'FormStickerSelector',
 		component: defineAsyncComponent(
 			() =>
-				import(
-					'~app/views/dashboard/shop/product/_forms/_sticker-selector/AppFormStickerSelectorModal.vue'
-				)
+				import('~app/views/dashboard/shop/product/_forms/_sticker-selector/AppFormStickerSelectorModal.vue')
 		),
 		props,
 	});

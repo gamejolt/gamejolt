@@ -77,7 +77,7 @@ const form: FormController<FormModel> = createForm<FormModel>({
 					message = isTemplate.value
 						? $gettext(
 								`You can't save your template while there are still messages being sent.`
-						  )
+							)
 						: $gettext(`You have an existing message being sent to this user.`);
 				} else if (errors.expired) {
 					// Shouldn't encounter this error type when saving
@@ -86,7 +86,7 @@ const form: FormController<FormModel> = createForm<FormModel>({
 						? undefined
 						: $gettext(
 								`It's been too long since this user supported you to thank them.`
-						  );
+							);
 				}
 
 				if (!message) {
@@ -171,7 +171,7 @@ const form: FormController<FormModel> = createForm<FormModel>({
 							isTemplate
 								? $gettext(
 										`Create a generic message to send your recent supporters!`
-								  )
+									)
 								: $gettext(`Thank this user with a custom message!`)
 						"
 						autofocus

@@ -96,7 +96,7 @@ function initializeHttpServer(
 					passphrase: 'yame yolt',
 				},
 				app
-		  )
+			)
 		: http.createServer(app);
 
 	server
@@ -197,9 +197,8 @@ function runViteBuild(gjOpts: Options, aborter: AbortController) {
 						section: sectionName,
 						'empty-outdir': false,
 					});
-					const gjOptsForSection = await parseAndInferOptionsFromCommandline(
-						argsForSection
-					);
+					const gjOptsForSection =
+						await parseAndInferOptionsFromCommandline(argsForSection);
 					gjOptsForSection.buildType = 'serve-build';
 					// Don't acquire ffmpeg during the build because multiple build
 					// processes would try overwriting the same ffmpeg binary. For

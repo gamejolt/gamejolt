@@ -56,7 +56,7 @@ function createFormGroup({
 					dropUnderscores: true,
 					expandCamelCase: true,
 					keepLcWords: true,
-			  })
+				})
 			: label.value
 	);
 

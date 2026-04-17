@@ -102,8 +102,8 @@ function insertAtCaret(text: string) {
 		txtarea.selectionStart || txtarea.selectionStart === 0
 			? 'ff'
 			: (document as any).selection
-			? 'ie'
-			: false;
+				? 'ie'
+				: false;
 
 	if (br === 'ie') {
 		txtarea.focus();

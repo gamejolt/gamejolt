@@ -46,7 +46,7 @@ const componentProps = computed(() => {
 				showDelay: hoverDelay,
 				block: true,
 				to: to,
-		  };
+			};
 });
 
 const componentOn = computed(() => {
@@ -57,7 +57,7 @@ const componentOn = computed(() => {
 				hide: () => onHide(),
 				mouseEnter: () => onMouseEnter(),
 				mouseLeave: () => onMouseLeave(),
-		  };
+			};
 });
 
 function onUserChange() {

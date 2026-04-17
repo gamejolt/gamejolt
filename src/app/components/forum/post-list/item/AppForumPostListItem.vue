@@ -171,7 +171,7 @@ function copyPermalink() {
 			>
 				<AppJolticon
 					class="middle"
-					:icon="('chevron-' + (!showingParent ? 'right' : 'down') as any)"
+					:icon="('chevron-' + (!showingParent ? 'right' : 'down')) as any"
 				/>
 				<AppTranslate :translate-params="{ user: post.replied_to.display_name }">
 					In response to %{ user }

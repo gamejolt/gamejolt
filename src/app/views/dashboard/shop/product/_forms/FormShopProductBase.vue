@@ -87,7 +87,7 @@ export const ShopProductCommonProps = {
 
 export function createShopProductBaseForm<
 	Fields extends Partial<BaseFields> & Record<string, any>,
-	BaseModel extends ShopProductModel
+	BaseModel extends ShopProductModel,
 >({
 	shopStore,
 	resource,
@@ -883,7 +883,7 @@ const canBeAnimated = computed(
 								canBeAnimated
 									? $gettext(
 											`Your image must be a PNG or an animated PNG (APNG).`
-									  )
+										)
 									: $gettext(`Your image must be a PNG.`)
 							}}
 						</div>
@@ -916,7 +916,7 @@ const canBeAnimated = computed(
 																(maxWidthStatic /
 																	maxHeightStatic)) *
 																100
-													  ) / 100,
+														) / 100,
 										}
 									)
 								}}
@@ -936,7 +936,7 @@ const canBeAnimated = computed(
 																(maxWidthStatic /
 																	maxHeightStatic)) *
 																100
-													  ) / 100,
+														) / 100,
 										}
 									)
 								}}
@@ -962,7 +962,7 @@ const canBeAnimated = computed(
 																(maxWidthStatic /
 																	maxHeightStatic)) *
 																100
-													  ) / 100,
+														) / 100,
 										}
 									)
 								}}
@@ -982,7 +982,7 @@ const canBeAnimated = computed(
 																(maxWidthStatic /
 																	maxHeightStatic)) *
 																100
-													  ) / 100,
+														) / 100,
 										}
 									)
 								}}
@@ -1007,7 +1007,7 @@ const canBeAnimated = computed(
 																(maxWidthAnimated /
 																	maxHeightAnimated)) *
 																100
-													  ) / 100,
+														) / 100,
 										}
 									)
 								}}
@@ -1027,7 +1027,7 @@ const canBeAnimated = computed(
 																(maxWidthAnimated /
 																	maxHeightAnimated)) *
 																100
-													  ) / 100,
+														) / 100,
 										}
 									)
 								}}

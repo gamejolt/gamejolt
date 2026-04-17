@@ -150,7 +150,7 @@ function setDateRefresh() {
 					item.is_voted
 						? {
 								fontWeight: `bold`,
-						  }
+							}
 						: {}
 				"
 			>

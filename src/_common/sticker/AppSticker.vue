@@ -34,7 +34,7 @@ const electricityProps = computed(
 		(showCharged
 			? {
 					ignoreAssetPadding: true,
-			  }
+				}
 			: {}) satisfies ComponentProps<typeof AppAnimElectricity>
 );
 

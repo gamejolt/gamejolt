@@ -104,7 +104,10 @@ export class SearchPayload {
 		twitter: string;
 	};
 
-	constructor(public type: string, data: any) {
+	constructor(
+		public type: string,
+		data: any
+	) {
 		this.page = data.page || 1;
 		this.perPage = data.perPage || 24;
 		this.count = data.count || 0;

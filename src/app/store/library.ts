@@ -32,7 +32,10 @@ export function useLibraryStore() {
 }
 
 class GamePlaylistFolder {
-	constructor(public title: string, public collections: Ref<GameCollectionModel[]>) {}
+	constructor(
+		public title: string,
+		public collections: Ref<GameCollectionModel[]>
+	) {}
 }
 
 function _isViewingCollection(router: Router, collection: GameCollectionModel) {

@@ -107,7 +107,7 @@ function getStyleForAsset(sheet: ImgSlideshow): CSSProperties {
 		? {}
 		: {
 				transform: `translate3d(${offsetX}, ${offsetY}, 0)`,
-		  };
+			};
 
 	return {
 		...pos,

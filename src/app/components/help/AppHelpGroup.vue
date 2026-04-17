@@ -17,7 +17,7 @@ defineProps<Props>();
 	<div class="list-group anim-fade-in-enlarge">
 		<div class="list-group-item" :class="{ 'has-icon': category.icon }">
 			<h3 class="list-group-item-heading">
-				<AppJolticon v-if="category.icon" :icon="(category.icon as any)" notice />
+				<AppJolticon v-if="category.icon" :icon="category.icon as any" notice />
 				{{ category.name }}
 			</h3>
 		</div>

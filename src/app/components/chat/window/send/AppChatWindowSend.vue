@@ -459,11 +459,11 @@ function disableTypingTimeout() {
 											type: 'resource',
 											resource: 'Chat_Message',
 											resourceId: room.messageEditing.id,
-									  }
+										}
 									: {
 											type: 'newChatMessage',
 											chatRoomId: room.id,
-									  }
+										}
 							"
 							:model-id="editorModelId"
 							:focus-token="focusToken"

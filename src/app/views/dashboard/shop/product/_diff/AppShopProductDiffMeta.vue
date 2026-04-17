@@ -49,8 +49,8 @@ const entries = computed(() =>
 			v-for="[key, value] in entries"
 			:key="key"
 			:entry="{ key, value }"
-			:current="(current as any)"
-			:other="(other as any)"
+			:current="current as any"
+			:other="other as any"
 			:diff-background="diffBackground"
 			:diff-color="diffColor"
 		/>

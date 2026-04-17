@@ -451,10 +451,10 @@ const rewardPackImageSize = run(() => {
 													authUser && authUser.id === shopOwner?.id
 														? $gettext(
 																`Users will get this reward pack every time they place a charged sticker on your content`
-														  )
+															)
 														: $gettext(
 																`Place a charged sticker on this user's content to get their reward pack`
-														  )
+															)
 												}}
 											</div>
 											<div
@@ -479,7 +479,7 @@ const rewardPackImageSize = run(() => {
 																.mediaserver_url,
 															maxWidth: rewardPackImageSize.width,
 															maxHeight: rewardPackImageSize.height,
-													  })
+														})
 											"
 											alt=""
 										/>

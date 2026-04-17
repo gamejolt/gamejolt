@@ -37,7 +37,10 @@ export class CommentStoreModel {
 	 * */
 	metadata: any = {};
 
-	constructor(public resource: string, public resourceId: number) {}
+	constructor(
+		public resource: string,
+		public resourceId: number
+	) {}
 
 	get parentComments() {
 		return this.comments.filter(i => !i.parent_id);

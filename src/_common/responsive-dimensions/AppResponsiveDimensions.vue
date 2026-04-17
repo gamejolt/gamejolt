@@ -8,7 +8,11 @@ import { useResizeObserver } from '~utils/resize-observer';
 import { debounce } from '~utils/utils';
 
 export class AppResponsiveDimensionsChangeEvent {
-	constructor(public containerWidth: number, public height: number, public isFilled: boolean) {}
+	constructor(
+		public containerWidth: number,
+		public height: number,
+		public isFilled: boolean
+	) {}
 }
 </script>
 

@@ -136,7 +136,7 @@ createAppRoute({});
 			<AppCardList
 				v-if="hasFullChannelsPermission"
 				:items="communityPresetChannels"
-				:active-item="(activeItem as any)"
+				:active-item="activeItem as any"
 				:is-adding="isShowingChannelAdd"
 				@activate="onActivate"
 			>

@@ -107,7 +107,7 @@ async function onClick(e: Event) {
 		:solid="solid"
 		:block="block"
 		:disabled="disabled || form.isProcessing"
-		:icon="(icon as any)"
+		:icon="icon as any"
 		@click="onClick"
 	>
 		<slot />

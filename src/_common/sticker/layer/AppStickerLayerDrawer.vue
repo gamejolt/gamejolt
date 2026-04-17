@@ -471,7 +471,7 @@ function _updateSliderOffset(extraOffsetPx = 0) {
 									? {}
 									: {
 											'pan-options': { threshold: 16 },
-									  }
+										}
 							"
 							@panstart="panStart"
 							@panmove="panMove"

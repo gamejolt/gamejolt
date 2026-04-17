@@ -154,12 +154,12 @@ onMounted(async () => {
 	const resource = emoji.value
 		? 'Emoji'
 		: sticker.value
-		? 'Sticker'
-		: avatarFrame.value
-		? 'Avatar_Frame'
-		: background.value
-		? 'Background'
-		: null;
+			? 'Sticker'
+			: avatarFrame.value
+				? 'Avatar_Frame'
+				: background.value
+					? 'Background'
+					: null;
 
 	if (resource) {
 		trackResourceInfoView({

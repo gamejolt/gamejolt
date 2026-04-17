@@ -23,8 +23,8 @@ class EnvironmentService {
 		GJ_BUILD_TYPE === 'build'
 			? 'chrome-extension://game-jolt-client/package'
 			: GJ_BUILD_TYPE === 'serve-build'
-			? 'chrome-extension://game-jolt-client/build/desktop'
-			: 'chrome-extension://game-jolt-client';
+				? 'chrome-extension://game-jolt-client/build/desktop'
+				: 'chrome-extension://game-jolt-client';
 
 	baseUrl =
 		GJ_ENVIRONMENT === 'development'
@@ -40,22 +40,22 @@ class EnvironmentService {
 		GJ_ENVIRONMENT === 'development'
 			? 'https://development.gamejolt.com'
 			: GJ_IS_DESKTOP_APP
-			? `${this.baseUrlDesktopApp}/index.html#`
-			: 'https://gamejolt.com';
+				? `${this.baseUrlDesktopApp}/index.html#`
+				: 'https://gamejolt.com';
 
 	authBaseUrl =
 		GJ_ENVIRONMENT === 'development'
 			? 'https://development.gamejolt.com'
 			: GJ_IS_DESKTOP_APP
-			? `${this.baseUrlDesktopApp}/auth.html#`
-			: 'https://gamejolt.com';
+				? `${this.baseUrlDesktopApp}/auth.html#`
+				: 'https://gamejolt.com';
 
 	checkoutBaseUrl =
 		GJ_ENVIRONMENT === 'development'
 			? 'https://development.gamejolt.com'
 			: GJ_IS_DESKTOP_APP
-			? `${this.baseUrlDesktopApp}/checkout.html#`
-			: 'https://gamejolt.com';
+				? `${this.baseUrlDesktopApp}/checkout.html#`
+				: 'https://gamejolt.com';
 
 	helpBaseUrl =
 		GJ_ENVIRONMENT === 'development'

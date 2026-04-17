@@ -80,7 +80,7 @@ function onBackgroundChange(bg?: BackgroundModel) {
 					: {
 							overflow: 'hidden',
 							'border-radius': '12px',
-					  }
+						}
 			"
 		>
 			<AppTheme class="modal-controls" :force-dark="overlay">

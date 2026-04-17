@@ -93,19 +93,19 @@ const ownerIndicatorTooltipText = computed(() => {
 			? $gettext(`You liked this and replied`)
 			: $gettext(`%{ username } liked this and replied`, {
 					username: resourceOwnerUsername,
-			  });
+				});
 	} else if (comment.has_owner_like) {
 		return isOwner
 			? $gettext(`You liked this`)
 			: $gettext(`%{ username } liked this`, {
 					username: resourceOwnerUsername,
-			  });
+				});
 	} else if (comment.has_owner_reply) {
 		return isOwner
 			? $gettext(`You replied to this`)
 			: $gettext(`%{ username } replied`, {
 					username: resourceOwnerUsername,
-			  });
+				});
 	}
 });
 

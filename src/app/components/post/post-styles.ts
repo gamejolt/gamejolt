@@ -53,13 +53,13 @@ const PostFeedItemPaddingStyles = computed(() => {
 				paddingBottom: kPostItemPaddingXsVertical.px,
 				paddingLeft: kPostItemPaddingXs.px,
 				paddingRight: kPostItemPaddingXs.px,
-		  } as const satisfies CSSProperties)
+			} as const satisfies CSSProperties)
 		: ({
 				paddingTop: kPostItemPaddingVertical.px,
 				paddingBottom: kPostItemPaddingVertical.px,
 				paddingLeft: kPostItemPaddingContainer.px,
 				paddingRight: kPostItemPaddingContainer.px,
-		  } as const satisfies CSSProperties);
+			} as const satisfies CSSProperties);
 });
 
 /**

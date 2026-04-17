@@ -22,7 +22,11 @@ export const enum PayloadErrorType {
 }
 
 export class PayloadError {
-	constructor(public type: string, public response?: any, public status?: number) {}
+	constructor(
+		public type: string,
+		public response?: any,
+		public status?: number
+	) {}
 	redirect?: string;
 }
 
@@ -61,7 +65,7 @@ class PayloadService {
 	// These http errors are not redirects, so the noRedirect behavior should not apply to them.
 	readonly httpNoRedirectOverrides = [429];
 
-	private declare commonStore: CommonStore;
+	declare private commonStore: CommonStore;
 	private ver?: number = undefined;
 	private payloadHandlers: ((payload: any) => void)[] = [];
 

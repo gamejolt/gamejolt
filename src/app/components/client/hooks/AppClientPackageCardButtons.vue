@@ -364,7 +364,7 @@ const buildCapability = computed(() => {
 			@click="buildClick(card.browserBuild!)"
 		>
 			<AppTranslate>Quick Play</AppTranslate>
-			<AppJolticon :icon="(card.showcasedBrowserIcon as any)" />
+			<AppJolticon :icon="card.showcasedBrowserIcon as any" />
 		</AppButton>
 
 		<AppPopper

@@ -62,13 +62,13 @@ const statusText = computed(() => {
 		return sentInvite.value
 			? $gettext(`@%{ user } accepted this invite.`, {
 					user: invite.value?.invited_user.username,
-			  })
+				})
 			: $gettext(`You accepted this invite.`);
 	} else if (invite.value.status === ChatInviteStatusDeclined) {
 		return sentInvite.value
 			? $gettext(`@%{ user } declined this invite.`, {
 					user: invite.value?.invited_user.username,
-			  })
+				})
 			: $gettext(`You declined this invite.`);
 	} else if (invite.value.status === ChatInviteStatusOpen && sentInvite.value) {
 		return $gettext(`This invite hasn't been responded to yet.`);

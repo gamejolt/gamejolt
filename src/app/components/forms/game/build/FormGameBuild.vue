@@ -175,8 +175,8 @@ const hasPlatformsError = computed(() => form.hasCustomError('platforms'));
 const isDeprecated = computed(() =>
 	Boolean(
 		props.model &&
-			(props.model.type === GameBuildType.Applet ||
-				props.model.type === GameBuildType.Silverlight)
+		(props.model.type === GameBuildType.Applet ||
+			props.model.type === GameBuildType.Silverlight)
 	)
 );
 
