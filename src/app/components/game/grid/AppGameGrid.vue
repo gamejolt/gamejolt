@@ -170,11 +170,7 @@ function shouldShowAd(index: number) {
 				</div>
 
 				<template v-if="canReorder">
-					<VueDraggable
-						v-model="processedGames"
-						:delay="100"
-						:delay-on-touch-only="true"
-					>
+					<VueDraggable v-model="processedGames" :delay="100" :delay-on-touch-only="true">
 						<div
 							v-for="element in processedGames"
 							:key="element.id"

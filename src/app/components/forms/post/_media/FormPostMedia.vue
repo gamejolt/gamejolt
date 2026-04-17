@@ -167,11 +167,7 @@ async function onDrop(e: DragEvent) {
 							:delay="100"
 							:delay-on-touch-only="true"
 						>
-							<div
-								v-for="element in internalItems"
-								:key="element.id"
-								class="-item"
-							>
+							<div v-for="element in internalItems" :key="element.id" class="-item">
 								<AppFormPostMediaItem
 									:item="element"
 									@remove="emit('remove', element)"

@@ -43,10 +43,7 @@ function onDraggableSort() {
 		:delay-on-touch-only="true"
 		@sort="onDraggableSort"
 	>
-		<div
-			v-for="(element, index) in modifiableItems"
-			:key="(element as any)[itemKey]"
-		>
+		<div v-for="(element, index) in modifiableItems" :key="(element as any)[itemKey]">
 			<slot name="item" :element :index />
 		</div>
 	</VueDraggable>

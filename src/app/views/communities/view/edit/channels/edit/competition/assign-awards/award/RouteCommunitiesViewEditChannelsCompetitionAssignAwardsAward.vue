@@ -232,42 +232,39 @@ createAppRoute({
 							<tr v-for="element in draggableItems" :key="element.id">
 								<td>
 									<div class="-drag-container">
-										<div
-											v-if="draggableItems.length > 1"
-											class="-drag-handle"
-										>
+										<div v-if="draggableItems.length > 1" class="-drag-handle">
 											<AppJolticon icon="arrows-v" />
 										</div>
 										<AppButton
 											v-app-tooltip="
 												$gettext(`Remove assigned award from entry`)
+											"
+											icon="remove"
+											sparse
+											primary
+											@click="onClickUnassign(element)"
+										/>
+									</div>
+								</td>
+								<th>
+									<a @click="onClickShowEntry(element)">
+										{{ element.resource.title }}
+									</a>
+									<AppJolticon
+										v-if="element.is_removed"
+										v-app-tooltip.touchable="
+											$gettext(`This entry was hidden from the jam`)
 										"
-										icon="remove"
-										sparse
-										primary
-										@click="onClickUnassign(element)"
+										class="text-muted"
+										icon="inactive"
 									/>
-								</div>
-							</td>
-							<th>
-								<a @click="onClickShowEntry(element)">
-									{{ element.resource.title }}
-								</a>
-								<AppJolticon
-									v-if="element.is_removed"
-									v-app-tooltip.touchable="
-										$gettext(`This entry was hidden from the jam`)
-									"
-									class="text-muted"
-									icon="inactive"
-								/>
-							</th>
-							<td>
-								{{ element.resource.developer.display_name }}
-								<small class="text-muted">
-									(@{{ element.resource.developer.username }})
-								</small>
-							</td>
+								</th>
+								<td>
+									{{ element.resource.developer.display_name }}
+									<small class="text-muted">
+										(@{{ element.resource.developer.username }})
+									</small>
+								</td>
 							</tr>
 						</VueDraggable>
 					</table>
