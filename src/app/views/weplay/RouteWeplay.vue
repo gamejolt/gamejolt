@@ -147,7 +147,11 @@ createAppRoute({
 								</tr>
 								<tr>
 									<td>
-										<AppButton v-app-tooltip="$gettext('Attack')" solid disabled>
+										<AppButton
+											v-app-tooltip="$gettext('Attack')"
+											solid
+											disabled
+										>
 											B
 										</AppButton>
 									</td>
