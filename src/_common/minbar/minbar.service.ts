@@ -26,5 +26,5 @@ export function addMinbarItem(item: Omit<MinbarItem, 'id'>) {
 }
 
 export function removeMinbarItem(item: MinbarItem) {
-	arrayRemove(Minbar.items, i => i === item);
+	arrayRemove(Minbar.items, i => i.id === item.id);
 }
