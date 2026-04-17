@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
-import VueDraggable from 'vuedraggable';
+import { VueDraggable } from 'vue-draggable-plus';
 
 import { useCardList } from '~common/card/list/AppCardList.vue';
 
@@ -37,19 +37,17 @@ function onDraggableSort() {
 
 <template>
 	<VueDraggable
-		:list="modifiableItems"
-		:item-key="itemKey"
-		v-bind="{
-			handle: '.card-drag-handle',
-			delay: 100,
-			delayOnTouchOnly: true,
-			onSort: onDraggableSort,
-		}"
+		v-model="modifiableItems"
+		handle=".card-drag-handle"
+		:delay="100"
+		:delay-on-touch-only="true"
+		@sort="onDraggableSort"
 	>
-		<template #item="{ element, index }: any">
-			<div>
-				<slot name="item" :element="element" :index="index" />
-			</div>
-		</template>
+		<div
+			v-for="(element, index) in modifiableItems"
+			:key="(element as any)[itemKey]"
+		>
+			<slot name="item" :element :index />
+		</div>
 	</VueDraggable>
 </template>

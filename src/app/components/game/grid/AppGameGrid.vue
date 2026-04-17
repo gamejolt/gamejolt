@@ -1,6 +1,6 @@
 <script lang="ts">
 import { computed, toRef } from 'vue';
-import draggable from 'vuedraggable';
+import { VueDraggable } from 'vue-draggable-plus';
 
 import AppGameThumbnailControls from '~app/components/game/thumbnail/AppGameThumbnailControls.vue';
 import { useAdStore } from '~common/ad/ad-store';
@@ -170,23 +170,25 @@ function shouldShowAd(index: number) {
 				</div>
 
 				<template v-if="canReorder">
-					<draggable
+					<VueDraggable
 						v-model="processedGames"
-						v-bind="{ delay: 100, delayOnTouchOnly: true }"
-						item-key="id"
+						:delay="100"
+						:delay-on-touch-only="true"
 					>
-						<template #item="{ element }">
-							<div class="_game-grid-item">
-								<AppAdTakeoverFloat>
-									<AppGameThumbnail :game="element">
-										<slot name="thumbnail-controls" :game="element">
-											<AppGameThumbnailControls :game="element" />
-										</slot>
-									</AppGameThumbnail>
-								</AppAdTakeoverFloat>
-							</div>
-						</template>
-					</draggable>
+						<div
+							v-for="element in processedGames"
+							:key="element.id"
+							class="_game-grid-item"
+						>
+							<AppAdTakeoverFloat>
+								<AppGameThumbnail :game="element">
+									<slot name="thumbnail-controls" :game="element">
+										<AppGameThumbnailControls :game="element" />
+									</slot>
+								</AppGameThumbnail>
+							</AppAdTakeoverFloat>
+						</div>
+					</VueDraggable>
 				</template>
 
 				<template v-else>

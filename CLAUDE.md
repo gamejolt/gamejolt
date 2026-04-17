@@ -179,6 +179,51 @@ When migrating old lowercase/kebab-case files (`widget.vue`, `my-form.vue`), ren
 
 ---
 
+## Template Shorthands
+
+Use Vue's shorthand syntax in templates wherever applicable:
+
+**Boolean `true` props** — omit the value entirely when the prop is declared with `Boolean` type. The presence of the attribute then means `true`.
+
+```vue
+<!-- Avoid -->
+<AppButton :primary="true" :sparse="true" />
+
+<!-- Prefer -->
+<AppButton primary sparse />
+```
+
+**Caveat for third-party components:** some libraries (e.g. `vue-draggable-plus`) declare their props as an untyped array of names. Vue's boolean-shorthand coercion only kicks in when the prop is declared as `Boolean`; on untyped props, `<Component prop-name />` is passed as the empty string `""` (falsy), not `true`. For these, use the explicit form:
+
+```vue
+<!-- vue-draggable-plus declares props as a string array -->
+<VueDraggable :delay-on-touch-only="true" />
+```
+
+**Same-name `v-bind` (Vue 3.4+)** — when the attribute name and the bound expression are the same identifier, drop the `="..."` part.
+
+```vue
+<!-- Avoid -->
+<AppGameThumbnail :game="game" />
+<slot name="item" :element="element" :index="index" />
+
+<!-- Prefer -->
+<AppGameThumbnail :game />
+<slot name="item" :element :index />
+```
+
+Applies to regular props *and* slot props. Only use it when the names actually match — `:item="element"` stays as-is.
+
+---
+
+## Dependencies
+
+Always pin dependency versions **exactly** in `package.json` — no `^`, no `~`, no ranges. Match the style of existing entries (e.g. `"vue": "3.5.13"`, not `"vue": "^3.5.13"`).
+
+When adding a package with `yarn add`, follow up with an edit to strip the leading `^` that yarn writes by default. This applies to `dependencies`, `devDependencies`, and `optionalDependencies`.
+
+---
+
 ## Reference Examples (New Style)
 
 - Regular component: [src/_common/ad/widget/AppAdWidget.vue](src/_common/ad/widget/AppAdWidget.vue)

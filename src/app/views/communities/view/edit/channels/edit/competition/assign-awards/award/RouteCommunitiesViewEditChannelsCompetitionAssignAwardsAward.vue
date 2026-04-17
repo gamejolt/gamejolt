@@ -1,7 +1,7 @@
 <script lang="ts">
 import { computed, ref, toRef } from 'vue';
+import { VueDraggable } from 'vue-draggable-plus';
 import { RouteLocationNormalized, useRoute } from 'vue-router';
-import draggable from 'vuedraggable';
 
 import { showEntryFromCommunityCompetitionEntryModal } from '~app/components/community/competition/entry/modal/modal.service';
 import { useAssignAwardsRoute } from '~app/views/communities/view/edit/channels/edit/competition/assign-awards/assign-awards.store';
@@ -222,59 +222,54 @@ createAppRoute({
 							</tr>
 						</thead>
 
-						<draggable
+						<VueDraggable
 							v-model="draggableItems"
-							v-bind="{
-								handle: '.-drag-handle',
-								delay: 100,
-								delayOnTouchOnly: true,
-							}"
+							handle=".-drag-handle"
+							:delay="100"
+							:delay-on-touch-only="true"
 							tag="tbody"
-							item-key="id"
 						>
-							<template #item="{ element }">
-								<tr>
-									<td>
-										<div class="-drag-container">
-											<div
-												v-if="draggableItems.length > 1"
-												class="-drag-handle"
-											>
-												<AppJolticon icon="arrows-v" />
-											</div>
-											<AppButton
-												v-app-tooltip="
-													$gettext(`Remove assigned award from entry`)
-												"
-												icon="remove"
-												sparse
-												primary
-												@click="onClickUnassign(element)"
-											/>
+							<tr v-for="element in draggableItems" :key="element.id">
+								<td>
+									<div class="-drag-container">
+										<div
+											v-if="draggableItems.length > 1"
+											class="-drag-handle"
+										>
+											<AppJolticon icon="arrows-v" />
 										</div>
-									</td>
-									<th>
-										<a @click="onClickShowEntry(element)">
-											{{ element.resource.title }}
-										</a>
-										<AppJolticon
-											v-if="element.is_removed"
-											v-app-tooltip.touchable="
-												$gettext(`This entry was hidden from the jam`)
-											"
-											class="text-muted"
-											icon="inactive"
-										/>
-									</th>
-									<td>
-										{{ element.resource.developer.display_name }}
-										<small class="text-muted">
-											(@{{ element.resource.developer.username }})
-										</small>
-									</td>
-								</tr>
-							</template>
-						</draggable>
+										<AppButton
+											v-app-tooltip="
+												$gettext(`Remove assigned award from entry`)
+										"
+										icon="remove"
+										sparse
+										primary
+										@click="onClickUnassign(element)"
+									/>
+								</div>
+							</td>
+							<th>
+								<a @click="onClickShowEntry(element)">
+									{{ element.resource.title }}
+								</a>
+								<AppJolticon
+									v-if="element.is_removed"
+									v-app-tooltip.touchable="
+										$gettext(`This entry was hidden from the jam`)
+									"
+									class="text-muted"
+									icon="inactive"
+								/>
+							</th>
+							<td>
+								{{ element.resource.developer.display_name }}
+								<small class="text-muted">
+									(@{{ element.resource.developer.username }})
+								</small>
+							</td>
+							</tr>
+						</VueDraggable>
 					</table>
 				</div>
 			</template>

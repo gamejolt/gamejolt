@@ -30,7 +30,6 @@
 		"pre-commit": "yarn tsscript scripts/git-pre-commit.ts"
 	},
 	"devDependencies": {
-		"@ckpack/vue-color": "1.3.0",
 		"@popperjs/core": "2.4.0",
 		"@types/autosize": "3.0.6",
 		"@types/dom-mediacapture-transform": "0.1.2",
@@ -115,9 +114,10 @@
 		"vite": "4.4.9",
 		"vite-plugin-markdown": "2.1.0",
 		"vue": "3.5.13",
+		"vue-color": "3.3.3",
+		"vue-draggable-plus": "0.6.1",
 		"vue-router": "4.5.0",
-		"vue-tsc": "3.2.6",
-		"vuedraggable": "4.1.0"
+		"vue-tsc": "3.2.6"
 	},
 	"optionalDependencies": {
 		"appdmg": "argv-minus-one/node-appdmg#node-12-temporary-fix",

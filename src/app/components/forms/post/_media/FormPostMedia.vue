@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { computed, ref, useTemplateRef } from 'vue';
-import draggable from 'vuedraggable';
+import { VueDraggable } from 'vue-draggable-plus';
 
 import AppFormPostMediaItem from '~app/components/forms/post/_media/item/FormPostMediaItem.vue';
 import { Api, ApiProgressEvent } from '~common/api/api.service';
@@ -161,21 +161,23 @@ async function onDrop(e: DragEvent) {
 							</div>
 						</a>
 
-						<draggable
+						<VueDraggable
 							v-model="internalItems"
 							style="display: inline-flex"
-							v-bind="{ delay: 100, delayOnTouchOnly: true }"
-							item-key="id"
+							:delay="100"
+							:delay-on-touch-only="true"
 						>
-							<template #item="{ element }">
-								<div class="-item">
-									<AppFormPostMediaItem
-										:item="element"
-										@remove="emit('remove', element)"
-									/>
-								</div>
-							</template>
-						</draggable>
+							<div
+								v-for="element in internalItems"
+								:key="element.id"
+								class="-item"
+							>
+								<AppFormPostMediaItem
+									:item="element"
+									@remove="emit('remove', element)"
+								/>
+							</div>
+						</VueDraggable>
 					</div>
 				</AppScrollScroller>
 

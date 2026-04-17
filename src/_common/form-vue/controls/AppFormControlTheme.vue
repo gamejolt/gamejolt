@@ -1,7 +1,8 @@
 <script lang="ts" setup>
-// @ts-expect-error no types for @ckpack/vue-color
-import { Sketch as VuePicker } from '@ckpack/vue-color';
+import 'vue-color/style.css';
+
 import { computed, ref, toRef } from 'vue';
+import { ChromePicker } from 'vue-color';
 
 import { Api } from '~common/api/api.service';
 import AppButton from '~common/button/AppButton.vue';
@@ -28,10 +29,6 @@ const { validators = [] } = defineProps<Props>();
 
 const emit = defineEmits<FormControlEmits>();
 
-interface VueColor {
-	hex: string | null;
-}
-
 const { controlVal, applyValue } = createFormControl({
 	initialValue: null as ThemeModel | null,
 	validators: toRef(() => validators),
@@ -41,9 +38,21 @@ const { controlVal, applyValue } = createFormControl({
 
 const presets = ref([] as ThemePresetModel[]);
 const activeTab = ref('preset' as 'preset' | 'custom');
-const customSelection = ref({ hex: null } as VueColor);
 
 const currentTheme = computed(() => controlVal.value || DefaultTheme);
+
+// vue-color@3.3.3 has a bug where passing `{ hex: ... }` as the model value
+// causes update events to emit `null` (Ee() returns null for hex-format
+// object inputs in vue-color.js:710). Use a bare hex string instead.
+const customSelection = computed<string>({
+	get: () => (currentTheme.value.custom ? `#${currentTheme.value.custom}` : '#000000'),
+	set: val => {
+		if (!val) {
+			return;
+		}
+		applyValue(makeThemeFromColor(val.replace(/^#/, '')));
+	},
+});
 const highlight = computed(() => {
 	if (!controlVal.value) {
 		return undefined;
@@ -61,7 +70,6 @@ const backlight = computed(() => {
 
 async function onPopover() {
 	activeTab.value = currentTheme.value.custom ? 'custom' : 'preset';
-	customSelection.value.hex = currentTheme.value.custom || null;
 
 	if (presets.value.length) {
 		return;
@@ -83,10 +91,6 @@ function isPresetActive(preset: ThemePresetModel) {
 	return currentTheme.value.theme_preset_id === preset.id;
 }
 
-function onCustomChange(colors: VueColor) {
-	applyValue(makeThemeFromColor((colors.hex || '').substr(1)));
-}
-
 function clear() {
 	applyValue(null);
 }
@@ -96,7 +100,7 @@ function clear() {
 	<div class="form-control-theme">
 		<AppPopper @show="onPopover()">
 			<a class="-current">
-				<AppThemeBubble :highlight="highlight" :backlight="backlight" active />
+				<AppThemeBubble :highlight :backlight active />
 			</a>
 
 			<template #popover>
@@ -142,12 +146,7 @@ function clear() {
 							</template>
 						</div>
 						<div v-else-if="activeTab === 'custom'">
-							<VuePicker
-								disable-alpha
-								:preset-colors="[]"
-								:model-value="customSelection"
-								@update:model-value="onCustomChange"
-							/>
+							<ChromePicker v-model="customSelection" disable-alpha />
 							<br />
 						</div>
 
@@ -188,15 +187,12 @@ strong
 	margin-bottom: $line-height-computed
 
 .-popover
-	::v-deep(.vc-sketch)
+	::v-deep(.vc-chrome-picker)
 		box-shadow: none
 		width: 100%
 		box-sizing: border-box
 
-	::v-deep(.vc-sketch-presets)
-		display: none
-
-	::v-deep(.vc-input__input)
+	::v-deep(.vc-input-input)
 		theme-prop('color', 'fg')
 		change-bg('bg')
 		theme-prop('border-color', 'bg-subtle')
