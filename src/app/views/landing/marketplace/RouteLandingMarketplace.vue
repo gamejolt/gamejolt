@@ -13,7 +13,11 @@ import { useCommonStore } from '~common/store/common-store';
 import AppThemeSvg from '~common/theme/svg/AppThemeSvg.vue';
 import { $gettext } from '~common/translate/translate.service';
 
-const assetPaths = import.meta.glob('./*.svg', { eager: true, as: 'url' });
+const assetPaths = import.meta.glob<string>('./*.svg', {
+	eager: true,
+	query: '?url',
+	import: 'default',
+});
 
 export default {
 	...defineAppRouteOptions({

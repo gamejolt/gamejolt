@@ -128,8 +128,8 @@ export default defineConfig(async (_configEnv: ConfigEnv): Promise<ViteUserConfi
 				name: 'gj:index-interpolations',
 				enforce: 'pre',
 				transformIndexHtml: {
-					enforce: 'pre',
-					transform: (html: string) => {
+					order: 'pre',
+					handler: (html: string) => {
 						// Patch our entrypoint depending on our section.
 						html = html.replace(
 							'<!-- gj:section-entrypoint -->',
@@ -475,6 +475,11 @@ export default defineConfig(async (_configEnv: ConfigEnv): Promise<ViteUserConfi
 								// inline the dynamic imports we have in our
 								// codebase.
 								inlineDynamicImports: true,
+
+								// Our ssr/server.js loader requires the bundle
+								// as CJS. Vite 5 dropped `build.ssr.format` so
+								// we set it on rollup's output instead.
+								...(gjOpts.platform === 'ssr' ? { format: 'cjs' as const } : {}),
 							},
 						};
 					}
@@ -601,10 +606,6 @@ export default defineConfig(async (_configEnv: ConfigEnv): Promise<ViteUserConfi
 			//
 			// More info: https://vitejs.dev/guide/ssr.html#ssr-externals
 			ssr: {
-				// Vite now makes nodejs module builds by default. We need to
-				// tell it to make a commonjs build so that our current server
-				// code can use it.
-				format: 'cjs',
 				noExternal: [
 					// These modules for whatever reason don't work being
 					// required server-side directly and must be bundled into

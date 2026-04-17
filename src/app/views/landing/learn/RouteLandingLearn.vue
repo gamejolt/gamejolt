@@ -7,7 +7,11 @@ import { useCommonStore } from '~common/store/common-store';
 import AppThemeSvg from '~common/theme/svg/AppThemeSvg.vue';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 
-const assetPaths = import.meta.glob('./*.(svg|png)', { eager: true, as: 'url' });
+const assetPaths = import.meta.glob<string>('./*.(svg|png)', {
+	eager: true,
+	query: '?url',
+	import: 'default',
+});
 
 export default {
 	...defineAppRouteOptions({

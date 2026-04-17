@@ -30,7 +30,11 @@ export const GJ_EMOJIS = [
 
 export const emojiBaseSize = buildCSSPixelValue(24);
 
-const assetPaths = import.meta.glob('./*.png', { eager: true, as: 'url' });
+const assetPaths = import.meta.glob<string>('./*.png', {
+	eager: true,
+	query: '?url',
+	import: 'default',
+});
 </script>
 
 <script lang="ts" setup>

@@ -1,4 +1,8 @@
-const images = import.meta.glob('./images/*.png', { eager: true, as: 'url' });
+const images = import.meta.glob<string>('./images/*.png', {
+	eager: true,
+	query: '?url',
+	import: 'default',
+});
 
 export interface TagInfo {
 	id: string;

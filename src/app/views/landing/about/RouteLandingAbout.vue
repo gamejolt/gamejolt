@@ -11,7 +11,11 @@ import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import { $gettext } from '~common/translate/translate.service';
 import { arrayShuffle } from '~utils/array';
 
-const assetUrls = import.meta.glob('./*.(png|jpg)', { eager: true, as: 'url' });
+const assetUrls = import.meta.glob<string>('./*.(png|jpg)', {
+	eager: true,
+	query: '?url',
+	import: 'default',
+});
 
 const colors = {
 	'#ccff00': 'black',
