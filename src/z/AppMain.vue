@@ -13,7 +13,7 @@ const { user } = useCommonStore();
 	<AppCommonShell>
 		<AppUserBar :user="user" />
 
-		<div id="content" class="container">
+		<div id="content" class="gj-container">
 			<AppErrorPage>
 				<RouterView />
 			</AppErrorPage>

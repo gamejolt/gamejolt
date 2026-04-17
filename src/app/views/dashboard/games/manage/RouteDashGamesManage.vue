@@ -67,7 +67,7 @@ const { isBootstrapped } = createAppRoute({
 <template>
 	<div v-if="isBootstrapped && game">
 		<section v-if="game.is_locked" class="section section-thin fill-notice">
-			<div class="container">
+			<div class="gj-container">
 				<div class="col-sm-10 col-md-8 col-lg-6 col-centered text-center">
 					<p>
 						<AppJolticon icon="notice" big />

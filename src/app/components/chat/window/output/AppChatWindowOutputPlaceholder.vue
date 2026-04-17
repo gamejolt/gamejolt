@@ -5,7 +5,6 @@ import {
 } from '~app/components/chat/window/variables';
 import { kChatRoomWindowPadding } from '~app/styles/variables';
 import { kThemeBg, kThemeBgSubtle } from '~common/theme/variables';
-import { styleBorderRadiusLg } from '~styles/mixins';
 </script>
 
 <template>
@@ -32,9 +31,8 @@ import { styleBorderRadiusLg } from '~styles/mixins';
 				}"
 			/>
 			<div
-				class="elevate-1"
+				class="elevate-1 rounded-lg"
 				:style="{
-					...styleBorderRadiusLg,
 					marginLeft: ChatWindowLeftGutterSize.px,
 					backgroundColor: kThemeBg,
 					maxWidth: `100%`,

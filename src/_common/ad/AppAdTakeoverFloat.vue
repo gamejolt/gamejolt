@@ -1,12 +1,7 @@
 <script lang="ts" setup></script>
 
 <template>
-	<div
-		:style="{
-			position: `relative`,
-			zIndex: `1`,
-		}"
-	>
+	<div class="relative z-[1]">
 		<slot />
 	</div>
 </template>

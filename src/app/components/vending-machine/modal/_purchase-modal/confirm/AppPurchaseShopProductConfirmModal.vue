@@ -6,7 +6,6 @@ import AppSpacer from '~common/spacer/AppSpacer.vue';
 import { $gettext } from '~common/translate/translate.service';
 import { UserModel } from '~common/user/user.model';
 import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
-import { styleBorderRadiusLg, styleChangeBg, styleFlexCenter } from '~styles/mixins';
 import { kFontSizeLarge, kFontSizeSmall } from '~styles/variables';
 
 type Props = {
@@ -32,30 +31,14 @@ const modal = useModal<boolean>()!;
 		</div>
 
 		<div class="modal-body">
-			<div
-				class="text-center"
-				:style="{
-					...styleFlexCenter({
-						direction: `column`,
-					}),
-				}"
-			>
+			<div class="text-center flex flex-col items-center justify-center">
 				<div
-					:style="{
-						...styleFlexCenter({ direction: `column` }),
-						...styleBorderRadiusLg,
-						...styleChangeBg('bg-offset'),
-						padding: `12px`,
-						maxWidth: `100%`,
-					}"
+					class="change-bg-bg-offset flex max-w-full flex-col items-center justify-center rounded-lg p-[12px]"
 				>
-					<AppUserAvatarBubble
-						:style="{ maxWidth: `100%`, width: `128px` }"
-						:user="giftUser"
-					/>
+					<AppUserAvatarBubble class="w-[128px] max-w-full" :user="giftUser" />
 					<AppSpacer :scale="2" vertical />
 					<div :style="{ fontSize: kFontSizeSmall.px }">@{{ giftUser.username }}</div>
-					<div :style="{ fontSize: kFontSizeLarge.px, fontWeight: `bold` }">
+					<div class="font-bold" :style="{ fontSize: kFontSizeLarge.px }">
 						{{ giftUser.display_name }}
 					</div>
 				</div>
@@ -69,13 +52,8 @@ const modal = useModal<boolean>()!;
 
 			<AppSpacer :scale="6" vertical />
 
-			<div :style="{ display: `flex` }">
-				<AppButton
-					:style="{ marginLeft: `auto` }"
-					solid
-					primary
-					@click="modal.resolve(true)"
-				>
+			<div class="flex">
+				<AppButton class="ml-auto" solid primary @click="modal.resolve(true)">
 					{{ $gettext(`Purchase`) }}
 				</AppButton>
 			</div>

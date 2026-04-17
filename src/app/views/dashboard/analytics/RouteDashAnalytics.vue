@@ -650,7 +650,7 @@ function _metricChanged() {
 				<AppSpacer vertical :scale="4" />
 
 				<section class="section -reports fill-backdrop">
-					<div class="container">
+					<div class="gj-container">
 						<div v-for="(report, i) of pageReports" :id="`report-${i}`" :key="i">
 							<h2 :class="{ 'section-header': i === 0 }">
 								{{ report.title }}

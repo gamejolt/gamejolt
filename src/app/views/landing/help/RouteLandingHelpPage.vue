@@ -81,7 +81,7 @@ const canModerate = computed(() => user.value && user.value.permission_level > 3
 			<AppContentViewer :source="page.content" />
 		</div>
 		<hr />
-		<div :style="{ maxWidth: `400px` }">
+		<div class="max-w-[400px]">
 			<AppShareCard resource="help-page" :url="page.getShareUrl()" offset-color />
 		</div>
 	</div>

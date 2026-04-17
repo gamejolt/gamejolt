@@ -25,7 +25,6 @@ import { Screen } from '~common/screen/screen-service';
 import { useCommonStore } from '~common/store/common-store';
 import AppThemeSvg from '~common/theme/svg/AppThemeSvg.vue';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
-import { styleWhen } from '~styles/mixins';
 
 const AppShellAccountPopover = defineAsyncComponent(
 	() => import('~app/components/shell/AppShellAccountPopover.vue')
@@ -187,15 +186,7 @@ trackExperimentEngagement(configShowStoreInMoreMenu);
 			</div>
 		</div>
 
-		<div
-			class="navbar-center"
-			:style="{
-				...styleWhen(!shouldShowSearch, {
-					// Allow this space to collapse if there's nothing to show.
-					minWidth: 0,
-				}),
-			}"
-		>
+		<div class="navbar-center" :class="{ '!min-w-0': !shouldShowSearch }">
 			<AppConfigLoaded class="-search">
 				<!-- Search Input -->
 				<AppSearch v-if="shouldShowSearch" />

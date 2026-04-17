@@ -7,14 +7,7 @@ import { useOnHover } from '~common/on/useOnHover';
 import AppTheme from '~common/theme/AppTheme.vue';
 import { kThemeFg, kThemePrimary } from '~common/theme/variables';
 import { UserModel } from '~common/user/user.model';
-import {
-	styleAbsoluteFill,
-	styleBorderRadiusLg,
-	styleFlexCenter,
-	styleOverlayTextShadow,
-	styleTyped,
-	styleWhen,
-} from '~styles/mixins';
+import { styleTyped } from '~styles/mixins';
 import { kBorderWidthBase } from '~styles/variables';
 
 type Props = {
@@ -28,13 +21,12 @@ const { hoverBinding, hovered } = useOnHover();
 <template>
 	<AppTheme :force-dark="!!user.header_media_item">
 		<RouterLink
-			class="sheet sheet-elevate"
+			class="sheet sheet-elevate rounded-lg"
 			v-bind="{
 				...hoverBinding,
 			}"
 			:style="
 				styleTyped({
-					...styleBorderRadiusLg,
 					display: `block`,
 					position: `relative`,
 					overflow: `hidden`,
@@ -47,7 +39,7 @@ const { hoverBinding, hovered } = useOnHover();
 			}"
 		>
 			<!-- Backdrop -->
-			<div v-if="user.header_media_item" :style="styleAbsoluteFill({ zIndex: 1 })">
+			<div v-if="user.header_media_item" class="absolute inset-0 z-[1]">
 				<AppImgResponsive
 					:src="user.header_media_item.mediaserver_url"
 					:style="{
@@ -62,21 +54,13 @@ const { hoverBinding, hovered } = useOnHover();
 
 			<!-- Content -->
 			<div
-				:style="{
-					...styleFlexCenter({
-						gap: `12px`,
-					}),
-					color: kThemeFg,
-					position: `relative`,
-					zIndex: 3,
-					...styleWhen(!!user.header_media_item, {
-						...styleOverlayTextShadow,
-					}),
-				}"
+				class="relative z-[3] flex items-center justify-center gap-[12px]"
+				:class="{ 'overlay-text-shadow': !!user.header_media_item }"
+				:style="{ color: kThemeFg }"
 			>
-				<AppJolticon icon="marketplace-filled" :style="{ margin: 0 }" big />
+				<AppJolticon class="m-0" icon="marketplace-filled" big />
 
-				<h3 :style="{ flex: `auto`, margin: 0 }">
+				<h3 class="m-0 flex-auto">
 					{{ $gettext(`@%{ username }'s Shop`, { username: user.username }) }}
 				</h3>
 

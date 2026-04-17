@@ -12,7 +12,6 @@ import AppMobileAppButtons from '~common/mobile-app/AppMobileAppButtons.vue';
 import { Screen } from '~common/screen/screen-service';
 import AppThemeSvg from '~common/theme/svg/AppThemeSvg.vue';
 import { $gettext } from '~common/translate/translate.service';
-import { styleWhen } from '~styles/mixins';
 import { arrayShuffle } from '~utils/array';
 import { useFullscreenHeight } from '~utils/fullscreen';
 
@@ -106,8 +105,8 @@ function onPostLoaded(post: FiresidePostModel) {
 		</template> -->
 
 		<div
-			class="container -container"
-			:style="styleWhen(!shouldShowTakeover, { position: `relative`, zIndex: 2 })"
+			class="gj-container -container"
+			:style="!shouldShowTakeover ? { position: `relative`, zIndex: 2 } : undefined"
 		>
 			<AppThemeSvg
 				v-if="Screen.isXs"

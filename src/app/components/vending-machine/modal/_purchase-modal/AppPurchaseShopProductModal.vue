@@ -49,7 +49,6 @@ import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import { $gettext } from '~common/translate/translate.service';
 import { UserModel } from '~common/user/user.model';
 import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
-import { styleBorderRadiusLg, styleFlexCenter, styleWhen } from '~styles/mixins';
 import {
 	kBorderWidthBase,
 	kFontFamilyDisplay,
@@ -434,8 +433,8 @@ async function onClickGift(sale: InventoryShopProductSaleModel) {
 
 		<div class="modal-body">
 			<AppLoadingFade :is-loading="isLoading">
-				<div v-if="!productData" :style="styleFlexCenter({ direction: 'column' })">
-					<div v-if="isLoading" :style="{ ...styleFlexCenter(), minHeight: `300px` }">
+				<div v-if="!productData" class="flex flex-col items-center justify-center">
+					<div v-if="isLoading" class="flex min-h-[300px] items-center justify-center">
 						<AppLoading centered stationary />
 					</div>
 					<template v-else>
@@ -448,12 +447,8 @@ async function onClickGift(sale: InventoryShopProductSaleModel) {
 						</AppIllustration>
 					</template>
 				</div>
-				<div v-else :style="styleFlexCenter({ direction: 'column' })">
-					<AppProfileShopButton
-						v-if="productOwner"
-						:style="{ width: `100%` }"
-						:user="productOwner"
-					/>
+				<div v-else class="flex flex-col items-center justify-center">
+					<AppProfileShopButton v-if="productOwner" class="w-full" :user="productOwner" />
 
 					<AppShopProductDisplay
 						:product-data="productData"
@@ -462,25 +457,24 @@ async function onClickGift(sale: InventoryShopProductSaleModel) {
 
 					<AppSpacer vertical :scale="8" />
 
-					<div v-if="actionOptionsData" :style="{ width: `100%` }">
+					<div v-if="actionOptionsData" class="w-full">
 						<template v-if="actionOptionsData.chargeUser">
 							<AppOnHover>
 								<template #default="{ hoverBinding, hovered }">
 									<a
+										class="rounded-lg"
 										v-bind="{
 											...hoverBinding,
 											style: {
 												background: kThemeBgOffset,
-												...styleBorderRadiusLg,
-												borderColor: `transparent`,
+												borderColor: hovered
+													? kThemePrimary
+													: `transparent`,
 												display: `block`,
 												borderStyle: `solid`,
 												borderWidth: kBorderWidthBase.px,
 												padding: `${12 - kBorderWidthBase.value}px`,
 												transition: `border-color 300ms ${kStrongEaseOut}`,
-												...styleWhen(hovered, {
-													borderColor: kThemePrimary,
-												}),
 											},
 										}"
 										@click="gotoCreator(actionOptionsData.chargeUser)"
@@ -506,34 +500,21 @@ async function onClickGift(sale: InventoryShopProductSaleModel) {
 											</div>
 										</div>
 
-										<AppButton
-											:style="{ marginTop: `12px` }"
-											:force-hover="hovered"
-											block
-										>
+										<AppButton class="mt-[12px]" :force-hover="hovered" block>
 											{{ $gettext(`View profile`) }}
 										</AppButton>
 									</a>
 								</template>
 							</AppOnHover>
 						</template>
-						<div
-							v-else
-							:style="{
-								display: `flex`,
-								columnGap: `8px`,
-								alignItems: `center`,
-								height: `56px`,
-								width: `100%`,
-							}"
-						>
+						<div v-else class="flex h-[56px] w-full items-center gap-x-[8px]">
 							<template v-if="!giftUser">
 								<AppButton
 									v-if="sale"
+									class="pointer-events-none invisible"
 									icon="gift"
 									circle
 									solid
-									:style="{ visibility: `hidden`, pointerEvents: `none` }"
 								/>
 								<div
 									class="text-center"
@@ -556,16 +537,16 @@ async function onClickGift(sale: InventoryShopProductSaleModel) {
 							</template>
 							<template v-else>
 								<div
+									class="rounded-lg"
 									:style="{
 										display: `flex`,
 										columnGap: `12px`,
 										width: `100%`,
 										backgroundColor: kThemeBgOffset,
 										padding: `12px`,
-										...styleBorderRadiusLg,
 									}"
 								>
-									<AppSectionTitle :style="{ flex: `auto` }">
+									<AppSectionTitle class="flex-auto">
 										<template #avatar>
 											<AppUserAvatarBubble
 												:user="giftUser"
@@ -583,7 +564,7 @@ async function onClickGift(sale: InventoryShopProductSaleModel) {
 										<template #title> @{{ giftUser.username }} </template>
 									</AppSectionTitle>
 
-									<div :style="{ alignSelf: `center` }">
+									<div class="self-center">
 										<AppButton
 											solid
 											circle
@@ -607,20 +588,11 @@ async function onClickGift(sale: InventoryShopProductSaleModel) {
 					<AppSpacer vertical :scale="4" />
 
 					<template v-if="!disablePurchaseButtons || sale">
-						<div
-							:style="{
-								...styleFlexCenter(),
-								width: `100%`,
-								gap: `12px`,
-							}"
-						>
+						<div class="flex w-full items-center justify-center gap-[12px]">
 							<AppButton
 								v-for="[id, [currency, amount]] in currencyOptionsList"
 								:key="id"
-								:style="{
-									// Remove automatic margin from adjacent <button> elements.
-									margin: 0,
-								}"
+								class="m-0"
 								:disabled="
 									disablePurchaseButtons ||
 									!canAffordCurrency(currency.id, amount, balanceRefs)
@@ -692,7 +664,7 @@ async function onClickGift(sale: InventoryShopProductSaleModel) {
 
 					<AppSpacer vertical :scale="4" />
 
-					<div :style="{ width: `100%` }">
+					<div class="w-full">
 						<template v-if="productData.resource === 'Sticker_Pack'">
 							{{
 								$gettext(

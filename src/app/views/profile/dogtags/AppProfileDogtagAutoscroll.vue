@@ -2,7 +2,6 @@
 import { computed, ref, useTemplateRef } from 'vue';
 
 import { Ruler } from '~common/ruler/ruler-service';
-import { styleWhen } from '~styles/mixins';
 import { buildCSSPixelValue } from '~styles/variables';
 import { useResizeObserver } from '~utils/resize-observer';
 
@@ -59,9 +58,10 @@ const bleed = buildCSSPixelValue(6);
 				marginRight: `0 - ${bleed.px}`,
 				paddingLeft: bleed.px,
 				paddingRight: bleed.px,
-				...styleWhen(sizeDiff > 0, {
-					maskImage: `linear-gradient(to right, transparent 0, black ${bleed.px}, black calc(100% - var(--bleed)), transparent 100%)`,
-				}),
+				maskImage:
+					sizeDiff > 0
+						? `linear-gradient(to right, transparent 0, black ${bleed.px}, black calc(100% - var(--bleed)), transparent 100%)`
+						: undefined,
 			},
 		]"
 	>

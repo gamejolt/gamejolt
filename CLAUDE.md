@@ -152,10 +152,26 @@ Route lifecycle mapping:
 
 ## Styles
 
-- Prefer inline `<style lang="stylus" scoped>` inside the component file.
-- Only use an external `.styl` file (`<style lang="stylus" src="./ComponentName.styl">`) if the styles are shared across multiple components — in that case, omit `scoped`.
-- Use BEM-style nesting, `change-bg()` mixin, and CSS variables for theming.
-- Use `styleWhen()` from `_styles/mixins` for conditional inline styles.
+We are migrating from Stylus to **Tailwind v4**. See [MIGRATION_LEDGER.md](MIGRATION_LEDGER.md) for current progress.
+
+**New components and new styling**:
+
+- Use Tailwind utility classes in the template. Tokens are defined in [src/_styles/tailwind.css](src/_styles/tailwind.css) and reference the existing `--theme-*` runtime CSS variables written by [src/_common/theme/AppTheme.vue](src/_common/theme/AppTheme.vue), so `.theme-dark` keeps working automatically.
+- Available color tokens: `bg`, `bg-offset`, `bg-backdrop`, `bg-subtle`, `bg-actual`, `fg`, `fg-muted`, `highlight`, `highlight-fg`, `backlight`, `backlight-fg`, `notice`, `notice-fg`, `bi-bg`, `bi-fg`, `link`, `link-hover`, `primary`, `primary-fg`, `gray`, `gray-subtle`, `light`, `lighter`, `lightest`, `dark`, `darker`, `darkest`, `white`, `black`. Use as `bg-bg-offset`, `text-fg`, `border-gray`, etc.
+- Elevation: `shadow-elevate-xs`, `shadow-elevate-1`, `shadow-elevate-2`, `shadow-elevate-3`.
+- Fonts: `font-sans` (Nunito, default body), `font-heading` (Lato), `font-mono`, `font-display` (Staatliches).
+- Type scale: `text-tiny` (11px), `text-sm` (13px), `text-base` (15px), `text-lg` (19px).
+- Breakpoints: `sm:` 768px, `md:` 992px, `lg:` 1200px, `xl:` 1500px.
+- Dark mode: use `dark:` variant — it targets `.theme-dark` (not the media query).
+- **Spacing quirk**: `html { font-size: 62.5% }` in [src/_styles/common/scaffolding.styl](src/_styles/common/scaffolding.styl) makes `1rem = 10px`, so Tailwind's default `--spacing: 0.25rem` means `p-4` = `1rem` = `10px`. Account for this — existing pixel values in Stylus components translate as `Xpx` → `p-[X/2.5]` for spacing utilities. This is intentional; do NOT override `--spacing`.
+- For conditional classes, use Vue's `:class="{ 'foo': cond }"`. `styleWhen()` from `_styles/mixins.ts` is being removed — prefer the native class binding.
+- If Tailwind can't express something (keyframes, complex pseudo-element work), add a `@utility` in [src/_styles/tailwind.css](src/_styles/tailwind.css) or a plain `<style scoped>` block (no `lang="stylus"`).
+
+**Files not yet migrated** keep their `<style lang="stylus" scoped>` blocks — don't convert opportunistically, only when the component comes up in [MIGRATION_LEDGER.md](MIGRATION_LEDGER.md). The following style-helpers from [src/_styles/mixins.ts](src/_styles/mixins.ts) have been **removed** and are blocked by eslint: `styleWhen`, `styleChangeBg`, `styleChangeBgRgba`, `styleElevate`, `styleBorderRadiusBase`/`Sm`/`Lg`, `styleFlexCenter`, `styleScrollable`/`X`, `styleTextOverflow`, `styleAbsoluteFill`, `styleOverlayTextShadow`. Use Tailwind classes and utilities instead.
+
+Helpers that **remain** because they're genuinely runtime: `styleLineClamp(n)` (dynamic `n`), `styleCaret` (runtime color/direction), `styleMaxWidthForOptions` (runtime math), `styleTyped` (TS helper, not a style generator), `kElevateTransition` (transition constant reused by inline styles).
+
+The Bootstrap-derived `.container` class was renamed to `.gj-container` to avoid colliding with Tailwind's `container` utility.
 
 ---
 

@@ -26,7 +26,7 @@ createAppRoute({
 
 <template>
 	<section class="section landing-header text-center">
-		<div class="container">
+		<div class="gj-container">
 			<h1>
 				<RouterLink
 					:style="{

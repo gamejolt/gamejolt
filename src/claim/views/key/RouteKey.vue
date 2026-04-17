@@ -132,7 +132,7 @@ async function claim(resource: GameModel | GameBundleModel) {
 <template>
 	<div v-if="isBootstrapped">
 		<AppInvalidKey v-if="invalidKey" />
-		<section v-else class="container">
+		<section v-else class="gj-container">
 			<component
 				:is="component"
 				v-if="routePayload"

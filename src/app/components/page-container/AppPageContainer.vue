@@ -6,7 +6,6 @@ import { ComponentProps } from '~common/component-helpers';
 import { Screen } from '~common/screen/screen-service';
 import AppScrollAffix from '~common/scroll/AppScrollAffix.vue';
 import AppScrollScroller, { createScroller } from '~common/scroll/AppScrollScroller.vue';
-import { styleWhen } from '~styles/mixins';
 import { kGridGutterWidth } from '~styles/variables';
 </script>
 
@@ -149,7 +148,7 @@ const stickyScrollerStyles = computed<CSSProperties>(() => {
 <template>
 	<div
 		:class="{
-			container: !xl,
+			'gj-container': !xl,
 			'container-xl': xl,
 			'-no-left': !hasLeftColumn,
 			'-no-right': !hasRightColumn,
@@ -169,9 +168,7 @@ const stickyScrollerStyles = computed<CSSProperties>(() => {
 					<component
 						:is="stickySideData.left ? AppScrollScroller : 'div'"
 						class="_left-scroller"
-						:style="{
-							...styleWhen(stickySideData.left, stickyScrollerStyles),
-						}"
+						:style="stickySideData.left ? stickyScrollerStyles : undefined"
 						v-bind="{
 							...scrollerProps,
 							disabled: disabledProps.left,
@@ -201,9 +198,7 @@ const stickyScrollerStyles = computed<CSSProperties>(() => {
 					<component
 						:is="stickySideData.right ? AppScrollScroller : 'div'"
 						class="_right-scroller"
-						:style="{
-							...styleWhen(stickySideData.right, stickyScrollerStyles),
-						}"
+						:style="stickySideData.right ? stickyScrollerStyles : undefined"
 						v-bind="{
 							...scrollerProps,
 							disabled: disabledProps.right,

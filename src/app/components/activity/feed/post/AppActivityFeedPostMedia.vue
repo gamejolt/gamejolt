@@ -18,7 +18,7 @@ import { Screen } from '~common/screen/screen-service';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 import { kThemeBgActual } from '~common/theme/variables';
 import AppTouch, { AppTouchInput } from '~common/touch/AppTouch.vue';
-import { styleBorderRadiusLg, styleElevate, styleWhen } from '~styles/mixins';
+import { kElevateTransition } from '~styles/mixins';
 import { kBorderRadiusLg, kStrongEaseOut } from '~styles/variables';
 
 type Props = {
@@ -196,12 +196,15 @@ const vPadding = computed(() =>
 			<AppSpacer vertical :scale="2" />
 			<AppEventItemMediaIndicator
 				:inner-styles="
-					styleWhen(!!post.background && post.hasAnyMedia, {
-						...styleBorderRadiusLg,
-						...styleElevate(1),
-						backgroundColor: kThemeBgActual,
-						padding: `4px 6px`,
-					})
+					!!post.background && post.hasAnyMedia
+						? {
+								borderRadius: kBorderRadiusLg.px,
+								boxShadow: `var(--shadow-elevate-xs)`,
+								transition: kElevateTransition,
+								backgroundColor: kThemeBgActual,
+								padding: `4px 6px`,
+						  }
+						: undefined
 				"
 				:count="post.media.length"
 				:current="page"

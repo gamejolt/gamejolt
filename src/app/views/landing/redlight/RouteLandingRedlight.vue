@@ -97,7 +97,7 @@ createAppRoute({
 <template>
 	<div>
 		<section class="section landing-header text-center">
-			<div class="container">
+			<div class="gj-container">
 				<h1 class="anim-fade-in-down">
 					<img
 						:width="1068 / (Screen.isXs ? 4 : 2)"
@@ -131,7 +131,7 @@ createAppRoute({
 
 		<div class="landing-body redlight-landing-body">
 			<section class="section">
-				<div class="container">
+				<div class="gj-container">
 					<div class="row">
 						<div class="col-sm-7 col-centered">
 							<p class="lead">
@@ -204,7 +204,7 @@ createAppRoute({
 			</section>
 
 			<section class="section fill-offset">
-				<div class="container">
+				<div class="gj-container">
 					<div class="row">
 						<div class="col-lg-1" />
 						<div class="col-sm-7 col-md-6 col-lg-5">
@@ -267,7 +267,7 @@ createAppRoute({
 			</section>
 
 			<section class="section">
-				<div class="container">
+				<div class="gj-container">
 					<div class="row">
 						<div class="col-sm-7 col-centered">
 							<p class="lead">
@@ -309,7 +309,7 @@ createAppRoute({
 			</section>
 
 			<section class="section fill-black">
-				<div class="container">
+				<div class="gj-container">
 					<div class="row">
 						<div class="col-sm-7 col-centered">
 							<h2 class="text-center section-header">What the Industry is Saying</h2>
@@ -329,7 +329,7 @@ createAppRoute({
 			</section>
 
 			<section class="section">
-				<div class="container">
+				<div class="gj-container">
 					<div class="row">
 						<div class="col-sm-7 col-centered">
 							<h2 class="text-center section-header">FAQ</h2>
@@ -443,7 +443,7 @@ createAppRoute({
 			</section>
 
 			<section v-if="!user" class="section fill-offset">
-				<div class="container">
+				<div class="gj-container">
 					<h1 class="section-header text-center">Join</h1>
 
 					<hr class="underbar underbar-center" />

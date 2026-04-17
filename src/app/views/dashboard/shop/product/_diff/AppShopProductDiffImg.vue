@@ -9,7 +9,7 @@ import AppScrollScroller from '~common/scroll/AppScrollScroller.vue';
 import { ShopProductModel, ShopProductResource } from '~common/shop/product/product-model';
 import { StickerPackRatio } from '~common/sticker/pack/AppStickerPack.vue';
 import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
-import { styleFlexCenter, styleMaxWidthForOptions, styleWhen } from '~styles/mixins';
+import { styleMaxWidthForOptions } from '~styles/mixins';
 import { kBorderRadiusBase, kBorderRadiusLg } from '~styles/variables';
 import { isInstance } from '~utils/utils';
 
@@ -118,22 +118,19 @@ const gridAreaSizes = {
 			width: `100%`,
 			alignSelf: `center`,
 			// Can't clamp our image sizes if we're tiling a background.
-			...styleWhen(
-				!backgroundData?.tileSize,
-				styleMaxWidthForOptions({
-					ratio: imgData.placeholderRatio,
-					maxHeight: Math.max(250, Screen.height * 0.3),
-				})
-			),
+			...(!backgroundData?.tileSize
+				? styleMaxWidthForOptions({
+						ratio: imgData.placeholderRatio,
+						maxHeight: Math.max(250, Screen.height * 0.3),
+				  })
+				: {}),
 		}"
 	>
 		<template v-if="resource === ShopProductResource.Background">
 			<AppScrollScroller
 				v-if="backgroundData?.tileSize"
 				:style="{
-					...styleWhen(!!scrollableBackgroundSize, {
-						height: scrollableBackgroundSize?.height,
-					}),
+					height: scrollableBackgroundSize?.height,
 				}"
 				horizontal
 			>
@@ -141,19 +138,18 @@ const gridAreaSizes = {
 					:style="[
 						imgData.styles,
 						backgroundData.styles,
-						styleWhen(!!scrollableBackgroundSize, {
-							width: scrollableBackgroundSize!.width,
-							height: `100%`,
-						}),
+						scrollableBackgroundSize
+							? {
+									width: scrollableBackgroundSize.width,
+									height: `100%`,
+							  }
+							: {},
 					]"
 				>
 					<AppAspectRatio :ratio="imgData.placeholderRatio" />
 				</div>
 			</AppScrollScroller>
-			<div
-				v-else
-				:style="[imgData.styles, styleWhen(!!backgroundData, backgroundData!.styles)]"
-			>
+			<div v-else :style="[imgData.styles, backgroundData ? backgroundData.styles : {}]">
 				<AppAspectRatio :ratio="imgData.placeholderRatio" />
 			</div>
 		</template>
@@ -176,7 +172,12 @@ const gridAreaSizes = {
 					<div :style="imgData.styles">
 						<AppAspectRatio
 							:ratio="1"
-							:inner-styles="[styleFlexCenter(), { padding: `2px` }]"
+							:inner-styles="{
+								display: `flex`,
+								alignItems: `center`,
+								justifyContent: `center`,
+								padding: `2px`,
+							}"
 						>
 							<template v-if="resource === ShopProductResource.Sticker">
 								<img

@@ -7,7 +7,6 @@ import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import { ShopProductResource } from '~common/shop/product/product-model';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 import { kThemeBgSubtle } from '~common/theme/variables';
-import { styleFlexCenter } from '~styles/mixins';
 
 type Props = {
 	resource: ShopProductResource;
@@ -27,16 +26,9 @@ const { resource, ratio = 1 } = defineProps<Props>();
 		}"
 		center
 	>
-		<AppAspectRatio :ratio="ratio" :style="{ width: `100%` }">
-			<div
-				:style="{
-					...styleFlexCenter({ direction: `column` }),
-					width: `100%`,
-					height: `100%`,
-					fontWeight: `bold`,
-				}"
-			>
-				<AppJolticon icon="add" :style="{ margin: 0 }" />
+		<AppAspectRatio class="w-full" :ratio="ratio">
+			<div class="flex h-full w-full flex-col items-center justify-center font-bold">
+				<AppJolticon class="m-0" icon="add" />
 				<AppSpacer :scale="2" vertical />
 				{{ $gettext(`Add`) }}
 			</div>

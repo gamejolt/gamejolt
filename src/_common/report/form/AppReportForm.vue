@@ -427,7 +427,7 @@ function validateContextSelected() {
 
 				<div
 					v-if="form.formModel.reason === reason.radioValue && !!reason.contexts"
-					:style="{ marginLeft: `32px` }"
+					class="ml-[32px]"
 				>
 					<AppFormGroup
 						name="context"

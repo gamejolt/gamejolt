@@ -279,43 +279,23 @@ function syncTime() {
 </script>
 
 <template>
-	<div
-		ref="root"
-		:style="{
-			position: `relative`,
-		}"
-	>
+	<div ref="root" class="relative">
 		<template v-if="!GJ_IS_SSR">
 			<div
 				v-if="!isLoaded && showLoading"
-				:style="{
-					position: `absolute`,
-					top: 0,
-					right: 0,
-					bottom: 0,
-					left: 0,
-					backgroundColor: `rgba(0, 0, 0, 0.5)`,
-					zIndex: 2,
-					display: `flex`,
-					alignItems: `center`,
-					justifyContent: `center`,
-				}"
+				class="absolute inset-0 z-[2] flex items-center justify-center bg-[rgba(0,0,0,0.5)]"
 			>
 				<AppLoading hide-label no-color stationary />
 			</div>
 		</template>
 		<template v-else>
 			<video
+				class="block h-auto w-full"
 				:poster="player.poster"
 				:autoplay="shouldPlay"
 				:muted="player.context === 'gif'"
 				loop
 				playsinline
-				:style="{
-					display: `block`,
-					width: `100%`,
-					height: `auto`,
-				}"
 			>
 				<source
 					v-for="{ src, type } in player.sources"

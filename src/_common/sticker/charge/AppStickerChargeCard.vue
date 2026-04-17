@@ -113,8 +113,7 @@ const showFullyChargedText = computed(() => allowFullyChargedText && canChargeSt
 					<RouterLink
 						v-if="headerCharge"
 						:to="{ name: routeLandingCreators.name }"
-						class="link-muted"
-						:style="{ float: 'right' }"
+						class="link-muted float-right"
 					>
 						<AppTranslate> Learn more </AppTranslate>
 					</RouterLink>
@@ -124,12 +123,7 @@ const showFullyChargedText = computed(() => allowFullyChargedText && canChargeSt
 					<div v-if="headerSpacerHeight" :style="{ height: headerSpacerHeight }" />
 					<AppSpacer v-else vertical :scale="4" />
 				</template>
-				<AppLoadingFade
-					:style="{
-						width: '100%',
-					}"
-					:is-loading="isLoading"
-				>
+				<AppLoadingFade class="w-full" :is-loading="isLoading">
 					<div
 						class="_center-grid"
 						:class="

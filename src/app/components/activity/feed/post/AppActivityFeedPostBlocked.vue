@@ -3,6 +3,7 @@ import { computed, CSSProperties } from 'vue';
 
 import { stylePostFeedItem } from '~app/components/post/post-styles';
 import AppButton from '~common/button/AppButton.vue';
+import { Screen } from '~common/screen/screen-service';
 import { $gettext } from '~common/translate/translate.service';
 import { TranslateDirective as vTranslate } from '~common/translate/translate-directive';
 import { kFontSizeSmall } from '~styles/variables';
@@ -27,7 +28,7 @@ const itemStyles = computed(() => {
 </script>
 
 <template>
-	<div :style="itemStyles">
+	<div :class="['change-bg-bg', { 'rounded-lg': !Screen.isXs }]" :style="itemStyles">
 		<span v-translate="{ username }">
 			{{ $gettext(`Hidden post by blocked user @%{ username }.`, { username }) }}
 		</span>

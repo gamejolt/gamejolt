@@ -139,7 +139,7 @@ function insertAtCaret(text: string) {
 
 <template>
 	<div ref="rootElem" class="content-block-editor">
-		<div class="container">
+		<div class="gj-container">
 			<div class="row">
 				<div class="col-xs-9">
 					<p>

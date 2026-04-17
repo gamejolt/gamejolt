@@ -16,7 +16,6 @@ import { ThemeModel } from '~common/theme/theme.model';
 import { useThemeStore } from '~common/theme/theme.store';
 import { kThemeFg } from '~common/theme/variables';
 import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
-import { styleBorderRadiusLg, styleChangeBg, styleFlexCenter } from '~styles/mixins';
 import { kBorderWidthBase } from '~styles/variables';
 
 interface FormModel {
@@ -162,17 +161,10 @@ function setFiles(files: File[]) {
 
 			<AppForm :controller="form">
 				<div class="-selectors">
-					<input
-						ref="input"
-						:style="{ display: `none` }"
-						type="file"
-						@change="selectFile"
-					/>
+					<input ref="input" class="hidden" type="file" @change="selectFile" />
 					<div
-						class="-selectors-item"
+						class="-selectors-item rounded-lg flex items-center justify-center"
 						:style="{
-							...styleBorderRadiusLg,
-							...styleFlexCenter(),
 							border: `${kBorderWidthBase.px} solid ${kThemeFg}`,
 							padding: `6px 12px`,
 							cursor: `pointer`,
@@ -227,8 +219,8 @@ function setFiles(files: File[]) {
 						"
 					>
 						<AppUserAvatarImg
+							class="change-bg-bg-offset"
 							:style="{
-								...styleChangeBg('bg-offset'),
 								width: `100%`,
 								height: `100%`,
 								borderRadius: `50%`,

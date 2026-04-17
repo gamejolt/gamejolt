@@ -1,8 +1,6 @@
 <script lang="ts" setup>
 import { CSSProperties } from 'vue';
 
-import { styleChangeBg, styleFlexCenter } from '~styles/mixins';
-
 type Props = {
 	count: number;
 	current: number;
@@ -12,29 +10,13 @@ const { count, current, innerStyles } = defineProps<Props>();
 </script>
 
 <template>
-	<div
-		:style="{
-			...styleFlexCenter({ direction: 'row' }),
-		}"
-	>
-		<div
-			:style="{
-				display: `inline-flex`,
-				alignItems: `center`,
-				flexWrap: `wrap`,
-				gap: `4px`,
-				...innerStyles,
-			}"
-		>
+	<div class="flex flex-row items-center justify-center">
+		<div class="inline-flex items-center flex-wrap gap-[4px]" :style="innerStyles">
 			<div
 				v-for="i of count"
 				:key="i"
-				:style="{
-					...styleChangeBg(current === i ? 'primary' : 'bg-subtle'),
-					width: `6px`,
-					height: `6px`,
-					borderRadius: `50%`,
-				}"
+				class="w-[6px] h-[6px] rounded-full"
+				:class="current === i ? 'change-bg-primary' : 'change-bg-bg-subtle'"
 			/>
 		</div>
 	</div>

@@ -18,7 +18,6 @@ import AppStickerPack, { StickerPackRatio } from '~common/sticker/pack/AppSticke
 import { StickerPackModel } from '~common/sticker/pack/pack.model';
 import { kThemeFg10, kThemeFgMuted } from '~common/theme/variables';
 import { $gettext } from '~common/translate/translate.service';
-import { styleBorderRadiusBase, styleFlexCenter, styleWhen } from '~styles/mixins';
 import { kBorderRadiusBase, kFontSizeLarge, kFontSizeSmall } from '~styles/variables';
 import { isInstance } from '~utils/utils';
 
@@ -87,31 +86,24 @@ const mutedStyles = {
 </script>
 
 <template>
-	<div
-		:style="{
-			display: `flex`,
-			flexDirection: `column`,
-			gap: `16px`,
-		}"
-	>
+	<div class="flex flex-col gap-[16px]">
 		<!-- Label -->
-		<div :style="{ textAlign: `center`, fontWeight: `bold`, fontSize: kFontSizeLarge.px }">
+		<div class="text-center font-bold" :style="{ fontSize: kFontSizeLarge.px }">
 			{{ collectible.name }}
 		</div>
 
 		<!-- Image -->
-		<div :style="{ width: `100%`, alignSelf: `center`, maxWidth: `200px` }">
+		<div class="w-full max-w-[200px] self-center">
 			<AppAspectRatio :ratio="1">
 				<img
-					:style="[
-						{
-							width: `100%`,
-							height: `auto`,
-						},
-						styleWhen(collectible.type === CollectibleType.Background, {
-							borderRadius: kBorderRadiusBase.px,
-						}),
-					]"
+					:style="{
+						width: `100%`,
+						height: `auto`,
+						borderRadius:
+							collectible.type === CollectibleType.Background
+								? kBorderRadiusBase.px
+								: undefined,
+					}"
 					:src="collectible.image_url"
 					alt=""
 				/>
@@ -124,19 +116,11 @@ const mutedStyles = {
 			</h2>
 
 			<template v-if="typeof collectible.sticker_mastery === 'number'">
-				<div
-					:style="{
-						flex: `none`,
-						display: `flex`,
-						flexDirection: `row`,
-						alignItems: `center`,
-						gap: `8px`,
-					}"
-				>
-					<div :style="{ flex: `none`, fontSize: kFontSizeSmall.px }">
+				<div class="flex flex-none flex-row items-center gap-[8px]">
+					<div class="flex-none" :style="{ fontSize: kFontSizeSmall.px }">
 						{{ collectible.sticker_mastery }}%
 					</div>
-					<div :style="{ flex: `auto` }">
+					<div class="flex-auto">
 						<AppStickerMastery :progress="collectible.sticker_mastery" />
 					</div>
 				</div>
@@ -173,13 +157,7 @@ const mutedStyles = {
 				{{ $gettext(`Packs`) }}
 			</h2>
 
-			<div
-				:style="{
-					display: `grid`,
-					gridTemplateColumns: `repeat(2, 1fr)`,
-					gap: `8px`,
-				}"
-			>
+			<div class="grid grid-cols-2 gap-[8px]">
 				<div v-for="pack in maybePacks" :key="pack.id">
 					<AppStickerPack
 						v-if="isInstance(pack, StickerPackModel)"
@@ -195,14 +173,18 @@ const mutedStyles = {
 					/>
 					<AppAspectRatio
 						v-else
+						class="rounded"
 						:style="{
-							...styleBorderRadiusBase,
 							backgroundColor: kThemeFg10,
 						}"
 						:ratio="StickerPackRatio"
-						:inner-styles="styleFlexCenter()"
+						:inner-styles="{
+							display: `flex`,
+							alignItems: `center`,
+							justifyContent: `center`,
+						}"
 					>
-						<AppCircularProgress :style="{ width: `36px`, maxWidth: `100%` }" />
+						<AppCircularProgress class="w-[36px] max-w-full" />
 					</AppAspectRatio>
 				</div>
 			</div>

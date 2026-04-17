@@ -40,7 +40,7 @@ createAppRoute({
 <template>
 	<div>
 		<section class="section landing-header text-center">
-			<div class="container">
+			<div class="gj-container">
 				<h1>
 					<AppThemeSvg class="bolt" :src="imageJolt" alt="" strict-colors />
 					Marketplace
@@ -50,7 +50,7 @@ createAppRoute({
 
 		<div class="landing-body">
 			<section class="section">
-				<div class="container">
+				<div class="gj-container">
 					<h1 class="section-header text-center">This is how it works...</h1>
 					<hr class="underbar underbar-center" />
 					<br />
@@ -120,7 +120,7 @@ createAppRoute({
 			<hr class="underbar underbar-center" />
 
 			<section class="section">
-				<div class="container">
+				<div class="gj-container">
 					<div class="row">
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
@@ -209,7 +209,7 @@ createAppRoute({
 			</section>
 
 			<section class="section">
-				<div class="container">
+				<div class="gj-container">
 					<h1 class="section-header text-center">Start Selling Your Games</h1>
 
 					<hr class="underbar underbar-center" />

@@ -1,3 +1,4 @@
+import '~styles/tailwind.css';
 import '~claim/main.styl';
 
 import { router } from '~claim/views/index';

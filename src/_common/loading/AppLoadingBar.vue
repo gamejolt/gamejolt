@@ -3,8 +3,7 @@ import { computed, onMounted, ref, watch } from 'vue';
 import { type Router, useRouter } from 'vue-router';
 
 import { Api } from '~common/api/api.service';
-import { styleChangeBg } from '~styles/mixins';
-import { kLayerLoadingBar, kStrongEaseOut } from '~styles/variables';
+import { kStrongEaseOut } from '~styles/variables';
 
 /**
  * How long to wait after a request has started before showing the loading bar.
@@ -117,25 +116,13 @@ watch(apiRequestCount, () => {
 	<transition>
 		<div
 			v-if="width > 0 && shouldShow"
-			class="loading-bar anim-fade-enter anim-fade-leave"
-			:style="{
-				position: `fixed`,
-				top: 0,
-				left: 0,
-				right: 0,
-				height: `3px`,
-				pointerEvents: `none`,
-				zIndex: kLayerLoadingBar,
-			}"
+			class="loading-bar anim-fade-enter anim-fade-leave fixed top-0 left-0 right-0 h-[3px] pointer-events-none z-[2000]"
 		>
 			<div
-				class="loading-bar-bar"
+				class="loading-bar-bar change-bg-highlight h-[3px] [will-change:width]"
 				:style="{
-					...styleChangeBg('highlight'),
 					width: width + '%',
-					height: `3px`,
 					transition: `width 300ms ${kStrongEaseOut}`,
-					willChange: `width`,
 				}"
 			/>
 		</div>

@@ -5,7 +5,6 @@ import { useDynamicSlots } from '~common/component-helpers';
 import AppImgResponsive from '~common/img/AppImgResponsive.vue';
 import { MicrotransactionProductModel } from '~common/microtransaction/product.model';
 import { kThemeFg10 } from '~common/theme/variables';
-import { styleBorderRadiusBase } from '~styles/mixins';
 import { kFontFamilyHeading, kFontSizeLarge, kLineHeightBase } from '~styles/variables';
 
 type DynamicSlotsProp = 'trailing'[] | Record<'trailing', boolean> | boolean;
@@ -82,14 +81,13 @@ const itemTrailingStyles = computed(() => {
 });
 
 const placeholderStyles: CSSProperties = {
-	...styleBorderRadiusBase,
 	background: kThemeFg10,
 };
 </script>
 
 <template>
 	<div :style="itemStyles">
-		<div :style="itemLeadingStyles">
+		<div :class="{ rounded: isPlaceholder }" :style="itemLeadingStyles">
 			<AppImgResponsive
 				v-if="item"
 				:src="item.media_item.mediaserver_url"
@@ -102,7 +100,7 @@ const placeholderStyles: CSSProperties = {
 			/>
 		</div>
 
-		<div :style="itemTitleStyles">
+		<div :class="{ rounded: isPlaceholder }" :style="itemTitleStyles">
 			<template v-if="item">
 				{{ item.display_name }}
 			</template>
@@ -112,6 +110,7 @@ const placeholderStyles: CSSProperties = {
 			<slot name="trailing">
 				<div
 					v-if="isPlaceholder"
+					class="rounded"
 					:style="[
 						placeholderStyles,
 						{

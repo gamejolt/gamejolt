@@ -7,7 +7,6 @@ import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import { Screen } from '~common/screen/screen-service';
 import { useSidebarStore } from '~common/sidebar/sidebar.store';
 import { kThemeGjOverlayNotice } from '~common/theme/variables';
-import { styleWhen } from '~styles/mixins';
 
 type Props = {
 	isControl?: boolean;
@@ -86,12 +85,14 @@ const isShowingPane = computed(() => showAsActive.value && !!visibleLeftPane.val
 			v-if="notificationCount > 0 || showBlip"
 			class="-notification-count"
 			:style="
-				styleWhen(showBlip, {
-					width: `16px`,
-					height: `16px`,
-					padding: 0,
-					background: kThemeGjOverlayNotice,
-				})
+				showBlip
+					? {
+							width: `16px`,
+							height: `16px`,
+							padding: 0,
+							background: kThemeGjOverlayNotice,
+					  }
+					: undefined
 			"
 		>
 			{{ notificationCountText }}

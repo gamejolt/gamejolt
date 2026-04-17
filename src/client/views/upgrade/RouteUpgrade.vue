@@ -50,7 +50,7 @@ function update() {
 
 <template>
 	<div class="-wrapper">
-		<div class="-content container">
+		<div class="-content gj-container">
 			<AppIllustration class="-no-chat" :asset="illMaintenance" />
 
 			<AppSpacer vertical :scale="4" />

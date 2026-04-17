@@ -27,7 +27,7 @@ createAppRoute({
 <template>
 	<div class="fill-dark">
 		<section class="section">
-			<div class="container">
+			<div class="gj-container">
 				<div class="header-content">
 					<div class="title">
 						<div class="logo">
@@ -53,7 +53,7 @@ createAppRoute({
 		</section>
 
 		<section class="section fill-darker">
-			<div class="container">
+			<div class="gj-container">
 				<div class="content">
 					<div class="player-container">
 						<iframe
@@ -161,7 +161,7 @@ createAppRoute({
 		</section>
 
 		<section class="section">
-			<div class="container">
+			<div class="gj-container">
 				<div class="content">
 					<div class="description">
 						<div class="well desc-item">
@@ -238,7 +238,7 @@ createAppRoute({
 		</section>
 
 		<section class="section">
-			<div class="container">
+			<div class="gj-container">
 				<div class="content">
 					<div class="footer-desc lead">
 						We are redefining how you play games by converting to a cutting edge G.A.S.

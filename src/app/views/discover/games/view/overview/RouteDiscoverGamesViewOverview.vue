@@ -58,7 +58,7 @@ import AppSpacer from '~common/spacer/AppSpacer.vue';
 import { kThemeBgSubtle } from '~common/theme/variables';
 import { $gettext } from '~common/translate/translate.service';
 import { TranslateDirective as vTranslate } from '~common/translate/translate-directive';
-import { styleChangeBg, styleElevate, styleWhen } from '~styles/mixins';
+import { kElevateTransition } from '~styles/mixins';
 import { kBorderRadiusLg, kBorderWidthSm, kLayerAds, kLineHeightComputed } from '~styles/variables';
 import { getAbsoluteLink } from '~utils/router';
 
@@ -308,13 +308,14 @@ async function reloadPreviewComments() {
 							<AppScrollAffix
 								:style="{ position: `relative`, zIndex: kLayerAds }"
 								:padding="Screen.isLg ? 80 : 8"
-								:affixed-styles="styleWhen(Screen.width > 2300, { right: `8px` })"
+								:affixed-styles="Screen.width > 2300 ? { right: `8px` } : undefined"
 							>
 								<AppAdWidget
 									unit-name="mpu"
+									class-override="change-bg-bg"
 									:style-override="{
-										...styleChangeBg('bg'),
-										...styleElevate(3),
+										boxShadow: `var(--shadow-elevate-1)`,
+										transition: kElevateTransition,
 										minWidth: `300px`,
 										padding: `8px`,
 										borderRadius: kBorderRadiusLg.px,
@@ -447,7 +448,7 @@ async function reloadPreviewComments() {
 								<span class="lazy-placeholder" />
 								<span class="lazy-placeholder" />
 								<span class="lazy-placeholder" />
-								<span class="lazy-placeholder" :style="{ width: `40%` }" />
+								<span class="lazy-placeholder w-[40%]" />
 							</div>
 							<div v-else-if="game">
 								<!-- Set a :key to let vue know that it should update this when the game changes. -->

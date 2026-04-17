@@ -2,7 +2,6 @@
 import { UserModel } from '~common/user/user.model';
 import AppUserAvatar from '~common/user/user-avatar/AppUserAvatar.vue';
 import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
-import { styleWhen } from '~styles/mixins';
 
 type Props = {
 	user: UserModel;
@@ -32,9 +31,7 @@ defineProps<Props>();
 				height: `100%`,
 				// We want to separate the avatar from the page header styling,
 				// but only if they don't have a frame already.
-				...styleWhen(!user.avatar_frame, {
-					border: `5px solid #fff`,
-				}),
+				border: !user.avatar_frame ? `5px solid #fff` : undefined,
 			}"
 		>
 			<slot>

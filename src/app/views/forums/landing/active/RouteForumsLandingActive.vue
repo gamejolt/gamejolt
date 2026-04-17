@@ -31,7 +31,7 @@ createAppRoute({
 
 <template>
 	<div class="section">
-		<div class="container">
+		<div class="gj-container">
 			<div class="alert full-bleed-xs">
 				<p>
 					{{

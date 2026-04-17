@@ -2,10 +2,8 @@
 import { computed, Ref, ref } from 'vue';
 
 import { Ruler } from '~common/ruler/ruler-service';
-import { kThemeHighlight } from '~common/theme/variables';
 import AppTouch, { AppTouchInput } from '~common/touch/AppTouch.vue';
 import { scrubVideo, VideoPlayerController } from '~common/video/player/controller';
-import { styleChangeBg, styleWhen } from '~styles/mixins';
 import { buildCSSPixelValue } from '~styles/variables';
 
 type Props = {
@@ -80,11 +78,7 @@ const thumbScrubbingSize = buildCSSPixelValue(17);
 
 <template>
 	<AppTouch
-		class="player-control"
-		:style="{
-			position: `relative`,
-			padding: `8px 12px`,
-		}"
+		class="player-control relative py-[8px] px-[12px]"
 		:pan-options="{
 			direction: 'horizontal',
 			threshold: 0,
@@ -95,73 +89,40 @@ const thumbScrubbingSize = buildCSSPixelValue(17);
 		@tap="tap"
 		@click.capture.prevent
 	>
-		<div
-			ref="timebar"
-			:style="{
-				position: `relative`,
-			}"
-		>
+		<div ref="timebar" class="relative">
 			<div
+				class="absolute top-1/2 z-[11] flex cursor-pointer justify-center rounded-full bg-white"
+				:class="{ 'change-bg-highlight': player.isScrubbing }"
 				:style="{
-					position: `absolute`,
-					width: thumbSize.px,
-					height: thumbSize.px,
-					top: `50%`,
-					marginTop: `-${thumbSize.value / 2}px`,
-					marginRight: `-${thumbSize.value / 2}px`,
-					backgroundColor: `white`,
-					borderRadius: `50%`,
-					cursor: `pointer`,
-					transition: `${baseTransitions}, ${rightTransition}`,
-					zIndex: 11,
-					display: `flex`,
-					justifyContent: `center`,
+					width: player.isScrubbing ? thumbScrubbingSize.px : thumbSize.px,
+					height: player.isScrubbing ? thumbScrubbingSize.px : thumbSize.px,
+					marginTop: player.isScrubbing
+						? `-${thumbScrubbingSize.value / 2}px`
+						: `-${thumbSize.value / 2}px`,
+					marginRight: player.isScrubbing
+						? `-${thumbScrubbingSize.value / 2}px`
+						: `-${thumbSize.value / 2}px`,
+					transition: player.isScrubbing
+						? baseTransitions
+						: `${baseTransitions}, ${rightTransition}`,
 					right: filledRight,
-					...styleWhen(player.isScrubbing, {
-						...styleChangeBg('highlight'),
-						width: thumbScrubbingSize.px,
-						height: thumbScrubbingSize.px,
-						marginTop: `-${thumbScrubbingSize.value / 2}px`,
-						marginRight: `-${thumbScrubbingSize.value / 2}px`,
-						transition: baseTransitions,
-					}),
 				}"
 			/>
 
 			<div
-				:style="{
-					backgroundColor: `rgba(255,255,255, 0.4)`,
-					position: `absolute`,
-					width: `100%`,
-					top: `50%`,
-					marginTop: `-2px`,
-					height: `5px`,
-					borderRadius: `5px`,
-					overflow: `hidden`,
-				}"
+				class="absolute top-1/2 -mt-[2px] h-[5px] w-full overflow-hidden rounded-[5px] bg-[rgba(255,255,255,0.4)]"
 			>
 				<div
+					class="absolute top-0 left-0 bottom-0 bg-[rgba(255,255,255,0.2)]"
 					:style="{
-						backgroundColor: `rgba(255,255,255, 0.2)`,
-						position: `absolute`,
-						top: 0,
-						left: 0,
-						bottom: 0,
 						right: bufferedRight,
 					}"
 				/>
 				<div
+					class="absolute top-0 left-0 bottom-0 bg-highlight"
 					:style="{
-						backgroundColor: kThemeHighlight,
-						position: `absolute`,
-						top: 0,
-						left: 0,
-						bottom: 0,
 						right: filledRight,
-						transition: rightTransition,
-						...styleWhen(player.isScrubbing, {
-							transition: `none`,
-						}),
+						transition: player.isScrubbing ? `none` : rightTransition,
 					}"
 				/>
 			</div>

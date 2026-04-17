@@ -1,15 +1,13 @@
 <script lang="ts" setup>
 import { kThemeBgOffset } from '~common/theme/variables';
-import { styleScrollable } from '~styles/mixins';
 import { kBorderWidthBase, kFontSizeSmall } from '~styles/variables';
 </script>
 
 <template>
 	<div class="_tos-container">
 		<div
-			class="_tos-scroller-inner"
+			class="_tos-scroller-inner gj-scrollable"
 			:style="{
-				...styleScrollable,
 				borderColor: kThemeBgOffset,
 				padding: `10px`,
 				maxHeight: `500px`,

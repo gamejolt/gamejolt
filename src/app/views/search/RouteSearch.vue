@@ -211,7 +211,7 @@ const noResults = computed(() => {
 
 	<AppExpand :when="noResults">
 		<section class="section fill-offset">
-			<div class="container">
+			<div class="gj-container">
 				<AppTranslate>No results for that search query.</AppTranslate>
 			</div>
 		</section>

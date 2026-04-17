@@ -18,7 +18,7 @@ import { useCommonStore } from '~common/store/common-store';
 import { kThemeFg, kThemeFgMuted, kThemeGray } from '~common/theme/variables';
 import { $gettext } from '~common/translate/translate.service';
 import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
-import { styleElevate, styleTyped, styleWhen } from '~styles/mixins';
+import { styleTyped } from '~styles/mixins';
 import { kBorderRadiusLg, kFontSizeSmall, kStrongEaseOut } from '~styles/variables';
 
 type Props = {
@@ -98,7 +98,10 @@ const nameFontSize = kFontSizeSmall;
 <template>
 	<a
 		v-bind="hoverBinding"
-		class="theme-dark"
+		:class="[
+			'theme-dark elevate-transition',
+			hovered && !disablePurchases ? 'shadow-elevate-raw-2' : 'shadow-none',
+		]"
 		:style="
 			styleTyped({
 				borderRadius: kBorderRadiusLg.px,
@@ -107,13 +110,7 @@ const nameFontSize = kFontSizeSmall;
 				backgroundImage: `radial-gradient(circle at center bottom, rgba(128, 128, 128, 0.75), transparent 69%)`,
 				display: `flex`,
 				flexDirection: `column`,
-				...styleElevate(0),
-				...styleWhen(hovered && !disablePurchases, {
-					...styleElevate(2),
-				}),
-				...styleWhen(disablePurchases, {
-					cursor: `default`,
-				}),
+				cursor: disablePurchases ? `default` : undefined,
 			})
 		"
 		@click="onClickProduct()"
@@ -127,9 +124,7 @@ const nameFontSize = kFontSizeSmall;
 				zIndex: 1,
 				padding: `12px`,
 				transition: `transform ${kStrongEaseOut} 250ms`,
-				...styleWhen(hovered, {
-					transform: `translateY(-16px) scale(1.2)`,
-				}),
+				transform: hovered ? `translateY(-16px) scale(1.2)` : undefined,
 			}"
 		>
 			<AppAspectRatio
@@ -216,6 +211,7 @@ const nameFontSize = kFontSizeSmall;
 		<Transition name="fade">
 			<div
 				v-if="readableEndsOn && !hovered"
+				class="change-bg-black-54 rounded-lg"
 				:style="{
 					...StickerPackExpiryStyles,
 					zIndex: overlayTagZIndex,

@@ -39,7 +39,7 @@ createAppRoute({});
 
 <template>
 	<section class="section">
-		<div class="container">
+		<div class="gj-container">
 			<div class="row">
 				<div class="col-sm-8 col-md-6 col-lg-5 col-centered text-center">
 					<div>

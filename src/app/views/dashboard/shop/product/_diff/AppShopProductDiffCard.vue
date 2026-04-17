@@ -1,13 +1,6 @@
 <script lang="ts" setup>
 import { Screen } from '~common/screen/screen-service';
 import { kThemeBgOffset } from '~common/theme/variables';
-import {
-	styleBorderRadiusLg,
-	styleElevate,
-	styleFlexCenter,
-	styleTextOverflow,
-	styleWhen,
-} from '~styles/mixins';
 </script>
 
 <template>
@@ -21,8 +14,8 @@ import {
 		<!-- Header -->
 		<h6
 			v-if="$slots.header"
+			class="truncate"
 			:style="{
-				...styleTextOverflow,
 				marginTop: 0,
 				marginBottom: `4px`,
 				minWidth: 0,
@@ -33,31 +26,27 @@ import {
 
 		<!-- Card -->
 		<div
+			class="rounded-lg shadow-elevate-xs elevate-transition"
 			:style="{
-				...styleBorderRadiusLg,
-				...styleElevate(1),
 				backgroundColor: kThemeBgOffset,
-				padding: `24px`,
-				...styleWhen(Screen.isXs, {
-					padding: `12px`,
-				}),
+				padding: Screen.isXs ? `12px` : `24px`,
 			}"
 		>
 			<!-- Status/controls -->
 			<!-- This needs to always show to maintain the same height between items. -->
 			<div
+				class="flex items-center justify-center"
 				:style="{
-					...styleFlexCenter(),
 					gap: `12px`,
 					height: `40px`,
 					marginBottom: `24px`,
 				}"
 			>
-				<div v-if="$slots.status" :style="{ flex: `auto`, position: `relative` }">
+				<div v-if="$slots.status" class="relative flex-auto">
 					<slot name="status" />
 				</div>
 
-				<div v-if="$slots.controls" :style="{ flex: `none`, position: `relative` }">
+				<div v-if="$slots.controls" class="relative flex-none">
 					<slot name="controls" />
 				</div>
 			</div>

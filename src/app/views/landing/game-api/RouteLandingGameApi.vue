@@ -39,7 +39,7 @@ createAppRoute({
 <template>
 	<div>
 		<section class="section landing-header text-center">
-			<div class="container">
+			<div class="gj-container">
 				<h1>
 					<AppThemeSvg
 						:src="imageJolt"
@@ -70,7 +70,7 @@ createAppRoute({
 		</section>
 
 		<section class="section">
-			<div class="container">
+			<div class="gj-container">
 				<div class="row text-center">
 					<div class="col-lg-3" />
 					<div v-if="totalScores" class="col-lg-2">
@@ -102,7 +102,7 @@ createAppRoute({
 		</section>
 
 		<section class="section">
-			<div class="container">
+			<div class="gj-container">
 				<div class="row">
 					<div class="col-lg-4">
 						<div class="landing-graphic">

@@ -21,7 +21,7 @@ import { StickerPackModel } from '~common/sticker/pack/pack.model';
 import { StickerModel } from '~common/sticker/sticker.model';
 import { kThemeBg, kThemeBgOffset, kThemeFg } from '~common/theme/variables';
 import { $gettext } from '~common/translate/translate.service';
-import { styleBorderRadiusLg, styleFlexCenter, styleTyped, styleWhen } from '~styles/mixins';
+import { styleTyped } from '~styles/mixins';
 import { kStrongEaseOut } from '~styles/variables';
 
 type Props = {
@@ -213,9 +213,9 @@ async function removeSticker(sticker: StickerModel) {
 				>
 					<div
 						v-bind="hoverBinding"
+						class="rounded-lg"
 						:style="
 							styleTyped({
-								...styleBorderRadiusLg,
 								backgroundColor: kThemeBgOffset,
 								padding: `12px`,
 								position: `relative`,
@@ -228,22 +228,17 @@ async function removeSticker(sticker: StickerModel) {
 								padding: `20px`,
 								top: `-${20 + 8}px`,
 								right: `-${20 + 8}px`,
-								opacity: 0,
-								transform: `scale(0)`,
+								opacity: hovered ? 1 : 0,
+								transform: hovered ? `scale(1)` : `scale(0)`,
 								transition: `all 300ms ${kStrongEaseOut}`,
-								pointerEvents: `none`,
+								pointerEvents: hovered ? `initial` : `none`,
 								cursor: `pointer`,
-								...styleWhen(hovered, {
-									opacity: 1,
-									transform: `scale(1)`,
-									pointerEvents: `initial`,
-								}),
 							}"
 							@click="removeSticker(sticker)"
 						>
 							<div
+								class="flex items-center justify-center"
 								:style="{
-									...styleFlexCenter(),
 									width: `30px`,
 									height: `30px`,
 									borderRadius: `50%`,
@@ -254,10 +249,7 @@ async function removeSticker(sticker: StickerModel) {
 								<AppJolticon icon="remove" />
 							</div>
 						</div>
-						<AppStickerImg
-							:src="sticker.img_url"
-							:style="{ width: `100%`, height: `100%` }"
-						/>
+						<AppStickerImg class="h-full w-full" :src="sticker.img_url" />
 					</div>
 				</AppOnHover>
 			</div>

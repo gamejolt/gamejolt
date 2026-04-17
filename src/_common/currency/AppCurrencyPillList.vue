@@ -4,7 +4,6 @@ import { CSSProperties } from 'vue';
 import AppCurrencyPill from '~common/currency/AppCurrencyPill.vue';
 import { CurrencyCostData } from '~common/currency/currency-type';
 import { ThemeColor } from '~common/theme/variables';
-import { styleWhen } from '~styles/mixins';
 
 type Props = {
 	currencies: CurrencyCostData;
@@ -31,15 +30,13 @@ const {
 <template>
 	<!-- AppCurrencyPillList -->
 	<div
+		class="inline-flex"
+		:class="{ 'flex-wrap': wrap }"
 		:style="{
-			display: `inline-flex`,
 			flexDirection: direction,
 			alignItems: crossAlign,
 			justifyContent: mainAlign,
 			gap: typeof gap === 'number' ? `${gap}px` : gap,
-			...styleWhen(wrap, {
-				flexWrap: 'wrap',
-			}),
 		}"
 	>
 		<AppCurrencyPill

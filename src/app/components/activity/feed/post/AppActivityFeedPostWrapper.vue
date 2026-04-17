@@ -2,6 +2,7 @@
 import { computed, HTMLAttributes } from 'vue';
 
 import { useOnHover } from '~common/on/useOnHover';
+import { Screen } from '~common/screen/screen-service';
 
 defineProps</* @vue-ignore */ Pick<HTMLAttributes, 'onClick'>>();
 import { stylePostFeedItem } from '~app/components/post/post-styles';
@@ -16,7 +17,11 @@ const itemStyles = computed(() => stylePostFeedItem({ isHovered: hovered }));
 </script>
 
 <template>
-	<div v-bind="hoverBinding" :style="itemStyles">
+	<div
+		v-bind="hoverBinding"
+		:class="['change-bg-bg', { 'rounded-lg': !Screen.isXs }]"
+		:style="itemStyles"
+	>
 		<slot />
 	</div>
 </template>

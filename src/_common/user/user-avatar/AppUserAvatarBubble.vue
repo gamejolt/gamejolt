@@ -9,7 +9,6 @@ import { ThemeColor } from '~common/theme/variables';
 import AppUserVerifiedWrapper from '~common/user/AppUserVerifiedWrapper.vue';
 import { UserCommonFields } from '~common/user/user.model';
 import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
-import { styleChangeBg } from '~styles/mixins';
 
 type Props = {
 	user: UserCommonFields | null;
@@ -80,8 +79,8 @@ const href = computed(() => {
 			>
 				<AppAvatarFrame :frame="avatarFrame" :hide-frame="!showFrame" :smoosh="smoosh">
 					<div
+						:class="`change-bg-${bgColor}`"
 						:style="{
-							...styleChangeBg(bgColor),
 							borderRadius: `50%`,
 							overflow: `hidden`,
 							// Some containers end up adjusting the size of this avatar
@@ -92,11 +91,7 @@ const href = computed(() => {
 						}"
 					>
 						<slot>
-							<AppUserAvatarImg
-								class="_img"
-								:style="{ borderRadius: `50%` }"
-								:user="user"
-							/>
+							<AppUserAvatarImg class="_img rounded-full" :user="user" />
 						</slot>
 					</div>
 				</AppAvatarFrame>

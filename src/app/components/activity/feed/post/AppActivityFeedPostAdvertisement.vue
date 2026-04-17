@@ -21,7 +21,6 @@ import AppImgResponsive from '~common/img/AppImgResponsive.vue';
 import { Screen } from '~common/screen/screen-service';
 import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
 import { $gettext } from '~common/translate/translate.service';
-import { styleAbsoluteFill } from '~styles/mixins';
 import { kBorderRadiusLg } from '~styles/variables';
 
 const inviewConfig = new ScrollInviewConfig();
@@ -50,14 +49,7 @@ const vPadding = computed(() =>
 	<AppScrollInview :config="inviewConfig" @inview="emit('inview')">
 		<div :style="PostFeedItemContainerStyles">
 			<AppActivityFeedPostWrapper>
-				<a
-					:style="{
-						...styleAbsoluteFill({ zIndex: 2 }),
-					}"
-					:href
-					target="_blank"
-					@click="emit('click')"
-				/>
+				<a class="absolute inset-0 z-[2]" :href target="_blank" @click="emit('click')" />
 				<div :style="PostHeaderStyles">
 					<div :style="PostHeaderContentStyles">
 						<div :style="PostHeaderAvatarStyles">
@@ -71,7 +63,7 @@ const vPadding = computed(() =>
 							/>
 						</div>
 						<div :style="PostHeaderBylineStyles">
-							<div :style="PostHeaderBylineNameStyles(false)">
+							<div class="truncate" :style="PostHeaderBylineNameStyles(false)">
 								{{ displayName }}
 							</div>
 						</div>
@@ -101,7 +93,7 @@ const vPadding = computed(() =>
 					</div>
 				</div>
 
-				<div v-if="actionText" :style="{ marginTop: `24px` }">
+				<div v-if="actionText" class="mt-[24px]">
 					<AppButton block primary solid>{{ actionText }}</AppButton>
 				</div>
 			</AppActivityFeedPostWrapper>

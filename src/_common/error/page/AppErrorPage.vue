@@ -53,13 +53,10 @@ onUnmounted(() => {
 
 <template>
 	<div>
-		<section v-if="error && page" class="container error-page" :style="{ textAlign: `center` }">
-			<div :style="{ marginTop: `-190px` }">
+		<section v-if="error && page" class="gj-container error-page text-center">
+			<div class="mt-[-190px]">
 				<img
-					:style="{
-						display: `block`,
-						margin: `0 auto`,
-					}"
+					class="mx-auto block"
 					:src="errorImage"
 					:width="416 / 2"
 					:height="760 / 2"

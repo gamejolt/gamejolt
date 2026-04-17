@@ -101,7 +101,7 @@ createAppRoute({
 <template>
 	<AppShellPageBackdrop>
 		<section class="section">
-			<div class="container">
+			<div class="gj-container">
 				<RouterView />
 			</div>
 		</section>

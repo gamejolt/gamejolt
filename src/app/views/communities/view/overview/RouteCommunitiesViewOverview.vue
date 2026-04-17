@@ -149,7 +149,7 @@ const appRoute = createAppRoute({
 <template>
 	<div>
 		<section v-if="collaboratorInvite" class="section section-thin fill-highlight">
-			<div class="container text-center">
+			<div class="gj-container text-center">
 				<p>
 					<b>
 						{{ $gettext(`You've been invited to collaborate on this community.`) }}

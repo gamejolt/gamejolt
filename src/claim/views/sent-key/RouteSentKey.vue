@@ -10,7 +10,7 @@ createAppRoute({
 </script>
 
 <template>
-	<section class="container">
+	<section class="gj-container">
 		<p class="lead text-center">
 			{{ $gettext(`Awesome. We're sending you an email with your keys.`) }}
 		</p>

@@ -18,7 +18,7 @@ createAppRoute({});
 
 <template>
 	<div>
-		<div v-if="Screen.isMobile" class="container">
+		<div v-if="Screen.isMobile" class="gj-container">
 			<br />
 			<AppNavTabList>
 				<AppManageGameApiNav />
@@ -26,7 +26,7 @@ createAppRoute({});
 		</div>
 
 		<section class="section">
-			<div class="container">
+			<div class="gj-container">
 				<div class="row">
 					<div v-if="Screen.isDesktop" class="col-md-2">
 						<nav class="platform-list">

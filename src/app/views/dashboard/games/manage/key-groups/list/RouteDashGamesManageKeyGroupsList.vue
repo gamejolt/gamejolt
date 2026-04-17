@@ -79,7 +79,7 @@ createAppRoute({
 <template>
 	<div class="route-manage-key-groups">
 		<section class="section">
-			<div class="container">
+			<div class="gj-container">
 				<h2 class="section-header">
 					<AppTranslate>Access Keys</AppTranslate>
 				</h2>

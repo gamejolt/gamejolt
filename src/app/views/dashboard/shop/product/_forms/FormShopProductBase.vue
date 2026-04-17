@@ -61,7 +61,6 @@ import { StickerPackModel } from '~common/sticker/pack/pack.model';
 import { StickerModel } from '~common/sticker/sticker.model';
 import { kThemeBgOffset, kThemeFg10, kThemeGjOverlayNotice } from '~common/theme/variables';
 import { $gettext } from '~common/translate/translate.service';
-import { styleBorderRadiusLg, styleChangeBg } from '~styles/mixins';
 import { kBorderRadiusBase, kBorderWidthBase } from '~styles/variables';
 import { arrayRemove, arrayUnique, numberSort } from '~utils/array';
 import { isAnimatedPng } from '~utils/image';
@@ -682,8 +681,6 @@ const {
 } = data;
 
 const productTypeSelectorStyle: CSSProperties = {
-	...styleBorderRadiusLg,
-	...styleChangeBg('bg-offset'),
 	padding: `24px`,
 	border: `${kBorderWidthBase.px} solid ${kThemeFg10}`,
 	flex: 1,
@@ -750,10 +747,11 @@ const canBeAnimated = computed(
 				}"
 			>
 				<div
+					class="change-bg-bg-offset rounded-lg"
 					:style="productTypeSelectorStyle"
 					@click="chooseProductType(ShopDashProductType.Premium)"
 				>
-					<div :style="{ fontWeight: `bold` }">
+					<div class="font-bold">
 						{{ $gettext(`Premium`) }}
 					</div>
 					<div>
@@ -766,10 +764,11 @@ const canBeAnimated = computed(
 				</div>
 
 				<div
+					class="change-bg-bg-offset rounded-lg"
 					:style="productTypeSelectorStyle"
 					@click="chooseProductType(ShopDashProductType.Basic)"
 				>
-					<div :style="{ fontWeight: `bold` }">
+					<div class="font-bold">
 						{{ $gettext(`Basic`) }}
 					</div>
 					<div>
@@ -841,24 +840,19 @@ const canBeAnimated = computed(
 						{{ $gettext(`The latest changes were rejected.`) }}
 					</template>
 					<template v-else>
-						<div :style="{ marginBottom: `8px` }">
+						<div class="mb-[8px]">
 							{{
 								$gettext(
 									`The latest changes were rejected with the following reason:`
 								)
 							}}
 						</div>
-						<div
-							:style="{
-								whiteSpace: `pre-wrap`,
-								fontWeight: `normal`,
-							}"
-						>
+						<div class="font-normal whitespace-pre-wrap">
 							{{ changeRequest.rejection_message }}
 						</div>
 					</template>
 
-					<div :style="{ marginTop: `8px` }">
+					<div class="mt-[8px]">
 						{{ $gettext(`Please fix the issues and submit again.`) }}
 					</div>
 				</div>

@@ -119,7 +119,7 @@ function getStyleForAsset(sheet: ImgSlideshow): CSSProperties {
 </script>
 
 <template>
-	<div ref="root" :style="{ position: `relative` }">
+	<div ref="root" class="relative">
 		<slot />
 
 		<template v-if="chosenAsset">

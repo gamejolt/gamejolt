@@ -5,14 +5,16 @@ import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
 import AppImgResponsive from '~common/img/AppImgResponsive.vue';
 import AppMediaItemBackdrop from '~common/media-item/backdrop/AppMediaItemBackdrop.vue';
 import { StickerPackModel } from '~common/sticker/pack/pack.model';
-import { styleBorderRadiusLg, styleChangeBgRgba, styleElevate, styleWhen } from '~styles/mixins';
 import { kFontSizeSmall } from '~styles/variables';
 
 export const StickerPackRatio = 2 / 3;
 
+/**
+ * Styles for the expiry ribbon on a sticker pack. Use with the
+ * `change-bg-black-54` class (from tailwind.css) to get the translucent
+ * background.
+ */
 export const StickerPackExpiryStyles: CSSProperties = {
-	...styleChangeBgRgba(`0, 0, 0`, 0.54),
-	...styleBorderRadiusLg,
 	position: `absolute`,
 	padding: `2px 6px`,
 	color: `white`,
@@ -47,28 +49,18 @@ function onClickPack() {
 
 <template>
 	<div>
-		<div :style="{ position: `relative` }">
-			<a
-				:style="
-					styleWhen(!canClickPack, {
-						// Do this instead of a <component> tag to prevent image flickering.
-						cursor: `inherit`,
-					})
-				"
-				@click="onClickPack()"
-			>
+		<div class="relative">
+			<a :class="{ '!cursor-[inherit]': !canClickPack }" @click="onClickPack()">
 				<AppAspectRatio :ratio="StickerPackRatio" show-overflow>
 					<AppMediaItemBackdrop
-						:style="[
-							styleWhen(forceElevate, styleElevate(1)),
-							styleWhen(canClickPack, {
-								cursor: `pointer`,
-							}),
-							{
-								width: `100%`,
-								height: `100%`,
-							},
+						:class="[
+							'elevate-transition',
+							{ 'shadow-elevate-xs': forceElevate, 'cursor-pointer': canClickPack },
 						]"
+						:style="{
+							width: `100%`,
+							height: `100%`,
+						}"
 						:media-item="pack.media_item"
 						:color-opacity="loadedImage ? 0 : 1"
 					>

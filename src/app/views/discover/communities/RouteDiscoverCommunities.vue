@@ -107,7 +107,7 @@ const { isLoading: isRouteLoading } = createAppRoute({
 <template>
 	<AppShellPageBackdrop>
 		<section class="section">
-			<div class="container">
+			<div class="gj-container">
 				<h1 class="text-center">
 					{{ $gettext(`Browse Communities`) }}
 				</h1>

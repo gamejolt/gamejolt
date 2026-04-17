@@ -22,7 +22,6 @@ import { kThemeFg10 } from '~common/theme/variables';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import { $gettext } from '~common/translate/translate.service';
 import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
-import { styleFlexCenter, styleLineClamp, styleWhen } from '~styles/mixins';
 import { kFontSizeSmall, kFontSizeTiny, kStrongEaseOut } from '~styles/variables';
 
 type Props = {
@@ -157,10 +156,7 @@ const floatingInfoSpacerExpandedHeight = computed(() => floatingAvatarSize.value
 		<div
 			:style="{
 				...avatarExpandStyles,
-				height: 0,
-				...styleWhen(Screen.isDesktop && showAvatar, {
-					height: `${floatingAvatarSize.value * 0.6}px`,
-				}),
+				height: Screen.isDesktop && showAvatar ? `${floatingAvatarSize.value * 0.6}px` : 0,
 			}"
 		/>
 
@@ -169,16 +165,10 @@ const floatingInfoSpacerExpandedHeight = computed(() => floatingAvatarSize.value
 			class="sheet"
 			:style="{
 				...cardStyles,
-				...styleWhen(Screen.isMobile, {
-					// Use the same background as the parent on mobile.
-					backgroundColor: `inherit`,
-					// Bleed the bottom padding since this no longer appears as a sheet.
-					paddingBottom: 0,
-				}),
-				...styleWhen(Screen.isSm, {
-					paddingLeft: 0,
-					paddingRight: 0,
-				}),
+				backgroundColor: Screen.isMobile ? `inherit` : undefined,
+				paddingBottom: Screen.isMobile ? 0 : undefined,
+				paddingLeft: Screen.isSm ? 0 : undefined,
+				paddingRight: Screen.isSm ? 0 : undefined,
 			}"
 		>
 			<div
@@ -191,12 +181,11 @@ const floatingInfoSpacerExpandedHeight = computed(() => floatingAvatarSize.value
 			<div
 				:style="{
 					...avatarExpandStyles,
-					height: 0,
-					...styleWhen(showAvatar, {
-						height: Screen.isDesktop
+					height: showAvatar
+						? Screen.isDesktop
 							? `${floatingAvatarSize.value * 0.6 - 12}px`
-							: `${floatingInfoSpacerExpandedHeight}px`,
-					}),
+							: `${floatingInfoSpacerExpandedHeight}px`
+						: 0,
 				}"
 			>
 				<div
@@ -204,28 +193,24 @@ const floatingInfoSpacerExpandedHeight = computed(() => floatingAvatarSize.value
 						minWidth: `100%`,
 						height: `100%`,
 						position: `relative`,
-						...styleWhen(Screen.isMobile, {
-							transition: `opacity 100ms linear, transform 100ms linear`,
-							transform: `translateY(${fadeAvatar ? -50 : 0}%)`,
-							opacity: fadeAvatar ? 0 : 1,
-						}),
-						...styleWhen(!showAvatar, {
-							pointerEvents: `none`,
-						}),
+						transition: Screen.isMobile
+							? `opacity 100ms linear, transform 100ms linear`
+							: undefined,
+						transform: Screen.isMobile
+							? `translateY(${fadeAvatar ? -50 : 0}%)`
+							: undefined,
+						opacity: Screen.isMobile ? (fadeAvatar ? 0 : 1) : undefined,
+						pointerEvents: !showAvatar ? `none` : undefined,
 					}"
 				>
 					<Transition>
 						<div
 							v-if="showAvatar"
-							class="anim-fade-in-down anim-fade-leave-up"
+							class="anim-fade-in-down anim-fade-leave-up flex flex-col items-center justify-center"
 							:style="{
-								...styleFlexCenter({ direction: `column` }),
 								position: `absolute`,
 								width: `100%`,
-								bottom: 0,
-								...styleWhen(Screen.isDesktop, {
-									bottom: `24px`,
-								}),
+								bottom: Screen.isDesktop ? `24px` : 0,
 							}"
 						>
 							<AppUserAvatarBubble
@@ -241,8 +226,8 @@ const floatingInfoSpacerExpandedHeight = computed(() => floatingAvatarSize.value
 								smoosh
 							/>
 							<div
+								class="flex flex-col items-center justify-center"
 								:style="{
-									...styleFlexCenter({ direction: `column` }),
 									position: `relative`,
 									width: `100%`,
 									paddingTop: `8px`,
@@ -261,10 +246,10 @@ const floatingInfoSpacerExpandedHeight = computed(() => floatingAvatarSize.value
 									</div>
 									<div
 										v-app-tooltip.touchable="routeUser.display_name"
+										class="line-clamp-2"
 										:style="{
 											fontSize: kFontSizeTiny.px,
 											textAlign: `center`,
-											...styleLineClamp(2),
 										}"
 									>
 										{{ routeUser.display_name }}

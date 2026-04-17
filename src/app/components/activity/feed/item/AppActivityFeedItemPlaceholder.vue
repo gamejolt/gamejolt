@@ -14,6 +14,7 @@ import {
 	stylePostFeedItem,
 } from '~app/components/post/post-styles';
 import AppButtonPlaceholder from '~common/button/AppButtonPlaceholder.vue';
+import { Screen } from '~common/screen/screen-service';
 import { kThemeBgSubtle } from '~common/theme/variables';
 
 const itemStyles = computed(() => stylePostFeedItem({ isHovered: false }));
@@ -21,7 +22,7 @@ const itemStyles = computed(() => stylePostFeedItem({ isHovered: false }));
 
 <template>
 	<div :style="PostFeedItemContainerStyles">
-		<div :style="itemStyles">
+		<div :class="['change-bg-bg', { 'rounded-lg': !Screen.isXs }]" :style="itemStyles">
 			<div :style="PostHeaderStyles">
 				<div :style="PostHeaderContentStyles">
 					<div
@@ -32,7 +33,7 @@ const itemStyles = computed(() => stylePostFeedItem({ isHovered: false }));
 					/>
 
 					<div :style="PostHeaderBylineStyles">
-						<div :style="PostHeaderBylineNameStyles(false)">
+						<div class="truncate" :style="PostHeaderBylineNameStyles(false)">
 							<span class="-placeholder-text" style="width: 100px" />
 						</div>
 					</div>

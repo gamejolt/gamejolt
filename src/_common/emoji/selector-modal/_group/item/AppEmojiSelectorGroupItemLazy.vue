@@ -29,11 +29,7 @@ const emit = defineEmits<{
 	<!-- AppEmojiSelectorGroupItemLazy -->
 	<div
 		v-if="!emoji || !isInview || !groupData.isBootstrapped"
-		:style="{
-			width: `100%`,
-			paddingTop: `100%`,
-			height: 0,
-		}"
+		class="h-0 w-full pt-[100%]"
 	/>
 	<AppEmojiSelectorGroupItem
 		v-else

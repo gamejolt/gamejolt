@@ -4,19 +4,10 @@ import { formatFuzzynumberOverThreshold } from '~common/filters/fuzzynumber';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 import { useCommonStore } from '~common/store/common-store';
 import AppTopSupportersHeader from '~common/supporters/AppTopSupportersHeader.vue';
-import { kThemeFg, kThemeFg10, kThemeFgMuted } from '~common/theme/variables';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import AppUserCardHover from '~common/user/card/AppUserCardHover.vue';
 import { UserModel } from '~common/user/user.model';
 import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
-import {
-	styleBorderRadiusBase,
-	styleBorderRadiusLg,
-	styleChangeBg,
-	styleFlexCenter,
-	styleTextOverflow,
-} from '~styles/mixins';
-import { kBorderWidthSm, kFontSizeSmall, kFontSizeTiny } from '~styles/variables';
 
 export interface TopSupporter {
 	user: UserModel;
@@ -55,41 +46,17 @@ const { user: myUser } = useCommonStore();
 	<div>
 		<AppTopSupportersHeader v-if="!insetHeader" />
 
-		<div
-			:style="{
-				...styleBorderRadiusLg,
-				...styleChangeBg('bg'),
-				padding: `12px 16px`,
-			}"
-		>
+		<div class="change-bg-bg rounded-lg px-[16px] py-[12px]">
 			<AppTopSupportersHeader v-if="insetHeader" small />
 
-			<div
-				:style="{
-					display: `flex`,
-					gap: `16px`,
-				}"
-			>
+			<div class="flex gap-[16px]">
 				<RouterLink
 					v-for="{ user, value } of supporters"
 					:key="user.id"
-					:style="{
-						flex: 1,
-						display: `flex`,
-						flexDirection: `column`,
-						alignItems: `center`,
-						justifyContent: `flex-end`,
-						minWidth: 0,
-						color: kThemeFg,
-					}"
+					class="flex flex-1 flex-col items-center justify-end min-w-0 text-fg"
 					:to="user.routeLocation"
 				>
-					<div
-						:style="{
-							width: `100%`,
-							maxWidth: `64px`,
-						}"
-					>
+					<div class="w-full max-w-[64px]">
 						<AppUserCardHover :user="user">
 							<AppUserAvatarBubble :user="user" show-frame smoosh />
 						</AppUserCardHover>
@@ -99,12 +66,7 @@ const { user: myUser } = useCommonStore();
 
 					<div
 						v-app-tooltip="'@' + user.username"
-						:style="{
-							...styleTextOverflow,
-							maxWidth: `100%`,
-							minWidth: `0`,
-							fontSize: kFontSizeSmall.px,
-						}"
+						class="truncate max-w-full min-w-0 text-sm"
 					>
 						{{ '@' + user.username }}
 					</div>
@@ -112,16 +74,7 @@ const { user: myUser } = useCommonStore();
 					<AppSpacer vertical :scale="2" />
 
 					<AppAnimElectricity
-						:style="{
-							...styleBorderRadiusBase,
-							...styleChangeBg('bg-offset'),
-							minWidth: `32px`,
-							padding: `0px 6px`,
-							fontWeight: `bold`,
-							display: `inline-flex`,
-							justifyContent: `center`,
-							fontSize: kFontSizeSmall.px,
-						}"
+						class="change-bg-bg-offset rounded min-w-[32px] px-[6px] py-0 font-bold inline-flex justify-center text-sm"
 						shock-anim="wide-rect"
 					>
 						{{ formatFuzzynumberOverThreshold(value, 10_000) }}
@@ -131,43 +84,18 @@ const { user: myUser } = useCommonStore();
 
 			<template v-if="!!myUser && ownSupport.total > 0">
 				<div
-					:style="{
-						...styleFlexCenter({ direction: `row` }),
-						gap: `8px`,
-						fontSize: kFontSizeTiny.px,
-						color: kThemeFgMuted,
-						marginTop: `12px`,
-						marginBottom: `8px`,
-					}"
+					class="flex flex-row items-center justify-center gap-[8px] text-tiny text-fg-muted mt-[12px] mb-[8px]"
 				>
 					{{ $gettext(`Your stats`) }}
 
-					<div
-						:style="{
-							flex: `auto`,
-							background: kThemeFg10,
-							height: kBorderWidthSm.px,
-						}"
-					/>
+					<div class="flex-auto h-[1px] bg-[rgba(var(--theme-fg-rgb),0.1)]" />
 				</div>
 
 				<div
-					:style="{
-						flex: 1,
-						display: `flex`,
-						flexDirection: `row`,
-						alignItems: `center`,
-						justifyContent: `flex-start`,
-						minWidth: 0,
-						gap: `12px`,
-						color: kThemeFg,
-					}"
+					class="flex flex-1 flex-row items-center justify-start min-w-0 gap-[12px] text-fg"
 				>
 					<AppUserAvatarBubble
-						:style="{
-							flex: `auto`,
-							maxWidth: `56px`,
-						}"
+						class="flex-auto max-w-[56px]"
 						:user="myUser"
 						show-frame
 						smoosh
@@ -185,32 +113,14 @@ const { user: myUser } = useCommonStore();
 							},
 						]"
 						:key="data.label"
-						:style="{
-							flex: `1 1 0`,
-							whiteSpace: `nowrap`,
-							alignSelf: `center`,
-						}"
+						class="flex-[1_1_0] whitespace-nowrap self-center"
 					>
-						<div
-							:style="{
-								color: kThemeFgMuted,
-								fontSize: kFontSizeSmall.px,
-							}"
-						>
+						<div class="text-fg-muted text-sm">
 							{{ data.label }}
 						</div>
 
 						<AppAnimElectricity
-							:style="{
-								...styleBorderRadiusBase,
-								...styleChangeBg('bg-offset'),
-								minWidth: `32px`,
-								padding: `0px 6px`,
-								fontWeight: `bold`,
-								display: `inline-flex`,
-								justifyContent: `center`,
-								fontSize: kFontSizeSmall.px,
-							}"
+							class="change-bg-bg-offset rounded min-w-[32px] px-[6px] py-0 font-bold inline-flex justify-center text-sm"
 							shock-anim="wide-rect"
 						>
 							{{ formatFuzzynumberOverThreshold(data.count, 10_000) }}

@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import { styleFlexCenter } from '~styles/mixins';
-
 type Props = {
 	row?: boolean;
 };
@@ -10,13 +8,8 @@ defineProps<Props>();
 <template>
 	<div
 		v-if="$slots.default"
-		class="button-group"
-		:style="{
-			...styleFlexCenter({
-				direction: row ? 'row' : 'column',
-				gap: row ? '4px' : `5px`,
-			}),
-		}"
+		class="button-group flex items-center justify-center"
+		:class="row ? 'flex-row gap-[4px]' : 'flex-col gap-[5px]'"
 	>
 		<slot />
 	</div>

@@ -24,7 +24,6 @@ import {
 	kThemeGjOverlayNotice,
 } from '~common/theme/variables';
 import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
-import { styleBorderRadiusLg, styleFlexCenter, styleLineClamp, styleWhen } from '~styles/mixins';
 import { kFontSizeTiny } from '~styles/variables';
 import { isInstance } from '~utils/utils';
 
@@ -39,11 +38,10 @@ const { item, borderRadius, hovered, itemStates } = defineProps<Props>();
 const productType = computed(() => getShopDashProductType(item));
 
 const baseInfoTagStyles: CSSProperties = {
-	...styleBorderRadiusLg,
-	...styleFlexCenter({
-		display: `inline-flex`,
-		gap: `6px`,
-	}),
+	display: `inline-flex`,
+	alignItems: `center`,
+	justifyContent: `center`,
+	gap: `6px`,
 	padding: `2px 8px`,
 	fontSize: kFontSizeTiny.px,
 	fontWeight: `bold`,
@@ -52,7 +50,7 @@ const baseInfoTagStyles: CSSProperties = {
 </script>
 
 <template>
-	<div :style="{ width: `100%`, position: `relative` }">
+	<div class="relative w-full">
 		<!-- Image -->
 		<AppUserAvatarBubble
 			v-if="isInstance(item, AvatarFrameModel)"
@@ -86,17 +84,15 @@ const baseInfoTagStyles: CSSProperties = {
 
 		<!-- Premium/charge tag -->
 		<div
+			class="rounded-lg"
+			:class="{ 'opacity-0': hovered }"
 			:style="{
-				...styleBorderRadiusLg,
 				position: `absolute`,
 				top: `-12px`,
 				right: `-12px`,
 				zIndex: 1,
 				pointerEvents: `none`,
 				transition: `opacity 250ms`,
-				...styleWhen(hovered, {
-					opacity: 0,
-				}),
 			}"
 		>
 			<AppDashShopProductType :product-type="productType" />
@@ -105,8 +101,8 @@ const baseInfoTagStyles: CSSProperties = {
 		<!-- Name -->
 		<div
 			v-if="item.name"
+			class="line-clamp-2"
 			:style="{
-				...styleLineClamp(2),
 				marginTop: `4px`,
 				fontWeight: `bold`,
 				fontSize: kFontSizeTiny.px,
@@ -117,47 +113,41 @@ const baseInfoTagStyles: CSSProperties = {
 		</div>
 
 		<!-- Product state tags -->
-		<div
-			:style="
-				styleFlexCenter({
-					direction: `column`,
-				})
-			"
-		>
+		<div class="flex flex-col items-center justify-center">
 			<div
 				v-if="itemStates.published"
+				class="rounded-lg"
 				:style="{
 					...baseInfoTagStyles,
 					backgroundColor: kThemeBiBg,
 					color: kThemeBiFg,
 				}"
 			>
-				<AppJolticon :style="{ margin: 0, fontSize: `inherit` }" icon="marketplace" />
+				<AppJolticon class="m-0 text-[inherit]" icon="marketplace" />
 				{{ $gettext(`Published`) }}
 			</div>
 			<div
 				v-if="itemStates.inReview"
+				class="rounded-lg"
 				:style="{
 					...baseInfoTagStyles,
 					backgroundColor: kThemeFg10,
 					color: kThemeFg,
 				}"
 			>
-				<AppJolticon :style="{ margin: 0, fontSize: `inherit` }" icon="clock" />
+				<AppJolticon class="m-0 text-[inherit]" icon="clock" />
 				{{ $gettext(`In review`) }}
 			</div>
 			<div
 				v-if="itemStates.rejected"
+				class="rounded-lg"
 				:style="{
 					...baseInfoTagStyles,
 					backgroundColor: kThemeGjOverlayNotice,
 					color: `white`,
 				}"
 			>
-				<AppJolticon
-					:style="{ margin: 0, fontSize: `inherit` }"
-					icon="exclamation-circle"
-				/>
+				<AppJolticon class="m-0 text-[inherit]" icon="exclamation-circle" />
 				{{ $gettext(`Rejected`) }}
 			</div>
 		</div>

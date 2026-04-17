@@ -38,7 +38,7 @@ function proceed() {
 <template>
 	<div v-if="user">
 		<section v-if="shouldBlock" class="section fill-darker">
-			<div class="container">
+			<div class="gj-container">
 				<div class="row">
 					<div class="col-sm-10 col-md-8 col-lg-6 col-centered">
 						<div class="user-block">

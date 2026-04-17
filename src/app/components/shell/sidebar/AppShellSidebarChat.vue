@@ -8,7 +8,6 @@ import { illMaintenance } from '~common/illustration/illustrations';
 import AppLoading from '~common/loading/AppLoading.vue';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 import { $gettext } from '~common/translate/translate.service';
-import { styleChangeBg } from '~styles/mixins';
 
 const { closeChatPane } = useAppStore();
 const { chat } = useGridStore();
@@ -17,14 +16,8 @@ useEscapeStack(() => closeChatPane());
 </script>
 
 <template>
-	<div id="shell-chat-pane" :style="[styleChangeBg('bg'), { height: '100%' }]">
-		<div
-			:style="{
-				display: `flex`,
-				flexDirection: `column`,
-				height: `100%`,
-			}"
-		>
+	<div id="shell-chat-pane" class="change-bg-bg h-full">
+		<div class="flex h-full flex-col">
 			<template v-if="!chat?.connected && chat?.populated">
 				<AppIllustration
 					:asset="illMaintenance"

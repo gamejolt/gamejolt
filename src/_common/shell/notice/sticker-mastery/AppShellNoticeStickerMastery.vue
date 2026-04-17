@@ -7,8 +7,7 @@ import AppShellNoticeBase from '~common/shell/notice/_base/AppShellNoticeBase.vu
 import { StickerMasteryNotice } from '~common/shell/notice/notice.service';
 import AppStickerImg from '~common/sticker/AppStickerImg.vue';
 import { $gettext } from '~common/translate/translate.service';
-import { styleFlexCenter } from '~styles/mixins';
-import { kBorderWidthLg, kFontSizeLarge, kFontSizeTiny } from '~styles/variables';
+import { kBorderWidthLg, kFontSizeTiny } from '~styles/variables';
 import { clampNumber } from '~utils/number';
 import { sleep } from '~utils/utils';
 
@@ -154,10 +153,7 @@ function getSquareInCircle(diameter: number) {
 	>
 		<template #leading="{ size: leadingSize }">
 			<AppCircularProgress
-				:style="{
-					width: `100%`,
-					height: `100%`,
-				}"
+				class="h-full w-full"
 				:transition-ms="percentTransitionMs"
 				:percent="percentData.percent"
 				:stroke-width="progressStrokeWidth"
@@ -171,23 +167,17 @@ function getSquareInCircle(diameter: number) {
 					<div
 						v-else
 						:key="percentData.key"
+						class="flex items-center justify-center"
 						:style="{
 							width: `${getSquareInCircle(leadingSize)}px`,
 							height: `${getSquareInCircle(leadingSize)}px`,
-							...styleFlexCenter(),
 						}"
 					>
 						<template v-if="percentData.type === 'sticker'">
-							<AppStickerImg
-								:src="data.sticker.img_url"
-								:style="{ width: `100%`, height: `100%` }"
-							/>
+							<AppStickerImg class="h-full w-full" :src="data.sticker.img_url" />
 						</template>
 						<template v-else>
-							<AppJolticon
-								:icon="percentData.icon"
-								:style="{ margin: 0, fontSize: kFontSizeLarge.px }"
-							/>
+							<AppJolticon class="m-0 text-lg" :icon="percentData.icon" />
 						</template>
 					</div>
 				</Transition>

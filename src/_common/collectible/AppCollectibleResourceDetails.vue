@@ -27,13 +27,7 @@ import { StickerPackModel } from '~common/sticker/pack/pack.model';
 import { StickerModel } from '~common/sticker/sticker.model';
 import { kThemeFg10, kThemeFgMuted } from '~common/theme/variables';
 import { $gettext } from '~common/translate/translate.service';
-import {
-	styleBorderRadiusBase,
-	styleChangeBg,
-	styleFlexCenter,
-	styleMaxWidthForOptions,
-	styleWhen,
-} from '~styles/mixins';
+import { styleMaxWidthForOptions } from '~styles/mixins';
 import { kBorderRadiusLg, kFontSizeLarge, kFontSizeSmall } from '~styles/variables';
 import { arrayAssignAll } from '~utils/array';
 import { isInstance } from '~utils/utils';
@@ -244,15 +238,9 @@ const mutedStyles = {
 </script>
 
 <template>
-	<div
-		:style="{
-			display: `flex`,
-			flexDirection: `column`,
-			gap: `16px`,
-		}"
-	>
+	<div class="flex flex-col gap-[16px]">
 		<!-- Label -->
-		<div :style="{ textAlign: `center`, fontWeight: `bold`, fontSize: kFontSizeLarge.px }">
+		<div class="text-center font-bold" :style="{ fontSize: kFontSizeLarge.px }">
 			{{ name }}
 		</div>
 
@@ -274,25 +262,23 @@ const mutedStyles = {
 			"
 		>
 			<AppAspectRatio
+				class="change-bg-bg-offset"
 				:style="{
-					...styleChangeBg('bg-offset'),
 					borderRadius: kBorderRadiusLg.px,
 				}"
 				:ratio="1"
 				:inner-styles="{
-					...styleFlexCenter(),
-					...styleWhen(!background, {
-						padding: `12px`,
-					}),
+					display: `flex`,
+					alignItems: `center`,
+					justifyContent: `center`,
+					padding: !background ? `12px` : undefined,
 				}"
 			>
 				<AppImgResponsive
 					:src="imageUrl"
 					:style="{
-						...styleWhen(!!background, {
-							width: `100%`,
-							maxWidth: `100%`,
-						}),
+						width: background ? `100%` : undefined,
+						maxWidth: background ? `100%` : undefined,
 					}"
 				/>
 
@@ -310,19 +296,11 @@ const mutedStyles = {
 			</h2>
 
 			<template v-if="typeof stickerMastery === 'number'">
-				<div
-					:style="{
-						flex: `none`,
-						display: `flex`,
-						flexDirection: `row`,
-						alignItems: `center`,
-						gap: `8px`,
-					}"
-				>
-					<div :style="{ flex: `none`, fontSize: kFontSizeSmall.px }">
+				<div class="flex flex-none flex-row items-center gap-[8px]">
+					<div class="flex-none" :style="{ fontSize: kFontSizeSmall.px }">
 						{{ stickerMastery }}%
 					</div>
-					<div :style="{ flex: `auto` }">
+					<div class="flex-auto">
 						<AppStickerMastery :progress="stickerMastery" />
 					</div>
 				</div>
@@ -354,13 +332,7 @@ const mutedStyles = {
 			</div>
 		</div>
 
-		<AppLoading
-			v-if="isLoading"
-			:style="{ marginTop: `24px` }"
-			hide-label
-			centered
-			stationary
-		/>
+		<AppLoading v-if="isLoading" class="mt-[24px]" hide-label centered stationary />
 
 		<template v-if="collectible && (packs.length || collectibleResourceAcquisition)">
 			<template v-if="packs.length">
@@ -368,13 +340,7 @@ const mutedStyles = {
 					{{ $gettext(`Packs`) }}
 				</h2>
 
-				<div
-					:style="{
-						display: `grid`,
-						gridTemplateColumns: `repeat(2, 1fr)`,
-						gap: `8px`,
-					}"
-				>
+				<div class="grid grid-cols-2 gap-[8px]">
 					<div v-for="pack in packs" :key="pack.id">
 						<AppStickerPack
 							v-if="isInstance(pack, StickerPackModel)"
@@ -390,14 +356,18 @@ const mutedStyles = {
 						/>
 						<AppAspectRatio
 							v-else
+							class="rounded"
 							:style="{
-								...styleBorderRadiusBase,
 								backgroundColor: kThemeFg10,
 							}"
 							:ratio="StickerPackRatio"
-							:inner-styles="styleFlexCenter()"
+							:inner-styles="{
+								display: `flex`,
+								alignItems: `center`,
+								justifyContent: `center`,
+							}"
 						>
-							<AppCircularProgress :style="{ width: `36px`, maxWidth: `100%` }" />
+							<AppCircularProgress class="w-[36px] max-w-full" />
 						</AppAspectRatio>
 					</div>
 				</div>

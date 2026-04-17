@@ -304,6 +304,6 @@ function onCropValueChange() {
 
 <template>
 	<div class="img-crop">
-		<img ref="refImg" :style="{ maxWidth: `100%` }" :src="src" alt="" />
+		<img ref="refImg" class="max-w-full" :src="src" alt="" />
 	</div>
 </template>

@@ -77,7 +77,7 @@ function onClickCopy() {
 </script>
 
 <template>
-	<div class="container">
+	<div class="gj-container">
 		<h1 class="section-header">Generate your Featured Badge!</h1>
 
 		<AppForm :controller="form">

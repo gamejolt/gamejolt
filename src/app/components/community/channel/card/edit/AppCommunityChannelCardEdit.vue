@@ -6,7 +6,6 @@ import {
 import AppEditableOverlay from '~common/editable-overlay/AppEditableOverlay.vue';
 import { MediaItemModel } from '~common/media-item/media-item-model';
 import { $gettext } from '~common/translate/translate.service';
-import { styleBorderRadiusLg } from '~styles/mixins';
 
 type Props = {
 	background?: MediaItemModel | null;
@@ -24,8 +23,8 @@ function onClickEdit() {
 
 <template>
 	<AppEditableOverlay
+		class="rounded-lg"
 		:style="{
-			...styleBorderRadiusLg,
 			width: `${CommunityChannelCardWidth}px`,
 			height: `${CommunityChannelCardHeight}px`,
 			overflow: `hidden`,
@@ -40,8 +39,8 @@ function onClickEdit() {
 
 		<template #default>
 			<div
+				class="rounded-lg"
 				:style="{
-					...styleBorderRadiusLg,
 					display: `flex`,
 					alignItems: `center`,
 					width: `${CommunityChannelCardWidth}px`,
@@ -51,7 +50,7 @@ function onClickEdit() {
 			>
 				<img
 					v-if="background"
-					:style="{ width: `100%` }"
+					class="w-full"
 					:src="background.mediaserver_url"
 					:alt="background.mediaserver_url"
 				/>

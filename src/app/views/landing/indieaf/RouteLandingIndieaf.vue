@@ -55,7 +55,7 @@ createAppRoute({
 <template>
 	<div class="route-landing-indieaf fill-darkest">
 		<div class="indieaf-header">
-			<div class="container">
+			<div class="gj-container">
 				<p class="lead">Don't you want to be</p>
 
 				<img class="img-responsive indieaf-logo" :src="assetPaths['./header.jpg']" alt="" />
@@ -63,7 +63,7 @@ createAppRoute({
 		</div>
 
 		<section class="section indieaf-body">
-			<div class="container">
+			<div class="gj-container">
 				<div class="row">
 					<div class="col-sm-7 col-centered">
 						<div class="social-widgets text-center">

@@ -17,7 +17,7 @@ import AppSpacer from '~common/spacer/AppSpacer.vue';
 import { useCommonStore } from '~common/store/common-store';
 import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
 import { UserAvatarFrameModel } from '~common/user/user-avatar/frame/frame.model';
-import { styleAbsoluteFill, styleFlexCenter, styleMaxWidthForOptions } from '~styles/mixins';
+import { styleMaxWidthForOptions } from '~styles/mixins';
 
 type ProductModel = UserAvatarFrameModel | BackgroundModel;
 type Props = {
@@ -81,16 +81,12 @@ function getStyles(ratio: number): CSSProperties {
 <template>
 	<AppModal class="anim-fade-in" force-theme="dark">
 		<div
-			class="theme-dark"
+			class="theme-dark absolute inset-0 flex flex-col items-center justify-center"
 			:style="{
-				...styleFlexCenter({
-					direction: `column`,
-				}),
-				...styleAbsoluteFill(),
 				padding: Screen.isXs ? `16px` : `32px`,
 			}"
 		>
-			<h2 class="modal-title text-center" :style="{ margin: 0 }">
+			<h2 class="modal-title m-0 text-center">
 				<template v-if="isUserAvatarFrame(product)">
 					{{ $gettext(`New avatar frame!`) }}
 				</template>
@@ -126,7 +122,7 @@ function getStyles(ratio: number): CSSProperties {
 			</template>
 			<AppIllustration
 				v-else
-				:style="{ margin: 0 }"
+				class="m-0"
 				:asset="illPointyThing"
 				:max-width="getStyles(illPointyThing.width / illPointyThing.height).maxWidth"
 			/>

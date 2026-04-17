@@ -41,7 +41,7 @@ createAppRoute({
 <template>
 	<AppShellPageBackdrop>
 		<section class="section">
-			<div class="container">
+			<div class="gj-container">
 				<div v-if="!game?.follower_count" class="alert alert-info">
 					{{ $gettext(`No one is following this game yet.`) }}
 				</div>

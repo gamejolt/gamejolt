@@ -5,7 +5,6 @@ import AppAnimSlideshowImg from '~common/animation/AppAnimSlideshowImg.vue';
 import { getImgSlideshowData, ImgSlideshow } from '~common/animation/slideshow/sheets';
 import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
 import { Ruler } from '~common/ruler/ruler-service';
-import { styleWhen } from '~styles/mixins';
 import { useResizeObserver } from '~utils/resize-observer';
 
 type Props = {
@@ -56,17 +55,15 @@ function onDimensionsChanged() {
 		>
 			<AppAspectRatio
 				:ratio="sheetData.frameAspectRatio"
-				:style="[
-					{
-						position: `relative`,
-						zIndex: 1,
-						overflow: `hidden`,
-						width: `100%`,
-					},
-					styleWhen(overlay, {
-						filter: `drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.15)) drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.15)) drop-shadow(0px 1px 16px rgba(0, 0, 0, 0.09))`,
-					}),
-				]"
+				:style="{
+					position: `relative`,
+					zIndex: 1,
+					overflow: `hidden`,
+					width: `100%`,
+					filter: overlay
+						? `drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.15)) drop-shadow(0px 4px 8px rgba(0, 0, 0, 0.15)) drop-shadow(0px 1px 16px rgba(0, 0, 0, 0.09))`
+						: undefined,
+				}"
 			>
 				<AppAnimSlideshowImg
 					:style="{

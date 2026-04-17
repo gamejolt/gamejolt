@@ -3,7 +3,6 @@ import { computed, HTMLAttributes } from 'vue';
 
 import { ReactionCount } from '~common/reaction/reaction-count';
 import { kThemeBacklight, kThemeBgActual, kThemeBgOffset } from '~common/theme/variables';
-import { styleBorderRadiusBase } from '~styles/mixins';
 import { kBorderWidthLg, kFontSizeTiny } from '~styles/variables';
 
 type Props = {
@@ -45,8 +44,8 @@ const bgColor = computed(() => {
 <template>
 	<!-- AppReactionListItem -->
 	<div
+		class="rounded"
 		:style="{
-			...styleBorderRadiusBase,
 			backgroundColor: bgColor,
 			display: `inline-flex`,
 			alignItems: `center`,

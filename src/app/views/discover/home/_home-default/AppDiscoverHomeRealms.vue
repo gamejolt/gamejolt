@@ -18,7 +18,7 @@ const {
 </script>
 
 <template>
-	<div class="container">
+	<div class="gj-container">
 		<slot name="header" />
 
 		<div

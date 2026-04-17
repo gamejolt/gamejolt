@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { CSSProperties, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 import { RouterLink } from 'vue-router';
 
 import { useContentOwnerController } from '~common/content/content-owner';
@@ -7,7 +7,6 @@ import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppUserCardHover from '~common/user/card/AppUserCardHover.vue';
 import AppUserCreatorBadge from '~common/user/creator/AppUserCreatorBadge.vue';
 import { UserModel } from '~common/user/user.model';
-import { styleChangeBg } from '~styles/mixins';
 
 type Props = {
 	username: string;
@@ -32,51 +31,29 @@ function _hydrateUser() {
 		}
 	});
 }
-
-const iconStyles: CSSProperties = {
-	position: `absolute`,
-	right: `-4px`,
-	bottom: `-4px`,
-};
 </script>
 
 <template>
-	<span
-		:style="{
-			display: `inline-block`,
-			whiteSpace: `normal`,
-		}"
-	>
+	<span class="inline-block whitespace-normal">
 		<template v-if="user">
 			<AppUserCardHover :user="user">
 				<RouterLink :to="user.url">
 					<span>
 						<slot />
 						{{ ' ' }}
-						<span
-							:style="{
-								position: `relative`,
-								display: `inline-block`,
-							}"
-						>
+						<span class="relative inline-block">
 							<img
 								:src="user.img_avatar"
-								class="img-responsive"
-								:style="{
-									display: `inline`,
-									height: `1.5em`,
-									borderRadius: `50%`,
-								}"
+								class="img-responsive inline h-[1.5em] rounded-full"
 								alt=""
 							/>
-							<AppUserCreatorBadge v-if="user.is_creator" :style="iconStyles" />
+							<AppUserCreatorBadge
+								v-if="user.is_creator"
+								class="absolute -right-[4px] -bottom-[4px]"
+							/>
 							<AppJolticon
 								v-else-if="user.is_verified"
-								:style="{
-									...iconStyles,
-									...styleChangeBg('bg-offset'),
-									borderRadius: `100%`,
-								}"
+								class="change-bg-bg-offset absolute -right-[4px] -bottom-[4px] rounded-full"
 								icon="verified"
 							/>
 						</span>

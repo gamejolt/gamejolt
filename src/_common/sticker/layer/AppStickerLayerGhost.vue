@@ -12,7 +12,6 @@ import {
 	useStickerStore,
 } from '~common/sticker/sticker-store';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
-import { styleBorderRadiusLg, styleChangeBg, styleWhen } from '~styles/mixins';
 
 const stickerStore = useStickerStore();
 const { ghostStickerSize, placedItem, isDragging, targetController, isChargingSticker } =
@@ -61,21 +60,20 @@ function sliderValueTooltip(value: number) {
 <template>
 	<div
 		ref="root"
+		:class="{
+			invisible: !hasData,
+			'pointer-events-none': isDragging,
+		}"
 		:style="{
 			position: `absolute`,
 			top: `0`,
 			left: `0`,
 			touchAction: `none`,
-			...styleWhen(!hasData, {
-				visibility: `hidden`,
-			}),
-			...styleWhen(isDragging, {
-				filter: `drop-shadow(4px 4px 5px black)`,
-				pointerEvents: `none`,
-			}),
-			...styleWhen(!!targetController, {
-				filter: `drop-shadow(2px 2px 2.5px black)`,
-			}),
+			filter: isDragging
+				? `drop-shadow(4px 4px 5px black)`
+				: !!targetController
+				? `drop-shadow(2px 2px 2.5px black)`
+				: undefined,
 		}"
 		@click.stop
 		@contextmenu.prevent
@@ -95,9 +93,7 @@ function sliderValueTooltip(value: number) {
 				:style="{
 					display: `block`,
 					userSelect: `none`,
-					...styleWhen(!!placedItem, {
-						transform: `rotate(${rotation}deg)`,
-					}),
+					transform: placedItem ? `rotate(${rotation}deg)` : undefined,
 				}"
 				:src="sticker.img_url"
 				:size="ghostStickerSize.value"
@@ -106,9 +102,8 @@ function sliderValueTooltip(value: number) {
 
 		<div
 			v-if="placedItem"
+			class="change-bg-bg-offset rounded-lg"
 			:style="{
-				...styleBorderRadiusLg,
-				...styleChangeBg('bg-offset'),
 				position: `absolute`,
 				left: `50%`,
 				top: `100%`,
@@ -128,7 +123,7 @@ function sliderValueTooltip(value: number) {
 
 			<AppJolticon
 				v-app-tooltip.touchable="$gettext(`Rotate sticker`)"
-				:style="{ margin: 0, fontSize: `24px` }"
+				class="m-0 text-[24px]"
 				icon="rotate"
 			/>
 		</div>

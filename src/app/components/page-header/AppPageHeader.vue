@@ -170,7 +170,7 @@ const hasControls = computed(() => {
 				</div>
 			</div>
 
-			<div class="container">
+			<div class="gj-container">
 				<div v-if="$slots.default" class="row">
 					<div :class="colClasses">
 						<div class="page-header-content">
@@ -195,7 +195,7 @@ const hasControls = computed(() => {
 				:padding="0"
 			>
 				<section class="section page-header-nav">
-					<div class="container">
+					<div class="gj-container">
 						<div class="row">
 							<div :class="colClasses">
 								<div class="-index row">

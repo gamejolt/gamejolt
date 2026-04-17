@@ -34,14 +34,7 @@ import {
 import { useEventSubscription } from '~common/system/event/event-topic';
 import { kThemePrimary, kThemePrimaryFg } from '~common/theme/variables';
 import AppTouch, { AppTouchInput } from '~common/touch/AppTouch.vue';
-import {
-	styleBorderRadiusLg,
-	styleCaret,
-	styleChangeBg,
-	styleElevate,
-	styleTextOverflow,
-	styleWhen,
-} from '~styles/mixins';
+import { styleCaret } from '~styles/mixins';
 import { kBorderRadiusLg, kStrongEaseOut } from '~styles/variables';
 
 const stickerStore = useStickerStore();
@@ -122,8 +115,6 @@ const maxStickersPerSheet = computed(() => {
 
 const styleOuter = computed(() => {
 	return {
-		...styleElevate(2),
-		...styleChangeBg('bg'),
 		cursor: isDragging.value ? 'grabbing' : 'default',
 		paddingTop: drawerPadding.px,
 		margin: `0 auto`,
@@ -132,17 +123,10 @@ const styleOuter = computed(() => {
 		// Max-width is unset when Xs (so it can bleed and span the whole
 		// width), with margins of 64px on other breakpoints.
 		maxWidth: Screen.isXs ? 'unset' : `calc(100% - 64px)`,
-		...styleWhen(Screen.isPointerMouse, {
-			// Max-height of 2 sticker rows
-			maxHeight: drawerMaxHeight.value,
-		}),
-		...styleWhen(Screen.isXs, {
-			width: `100%`,
-		}),
-		...styleWhen(!Screen.isXs, {
-			borderTopLeftRadius: kBorderRadiusLg.px,
-			borderTopRightRadius: kBorderRadiusLg.px,
-		}),
+		maxHeight: Screen.isPointerMouse ? drawerMaxHeight.value : undefined,
+		width: Screen.isXs ? `100%` : undefined,
+		borderTopLeftRadius: !Screen.isXs ? kBorderRadiusLg.px : undefined,
+		borderTopRightRadius: !Screen.isXs ? kBorderRadiusLg.px : undefined,
 	} satisfies CSSProperties;
 });
 
@@ -328,44 +312,37 @@ function _updateSliderOffset(extraOffsetPx = 0) {
 			display: `flex`,
 			justifyContent: `center`,
 			transition: `transform 250ms ${kStrongEaseOut}`,
-			transform: `translateY(0)`,
-			...styleWhen(Screen.isPointerMouse, {
-				// Max-height of 2 sticker rows
-				maxHeight: drawerMaxHeight,
-			}),
-			...styleWhen(storeSticker && !isHoveringDrawer && !placedItem, {
-				// Shift the drawer down when there's an item being dragged
-				// and the drawer container is not being hovered.
-				transform: `translateY(calc(100% - ${drawerCollapsedHeight.px}))`,
-			}),
+			transform:
+				storeSticker && !isHoveringDrawer && !placedItem
+					? `translateY(calc(100% - ${drawerCollapsedHeight.px}))`
+					: `translateY(0)`,
+			maxHeight: Screen.isPointerMouse ? drawerMaxHeight : undefined,
 		}"
 		@contextmenu.prevent
 		@mousemove="onMouseMove"
 		@mouseup="assignTouchedSticker(null)"
 		@touchend="assignTouchedSticker(null)"
 	>
-		<div :style="{ flex: `auto` }" @click="closeDrawer()" />
+		<div class="flex-auto" @click="closeDrawer()" />
 
 		<template v-if="showPlaceButton">
 			<div
+				class="shadow-elevate-raw-2 elevate-transition change-bg-bg"
 				:style="{
 					...styleOuter,
-					flex: `1 1 100vw`,
+					flex: !Screen.isXs ? 3 : `1 1 100vw`,
 					overflow: `visible`,
 					display: `flex`,
 					gap: `12px`,
 					padding: `12px`,
 					position: `relative`,
-					...styleWhen(!Screen.isXs, {
-						flex: 3,
-						maxWidth: `calc(min(100% - 64px, 500px))`,
-					}),
+					maxWidth: !Screen.isXs ? `calc(min(100% - 64px, 500px))` : undefined,
 				}"
 			>
 				<div
 					v-if="canPlaceChargedStickerOnResource && !isChargingSticker"
+					:class="['change-bg-primary', { 'rounded-lg': !Screen.isXs }]"
 					:style="{
-						...styleChangeBg('primary'),
 						color: kThemePrimaryFg,
 						display: `inline-flex`,
 						padding: `8px 12px 8px`,
@@ -374,21 +351,16 @@ function _updateSliderOffset(extraOffsetPx = 0) {
 						bottom: `calc(100% + ${topBarMargin})`,
 						zIndex: -1,
 						left: 0,
+						right: Screen.isXs ? 0 : undefined,
 						maxWidth: `100%`,
-						...styleWhen(Screen.isXs, {
-							right: 0,
-						}),
-						...styleWhen(!Screen.isXs, styleBorderRadiusLg),
 					}"
 					@click="overflowTopBarText = !overflowTopBarText"
 				>
 					<div
+						:class="{ truncate: overflowTopBarText }"
 						:style="{
 							minWidth: 0,
 							maxWidth: `100%`,
-							...styleWhen(overflowTopBarText, {
-								...styleTextOverflow,
-							}),
 						}"
 					>
 						{{ $gettext(`Support your favorite creators with charged stickers!`) }}
@@ -397,9 +369,9 @@ function _updateSliderOffset(extraOffsetPx = 0) {
 
 				<AppAnimElectricity
 					v-if="!isChargingSticker && canPlaceChargedStickerOnResource"
+					class="relative"
 					shock-anim="square"
 					:disabled="!canPlaceChargedStickerOnResource"
-					:style="{ position: `relative` }"
 				>
 					<AppButton
 						sparse
@@ -418,11 +390,9 @@ function _updateSliderOffset(extraOffsetPx = 0) {
 				</AppAnimElectricity>
 
 				<AppAnimElectricity
+					class="w-full"
 					shock-anim="wide-rect"
 					:disabled="!isChargingSticker"
-					:style="{
-						width: '100%',
-					}"
 				>
 					<AppButton block primary :solid="isChargingSticker" @click="onClickPlace()">
 						<span v-if="isChargingSticker">
@@ -439,13 +409,9 @@ function _updateSliderOffset(extraOffsetPx = 0) {
 		<div
 			ref="content"
 			v-app-observe-dimensions="onContentDimensionsChanged"
-			class="anim-fade-in-up"
-			:style="{
-				...styleOuter,
-				...styleWhen(showPlaceButton, {
-					display: `none`,
-				}),
-			}"
+			class="anim-fade-in-up shadow-elevate-raw-2 elevate-transition change-bg-bg"
+			:class="{ hidden: showPlaceButton }"
+			:style="styleOuter"
 		>
 			<AppLoadingFade :is-loading="isLoading">
 				<component
@@ -454,10 +420,7 @@ function _updateSliderOffset(extraOffsetPx = 0) {
 						minWidth: Screen.isXs ? 'unset' : '400px',
 						minHeight: `${drawerStickerSize}px`,
 						paddingBottom: drawerPadding.px,
-						...styleWhen(Screen.isPointerMouse, {
-							// Max-height of 2 sticker rows
-							maxHeight: drawerMaxHeight,
-						}),
+						maxHeight: Screen.isPointerMouse ? drawerMaxHeight : undefined,
 					}"
 				>
 					<AppLoadingFade :is-loading="isLoading">
@@ -479,13 +442,11 @@ function _updateSliderOffset(extraOffsetPx = 0) {
 						>
 							<div
 								ref="slider"
+								:class="{
+									'whitespace-nowrap flex flex-nowrap': !Screen.isPointerMouse,
+								}"
 								:style="{
 									transition: `transform 300ms ${kStrongEaseOut}`,
-									...styleWhen(!Screen.isPointerMouse, {
-										whiteSpace: `nowrap`,
-										display: `flex`,
-										flexWrap: `nowrap`,
-									}),
 								}"
 							>
 								<template v-if="hasStickers">
@@ -496,14 +457,13 @@ function _updateSliderOffset(extraOffsetPx = 0) {
 											padding: `0 ${drawerPadding.px}`,
 											width: `100%`,
 											height: `100%`,
-											display: `flex`,
+											display: !Screen.isPointerMouse
+												? `inline-flex`
+												: `flex`,
 											gap: `${drawerStickerSpacing}px`,
 											justifyContent: `space-between`,
 											flexWrap: `wrap`,
-											...styleWhen(!Screen.isPointerMouse, {
-												display: `inline-flex`,
-												flex: `none`,
-											}),
+											flex: !Screen.isPointerMouse ? `none` : undefined,
 										}"
 									>
 										<div v-for="item of sheet" :key="item.sticker.id">
@@ -522,7 +482,7 @@ function _updateSliderOffset(extraOffsetPx = 0) {
 								</template>
 								<template v-else-if="hasLoaded">
 									<div class="text-center">
-										<p class="lead" :style="{ padding: `0 16px` }">
+										<p class="lead px-[16px]">
 											{{
 												$gettext(
 													`Oh no! Looks like you don't have any stickers.`
@@ -530,12 +490,7 @@ function _updateSliderOffset(extraOffsetPx = 0) {
 											}}
 										</p>
 
-										<div
-											:style="{
-												padding: `0 16px`,
-												marginBottom: `8px`,
-											}"
-										>
+										<div class="mb-[8px] px-[16px]">
 											<AppButton block solid @click="onClickPurchasePacks()">
 												{{ $gettext(`Purchase packs`) }}
 											</AppButton>
@@ -547,7 +502,7 @@ function _updateSliderOffset(extraOffsetPx = 0) {
 								</template>
 							</div>
 						</component>
-						<div v-if="!Screen.isPointerMouse" :style="{ marginTop: `8px` }">
+						<div v-if="!Screen.isPointerMouse" class="mt-[8px]">
 							<AppPageIndicatorCompact
 								:count="stickerSheets.length"
 								:current="sheetPage"
@@ -558,6 +513,6 @@ function _updateSliderOffset(extraOffsetPx = 0) {
 			</AppLoadingFade>
 		</div>
 
-		<div :style="{ flex: `auto` }" @click="closeDrawer()" />
+		<div class="flex-auto" @click="closeDrawer()" />
 	</div>
 </template>

@@ -1,8 +1,6 @@
 <script lang="ts" setup>
 import { computed, CSSProperties, StyleValue } from 'vue';
 
-import { styleFlexCenter, styleWhen } from '~styles/mixins';
-
 /**
  * Used to create a box that takes the full-width of its parent and sizes its
  * height based on a ratio from that.
@@ -47,30 +45,19 @@ const childSizing = computed<CSSProperties>(() => {
 
 <template>
 	<div
-		:style="[
-			{
-				position: `relative`,
-				height: 0,
-				paddingTop: `${100 / ratio}%`,
-			},
-			styleWhen(!showOverflow, {
-				overflow: `hidden`,
-			}),
-		]"
+		class="relative h-0"
+		:class="{ 'overflow-hidden': !showOverflow }"
+		:style="{
+			paddingTop: `${100 / ratio}%`,
+		}"
 	>
 		<div
-			:style="[
-				{
-					position: `absolute`,
-					top: 0,
-					left: 0,
-					width: `100%`,
-					height: `100%`,
-				},
-				styleWhen(childSizing.width !== childSizing.height, styleFlexCenter()),
-			]"
+			class="absolute top-0 left-0 h-full w-full"
+			:class="{
+				'flex items-center justify-center': childSizing.width !== childSizing.height,
+			}"
 		>
-			<div :style="[childSizing, { position: `relative` }, innerStyles]">
+			<div class="relative" :style="[childSizing, innerStyles]">
 				<slot />
 			</div>
 		</div>

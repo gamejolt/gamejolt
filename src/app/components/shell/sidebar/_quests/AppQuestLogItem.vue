@@ -9,7 +9,6 @@ import AppQuestProgress from '~common/quest/AppQuestProgress.vue';
 import AppQuestThumbnail from '~common/quest/AppQuestThumbnail.vue';
 import { QuestModel } from '~common/quest/quest-model';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
-import { styleBorderRadiusLg, styleChangeBgRgba, styleFlexCenter } from '~styles/mixins';
 import { kFontSizeBase, kFontSizeLarge, kFontSizeSmall } from '~styles/variables';
 
 type Props = {
@@ -56,16 +55,14 @@ function onSelect() {
 
 				<div
 					v-if="quest.ends_on && !quest.isDaily && !compactStack"
+					class="flex items-center justify-center"
 					:style="{
-						...styleFlexCenter(),
 						marginTop: `6px`,
 					}"
 				>
 					<AppQuestTimer
-						class="fill-offset"
+						class="fill-offset change-bg-fg-5 rounded-lg"
 						:style="{
-							...styleBorderRadiusLg,
-							...styleChangeBgRgba('var(--theme-fg-rgb)', 0.05),
 							padding: `1px 6px`,
 						}"
 						:ends-on="quest.ends_on"

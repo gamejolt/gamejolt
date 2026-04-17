@@ -9,7 +9,7 @@ import AppStickerMastery from '~common/sticker/AppStickerMastery.vue';
 import { StickerModel } from '~common/sticker/sticker.model';
 import { useStickerStore } from '~common/sticker/sticker-store';
 import AppUserAvatar from '~common/user/user-avatar/AppUserAvatar.vue';
-import { styleBorderRadiusLg, styleChangeBg, styleElevate, styleWhen } from '~styles/mixins';
+import { kElevateTransition } from '~styles/mixins';
 import { kBorderWidthLg } from '~styles/variables';
 
 type Props = {
@@ -87,8 +87,8 @@ function onContextMenu(event: Event) {
 }
 
 const tagStyles: CSSProperties = {
-	...styleBorderRadiusLg,
-	...styleElevate(1),
+	boxShadow: `var(--shadow-elevate-xs)`,
+	transition: kElevateTransition,
 	backgroundColor: `rgba(0,0,0,0.87)`,
 	position: `absolute`,
 	zIndex: 1,
@@ -111,23 +111,15 @@ const tagStyles: CSSProperties = {
 		<component
 			:is="fitParent ? AppAspectRatio : 'div'"
 			:ratio="1"
-			:style="{
-				...styleWhen(shouldFade, {
-					opacity: 0.3,
-				}),
-			}"
+			:class="{ 'opacity-30': shouldFade }"
 		>
 			<component :is="sticker.is_event ? AppQuestFrame : 'div'" :style="itemStyling">
 				<template #[slotName]>
 					<div
+						:class="{ '[filter:contrast(0)]': isPeeled }"
 						:style="{
 							...itemStyling,
-							...styleWhen(isPeeled, {
-								filter: `contrast(0)`,
-							}),
-							...styleWhen(sticker.is_event, {
-								padding: `${size * 0.1}px`,
-							}),
+							padding: sticker.is_event ? `${size * 0.1}px` : undefined,
 						}"
 					>
 						<AppStickerImg
@@ -144,6 +136,7 @@ const tagStyles: CSSProperties = {
 
 		<div
 			v-if="currentStreak > 1"
+			class="rounded-lg"
 			:style="{
 				...tagStyles,
 				top: 0,
@@ -155,13 +148,12 @@ const tagStyles: CSSProperties = {
 
 		<div
 			v-if="!hideCount"
+			class="rounded-lg"
+			:class="{ 'opacity-30': shouldFade }"
 			:style="{
 				...tagStyles,
 				top: 0,
 				left: 0,
-				...styleWhen(shouldFade, {
-					opacity: 0.3,
-				}),
 			}"
 		>
 			{{ displayCount }}
@@ -169,8 +161,8 @@ const tagStyles: CSSProperties = {
 
 		<div
 			v-if="showCreator && sticker.isCreatorSticker && sticker.owner_user"
+			class="change-bg-bg-offset"
 			:style="{
-				...styleChangeBg('bg-offset'),
 				position: `absolute`,
 				right: 0,
 				bottom: 0,

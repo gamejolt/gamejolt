@@ -122,13 +122,13 @@ createAppRoute({
 				:key="group.key"
 				class="section collection-row-section"
 			>
-				<div v-if="group.heading" class="container">
+				<div v-if="group.heading" class="gj-container">
 					<h2 class="section-header" :class="{ h4: Screen.isXs }">
 						{{ group.heading }}
 					</h2>
 				</div>
 
-				<div :class="!Screen.isXs ? 'container' : ''">
+				<div :class="!Screen.isXs ? 'gj-container' : ''">
 					<AppGameCollectionList
 						v-if="Screen.isXs"
 						:collections="group.collections"

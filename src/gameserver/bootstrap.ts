@@ -1,3 +1,4 @@
+import '~styles/tailwind.css';
 import '~gameserver/main.styl';
 
 import { bootstrapCommon } from '~common/bootstrap';

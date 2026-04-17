@@ -1,8 +1,6 @@
 <script lang="ts" setup>
 import { useTemplateRef } from 'vue';
 
-import { styleTextOverflow } from '~styles/mixins';
-
 export interface AppFormControlUploadFileInterface {
 	showFileSelect: () => void;
 }
@@ -56,7 +54,7 @@ defineExpose<AppFormControlUploadFileInterface>({
 	<input
 		:id="id"
 		ref="root"
-		:style="[styleTextOverflow, { width: `100%` }]"
+		class="w-full truncate"
 		:name="name"
 		type="file"
 		:accept="accept"

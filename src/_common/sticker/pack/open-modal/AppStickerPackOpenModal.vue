@@ -477,18 +477,7 @@ function addMs(value: number) {
 			}"
 		>
 			<div
-				class="theme-dark"
-				:style="{
-					position: 'absolute',
-					top: 0,
-					right: 0,
-					bottom: 0,
-					left: 0,
-					display: 'flex',
-					flexDirection: 'column',
-					alignItems: 'stretch',
-					overflow: 'hidden',
-				}"
+				class="theme-dark absolute inset-0 flex flex-col items-stretch overflow-hidden"
 				@click="onClickBackdrop()"
 			>
 				<div

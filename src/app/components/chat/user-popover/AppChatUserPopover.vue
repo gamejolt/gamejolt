@@ -21,7 +21,6 @@ import { kThemeDarkest } from '~common/theme/variables';
 import { $gettext } from '~common/translate/translate.service';
 import AppUserVerifiedTick from '~common/user/AppUserVerifiedTick.vue';
 import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
-import { styleWhen } from '~styles/mixins';
 import { kBorderWidthLg, kFontFamilyTiny, kFontSizeSmall, kFontSizeTiny } from '~styles/variables';
 
 type Props = {
@@ -133,36 +132,20 @@ const styleStatusIcon: CSSProperties = {
 				width: `250px`,
 			}"
 		>
-			<div
-				:style="{
-					display: `flex`,
-					justifyContent: `center`,
-					marginBottom: `10px`,
-				}"
-			>
-				<div
-					class="elevate-hover-2"
-					:style="{
-						position: `relative`,
-						borderRadius: `50%`,
-					}"
-				>
+			<div class="mb-[10px] flex justify-center">
+				<div class="elevate-hover-2 relative rounded-full">
 					<AppOnHover v-slot="{ hoverBinding, hovered }">
 						<AppUserAvatarBubble
 							v-bind="{
 								...hoverBinding,
-								style: [
-									{
-										position: `relative`,
-										zIndex: 2,
-										width: `72px`,
-										height: `72px`,
-										transition: `filter 0.1s ease`,
-									},
-									styleWhen(hovered, {
-										filter: `brightness(0.6) contrast(1.1)`,
-									}),
-								],
+								style: {
+									position: `relative`,
+									zIndex: 2,
+									width: `72px`,
+									height: `72px`,
+									transition: `filter 0.1s ease`,
+									filter: hovered ? `brightness(0.6) contrast(1.1)` : undefined,
+								},
 							}"
 							:user="user"
 							show-frame
@@ -184,12 +167,7 @@ const styleStatusIcon: CSSProperties = {
 				</div>
 			</div>
 
-			<div
-				:style="{
-					marginTop: `4px`,
-					textAlign: `center`,
-				}"
-			>
+			<div class="mt-[4px] text-center">
 				<div>
 					<b>{{ user.display_name }}</b>
 					<AppUserVerifiedTick :user="user" vertical-align />
@@ -206,10 +184,7 @@ const styleStatusIcon: CSSProperties = {
 
 			<div v-if="isOnline !== null" :style="statusStyles">
 				<AppChatUserOnlineStatus
-					:style="{
-						marginRight: `4px`,
-						alignSelf: `stretch`,
-					}"
+					class="mr-[4px] self-stretch"
 					:is-online="isOnline"
 					:size="12"
 					:segment-width="1.5"

@@ -285,7 +285,7 @@ function showLikers() {
 						borderRadius: `50%`,
 					}"
 				>
-					<AppJolticon notice :icon="icon" :style="{ fontSize: `10px` }" />
+					<AppJolticon class="text-[10px]" notice :icon="icon" />
 				</span>
 			</span>
 		</span>

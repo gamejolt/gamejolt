@@ -266,7 +266,7 @@ function _canThankSupporterAction(action: SupporterActionModel) {
 
 <template>
 	<AppShellPageBackdrop>
-		<div class="container">
+		<div class="gj-container">
 			<AppSpacer vertical :scale="10" />
 
 			<div class="-template">

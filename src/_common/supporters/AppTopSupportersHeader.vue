@@ -1,8 +1,6 @@
 <script lang="ts" setup>
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
-import { kThemeFgMuted } from '~common/theme/variables';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
-import { kFontSizeH4, kFontSizeH6 } from '~styles/variables';
 
 type Props = {
 	small?: boolean;
@@ -12,8 +10,8 @@ defineProps<Props>();
 
 <template>
 	<div class="clearfix">
-		<component :is="small ? 'h6' : 'h4'" class="section-header" :style="{ display: `flex` }">
-			<div :style="{ flex: `auto`, minWidth: 0 }">
+		<component :is="small ? 'h6' : 'h4'" class="section-header flex">
+			<div class="min-w-0 flex-auto">
 				{{ $gettext(`Top supporters (last 30 days)`) }}
 			</div>
 
@@ -21,17 +19,12 @@ defineProps<Props>();
 				v-app-tooltip.touchable="
 					$gettext(`Top supporters that placed a charged sticker in the last 30 days`)
 				"
-				:style="{
-					marginLeft: `4px`,
-					display: 'inline-block',
-					minHeight: small ? kFontSizeH6.px : kFontSizeH4.px,
-				}"
+				class="ml-[4px] inline-block"
+				:class="small ? 'min-h-[13px]' : 'min-h-[18px]'"
 			>
 				<AppJolticon
-					:style="{
-						fontSize: small ? kFontSizeH6.px : kFontSizeH4.px,
-						color: kThemeFgMuted,
-					}"
+					class="text-fg-muted"
+					:class="small ? 'text-[13px]' : 'text-[18px]'"
 					icon="help-circle"
 				/>
 			</div>

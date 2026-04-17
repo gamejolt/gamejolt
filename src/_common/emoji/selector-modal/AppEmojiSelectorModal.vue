@@ -15,7 +15,6 @@ import { ModelData } from '~common/model/model.service';
 import { storeModelList } from '~common/model/model-store.service';
 import { EmojiGroupData, useCommonStore } from '~common/store/common-store';
 import { $gettext } from '~common/translate/translate.service';
-import { styleChangeBg } from '~styles/mixins';
 import { arrayRemove } from '~utils/array';
 import { debounceWithMaxTimeout } from '~utils/utils';
 
@@ -348,42 +347,18 @@ const gridStyles: CSSProperties = {
 
 		<div class="modal-body">
 			<template v-if="!reactionsData.size">
-				<div
-					v-if="hasError || isBootstrapped"
-					class="well fill-notice"
-					:style="{
-						marginBottom: `32px`,
-					}"
-				>
+				<div v-if="hasError || isBootstrapped" class="well fill-notice mb-[32px]">
 					{{ $gettext(`We couldn't find anything you can use. Please try again later.`) }}
 				</div>
-				<div
-					v-else
-					:style="{
-						marginBottom: `32px`,
-					}"
-				>
+				<div v-else class="mb-[32px]">
 					<h6 class="section-header">
-						<div
-							class="lazy-placeholder"
-							:style="{
-								width: `25%`,
-								maxWidth: `200px`,
-							}"
-						/>
+						<div class="lazy-placeholder w-1/4 max-w-[200px]" />
 					</h6>
 
 					<div :style="gridStyles">
 						<div v-for="num of 3" :key="num">
 							<AppAspectRatio :ratio="1">
-								<div
-									:style="{
-										...styleChangeBg('bg-subtle'),
-										width: `100%`,
-										height: `100%`,
-										borderRadius: `50%`,
-									}"
-								/>
+								<div class="change-bg-bg-subtle h-full w-full rounded-full" />
 							</AppAspectRatio>
 						</div>
 					</div>

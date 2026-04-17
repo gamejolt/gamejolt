@@ -67,14 +67,7 @@ function showAboutModal() {
 <template>
 	<AppAdTakeoverFloat>
 		<AppButtonGroup v-if="routeUser" :row="collapse">
-			<div
-				:style="{
-					width: `100%`,
-					display: `flex`,
-					columnGap: `4px`,
-					flex: `auto`,
-				}"
-			>
+			<div class="flex w-full flex-auto gap-x-[4px]">
 				<AppUserFollowButton
 					v-if="shouldShowFollow"
 					:user="routeUser"
@@ -94,17 +87,10 @@ function showAboutModal() {
 					{{ $gettext(`Edit profile`) }}
 				</AppButton>
 
-				<AppProfileShortcutExtras v-if="!collapse" :style="{ flex: `none` }" />
+				<AppProfileShortcutExtras v-if="!collapse" class="flex-none" />
 			</div>
 
-			<div
-				:style="{
-					width: `100%`,
-					display: `flex`,
-					columnGap: `4px`,
-					flex: `auto`,
-				}"
-			>
+			<div class="flex w-full flex-auto gap-x-[4px]">
 				<template v-if="collapse">
 					<AppButton block @click="showAboutModal()">
 						{{ $gettext(`About`) }}
@@ -125,7 +111,7 @@ function showAboutModal() {
 				</template>
 			</div>
 
-			<AppProfileShortcutExtras v-if="collapse" :style="{ flex: `none` }" />
+			<AppProfileShortcutExtras v-if="collapse" class="flex-none" />
 		</AppButtonGroup>
 	</AppAdTakeoverFloat>
 </template>

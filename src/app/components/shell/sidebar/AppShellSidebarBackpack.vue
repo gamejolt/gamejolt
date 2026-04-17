@@ -31,7 +31,6 @@ import {
 import { useCommonStore } from '~common/store/common-store';
 import { $gettext } from '~common/translate/translate.service';
 import AppUserAvatar from '~common/user/user-avatar/AppUserAvatar.vue';
-import { styleTextOverflow } from '~styles/mixins';
 import { kFontSizeLarge } from '~styles/variables';
 import { arrayRemove } from '~utils/array';
 import { run } from '~utils/utils';
@@ -202,7 +201,11 @@ function onRemoveGift(gift: InventoryShopGiftModel) {
 					can-click-pack
 					@click-pack="openPack(userPack)"
 				>
-					<div v-if="userPack.expires_on" :style="StickerPackExpiryStyles">
+					<div
+						v-if="userPack.expires_on"
+						class="change-bg-black-54 rounded-lg"
+						:style="StickerPackExpiryStyles"
+					>
 						{{
 							shorthandReadableTime(userPack.expires_on, {
 								allowFuture: true,
@@ -303,8 +306,8 @@ function onRemoveGift(gift: InventoryShopGiftModel) {
 							/>
 
 							<div
+								class="truncate"
 								:style="{
-									...styleTextOverflow,
 									minWidth: 0,
 								}"
 							>

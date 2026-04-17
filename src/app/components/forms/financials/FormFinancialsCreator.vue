@@ -109,7 +109,7 @@ async function acceptTerms() {
 			/>
 
 			<template v-if="creatorOnboardingForm">
-				<h2 :style="{ marginTop: 0 }">
+				<h2 class="mt-0">
 					{{ $gettext(`Payment settings`) }}
 				</h2>
 

@@ -447,7 +447,7 @@ function focus() {
 					<div
 						ref="doc"
 						class="-doc"
-						:style="{ 'max-height': maxHeight > 0 ? maxHeight + 'px' : 'auto' }"
+						:style="{ maxHeight: maxHeight > 0 ? maxHeight + 'px' : 'auto' }"
 						:class="editorStyleClass"
 					/>
 				</div>

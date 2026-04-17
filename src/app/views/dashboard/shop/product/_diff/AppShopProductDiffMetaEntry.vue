@@ -8,7 +8,7 @@ import AppStickerImg from '~common/sticker/AppStickerImg.vue';
 import { StickerModel } from '~common/sticker/sticker.model';
 import { kThemeFgMuted } from '~common/theme/variables';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
-import { styleAbsoluteFill, styleLineClamp, styleWhen } from '~styles/mixins';
+import { styleLineClamp } from '~styles/mixins';
 import { kFontSizeSmall, kLineHeightBase } from '~styles/variables';
 import { isInstance } from '~utils/utils';
 
@@ -79,7 +79,7 @@ const helpers = computed(() => {
 			marginBottom: `8px`,
 		}"
 	>
-		<div :style="{ fontWeight: `bold` }">
+		<div class="font-bold">
 			<span v-app-tooltip.touchable="helpers.tooltip">
 				{{ prettyKey(entry.key) }}
 			</span>
@@ -91,29 +91,27 @@ const helpers = computed(() => {
 				:style="{
 					position: `relative`,
 					zIndex: 1,
-					...styleWhen(isSimple(entry.value), {
-						width: `fit-content`,
-					}),
+					width: isSimple(entry.value) ? `fit-content` : undefined,
 				}"
 			>
 				<!-- Value display -->
 				<!-- Simple -->
 				<div
 					v-if="isSimple(entry.value)"
-					:style="styleWhen(!!helpers.lineClamp, styleLineClamp(helpers.lineClamp!))"
+					:style="helpers.lineClamp ? styleLineClamp(helpers.lineClamp) : undefined"
 				>
 					{{ entry.value }}
 				</div>
 				<!-- Stickers -->
 				<AppScrollScroller
 					v-else-if="isArrayOfInstance(entry.value, StickerModel)"
-					:style="{ whiteSpace: `nowrap` }"
+					class="whitespace-nowrap"
 					horizontal
 				>
 					<div
 						v-for="sticker in entry.value"
 						:key="sticker.id"
-						:style="{ display: `inline-block`, padding: `4px` }"
+						class="inline-block p-[4px]"
 					>
 						<AppStickerImg :src="sticker.img_url" :size="64" />
 					</div>
@@ -121,15 +119,17 @@ const helpers = computed(() => {
 
 				<!-- Diff color indicator -->
 				<div
-					:style="[
-						styleAbsoluteFill({ zIndex: -1, left: `-4px`, right: `-4px` }),
-						styleWhen(!isFieldEqual(entry.key), {
-							backgroundColor: diffBackground,
-							color: diffColor,
-							borderRadius: `4px`,
-							opacity: 0.2,
-						}),
-					]"
+					class="absolute top-0 bottom-0 left-[-4px] right-[-4px] z-[-1]"
+					:style="
+						!isFieldEqual(entry.key)
+							? {
+									backgroundColor: diffBackground,
+									color: diffColor,
+									borderRadius: `4px`,
+									opacity: 0.2,
+							  }
+							: undefined
+					"
 				/>
 			</div>
 			<div v-else :style="{ color: kThemeFgMuted, fontStyle: `italic` }">

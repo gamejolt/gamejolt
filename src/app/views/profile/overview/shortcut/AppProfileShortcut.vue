@@ -31,7 +31,7 @@ const { item, width, tag = 'div' } = defineProps<Props>();
 		:to="item.location"
 		@click="item.action?.()"
 	>
-		<AppJolticon :icon="item.icon" :style="{ fontSize: `28px` }" />
+		<AppJolticon class="text-[28px]" :icon="item.icon" />
 		<div
 			:style="{
 				fontWeight: `bold`,

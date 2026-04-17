@@ -2,7 +2,6 @@
 import { onBeforeUnmount, onMounted } from 'vue';
 
 import { useAdStore } from '~common/ad/ad-store';
-import { styleAbsoluteFill, styleWhen } from '~styles/mixins';
 
 export type AdTakeoverProps = {
 	fgImg: string;
@@ -49,18 +48,18 @@ function onClick() {
 		<img class="img-responsive" width="300" height="600" alt="Advertisement" :src="fgImg" />
 		<Teleport to="#ad-takeover-background">
 			<a
+				class="absolute inset-0"
 				:style="{
-					...styleAbsoluteFill(),
 					backgroundImage: `url(${bgImg})`,
 					backgroundRepeat: `no-repeat`,
-					...styleWhen(sizing === 'cover', {
-						backgroundSize: `cover`,
-						backgroundPosition: `center`,
-					}),
-					...styleWhen(sizing === 'contain', {
-						backgroundSize: `contain`,
-						backgroundPosition: `top center`,
-					}),
+					backgroundSize:
+						sizing === 'cover' ? `cover` : sizing === 'contain' ? `contain` : undefined,
+					backgroundPosition:
+						sizing === 'cover'
+							? `center`
+							: sizing === 'contain'
+							? `top center`
+							: undefined,
 				}"
 				:href="destUrl"
 				target="_blank"

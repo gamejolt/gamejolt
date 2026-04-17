@@ -3,12 +3,7 @@ import { computed, Ref, ref } from 'vue';
 
 import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
 import { kThemeFg10, kThemePrimary, kThemePrimaryFg } from '~common/theme/variables';
-import {
-	styleAbsoluteFill,
-	styleFlexCenter,
-	styleMaxWidthForOptions,
-	styleWhen,
-} from '~styles/mixins';
+import { styleMaxWidthForOptions } from '~styles/mixins';
 import { kBorderWidthLg } from '~styles/variables';
 import { useResizeObserver } from '~utils/resize-observer';
 
@@ -55,8 +50,8 @@ useResizeObserver({
 <template>
 	<div
 		ref="root"
+		class="flex items-center justify-center"
 		:style="{
-			...styleFlexCenter(),
 			width: `100%`,
 			height: `100%`,
 		}"
@@ -74,24 +69,18 @@ useResizeObserver({
 			<AppAspectRatio :ratio="1" show-overflow>
 				<div
 					v-if="$slots.default"
-					:style="[
-						styleAbsoluteFill(),
-						styleFlexCenter({
-							direction: `column`,
-						}),
-					]"
+					class="absolute inset-0 flex flex-col items-center justify-center"
 				>
 					<slot />
 				</div>
 
 				<svg
 					v-if="smallestSide > 0"
-					class="_svg"
+					class="_svg absolute inset-0"
 					:width="smallestSide"
 					:height="smallestSide"
 					:viewBox="`0 0 ${smallestSide} ${smallestSide}`"
 					:style="{
-						...styleAbsoluteFill(),
 						transform: `rotate(-90deg)`,
 					}"
 				>
@@ -116,12 +105,12 @@ useResizeObserver({
 							strokeWidth: strokeWidth,
 							strokeLinecap: `round`,
 							strokeDasharray: trackLength,
-							...styleWhen(!indeterminate, {
-								transition: `stroke-dashoffset ${transitionMs}ms ease-in-out`,
-								strokeDashoffset: `${
-									trackLength * (-safePercent + 1) + strokeWidth
-								}px`,
-							}),
+							transition: !indeterminate
+								? `stroke-dashoffset ${transitionMs}ms ease-in-out`
+								: undefined,
+							strokeDashoffset: !indeterminate
+								? `${trackLength * (-safePercent + 1) + strokeWidth}px`
+								: undefined,
 						}"
 						@transitionend="emit('after-transition')"
 					/>

@@ -19,7 +19,7 @@ import { useStickerStore } from '~common/sticker/sticker-store';
 import { useCommonStore } from '~common/store/common-store';
 import { kThemeFg10, kThemeFgMuted } from '~common/theme/variables';
 import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
-import { styleFlexCenter, styleMaxWidthForOptions, styleTextOverflow } from '~styles/mixins';
+import { styleMaxWidthForOptions } from '~styles/mixins';
 import { kFontSizeH2, kFontSizeSmall } from '~styles/variables';
 import { isInstance } from '~utils/utils';
 
@@ -114,26 +114,26 @@ async function onClickGift() {
 				<AppStickerPack v-else-if="isInstance(product, StickerPackModel)" :pack="product" />
 				<div
 					v-else
+					class="flex items-center justify-center"
 					:style="{
-						...styleFlexCenter(),
 						width: `100%`,
 						height: `100%`,
 						borderRadius: `50%`,
 						backgroundColor: kThemeFg10,
 					}"
 				>
-					<AppJolticon icon="gift" :style="{ fontSize: `32px` }" />
+					<AppJolticon class="text-[32px]" icon="gift" />
 				</div>
 			</div>
 
 			<!-- Info -->
-			<div :style="{ flex: `1 1 0`, minWidth: 0 }">
-				<div :style="{ ...styleTextOverflow }">
+			<div class="min-w-0 [flex:1_1_0]">
+				<div class="truncate">
 					{{ readableProductType }}
 				</div>
 				<div
+					class="truncate"
 					:style="{
-						...styleTextOverflow,
 						color: kThemeFgMuted,
 						fontSize: kFontSizeSmall.px,
 					}"
@@ -142,8 +142,8 @@ async function onClickGift() {
 				</div>
 				<div
 					v-if="gift.from_user"
+					class="truncate"
 					:style="{
-						...styleTextOverflow,
 						color: kThemeFgMuted,
 						fontSize: kFontSizeSmall.px,
 					}"

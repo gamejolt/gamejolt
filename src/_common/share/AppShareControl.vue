@@ -18,7 +18,7 @@ function copyLink() {
 		<!-- force update on input so that the URL re-applies and they can't edit -->
 		<input class="-url form-control" :value="url" @input="$forceUpdate()" />
 
-		<AppButton :style="{ flex: `none` }" @click="copyLink()">
+		<AppButton class="flex-none" @click="copyLink()">
 			{{ $gettext(`Copy`) }}
 		</AppButton>
 	</div>

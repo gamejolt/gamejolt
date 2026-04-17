@@ -26,7 +26,6 @@ import AppPopperEscapeStack from '~common/popper/AppPopperEscapeStack.vue';
 import { Popper } from '~common/popper/popper.service';
 import { Screen } from '~common/screen/screen-service';
 import AppScrollScroller from '~common/scroll/AppScrollScroller.vue';
-import { styleWhen } from '~styles/mixins';
 
 type ActualTrigger = 'click' | 'hover' | 'manual';
 
@@ -549,12 +548,11 @@ function onManualShow() {
 				ref="popperElem"
 				v-app-observe-dimensions="onDimensionsChanged"
 				class="popper-wrapper"
-				:class="{ '-hide': isHiding, '-ssr': GJ_IS_SSR }"
-				:style="
-					styleWhen(noHoverPopover, {
-						pointerEvents: `none`,
-					})
-				"
+				:class="{
+					'-hide': isHiding,
+					'-ssr': GJ_IS_SSR,
+					'pointer-events-none': noHoverPopover,
+				}"
 				@mouseenter="onPopoverEnter"
 				@mouseleave="onPopoverLeave"
 			>

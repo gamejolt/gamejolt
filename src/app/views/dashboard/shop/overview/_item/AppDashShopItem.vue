@@ -25,7 +25,7 @@ const resourceParam = computed(() => getShopDashProductResourceParam(item));
 <template>
 	<AppHoverCard
 		v-if="resourceParam"
-		:style="{ width: `100%` }"
+		class="w-full"
 		:border-color="
 			itemStates.published ? `rgba(${kThemeFgRgb}, 0.7)` : `rgba(${kThemeFgRgb}, 0.2)`
 		"

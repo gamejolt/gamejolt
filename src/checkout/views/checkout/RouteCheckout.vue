@@ -20,7 +20,7 @@ import { Screen } from '~common/screen/screen-service';
 import { useThemeStore } from '~common/theme/theme.store';
 import { kThemeFgMuted } from '~common/theme/variables';
 import { $gettext } from '~common/translate/translate.service';
-import { styleFlexCenter, styleMaxWidthForOptions } from '~styles/mixins';
+import { styleMaxWidthForOptions } from '~styles/mixins';
 import { kFontFamilyDisplay, kLineHeightComputed } from '~styles/variables';
 
 export default {
@@ -170,7 +170,7 @@ const headingStyles = computed<CSSProperties>(() => ({
 </script>
 
 <template>
-	<section class="container" :style="{ overflow: `hidden` }">
+	<section class="gj-container overflow-hidden">
 		<template v-if="!isBootstrapped">
 			<AppLoading big centered />
 		</template>
@@ -181,7 +181,7 @@ const headingStyles = computed<CSSProperties>(() => ({
 					:media-item="maybeGame.header_media_item"
 				/>
 			</div>
-			<div v-else-if="maybeMicrotransaction" :style="styleFlexCenter()">
+			<div v-else-if="maybeMicrotransaction" class="flex items-center justify-center">
 				<div
 					:style="{
 						...styleMaxWidthForOptions({

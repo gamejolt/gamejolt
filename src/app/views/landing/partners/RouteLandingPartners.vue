@@ -27,7 +27,7 @@ createAppRoute({
 <template>
 	<div>
 		<section class="section landing-header text-center">
-			<div class="container">
+			<div class="gj-container">
 				<h1>
 					<AppThemeSvg class="bolt" :src="imageJolt" alt="" strict-colors />
 					Partners
@@ -54,7 +54,7 @@ createAppRoute({
 
 		<div class="landing-body">
 			<section class="section">
-				<div class="container">
+				<div class="gj-container">
 					<div class="row">
 						<div class="col-sm-6 col-md-4">
 							<div class="landing-graphic">
@@ -105,7 +105,7 @@ createAppRoute({
 			</section>
 
 			<section class="section">
-				<div class="container">
+				<div class="gj-container">
 					<div class="row">
 						<div class="col-sm-10 col-md-8 col-lg-6 col-centered">
 							<h2 class="section-header text-center">Have some questions?</h2>

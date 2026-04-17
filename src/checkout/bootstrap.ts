@@ -1,3 +1,4 @@
+import '~styles/tailwind.css';
 import '~checkout/main.styl';
 
 import { router } from '~checkout/views/index';

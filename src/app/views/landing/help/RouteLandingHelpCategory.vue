@@ -78,7 +78,7 @@ createAppRoute({
 
 <template>
 	<section class="section">
-		<div class="container">
+		<div class="gj-container">
 			<div class="row">
 				<div class="col-lg-3 col-sm-12">
 					<div v-if="Screen.isMobile">

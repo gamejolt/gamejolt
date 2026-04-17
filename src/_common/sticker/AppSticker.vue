@@ -9,7 +9,6 @@ import {
 	removeStickerFromTarget,
 	StickerTargetController,
 } from '~common/sticker/target/target-controller';
-import { styleWhen } from '~styles/mixins';
 
 type Props = {
 	sticker: StickerPlacementModel;
@@ -55,14 +54,10 @@ function onClickRemove() {
 
 <template>
 	<div
-		class="-sticker"
+		class="-sticker absolute z-[2] w-[64px] h-[64px]"
 		:style="{
-			position: `absolute`,
-			zIndex: 2,
 			left: `calc(${sticker.position_x * 100}% - 32px)`,
 			top: `calc(${sticker.position_y * 100}% - 32px)`,
-			width: `${size}px`,
-			height: `${size}px`,
 		}"
 		@click.stop="onClickRemove"
 	>
@@ -75,14 +70,10 @@ function onClickRemove() {
 			<component :is="showCharged ? AppAnimElectricity : 'div'" v-bind="electricityProps">
 				<AppStickerImg
 					:size="size"
-					:style="[
-						{
-							transform: `rotate(${sticker.rotation * 90 - 45}deg)`,
-						},
-						styleWhen(isClickable, {
-							cursor: `pointer`,
-						}),
-					]"
+					:class="{ 'cursor-pointer': isClickable }"
+					:style="{
+						transform: `rotate(${sticker.rotation * 90 - 45}deg)`,
+					}"
 					:src="sticker.sticker.img_url"
 					:alt="sticker.sticker.name || ''"
 				/>

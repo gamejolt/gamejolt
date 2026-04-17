@@ -35,7 +35,7 @@ createAppRoute({
 <template>
 	<div>
 		<section class="section landing-header">
-			<div class="container">
+			<div class="gj-container">
 				<div class="row">
 					<div class="col-lg-offset-1 col-lg-11">
 						<h1>
@@ -58,7 +58,7 @@ createAppRoute({
 		</section>
 
 		<section class="section">
-			<div class="container">
+			<div class="gj-container">
 				<div class="row">
 					<div class="col-lg-1" />
 					<div class="col-sm-3 col-sm-push-9 col-lg-3 col-lg-push-8">

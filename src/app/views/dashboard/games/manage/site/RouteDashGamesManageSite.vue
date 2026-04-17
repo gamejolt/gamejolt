@@ -37,7 +37,7 @@ const appRoute = createAppRoute({
 
 <template>
 	<section v-if="appRoute.isBootstrapped.value" class="section">
-		<div class="container">
+		<div class="gj-container">
 			<template v-if="!game.path">
 				<div class="alert">
 					<p>

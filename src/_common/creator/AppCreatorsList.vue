@@ -66,11 +66,11 @@ const placeholderCount = computed(() => {
 			'-scroll': listType === 'scroll',
 			'-grid': listType === 'grid',
 		}"
-		:style="[
-			`--col-desktop: ${gridColumnsDesktop}`,
-			`--col-sm: ${gridColumnsSm}`,
-			`--col-xs: ${gridColumnsXs}`,
-		]"
+		:style="{
+			'--col-desktop': gridColumnsDesktop,
+			'--col-sm': gridColumnsSm,
+			'--col-xs': gridColumnsXs,
+		}"
 		horizontal
 	>
 		<div

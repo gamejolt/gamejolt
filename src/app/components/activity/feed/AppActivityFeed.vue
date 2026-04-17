@@ -29,7 +29,6 @@ import { Screen } from '~common/screen/screen-service';
 import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
 import { Scroll } from '~common/scroll/scroll.service';
 import { $gettext } from '~common/translate/translate.service';
-import { styleWhen } from '~styles/mixins';
 
 const InviewConfigShowNew = new ScrollInviewConfig({ margin: `-${Scroll.offsetTop}px` });
 const InviewConfigLoadMore = new ScrollInviewConfig({ margin: `${Screen.height * 1.5}px` });
@@ -250,7 +249,9 @@ function shouldShowAd(index: number) {
 				<AppLoading
 					v-if="feed.isLoadingMore"
 					class="-bottom-loading loading-centered"
-					:style="styleWhen(Screen.isMobile, { marginTop: kPostItemPaddingVertical.px })"
+					:style="
+						Screen.isMobile ? { marginTop: kPostItemPaddingVertical.px } : undefined
+					"
 				/>
 			</RouterLink>
 

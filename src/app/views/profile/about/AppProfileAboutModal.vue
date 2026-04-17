@@ -19,7 +19,6 @@ import AppSpacer from '~common/spacer/AppSpacer.vue';
 import { kThemeFg10 } from '~common/theme/variables';
 import AppTimeAgo from '~common/time/AppTimeAgo.vue';
 import { $gettext } from '~common/translate/translate.service';
-import { styleChangeBg } from '~styles/mixins';
 
 type Props = {
 	routeStore: ProfileRouteStore;
@@ -84,7 +83,7 @@ const showFullDescription = ref(false);
 
 			<AppProfileSocialLinks />
 
-			<div v-if="routeUser" class="small text-muted" :style="{ marginTop: `32px` }">
+			<div v-if="routeUser" class="small text-muted mt-[32px]">
 				{{ $gettext(`Joined`) }}
 				{{ ' ' }}
 				<AppTimeAgo :date="routeUser.created_on" />
@@ -94,11 +93,11 @@ const showFullDescription = ref(false);
 
 			<AppShareCard
 				v-if="!myUser || !isMe"
-				:style="styleChangeBg('bg-offset')"
+				class="change-bg-bg-offset"
 				resource="user"
 				:url="shareUrl"
 			/>
-			<AppInviteCard v-else :style="styleChangeBg('bg-offset')" :user="myUser" />
+			<AppInviteCard v-else class="change-bg-bg-offset" :user="myUser" />
 		</div>
 	</AppModal>
 </template>

@@ -33,7 +33,7 @@ import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 import { $gettext } from '~common/translate/translate.service';
 import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
-import { styleElevate } from '~styles/mixins';
+import { kElevateTransition } from '~styles/mixins';
 
 export interface ChatMessageEditEvent {
 	message: ChatMessageModel;
@@ -293,7 +293,10 @@ async function onMessageClick() {
 					:style="{
 						...avatarSizeStyles,
 					}"
-					:img-wrapper-styles="styleElevate(1)"
+					:img-wrapper-styles="{
+						boxShadow: `var(--shadow-elevate-xs)`,
+						transition: kElevateTransition,
+					}"
 					:user="message.user"
 					disable-link
 					show-frame

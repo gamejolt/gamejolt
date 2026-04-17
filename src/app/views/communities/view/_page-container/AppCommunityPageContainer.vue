@@ -23,7 +23,7 @@ const shouldShowSidebar = computed(() => Screen.isLg || (Screen.isMd && sidebarH
 			class="-content"
 			:class="{ '-single': !sidebarHasContent, '-full': full && !sidebarHasContent }"
 		>
-			<div :class="{ container: full && !sidebarHasContent }">
+			<div :class="{ 'gj-container': full && !sidebarHasContent }">
 				<slot />
 			</div>
 		</div>

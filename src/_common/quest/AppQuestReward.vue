@@ -10,16 +10,7 @@ import AppSpacer from '~common/spacer/AppSpacer.vue';
 import { kThemeFg, kThemeFgMuted } from '~common/theme/variables';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import { $gettext } from '~common/translate/translate.service';
-import {
-	styleBorderRadiusLg,
-	styleChangeBg,
-	styleElevate,
-	styleFlexCenter,
-	styleLineClamp,
-	styleOverlayTextShadow,
-	styleTyped,
-	styleWhen,
-} from '~styles/mixins';
+import { styleTyped } from '~styles/mixins';
 import { kFontSizeBase, kFontSizeTiny } from '~styles/variables';
 
 const itemsWithCount = new Set([
@@ -72,19 +63,18 @@ const { hovered, hoverBinding } = useOnHover();
 	<div>
 		<div
 			v-bind="{ ...hoverBinding }"
+			:class="[
+				'change-bg-bg-offset rounded-lg elevate-transition',
+				{ 'shadow-elevate-xs': hovered },
+			]"
 			:style="
 				styleTyped({
-					...styleChangeBg('bg-offset'),
-					...styleBorderRadiusLg,
 					height: `100%`,
 					padding: `12px 8px`,
 					display: `flex`,
 					flexDirection: `column`,
 					alignItems: `center`,
 					position: `relative`,
-					...styleWhen(hovered, {
-						...styleElevate(1),
-					}),
 				})
 			"
 		>
@@ -93,8 +83,8 @@ const { hovered, hoverBinding } = useOnHover();
 
 				<span
 					v-if="displayCount"
+					class="overlay-text-shadow"
 					:style="{
-						...styleOverlayTextShadow,
 						position: `absolute`,
 						right: 0,
 						userSelect: `none`,
@@ -113,20 +103,14 @@ const { hovered, hoverBinding } = useOnHover();
 
 			<div
 				v-app-tooltip.touchable="reward.name"
+				class="flex flex-col items-center justify-center"
 				:style="{
-					...styleFlexCenter({
-						direction: `column`,
-					}),
 					flex: `auto`,
 					width: `100%`,
 					textAlign: `center`,
 				}"
 			>
-				<div
-					:style="{
-						...styleLineClamp(3),
-					}"
-				>
+				<div class="line-clamp-3">
 					{{ reward.name }}
 				</div>
 
@@ -138,9 +122,6 @@ const { hovered, hoverBinding } = useOnHover();
 						fontStyle: `italic`,
 						color: kThemeFgMuted,
 						userSelect: `none`,
-						...styleWhen(!subtitle, {
-							visibility: `hidden`,
-						}),
 					}"
 				>
 					{{ subtitle }}

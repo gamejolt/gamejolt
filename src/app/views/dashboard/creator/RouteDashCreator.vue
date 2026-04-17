@@ -28,7 +28,6 @@ import AppSpacer from '~common/spacer/AppSpacer.vue';
 import { useCommonStore } from '~common/store/common-store';
 import { kThemeFgMuted } from '~common/theme/variables';
 import { $gettext } from '~common/translate/translate.service';
-import { styleAbsoluteFill, styleFlexCenter } from '~styles/mixins';
 import { kGridGutterWidth } from '~styles/variables';
 import { RouteLocationRedirect } from '~utils/router';
 
@@ -150,37 +149,26 @@ const creatorNextUnlock = computed(() => {
 <template>
 	<AppShellPageBackdrop v-if="user && isBootstrapped">
 		<section class="section">
-			<div class="container">
+			<div class="gj-container">
 				<h1 class="text-center _heading">
-					<span :style="{ marginRight: `8px` }">
+					<span class="mr-[8px]">
 						<AppJolticon icon="dashboard" big middle />
 					</span>
 					{{ $gettext(`Creator HUD`) }}
 				</h1>
 
 				<template v-if="experience && user.is_creator">
-					<div :style="styleFlexCenter({ direction: `column` })">
-						<div
-							:style="{
-								width: `120px`,
-							}"
-						>
+					<div class="flex flex-col items-center justify-center">
+						<div class="w-[120px]">
 							<AppAspectRatio :ratio="1" show-overflow>
 								<div
-									:style="{
-										...styleFlexCenter({
-											direction: `column`,
-										}),
-										width: `100%`,
-										height: `100%`,
-										position: `relative`,
-									}"
+									class="relative flex h-full w-full flex-col items-center justify-center"
 								>
 									<div>{{ experience.current_level }}</div>
 									<div>{{ $gettext(`level`) }}</div>
 
 									<AppCircularProgress
-										:style="styleAbsoluteFill()"
+										class="absolute inset-0"
 										:percent="
 											Math.min(
 												1,

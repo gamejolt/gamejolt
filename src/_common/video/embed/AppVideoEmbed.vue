@@ -99,7 +99,7 @@ async function recalculateDimensions() {
 		<div ref="innerElem">
 			<iframe
 				v-if="videoProvider === 'youtube' && embedUrl"
-				:style="{ display: `block` }"
+				class="block"
 				nwdisable
 				nwfaketop
 				frameborder="0"
@@ -111,7 +111,7 @@ async function recalculateDimensions() {
 
 			<iframe
 				v-if="videoProvider === 'vimeo' && embedUrl"
-				:style="{ display: `block` }"
+				class="block"
 				nwdisable
 				nwfaketop
 				frameborder="0"

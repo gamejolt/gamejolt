@@ -20,13 +20,7 @@ import {
 	kThemeFg10,
 	kThemePrimary,
 } from '~common/theme/variables';
-import {
-	kElevateTransition,
-	styleBorderRadiusLg,
-	styleElevate,
-	styleFlexCenter,
-	styleWhen,
-} from '~styles/mixins';
+import { kElevateTransition } from '~styles/mixins';
 import {
 	kBorderWidthBase,
 	kFontFamilyDisplay,
@@ -82,30 +76,22 @@ const imageSize = Math.floor((labelFontSize.value + amountFontSize.value) * kLin
 <template>
 	<a
 		v-app-auth-required
+		:class="[
+			'rounded-lg elevate-transition',
+			hovered ? 'shadow-elevate-raw-2' : 'shadow-elevate-xs',
+		]"
 		v-bind="{
 			...hoverBinding,
-			style: [
-				styleBorderRadiusLg,
-				{
-					backgroundColor: kThemeBgOffset,
-					gap: `8px`,
-					color: kThemeFg,
-					padding: `${12 - kBorderWidthBase.value}px`,
-					borderWidth: kBorderWidthBase.px,
-					borderStyle: `solid`,
-					borderColor: `transparent`,
-				},
-				styleElevate(1),
-				styleWhen(hovered, {
-					...styleElevate(2),
-					borderColor: kThemePrimary,
-					backgroundColor: kThemeBgBackdrop,
-				}),
-				// Needs to be defined after [styleElevate] calls.
-				{
-					transition: `background-color 200ms ${kStrongEaseOut}, border-color 250ms ${kStrongEaseOut}, ${kElevateTransition}`,
-				},
-			],
+			style: {
+				backgroundColor: hovered ? kThemeBgBackdrop : kThemeBgOffset,
+				gap: `8px`,
+				color: kThemeFg,
+				padding: `${12 - kBorderWidthBase.value}px`,
+				borderWidth: kBorderWidthBase.px,
+				borderStyle: `solid`,
+				borderColor: hovered ? kThemePrimary : `transparent`,
+				transition: `background-color 200ms ${kStrongEaseOut}, border-color 250ms ${kStrongEaseOut}, ${kElevateTransition}`,
+			},
 		}"
 		@click="onClickCard(currency)"
 	>
@@ -119,12 +105,7 @@ const imageSize = Math.floor((labelFontSize.value + amountFontSize.value) * kLin
 			}"
 		>
 			<!-- Label and Amount -->
-			<div
-				:style="{
-					flexDirection: `column`,
-					justifyContent: `center`,
-				}"
-			>
+			<div class="flex-col justify-center">
 				<div
 					:style="{
 						fontFamily: kFontFamilyDisplay,
@@ -134,9 +115,9 @@ const imageSize = Math.floor((labelFontSize.value + amountFontSize.value) * kLin
 					{{ currency.label }}
 				</div>
 				<div
+					class="font-semibold"
 					:style="{
 						fontSize: amountFontSize.px,
-						fontWeight: `600`,
 					}"
 				>
 					{{ formatNumber(amount) }}
@@ -151,7 +132,9 @@ const imageSize = Math.floor((labelFontSize.value + amountFontSize.value) * kLin
 					borderRadius: `50%`,
 				}"
 				:inner-styles="{
-					...styleFlexCenter(),
+					display: `flex`,
+					alignItems: `center`,
+					justifyContent: `center`,
 					padding: `8px`,
 				}"
 				show-overflow
@@ -166,14 +149,7 @@ const imageSize = Math.floor((labelFontSize.value + amountFontSize.value) * kLin
 			</AppAspectRatio>
 		</div>
 
-		<AppButton
-			block
-			solid
-			:force-hover="hovered"
-			:style="{
-				pointerEvents: `none`,
-			}"
-		>
+		<AppButton class="pointer-events-none" block solid :force-hover="hovered">
 			{{
 				$gettext(`Get %{ label }`, {
 					label: currency.label,

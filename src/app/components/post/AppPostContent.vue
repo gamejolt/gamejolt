@@ -55,7 +55,10 @@ function toggleLead() {
 </script>
 
 <template>
-	<div :style="PostContentContainerStyles(overlay)">
+	<div
+		:class="{ 'change-bg-bg rounded-lg': overlay }"
+		:style="PostContentContainerStyles(overlay)"
+	>
 		<AppStickerTarget :controller="stickerTargetController" :disabled="!post.canPlaceSticker">
 			<slot name="content">
 				<!--

@@ -17,7 +17,7 @@ const emit = defineEmits<{
 
 <template>
 	<section class="section fill-notice">
-		<div class="container">
+		<div class="gj-container">
 			<h2 class="sans-margin-top">
 				{{ $gettext(`This account is banned.`) }}
 			</h2>

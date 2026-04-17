@@ -19,7 +19,6 @@ import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 import { useCommonStore } from '~common/store/common-store';
 import { $gettext } from '~common/translate/translate.service';
-import { styleBorderRadiusBase, styleChangeBg } from '~styles/mixins';
 import { kFontSizeLarge } from '~styles/variables';
 
 type Props = {
@@ -148,9 +147,8 @@ async function onClickDecline() {
 <template>
 	<!-- AppContentChatInvite -->
 	<div
+		class="change-bg-bg-offset rounded"
 		:style="{
-			...styleChangeBg('bg-offset'),
-			...styleBorderRadiusBase,
 			padding: `8px`,
 			width: `300px`,
 			maxWidth: `100%`,
@@ -195,7 +193,7 @@ async function onClickDecline() {
 
 				<div
 					v-if="!sentInvite && invite.status === ChatInviteStatusOpen"
-					:style="{ display: `flex`, gap: `12px` }"
+					class="flex gap-[12px]"
 				>
 					<AppButton primary solid block @click="onClickAccept">
 						{{ $gettext(`Accept`) }}

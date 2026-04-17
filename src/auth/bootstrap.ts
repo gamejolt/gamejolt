@@ -1,3 +1,4 @@
+import '~styles/tailwind.css';
 import '~auth/main.styl';
 
 import { authStore, AuthStoreKey } from '~auth/store';

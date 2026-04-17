@@ -3,7 +3,6 @@ import AppCurrencyImg from '~common/currency/AppCurrencyImg.vue';
 import { Currency } from '~common/currency/currency-type';
 import { formatNumber } from '~common/filters/number';
 import { ThemeColor } from '~common/theme/variables';
-import { styleChangeBg, styleWhen } from '~styles/mixins';
 
 type Props = {
 	currency: Currency;
@@ -17,18 +16,8 @@ const { currency, amount, fillColor = 'bg-offset', overlay } = defineProps<Props
 <template>
 	<!-- AppCurrencyPill -->
 	<div
-		:style="{
-			...styleChangeBg(fillColor),
-			display: 'flex',
-			padding: '4px 6px',
-			fontWeight: 'bold',
-			borderRadius: '50px',
-			gap: '4px',
-			...styleWhen(overlay, {
-				backgroundColor: `rgba(0, 0, 0, 0.87)`,
-				color: `white`,
-			}),
-		}"
+		class="flex font-bold rounded-[50px] gap-[4px] py-[4px] px-[6px]"
+		:class="[`change-bg-${fillColor}`, { '!bg-[rgba(0,0,0,0.87)] !text-white': overlay }]"
 	>
 		<AppCurrencyImg :currency="currency" asset-size="small" />
 

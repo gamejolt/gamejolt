@@ -141,7 +141,7 @@ function showEditAvatar() {
 
 		<!-- Don't show content before this route has loaded in the account data. -->
 		<section v-if="isBootstrapped" class="section">
-			<div class="container">
+			<div class="gj-container">
 				<div class="row">
 					<div v-if="!Screen.isXs" class="col-sm-3 col-md-2">
 						<nav class="platform-list">

@@ -3,7 +3,6 @@ import { computed } from 'vue';
 
 import { GameModel } from '~common/game/game.model';
 import AppJolticon, { Jolticon } from '~common/jolticon/AppJolticon.vue';
-import { kThemeBgSubtle } from '~common/theme/variables';
 
 type Props = {
 	game: GameModel;
@@ -46,17 +45,12 @@ const icons = computed(() => {
 
 <template>
 	<span v-if="icons.length">
+		<!-- Bump it down to match up with the bottom of the text more. -->
 		<AppJolticon
 			v-for="platform of icons"
 			:key="platform"
-			class="-icon"
+			class="-icon text-bg-subtle relative top-[1px]"
 			:icon="platform"
-			:style="{
-				color: kThemeBgSubtle,
-				position: `relative`,
-				// Bump it down to match up with the bottom of the text more.
-				top: `1px`,
-			}"
 		/>
 	</span>
 </template>

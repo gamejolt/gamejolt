@@ -15,7 +15,6 @@ import {
 	queueVideoTimeChange,
 	VideoPlayerController,
 } from '~common/video/player/controller';
-import { styleBorderRadiusBase, styleOverlayTextShadow } from '~styles/mixins';
 import { kFontSizeLarge, kFontSizeSmall } from '~styles/variables';
 
 /**
@@ -154,21 +153,21 @@ function setVideoShouldLoadTimer() {
 				>
 					<AppJolticon
 						v-if="player.muted"
+						class="overlay-text-shadow"
 						icon="audio-mute"
 						:style="{
-							...styleOverlayTextShadow,
 							fontSize: kFontSizeLarge.px,
 							color: `white`,
 							margin: 0,
 						}"
 					/>
 
-					<div :style="{ flex: `1 0 12px` }" />
+					<div class="[flex:1_0_12px]" />
 
 					<div
 						v-if="player.duration"
+						class="rounded"
 						:style="{
-							...styleBorderRadiusBase,
 							backgroundColor: `rgba(0,0,0,0.4)`,
 							color: `white`,
 							padding: `4px 8px`,

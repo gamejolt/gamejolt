@@ -33,12 +33,10 @@ const supportersModel = computed(() =>
 		<AppStickerSupporters
 			v-if="supporters.length && supportersModel"
 			class="-supporters"
+			:class="{ 'mr-[12px]': stickers.length }"
 			:model="supportersModel"
 			:limit="Screen.isDesktop ? 8 : Math.max(1, Math.min(8, Math.round(Screen.width / 100)))"
 			:supporters="supporters"
-			:style="{
-				marginRight: stickers.length ? '12px' : undefined,
-			}"
 		/>
 
 		<AppStickerReactions

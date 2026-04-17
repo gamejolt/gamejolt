@@ -24,7 +24,7 @@ createAppRoute({});
 <template>
 	<div class="route-landing-learn">
 		<section class="section landing-header text-center">
-			<div class="container">
+			<div class="gj-container">
 				<h1>
 					<AppThemeSvg
 						v-app-tooltip="$gettext('This is a lightning bolt.')"
@@ -45,7 +45,7 @@ createAppRoute({});
 
 		<div class="landing-body">
 			<section class="section">
-				<div class="container">
+				<div class="gj-container">
 					<h1 class="section-header text-center">Game Jolt Loves</h1>
 
 					<hr class="underbar underbar-center" />
@@ -100,7 +100,7 @@ createAppRoute({});
 			</section>
 
 			<section class="section fill-offset">
-				<div class="container">
+				<div class="gj-container">
 					<div class="row">
 						<div class="col-lg-1" />
 						<div class="col-sm-7 col-md-6 col-lg-5">
@@ -180,7 +180,7 @@ createAppRoute({});
 			</section>
 
 			<section class="section">
-				<div class="container">
+				<div class="gj-container">
 					<div class="row">
 						<div class="col-sm-5 col-sm-push-7 col-md-push-0">
 							<div class="landing-graphic-full hidden-xs">
@@ -219,7 +219,7 @@ createAppRoute({});
 			</section>
 
 			<section class="section fill-offset">
-				<div class="container">
+				<div class="gj-container">
 					<div class="row">
 						<div class="col-lg-1" />
 						<div class="col-sm-7 col-md-6 col-lg-5">
@@ -254,7 +254,7 @@ createAppRoute({});
 			</section>
 
 			<section class="section">
-				<div class="container">
+				<div class="gj-container">
 					<div class="row">
 						<div class="col-sm-5 col-sm-push-7 col-md-push-0">
 							<div class="landing-graphic-full hidden-xs">
@@ -311,7 +311,7 @@ createAppRoute({});
 			</section>
 
 			<section class="section fill-offset">
-				<div class="container">
+				<div class="gj-container">
 					<div class="row">
 						<div class="col-lg-1" />
 						<div class="col-sm-7 col-md-6 col-lg-5">
@@ -344,7 +344,7 @@ createAppRoute({});
 			</section>
 
 			<section class="section">
-				<div class="container">
+				<div class="gj-container">
 					<div class="row">
 						<div class="col-sm-5 col-sm-push-7 col-md-push-0">
 							<div class="landing-graphic-full hidden-xs">
@@ -375,7 +375,7 @@ createAppRoute({});
 			</section>
 
 			<section class="section fill-black">
-				<div class="container">
+				<div class="gj-container">
 					<h1 class="section-header text-center">Community</h1>
 
 					<hr class="underbar underbar-center" />
@@ -429,7 +429,7 @@ createAppRoute({});
 			</section>
 
 			<section class="section fill-highlight">
-				<div class="container text-center">
+				<div class="gj-container text-center">
 					<h1 class="section-header">Everywhere</h1>
 
 					<div class="row">
@@ -487,7 +487,7 @@ createAppRoute({});
 			</section>
 
 			<section v-if="!user" class="section">
-				<div class="container">
+				<div class="gj-container">
 					<h1 class="section-header text-center">
 						{{ $gettext(`Join`) }}
 					</h1>

@@ -4,7 +4,6 @@ import { CSSProperties, ref, toRef, useTemplateRef } from 'vue';
 import { Ruler } from '~common/ruler/ruler-service';
 import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
 import { Scroll } from '~common/scroll/scroll.service';
-import { styleWhen } from '~styles/mixins';
 import { useResizeObserver } from '~utils/resize-observer';
 
 type Props = {
@@ -96,19 +95,14 @@ function _createInviewConfig() {
 				'gj-scroll-affixed': isAffixed,
 			}"
 			:style="{
-				...styleWhen(isAffixed && anchor === 'top', {
-					top: `var(--scroll-affix-top, 0)`,
-					paddingTop: `${padding}px`,
-				}),
-				...styleWhen(isAffixed && anchor === 'bottom', {
-					bottom: `var(--scroll-affix-bottom, 0)`,
-					paddingBottom: `${padding}px`,
-				}),
-				...styleWhen(isAffixed, {
-					position: `fixed`,
-					width: `${width}px`,
-					...affixedStyles,
-				}),
+				top: isAffixed && anchor === 'top' ? `var(--scroll-affix-top, 0)` : undefined,
+				paddingTop: isAffixed && anchor === 'top' ? `${padding}px` : undefined,
+				bottom:
+					isAffixed && anchor === 'bottom' ? `var(--scroll-affix-bottom, 0)` : undefined,
+				paddingBottom: isAffixed && anchor === 'bottom' ? `${padding}px` : undefined,
+				position: isAffixed ? `fixed` : undefined,
+				width: isAffixed ? `${width}px` : undefined,
+				...(isAffixed ? affixedStyles : {}),
 			}"
 		>
 			<slot :affixed="isAffixed" />

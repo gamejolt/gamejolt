@@ -60,31 +60,18 @@ function selectEmoji(emoji: EmojiModel) {
 <template>
 	<!-- AppEmojiSelectorGroup -->
 	<AppScrollInview
+		class="mb-[32px]"
 		:config="GroupInviewConfig"
-		:style="{
-			marginBottom: `32px`,
-		}"
 		@inview="onInview()"
 		@outview="onOutview()"
 	>
-		<div
-			class="section-header"
-			:style="{
-				display: `flex`,
-				gap: `8px`,
-				alignItems: `flex-start`,
-			}"
-		>
+		<div class="section-header flex items-start gap-[8px]">
 			<AppEmojiSelectorGroupThumbnail
 				:group="groupData.group"
 				:size="kFontSizeBase.value + 2"
 			/>
 
-			<h6
-				:style="{
-					marginTop: 0,
-				}"
-			>
+			<h6 class="mt-0">
 				{{ groupData.group.name }}
 			</h6>
 		</div>

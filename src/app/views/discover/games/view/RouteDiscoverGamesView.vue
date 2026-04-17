@@ -499,7 +499,7 @@ createAppRoute({
 	<div v-if="game" class="route-discover-games-view">
 		<AppGameMaturityBlock :game="game">
 			<section v-if="collaboratorInvite" class="section section-thin fill-highlight">
-				<div class="container text-center">
+				<div class="gj-container text-center">
 					<p>
 						<b> @{{ game.developer.username }} </b>
 						{{ ' ' }}

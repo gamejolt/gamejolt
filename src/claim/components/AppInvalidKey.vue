@@ -3,7 +3,7 @@ import { $gettext } from '~common/translate/translate.service';
 </script>
 
 <template>
-	<section class="container">
+	<section class="gj-container">
 		<h1 class="section-header">
 			{{ $gettext(`Invalid Key`) }}
 		</h1>

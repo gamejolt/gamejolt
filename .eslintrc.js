@@ -64,6 +64,28 @@ module.exports = {
 							'Use ~section aliases (~app, ~common, ~styles, etc.) instead of ../ relative imports.',
 					},
 				],
+				paths: [
+					{
+						name: '~styles/mixins',
+						importNames: [
+							'styleWhen',
+							'styleChangeBg',
+							'styleChangeBgRgba',
+							'styleElevate',
+							'styleBorderRadiusBase',
+							'styleBorderRadiusSm',
+							'styleBorderRadiusLg',
+							'styleFlexCenter',
+							'styleScrollable',
+							'styleScrollableX',
+							'styleTextOverflow',
+							'styleAbsoluteFill',
+							'styleOverlayTextShadow',
+						],
+						message:
+							'This style helper has been removed during the Tailwind migration. Use Tailwind utility classes instead — see CLAUDE.md and src/_styles/tailwind.css for tokens.',
+					},
+				],
 			},
 		],
 	},

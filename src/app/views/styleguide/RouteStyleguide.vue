@@ -49,7 +49,7 @@ createAppRoute({
 </script>
 
 <template>
-	<div class="container">
+	<div class="gj-container">
 		<div class="row">
 			<div class="col-sm-3 col-sm-push-9 col-lg-2 col-lg-push-10">
 				<br />

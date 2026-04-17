@@ -6,9 +6,6 @@ import AppShellNoticeBase from '~common/shell/notice/_base/AppShellNoticeBase.vu
 import AppShellNoticeCreatorExperience from '~common/shell/notice/creator-experience/AppShellNoticeCreatorExperience.vue';
 import { getShellNotice } from '~common/shell/notice/notice.service';
 import AppShellNoticeStickerMastery from '~common/shell/notice/sticker-mastery/AppShellNoticeStickerMastery.vue';
-import { kThemeBgOffset, kThemeFg, kThemeFg10 } from '~common/theme/variables';
-import { styleFlexCenter } from '~styles/mixins';
-import { kBorderRadiusLg, kBorderWidthBase } from '~styles/variables';
 import { sleep } from '~utils/utils';
 
 const { notices, remove: removeNotice } = getShellNotice();
@@ -44,32 +41,15 @@ async function removeAllNotices() {
 </script>
 
 <template>
-	<div
-		class="shell-notice-container"
-		:style="{
-			// kShellTopNavHeight is in [app] section and can't be imported here.
-			top: `56px`,
-			display: `grid`,
-			justifyItems: `end`,
-		}"
-	>
+	<!-- kShellTopNavHeight is in [app] section and can't be imported here, so we use 56px. -->
+	<div class="shell-notice-container top-[56px] grid justify-items-end">
 		<Transition>
 			<a
 				v-if="notices.length > 0 && !isRemoving"
-				class="_close anim-fade-enter-right anim-fade-leave-right"
-				:style="{
-					borderTopLeftRadius: kBorderRadiusLg.px,
-					borderBottomLeftRadius: kBorderRadiusLg.px,
-					backgroundColor: kThemeBgOffset,
-					border: `${kBorderWidthBase.px} solid ${kThemeFg10}`,
-					borderRight: `none`,
-					padding: `12px 16px`,
-					marginBottom: `8px`,
-					...styleFlexCenter(),
-				}"
+				class="_close anim-fade-enter-right anim-fade-leave-right flex items-center justify-center rounded-l-lg bg-bg-offset border-[1.5px] border-[rgba(var(--theme-fg-rgb),0.1)] border-r-0 py-[12px] px-[16px] mb-[8px]"
 				@click.stop="removeAllNotices()"
 			>
-				<AppJolticon icon="remove" :style="{ margin: 0, color: kThemeFg }" />
+				<AppJolticon icon="remove" class="m-0 text-fg" />
 			</a>
 		</Transition>
 

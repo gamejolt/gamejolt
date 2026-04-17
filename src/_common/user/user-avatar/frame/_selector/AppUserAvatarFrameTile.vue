@@ -12,7 +12,6 @@ import {
 } from '~common/theme/variables';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import { UserAvatarFrameModel } from '~common/user/user-avatar/frame/frame.model';
-import { styleBorderRadiusBase, styleBorderRadiusLg, styleLineClamp } from '~styles/mixins';
 import { kBorderWidthLg, kFontSizeSmall, kStrongEaseOut } from '~styles/variables';
 
 type Props = {
@@ -34,7 +33,6 @@ const name = toRef(() => frame?.avatar_frame.name || '');
 
 const rootStyles = computed(() => {
 	return {
-		...styleBorderRadiusLg,
 		position: `relative`,
 		padding: `24px`,
 		transition: `background-color 300ms ${kStrongEaseOut}`,
@@ -62,7 +60,7 @@ function onClickFrame() {
 <template>
 	<!-- AppUserAvatarFrameTile -->
 	<div>
-		<div :style="rootStyles" @click="onClickFrame">
+		<div class="rounded-lg" :style="rootStyles" @click="onClickFrame">
 			<!-- Clickable avatar frame tile -->
 			<AppAspectRatio
 				:style="{
@@ -106,8 +104,8 @@ function onClickFrame() {
 			<div
 				v-if="frame && frame.expires_on"
 				:key="expiryInfoKey"
+				class="rounded"
 				:style="{
-					...styleBorderRadiusBase,
 					position: `absolute`,
 					top: `8px`,
 					left: `8px`,
@@ -136,10 +134,10 @@ function onClickFrame() {
 		<div
 			v-if="name.length"
 			v-app-tooltip="name.length > 30 ? name : undefined"
+			class="line-clamp-2"
 			:style="{
 				fontSize: kFontSizeSmall.px,
 				fontWeight: `600`,
-				...styleLineClamp(2),
 			}"
 		>
 			{{ name }}

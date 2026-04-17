@@ -8,7 +8,6 @@ import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppSc
 import { kThemeFg10 } from '~common/theme/variables';
 import { UserModel } from '~common/user/user.model';
 import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
-import { styleTextOverflow, styleWhen } from '~styles/mixins';
 import { kBorderRadiusBase } from '~styles/variables';
 
 const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height / 2}px` });
@@ -40,41 +39,40 @@ const isInview = ref(false);
 				<a
 					v-bind="{
 						...hoverBinding,
-						style: [
-							{
-								display: `flex`,
-								alignItems: `center`,
-								padding: `0 4px`,
-								margin: `0 -4px`,
-								height: `100%`,
-								borderRadius: kBorderRadiusBase.px,
-								color: `inherit`,
-								gap: `8px`,
-								transition: `margin 150ms, padding 150ms`,
-							},
-							styleWhen(hovered || selectedJoltydexUser === user, {
-								background: kThemeFg10,
-							}),
-							styleWhen(selectedJoltydexUser === user, {
-								marginLeft: `calc(0px - var(--shell-content-sidebar-padding))`,
-								paddingLeft: `var(--shell-content-sidebar-padding)`,
-								borderTopLeftRadius: 0,
-								borderBottomLeftRadius: 0,
-							}),
-						],
+						style: {
+							display: `flex`,
+							alignItems: `center`,
+							padding: `0 4px`,
+							margin: `0 -4px`,
+							height: `100%`,
+							borderRadius: kBorderRadiusBase.px,
+							color: `inherit`,
+							gap: `8px`,
+							transition: `margin 150ms, padding 150ms`,
+							background:
+								hovered || selectedJoltydexUser === user ? kThemeFg10 : undefined,
+							marginLeft:
+								selectedJoltydexUser === user
+									? `calc(0px - var(--shell-content-sidebar-padding))`
+									: undefined,
+							paddingLeft:
+								selectedJoltydexUser === user
+									? `var(--shell-content-sidebar-padding)`
+									: undefined,
+							borderTopLeftRadius: selectedJoltydexUser === user ? 0 : undefined,
+							borderBottomLeftRadius: selectedJoltydexUser === user ? 0 : undefined,
+						},
 					}"
 					@click="selectedJoltydexUser = user"
 				>
 					<AppUserAvatarBubble
-						:style="{ flex: `none`, width: '32px', height: '32px' }"
+						class="h-[32px] w-[32px] flex-none"
 						:user="user"
 						disable-link
 						show-frame
 					/>
 
-					<div :style="[styleTextOverflow, { fontWeight: `bold` }]">
-						@{{ user.username }}
-					</div>
+					<div class="truncate font-bold">@{{ user.username }}</div>
 				</a>
 			</AppOnHover>
 		</template>

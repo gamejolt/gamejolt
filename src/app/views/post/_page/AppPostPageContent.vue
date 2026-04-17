@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, CSSProperties, ref } from 'vue';
+import { computed, ref } from 'vue';
 import { RouteLocationRaw, RouterLink, useRoute, useRouter } from 'vue-router';
 
 import AppCommunityUserNotification from '~app/components/community/user-notification/AppCommunityUserNotification.vue';
@@ -21,7 +21,6 @@ import AppTranslate from '~common/translate/AppTranslate.vue';
 import AppUserCardHover from '~common/user/card/AppUserCardHover.vue';
 import AppUserFollowButton from '~common/user/follow/AppUserFollowButton.vue';
 import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
-import { styleOverlayTextShadow, styleWhen } from '~styles/mixins';
 import { arrayRemove } from '~utils/array';
 
 const UserFollowLocation = 'postPage' as const;
@@ -72,11 +71,6 @@ function onClickFullscreen(mediaItem: MediaItemModel) {
 function onDismissNotification(notification: CommunityUserNotificationModel) {
 	arrayRemove(communityNotifications, i => i.id === notification.id);
 }
-
-const overlayText: CSSProperties = {
-	...styleOverlayTextShadow,
-	color: `white`,
-};
 </script>
 
 <template>
@@ -109,18 +103,12 @@ const overlayText: CSSProperties = {
 					</div>
 
 					<RouterLink :to="displayUser.url" class="_name link-unstyled">
-						<span
-							:style="{
-								...styleWhen(shouldOverlay, overlayText),
-							}"
-						>
+						<span :class="{ 'overlay-text-shadow text-white': shouldOverlay }">
 							<strong>{{ displayUser.display_name }}</strong>
 						</span>
 						<span
 							class="tiny text-muted"
-							:style="{
-								...styleWhen(shouldOverlay, overlayText),
-							}"
+							:class="{ 'overlay-text-shadow text-white': shouldOverlay }"
 						>
 							@{{ displayUser.username }}
 						</span>
@@ -155,9 +143,7 @@ const overlayText: CSSProperties = {
 			<div class="tiny text-muted">
 				<AppTimeAgo
 					v-if="post.isActive"
-					:style="{
-						...styleWhen(shouldOverlay, overlayText),
-					}"
+					:class="{ 'overlay-text-shadow text-white': shouldOverlay }"
 					:date="post.published_on"
 					strict
 				/>

@@ -95,7 +95,7 @@ createAppRoute({
 
 <template>
 	<section class="section">
-		<div class="container">
+		<div class="gj-container">
 			<div class="row">
 				<div class="col-sm-4 col-sm-push-8">
 					<div class="page-help">

@@ -102,7 +102,7 @@ const bannerMediaItem = computed(() => {
 				<router-link v-if="location" class="_click" :to="location" />
 				<a v-else-if="item.hero_button_url" class="_click" :href="item.hero_button_url" />
 
-				<div class="container">
+				<div class="gj-container">
 					<div class="_main">
 						<div v-if="item.hero_front_media_item" class="_logo">
 							<img

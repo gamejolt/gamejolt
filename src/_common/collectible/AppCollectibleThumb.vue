@@ -12,13 +12,7 @@ import AppPopper from '~common/popper/AppPopper.vue';
 import { Screen } from '~common/screen/screen-service';
 import AppStickerMastery from '~common/sticker/AppStickerMastery.vue';
 import { kThemeBgOffset, kThemeBiBg, kThemeBiFg, kThemeGjBlue } from '~common/theme/variables';
-import {
-	styleBorderRadiusLg,
-	styleElevate,
-	styleLineClamp,
-	styleTyped,
-	styleWhen,
-} from '~styles/mixins';
+import { styleTyped } from '~styles/mixins';
 import {
 	kBorderRadiusBase,
 	kBorderRadiusLg,
@@ -73,7 +67,6 @@ const acquisitionStates = computed(() => {
 });
 
 const availabilityTagStyles = {
-	...styleBorderRadiusLg,
 	marginTop: `4px`,
 	padding: `2px 8px`,
 	display: `inline-block`,
@@ -87,17 +80,13 @@ const availabilityTagStyles = {
 	<AppPopper
 		v-bind="{
 			...hoverBinding,
-			style: styleTyped([
-				{
-					position: `relative`,
-					display: `block`,
-					width: `100%`,
-					height: `100%`,
-				},
-				styleWhen(hovered, {
-					zIndex: 1,
-				}),
-			]),
+			style: styleTyped({
+				position: `relative`,
+				display: `block`,
+				width: `100%`,
+				height: `100%`,
+				zIndex: hovered ? 1 : undefined,
+			}),
 		}"
 		placement="right-start"
 		:fallback-placements="['left-start']"
@@ -105,38 +94,32 @@ const availabilityTagStyles = {
 	>
 		<template #default="{ isShowingPopper }">
 			<div
-				:style="[
-					styleElevate(2),
-					{
-						position: `relative`,
-						padding: `8px`,
-						height: `100%`,
-						backgroundColor: kThemeBgOffset,
-						borderRadius: kBorderRadiusLg.px,
-						textAlign: `center`,
-						overflow: `hidden`,
-						display: `flex`,
-						cursor: `pointer`,
-						flexDirection: `column`,
-					},
-					// We make it look like the card pulls up.
-					styleWhen(hovered, {
-						...styleElevate(5),
-						transform: `scale(1.1)`,
-					}),
-					// When viewing details we push the card back since the details
-					// popover should be the main view.
-					styleWhen(isShowingPopper, {
-						...styleElevate(1),
-						transform: `rotate(-4deg) scale(0.95)`,
-						zIndex: 2,
-					}),
-					{
-						// Put this last so that it overrides any of the box-shadow
-						// transitions from elevation changes.
-						transition: `transform 300ms ${kStrongEaseOut}, box-shadow 300ms ${kStrongEaseOut}`,
-					},
+				:class="[
+					isShowingPopper
+						? 'shadow-elevate-xs'
+						: hovered
+						? 'shadow-elevate-raw-5'
+						: 'shadow-elevate-raw-2',
 				]"
+				:style="{
+					position: `relative`,
+					padding: `8px`,
+					height: `100%`,
+					backgroundColor: kThemeBgOffset,
+					borderRadius: kBorderRadiusLg.px,
+					textAlign: `center`,
+					overflow: `hidden`,
+					display: `flex`,
+					cursor: `pointer`,
+					flexDirection: `column`,
+					transform: isShowingPopper
+						? `rotate(-4deg) scale(0.95)`
+						: hovered
+						? `scale(1.1)`
+						: undefined,
+					zIndex: isShowingPopper ? 2 : undefined,
+					transition: `transform 300ms ${kStrongEaseOut}, box-shadow 300ms ${kStrongEaseOut}`,
+				}"
 			>
 				<div
 					:style="{
@@ -149,15 +132,14 @@ const availabilityTagStyles = {
 					<!-- Image -->
 					<AppAspectRatio :ratio="1">
 						<img
-							:style="[
-								{
-									width: `100%`,
-									height: `auto`,
-								},
-								styleWhen(collectible.type === CollectibleType.Background, {
-									borderRadius: kBorderRadiusBase.px,
-								}),
-							]"
+							:style="{
+								width: `100%`,
+								height: `auto`,
+								borderRadius:
+									collectible.type === CollectibleType.Background
+										? kBorderRadiusBase.px
+										: undefined,
+							}"
 							:src="collectible.image_url"
 							alt=""
 						/>
@@ -166,13 +148,11 @@ const availabilityTagStyles = {
 					<div>
 						<!-- Label -->
 						<div
-							:style="[
-								styleLineClamp(2),
-								{
-									fontWeight: `bold`,
-									userSelect: `none`,
-								},
-							]"
+							class="line-clamp-2"
+							:style="{
+								fontWeight: `bold`,
+								userSelect: `none`,
+							}"
 						>
 							{{ collectible.name }}
 						</div>
@@ -182,6 +162,7 @@ const availabilityTagStyles = {
 				<!-- Availability -->
 				<div
 					v-if="acquisitionStates.hasSale"
+					class="rounded-lg"
 					:style="[
 						availabilityTagStyles,
 						{
@@ -195,6 +176,7 @@ const availabilityTagStyles = {
 
 				<div
 					v-if="acquisitionStates.hasChargeReward"
+					class="rounded-lg"
 					:style="[
 						availabilityTagStyles,
 						{
@@ -207,7 +189,7 @@ const availabilityTagStyles = {
 				</div>
 				<div
 					v-if="typeof collectible.sticker_mastery === 'number'"
-					:style="{ flex: `none`, paddingTop: `12px` }"
+					class="flex-none pt-[12px]"
 				>
 					<AppStickerMastery :progress="collectible.sticker_mastery" />
 				</div>
@@ -217,12 +199,9 @@ const availabilityTagStyles = {
 		</template>
 		<template #popover>
 			<AppCollectibleThumbDetails
+				class="w-[250px] p-[16px]"
 				:collectible="collectible"
 				:feed="feed"
-				:style="{
-					width: `250px`,
-					padding: `16px`,
-				}"
 			/>
 		</template>
 	</AppPopper>

@@ -76,7 +76,7 @@ createAppRoute({
 <template>
 	<div>
 		<section v-if="featuredPages?.length" class="section">
-			<div class="container">
+			<div class="gj-container">
 				<div class="row">
 					<div
 						v-for="{ category, pages } of featuredPages"
@@ -90,7 +90,7 @@ createAppRoute({
 		</section>
 
 		<section v-if="broadcastPosts?.length" class="section fill-offset">
-			<div class="container">
+			<div class="gj-container">
 				<h2 class="section-header">
 					{{ $gettext(`Recent updates`) }}
 				</h2>
@@ -122,7 +122,7 @@ createAppRoute({
 		</section>
 
 		<section class="section">
-			<div class="container">
+			<div class="gj-container">
 				<div class="col-lg-3 col-sm-12 _footer-column">
 					<h3 class="sans-margin-top _footer-header">{{ $gettext(`Company`) }}</h3>
 					<div>

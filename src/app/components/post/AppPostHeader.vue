@@ -75,7 +75,7 @@ const shouldShowFollow = computed(() => {
 			</AppUserCardHover>
 
 			<div :style="PostHeaderBylineStyles">
-				<div :style="PostHeaderBylineNameStyles(overlay)">
+				<div class="truncate" :style="PostHeaderBylineNameStyles(overlay)">
 					<RouterLink
 						class="link-unstyled"
 						:class="{ '-overlay-text': overlay }"
@@ -102,6 +102,7 @@ const shouldShowFollow = computed(() => {
 
 				<div
 					v-if="game && !feed?.hideGameInfo"
+					class="truncate"
 					:style="PostHeaderBylineGameStyles(overlay)"
 				>
 					<component

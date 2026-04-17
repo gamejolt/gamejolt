@@ -5,7 +5,6 @@ import { AdSlot, AdUnitName } from '~common/ad/ad-slot-info';
 import { useAdStore } from '~common/ad/ad-store';
 import AppAdWidgetInner from '~common/ad/widget/AppAdWidgetInner.vue';
 import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
-import { styleWhen } from '~styles/mixins';
 
 type Props = {
 	unitName: AdUnitName;
@@ -43,20 +42,16 @@ function _makeAdSlot() {
 				alignItems: `center`,
 				justifyContent: `center`,
 				margin: `0 auto`,
-				...styleWhen(unitName === 'billboard', {
-					minHeight: `115px`,
-				}),
-				...styleWhen(unitName === 'mpu' || unitName === 'halfpage', {
-					minHeight: `250px`,
-				}),
-				// For debugging ad placements.
-				...styleWhen(GJ_BUILD_TYPE !== 'build', {
-					background: `rgba(255, 0, 0, 0.2)`,
-					...styleWhen(unitName === 'rail', {
-						minWidth: `160px`,
-						minHeight: `600px`,
-					}),
-				}),
+				minHeight:
+					unitName === 'billboard'
+						? `115px`
+						: unitName === 'mpu' || unitName === 'halfpage'
+						? `250px`
+						: GJ_BUILD_TYPE !== 'build' && unitName === 'rail'
+						? `600px`
+						: undefined,
+				minWidth: GJ_BUILD_TYPE !== 'build' && unitName === 'rail' ? `160px` : undefined,
+				background: GJ_BUILD_TYPE !== 'build' ? `rgba(255, 0, 0, 0.2)` : undefined,
 			}"
 		>
 			<AppAspectRatio v-if="unitName === 'video'" :ratio="16 / 9">

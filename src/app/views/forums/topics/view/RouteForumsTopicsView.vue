@@ -211,7 +211,7 @@ createAppRoute({
 		</AppPageHeader>
 
 		<section class="section">
-			<div class="container">
+			<div class="gj-container">
 				<AppForumRules />
 
 				<div class="row">

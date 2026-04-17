@@ -1,8 +1,6 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import { styleChangeBg } from '~styles/mixins';
-
 type Props = {
 	count: number;
 	displayCount: number;
@@ -28,12 +26,11 @@ const size = computed(() => {
 
 <template>
 	<div
+		class="rounded-full [transition:background-color_300ms,width_300ms,height_300ms]"
+		:class="current === index ? 'change-bg-primary' : 'change-bg-bg-subtle'"
 		:style="{
-			...styleChangeBg(current === index ? 'primary' : 'bg-subtle'),
 			width: size,
 			height: size,
-			borderRadius: `50%`,
-			transition: `background-color 300ms, width 300ms, height 300ms`,
 		}"
 	/>
 </template>

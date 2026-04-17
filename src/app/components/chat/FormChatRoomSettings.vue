@@ -299,13 +299,7 @@ async function leaveRoom() {
 			</template>
 		</div>
 
-		<AppLoading
-			v-if="!hasLoadedBackgrounds"
-			centered
-			hide-label
-			stationary
-			:style="{ position: 'absolute' }"
-		/>
+		<AppLoading v-if="!hasLoadedBackgrounds" class="absolute" centered hide-label stationary />
 	</div>
 </template>
 

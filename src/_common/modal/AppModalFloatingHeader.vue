@@ -12,22 +12,15 @@ defineProps<Props>();
 		<div class="modal-controls">
 			<div
 				v-if="$slots['inline-title']"
-				:style="{
-					marginRight: `auto`,
-					flex: `auto`,
-					minWidth: 0,
-					alignSelf: `center`,
-					paddingTop: `8px`,
-					textAlign: `unset`,
-				}"
+				class="mr-auto flex-auto min-w-0 self-center pt-[8px] [text-align:unset]"
 			>
 				<slot name="inline-title" />
 			</div>
 
 			<div
 				v-if="controlsGap !== undefined && controlsGap > 0"
+				class="flex-none"
 				:style="{
-					flex: `none`,
 					width: `${controlsGap}px`,
 				}"
 			/>
@@ -43,7 +36,7 @@ defineProps<Props>();
 					<slot name="title" />
 				</h2>
 			</div>
-			<div v-else :style="{ height: `8px` }" />
+			<div v-else class="h-[8px]" />
 
 			<slot v-if="$slots.bottom" name="bottom" />
 		</div>

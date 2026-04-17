@@ -12,7 +12,6 @@ import { GameModel } from '~common/game/game.model';
 import AppGameThumbnail from '~common/game/thumbnail/AppGameThumbnail.vue';
 import { Screen } from '~common/screen/screen-service';
 import AppScrollAffix from '~common/scroll/AppScrollAffix.vue';
-import { styleWhen } from '~styles/mixins';
 import { kLayerAds } from '~styles/variables';
 
 export const GameGridRowSizeSm = 2;
@@ -150,10 +149,8 @@ function shouldShowAd(index: number) {
 				<div v-if="Screen.isDesktop && shouldShowAds" class="_game-grid-ad">
 					<div
 						:style="{
-							...styleWhen(shouldShowStickyAd, {
-								margin: `0 auto`,
-								maxWidth: `400px`,
-							}),
+							margin: shouldShowStickyAd ? `0 auto` : undefined,
+							maxWidth: shouldShowStickyAd ? `400px` : undefined,
 						}"
 					>
 						<AppScrollAffix

@@ -51,7 +51,7 @@ createAppRoute({
 
 <template>
 	<section class="section">
-		<div class="container">
+		<div class="gj-container">
 			<AppGameCollectionGrid :collections="collections" />
 		</div>
 	</section>

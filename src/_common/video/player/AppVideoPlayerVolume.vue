@@ -46,12 +46,7 @@ function onVolumeScrub({ percent, stage }: ScrubberCallback) {
 </script>
 
 <template>
-	<div
-		:style="{
-			display: `inline-flex`,
-			alignItems: `center`,
-		}"
-	>
+	<div class="inline-flex items-center">
 		<div class="player-control-button" @click="onClickMute">
 			<AppJolticon :icon="isMuted ? 'audio-mute' : 'audio'" />
 		</div>
@@ -59,9 +54,7 @@ function onVolumeScrub({ percent, stage }: ScrubberCallback) {
 		<Transition name="fade" :duration="transitionSlider ? undefined : 0">
 			<AppSlider
 				v-if="hasSlider"
-				:style="{
-					maxWidth: `128px`,
-				}"
+				class="max-w-[128px]"
 				:percent="player.volume"
 				overlay
 				@scrub="onVolumeScrub"

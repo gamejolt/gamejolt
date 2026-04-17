@@ -21,13 +21,7 @@ import { kThemeBg, kThemeBgOffset, kThemeFg, kThemeFg10 } from '~common/theme/va
 import { $gettext } from '~common/translate/translate.service';
 import { UserModel } from '~common/user/user.model';
 import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
-import {
-	styleChangeBg,
-	styleFlexCenter,
-	styleTextOverflow,
-	styleTyped,
-	styleWhen,
-} from '~styles/mixins';
+import { styleTyped } from '~styles/mixins';
 import { kFontSizeBase, kFontSizeLarge, kStrongEaseOut } from '~styles/variables';
 import { debounceWithCancel } from '~utils/utils';
 
@@ -239,7 +233,7 @@ function clearSearch() {
 			<div class="modal-body">
 				<div>
 					<template v-if="!giftableUsers.length && searchLoading !== undefined">
-						<div :style="{ minHeight: `300px`, ...styleFlexCenter() }">
+						<div class="flex min-h-[300px] items-center justify-center">
 							<AppLoading stationary hide-label />
 						</div>
 					</template>
@@ -262,7 +256,7 @@ function clearSearch() {
 						</AppIllustration>
 					</template>
 					<template v-else>
-						<div class="sheet" :style="{ ...styleChangeBg('bg-offset') }">
+						<div class="sheet change-bg-bg-offset">
 							{{ $gettext(`Purchase this item as a gift for a friend.`) }}
 						</div>
 
@@ -279,16 +273,16 @@ function clearSearch() {
 													display: `grid`,
 													gridTemplateColumns: `48px minmax(0, 1fr) auto`,
 													columnGap: `12px`,
-													backgroundColor: kThemeBg,
+													backgroundColor: hovered
+														? kThemeBgOffset
+														: kThemeBg,
 													paddingTop: `12px`,
 													paddingBottom: `12px`,
 													transition: `background-color 200ms ${kStrongEaseOut}`,
-													...styleWhen(hovered, {
-														backgroundColor: kThemeBgOffset,
-													}),
-													...styleWhen(index < giftableUsers.length - 1, {
-														borderBottom: `1px solid ${kThemeFg10}`,
-													}),
+													borderBottom:
+														index < giftableUsers.length - 1
+															? `1px solid ${kThemeFg10}`
+															: undefined,
 												})
 											"
 											@click="modal.resolve(user)"
@@ -303,18 +297,18 @@ function clearSearch() {
 
 											<div>
 												<div
+													class="truncate"
 													:style="{
 														fontWeight: `bold`,
 														fontSize: kFontSizeLarge.px,
-														...styleTextOverflow,
 													}"
 												>
 													{{ user.display_name }}
 												</div>
 												<div
+													class="truncate"
 													:style="{
 														fontSize: kFontSizeBase.px,
-														...styleTextOverflow,
 													}"
 												>
 													@{{ user.username }}
@@ -337,9 +331,8 @@ function clearSearch() {
 
 						<div
 							v-if="showSearchHint"
-							class="sheet"
+							class="sheet change-bg-bg-offset"
 							:style="{
-								...styleChangeBg('bg-offset'),
 								marginTop: `24px`,
 								marginBottom: 0,
 							}"

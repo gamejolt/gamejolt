@@ -47,7 +47,7 @@ createAppRoute({
 
 <template>
 	<section class="section">
-		<div class="container">
+		<div class="gj-container">
 			<AppForumRules />
 
 			<div v-for="category of categories" :key="category.id">

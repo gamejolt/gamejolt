@@ -6,7 +6,6 @@ import AppJolticon, { Jolticon } from '~common/jolticon/AppJolticon.vue';
 import AppQuestFrame from '~common/quest/AppQuestFrame.vue';
 import { QuestModel } from '~common/quest/quest-model';
 import { kThemeGjOverlayNotice, kThemePrimary, kThemePrimaryFg } from '~common/theme/variables';
-import { styleElevate, styleFlexCenter, styleOverlayTextShadow } from '~styles/mixins';
 import { kFontSizeBase, kFontSizeTiny } from '~styles/variables';
 
 interface QuestBlipState {
@@ -70,9 +69,8 @@ const questBlipState = computed<QuestBlipState | undefined>(() => {
 
 		<div
 			v-if="questBlipState"
+			class="shadow-elevate-xs elevate-transition flex items-center justify-center"
 			:style="{
-				...styleElevate(1),
-				...styleFlexCenter(),
 				backgroundColor: questBlipState.bgColor,
 				borderRadius: `50%`,
 				minWidth: kFontSizeBase.px,
@@ -86,8 +84,8 @@ const questBlipState = computed<QuestBlipState | undefined>(() => {
 		>
 			<AppJolticon
 				v-if="questBlipState.icon"
+				class="overlay-text-shadow"
 				:style="{
-					...styleOverlayTextShadow,
 					margin: 0,
 					fontSize: kFontSizeTiny.px,
 					color: questBlipState.color,

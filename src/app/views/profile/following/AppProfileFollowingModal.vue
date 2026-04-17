@@ -44,11 +44,7 @@ onMounted(async () => {
 	<AppModal>
 		<AppModalFloatingHeader :controls-gap="16">
 			<template #inline-title>
-				<AppSectionTitle
-					:style="{ marginRight: `auto`, flex: `auto` }"
-					:avatar-height="48"
-					:slot-data="user"
-				>
+				<AppSectionTitle class="mr-auto flex-auto" :avatar-height="48" :slot-data="user">
 					<template #title>
 						{{ $gettext(`Following`) }}
 					</template>

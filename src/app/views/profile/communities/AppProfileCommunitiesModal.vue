@@ -18,7 +18,6 @@ import AppSectionTitle from '~common/section/AppSectionTitle.vue';
 import { kThemeBgSubtle } from '~common/theme/variables';
 import { $gettext } from '~common/translate/translate.service';
 import { UserModel } from '~common/user/user.model';
-import { styleBorderRadiusLg, styleChangeBg, styleLineClamp } from '~styles/mixins';
 import { kFontSizeSmall, kLineHeightBase } from '~styles/variables';
 
 const innerCircleEdge = 30 * (Math.SQRT2 - 1);
@@ -91,16 +90,15 @@ const nameMargin = 8;
 						<div
 							v-for="i in 5"
 							:key="i"
+							class="change-bg-bg-offset rounded-lg"
 							:style="{
-								...styleChangeBg('bg-offset'),
-								...styleBorderRadiusLg,
 								padding: `12px`,
 							}"
 						>
 							<AppAspectRatio
 								:ratio="1"
+								class="change-bg-bg-subtle"
 								:style="{
-									...styleChangeBg('bg-subtle'),
 									borderRadius: `50%`,
 									marginBottom: `${nameMargin}px`,
 								}"
@@ -119,11 +117,7 @@ const nameMargin = 8;
 						<AppHoverCard
 							v-for="community in communities"
 							:key="community.id"
-							class="pressy"
-							:style="{
-								...styleChangeBg('bg-offset'),
-								...styleBorderRadiusLg,
-							}"
+							class="pressy change-bg-bg-offset rounded-lg"
 							disable-scale
 							:padding="12"
 							:to="community.routeLocation"
@@ -138,8 +132,8 @@ const nameMargin = 8;
 							>
 								<AppCommunityThumbnailImg :community="community" />
 								<AppCommunityVerifiedTick
+									class="change-bg-bg-offset"
 									:style="{
-										...styleChangeBg('bg-offset'),
 										position: `absolute`,
 										right: `${innerCircleEdge}%`,
 										bottom: `${innerCircleEdge}%`,
@@ -152,9 +146,8 @@ const nameMargin = 8;
 							</div>
 
 							<div
-								class="text-center"
+								class="line-clamp-2 text-center"
 								:style="{
-									...styleLineClamp(2),
 									fontSize: nameFontSize.px,
 									fontWeight: `bold`,
 								}"

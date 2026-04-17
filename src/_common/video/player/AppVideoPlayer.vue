@@ -27,7 +27,6 @@ import {
 	VideoPlayerController,
 	VideoPlayerControllerContext,
 } from '~common/video/player/controller';
-import { styleWhen } from '~styles/mixins';
 
 const KeyShortcutsList = ['ArrowUp', 'ArrowRight', 'ArrowDown', 'ArrowLeft', 'm', ' '];
 type KEY_SHORTCUTS = 'ArrowUp' | 'ArrowRight' | 'ArrowDown' | 'ArrowLeft' | 'm' | ' ';
@@ -503,12 +502,10 @@ function onFullscreenChange() {
 				-->
 				<AppMediaItemBackdrop
 					class="_backdrop"
+					:class="{ relative: GJ_IS_SSR }"
 					:style="{
 						height,
 						width,
-						...styleWhen(GJ_IS_SSR, {
-							position: `relative`,
-						}),
 					}"
 					:media-item="mediaItem"
 				>
@@ -556,9 +553,7 @@ function onFullscreenChange() {
 								<div class="_row">
 									<AppVideoPlayerPlayback :player="player" />
 									<AppVideoPlayerVolume
-										:style="{
-											marginRight: `auto`,
-										}"
+										class="mr-auto"
 										:player="player"
 										has-slider
 									/>

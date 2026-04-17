@@ -14,7 +14,6 @@ import { QuestRewardModel } from '~common/quest/quest-reward-model';
 import { StickerPackRatio } from '~common/sticker/pack/AppStickerPack.vue';
 import { useCommonStore } from '~common/store/common-store';
 import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
-import { styleBorderRadiusLg, styleFlexCenter, styleWhen } from '~styles/mixins';
 
 type Props = {
 	reward: QuestRewardModel;
@@ -61,11 +60,6 @@ const styleFill = {
 	height: `100%`,
 } satisfies CSSProperties;
 
-const iconWrapperStyles = {
-	...styleFill,
-	...styleFlexCenter(),
-} satisfies CSSProperties;
-
 const iconStyles = {
 	margin: 0,
 	fontSize: `52px`,
@@ -74,7 +68,7 @@ const iconStyles = {
 
 <template>
 	<AppAspectRatio :ratio="1.25" :child-ratio="childInfo.ratio" show-overflow>
-		<div v-if="reward.is_secret" :style="iconWrapperStyles">
+		<div v-if="reward.is_secret" class="flex items-center justify-center" :style="styleFill">
 			<AppJolticon :icon="icon" :style="iconStyles" />
 		</div>
 		<AppIllustration
@@ -101,14 +95,12 @@ const iconStyles = {
 			/>
 			<AppMediaItemImg
 				v-else
+				:class="{ 'rounded-lg': reward.type === QuestRewardTypes.Background }"
 				:media-item="reward.media"
-				:style="{
-					...styleFill,
-					...styleWhen(reward.type === QuestRewardTypes.Background, styleBorderRadiusLg),
-				}"
+				:style="styleFill"
 			/>
 		</template>
-		<div v-else :style="iconWrapperStyles">
+		<div v-else class="flex items-center justify-center" :style="styleFill">
 			<AppJolticon :icon="icon" :style="iconStyles" />
 		</div>
 	</AppAspectRatio>

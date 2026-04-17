@@ -117,7 +117,7 @@ function onSubmit() {
 	<div>
 		<AppInvalidKey v-if="invalidKey" />
 
-		<section v-else class="container">
+		<section v-else class="gj-container">
 			<h1 class="section-header">
 				<template v-if="!resourceTitle">
 					{{ $gettext(`Retrieve Your Keys`) }}

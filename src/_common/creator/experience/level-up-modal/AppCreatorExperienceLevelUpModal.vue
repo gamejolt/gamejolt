@@ -10,7 +10,6 @@ import AppCircularProgress from '~common/progress/AppCircularProgress.vue';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 import { useCommonStore } from '~common/store/common-store';
 import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
-import { styleAbsoluteFill, styleChangeBg } from '~styles/mixins';
 import { sleep } from '~utils/utils';
 
 type Props = {
@@ -63,10 +62,7 @@ onMounted(async () => {
 					<AppAspectRatio :ratio="1" show-overflow>
 						<AppUserAvatarBubble :user="myUser" disable-link />
 
-						<AppCircularProgress
-							:style="styleAbsoluteFill({ zIndex: 2 })"
-							:percent="percent"
-						/>
+						<AppCircularProgress class="absolute inset-0 z-[2]" :percent="percent" />
 					</AppAspectRatio>
 				</div>
 			</div>
@@ -85,13 +81,7 @@ onMounted(async () => {
 
 			<AppSpacer vertical :scale="4" />
 
-			<div
-				v-if="level.ability_display"
-				class="sheet sans-margin-bottom"
-				:style="{
-					...styleChangeBg('bg-offset'),
-				}"
-			>
+			<div v-if="level.ability_display" class="sheet sans-margin-bottom change-bg-bg-offset">
 				<div class="section-header small text-muted">
 					{{ $gettext(`Reward`) }}
 				</div>

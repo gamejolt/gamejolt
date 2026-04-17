@@ -1,6 +1,4 @@
-<script lang="ts" setup>
-import { styleChangeBg } from '~styles/mixins';
-</script>
+<script lang="ts" setup></script>
 
 <template>
 	<section class="-section section-thin">
@@ -8,9 +6,8 @@ import { styleChangeBg } from '~styles/mixins';
 			<div class="-col-primary">
 				<div class="-user-info">
 					<div
-						class="-avatar"
+						class="-avatar change-bg-bg-subtle"
 						:style="{
-							...styleChangeBg('bg-subtle'),
 							borderRadius: `50%`,
 						}"
 					/>

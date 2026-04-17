@@ -33,7 +33,7 @@ const cardColumnsXs = 2;
 		<AppDiscoverHomeBanner :is-loading="!isBootstrapped" :item="featuredItem" />
 
 		<section class="section">
-			<div v-if="!isBootstrapped || creatorPosts.length" class="-content-row container">
+			<div v-if="!isBootstrapped || creatorPosts.length" class="-content-row gj-container">
 				<h2 class="-content-row-header">
 					<AppUserCreatorBadge size="lg" />
 					{{ $gettext(`Game Jolt Creators`) }}

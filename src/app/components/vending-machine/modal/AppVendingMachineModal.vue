@@ -42,18 +42,9 @@ import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import { $gettext } from '~common/translate/translate.service';
 import { UserModel } from '~common/user/user.model';
 import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
+import { kElevateTransition, styleMaxWidthForOptions, styleTyped } from '~styles/mixins';
 import {
-	kElevateTransition,
-	styleBorderRadiusLg,
-	styleChangeBg,
-	styleElevate,
-	styleFlexCenter,
-	styleMaxWidthForOptions,
-	styleTextOverflow,
-	styleTyped,
-	styleWhen,
-} from '~styles/mixins';
-import {
+	kBorderRadiusLg,
 	kBorderWidthBase,
 	kFontFamilyDisplay,
 	kFontSizeBase,
@@ -252,28 +243,27 @@ async function purchaseProduct(sale: InventoryShopProductSaleModel) {
 
 // Make the vending machine content full-height for phone sizes.
 const containerStyles = computed<CSSProperties>(() =>
-	styleWhen(Screen.isXs, {
-		display: `flex`,
-		flexDirection: `column`,
-		minHeight: `100vh`,
-	})
+	Screen.isXs
+		? {
+				display: `flex`,
+				flexDirection: `column`,
+				minHeight: `100vh`,
+		  }
+		: {}
 );
 
 // Make the vending machine content full-height for phone sizes.
 const loadingFadeStyles = computed<CSSProperties>(() => {
 	return {
-		...styleBorderRadiusLg,
-		...styleWhen(Screen.isXs, {
-			flex: `auto`,
-			display: `flex`,
-			flexDirection: `column`,
-		}),
+		borderRadius: kBorderRadiusLg.px,
+		flex: Screen.isXs ? `auto` : undefined,
+		display: Screen.isXs ? `flex` : undefined,
+		flexDirection: Screen.isXs ? `column` : undefined,
 		minHeight: `calc(min(45vh, 800px))`,
 	};
 });
 
 const shopOwnerNameStyles: CSSProperties = {
-	...styleTextOverflow,
 	flex: `auto`,
 	minWidth: 0,
 	margin: 0,
@@ -362,7 +352,7 @@ const rewardPackImageSize = run(() => {
 						show-frame
 					/>
 
-					<h2 :style="shopOwnerNameStyles">
+					<h2 class="truncate" :style="shopOwnerNameStyles">
 						{{
 							$gettext(`@%{ username }'s Shop`, {
 								username: shopOwner.username,
@@ -399,7 +389,10 @@ const rewardPackImageSize = run(() => {
 								<template #default="{ hoverBinding, hovered }">
 									<!-- Charge/Reward pack info -->
 									<a
-										class="fill-offset"
+										:class="[
+											'fill-offset rounded-lg elevate-transition',
+											hovered ? 'shadow-elevate-raw-2' : 'shadow-elevate-xs',
+										]"
 										v-bind="{
 											...hoverBinding,
 											style: styleTyped({
@@ -410,17 +403,14 @@ const rewardPackImageSize = run(() => {
 												padding: `${12 - kBorderWidthBase.value}px`,
 												borderWidth: kBorderWidthBase.px,
 												borderStyle: `solid`,
-												borderColor: `transparent`,
+												borderColor: hovered
+													? kThemePrimary
+													: `transparent`,
 												// Required for dark/light mode to work.
 												color: kThemeFg,
-												...styleBorderRadiusLg,
-												...styleElevate(1),
-												...styleWhen(hovered, {
-													...styleElevate(2),
-													borderColor: kThemePrimary,
-													backgroundColor: kThemeBgBackdrop,
-												}),
-												// Needs to come after [styleElevate] calls.
+												backgroundColor: hovered
+													? kThemeBgBackdrop
+													: undefined,
 												transition: `background-color 200ms ${kStrongEaseOut}, border-color 250ms ${kStrongEaseOut}, ${kElevateTransition}`,
 											}),
 										}"
@@ -492,19 +482,19 @@ const rewardPackImageSize = run(() => {
 
 						<div
 							:style="
-								styleWhen(!hasProducts && !isLoading, {
-									padding: `12px`,
-									gridTemplateColumns: '1fr',
-									alignContent: 'center',
-								})
+								!hasProducts && !isLoading
+									? {
+											padding: `12px`,
+											gridTemplateColumns: '1fr',
+											alignContent: 'center',
+									  }
+									: undefined
 							"
 						>
 							<div
 								v-if="isLoading && !hasProducts"
-								class="fill-offset"
+								class="fill-offset rounded-lg shadow-elevate-xs elevate-transition"
 								:style="{
-									...styleBorderRadiusLg,
-									...styleElevate(1),
 									padding: `8px`,
 									marginLeft: `8px`,
 									marginRight: `8px`,
@@ -512,8 +502,8 @@ const rewardPackImageSize = run(() => {
 								}"
 							>
 								<div
+									class="rounded-lg"
 									:style="{
-										...styleBorderRadiusLg,
 										height: `${kFontSizeH2.value * kLineHeightBase}px`,
 										margin: 0,
 										padding: `8px 12px 12px`,
@@ -527,13 +517,10 @@ const rewardPackImageSize = run(() => {
 									<div
 										v-for="i in 2"
 										:key="i"
-										:style="{
-											...styleBorderRadiusLg,
-											...styleChangeBg('bg-subtle'),
-										}"
+										class="change-bg-bg-subtle rounded-lg"
 									>
 										<AppAspectRatio :ratio="1" show-overflow />
-										<div :style="{ height: `80px` }" />
+										<div class="h-[80px]" />
 									</div>
 								</div>
 							</div>
@@ -541,10 +528,8 @@ const rewardPackImageSize = run(() => {
 								<template v-for="section in sections" :key="section.id">
 									<div
 										v-if="section.sales.length"
-										class="fill-offset"
+										class="fill-offset rounded-lg shadow-elevate-xs elevate-transition"
 										:style="{
-											...styleBorderRadiusLg,
-											...styleElevate(1),
 											padding: `8px`,
 											marginLeft: `8px`,
 											marginRight: `8px`,
@@ -602,8 +587,8 @@ const rewardPackImageSize = run(() => {
 				</AppTheme>
 
 				<div
+					class="flex flex-col items-center justify-center"
 					:style="{
-						...styleFlexCenter({ direction: 'column' }),
 						position: 'relative',
 						backgroundColor: kThemeBgActual,
 					}"

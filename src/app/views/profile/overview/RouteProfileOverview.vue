@@ -50,7 +50,7 @@ import { $gettext } from '~common/translate/translate.service';
 import { UserFriendshipState } from '~common/user/friendship/friendship.model';
 import { showUserInviteFollowModal } from '~common/user/invite/modal/modal.service';
 import { $unfollowUser, UserModel } from '~common/user/user.model';
-import { styleChangeBg, styleElevate, styleWhen } from '~styles/mixins';
+import { kElevateTransition } from '~styles/mixins';
 import { kBorderRadiusLg } from '~styles/variables';
 import { numberSort } from '~utils/array';
 import { removeQuery } from '~utils/router';
@@ -249,14 +249,7 @@ async function onFriendRequestReject() {
 			@unfollow="onClickUnfollow()"
 		/>
 		<AppShellPageBackdrop v-else>
-			<section
-				class="section"
-				:style="{
-					...styleWhen(Screen.isMobile, {
-						paddingTop: 0,
-					}),
-				}"
-			>
+			<section class="section" :class="{ '!pt-0': Screen.isMobile }">
 				<AppPageContainer
 					xl
 					order="left,main,right"
@@ -273,9 +266,10 @@ async function onFriendRequestReject() {
 								<AppAdWidget
 									unit-name="halfpage"
 									takeover
+									class-override="change-bg-bg"
 									:style-override="{
-										...styleChangeBg('bg'),
-										...styleElevate(3),
+										boxShadow: `var(--shadow-elevate-1)`,
+										transition: kElevateTransition,
 										// Can't change this, needs to be at least 300px wide.
 										minWidth: `300px`,
 										borderRadius: kBorderRadiusLg.px,
@@ -291,12 +285,14 @@ async function onFriendRequestReject() {
 									position: `relative`,
 									zIndex: 2,
 								}"
-								:card-styles="{
-									...styleWhen(Screen.isMobile, {
-										borderTopLeftRadius: 0,
-										borderTopRightRadius: 0,
-									}),
-								}"
+								:card-styles="
+									Screen.isMobile
+										? {
+												borderTopLeftRadius: 0,
+												borderTopRightRadius: 0,
+										  }
+										: undefined
+								"
 								:show-avatar="showSidebarAvatar"
 							/>
 
@@ -320,9 +316,10 @@ async function onFriendRequestReject() {
 							<AppAdWidget
 								unit-name="halfpage"
 								takeover
+								class-override="change-bg-bg"
 								:style-override="{
-									...styleChangeBg('bg'),
-									...styleElevate(3),
+									boxShadow: `var(--shadow-elevate-1)`,
+									transition: kElevateTransition,
 									// Can't change this, needs to be at least 300px wide.
 									minWidth: `300px`,
 									borderRadius: kBorderRadiusLg.px,

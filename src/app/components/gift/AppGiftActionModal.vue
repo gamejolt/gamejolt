@@ -47,10 +47,10 @@ function doAction(action: 'accept' | 'reject' | 'ignore') {
 		</div>
 
 		<div class="modal-header">
-			<h2 v-if="!gift.from_user" class="modal-title" :style="{ textAlign: `center` }">
+			<h2 v-if="!gift.from_user" class="modal-title text-center">
 				{{ $gettext(`New gift`) }}
 			</h2>
-			<AppSectionTitle v-else center :style="{ width: `100%` }" :avatar-height="48">
+			<AppSectionTitle v-else class="w-full" center :avatar-height="48">
 				<template #avatar>
 					<AppUserAvatarBubble :user="gift.from_user" show-frame show-verified smoosh />
 				</template>
@@ -72,26 +72,14 @@ function doAction(action: 'accept' | 'reject' | 'ignore') {
 				"
 			/>
 
-			<div
-				:style="{
-					display: `grid`,
-					gridTemplateColumns: `minmax(0, 400px)`,
-					justifyContent: `center`,
-				}"
-			>
+			<div class="grid justify-center [grid-template-columns:minmax(0,400px)]">
 				<AppSpacer :scale="4" vertical />
 
-				<div :style="{ display: `flex`, gap: `12px` }">
-					<AppButton :style="{ margin: 0 }" block solid @click="doAction('reject')">
+				<div class="flex gap-[12px]">
+					<AppButton class="m-0" block solid @click="doAction('reject')">
 						{{ $gettext(`Reject`) }}
 					</AppButton>
-					<AppButton
-						:style="{ margin: 0 }"
-						block
-						solid
-						primary
-						@click="doAction('accept')"
-					>
+					<AppButton class="m-0" block solid primary @click="doAction('accept')">
 						{{ $gettext(`Accept`) }}
 					</AppButton>
 				</div>

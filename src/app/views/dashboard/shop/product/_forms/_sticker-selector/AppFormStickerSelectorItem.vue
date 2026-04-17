@@ -5,7 +5,6 @@ import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppStickerImg from '~common/sticker/AppStickerImg.vue';
 import { StickerModel } from '~common/sticker/sticker.model';
 import { kThemeBgOffset, kThemePrimary, kThemePrimaryFg } from '~common/theme/variables';
-import { styleBorderRadiusLg, styleFlexCenter, styleWhen } from '~styles/mixins';
 import { kBorderWidthBase, kStrongEaseOut } from '~styles/variables';
 
 type Props = {
@@ -21,7 +20,6 @@ const emit = defineEmits<{
 
 const baseStyles = computed(() => {
 	const result: CSSProperties = {
-		...styleBorderRadiusLg,
 		position: `relative`,
 		backgroundColor: kThemeBgOffset,
 		border: kBorderWidthBase.px,
@@ -54,29 +52,24 @@ function onClickSticker(event: Event) {
 </script>
 
 <template>
-	<div :style="baseStyles" @click="onClickSticker">
-		<AppStickerImg :src="sticker.img_url" :style="{ width: `100%`, height: `100%` }" />
+	<div class="rounded-lg" :style="baseStyles" @click="onClickSticker">
+		<AppStickerImg class="h-full w-full" :src="sticker.img_url" />
 
 		<div
-			:style="[
-				styleFlexCenter(),
-				{
-					position: `absolute`,
-					left: `4px`,
-					top: `4px`,
-					width: `24px`,
-					height: `24px`,
-					zIndex: 1,
-					pointerEvents: `none`,
-					borderRadius: `50%`,
-					transition: `opacity 300ms ${kStrongEaseOut}`,
-					opacity: 0,
-					backgroundColor: kThemePrimary,
-				},
-				styleWhen(selected, {
-					opacity: 1,
-				}),
-			]"
+			class="flex items-center justify-center"
+			:style="{
+				position: `absolute`,
+				left: `4px`,
+				top: `4px`,
+				width: `24px`,
+				height: `24px`,
+				zIndex: 1,
+				pointerEvents: `none`,
+				borderRadius: `50%`,
+				transition: `opacity 300ms ${kStrongEaseOut}`,
+				opacity: selected ? 1 : 0,
+				backgroundColor: kThemePrimary,
+			}"
 		>
 			<AppJolticon
 				icon="check"

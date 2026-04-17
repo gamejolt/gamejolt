@@ -49,7 +49,7 @@ createAppRoute({
 <template>
 	<div class="route-landing-about">
 		<section class="section landing-header text-center">
-			<div class="container">
+			<div class="gj-container">
 				<h1>
 					<AppThemeSvg
 						v-app-tooltip="$gettext('This is a lightning bolt!')"
@@ -75,7 +75,7 @@ createAppRoute({
 
 		<div class="landing-body">
 			<section class="section">
-				<div class="container">
+				<div class="gj-container">
 					<h1 class="section-header text-center">Best place for creators</h1>
 					<hr class="underbar underbar-center" />
 

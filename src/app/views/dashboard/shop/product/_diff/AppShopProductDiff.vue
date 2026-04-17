@@ -26,7 +26,6 @@ import { StickerModel } from '~common/sticker/sticker.model';
 import { kThemePrimary, kThemePrimaryFg } from '~common/theme/variables';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import { $gettext } from '~common/translate/translate.service';
-import { styleAbsoluteFill, styleWhen } from '~styles/mixins';
 import { arrayRemove } from '~utils/array';
 import { assertNever, isInstance } from '~utils/utils';
 
@@ -284,22 +283,29 @@ const tabViewStyles: CSSProperties = {
 };
 
 function getDiffContainerStyles(gridArea: 'before' | 'arrow' | 'after'): CSSProperties {
-	return useTabView.value
-		? {
-				// Always render the inactive sections or we may have content
-				// shifting as images are loaded in when switching between
-				// sections.
-				...styleWhen(gridArea !== currentSection.value, {
-					...styleAbsoluteFill({ zIndex: -1 }),
-					pointerEvents: `none`,
-				}),
-		  }
-		: {
-				position: `relative`,
-				width: `100%`,
-				height: gridArea === 'arrow' ? `36px` : `100%`,
-				gridArea,
-		  };
+	if (useTabView.value) {
+		// Always render the inactive sections or we may have content
+		// shifting as images are loaded in when switching between
+		// sections.
+		if (gridArea !== currentSection.value) {
+			return {
+				position: `absolute`,
+				top: 0,
+				left: 0,
+				right: 0,
+				bottom: 0,
+				zIndex: -1,
+				pointerEvents: `none`,
+			};
+		}
+		return {};
+	}
+	return {
+		position: `relative`,
+		width: `100%`,
+		height: gridArea === 'arrow' ? `36px` : `100%`,
+		gridArea,
+	};
 }
 </script>
 
@@ -359,8 +365,8 @@ function getDiffContainerStyles(gridArea: 'before' | 'arrow' | 'after'): CSSProp
 								v-app-tooltip.touchable="
 									$gettext(`You must save your changes first.`)
 								"
+								class="absolute inset-0"
 								:style="{
-									...styleAbsoluteFill(),
 									cursor: `not-allowed`,
 								}"
 							/>
@@ -372,7 +378,7 @@ function getDiffContainerStyles(gridArea: 'before' | 'arrow' | 'after'): CSSProp
 								:model="baseModel"
 								:form="data"
 								:img-url="existingImgUrl || undefined"
-								:style="{ marginBottom: `16px` }"
+								class="mb-[16px]"
 							/>
 							<AppShopProductDiffMeta
 								:current="{
@@ -390,13 +396,8 @@ function getDiffContainerStyles(gridArea: 'before' | 'arrow' | 'after'): CSSProp
 				<Transition name="fade">
 					<AppJolticon
 						v-if="diffData.hasChange"
+						class="m-0 self-center justify-self-center text-[24px]"
 						icon="arrow-right"
-						:style="{
-							margin: 0,
-							fontSize: `24px`,
-							justifySelf: `center`,
-							alignSelf: `center`,
-						}"
 					/>
 				</Transition>
 			</div>
@@ -411,7 +412,7 @@ function getDiffContainerStyles(gridArea: 'before' | 'arrow' | 'after'): CSSProp
 
 						<template #status>
 							<template v-if="diffData.hasChange || !changeRequest">
-								<div class="text-center" :style="{ fontWeight: `bold` }">
+								<div class="text-center font-bold">
 									{{ $gettext(`Preview`) }}
 								</div>
 							</template>
@@ -425,11 +426,7 @@ function getDiffContainerStyles(gridArea: 'before' | 'arrow' | 'after'): CSSProp
 
 						<template v-if="!diffData.hasChange && changeRequest" #controls>
 							<!-- Cancel pending changes -->
-							<AppButton
-								:style="{ marginLeft: `auto` }"
-								solid
-								@click="cancelChangeRequest()"
-							>
+							<AppButton class="ml-auto" solid @click="cancelChangeRequest()">
 								{{
 									baseModel?.was_approved
 										? $gettext(`Cancel changes`)
@@ -444,7 +441,7 @@ function getDiffContainerStyles(gridArea: 'before' | 'arrow' | 'after'): CSSProp
 								:model="baseModel"
 								:form="data"
 								:img-url="tempImgUrl || undefined"
-								:style="{ marginBottom: `16px` }"
+								class="mb-[16px]"
 							/>
 
 							<AppShopProductDiffMeta

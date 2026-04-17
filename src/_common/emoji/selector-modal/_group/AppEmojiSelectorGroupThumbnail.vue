@@ -5,7 +5,6 @@ import { EmojiGroupModel, EmojiGroupType } from '~common/emoji/emoji-group.model
 import AppImgResponsive from '~common/img/AppImgResponsive.vue';
 import AppJolticon, { Jolticon } from '~common/jolticon/AppJolticon.vue';
 import AppMediaItemBackdrop from '~common/media-item/backdrop/AppMediaItemBackdrop.vue';
-import { styleFlexCenter } from '~styles/mixins';
 
 type Props = {
 	group: EmojiGroupModel;
@@ -74,11 +73,7 @@ const icon = computed(() => {
 	>
 		<template v-if="mediaItem">
 			<AppMediaItemBackdrop
-				:style="{
-					...styleFlexCenter(),
-					width: `100%`,
-					height: `100%`,
-				}"
+				class="flex h-full w-full items-center justify-center"
 				:media-item="mediaItem"
 			>
 				<AppImgResponsive :src="mediaItem.mediaserver_url" />
@@ -86,10 +81,9 @@ const icon = computed(() => {
 		</template>
 		<template v-else>
 			<AppJolticon
+				class="m-0 leading-none"
 				:style="{
 					fontSize: `${size}px`,
-					margin: 0,
-					lineHeight: 0,
 				}"
 				:icon="icon"
 			/>

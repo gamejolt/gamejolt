@@ -42,7 +42,6 @@ import AppTranslate from '~common/translate/AppTranslate.vue';
 import { $gettext } from '~common/translate/translate.service';
 import AppUserVerifiedTick from '~common/user/AppUserVerifiedTick.vue';
 import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
-import { styleFlexCenter } from '~styles/mixins';
 
 type SidebarTab = 'settings' | 'members';
 
@@ -67,7 +66,6 @@ const headerAvatarJolticonColor = kThemeBacklightFg;
 
 const headerAvatarStyles: CSSProperties = {
 	...headerAvatarSizeStyles,
-	...styleFlexCenter(),
 	borderRadius: `50%`,
 	backgroundColor: headerAvatarBackgroundColor,
 };
@@ -232,16 +230,19 @@ function onMobileAppBarBack() {
 					<AppButton
 						v-if="Screen.isXs"
 						v-app-tooltip="$gettext('Close')"
+						class="mr-[4px]"
 						circle
 						trans
 						icon="remove"
-						:style="{ marginRight: '4px' }"
 						@click="closeWindow"
 					/>
 
 					<template v-if="room">
 						<span v-if="!room.isPmRoom" class="anim-fade-in-enlarge no-animate-xs">
-							<div :style="headerAvatarStyles">
+							<div
+								class="flex items-center justify-center"
+								:style="headerAvatarStyles"
+							>
 								<AppJolticon
 									:style="{
 										color: headerAvatarJolticonColor,
@@ -252,8 +253,7 @@ function onMobileAppBarBack() {
 						</span>
 						<RouterLink
 							v-else-if="room.user"
-							class="anim-fade-in-enlarge no-animate-xs"
-							:style="{ position: `relative` }"
+							class="anim-fade-in-enlarge no-animate-xs relative"
 							:to="room.user.url"
 						>
 							<AppUserAvatarBubble

@@ -19,6 +19,10 @@ type RollupOptions = Required<Required<ViteUserConfig>['build']>['rollupOptions'
 
 // https://vitejs.dev/config/
 export default defineConfig(async (_configEnv: ConfigEnv): Promise<ViteUserConfig> => {
+	// Dynamic import because @tailwindcss/vite is ESM-only and our vite.config.ts
+	// is bundled as CJS by esbuild.
+	const { default: tailwindcss } = await import('@tailwindcss/vite');
+
 	const gjOpts = readFromViteEnv(process.env);
 
 	// package.json has to have specific main/node-remote values depending on if
@@ -261,6 +265,7 @@ export default defineConfig(async (_configEnv: ConfigEnv): Promise<ViteUserConfi
 					},
 				},
 			}),
+			tailwindcss(),
 			md({
 				mode: [MarkdownMode.HTML],
 			}),

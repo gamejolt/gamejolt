@@ -49,7 +49,7 @@ async function blockUser() {
 </script>
 
 <template>
-	<AppPopper v-if="routeUser" popover-class="fill-darkest" :style="{ flex: `none` }">
+	<AppPopper v-if="routeUser" class="flex-none" popover-class="fill-darkest">
 		<template #default>
 			<slot name="default">
 				<AppButton icon="ellipsis-v" sparse />

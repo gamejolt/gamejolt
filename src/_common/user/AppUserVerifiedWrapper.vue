@@ -4,7 +4,6 @@ import { computed, CSSProperties } from 'vue';
 import { kThemeFg } from '~common/theme/variables';
 import AppUserVerifiedTick from '~common/user/AppUserVerifiedTick.vue';
 import { UserCommonFields } from '~common/user/user.model';
-import { styleChangeBg } from '~styles/mixins';
 
 interface PositionData {
 	vPos: 'top' | 'bottom';
@@ -88,8 +87,8 @@ const floatingTickPositionStyles = computed(() => {
 
 		<AppUserVerifiedTick
 			v-if="user && !hideTick"
+			class="change-bg-bg"
 			:style="{
-				...styleChangeBg('bg'),
 				...floatingTickPositionStyles,
 				margin: 0,
 				padding: `1px`,

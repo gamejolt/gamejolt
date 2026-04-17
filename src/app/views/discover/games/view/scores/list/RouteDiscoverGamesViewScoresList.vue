@@ -90,7 +90,7 @@ const { isLoading } = createAppRoute({
 <template>
 	<div v-if="scoreTable" class="route-discover-games-view-scores-list">
 		<section class="section">
-			<div class="container">
+			<div class="gj-container">
 				<AppScoreboardSelector
 					v-if="Screen.isMobile && scoreTables.length > 1"
 					:current-table="scoreTable"

@@ -65,20 +65,10 @@ const stickySideTopMargin = toRef(() => 4 * (Screen.isMobile ? 5 : 10));
 					link-target="image"
 				/>
 				<template v-else>
-					<h1
-						:style="{
-							display: `flex`,
-							flexDirection: `row`,
-							alignItems: `center`,
-							fontSize: `18px`,
-							height: `48px`,
-							margin: `0`,
-							marginBottom: `8px`,
-						}"
-					>
-						<span :style="{ flex: `auto` }">{{ realm.name }}</span>
+					<h1 class="m-0 mb-[8px] flex h-[48px] flex-row items-center text-[18px]">
+						<span class="flex-auto">{{ realm.name }}</span>
 						<AppButton
-							:style="{ flex: `none` }"
+							class="flex-none"
 							icon="share-airplane"
 							trans
 							@click="onShareClick"
@@ -88,21 +78,14 @@ const stickySideTopMargin = toRef(() => 4 * (Screen.isMobile ? 5 : 10));
 					</h1>
 
 					<AppRealmFollowButton
-						:style="{ marginBottom: `8px` }"
+						class="mb-[8px]"
 						:realm="realm"
 						source="realmHeader"
 						block
 					/>
 				</template>
 
-				<div
-					class="_followers"
-					:style="{
-						display: `flex`,
-						alignItems: `center`,
-						justifyContent: `center`,
-					}"
-				>
+				<div class="_followers flex items-center justify-center">
 					<AppUserKnownFollowers :users="knownFollowers" :count="knownFollowerCount" />
 				</div>
 			</template>

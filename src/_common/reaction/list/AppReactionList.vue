@@ -11,7 +11,6 @@ import {
 } from '~common/reaction/reaction-count';
 import { Screen } from '~common/screen/screen-service';
 import AppScrollScroller, { createScroller } from '~common/scroll/AppScrollScroller.vue';
-import { styleWhen } from '~styles/mixins';
 import { buildCSSPixelValue } from '~styles/variables';
 
 type ClickAction = 'toggle' | 'emit-click';
@@ -161,36 +160,24 @@ const scrollerMarginBottom = buildCSSPixelValue(12);
 			:is="useScroller ? AppScrollScroller : 'div'"
 			v-bind="scrollerProps"
 			:style="{
-				display: `inline-block`,
+				display: useScroller ? `block` : `inline-block`,
 				margin: `4px 0 8px 0`,
-				...styleWhen(sansMarginBottom, {
-					marginBottom: 0,
-				}),
-				...styleWhen(useScroller, {
-					display: `block`,
-				}),
+				marginBottom: sansMarginBottom ? 0 : undefined,
 			}"
 		>
 			<div
 				:style="{
 					display: `inline-flex`,
-					flexWrap: `wrap`,
+					flexWrap: useScroller ? `nowrap` : `wrap`,
 					gap: `2px 6px`,
-					...styleWhen(useScroller, {
-						flexWrap: `nowrap`,
-						marginBottom: scrollerMarginBottom.px,
-						zIndex: 0,
-					}),
+					marginBottom: useScroller ? scrollerMarginBottom.px : undefined,
+					zIndex: useScroller ? 0 : undefined,
 				}"
 			>
 				<AppReactionListItem
 					v-for="reaction of reactions"
 					:key="reaction.id"
-					:style="
-						styleWhen(!!clickAction, {
-							cursor: `pointer`,
-						})
-					"
+					:class="{ 'cursor-pointer': !!clickAction }"
 					:reaction="reaction"
 					:focused-id="focusedId"
 					@click="onItemClick(reaction)"

@@ -2,7 +2,6 @@
 import { computed, toRefs } from 'vue';
 
 import { EmojiModel } from '~common/emoji/emoji.model';
-import { styleWhen } from '~styles/mixins';
 import { buildCSSPixelValue } from '~styles/variables';
 
 export const GJ_EMOJIS = [
@@ -54,21 +53,12 @@ const src = computed(() => {
 
 <template>
 	<img
-		:style="[
-			'speak: none',
-			{
-				display: `inline-block`,
-				width: emojiBaseSize.px,
-				height: `auto`,
-				minHeight: `20px`,
-				maxHeight: emojiBaseSize.px,
-				verticalAlign: `middle`,
-				lineHeight: 1,
-			},
-			styleWhen(typeof emoji === 'string', {
-				imageRendering: `pixelated`,
-			}),
-		]"
+		class="inline-block h-auto min-h-[20px] align-middle leading-none [speak:none]"
+		:class="{ '[image-rendering:pixelated]': typeof emoji === 'string' }"
+		:style="{
+			width: emojiBaseSize.px,
+			maxHeight: emojiBaseSize.px,
+		}"
 		:src="src"
 		:alt="GJ_IS_MOBILE_APP ? undefined : ''"
 	/>

@@ -35,7 +35,6 @@ import AppSpacer from '~common/spacer/AppSpacer.vue';
 import AppStickerChargeCard from '~common/sticker/charge/AppStickerChargeCard.vue';
 import { useCommonStore } from '~common/store/common-store';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
-import { styleTextOverflow } from '~styles/mixins';
 import { kGridGutterWidth, kGridGutterWidthXs } from '~styles/variables';
 import { numberSort } from '~utils/array';
 import { fuzzysearch } from '~utils/string';
@@ -262,6 +261,7 @@ async function refreshQuests() {
 									<ul>
 										<li v-for="game of filteredGames" :key="game.id">
 											<RouterLink
+												class="truncate"
 												:to="{
 													name: 'dash.games.manage.game.overview',
 													params: { id: game.id },
@@ -270,7 +270,6 @@ async function refreshQuests() {
 													(game.ownerName ? `@${game.ownerName}/` : '') +
 													game.title
 												"
-												:style="styleTextOverflow"
 											>
 												<template v-if="game.ownerName">
 													<small>@{{ game.ownerName }}</small>

@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { computed, CSSProperties } from 'vue';
 
-import { styleAbsoluteFill, styleWhen } from '~styles/mixins';
 import { kStrongEaseOut } from '~styles/variables';
 
 type Props = {
@@ -24,9 +23,7 @@ function createFadeStyles(edge: 'top' | 'bottom') {
 		backgroundSize: `cover`,
 		backgroundImage: `linear-gradient(to ${imageDirection}, rgba(0, 0, 0, 0.3),  rgba(0, 0, 0, 0))`,
 		backgroundPosition: edge,
-		...styleWhen(zIndex !== undefined, {
-			zIndex,
-		}),
+		zIndex,
 	} satisfies CSSProperties;
 }
 
@@ -37,8 +34,9 @@ const fadeBottomStyles = computed(() => createFadeStyles('bottom'));
 <template>
 	<div v-if="!noEdges" :style="fadeTopStyles" />
 	<div
+		class="absolute inset-0"
 		:style="{
-			...styleAbsoluteFill({ zIndex }),
+			zIndex,
 			backgroundColor: `rgba(0, 0, 0, ${fadeOpacity})`,
 			transition: `background-color 300ms ${kStrongEaseOut}`,
 		}"

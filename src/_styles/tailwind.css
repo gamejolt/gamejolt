@@ -1,0 +1,272 @@
+@layer theme, base, components, utilities;
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/utilities.css' layer(utilities);
+/* preflight deliberately omitted — scaffolding.styl is the reset */
+
+@custom-variant dark (&:where(.theme-dark, .theme-dark *));
+
+@theme {
+	/* colors — all reference existing runtime vars written by AppTheme.vue */
+	--color-white: var(--theme-white);
+	--color-black: var(--theme-black);
+
+	--color-bg: var(--theme-bg);
+	--color-bg-offset: var(--theme-bg-offset);
+	--color-bg-backdrop: var(--theme-bg-backdrop);
+	--color-bg-subtle: var(--theme-bg-subtle);
+	--color-bg-actual: var(--theme-bg-actual);
+
+	--color-fg: var(--theme-fg);
+	--color-fg-muted: var(--theme-fg-muted);
+
+	--color-highlight: var(--theme-highlight);
+	--color-highlight-fg: var(--theme-highlight-fg);
+	--color-backlight: var(--theme-backlight);
+	--color-backlight-fg: var(--theme-backlight-fg);
+	--color-notice: var(--theme-notice);
+	--color-notice-fg: var(--theme-notice-fg);
+	--color-bi-bg: var(--theme-bi-bg);
+	--color-bi-fg: var(--theme-bi-fg);
+
+	--color-link: var(--theme-link);
+	--color-link-hover: var(--theme-link-hover);
+	--color-primary: var(--theme-primary);
+	--color-primary-fg: var(--theme-primary-fg);
+
+	--color-gray: var(--theme-gray);
+	--color-gray-subtle: var(--theme-gray-subtle);
+	--color-light: var(--theme-light);
+	--color-lighter: var(--theme-lighter);
+	--color-lightest: var(--theme-lightest);
+	--color-dark: var(--theme-dark);
+	--color-darker: var(--theme-darker);
+	--color-darkest: var(--theme-darkest);
+
+	/* fonts */
+	--font-sans: 'Nunito', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	--font-heading: 'Lato', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	--font-mono: Inconsolata, Menlo, Monaco, 'Ubuntu Mono', Consolas, source-code-pro,
+		'Courier New', monospace;
+	--font-display: 'Staatliches', 'Lato', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+	/* type scale — note: html { font-size: 62.5% } in scaffolding.styl makes 1rem = 10px */
+	--text-tiny: 11px;
+	--text-sm: 13px;
+	--text-base: 15px;
+	--text-lg: 19px;
+
+	/* radius */
+	--radius-sm: 2px;
+	--radius: 6px;
+	--radius-lg: 12px;
+
+	/* breakpoints — from bootstrap-variables.styl */
+	--breakpoint-sm: 768px;
+	--breakpoint-md: 992px;
+	--breakpoint-lg: 1200px;
+	--breakpoint-xl: 1500px;
+
+	/* elevation — from $mdc-elevation-*-map in mixins.styl
+	 * elevate-xs = elevate('1'), elevate-1 = elevate('3'),
+	 * elevate-2 = elevate('8'), elevate-3 = elevate('24') */
+	--shadow-elevate-xs: 0px 2px 1px -1px rgb(0 0 0 / 0.15), 0px 1px 1px 0px rgb(0 0 0 / 0.1),
+		0px 1px 3px 0px rgb(0 0 0 / 0.09);
+	--shadow-elevate-1: 0px 3px 3px -2px rgb(0 0 0 / 0.15), 0px 3px 4px 0px rgb(0 0 0 / 0.1),
+		0px 1px 8px 0px rgb(0 0 0 / 0.09);
+	--shadow-elevate-2: 0px 5px 5px -3px rgb(0 0 0 / 0.15), 0px 8px 10px 1px rgb(0 0 0 / 0.1),
+		0px 3px 14px 2px rgb(0 0 0 / 0.09);
+	--shadow-elevate-3: 0px 11px 15px -7px rgb(0 0 0 / 0.15), 0px 24px 38px 3px rgb(0 0 0 / 0.1),
+		0px 9px 46px 8px rgb(0 0 0 / 0.09);
+
+	/* raw MDC elevation levels — used where the named xs/1/2/3 don't fit */
+	--shadow-elevate-raw-2: 0px 3px 1px -2px rgb(0 0 0 / 0.15), 0px 2px 2px 0px rgb(0 0 0 / 0.1),
+		0px 1px 5px 0px rgb(0 0 0 / 0.09);
+	--shadow-elevate-raw-4: 0px 2px 4px -1px rgb(0 0 0 / 0.15), 0px 4px 5px 0px rgb(0 0 0 / 0.1),
+		0px 1px 10px 0px rgb(0 0 0 / 0.09);
+	--shadow-elevate-raw-5: 0px 3px 5px -1px rgb(0 0 0 / 0.15), 0px 5px 8px 0px rgb(0 0 0 / 0.1),
+		0px 1px 14px 0px rgb(0 0 0 / 0.09);
+}
+
+@utility elevate-transition {
+	transition: box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/*
+ * change-bg-* utilities set a background color AND propagate it down via the
+ * --theme-bg-actual / --theme-bg-actual-trans CSS vars so descendants can
+ * layer over whatever background their ancestor set. This replaces the old
+ * styleChangeBg helper from mixins.ts.
+ */
+@utility change-bg-bg {
+	--theme-bg-actual: var(--theme-bg);
+	--theme-bg-actual-trans: var(--theme-bg-trans);
+	background-color: var(--theme-bg);
+}
+@utility change-bg-bg-offset {
+	--theme-bg-actual: var(--theme-bg-offset);
+	--theme-bg-actual-trans: var(--theme-bg-offset-trans);
+	background-color: var(--theme-bg-offset);
+}
+@utility change-bg-bg-backdrop {
+	--theme-bg-actual: var(--theme-bg-backdrop);
+	--theme-bg-actual-trans: var(--theme-bg-backdrop-trans);
+	background-color: var(--theme-bg-backdrop);
+}
+@utility change-bg-bg-subtle {
+	--theme-bg-actual: var(--theme-bg-subtle);
+	--theme-bg-actual-trans: var(--theme-bg-subtle-trans);
+	background-color: var(--theme-bg-subtle);
+}
+@utility change-bg-fg {
+	--theme-bg-actual: var(--theme-fg);
+	--theme-bg-actual-trans: var(--theme-fg-trans);
+	background-color: var(--theme-fg);
+}
+@utility change-bg-fg-muted {
+	--theme-bg-actual: var(--theme-fg-muted);
+	--theme-bg-actual-trans: var(--theme-fg-muted-trans);
+	background-color: var(--theme-fg-muted);
+}
+@utility change-bg-highlight {
+	--theme-bg-actual: var(--theme-highlight);
+	--theme-bg-actual-trans: var(--theme-highlight-trans);
+	background-color: var(--theme-highlight);
+}
+@utility change-bg-highlight-fg {
+	--theme-bg-actual: var(--theme-highlight-fg);
+	--theme-bg-actual-trans: var(--theme-highlight-fg-trans);
+	background-color: var(--theme-highlight-fg);
+}
+@utility change-bg-backlight {
+	--theme-bg-actual: var(--theme-backlight);
+	--theme-bg-actual-trans: var(--theme-backlight-trans);
+	background-color: var(--theme-backlight);
+}
+@utility change-bg-backlight-fg {
+	--theme-bg-actual: var(--theme-backlight-fg);
+	--theme-bg-actual-trans: var(--theme-backlight-fg-trans);
+	background-color: var(--theme-backlight-fg);
+}
+@utility change-bg-notice {
+	--theme-bg-actual: var(--theme-notice);
+	--theme-bg-actual-trans: var(--theme-notice-trans);
+	background-color: var(--theme-notice);
+}
+@utility change-bg-notice-fg {
+	--theme-bg-actual: var(--theme-notice-fg);
+	--theme-bg-actual-trans: var(--theme-notice-fg-trans);
+	background-color: var(--theme-notice-fg);
+}
+@utility change-bg-bi-bg {
+	--theme-bg-actual: var(--theme-bi-bg);
+	--theme-bg-actual-trans: var(--theme-bi-bg-trans);
+	background-color: var(--theme-bi-bg);
+}
+@utility change-bg-bi-fg {
+	--theme-bg-actual: var(--theme-bi-fg);
+	--theme-bg-actual-trans: var(--theme-bi-fg-trans);
+	background-color: var(--theme-bi-fg);
+}
+@utility change-bg-link {
+	--theme-bg-actual: var(--theme-link);
+	--theme-bg-actual-trans: var(--theme-link-trans);
+	background-color: var(--theme-link);
+}
+@utility change-bg-link-hover {
+	--theme-bg-actual: var(--theme-link-hover);
+	--theme-bg-actual-trans: var(--theme-link-hover-trans);
+	background-color: var(--theme-link-hover);
+}
+@utility change-bg-primary {
+	--theme-bg-actual: var(--theme-primary);
+	--theme-bg-actual-trans: var(--theme-primary-trans);
+	background-color: var(--theme-primary);
+}
+@utility change-bg-primary-fg {
+	--theme-bg-actual: var(--theme-primary-fg);
+	--theme-bg-actual-trans: var(--theme-primary-fg-trans);
+	background-color: var(--theme-primary-fg);
+}
+@utility change-bg-gray {
+	--theme-bg-actual: var(--theme-gray);
+	--theme-bg-actual-trans: var(--theme-gray-trans);
+	background-color: var(--theme-gray);
+}
+@utility change-bg-gray-subtle {
+	--theme-bg-actual: var(--theme-gray-subtle);
+	--theme-bg-actual-trans: var(--theme-gray-subtle-trans);
+	background-color: var(--theme-gray-subtle);
+}
+@utility change-bg-light {
+	--theme-bg-actual: var(--theme-light);
+	--theme-bg-actual-trans: var(--theme-light-trans);
+	background-color: var(--theme-light);
+}
+@utility change-bg-lighter {
+	--theme-bg-actual: var(--theme-lighter);
+	--theme-bg-actual-trans: var(--theme-lighter-trans);
+	background-color: var(--theme-lighter);
+}
+@utility change-bg-lightest {
+	--theme-bg-actual: var(--theme-lightest);
+	--theme-bg-actual-trans: var(--theme-lightest-trans);
+	background-color: var(--theme-lightest);
+}
+@utility change-bg-dark {
+	--theme-bg-actual: var(--theme-dark);
+	--theme-bg-actual-trans: var(--theme-dark-trans);
+	background-color: var(--theme-dark);
+}
+@utility change-bg-darker {
+	--theme-bg-actual: var(--theme-darker);
+	--theme-bg-actual-trans: var(--theme-darker-trans);
+	background-color: var(--theme-darker);
+}
+@utility change-bg-darkest {
+	--theme-bg-actual: var(--theme-darkest);
+	--theme-bg-actual-trans: var(--theme-darkest-trans);
+	background-color: var(--theme-darkest);
+}
+
+/*
+ * change-bg-* rgba variants — replace old styleChangeBgRgba call sites.
+ * Both rgb and opacity were static at every call site.
+ */
+@utility change-bg-black-54 {
+	--theme-bg-actual: rgba(0, 0, 0, 0.54);
+	--theme-bg-actual-trans: rgba(0, 0, 0, 0);
+	background-color: rgba(0, 0, 0, 0.54);
+}
+@utility change-bg-fg-5 {
+	--theme-bg-actual: rgba(var(--theme-fg-rgb), 0.05);
+	--theme-bg-actual-trans: rgba(var(--theme-fg-rgb), 0);
+	background-color: rgba(var(--theme-fg-rgb), 0.05);
+}
+
+/*
+ * Scrollable utilities — replace the old styleScrollable / styleScrollableX
+ * helpers and the scrollable() / scrollable-x() Stylus mixins. The
+ * -webkit-overflow-scrolling hint enables momentum scrolling on iOS, and
+ * will-change: scroll-position promotes the element to its own compositor
+ * layer.
+ */
+@utility gj-scrollable {
+	overflow-y: auto;
+	overflow-x: hidden;
+	will-change: scroll-position;
+	-webkit-overflow-scrolling: touch;
+}
+@utility gj-scrollable-x {
+	overflow-y: hidden;
+	overflow-x: auto;
+	will-change: scroll-position;
+	-webkit-overflow-scrolling: touch;
+}
+
+/*
+ * overlay-text-shadow — replaces the old styleOverlayTextShadow helper from
+ * mixins.ts. Used to make text readable over arbitrary media backgrounds.
+ */
+@utility overlay-text-shadow {
+	text-shadow: 0.5px 0.5px 1.5px rgba(0, 0, 0, 0.38);
+}

@@ -27,7 +27,6 @@ import AppSpacer from '~common/spacer/AppSpacer.vue';
 import { kThemeBgActual, kThemeFgMuted } from '~common/theme/variables';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 import { $gettext } from '~common/translate/translate.service';
-import { styleFlexCenter, styleWhen } from '~styles/mixins';
 import {
 	buildCSSPixelValue,
 	kFontFamilyDisplay,
@@ -352,11 +351,7 @@ const fillStyles: CSSProperties = {
 										</div>
 									</section>
 
-									<section
-										v-if="quest.rewards.length > 0"
-										class="section"
-										:style="{ paddingTop: '0' }"
-									>
+									<section v-if="quest.rewards.length > 0" class="section pt-0">
 										<div
 											:style="{
 												textTransform: `uppercase`,
@@ -399,23 +394,21 @@ const fillStyles: CSSProperties = {
 									<template #default="{ affixed }">
 										<div
 											:style="{
-												boxShadow: `none`,
+												boxShadow: affixed
+													? `0px 1px 8px rgba(0,0,0, 0.8)`
+													: `none`,
 												transition: `box-shadow 250ms ${kWeakEaseOut}`,
 												borderBottomLeftRadius: borderRadius.px,
 												borderBottomRightRadius: borderRadius.px,
-												...styleWhen(affixed, {
-													backgroundColor: kThemeBgActual,
-													boxShadow: `0px 1px 8px rgba(0,0,0, 0.8)`,
-												}),
+												backgroundColor: affixed
+													? kThemeBgActual
+													: undefined,
 											}"
 										>
 											<AppQuestActionButton
 												:key="quest.id"
 												:style="{
-													padding: `12px`,
-													...styleWhen(!Screen.isXs, {
-														padding: `16px`,
-													}),
+													padding: !Screen.isXs ? `16px` : `12px`,
 												}"
 												:quest="quest"
 												:is-accept="isQuestAcceptAction"
@@ -431,16 +424,10 @@ const fillStyles: CSSProperties = {
 								<div class="_placeholder-header" />
 
 								<section class="section section-thin">
-									<div :style="styleFlexCenter({ direction: 'column' })">
-										<div
-											class="_placeholder-text"
-											:style="{ width: `120px` }"
-										/>
+									<div class="flex flex-col items-center justify-center">
+										<div class="_placeholder-text w-[120px]" />
 										<AppSpacer vertical :scale="1" />
-										<div
-											class="_placeholder-title"
-											:style="{ width: `240px` }"
-										/>
+										<div class="_placeholder-title w-[240px]" />
 									</div>
 									<AppSpacer vertical :scale="4" />
 
@@ -450,11 +437,8 @@ const fillStyles: CSSProperties = {
 											:key="i"
 											class="_placeholder-text"
 											:style="{
-												width: `30%`,
-												...styleWhen(i < 4, {
-													width: '100%',
-													marginBottom: '8px',
-												}),
+												width: i < 4 ? '100%' : '30%',
+												marginBottom: i < 4 ? '8px' : undefined,
 											}"
 										/>
 									</div>
@@ -462,10 +446,12 @@ const fillStyles: CSSProperties = {
 							</template>
 							<template v-else>
 								<div
-									:class="containerStyles.class"
+									:class="[
+										containerStyles.class,
+										'flex flex-col items-center justify-center',
+									]"
 									:style="{
 										...containerStyles.style,
-										...styleFlexCenter({ direction: 'column' }),
 										height: `100%`,
 									}"
 								>

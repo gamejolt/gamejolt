@@ -1,3 +1,4 @@
+import '~styles/tailwind.css';
 import '~app/main.styl';
 
 import { defineAsyncComponent } from 'vue';

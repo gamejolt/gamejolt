@@ -2,7 +2,6 @@
 import { computed, CSSProperties } from 'vue';
 
 import AppPageIndicatorCompactItem from '~common/pagination/AppPageIndicatorCompactItem.vue';
-import { styleFlexCenter, styleWhen } from '~styles/mixins';
 
 type Props = {
 	count: number;
@@ -10,8 +9,6 @@ type Props = {
 	innerStyles?: CSSProperties;
 };
 const { count, current, innerStyles } = defineProps<Props>();
-
-const sizeBase = 8;
 
 const displayCount = computed(() => Math.min(count, 5));
 const edgeCount = computed(() => Math.floor(displayCount.value / 2));
@@ -28,42 +25,25 @@ function shouldShowItem(offset: number) {
 </script>
 
 <template>
-	<div
-		:style="{
-			...styleFlexCenter({ direction: 'row' }),
-			minHeight: `${sizeBase}px`,
-		}"
-	>
+	<div class="flex flex-row items-center justify-center min-h-[8px]">
 		<div
-			:style="{
-				display: `inline-flex`,
-				alignItems: `center`,
-				gap: `4px`,
-				flexWrap: `nowrap`,
-				...innerStyles,
-				position: `relative`,
-			}"
+			class="inline-flex items-center gap-[4px] flex-nowrap relative"
+			:style="innerStyles"
 		>
 			<TransitionGroup name="list">
 				<template v-for="i of count" :key="i">
 					<div
 						v-if="shouldShowItem(i)"
+						class="flex items-center justify-center w-[8px] h-[8px]"
 						:class="{
 							_pre: i - current < 0,
 							_post: i - current > 0,
 						}"
 						:style="{
-							...styleFlexCenter(),
-							width: `${sizeBase}px`,
-							height: `${sizeBase}px`,
 							// Pin the first and last items to the edges.
 							// Helps with transitions.
-							...styleWhen(i === current - edgeCount, {
-								left: 0,
-							}),
-							...styleWhen(i === current + edgeCount, {
-								right: 0,
-							}),
+							left: i === current - edgeCount ? 0 : undefined,
+							right: i === current + edgeCount ? 0 : undefined,
 						}"
 					>
 						<AppPageIndicatorCompactItem

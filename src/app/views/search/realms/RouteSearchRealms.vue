@@ -37,7 +37,7 @@ createAppRoute({
 </script>
 
 <template>
-	<div v-if="hasSearch" class="container">
+	<div v-if="hasSearch" class="gj-container">
 		<div class="row">
 			<div class="-grid">
 				<AppRealmFullCard

@@ -15,7 +15,6 @@ import AppScrollScroller from '~common/scroll/AppScrollScroller.vue';
 import { kThemeFgMuted } from '~common/theme/variables';
 import { UserModel } from '~common/user/user.model';
 import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
-import { styleTextOverflow } from '~styles/mixins';
 import { kFontSizeLarge, kFontSizeSmall } from '~styles/variables';
 
 type Props = {
@@ -121,13 +120,11 @@ function close() {
 
 				<template #title>
 					<div
-						:style="[
-							styleTextOverflow,
-							{
-								fontSize: kFontSizeLarge.px,
-								fontWeight: `bold`,
-							},
-						]"
+						class="truncate"
+						:style="{
+							fontSize: kFontSizeLarge.px,
+							fontWeight: `bold`,
+						}"
 					>
 						{{
 							$gettext(`%{ user }'s Collection`, {

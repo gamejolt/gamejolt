@@ -6,7 +6,6 @@ import AppBackgroundImg from '~common/background/AppBackgroundImg.vue';
 import { BackgroundModel } from '~common/background/background.model';
 import { ImgHelper } from '~common/img/helper/helper-service';
 import AppMediaItemBackdrop from '~common/media-item/backdrop/AppMediaItemBackdrop.vue';
-import { styleWhen } from '~styles/mixins';
 
 type Props = {
 	background?: BackgroundModel;
@@ -88,9 +87,7 @@ if (import.meta.env.SSR) {
 						:key="loadedBackground.id"
 						class="_stretch anim-fade-in"
 						:background="background"
-						:background-style="
-							styleWhen(!!backgroundStyle, backgroundStyle!)
-						"
+						:background-style="backgroundStyle"
 						:scroll-direction="scrollDirection"
 						:enable-page-scroll="enablePageScroll"
 					/>

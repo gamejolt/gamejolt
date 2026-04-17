@@ -41,7 +41,7 @@ createAppRoute({
 
 	<AppShellPageBackdrop>
 		<section class="section">
-			<div class="container">
+			<div class="gj-container">
 				<AppAlertDismissable alert-type="info" dismiss-key="library.install-location-msg">
 					<AppJolticon icon="info-circle" middle />
 					{{ ' ' }}

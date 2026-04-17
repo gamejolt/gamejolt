@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { styleChangeBg, styleWhen } from '~styles/mixins';
 import { kBorderRadiusBase, kButtonMdLineHeight } from '~styles/variables';
 
 type Props = {
@@ -8,28 +7,20 @@ type Props = {
 	block?: boolean;
 };
 
-defineProps<Props>();
+const { sparse, circle, block } = defineProps<Props>();
 </script>
 
 <template>
 	<div
+		class="change-bg-bg-subtle align-middle"
+		:class="{
+			block: block,
+			'inline-block': !block,
+		}"
 		:style="{
-			...styleChangeBg('bg-subtle'),
-			borderRadius: kBorderRadiusBase.px,
-			display: `inline-block`,
+			borderRadius: circle ? `100%` : kBorderRadiusBase.px,
 			height: kButtonMdLineHeight.px,
-			verticalAlign: `middle`,
-			width: `75px`,
-			...styleWhen(sparse, {
-				width: kButtonMdLineHeight.px,
-			}),
-			...styleWhen(circle, {
-				borderRadius: `100%`,
-			}),
-			...styleWhen(block, {
-				display: `block`,
-				width: `100%`,
-			}),
+			width: sparse ? kButtonMdLineHeight.px : block ? `100%` : `75px`,
 		}"
 	/>
 </template>

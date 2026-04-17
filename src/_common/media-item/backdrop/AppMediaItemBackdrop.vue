@@ -2,7 +2,6 @@
 import { computed } from 'vue';
 
 import { MediaItemModel } from '~common/media-item/media-item-model';
-import { styleAbsoluteFill } from '~styles/mixins';
 
 type Props = {
 	mediaItem?: MediaItemModel;
@@ -40,12 +39,9 @@ const colorStyles = computed(() => {
 <template>
 	<div class="media-item-backdrop" :class="radiusClass">
 		<div
+			class="absolute top-[1px] right-[1px] bottom-[1px] left-[1px] z-[-1]"
 			:style="{
 				...colorStyles,
-				...styleAbsoluteFill({
-					inset: `1px`,
-					zIndex: -1,
-				}),
 				width: `auto`,
 				borderRadius: `inherit`,
 				opacity: colorOpacity,

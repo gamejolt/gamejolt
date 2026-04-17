@@ -20,7 +20,6 @@ import AppSpacer from '~common/spacer/AppSpacer.vue';
 import { useCommonStore } from '~common/store/common-store';
 import { kThemeFg10 } from '~common/theme/variables';
 import { $gettext } from '~common/translate/translate.service';
-import { styleWhen } from '~styles/mixins';
 import { kBorderWidthBase } from '~styles/variables';
 
 const { joltbuxBalance } = useCommonStore();
@@ -157,7 +156,7 @@ const itemBorderSeperatorStyles: CSSProperties = {
 						<AppMicrotransactionItem
 							v-for="i in 3"
 							:key="i"
-							:style="styleWhen(i < 3, itemBorderSeperatorStyles)"
+							:style="i < 3 ? itemBorderSeperatorStyles : undefined"
 							:dynamic-slots="['trailing']"
 							is-placeholder
 						/>
@@ -183,7 +182,7 @@ const itemBorderSeperatorStyles: CSSProperties = {
 							item.sellable && item.sellable.pricings.length ? ['trailing'] : false
 						"
 						:style="
-							styleWhen(index < mtxProducts.length - 1, itemBorderSeperatorStyles)
+							index < mtxProducts.length - 1 ? itemBorderSeperatorStyles : undefined
 						"
 					>
 						<template #trailing>

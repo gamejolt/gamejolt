@@ -19,7 +19,7 @@ const date = computed(() => (post.isActive ? post.published_on : post.added_on))
 <template>
 	<RouterLink :to="link" class="link-unstyled">
 		<template v-if="post.isScheduled">
-			<span class="tag" :style="{ verticalAlign: `middle` }">
+			<span class="tag align-middle">
 				<AppJolticon icon="calendar-grid" />
 				{{ ' ' }}
 				{{ $gettext(`Scheduled`) }}

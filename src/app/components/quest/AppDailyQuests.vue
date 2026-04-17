@@ -18,7 +18,6 @@ import AppStickerChargeTooltipHandler from '~common/sticker/charge/AppStickerCha
 import { useStickerStore } from '~common/sticker/sticker-store';
 import { kThemeFg } from '~common/theme/variables';
 import { $gettext } from '~common/translate/translate.service';
-import { styleWhen } from '~styles/mixins';
 
 type Props = {
 	/**
@@ -137,14 +136,10 @@ function onRefresh() {
 			<span class="_info help-inline">
 				<template v-if="showCharge">
 					<AppStickerChargeTooltipHandler
-						:style="[
-							styleWhen(!!questEndsOnDate, {
-								marginRight: '12px',
-							}),
-							styleWhen(chargeOrbStyle === 'overcharge', {
-								color: kThemeFg,
-							}),
-						]"
+						:style="{
+							marginRight: !!questEndsOnDate ? '12px' : undefined,
+							color: chargeOrbStyle === 'overcharge' ? kThemeFg : undefined,
+						}"
 						:trigger="Screen.isPointerMouse ? 'hover' : 'focus'"
 						inline
 						@show="showChargeTooltip = true"
@@ -200,9 +195,9 @@ function onRefresh() {
 		<div
 			class="_list-grid"
 			:style="[
-				styleWhen(direction === 'column', {
-					gridTemplateColumns: '1fr',
-				}),
+				{
+					gridTemplateColumns: direction === 'column' ? '1fr' : undefined,
+				},
 				gridStyles,
 			]"
 		>

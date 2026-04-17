@@ -5,7 +5,6 @@ import { RouteLocationRaw, RouterLink } from 'vue-router';
 import { useDynamicSlots } from '~common/component-helpers';
 import AppJolticon, { Jolticon } from '~common/jolticon/AppJolticon.vue';
 import AppCircularProgress from '~common/progress/AppCircularProgress.vue';
-import { styleFlexCenter, styleWhen } from '~styles/mixins';
 import { kJolticonSize } from '~styles/variables';
 
 type Props = {
@@ -102,27 +101,16 @@ const { hasSlot } = useDynamicSlots(toRef(() => dynamicSlots));
 			'-disabled': disabled,
 			'-hover': forceHover,
 			[`-fill-color-${fillColor}`]: !!fillColor,
+			'!p-0': (sparse || circle) && loading,
 		}"
-		:style="
-			styleWhen((sparse || circle) && loading, {
-				padding: 0,
-			})
-		"
 		:to="to"
 		:href="href"
 		:target="target"
 		:disabled="disabled === true ? 'disabled' : null"
 		@click="emit('click', $event)"
 	>
-		<div v-if="loading" :style="styleFlexCenter()">
-			<AppCircularProgress
-				:style="{
-					height: `33px`,
-					width: `33px`,
-					paddingTop: `6px`,
-					paddingBottom: `6px`,
-				}"
-			/>
+		<div v-if="loading" class="flex items-center justify-center">
+			<AppCircularProgress class="h-[33px] w-[33px] pt-[6px] pb-[6px]" />
 		</div>
 		<template v-else>
 			<span v-if="badge" class="-badge">{{ badge }}</span>
@@ -133,7 +121,7 @@ const { hasSlot } = useDynamicSlots(toRef(() => dynamicSlots));
 				:icon="icon"
 				:big="lg"
 			/>
-			<div v-else-if="hasSlot('icon')" class="-icon" :style="{ display: `inline-block` }">
+			<div v-else-if="hasSlot('icon')" class="-icon inline-block">
 				<slot name="icon" :size="lg ? kJolticonSize.value * 2 : kJolticonSize.value" />
 			</div>
 

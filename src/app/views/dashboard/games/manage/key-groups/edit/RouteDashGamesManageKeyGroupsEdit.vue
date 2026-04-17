@@ -146,7 +146,7 @@ const appRoute = createAppRoute({
 
 <template>
 	<section v-if="appRoute.isBootstrapped.value" class="section">
-		<div class="container">
+		<div class="gj-container">
 			<div class="row">
 				<div class="col-sm-10 col-md-7 col-lg-6">
 					<h2 class="section-header">

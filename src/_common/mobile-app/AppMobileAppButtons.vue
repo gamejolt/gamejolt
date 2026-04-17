@@ -5,7 +5,6 @@ import { trackAppPromotionClick } from '~common/analytics/analytics.service';
 import appStoreImage from '~common/mobile-app/button-app-store.svg';
 import playStoreImage from '~common/mobile-app/button-play-store.png';
 import { AppPromotionSource, getAppUrl, useAppPromotionStore } from '~common/mobile-app/store';
-import { styleWhen } from '~styles/mixins';
 
 type Props = {
 	source: AppPromotionSource;
@@ -20,15 +19,7 @@ const appStoreUrl = computed(() => getAppUrl(appPromotion, { targetStore: 'app' 
 </script>
 
 <template>
-	<div
-		class="app-buttons"
-		:class="{ '-justified': justified }"
-		:style="{
-			...styleWhen(wrap, {
-				flexWrap: `wrap`,
-			}),
-		}"
-	>
+	<div class="app-buttons" :class="{ '-justified': justified, 'flex-wrap': wrap }">
 		<a
 			class="-button"
 			:href="playStoreUrl"

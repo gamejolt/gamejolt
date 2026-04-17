@@ -18,7 +18,6 @@ import { useCommonStore } from '~common/store/common-store';
 import { kThemePlaceholderBg } from '~common/theme/variables';
 import { $gettext } from '~common/translate/translate.service';
 import { UserModel } from '~common/user/user.model';
-import { styleFlexCenter } from '~styles/mixins';
 import { kBorderRadiusLg, kFontFamilyDisplay } from '~styles/variables';
 
 type Props = {
@@ -106,17 +105,8 @@ const gridStyles = {
 				:ratio="1"
 				:style="{ backgroundColor: kThemePlaceholderBg, borderRadius: kBorderRadiusLg.px }"
 			>
-				<div
-					v-if="i === 1"
-					:style="[
-						styleFlexCenter(),
-						{
-							width: `100%`,
-							height: `100%`,
-						},
-					]"
-				>
-					<AppCircularProgress :style="{ width: `32px`, height: `32px` }" />
+				<div v-if="i === 1" class="flex h-full w-full items-center justify-center">
+					<AppCircularProgress class="h-[32px] w-[32px]" />
 				</div>
 			</AppAspectRatio>
 		</div>

@@ -5,7 +5,6 @@ import AppFadeCollapse from '~common/AppFadeCollapse.vue';
 import AppContentViewer from '~common/content/content-viewer/AppContentViewer.vue';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppUserAvatar from '~common/user/user-avatar/AppUserAvatar.vue';
-import { styleTextOverflow } from '~styles/mixins';
 
 type Props = {
 	chat: ChatClient;
@@ -37,8 +36,8 @@ const { message } = defineProps<Props>();
 			}"
 		>
 			<h4
+				class="truncate"
 				:style="{
-					...styleTextOverflow,
 					marginBottom: `8px`,
 				}"
 			>

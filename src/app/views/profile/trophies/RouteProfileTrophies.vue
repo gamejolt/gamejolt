@@ -41,7 +41,7 @@ createAppRoute({
 <template>
 	<AppShellPageBackdrop>
 		<section class="section">
-			<div class="container">
+			<div class="gj-container">
 				<div class="row">
 					<div v-if="Screen.isDesktop" class="col-md-3">
 						<nav class="platform-list">

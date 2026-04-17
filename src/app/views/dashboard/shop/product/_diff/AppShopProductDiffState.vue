@@ -12,7 +12,6 @@ import {
 	kThemeGjOverlayNotice,
 } from '~common/theme/variables';
 import { $gettext } from '~common/translate/translate.service';
-import { styleBorderRadiusLg, styleFlexCenter, styleWhen } from '~styles/mixins';
 import { kFontSizeBase } from '~styles/variables';
 
 type Props = {
@@ -51,30 +50,19 @@ const data = computed(() => {
 <template>
 	<div
 		v-if="data"
-		:style="[
-			styleBorderRadiusLg,
-			styleFlexCenter({
-				display: `inline-flex`,
-				gap: `6px`,
-			}),
-			{
-				borderRadius: `12px`,
-				padding: `2px 8px`,
-				backgroundColor: kThemeFg10,
-				color: kThemeFg,
-				fontSize: kFontSizeBase.px,
-				fontWeight: `bold`,
-				marginRight: `auto`,
-			},
-			styleWhen(itemStates.rejected, {
-				backgroundColor: kThemeGjOverlayNotice,
-				color: `white`,
-			}),
-			styleWhen(itemStates.published, {
-				backgroundColor: kThemeBiBg,
-				color: kThemeBiFg,
-			}),
-		]"
+		class="rounded-lg inline-flex items-center justify-center gap-[6px]"
+		:style="{
+			padding: `2px 8px`,
+			backgroundColor: itemStates.rejected
+				? kThemeGjOverlayNotice
+				: itemStates.published
+				? kThemeBiBg
+				: kThemeFg10,
+			color: itemStates.rejected ? `white` : itemStates.published ? kThemeBiFg : kThemeFg,
+			fontSize: kFontSizeBase.px,
+			fontWeight: `bold`,
+			marginRight: `auto`,
+		}"
 	>
 		<AppJolticon
 			:icon="data.icon"

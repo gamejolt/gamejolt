@@ -55,7 +55,7 @@ function navigateBack() {
 		</div>
 
 		<footer id="footer">
-			<div class="container">
+			<div class="gj-container">
 				<div class="row">
 					<div class="col-sm-6">
 						<p class="footer-links">

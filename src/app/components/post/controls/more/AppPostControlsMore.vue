@@ -34,7 +34,6 @@ import { copyShareLink } from '~common/share/share.service';
 import { useCommonStore } from '~common/store/common-store';
 import { $gettext } from '~common/translate/translate.service';
 import { UserModel } from '~common/user/user.model';
-import { styleWhen } from '~styles/mixins';
 import { kFontSizeTiny } from '~styles/variables';
 import { arrayRemove } from '~utils/array';
 
@@ -233,12 +232,7 @@ async function togglePin() {
 			circle
 			trans
 			icon="ellipsis-v"
-			:style="{
-				...styleWhen(overlay, {
-					color: 'white',
-					'text-shadow': 'black 1px 1px 4px',
-				}),
-			}"
+			:class="{ 'overlay-text-shadow !text-white': overlay }"
 		/>
 
 		<template #popover>

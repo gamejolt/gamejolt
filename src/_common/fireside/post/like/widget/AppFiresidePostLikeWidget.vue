@@ -18,7 +18,6 @@ import { showLikersModal } from '~common/likers/modal.service';
 import { Screen } from '~common/screen/screen-service';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import { $gettext } from '~common/translate/translate.service';
-import { styleWhen } from '~styles/mixins';
 
 type Props = {
 	post: FiresidePostModel;
@@ -101,7 +100,7 @@ function showLikers() {
 				v-app-tooltip="tooltip"
 				v-app-auth-required
 				class="-like-button"
-				:style="styleWhen(!liked && overlay, PostOverlayTextStyles)"
+				:style="!liked && overlay ? PostOverlayTextStyles : undefined"
 				icon="heart-filled"
 				circle
 				:trans="trans"
@@ -133,7 +132,7 @@ function showLikers() {
 				mobile: Screen.isXs,
 				'-highlight': liked,
 			}"
-			:style="styleWhen(overlay, PostOverlayTextStyles)"
+			:style="overlay ? PostOverlayTextStyles : undefined"
 			@click="showLikers()"
 		>
 			{{ likeCount }}

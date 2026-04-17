@@ -471,7 +471,7 @@ function getRandomStickers(count = 3) {
 
 				<AppLinkExternal :href="applyUrl">
 					<AppButton
-						:style="{ maxWidth: '384px' }"
+						class="max-w-[384px]"
 						primary
 						solid
 						block
@@ -562,7 +562,7 @@ function getRandomStickers(count = 3) {
 			<div class="-footer-content">
 				<AppLinkExternal :href="applyUrl">
 					<AppButton
-						:style="{ maxWidth: '384px' }"
+						class="max-w-[384px]"
 						primary
 						solid
 						block

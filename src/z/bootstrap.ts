@@ -1,3 +1,4 @@
+import '~styles/tailwind.css';
 import '~z/main.styl';
 
 import { bootstrapCommon } from '~common/bootstrap';

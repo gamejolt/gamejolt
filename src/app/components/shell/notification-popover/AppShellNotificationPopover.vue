@@ -22,7 +22,6 @@ import AppPopper from '~common/popper/AppPopper.vue';
 import { Screen } from '~common/screen/screen-service';
 import { kThemeDarkest } from '~common/theme/variables';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
-import { styleChangeBg } from '~styles/mixins';
 import { kBorderWidthLg } from '~styles/variables';
 
 const route = useRoute();
@@ -147,9 +146,8 @@ function onClickFilter() {
 		>
 			<div
 				v-if="hasUnreadNotifications"
-				class="anim-fade-enter anim-fade-leave"
+				class="anim-fade-enter anim-fade-leave change-bg-highlight"
 				:style="{
-					...styleChangeBg('highlight'),
 					borderRadius: `50%`,
 					width: `12px`,
 					height: `12px`,

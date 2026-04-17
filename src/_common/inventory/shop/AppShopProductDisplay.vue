@@ -15,12 +15,7 @@ import { useCommonStore } from '~common/store/common-store';
 import { kThemeFgMuted } from '~common/theme/variables';
 import { UserModel } from '~common/user/user.model';
 import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
-import {
-	styleBorderRadiusLg,
-	styleFlexCenter,
-	styleMaxWidthForOptions,
-	styleWhen,
-} from '~styles/mixins';
+import { styleMaxWidthForOptions } from '~styles/mixins';
 import { kFontSizeSmall } from '~styles/variables';
 
 type Props = {
@@ -54,7 +49,7 @@ const itemWidthStyles = computed(() => {
 </script>
 
 <template>
-	<div :style="{ ...styleFlexCenter({ direction: `column` }), width: `100%` }">
+	<div class="flex w-full flex-col items-center justify-center">
 		<div :style="itemWidthStyles">
 			<AppUserAvatarBubble
 				v-if="productData.resource === 'Avatar_Frame'"
@@ -66,13 +61,10 @@ const itemWidthStyles = computed(() => {
 			/>
 			<AppAspectRatio
 				v-else
-				v-bind="{
-					ratio: productData.aspectRatio,
-					style: styleWhen(
-						productData.resource === PurchasableProductType.Background,
-						styleBorderRadiusLg
-					),
+				:class="{
+					'rounded-lg': productData.resource === PurchasableProductType.Background,
 				}"
+				:ratio="productData.aspectRatio"
 			>
 				<AppImgResponsive
 					v-if="productData.imgUrl && productData.processMediaserverUrl"

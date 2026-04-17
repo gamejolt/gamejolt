@@ -107,10 +107,7 @@ async function onClick(event: Event) {
 		<AppResponsiveDimensions :ratio="REALM_CARD_RATIO">
 			<component
 				:is="to && linkTarget === 'image' ? RouterLink : 'div'"
-				:style="{
-					width: `100%`,
-					height: `100%`,
-				}"
+				class="w-full h-full block"
 				:to="to"
 			>
 				<AppMediaItemBackdrop v-if="mediaItem" :media-item="mediaItem">

@@ -14,7 +14,6 @@ import AppUserFollowButton from '~common/user/follow/AppUserFollowButton.vue';
 import { UserModel } from '~common/user/user.model';
 import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
 import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
-import { styleWhen } from '~styles/mixins';
 import { getMediaserverUrlForBounds } from '~utils/image';
 
 type Props = {
@@ -80,12 +79,7 @@ const headerBackgroundImage = computed(() => {
 			>
 				<AppUserAvatarImg
 					class="-avatar-img"
-					:style="
-						// Hide the border when there's an avatar frame.
-						styleWhen(!!user.avatar_frame, {
-							border: `none`,
-						})
-					"
+					:class="{ '!border-none': !!user.avatar_frame }"
 					:user="user"
 				/>
 			</AppUserAvatarBubble>

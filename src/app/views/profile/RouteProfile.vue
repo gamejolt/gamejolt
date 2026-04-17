@@ -36,7 +36,6 @@ import { UserFriendshipModel, UserFriendshipState } from '~common/user/friendshi
 import { populateTrophies } from '~common/user/trophy/trophy-utils';
 import { UserBaseTrophyModel } from '~common/user/trophy/user-base-trophy.model';
 import { UserModel } from '~common/user/user.model';
-import { styleWhen } from '~styles/mixins';
 import { buildCSSPixelValue, kFontFamilyBase } from '~styles/variables';
 import { useResizeObserver } from '~utils/resize-observer';
 
@@ -377,17 +376,21 @@ const coverMaxHeight = computed(() => Math.min(Screen.height * 0.35, 400));
 						:cover-max-height="coverMaxHeight"
 						should-affix-nav
 						:autoscroll-anchor-key="autoscrollAnchorKey"
-						:style="{
-							...styleWhen(Screen.isMobile && !routeUser.header_media_item, {
-								height: 0,
-								minHeight: 0,
-							}),
-						}"
-						:cover-header-styles="{
-							...styleWhen(Screen.isMobile && !routeUser.header_media_item, {
-								background: `transparent`,
-							}),
-						}"
+						:style="
+							Screen.isMobile && !routeUser.header_media_item
+								? {
+										height: 0,
+										minHeight: 0,
+								  }
+								: undefined
+						"
+						:cover-header-styles="
+							Screen.isMobile && !routeUser.header_media_item
+								? {
+										background: `transparent`,
+								  }
+								: undefined
+						"
 					>
 						<template v-if="!Screen.isMobile" #default>
 							<RouterLink

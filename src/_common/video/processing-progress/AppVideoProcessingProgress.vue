@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, CSSProperties, ref } from 'vue';
+import { computed, ref } from 'vue';
 
 import { FiresidePostModel } from '~common/fireside/post/post-model';
 import AppImgResponsive from '~common/img/AppImgResponsive.vue';
@@ -8,7 +8,6 @@ import AppProgressBar from '~common/progress/AppProgressBar.vue';
 import AppProgressPoller from '~common/progress/poller/AppProgressPoller.vue';
 import AppResponsiveDimensions from '~common/responsive-dimensions/AppResponsiveDimensions.vue';
 import { $gettext } from '~common/translate/translate.service';
-import { styleBorderRadiusLg, styleChangeBg } from '~styles/mixins';
 
 type Props = {
 	post: FiresidePostModel;
@@ -66,9 +65,6 @@ async function onError(input: any) {
 	emit('error', errorMsg);
 }
 
-const posterIconStyle: CSSProperties = {
-	filter: `drop-shadow(0 0 5px rgba(0, 0, 0, 1))`,
-};
 </script>
 
 <template>
@@ -84,53 +80,32 @@ const posterIconStyle: CSSProperties = {
 		<AppResponsiveDimensions :ratio="16 / 9">
 			<div
 				v-if="hasData"
-				:style="{
-					...styleBorderRadiusLg,
-					...styleChangeBg('bg-offset'),
-					overflow: `hidden`,
-					position: `relative`,
-					height: `100%`,
-					display: `flex`,
-					justifyContent: `center`,
-					alignItems: `center`,
-				}"
+				class="change-bg-bg-offset relative flex h-full items-center justify-center overflow-hidden rounded-lg"
 			>
 				<template v-if="videoPosterImgUrl">
 					<AppImgResponsive
+						class="relative block max-w-full max-h-full"
 						:src="videoPosterImgUrl"
 						:style="{
-							display: `block`,
-							position: `relative`,
-							maxWidth: `100%`,
-							maxHeight: `100%`,
 							transition: `filter 0.5s ease`,
 							filter: cssFilter,
 						}"
 					/>
 
-					<div
-						:style="{
-							position: `absolute`,
-							left: 0,
-							top: 0,
-							right: 0,
-							bottom: 0,
-							display: `flex`,
-							justifyContent: `center`,
-							alignItems: `center`,
-						}"
-					>
+					<div class="absolute inset-0 flex items-center justify-center">
 						<AppJolticon
+							class="text-white [filter:drop-shadow(0_0_5px_rgba(0,0,0,1))]"
 							icon="video"
 							big
-							:style="{
-								...posterIconStyle,
-								color: `white`,
-							}"
 						/>
 					</div>
 				</template>
-				<AppJolticon v-else icon="video" big :style="posterIconStyle" />
+				<AppJolticon
+					v-else
+					class="[filter:drop-shadow(0_0_5px_rgba(0,0,0,1))]"
+					icon="video"
+					big
+				/>
 			</div>
 		</AppResponsiveDimensions>
 

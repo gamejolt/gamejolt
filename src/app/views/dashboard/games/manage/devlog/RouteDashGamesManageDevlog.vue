@@ -94,7 +94,7 @@ const appRoute = createAppRoute({
 <template>
 	<template v-if="isBootstrapped">
 		<section class="section">
-			<div class="container">
+			<div class="gj-container">
 				<div class="row">
 					<div class="col-sm-10 col-md-8 col-lg-7 col-centered">
 						<AppGamePerms :game="game" required="devlogs">

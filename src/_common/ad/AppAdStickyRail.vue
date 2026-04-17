@@ -20,7 +20,7 @@ const { shouldShow } = useAdStore();
 </script>
 
 <template>
-	<div :style="{ position: `relative` }">
+	<div class="relative">
 		<div
 			v-if="showLeft && shouldShow && Screen.width >= minWidth"
 			:style="{

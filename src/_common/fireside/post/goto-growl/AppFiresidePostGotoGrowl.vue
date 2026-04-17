@@ -130,7 +130,7 @@ function onClickedView() {
 			.
 		</div>
 
-		<div :style="{ marginTop: `16px` }">
+		<div class="mt-[16px]">
 			<RouterLink :to="post.routeLocation">
 				<AppButton @click="onClickedView">
 					{{ $gettext(`View Post`) }}

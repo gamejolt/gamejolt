@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import AppJolticon, { Jolticon } from '~common/jolticon/AppJolticon.vue';
 import { kThemeFgMuted, kThemePrimary } from '~common/theme/variables';
-import { styleBorderRadiusBase, styleWhen } from '~styles/mixins';
 import { kFontSizeSmall } from '~styles/variables';
 
 type Props = {
@@ -14,28 +13,16 @@ const { icon, color = 'default', fillColor = 'backdrop' } = defineProps<Props>()
 
 <template>
 	<div
+		class="flex flex-row items-center rounded p-[24px] [grid-gap:16px]"
 		:class="`fill-${fillColor}`"
-		:style="{
-			...styleBorderRadiusBase,
-			display: `flex`,
-			flexDirection: `row`,
-			alignItems: `center`,
-			padding: `24px`,
-			gridGap: `16px`,
-		}"
 	>
 		<div
 			v-if="icon"
 			:style="{
-				...styleWhen(color === 'default', {
-					color: kThemeFgMuted,
-				}),
-				...styleWhen(color === 'primary', {
-					color: kThemePrimary,
-				}),
+				color: color === 'primary' ? kThemePrimary : kThemeFgMuted,
 			}"
 		>
-			<AppJolticon :icon="icon" middle :style="{ fontSize: `24px` }" />
+			<AppJolticon class="text-[24px]" :icon="icon" middle />
 		</div>
 		<div :style="{ fontSize: kFontSizeSmall.px }">
 			<slot />

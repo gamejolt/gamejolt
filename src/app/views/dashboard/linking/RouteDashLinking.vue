@@ -64,7 +64,7 @@ createAppRoute({
 
 <template>
 	<section class="section">
-		<div class="container">
+		<div class="gj-container">
 			<div v-if="token">
 				<p>
 					{{ $gettext(`Please use your web browser to complete the process.`) }}

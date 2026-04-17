@@ -110,7 +110,7 @@ function onClickLeave() {
 
 <template>
 	<div class="-main fill-darker theme-dark">
-		<div class="container">
+		<div class="gj-container">
 			<div class="-content">
 				<div class="-centered">
 					<AppThemeSvg

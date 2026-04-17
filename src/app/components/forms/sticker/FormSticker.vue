@@ -32,7 +32,6 @@ import { StickerPackModel } from '~common/sticker/pack/pack.model';
 import { StickerModel } from '~common/sticker/sticker.model';
 import { $gettext } from '~common/translate/translate.service';
 import { TranslateDirective as vTranslate } from '~common/translate/translate-directive';
-import { styleBorderRadiusLg, styleChangeBg, styleFlexCenter } from '~styles/mixins';
 import { kLineHeightComputed } from '~styles/variables';
 
 type FormModel = Partial<StickerModel> & {
@@ -344,18 +343,16 @@ async function beforeChangeIsActive(next: boolean) {
 				:ratio="1"
 			>
 				<div
+					class="change-bg-bg-offset rounded-lg flex items-center justify-center"
 					:style="{
-						...styleBorderRadiusLg,
-						...styleChangeBg('bg-offset'),
-						...styleFlexCenter(),
 						width: `100%`,
 						height: `100%`,
 						padding: `8px`,
 					}"
 				>
 					<div
+						class="flex items-center justify-center"
 						:style="{
-							...styleFlexCenter(),
 							width: `50%`,
 							height: `50%`,
 						}"
@@ -374,8 +371,8 @@ async function beforeChangeIsActive(next: boolean) {
 						/>
 						<div
 							v-else
+							class="change-bg-bg-subtle"
 							:style="{
-								...styleChangeBg('bg-subtle'),
 								width: `100%`,
 								height: `100%`,
 								borderRadius: `50%`,

@@ -17,7 +17,6 @@ import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import { $gettext } from '~common/translate/translate.service';
 import { UserModel } from '~common/user/user.model';
 import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
-import { styleTextOverflow } from '~styles/mixins';
 import { kFontSizeLarge } from '~styles/variables';
 
 export default {
@@ -83,7 +82,7 @@ function getEarnedGems(referral: ReferralData) {
 	<AppShellPageBackdrop v-if="isBootstrapped && user">
 		<div class="row">
 			<div class="col-sm-7">
-				<h3 :style="{ marginTop: 0 }">
+				<h3 class="mt-0">
 					{{ $gettext(`How referrals work`) }}
 				</h3>
 				<p>
@@ -155,8 +154,8 @@ function getEarnedGems(referral: ReferralData) {
 							}"
 						>
 							<div
+								class="truncate"
 								:style="{
-									...styleTextOverflow,
 									minWidth: 0,
 									maxWidth: `100%`,
 									fontWeight: `bold`,
@@ -169,7 +168,7 @@ function getEarnedGems(referral: ReferralData) {
 					</RouterLink>
 
 					<!-- referral info -->
-					<div class="stat-big" :style="{ flex: 1 }">
+					<div class="stat-big flex-1">
 						<div class="stat-big-label">
 							{{ $gettext(`Joined on`) }}
 						</div>
@@ -178,7 +177,7 @@ function getEarnedGems(referral: ReferralData) {
 						</div>
 					</div>
 
-					<div :style="{ flex: 1 }">
+					<div class="flex-1">
 						<div class="stat-big">
 							<div class="stat-big-label">
 								{{ $gettext(`Current bonus`) }}
@@ -199,7 +198,7 @@ function getEarnedGems(referral: ReferralData) {
 						</div>
 					</div>
 
-					<div class="stat-big" :style="{ flex: 1 }">
+					<div class="stat-big flex-1">
 						<div class="stat-big-label">
 							{{ $gettext(`Gems earned`) }}
 						</div>

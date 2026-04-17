@@ -147,7 +147,7 @@ function onClickFilter() {
 
 <template>
 	<section class="section">
-		<div class="container">
+		<div class="gj-container">
 			<div class="row">
 				<div class="col-sm-9 col-md-8 col-lg-7 col-centered">
 					<p v-if="feed" class="-header">

@@ -11,7 +11,6 @@ import { trackHomeFeedSwitch } from '~common/analytics/analytics.service';
 import { Screen } from '~common/screen/screen-service';
 import { kThemeBg, kThemeBiBg, kThemeBiFg, kThemeGjOverlayNotice } from '~common/theme/variables';
 import { $gettext } from '~common/translate/translate.service';
-import { styleBorderRadiusLg, styleElevate, styleWhen } from '~styles/mixins';
 import { kBorderWidthLg } from '~styles/variables';
 import { assertNever } from '~utils/utils';
 
@@ -82,27 +81,20 @@ function onTabClick(path: string, isActive: boolean) {
 		<template v-for="{ tab, to, label, unread } of tabData" :key="tab">
 			<RouterLink
 				:to
-				class="pressy"
+				class="pressy rounded-lg"
 				:style="{
-					...styleBorderRadiusLg,
 					position: `relative`,
-					display: `flex`,
+					display: Screen.isMobile ? `block` : `flex`,
 					alignItems: `center`,
 					padding: `8px 20px`,
 					fontWeight: 700,
 					textAlign: `center`,
-					backgroundColor: kThemeBg,
+					backgroundColor: activeTab === tab ? kThemeBiBg : kThemeBg,
 					borderWidth: kBorderWidthLg.px,
 					borderStyle: `solid`,
-					...styleWhen(activeTab === tab, {
-						backgroundColor: kThemeBiBg,
-						borderColor: kThemeBiFg,
-						color: kThemeBiFg,
-					}),
-					...styleWhen(Screen.isMobile, {
-						display: `block`,
-						width: `100%`,
-					}),
+					borderColor: activeTab === tab ? kThemeBiFg : undefined,
+					color: activeTab === tab ? kThemeBiFg : undefined,
+					width: Screen.isMobile ? `100%` : undefined,
 				}"
 				@click.capture="onTabClick(tab, activeTab === tab)"
 			>
@@ -110,9 +102,8 @@ function onTabClick(path: string, isActive: boolean) {
 
 				<span
 					v-if="unread"
-					class="anim-fade-in anim-fade-leave"
+					class="anim-fade-in anim-fade-leave shadow-elevate-xs elevate-transition"
 					:style="{
-						...styleElevate(1),
 						position: `absolute`,
 						top: `-3px`,
 						right: `-3px`,

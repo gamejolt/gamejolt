@@ -13,7 +13,7 @@ const topOffset = useRandomOffset ? Math.random() : undefined;
 </script>
 
 <template>
-	<div :style="{ position: `relative` }">
+	<div class="relative">
 		<AppAnimSlideshow
 			:pause="pause"
 			:sheet="sheetChargeOrbBottom"

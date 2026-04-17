@@ -28,7 +28,6 @@ import { createAppRoute, defineAppRouteOptions } from '~common/route/route-compo
 import { Screen } from '~common/screen/screen-service';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 import { kThemeGjOverlayNotice } from '~common/theme/variables';
-import { styleFlexCenter, styleWhen } from '~styles/mixins';
 import { kFontSizeLarge } from '~styles/variables';
 import { arrayShuffle } from '~utils/array';
 import { useFullscreenHeight } from '~utils/fullscreen';
@@ -156,8 +155,8 @@ async function _getDownloadUrl(platform: DeviceOs, arch: DeviceArch) {
 					fontSize: kFontSizeLarge.px,
 				}"
 			>
-				<div :style="[styleFlexCenter(), { marginBottom: `12px` }]">
-					<AppJolticon icon="notice" big :style="{ color: `white` }" />
+				<div class="mb-[12px] flex items-center justify-center">
+					<AppJolticon class="text-white" icon="notice" big />
 				</div>
 
 				<span>
@@ -168,8 +167,7 @@ async function _getDownloadUrl(platform: DeviceOs, arch: DeviceArch) {
 				<a
 					href="https://app.gamejolt.com/qr"
 					target="_blank"
-					class="link-unstyled"
-					:style="{ textDecoration: 'underline' }"
+					class="link-unstyled underline"
 				>
 					{{ $gettext(`Get the mobile app now!`) }}
 				</a>
@@ -177,7 +175,7 @@ async function _getDownloadUrl(platform: DeviceOs, arch: DeviceArch) {
 			<section class="-header theme-dark">
 				<div class="-header-darken" />
 
-				<div class="container">
+				<div class="gj-container">
 					<div class="-header-content">
 						<div class="-header-lead lead">
 							for gamers.
@@ -213,7 +211,7 @@ async function _getDownloadUrl(platform: DeviceOs, arch: DeviceArch) {
 		</AppBackground>
 
 		<div class="fill-offset">
-			<div class="container">
+			<div class="gj-container">
 				<div class="-content-rows">
 					<div v-if="!GJ_IS_DESKTOP_APP" class="-desktop-row -content-row">
 						<AppBean class="-bean" :variant="2" no-clamp>
@@ -266,14 +264,11 @@ async function _getDownloadUrl(platform: DeviceOs, arch: DeviceArch) {
 					<div
 						class="-mobile-row -content-row"
 						:style="
-							styleWhen(
-								detectedDevice === 'ios' ||
-									detectedDevice === 'android' ||
-									hasKeyClaimIntent,
-								{
-									order: -1,
-								}
-							)
+							detectedDevice === 'ios' ||
+							detectedDevice === 'android' ||
+							hasKeyClaimIntent
+								? { order: -1 }
+								: undefined
 						"
 					>
 						<AppBean class="-bean" no-clamp>

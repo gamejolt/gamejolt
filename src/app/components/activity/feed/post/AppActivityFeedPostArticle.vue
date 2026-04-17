@@ -10,7 +10,6 @@ import { FiresidePostModel, loadArticleIntoPost } from '~common/fireside/post/po
 import AppLoading from '~common/loading/AppLoading.vue';
 import { Screen } from '~common/screen/screen-service';
 import { Scroll } from '~common/scroll/scroll.service';
-import { styleWhen } from '~styles/mixins';
 
 type Props = {
 	item: ActivityFeedItem;
@@ -73,11 +72,9 @@ async function collapse() {
 
 const pageCutStyles = computed(() => {
 	return {
-		...styleWhen(Screen.isDesktop, {
-			marginLeft: `-${kPostItemPaddingContainer.px}`,
-			marginRight: `-${kPostItemPaddingContainer.px}`,
-		}),
-	} as const satisfies CSSProperties;
+		marginLeft: Screen.isDesktop ? `-${kPostItemPaddingContainer.px}` : undefined,
+		marginRight: Screen.isDesktop ? `-${kPostItemPaddingContainer.px}` : undefined,
+	} satisfies CSSProperties;
 });
 </script>
 

@@ -108,7 +108,7 @@ const canManagePremium = computed(() =>
 
 <template>
 	<div>
-		<h1 :style="{ marginTop: 0 }">
+		<h1 class="mt-0">
 			{{ routeTitle }}
 		</h1>
 
@@ -138,9 +138,7 @@ const canManagePremium = computed(() =>
 		<div
 			v-for="{ label, resource, group, ratio, canAdd } of sectionData"
 			:key="label"
-			:style="{
-				margin: `32px 0`,
-			}"
+			class="my-[32px] mx-0"
 		>
 			<template v-if="canAdd || group.items.length > 0">
 				<h4 class="sans-margin">
@@ -150,8 +148,7 @@ const canManagePremium = computed(() =>
 				<!-- Slots -->
 				<div
 					v-if="group.slotAmount || group.maxSalesAmount"
-					class="help-block"
-					:style="{ marginTop: `4px`, marginBottom: 0 }"
+					class="help-block mt-[4px] mb-0"
 				>
 					<div>
 						<template v-if="group.slotAmount">

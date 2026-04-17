@@ -2,13 +2,7 @@ import { computed, CSSProperties, MaybeRefOrGetter, toValue } from 'vue';
 
 import { Screen } from '~common/screen/screen-service';
 import { kThemeFgMuted, kThemeLink } from '~common/theme/variables';
-import {
-	styleBorderRadiusLg,
-	styleChangeBg,
-	styleElevate,
-	styleTextOverflow,
-	styleWhen,
-} from '~styles/mixins';
+import { kElevateTransition } from '~styles/mixins';
 import {
 	buildCSSPixelValue,
 	kBorderWidthBase,
@@ -68,32 +62,36 @@ const PostFeedItemPaddingStyles = computed(() => {
 export const stylePostFeedItem = (options: { isHovered: MaybeRefOrGetter<boolean> }) => {
 	const isHovered = toValue(options.isHovered);
 
-	return {
+	const result: CSSProperties = {
 		...PostFeedItemPaddingStyles.value,
-		...styleChangeBg('bg'),
 		overflow: `hidden`,
 		position: `relative`,
 		zIndex: 1,
-		...styleWhen(Screen.isXs, {
-			...styleElevate(1),
-			marginLeft: `-${kPostItemPaddingXs.value}px`,
-			marginRight: `-${kPostItemPaddingXs.value}px`,
-		}),
-		...styleWhen(!Screen.isXs, {
-			...styleElevate(3),
-			...styleBorderRadiusLg,
-			borderWidth: kPostBorderWidth.px,
-			borderStyle: `solid`,
-			borderColor: `transparent`,
-		}),
-		...styleWhen(isHovered, {
-			borderColor: kThemeLink,
-			cursor: `pointer`,
-		}),
-		// Keep this down here since it needs to write the transition from the
-		// elevate mixin.
-		transition: `border-color 200ms ease`,
-	} satisfies CSSProperties;
+	};
+
+	if (Screen.isXs) {
+		result.boxShadow = `var(--shadow-elevate-xs)`;
+		result.transition = kElevateTransition;
+		result.marginLeft = `-${kPostItemPaddingXs.value}px`;
+		result.marginRight = `-${kPostItemPaddingXs.value}px`;
+	} else {
+		result.boxShadow = `var(--shadow-elevate-1)`;
+		result.transition = kElevateTransition;
+		result.borderWidth = kPostBorderWidth.px;
+		result.borderStyle = `solid`;
+		result.borderColor = `transparent`;
+	}
+
+	if (isHovered) {
+		result.borderColor = kThemeLink;
+		result.cursor = `pointer`;
+	}
+
+	// Keep this down here since it needs to write the transition from the
+	// elevate mixin.
+	result.transition = `border-color 200ms ease`;
+
+	return result satisfies CSSProperties;
 };
 
 ////////////////////////////////////////////
@@ -132,9 +130,8 @@ export const PostHeaderBylineStyles = {
 export const PostHeaderBylineNameStyles = (overlay: boolean) => {
 	return {
 		fontWeight: `bold`,
-		...styleTextOverflow,
-		...styleWhen(overlay, PostOverlayTextStyles),
-	} as const satisfies CSSProperties;
+		...(overlay ? PostOverlayTextStyles : {}),
+	} satisfies CSSProperties;
 };
 
 export const PostHeaderBylineUsernameStyles = (overlay: boolean) => {
@@ -142,23 +139,22 @@ export const PostHeaderBylineUsernameStyles = (overlay: boolean) => {
 		fontWeight: `normal`,
 		fontSize: kFontSizeSmall.px,
 		color: kThemeFgMuted,
-		...styleWhen(overlay, PostOverlayTextStyles),
-	} as const satisfies CSSProperties;
+		...(overlay ? PostOverlayTextStyles : {}),
+	} satisfies CSSProperties;
 };
 
 export const PostHeaderBylineGameStyles = (overlay: boolean) => {
 	return {
 		color: kThemeFgMuted,
 		fontWeight: `bold`,
-		...styleTextOverflow,
-		...styleWhen(overlay, PostOverlayTextStyles),
-	} as const satisfies CSSProperties;
+		...(overlay ? PostOverlayTextStyles : {}),
+	} satisfies CSSProperties;
 };
 
 export const PostHeaderTimeStyles = (overlay: boolean) => {
 	return {
-		...styleWhen(overlay, PostOverlayTextStyles),
-	} as const satisfies CSSProperties;
+		...(overlay ? PostOverlayTextStyles : {}),
+	} satisfies CSSProperties;
 };
 
 export const PostHeaderMetaStyles = computed(() => {
@@ -185,9 +181,8 @@ export const PostContentContainerStyles = (overlay: boolean) => {
 
 	const padding = Screen.isMobile ? kPostItemPaddingXs.value / 2 : kPostItemPadding.value / 2;
 	return {
-		...styleBorderRadiusLg,
-		...styleChangeBg('bg'),
-		...styleElevate(1),
+		boxShadow: `var(--shadow-elevate-xs)`,
+		transition: kElevateTransition,
 		overflow: `hidden`,
 		padding: `0 ${padding}px`,
 		margin: `${padding}px 0`,

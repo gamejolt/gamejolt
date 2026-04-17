@@ -70,7 +70,7 @@ createAppRoute({
 <template>
 	<div>
 		<section class="section">
-			<div class="container">
+			<div class="gj-container">
 				<h2 class="section-header">
 					{{ $gettext(`Trophies`) }}
 				</h2>
@@ -145,7 +145,7 @@ createAppRoute({
 		</section>
 
 		<section v-if="!trophies.length" class="section fill-offset">
-			<div class="container text-center">
+			<div class="gj-container text-center">
 				{{
 					$gettext(
 						`There are no trophies for this game yet. Bug the developer about adding some!`

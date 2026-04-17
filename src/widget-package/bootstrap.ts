@@ -1,3 +1,4 @@
+import '~styles/tailwind.css';
 import '~widget-package/main.styl';
 
 import { bootstrapCommon } from '~common/bootstrap';

@@ -13,15 +13,7 @@ import {
 	kThemeGjOverlayNotice,
 } from '~common/theme/variables';
 import { $gettext } from '~common/translate/translate.service';
-import {
-	styleAbsoluteFill,
-	styleBorderRadiusBase,
-	styleBorderRadiusLg,
-	styleElevate,
-	styleFlexCenter,
-	styleTyped,
-	styleWhen,
-} from '~styles/mixins';
+import { styleTyped } from '~styles/mixins';
 import { kBorderWidthBase, kFontSizeLarge, kFontSizeSmall } from '~styles/variables';
 import { sleep } from '~utils/utils';
 
@@ -104,9 +96,7 @@ function removeNotice() {
 		}"
 		:style="
 			styleTyped({
-				...styleWhen(animDurationMs >= 0, {
-					animationDuration: `${animDurationMs}ms`,
-				}),
+				animationDuration: animDurationMs >= 0 ? `${animDurationMs}ms` : undefined,
 				display: `inline-flex`,
 				justifyContent: `flex-end`,
 				minWidth: `${Math.min(200, Screen.width - 32)}px`,
@@ -116,10 +106,8 @@ function removeNotice() {
 		"
 	>
 		<a
-			class="fill-offset"
+			class="fill-offset rounded-lg shadow-elevate-raw-2 elevate-transition"
 			:style="{
-				...styleElevate(2),
-				...styleBorderRadiusLg,
 				border: `${kBorderWidthBase.px} solid ${kThemeFg10}`,
 				borderTopRightRadius: 0,
 				borderBottomRightRadius: 0,
@@ -131,8 +119,8 @@ function removeNotice() {
 			@click="removeNotice"
 		>
 			<div
+				class="rounded"
 				:style="{
-					...styleBorderRadiusBase,
 					height: `${leadingSize - 8}px`,
 					width: `8px`,
 					background: kThemeBgOffset,
@@ -141,9 +129,9 @@ function removeNotice() {
 				}"
 			>
 				<div
+					class="rounded"
 					:class="{ '_anim-progress': autoCloseMs }"
 					:style="{
-						...styleBorderRadiusBase,
 						animationDuration: `${autoCloseMs}ms`,
 						animationPlayState: hovered ? `paused` : `running`,
 						animationFillMode: `both`,
@@ -166,10 +154,8 @@ function removeNotice() {
 			>
 				<slot name="leading" v-bind="{ size: leadingSize }">
 					<div
-						class="fill-offset"
+						class="fill-offset absolute inset-0 flex items-center justify-center"
 						:style="{
-							...styleAbsoluteFill(),
-							...styleFlexCenter(),
 							borderRadius: `50%`,
 						}"
 					>
@@ -185,11 +171,7 @@ function removeNotice() {
 				</slot>
 			</div>
 
-			<div
-				:style="{
-					flex: `auto`,
-				}"
-			>
+			<div class="flex-auto">
 				<div>
 					{{ message }}
 				</div>

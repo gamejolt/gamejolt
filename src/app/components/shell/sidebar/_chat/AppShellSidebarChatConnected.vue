@@ -59,7 +59,7 @@ function openInviteModal() {
 		</AppIllustration>
 	</template>
 	<template v-else>
-		<AppTabBar :style="{ padding: `0 16px` }">
+		<AppTabBar class="px-[16px] py-0">
 			<AppTabBarItem v-if="chats.length > 0" :active="tab === 'chats'" @click="tab = 'chats'">
 				{{ $gettext(`Chats`) }}
 			</AppTabBarItem>
@@ -76,7 +76,7 @@ function openInviteModal() {
 
 		<AppChatUserList :entries="tab === 'chats' ? chats : friends" />
 
-		<div :style="{ padding: `4px 16px` }">
+		<div class="px-[16px] py-[4px]">
 			<AppButton block primary solid @click="openInviteModal()">
 				{{ $gettext(`Invite a friend`) }}
 			</AppButton>

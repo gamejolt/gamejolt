@@ -1,0 +1,791 @@
+# Stylus → Tailwind Migration Ledger
+
+Progress tracker for the Stylus-to-Tailwind migration. See the plan in `.claude/plans/` for the full strategy.
+
+## Phase status
+
+- [x] **Phase 1** — Tailwind setup, tokens defined, `.container` → `.gj-container` rename.
+- [x] **Phase 2** — Style-helper removal + static `:style=` conversion.
+- [ ] **Phase 3** — Component-scoped Stylus migration (see section (b) below).
+- [ ] **Phase 4** — Grid, `.fill-*`, global utilities.
+- [ ] **Phase 5** — Enable preflight, delete `_styles/common/`, remove stylus dependency.
+
+---
+
+## (a) Style-helper call sites — **Phase 2 complete**
+
+Removed helpers (banned by eslint `no-restricted-imports`):
+
+- [x] `styleWhen`
+- [x] `styleChangeBg`
+- [x] `styleChangeBgRgba`
+- [x] `styleElevate`
+- [x] `styleBorderRadiusBase`
+- [x] `styleBorderRadiusSm`
+- [x] `styleBorderRadiusLg`
+- [x] `styleFlexCenter`
+- [x] `styleScrollable`
+- [x] `styleScrollableX`
+- [x] `styleTextOverflow`
+- [x] `styleAbsoluteFill`
+- [x] `styleOverlayTextShadow`
+
+Helpers kept (genuinely runtime):
+
+| Helper | Reason | Remaining call sites |
+|---|---|---:|
+| `styleLineClamp` | dynamic `n` from computed/prop | 2 |
+| `styleCaret` | generates CSS triangle with dynamic color — no Tailwind equivalent | 2 |
+| `styleMaxWidthForOptions` | runtime math on ratio × maxWidth/maxHeight | 18 |
+| `styleTyped` | TS type-narrowing helper (not a style generator) | 20 |
+| `kElevateTransition` | transition value reused by inline styles + utilities | 23 |
+
+## (b) `.vue` files with Stylus styles — **Phase 3 target**
+
+429 files with inline `<style lang="stylus">` or external `.styl` src.
+
+### src/_common/ (185)
+
+- [ ] [src/_common/AppFadeCollapse.vue](src/_common/AppFadeCollapse.vue)
+- [ ] [src/_common/audio/playlist/AppAudioPlaylist.vue](src/_common/audio/playlist/AppAudioPlaylist.vue)
+- [ ] [src/_common/audio/scrubber/AppAudioScrubber.vue](src/_common/audio/scrubber/AppAudioScrubber.vue)
+- [ ] [src/_common/auth/join/AppAuthJoinForm.vue](src/_common/auth/join/AppAuthJoinForm.vue)
+- [ ] [src/_common/auth/login/AppAuthLoginForm.vue](src/_common/auth/login/AppAuthLoginForm.vue)
+- [ ] [src/_common/backdrop/AppBackdrop.vue](src/_common/backdrop/AppBackdrop.vue)
+- [ ] [src/_common/background/AppBackground.vue](src/_common/background/AppBackground.vue)
+- [ ] [src/_common/background/AppBackgroundImg.vue](src/_common/background/AppBackgroundImg.vue)
+- [ ] [src/_common/background/AppBackgroundSelector.vue](src/_common/background/AppBackgroundSelector.vue)
+- [ ] [src/_common/bean/AppBean.vue](src/_common/bean/AppBean.vue)
+- [ ] [src/_common/button/AppButton.vue](src/_common/button/AppButton.vue)
+- [ ] [src/_common/button/AppButtonGroup.vue](src/_common/button/AppButtonGroup.vue)
+- [ ] [src/_common/card/list/AppCardListAdd.vue](src/_common/card/list/AppCardListAdd.vue)
+- [ ] [src/_common/card/list/AppCardListItem.vue](src/_common/card/list/AppCardListItem.vue)
+- [ ] [src/_common/collectible/AppCollectibleResourceDetails.vue](src/_common/collectible/AppCollectibleResourceDetails.vue)
+- [ ] [src/_common/colorpicker/AppColorpicker.vue](src/_common/colorpicker/AppColorpicker.vue)
+- [ ] [src/_common/comment/AppCommentBlocked.vue](src/_common/comment/AppCommentBlocked.vue)
+- [ ] [src/_common/comment/AppCommentContent.vue](src/_common/comment/AppCommentContent.vue)
+- [ ] [src/_common/comment/FormComment.vue](src/_common/comment/FormComment.vue)
+- [ ] [src/_common/community/activity-item/AppCommunityActivityItem.vue](src/_common/community/activity-item/AppCommunityActivityItem.vue)
+- [ ] [src/_common/community/add-widget/AppCommunityAddWidget.vue](src/_common/community/add-widget/AppCommunityAddWidget.vue)
+- [ ] [src/_common/community/card-base/AppCommunityCardBase.vue](src/_common/community/card-base/AppCommunityCardBase.vue)
+- [ ] [src/_common/community/card-create-placeholder/AppCommunityCardCreatePlaceholder.vue](src/_common/community/card-create-placeholder/AppCommunityCardCreatePlaceholder.vue)
+- [ ] [src/_common/community/competition/entry/submit-modal/AppCommunityCompetitionEntrySubmitModal.vue](src/_common/community/competition/entry/submit-modal/AppCommunityCompetitionEntrySubmitModal.vue)
+- [ ] [src/_common/community/thumbnail/AppCommunityThumbnail.vue](src/_common/community/thumbnail/AppCommunityThumbnail.vue)
+- [ ] [src/_common/community/verified-tick/AppCommunityVerifiedTick.vue](src/_common/community/verified-tick/AppCommunityVerifiedTick.vue)
+- [ ] [src/_common/content/components/AppBaseContentComponent.vue](src/_common/content/components/AppBaseContentComponent.vue)
+- [ ] [src/_common/content/components/AppContentCustomButton.vue](src/_common/content/components/AppContentCustomButton.vue)
+- [ ] [src/_common/content/components/AppContentGif.vue](src/_common/content/components/AppContentGif.vue)
+- [ ] [src/_common/content/components/AppContentMediaItem.vue](src/_common/content/components/AppContentMediaItem.vue)
+- [ ] [src/_common/content/components/AppContentMediaUpload.vue](src/_common/content/components/AppContentMediaUpload.vue)
+- [ ] [src/_common/content/components/AppContentSticker.vue](src/_common/content/components/AppContentSticker.vue)
+- [ ] [src/_common/content/components/embed/AppContentEmbed.vue](src/_common/content/components/embed/AppContentEmbed.vue)
+- [ ] [src/_common/content/content-editor/AppContentEditor.vue](src/_common/content/content-editor/AppContentEditor.vue)
+- [ ] [src/_common/content/content-editor/controls/AppContentEditorBlockControls.vue](src/_common/content/content-editor/controls/AppContentEditorBlockControls.vue)
+- [ ] [src/_common/content/content-editor/controls/AppContentEditorInsetControls.vue](src/_common/content/content-editor/controls/AppContentEditorInsetControls.vue)
+- [ ] [src/_common/content/content-editor/controls/AppContentEditorTextControls.vue](src/_common/content/content-editor/controls/AppContentEditorTextControls.vue)
+- [ ] [src/_common/content/content-editor/controls/custom-button/AppContentEditorControlsCustomButton.vue](src/_common/content/content-editor/controls/custom-button/AppContentEditorControlsCustomButton.vue)
+- [ ] [src/_common/content/content-editor/controls/emoji/AppContentEditorControlsEmoji.vue](src/_common/content/content-editor/controls/emoji/AppContentEditorControlsEmoji.vue)
+- [ ] [src/_common/content/content-editor/controls/gif/AppContentEditorControlsGif.vue](src/_common/content/content-editor/controls/gif/AppContentEditorControlsGif.vue)
+- [ ] [src/_common/content/content-editor/controls/mention/AppContentEditorControlsMentionAutocomplete.vue](src/_common/content/content-editor/controls/mention/AppContentEditorControlsMentionAutocomplete.vue)
+- [ ] [src/_common/content/content-editor/modals/gif/AppGifModal.vue](src/_common/content/content-editor/modals/gif/AppGifModal.vue)
+- [ ] [src/_common/content/content-viewer/AppContentViewer.vue](src/_common/content/content-viewer/AppContentViewer.vue)
+- [ ] [src/_common/content/content-viewer/components/AppContentViewerCodeBlock.vue](src/_common/content/content-viewer/components/AppContentViewerCodeBlock.vue)
+- [ ] [src/_common/creator/AppCreatorCard.vue](src/_common/creator/AppCreatorCard.vue)
+- [ ] [src/_common/creator/AppCreatorsList.vue](src/_common/creator/AppCreatorsList.vue)
+- [ ] [src/_common/datepicker/AppDatepicker.vue](src/_common/datepicker/AppDatepicker.vue)
+- [ ] [src/_common/datetime-picker/AppDatetimePicker.vue](src/_common/datetime-picker/AppDatetimePicker.vue)
+- [ ] [src/_common/editable-overlay/AppEditableOverlay.vue](src/_common/editable-overlay/AppEditableOverlay.vue)
+- [ ] [src/_common/emoji/selector-modal/_group/item/AppEmojiSelectorGroupItem.vue](src/_common/emoji/selector-modal/_group/item/AppEmojiSelectorGroupItem.vue)
+- [ ] [src/_common/expand/AppExpand.vue](src/_common/expand/AppExpand.vue)
+- [ ] [src/_common/fireside/post/card/AppPostCard.vue](src/_common/fireside/post/card/AppPostCard.vue)
+- [ ] [src/_common/fireside/post/card/AppPostCardBase.vue](src/_common/fireside/post/card/AppPostCardBase.vue)
+- [ ] [src/_common/fireside/post/card/AppPostCardPlaceholder.vue](src/_common/fireside/post/card/AppPostCardPlaceholder.vue)
+- [ ] [src/_common/fireside/post/like/widget/AppFiresidePostLikeWidget.vue](src/_common/fireside/post/like/widget/AppFiresidePostLikeWidget.vue)
+- [ ] [src/_common/form-vue/AppFormButton.vue](src/_common/form-vue/AppFormButton.vue)
+- [ ] [src/_common/form-vue/AppFormControlLabel.vue](src/_common/form-vue/AppFormControlLabel.vue)
+- [ ] [src/_common/form-vue/AppFormControlPrefix.vue](src/_common/form-vue/AppFormControlPrefix.vue)
+- [ ] [src/_common/form-vue/AppFormGroup.vue](src/_common/form-vue/AppFormGroup.vue)
+- [ ] [src/_common/form-vue/AppFormLegend.vue](src/_common/form-vue/AppFormLegend.vue)
+- [ ] [src/_common/form-vue/AppFormStickySubmit.vue](src/_common/form-vue/AppFormStickySubmit.vue)
+- [ ] [src/_common/form-vue/controls/AppFormControlContent.vue](src/_common/form-vue/controls/AppFormControlContent.vue)
+- [ ] [src/_common/form-vue/controls/AppFormControlTheme.vue](src/_common/form-vue/controls/AppFormControlTheme.vue)
+- [ ] [src/_common/form-vue/controls/AppFormControlToggle.vue](src/_common/form-vue/controls/AppFormControlToggle.vue)
+- [ ] [src/_common/form-vue/controls/markdown/AppFormControlMarkdown.vue](src/_common/form-vue/controls/markdown/AppFormControlMarkdown.vue)
+- [ ] [src/_common/form-vue/controls/markdown/AppFormControlMarkdownMediaItems.vue](src/_common/form-vue/controls/markdown/AppFormControlMarkdownMediaItems.vue)
+- [ ] [src/_common/form-vue/controls/toggle-button/AppFormControlToggleButton.vue](src/_common/form-vue/controls/toggle-button/AppFormControlToggleButton.vue)
+- [ ] [src/_common/form-vue/controls/toggle-button/AppFormControlToggleButtonGroup.vue](src/_common/form-vue/controls/toggle-button/AppFormControlToggleButtonGroup.vue)
+- [ ] [src/_common/form-vue/controls/upload/AppFormControlUpload.vue](src/_common/form-vue/controls/upload/AppFormControlUpload.vue)
+- [ ] [src/_common/game/add-banner/AppGameAddBanner.vue](src/_common/game/add-banner/AppGameAddBanner.vue)
+- [ ] [src/_common/game/external-package/card/AppGameExternalPackageCard.vue](src/_common/game/external-package/card/AppGameExternalPackageCard.vue)
+- [ ] [src/_common/game/media-bar/AppGameMediaBar.vue](src/_common/game/media-bar/AppGameMediaBar.vue)
+- [ ] [src/_common/game/media-bar/item/AppGameMediaBarItem.vue](src/_common/game/media-bar/item/AppGameMediaBarItem.vue)
+- [ ] [src/_common/game/package/card/AppGamePackageCard.vue](src/_common/game/package/card/AppGamePackageCard.vue)
+- [ ] [src/_common/game/package/payment-form/FormGamePackagePayment.vue](src/_common/game/package/payment-form/FormGamePackagePayment.vue)
+- [ ] [src/_common/game/play-modal/AppGamePlayModal.vue](src/_common/game/play-modal/AppGamePlayModal.vue)
+- [ ] [src/_common/game/thumbnail/AppGameThumbnail.vue](src/_common/game/thumbnail/AppGameThumbnail.vue)
+- [ ] [src/_common/game/thumbnail/AppGameThumbnailImg.vue](src/_common/game/thumbnail/AppGameThumbnailImg.vue)
+- [ ] [src/_common/game/thumbnail/AppGameThumbnailPlaceholder.vue](src/_common/game/thumbnail/AppGameThumbnailPlaceholder.vue)
+- [ ] [src/_common/graph/AppGraph.vue](src/_common/graph/AppGraph.vue)
+- [ ] [src/_common/growls/AppGrowl.vue](src/_common/growls/AppGrowl.vue)
+- [ ] [src/_common/growls/AppGrowls.vue](src/_common/growls/AppGrowls.vue)
+- [ ] [src/_common/header/AppHeaderBar.vue](src/_common/header/AppHeaderBar.vue)
+- [ ] [src/_common/illustration/AppIllustration.vue](src/_common/illustration/AppIllustration.vue)
+- [ ] [src/_common/inventory/shop/product-modal/AppNewProductModal.vue](src/_common/inventory/shop/product-modal/AppNewProductModal.vue)
+- [ ] [src/_common/invite/AppInviteCard.vue](src/_common/invite/AppInviteCard.vue)
+- [ ] [src/_common/invite/modal/AppInviteModal.vue](src/_common/invite/modal/AppInviteModal.vue)
+- [ ] [src/_common/jolticon/AppJolticon.vue](src/_common/jolticon/AppJolticon.vue)
+- [ ] [src/_common/lightbox/AppLightboxPortal.vue](src/_common/lightbox/AppLightboxPortal.vue)
+- [ ] [src/_common/lightbox/item/AppLightboxItem.vue](src/_common/lightbox/item/AppLightboxItem.vue)
+- [ ] [src/_common/linked-account/AppLinkedAccount.vue](src/_common/linked-account/AppLinkedAccount.vue)
+- [ ] [src/_common/loading/AppLoading.vue](src/_common/loading/AppLoading.vue)
+- [ ] [src/_common/loading/AppLoadingFade.vue](src/_common/loading/AppLoadingFade.vue)
+- [ ] [src/_common/media-item/backdrop/AppMediaItemBackdrop.vue](src/_common/media-item/backdrop/AppMediaItemBackdrop.vue)
+- [ ] [src/_common/media-item/cover/AppMediaItemCover.vue](src/_common/media-item/cover/AppMediaItemCover.vue)
+- [ ] [src/_common/media-item/post/AppMediaItemPost.vue](src/_common/media-item/post/AppMediaItemPost.vue)
+- [ ] [src/_common/message-thread/AppMessageThread.vue](src/_common/message-thread/AppMessageThread.vue)
+- [ ] [src/_common/message-thread/AppMessageThreadItem.vue](src/_common/message-thread/AppMessageThreadItem.vue)
+- [ ] [src/_common/microtransaction/payment-form/AppMicrotransactionPaymentForm.vue](src/_common/microtransaction/payment-form/AppMicrotransactionPaymentForm.vue)
+- [ ] [src/_common/minbar/AppMinbar.vue](src/_common/minbar/AppMinbar.vue)
+- [ ] [src/_common/mobile-app/AppMobileAppButtons.vue](src/_common/mobile-app/AppMobileAppButtons.vue)
+- [ ] [src/_common/mobile-app/AppMobileAppPromotionBanner.vue](src/_common/mobile-app/AppMobileAppPromotionBanner.vue)
+- [ ] [src/_common/modal/AppModal.vue](src/_common/modal/AppModal.vue)
+- [ ] [src/_common/modal/AppModalFloatingHeader.vue](src/_common/modal/AppModalFloatingHeader.vue)
+- [ ] [src/_common/modal/AppModalPortal.vue](src/_common/modal/AppModalPortal.vue)
+- [ ] [src/_common/nav/tab-list/AppNavTabList.vue](src/_common/nav/tab-list/AppNavTabList.vue)
+- [ ] [src/_common/pagination/AppPageIndicatorCompact.vue](src/_common/pagination/AppPageIndicatorCompact.vue)
+- [ ] [src/_common/pagination/AppPagination.vue](src/_common/pagination/AppPagination.vue)
+- [ ] [src/_common/particle-effects/AppConfetti.vue](src/_common/particle-effects/AppConfetti.vue)
+- [ ] [src/_common/pill/AppPill.vue](src/_common/pill/AppPill.vue)
+- [ ] [src/_common/pill/AppPillBi.vue](src/_common/pill/AppPillBi.vue)
+- [ ] [src/_common/popcorn/AppPopcornKernel.vue](src/_common/popcorn/AppPopcornKernel.vue)
+- [ ] [src/_common/popcorn/AppPopcornKettle.vue](src/_common/popcorn/AppPopcornKettle.vue)
+- [ ] [src/_common/popper/AppPopper.vue](src/_common/popper/AppPopper.vue)
+- [ ] [src/_common/progress/AppCircularProgress.vue](src/_common/progress/AppCircularProgress.vue)
+- [ ] [src/_common/progress/AppProgressBar.vue](src/_common/progress/AppProgressBar.vue)
+- [ ] [src/_common/quest/AppQuestActionButton.vue](src/_common/quest/AppQuestActionButton.vue)
+- [ ] [src/_common/quest/AppQuestFrame.vue](src/_common/quest/AppQuestFrame.vue)
+- [ ] [src/_common/quest/AppQuestObjective.vue](src/_common/quest/AppQuestObjective.vue)
+- [ ] [src/_common/quest/AppQuestProgress.vue](src/_common/quest/AppQuestProgress.vue)
+- [ ] [src/_common/quest/reward/AppQuestRewardModal.vue](src/_common/quest/reward/AppQuestRewardModal.vue)
+- [ ] [src/_common/realm/AppRealmFullCard.vue](src/_common/realm/AppRealmFullCard.vue)
+- [ ] [src/_common/realm/AppRealmLabel.vue](src/_common/realm/AppRealmLabel.vue)
+- [ ] [src/_common/realm/AppRealmThumbnail.vue](src/_common/realm/AppRealmThumbnail.vue)
+- [ ] [src/_common/scroll/AppScrollScroller.vue](src/_common/scroll/AppScrollScroller.vue)
+- [ ] [src/_common/share/AppShareControl.vue](src/_common/share/AppShareControl.vue)
+- [ ] [src/_common/share/card/AppShareCard.vue](src/_common/share/card/AppShareCard.vue)
+- [ ] [src/_common/share/card/AppShareCardTile.vue](src/_common/share/card/AppShareCardTile.vue)
+- [ ] [src/_common/share/card/_modal/AppShareCardModal.vue](src/_common/share/card/_modal/AppShareCardModal.vue)
+- [ ] [src/_common/shell/notice/AppShellNotice.vue](src/_common/shell/notice/AppShellNotice.vue)
+- [ ] [src/_common/shell/notice/_base/AppShellNoticeBase.vue](src/_common/shell/notice/_base/AppShellNoticeBase.vue)
+- [ ] [src/_common/shell/notice/creator-experience/AppShellNoticeCreatorExperience.vue](src/_common/shell/notice/creator-experience/AppShellNoticeCreatorExperience.vue)
+- [ ] [src/_common/shell/notice/sticker-mastery/AppShellNoticeStickerMastery.vue](src/_common/shell/notice/sticker-mastery/AppShellNoticeStickerMastery.vue)
+- [ ] [src/_common/slider/AppSlider.vue](src/_common/slider/AppSlider.vue)
+- [ ] [src/_common/spacer/AppSpacer.vue](src/_common/spacer/AppSpacer.vue)
+- [ ] [src/_common/sticker/AppSticker.vue](src/_common/sticker/AppSticker.vue)
+- [ ] [src/_common/sticker/AppStickerControlsOverlay.vue](src/_common/sticker/AppStickerControlsOverlay.vue)
+- [ ] [src/_common/sticker/AppStickerPlacementList.vue](src/_common/sticker/AppStickerPlacementList.vue)
+- [ ] [src/_common/sticker/AppStickerSupporters.vue](src/_common/sticker/AppStickerSupporters.vue)
+- [ ] [src/_common/sticker/charge/AppStickerChargeCard.vue](src/_common/sticker/charge/AppStickerChargeCard.vue)
+- [ ] [src/_common/sticker/charge/AppStickerChargeTooltip.vue](src/_common/sticker/charge/AppStickerChargeTooltip.vue)
+- [ ] [src/_common/sticker/charge/AppStickerChargeTooltipCaret.vue](src/_common/sticker/charge/AppStickerChargeTooltipCaret.vue)
+- [ ] [src/_common/sticker/layer/AppStickerLayer.vue](src/_common/sticker/layer/AppStickerLayer.vue)
+- [ ] [src/_common/sticker/layer/AppStickerLayerPlacementMask.vue](src/_common/sticker/layer/AppStickerLayerPlacementMask.vue)
+- [ ] [src/_common/sticker/layer/AppStickerLayerPlacementMaskTarget.vue](src/_common/sticker/layer/AppStickerLayerPlacementMaskTarget.vue)
+- [ ] [src/_common/sticker/pack/open-modal/AppStickerPackOpenModal.vue](src/_common/sticker/pack/open-modal/AppStickerPackOpenModal.vue)
+- [ ] [src/_common/sticker/reactions/AppStickerReactions.vue](src/_common/sticker/reactions/AppStickerReactions.vue)
+- [ ] [src/_common/sticker/reactions/AppStickerReactionsItem.vue](src/_common/sticker/reactions/AppStickerReactionsItem.vue)
+- [ ] [src/_common/sticker/target/AppStickerTarget.vue](src/_common/sticker/target/AppStickerTarget.vue)
+- [ ] [src/_common/supporters/message/AppSupporterMessageModal.vue](src/_common/supporters/message/AppSupporterMessageModal.vue)
+- [ ] [src/_common/supporters/message/do/FormSupporterMessage.vue](src/_common/supporters/message/do/FormSupporterMessage.vue)
+- [ ] [src/_common/tab-bar/AppTabBar.vue](src/_common/tab-bar/AppTabBar.vue)
+- [ ] [src/_common/tab-bar/AppTabBarItem.vue](src/_common/tab-bar/AppTabBarItem.vue)
+- [ ] [src/_common/tag/suggestion/AppTagSuggestion.vue](src/_common/tag/suggestion/AppTagSuggestion.vue)
+- [ ] [src/_common/theme/bubble/AppThemeBubble.vue](src/_common/theme/bubble/AppThemeBubble.vue)
+- [ ] [src/_common/theme/svg/AppThemeSvgStyleguide.vue](src/_common/theme/svg/AppThemeSvgStyleguide.vue)
+- [ ] [src/_common/theme/theme-editor/AppThemeEditor.vue](src/_common/theme/theme-editor/AppThemeEditor.vue)
+- [ ] [src/_common/theme/theme-editor/AppThemeEditorFontSelector.vue](src/_common/theme/theme-editor/AppThemeEditorFontSelector.vue)
+- [ ] [src/_common/theme/theme-editor/AppThemeEditorImage.vue](src/_common/theme/theme-editor/AppThemeEditorImage.vue)
+- [ ] [src/_common/timepicker/AppTimepicker.vue](src/_common/timepicker/AppTimepicker.vue)
+- [ ] [src/_common/tooltip/AppTooltipPortal.vue](src/_common/tooltip/AppTooltipPortal.vue)
+- [ ] [src/_common/trophy/AppTrophyCard.vue](src/_common/trophy/AppTrophyCard.vue)
+- [ ] [src/_common/trophy/list/AppTrophyList.vue](src/_common/trophy/list/AppTrophyList.vue)
+- [ ] [src/_common/trophy/list/AppTrophyListPaged.vue](src/_common/trophy/list/AppTrophyListPaged.vue)
+- [ ] [src/_common/trophy/modal/AppTrophyModal.vue](src/_common/trophy/modal/AppTrophyModal.vue)
+- [ ] [src/_common/trophy/thumbnail/AppTrophyThumbnail.vue](src/_common/trophy/thumbnail/AppTrophyThumbnail.vue)
+- [ ] [src/_common/user/AppUserDogtag.vue](src/_common/user/AppUserDogtag.vue)
+- [ ] [src/_common/user/AppUserVerifiedTick.vue](src/_common/user/AppUserVerifiedTick.vue)
+- [ ] [src/_common/user/card/AppUserCard.vue](src/_common/user/card/AppUserCard.vue)
+- [ ] [src/_common/user/card/AppUserCardHover.vue](src/_common/user/card/AppUserCardHover.vue)
+- [ ] [src/_common/user/card/AppUserCardPlaceholder.vue](src/_common/user/card/AppUserCardPlaceholder.vue)
+- [ ] [src/_common/user/creator/AppUserCreatorBadge.vue](src/_common/user/creator/AppUserCreatorBadge.vue)
+- [ ] [src/_common/user/invite/modal/AppUserInviteFollowModal.vue](src/_common/user/invite/modal/AppUserInviteFollowModal.vue)
+- [ ] [src/_common/user/list/AppUserListItem.vue](src/_common/user/list/AppUserListItem.vue)
+- [ ] [src/_common/user/user-avatar/AppUserAvatarBubble.vue](src/_common/user/user-avatar/AppUserAvatarBubble.vue)
+- [ ] [src/_common/user/user-avatar/AppUserAvatarList.vue](src/_common/user/user-avatar/AppUserAvatarList.vue)
+- [ ] [src/_common/user/user-avatar/frame/_selector/AppUserAvatarFrameSelector.vue](src/_common/user/user-avatar/frame/_selector/AppUserAvatarFrameSelector.vue)
+- [ ] [src/_common/video/player/AppVideoPlayer.vue](src/_common/video/player/AppVideoPlayer.vue)
+- [ ] [src/_common/video/player/AppVideoPlayerFullscreen.vue](src/_common/video/player/AppVideoPlayerFullscreen.vue)
+- [ ] [src/_common/video/player/AppVideoPlayerPlayback.vue](src/_common/video/player/AppVideoPlayerPlayback.vue)
+- [ ] [src/_common/video/player/AppVideoPlayerScrubber.vue](src/_common/video/player/AppVideoPlayerScrubber.vue)
+- [ ] [src/_common/video/player/AppVideoPlayerVolume.vue](src/_common/video/player/AppVideoPlayerVolume.vue)
+- [ ] [src/_common/widget-compiler/widget-game-list/AppWidgetCompilerWidgetGameList.vue](src/_common/widget-compiler/widget-game-list/AppWidgetCompilerWidgetGameList.vue)
+- [ ] [src/_common/widget-compiler/widget-game-packages/AppWidgetCompilerWidgetGamePackages.vue](src/_common/widget-compiler/widget-game-packages/AppWidgetCompilerWidgetGamePackages.vue)
+- [ ] [src/_common/widget-compiler/widget-soundcloud/AppWidgetCompilerWidgetSoundcloud.vue](src/_common/widget-compiler/widget-soundcloud/AppWidgetCompilerWidgetSoundcloud.vue)
+
+### src/app/ (221)
+
+- [ ] [src/app/components/activity/feed/AppActivityFeed.vue](src/app/components/activity/feed/AppActivityFeed.vue)
+- [ ] [src/app/components/activity/feed/item/AppActivityFeedItemPlaceholder.vue](src/app/components/activity/feed/item/AppActivityFeedItemPlaceholder.vue)
+- [ ] [src/app/components/activity/feed/notification/AppActivityFeedNotification.vue](src/app/components/activity/feed/notification/AppActivityFeedNotification.vue)
+- [ ] [src/app/components/activity/feed/post/AppActivityFeedPostArticle.vue](src/app/components/activity/feed/post/AppActivityFeedPostArticle.vue)
+- [ ] [src/app/components/activity/feed/post/AppActivityFeedPostMedia.vue](src/app/components/activity/feed/post/AppActivityFeedPostMedia.vue)
+- [ ] [src/app/components/chat/FormChatRoomSettings.vue](src/app/components/chat/FormChatRoomSettings.vue)
+- [ ] [src/app/components/chat/_list/AppChatList.vue](src/app/components/chat/_list/AppChatList.vue)
+- [ ] [src/app/components/chat/_list/AppChatListItem.vue](src/app/components/chat/_list/AppChatListItem.vue)
+- [ ] [src/app/components/chat/invite-modal/AppChatInviteModal.vue](src/app/components/chat/invite-modal/AppChatInviteModal.vue)
+- [ ] [src/app/components/chat/notification-settings/AppChatNotificationSettings.vue](src/app/components/chat/notification-settings/AppChatNotificationSettings.vue)
+- [ ] [src/app/components/chat/user-online-status/AppChatUserOnlineStatus.vue](src/app/components/chat/user-online-status/AppChatUserOnlineStatus.vue)
+- [ ] [src/app/components/chat/window/AppChatWindow.vue](src/app/components/chat/window/AppChatWindow.vue)
+- [ ] [src/app/components/chat/window/output/AppChatWindowOutput.vue](src/app/components/chat/window/output/AppChatWindowOutput.vue)
+- [ ] [src/app/components/chat/window/output/AppChatWindowOutputItem.vue](src/app/components/chat/window/output/AppChatWindowOutputItem.vue)
+- [ ] [src/app/components/chat/window/send/AppChatWindowSend.vue](src/app/components/chat/window/send/AppChatWindowSend.vue)
+- [ ] [src/app/components/client/hooks/AppClientPackageCardButtons.vue](src/app/components/client/hooks/AppClientPackageCardButtons.vue)
+- [ ] [src/app/components/client/intro/AppClientIntro.vue](src/app/components/client/intro/AppClientIntro.vue)
+- [ ] [src/app/components/client/status-bar/AppClientStatusBar.vue](src/app/components/client/status-bar/AppClientStatusBar.vue)
+- [ ] [src/app/components/client/status-bar/AppClientStatusBarPatchItem.vue](src/app/components/client/status-bar/AppClientStatusBarPatchItem.vue)
+- [ ] [src/app/components/comment/AppCommentOverview.vue](src/app/components/comment/AppCommentOverview.vue)
+- [ ] [src/app/components/comment/add-button/AppCommentAddButton.vue](src/app/components/comment/add-button/AppCommentAddButton.vue)
+- [ ] [src/app/components/comment/controls/AppCommentControls.vue](src/app/components/comment/controls/AppCommentControls.vue)
+- [ ] [src/app/components/comment/modal/AppCommentModal.vue](src/app/components/comment/modal/AppCommentModal.vue)
+- [ ] [src/app/components/comment/thread/AppCommentThreadModal.vue](src/app/components/comment/thread/AppCommentThreadModal.vue)
+- [ ] [src/app/components/comment/widget/AppCommentWidgetComment.vue](src/app/components/comment/widget/AppCommentWidgetComment.vue)
+- [ ] [src/app/components/community/channel/card/AppCommunityChannelCard.vue](src/app/components/community/channel/card/AppCommunityChannelCard.vue)
+- [ ] [src/app/components/community/competition/countdown/AppCommunityCompetitionCountdown.vue](src/app/components/community/competition/countdown/AppCommunityCompetitionCountdown.vue)
+- [ ] [src/app/components/community/competition/entry/grid/AppCommunityCompetitionEntryGrid.vue](src/app/components/community/competition/entry/grid/AppCommunityCompetitionEntryGrid.vue)
+- [ ] [src/app/components/community/competition/entry/modal/AppCommunityCompetitionEntryModal.vue](src/app/components/community/competition/entry/modal/AppCommunityCompetitionEntryModal.vue)
+- [ ] [src/app/components/community/competition/entry/thumbnail/AppCommunityCompetitionEntryThumbnail.vue](src/app/components/community/competition/entry/thumbnail/AppCommunityCompetitionEntryThumbnail.vue)
+- [ ] [src/app/components/community/competition/voting/AppCommunityCompetitionVotingWidget.vue](src/app/components/community/competition/voting/AppCommunityCompetitionVotingWidget.vue)
+- [ ] [src/app/components/community/eject-post/modal/AppCommunityEjectPostModal.vue](src/app/components/community/eject-post/modal/AppCommunityEjectPostModal.vue)
+- [ ] [src/app/components/community/link-game-modal/AppCommunityLinkGameModal.vue](src/app/components/community/link-game-modal/AppCommunityLinkGameModal.vue)
+- [ ] [src/app/components/community/move-post/modal/AppCommunityMovePostModal.vue](src/app/components/community/move-post/modal/AppCommunityMovePostModal.vue)
+- [ ] [src/app/components/community/remove-channel/AppCommunityRemoveChannel.vue](src/app/components/community/remove-channel/AppCommunityRemoveChannel.vue)
+- [ ] [src/app/components/community/remove-channel/modal/AppCommunityRemoveChannelModal.vue](src/app/components/community/remove-channel/modal/AppCommunityRemoveChannelModal.vue)
+- [ ] [src/app/components/community/sidebar/AppCommunitySidebar.vue](src/app/components/community/sidebar/AppCommunitySidebar.vue)
+- [ ] [src/app/components/community/user-notification/AppCommunityUserNotification.vue](src/app/components/community/user-notification/AppCommunityUserNotification.vue)
+- [ ] [src/app/components/content/AppContentTargets.vue](src/app/components/content/AppContentTargets.vue)
+- [ ] [src/app/components/content/target/AppContentTarget.vue](src/app/components/content/target/AppContentTarget.vue)
+- [ ] [src/app/components/content/target/AppContentTargetCommunity.vue](src/app/components/content/target/AppContentTargetCommunity.vue)
+- [ ] [src/app/components/content/target/manage-realms/AppContentTargetManageRealmsModal.vue](src/app/components/content/target/manage-realms/AppContentTargetManageRealmsModal.vue)
+- [ ] [src/app/components/fireside/post/embed/AppFiresidePostEmbed.vue](src/app/components/fireside/post/embed/AppFiresidePostEmbed.vue)
+- [ ] [src/app/components/follower/list/AppFollowerList.vue](src/app/components/follower/list/AppFollowerList.vue)
+- [ ] [src/app/components/forms/community/competition/voting/cast/FormCommunityCompetitionVotingCast.vue](src/app/components/forms/community/competition/voting/cast/FormCommunityCompetitionVotingCast.vue)
+- [ ] [src/app/components/forms/financials/AppFinancialsTosScroller.vue](src/app/components/forms/financials/AppFinancialsTosScroller.vue)
+- [ ] [src/app/components/forms/financials/managed-account/FormFinancialsManagedAccount.vue](src/app/components/forms/financials/managed-account/FormFinancialsManagedAccount.vue)
+- [ ] [src/app/components/forms/game/build/FormGameBuild.vue](src/app/components/forms/game/build/FormGameBuild.vue)
+- [ ] [src/app/components/forms/game/description/FormGameDescription.vue](src/app/components/forms/game/description/FormGameDescription.vue)
+- [ ] [src/app/components/forms/game/design/FormGameDesign.vue](src/app/components/forms/game/design/FormGameDesign.vue)
+- [ ] [src/app/components/forms/game/dev-stage-selector/AppGameDevStageSelector.vue](src/app/components/forms/game/dev-stage-selector/AppGameDevStageSelector.vue)
+- [ ] [src/app/components/forms/game/featured-badge/FormGameFeaturedBadge.vue](src/app/components/forms/game/featured-badge/FormGameFeaturedBadge.vue)
+- [ ] [src/app/components/forms/onboarding/AppOnboardingFollowsCommunityItem.vue](src/app/components/forms/onboarding/AppOnboardingFollowsCommunityItem.vue)
+- [ ] [src/app/components/forms/onboarding/FormOnboardingCreators.vue](src/app/components/forms/onboarding/FormOnboardingCreators.vue)
+- [ ] [src/app/components/forms/onboarding/FormOnboardingFollows.vue](src/app/components/forms/onboarding/FormOnboardingFollows.vue)
+- [ ] [src/app/components/forms/onboarding/FormOnboardingProfile.vue](src/app/components/forms/onboarding/FormOnboardingProfile.vue)
+- [ ] [src/app/components/forms/onboarding/FormOnboardingRealms.vue](src/app/components/forms/onboarding/FormOnboardingRealms.vue)
+- [ ] [src/app/components/forms/pill-selector/AppFormsPillSelector.vue](src/app/components/forms/pill-selector/AppFormsPillSelector.vue)
+- [ ] [src/app/components/forms/pill-selector/_item/AppFormsPillSelectorItem.vue](src/app/components/forms/pill-selector/_item/AppFormsPillSelectorItem.vue)
+- [ ] [src/app/components/forms/post/AppFormPost.vue](src/app/components/forms/post/AppFormPost.vue)
+- [ ] [src/app/components/forms/post/_media/FormPostMedia.vue](src/app/components/forms/post/_media/FormPostMedia.vue)
+- [ ] [src/app/components/forms/post/_media/item/FormPostMediaItem.vue](src/app/components/forms/post/_media/item/FormPostMediaItem.vue)
+- [ ] [src/app/components/forms/post/_video/FormPostVideo.vue](src/app/components/forms/post/_video/FormPostVideo.vue)
+- [ ] [src/app/components/forms/site/build/FormSiteBuild.vue](src/app/components/forms/site/build/FormSiteBuild.vue)
+- [ ] [src/app/components/forum/channel-list/AppForumChannelList.vue](src/app/components/forum/channel-list/AppForumChannelList.vue)
+- [ ] [src/app/components/forum/post-list/item/AppForumPostListItem.vue](src/app/components/forum/post-list/item/AppForumPostListItem.vue)
+- [ ] [src/app/components/forum/topic-list/AppForumTopicList.vue](src/app/components/forum/topic-list/AppForumTopicList.vue)
+- [ ] [src/app/components/game-playlist/add-to-popover/AppGamePlaylistAddToPopover.vue](src/app/components/game-playlist/add-to-popover/AppGamePlaylistAddToPopover.vue)
+- [ ] [src/app/components/game/badge/AppGameBadge.vue](src/app/components/game/badge/AppGameBadge.vue)
+- [ ] [src/app/components/game/collection/grid/item/AppGameCollectionGridItem.vue](src/app/components/game/collection/grid/item/AppGameCollectionGridItem.vue)
+- [ ] [src/app/components/game/collection/list/AppGameCollectionList.vue](src/app/components/game/collection/list/AppGameCollectionList.vue)
+- [ ] [src/app/components/game/collection/thumbnail/AppGameCollectionThumbnail.vue](src/app/components/game/collection/thumbnail/AppGameCollectionThumbnail.vue)
+- [ ] [src/app/components/game/community-badge/AppGameCommunityBadge.vue](src/app/components/game/community-badge/AppGameCommunityBadge.vue)
+- [ ] [src/app/components/game/filtering/AppGameFilteringInput.vue](src/app/components/game/filtering/AppGameFilteringInput.vue)
+- [ ] [src/app/components/game/filtering/AppGameFilteringTags.vue](src/app/components/game/filtering/AppGameFilteringTags.vue)
+- [ ] [src/app/components/game/filtering/AppGameFilteringWidget.vue](src/app/components/game/filtering/AppGameFilteringWidget.vue)
+- [ ] [src/app/components/game/grid/AppGameGrid.vue](src/app/components/game/grid/AppGameGrid.vue)
+- [ ] [src/app/components/game/grid/AppGameGridPlaceholder.vue](src/app/components/game/grid/AppGameGridPlaceholder.vue)
+- [ ] [src/app/components/game/list/AppGameListItem.vue](src/app/components/game/list/AppGameListItem.vue)
+- [ ] [src/app/components/game/list/AppGameListPlaceholder.vue](src/app/components/game/list/AppGameListPlaceholder.vue)
+- [ ] [src/app/components/game/listing/AppGameListing.vue](src/app/components/game/listing/AppGameListing.vue)
+- [ ] [src/app/components/game/maturity-block/AppGameMaturityBlock.vue](src/app/components/game/maturity-block/AppGameMaturityBlock.vue)
+- [ ] [src/app/components/game/ogrs/AppGameOgrs.vue](src/app/components/game/ogrs/AppGameOgrs.vue)
+- [ ] [src/app/components/game/ogrs/AppGameOgrsTag.vue](src/app/components/game/ogrs/AppGameOgrsTag.vue)
+- [ ] [src/app/components/page-container/AppPageContainer.vue](src/app/components/page-container/AppPageContainer.vue)
+- [ ] [src/app/components/page-header/AppPageHeader.vue](src/app/components/page-header/AppPageHeader.vue)
+- [ ] [src/app/components/page-header/controls/AppPageHeaderControls.vue](src/app/components/page-header/controls/AppPageHeaderControls.vue)
+- [ ] [src/app/components/post/add-button/AppPostAddButton.vue](src/app/components/post/add-button/AppPostAddButton.vue)
+- [ ] [src/app/components/post/add-button/AppPostAddButtonFormControl.vue](src/app/components/post/add-button/AppPostAddButtonFormControl.vue)
+- [ ] [src/app/components/post/add-placeholder/AppPostAddPlaceholder.vue](src/app/components/post/add-placeholder/AppPostAddPlaceholder.vue)
+- [ ] [src/app/components/post/controls/AppPostControls.vue](src/app/components/post/controls/AppPostControls.vue)
+- [ ] [src/app/components/post/controls/more/AppPostControlsMore.vue](src/app/components/post/controls/more/AppPostControlsMore.vue)
+- [ ] [src/app/components/post/controls/save-progress/AppPostControlsSaveProgress.vue](src/app/components/post/controls/save-progress/AppPostControlsSaveProgress.vue)
+- [ ] [src/app/components/post/controls/user-follow/AppPostControlsUserFollow.vue](src/app/components/post/controls/user-follow/AppPostControlsUserFollow.vue)
+- [ ] [src/app/components/post/edit-modal/AppPostEditModal.vue](src/app/components/post/edit-modal/AppPostEditModal.vue)
+- [ ] [src/app/components/quest/AppDailyQuests.vue](src/app/components/quest/AppDailyQuests.vue)
+- [ ] [src/app/components/quest/window/AppQuestWindow.vue](src/app/components/quest/window/AppQuestWindow.vue)
+- [ ] [src/app/components/score/list/AppScoreList.vue](src/app/components/score/list/AppScoreList.vue)
+- [ ] [src/app/components/score/overview/AppScoreOverview.vue](src/app/components/score/overview/AppScoreOverview.vue)
+- [ ] [src/app/components/search/AppSearch.vue](src/app/components/search/AppSearch.vue)
+- [ ] [src/app/components/search/AppSearchAutocomplete.vue](src/app/components/search/AppSearchAutocomplete.vue)
+- [ ] [src/app/components/shell/AppShell.vue](src/app/components/shell/AppShell.vue)
+- [ ] [src/app/components/shell/AppShellAccountPopover.vue](src/app/components/shell/AppShellAccountPopover.vue)
+- [ ] [src/app/components/shell/AppShellAltMenuDevelopers.vue](src/app/components/shell/AppShellAltMenuDevelopers.vue)
+- [ ] [src/app/components/shell/AppShellAltMenuExtra.vue](src/app/components/shell/AppShellAltMenuExtra.vue)
+- [ ] [src/app/components/shell/AppShellAltMenuPopover.vue](src/app/components/shell/AppShellAltMenuPopover.vue)
+- [ ] [src/app/components/shell/AppShellBanner.vue](src/app/components/shell/AppShellBanner.vue)
+- [ ] [src/app/components/shell/AppShellBody.vue](src/app/components/shell/AppShellBody.vue)
+- [ ] [src/app/components/shell/AppShellContentWithSidebar.vue](src/app/components/shell/AppShellContentWithSidebar.vue)
+- [ ] [src/app/components/shell/AppShellHotBottom.vue](src/app/components/shell/AppShellHotBottom.vue)
+- [ ] [src/app/components/shell/AppShellTopNav.vue](src/app/components/shell/AppShellTopNav.vue)
+- [ ] [src/app/components/shell/AppShellWindow.vue](src/app/components/shell/AppShellWindow.vue)
+- [ ] [src/app/components/shell/cbar/AppShellCbar.vue](src/app/components/shell/cbar/AppShellCbar.vue)
+- [ ] [src/app/components/shell/cbar/AppShellCbarCommunity.vue](src/app/components/shell/cbar/AppShellCbarCommunity.vue)
+- [ ] [src/app/components/shell/cbar/AppShellCbarControls.vue](src/app/components/shell/cbar/AppShellCbarControls.vue)
+- [ ] [src/app/components/shell/cbar/AppShellCbarItem.vue](src/app/components/shell/cbar/AppShellCbarItem.vue)
+- [ ] [src/app/components/shell/friend-request-popover/AppShellFriendRequestPopover.vue](src/app/components/shell/friend-request-popover/AppShellFriendRequestPopover.vue)
+- [ ] [src/app/components/shell/friend-request-popover/AppShellFriendRequestPopoverItem.vue](src/app/components/shell/friend-request-popover/AppShellFriendRequestPopoverItem.vue)
+- [ ] [src/app/components/shell/notification-popover/AppShellNotificationPopover.vue](src/app/components/shell/notification-popover/AppShellNotificationPopover.vue)
+- [ ] [src/app/components/shell/sidebar/AppShellSidebar.vue](src/app/components/shell/sidebar/AppShellSidebar.vue)
+- [ ] [src/app/components/shell/sidebar/AppShellSidebarBackpack.vue](src/app/components/shell/sidebar/AppShellSidebarBackpack.vue)
+- [ ] [src/app/components/shell/sidebar/AppShellSidebarLibrary.vue](src/app/components/shell/sidebar/AppShellSidebarLibrary.vue)
+- [ ] [src/app/components/shell/sidebar/AppShellSidebarMobile.vue](src/app/components/shell/sidebar/AppShellSidebarMobile.vue)
+- [ ] [src/app/components/shell/sidebar/AppShellSidebarQuests.vue](src/app/components/shell/sidebar/AppShellSidebarQuests.vue)
+- [ ] [src/app/components/shell/sidebar/_quests/AppQuestLogItem.vue](src/app/components/shell/sidebar/_quests/AppQuestLogItem.vue)
+- [ ] [src/app/components/sites/manage-page/AppSitesManagePage.vue](src/app/components/sites/manage-page/AppSitesManagePage.vue)
+- [ ] [src/app/components/store-banner/AppStoreBanner.vue](src/app/components/store-banner/AppStoreBanner.vue)
+- [ ] [src/app/components/tag/list/AppTagList.vue](src/app/components/tag/list/AppTagList.vue)
+- [ ] [src/app/components/tag/thumbnail/AppTagThumbnail.vue](src/app/components/tag/thumbnail/AppTagThumbnail.vue)
+- [ ] [src/app/components/user/block-overlay/AppUserBlockOverlay.vue](src/app/components/user/block-overlay/AppUserBlockOverlay.vue)
+- [ ] [src/app/components/user/known-followers/AppUserKnownFollowers.vue](src/app/components/user/known-followers/AppUserKnownFollowers.vue)
+- [ ] [src/app/components/user/level-widget/AppUserLevelWidget.vue](src/app/components/user/level-widget/AppUserLevelWidget.vue)
+- [ ] [src/app/components/user/payment-source/AppUserPaymentSourceCard.vue](src/app/components/user/payment-source/AppUserPaymentSourceCard.vue)
+- [ ] [src/app/components/user/spawn-day/AppUserSpawnDay.vue](src/app/components/user/spawn-day/AppUserSpawnDay.vue)
+- [ ] [src/app/components/vending-machine/modal/AppVendingMachineModal.vue](src/app/components/vending-machine/modal/AppVendingMachineModal.vue)
+- [ ] [src/app/components/vending-machine/modal/_product/AppVendingMachineProduct.vue](src/app/components/vending-machine/modal/_product/AppVendingMachineProduct.vue)
+- [ ] [src/app/components/vending-machine/modal/_purchase-modal/gift-recipient/AppGiftRecipientModal.vue](src/app/components/vending-machine/modal/_purchase-modal/gift-recipient/AppGiftRecipientModal.vue)
+- [ ] [src/app/components/wallet/withdraw/AppWalletWithdrawModal.vue](src/app/components/wallet/withdraw/AppWalletWithdrawModal.vue)
+- [ ] [src/app/views/communities/view/RouteCommunitiesView.vue](src/app/views/communities/view/RouteCommunitiesView.vue)
+- [ ] [src/app/views/communities/view/_context/AppCommunitiesViewContext.vue](src/app/views/communities/view/_context/AppCommunitiesViewContext.vue)
+- [ ] [src/app/views/communities/view/_mobile-header/AppMobileHeader.vue](src/app/views/communities/view/_mobile-header/AppMobileHeader.vue)
+- [ ] [src/app/views/communities/view/_nav/channels/AppNavChannels.vue](src/app/views/communities/view/_nav/channels/AppNavChannels.vue)
+- [ ] [src/app/views/communities/view/_nav/edit/AppNavEdit.vue](src/app/views/communities/view/_nav/edit/AppNavEdit.vue)
+- [ ] [src/app/views/communities/view/_page-container/AppCommunityPageContainer.vue](src/app/views/communities/view/_page-container/AppCommunityPageContainer.vue)
+- [ ] [src/app/views/communities/view/channel/RouteCommunitiesViewChannel.vue](src/app/views/communities/view/channel/RouteCommunitiesViewChannel.vue)
+- [ ] [src/app/views/communities/view/channel/RouteCommunitiesViewChannelFeed.vue](src/app/views/communities/view/channel/RouteCommunitiesViewChannelFeed.vue)
+- [ ] [src/app/views/communities/view/channel/RouteCommunitiesViewChannelJam.vue](src/app/views/communities/view/channel/RouteCommunitiesViewChannelJam.vue)
+- [ ] [src/app/views/communities/view/channel/RouteCommunitiesViewChannelJamEntries.vue](src/app/views/communities/view/channel/RouteCommunitiesViewChannelJamEntries.vue)
+- [ ] [src/app/views/communities/view/edit/activity/RouteCommunitiesViewEditActivity.vue](src/app/views/communities/view/edit/activity/RouteCommunitiesViewEditActivity.vue)
+- [ ] [src/app/views/communities/view/edit/blocks/RouteCommunitiesViewEditBlocks.vue](src/app/views/communities/view/edit/blocks/RouteCommunitiesViewEditBlocks.vue)
+- [ ] [src/app/views/communities/view/edit/channels/edit/RouteCommunitiesViewEditChannelsEdit.vue](src/app/views/communities/view/edit/channels/edit/RouteCommunitiesViewEditChannelsEdit.vue)
+- [ ] [src/app/views/communities/view/edit/channels/edit/competition/assign-awards/RouteCommunitiesViewEditChannelsCompetitionAssignAwards.vue](src/app/views/communities/view/edit/channels/edit/competition/assign-awards/RouteCommunitiesViewEditChannelsCompetitionAssignAwards.vue)
+- [ ] [src/app/views/communities/view/edit/channels/edit/competition/assign-awards/award/RouteCommunitiesViewEditChannelsCompetitionAssignAwardsAward.vue](src/app/views/communities/view/edit/channels/edit/competition/assign-awards/award/RouteCommunitiesViewEditChannelsCompetitionAssignAwardsAward.vue)
+- [ ] [src/app/views/communities/view/edit/channels/edit/competition/entries/RouteCommunitiesViewEditChannelsCompetitionEntries.vue](src/app/views/communities/view/edit/channels/edit/competition/entries/RouteCommunitiesViewEditChannelsCompetitionEntries.vue)
+- [ ] [src/app/views/communities/view/edit/channels/list/RouteCommunitiesViewEditChannelsList.vue](src/app/views/communities/view/edit/channels/list/RouteCommunitiesViewEditChannelsList.vue)
+- [ ] [src/app/views/communities/view/edit/channels/list/_item/AppCommunitiesEditChannelListItem.vue](src/app/views/communities/view/edit/channels/list/_item/AppCommunitiesEditChannelListItem.vue)
+- [ ] [src/app/views/communities/view/edit/details/RouteCommunitiesViewEditDetails.vue](src/app/views/communities/view/edit/details/RouteCommunitiesViewEditDetails.vue)
+- [ ] [src/app/views/dashboard/account/blocks/RouteDashAccountBlocks.vue](src/app/views/dashboard/account/blocks/RouteDashAccountBlocks.vue)
+- [ ] [src/app/views/dashboard/account/purchases/view/RouteDashAccountPurchasesView.vue](src/app/views/dashboard/account/purchases/view/RouteDashAccountPurchasesView.vue)
+- [ ] [src/app/views/dashboard/account/referrals/RouteDashAccountReferrals.vue](src/app/views/dashboard/account/referrals/RouteDashAccountReferrals.vue)
+- [ ] [src/app/views/dashboard/account/wallet/RouteDashAccountWallet.vue](src/app/views/dashboard/account/wallet/RouteDashAccountWallet.vue)
+- [ ] [src/app/views/dashboard/analytics/RouteDashAnalytics.vue](src/app/views/dashboard/analytics/RouteDashAnalytics.vue)
+- [ ] [src/app/views/dashboard/analytics/_report/AppAnalyticsReportRatingBreakdown.vue](src/app/views/dashboard/analytics/_report/AppAnalyticsReportRatingBreakdown.vue)
+- [ ] [src/app/views/dashboard/analytics/_report/AppAnalyticsReportTopComposition.vue](src/app/views/dashboard/analytics/_report/AppAnalyticsReportTopComposition.vue)
+- [ ] [src/app/views/dashboard/analytics/_report/AppAnalyticsReportUserGrid.vue](src/app/views/dashboard/analytics/_report/AppAnalyticsReportUserGrid.vue)
+- [ ] [src/app/views/dashboard/analytics/_report/AppAnalyticsReportUserModel.vue](src/app/views/dashboard/analytics/_report/AppAnalyticsReportUserModel.vue)
+- [ ] [src/app/views/dashboard/creator/RouteDashCreator.vue](src/app/views/dashboard/creator/RouteDashCreator.vue)
+- [ ] [src/app/views/dashboard/games/manage/game/_media-bar/AppGameManageMediaBar.vue](src/app/views/dashboard/games/manage/game/_media-bar/AppGameManageMediaBar.vue)
+- [ ] [src/app/views/dashboard/games/manage/game/_nav/AppGameManageNav.vue](src/app/views/dashboard/games/manage/game/_nav/AppGameManageNav.vue)
+- [ ] [src/app/views/dashboard/games/manage/game/_nav/AppGameManageNavRequired.vue](src/app/views/dashboard/games/manage/game/_nav/AppGameManageNavRequired.vue)
+- [ ] [src/app/views/dashboard/games/manage/game/description/RouteDashGamesManageGameDescription.vue](src/app/views/dashboard/games/manage/game/description/RouteDashGamesManageGameDescription.vue)
+- [ ] [src/app/views/dashboard/games/manage/game/overview/RouteDashGamesManageGameOverview.vue](src/app/views/dashboard/games/manage/game/overview/RouteDashGamesManageGameOverview.vue)
+- [ ] [src/app/views/dashboard/games/manage/game/settings/RouteDashGamesManageGameSettings.vue](src/app/views/dashboard/games/manage/game/settings/RouteDashGamesManageGameSettings.vue)
+- [ ] [src/app/views/dashboard/games/manage/key-groups/list/RouteDashGamesManageKeyGroupsList.vue](src/app/views/dashboard/games/manage/key-groups/list/RouteDashGamesManageKeyGroupsList.vue)
+- [ ] [src/app/views/dashboard/games/manage/site/RouteDashGamesManageSite.vue](src/app/views/dashboard/games/manage/site/RouteDashGamesManageSite.vue)
+- [ ] [src/app/views/dashboard/shop/product/_diff/AppShopProductDiff.vue](src/app/views/dashboard/shop/product/_diff/AppShopProductDiff.vue)
+- [ ] [src/app/views/dashboard/supporters/RouteDashSupporters.vue](src/app/views/dashboard/supporters/RouteDashSupporters.vue)
+- [ ] [src/app/views/discover/communities/RouteDiscoverCommunities.vue](src/app/views/discover/communities/RouteDiscoverCommunities.vue)
+- [ ] [src/app/views/discover/games/list/RouteDiscoverGamesList.vue](src/app/views/discover/games/list/RouteDiscoverGamesList.vue)
+- [ ] [src/app/views/discover/games/view/overview/AppDiscoverGamesViewOverviewSupporters.vue](src/app/views/discover/games/view/overview/AppDiscoverGamesViewOverviewSupporters.vue)
+- [ ] [src/app/views/discover/games/view/overview/_details/AppGameDetails.vue](src/app/views/discover/games/view/overview/_details/AppGameDetails.vue)
+- [ ] [src/app/views/discover/games/view/overview/_statbar/AppGameStatbar.vue](src/app/views/discover/games/view/overview/_statbar/AppGameStatbar.vue)
+- [ ] [src/app/views/discover/home/AppHomeDefault.vue](src/app/views/discover/home/AppHomeDefault.vue)
+- [ ] [src/app/views/discover/home/AppHomeSlider.vue](src/app/views/discover/home/AppHomeSlider.vue)
+- [ ] [src/app/views/discover/home/RouteDiscoverHome.vue](src/app/views/discover/home/RouteDiscoverHome.vue)
+- [ ] [src/app/views/discover/home/_home-default/AppDiscoverHomeBanner.vue](src/app/views/discover/home/_home-default/AppDiscoverHomeBanner.vue)
+- [ ] [src/app/views/discover/home/_home-default/AppDiscoverHomeRealms.vue](src/app/views/discover/home/_home-default/AppDiscoverHomeRealms.vue)
+- [ ] [src/app/views/discover/home/_home-slider/AppCommunityOverlayPill.vue](src/app/views/discover/home/_home-slider/AppCommunityOverlayPill.vue)
+- [ ] [src/app/views/discover/home/_home-slider/AppHomeFsPost.vue](src/app/views/discover/home/_home-slider/AppHomeFsPost.vue)
+- [ ] [src/app/views/discover/home/_home-slider/AppHomeFsPostMeta.vue](src/app/views/discover/home/_home-slider/AppHomeFsPostMeta.vue)
+- [ ] [src/app/views/forums/landing/RouteForumsLanding.vue](src/app/views/forums/landing/RouteForumsLanding.vue)
+- [ ] [src/app/views/landing/about/RouteLandingAbout.vue](src/app/views/landing/about/RouteLandingAbout.vue)
+- [ ] [src/app/views/landing/app/RouteLandingApp.vue](src/app/views/landing/app/RouteLandingApp.vue)
+- [ ] [src/app/views/landing/creators/AppCreatorMooMoo.vue](src/app/views/landing/creators/AppCreatorMooMoo.vue)
+- [ ] [src/app/views/landing/creators/RouteLandingCreators.vue](src/app/views/landing/creators/RouteLandingCreators.vue)
+- [ ] [src/app/views/landing/game-api-doc/RouteLandingGameApiDoc.vue](src/app/views/landing/game-api-doc/RouteLandingGameApiDoc.vue)
+- [ ] [src/app/views/landing/help/RouteLandingHelpIndex.vue](src/app/views/landing/help/RouteLandingHelpIndex.vue)
+- [ ] [src/app/views/landing/indieaf/RouteLandingIndieaf.vue](src/app/views/landing/indieaf/RouteLandingIndieaf.vue)
+- [ ] [src/app/views/landing/learn/RouteLandingLearn.vue](src/app/views/landing/learn/RouteLandingLearn.vue)
+- [ ] [src/app/views/landing/redlight/RouteLandingRedlight.vue](src/app/views/landing/redlight/RouteLandingRedlight.vue)
+- [ ] [src/app/views/library/collection/RouteLibraryCollection.vue](src/app/views/library/collection/RouteLibraryCollection.vue)
+- [ ] [src/app/views/library/installed/AppLibraryInstalledGame.vue](src/app/views/library/installed/AppLibraryInstalledGame.vue)
+- [ ] [src/app/views/library/overview/RouteLibraryOverview.vue](src/app/views/library/overview/RouteLibraryOverview.vue)
+- [ ] [src/app/views/notifications/RouteNotifications.vue](src/app/views/notifications/RouteNotifications.vue)
+- [ ] [src/app/views/notifications/filter/NotificationsFilter.vue](src/app/views/notifications/filter/NotificationsFilter.vue)
+- [ ] [src/app/views/post/_page-placeholder/AppPostPagePlaceholder.vue](src/app/views/post/_page-placeholder/AppPostPagePlaceholder.vue)
+- [ ] [src/app/views/post/_page/AppPostPage.vue](src/app/views/post/_page/AppPostPage.vue)
+- [ ] [src/app/views/post/_page/AppPostPageContent.vue](src/app/views/post/_page/AppPostPageContent.vue)
+- [ ] [src/app/views/post/_page/recommendations/AppPostPageRecommendations.vue](src/app/views/post/_page/recommendations/AppPostPageRecommendations.vue)
+- [ ] [src/app/views/post/_page/recommendations/AppPostPageRecommendationsPosts.vue](src/app/views/post/_page/recommendations/AppPostPageRecommendationsPosts.vue)
+- [ ] [src/app/views/profile/dogtags/AppProfileDogtagAutoscroll.vue](src/app/views/profile/dogtags/AppProfileDogtagAutoscroll.vue)
+- [ ] [src/app/views/profile/trophies/game/RouteProfileTrophiesGame.vue](src/app/views/profile/trophies/game/RouteProfileTrophiesGame.vue)
+- [ ] [src/app/views/profile/trophies/overview/RouteProfileTrophiesOverview.vue](src/app/views/profile/trophies/overview/RouteProfileTrophiesOverview.vue)
+- [ ] [src/app/views/realms/view/RouteRealmsView.vue](src/app/views/realms/view/RouteRealmsView.vue)
+- [ ] [src/app/views/search/realms/RouteSearchRealms.vue](src/app/views/search/realms/RouteSearchRealms.vue)
+- [ ] [src/app/views/search/results/RouteSearchResults.vue](src/app/views/search/results/RouteSearchResults.vue)
+- [ ] [src/app/views/styleguide/avatar-frame/AppAvatarFrameStyleguide.vue](src/app/views/styleguide/avatar-frame/AppAvatarFrameStyleguide.vue)
+- [ ] [src/app/views/styleguide/color/AppStyleguideColor.vue](src/app/views/styleguide/color/AppStyleguideColor.vue)
+- [ ] [src/app/views/timeout/RouteTimeout.vue](src/app/views/timeout/RouteTimeout.vue)
+- [ ] [src/app/views/welcome/RouteWelcome.vue](src/app/views/welcome/RouteWelcome.vue)
+- [ ] [src/app/views/weplay/RouteWeplay.vue](src/app/views/weplay/RouteWeplay.vue)
+
+### src/auth/ (5)
+
+- [ ] [src/auth/components/AppCoverImg.vue](src/auth/components/AppCoverImg.vue)
+- [ ] [src/auth/components/AppGameCoverCredits.vue](src/auth/components/AppGameCoverCredits.vue)
+- [ ] [src/auth/views/auth/RouteAuth.vue](src/auth/views/auth/RouteAuth.vue)
+- [ ] [src/auth/views/auth/approve-login/RouteApproveLogin.vue](src/auth/views/auth/approve-login/RouteApproveLogin.vue)
+- [ ] [src/auth/views/auth/join/RouteAuthJoin.vue](src/auth/views/auth/join/RouteAuthJoin.vue)
+
+### src/checkout/ (2)
+
+- [ ] [src/checkout/components/forms/FormPayment.vue](src/checkout/components/forms/FormPayment.vue)
+- [ ] [src/checkout/views/checkout/RouteCheckout.vue](src/checkout/views/checkout/RouteCheckout.vue)
+
+### src/claim/ (1)
+
+- [ ] [src/claim/views/key/AppKeyGame.vue](src/claim/views/key/AppKeyGame.vue)
+
+### src/client/ (1)
+
+- [ ] [src/client/views/upgrade/RouteUpgrade.vue](src/client/views/upgrade/RouteUpgrade.vue)
+
+### src/gameserver/ (1)
+
+- [ ] [src/gameserver/AppMain.vue](src/gameserver/AppMain.vue)
+
+### src/site-editor/ (1)
+
+- [ ] [src/site-editor/components/site-editor/AppSiteEditor.vue](src/site-editor/components/site-editor/AppSiteEditor.vue)
+
+### src/widget-package/ (11)
+
+- [ ] [src/widget-package/AppMain.vue](src/widget-package/AppMain.vue)
+- [ ] [src/widget-package/components/AppDownload.vue](src/widget-package/components/AppDownload.vue)
+- [ ] [src/widget-package/components/AppFadeCollapse.vue](src/widget-package/components/AppFadeCollapse.vue)
+- [ ] [src/widget-package/components/AppFooter.vue](src/widget-package/components/AppFooter.vue)
+- [ ] [src/widget-package/components/AppGameHeader.vue](src/widget-package/components/AppGameHeader.vue)
+- [ ] [src/widget-package/components/AppIncludedItems.vue](src/widget-package/components/AppIncludedItems.vue)
+- [ ] [src/widget-package/components/AppPricingCard.vue](src/widget-package/components/AppPricingCard.vue)
+- [ ] [src/widget-package/components/AppToast.vue](src/widget-package/components/AppToast.vue)
+- [ ] [src/widget-package/components/AppWidgetModal.vue](src/widget-package/components/AppWidgetModal.vue)
+- [ ] [src/widget-package/components/forms/FormAddress.vue](src/widget-package/components/forms/FormAddress.vue)
+- [ ] [src/widget-package/components/forms/FormPayment.vue](src/widget-package/components/forms/FormPayment.vue)
+
+### src/z/ (1)
+
+- [ ] [src/z/views/content/RouteContent.vue](src/z/views/content/RouteContent.vue)
+
+## (c) Remaining `:style=` bindings
+
+783 bindings across 268 files. Phase 2 converted the bulk of static bindings. Most of the rest are runtime-derived (theme constants like `kThemeFgMuted`, `Screen.*` reactive state, computed pixel values, template-literal transforms). Use `:class` bindings for runtime booleans and keep `:style` only for values that truly vary at runtime.
+
+### src/_common/ (371 bindings, 140 files)
+
+- [ ] [src/_common/ad/AppAdStickyRail.vue](src/_common/ad/AppAdStickyRail.vue) — 2×
+- [ ] [src/_common/ad/AppAdTakeoverBackground.vue](src/_common/ad/AppAdTakeoverBackground.vue) — 1×
+- [ ] [src/_common/ad/gpt/AppAdGptVideo.vue](src/_common/ad/gpt/AppAdGptVideo.vue) — 4×
+- [ ] [src/_common/ad/monetizemore/AppAdMonetizeMore.vue](src/_common/ad/monetizemore/AppAdMonetizeMore.vue) — 1×
+- [ ] [src/_common/ad/monetizemore/AppAdMonetizeMoreTakeover.vue](src/_common/ad/monetizemore/AppAdMonetizeMoreTakeover.vue) — 2×
+- [ ] [src/_common/ad/widget/AppAdWidget.vue](src/_common/ad/widget/AppAdWidget.vue) — 2×
+- [ ] [src/_common/ad/widget/AppAdWidgetInner.vue](src/_common/ad/widget/AppAdWidgetInner.vue) — 1×
+- [ ] [src/_common/alert/AppAlertBox.vue](src/_common/alert/AppAlertBox.vue) — 2×
+- [ ] [src/_common/animation/AppAnimChargeOrb.vue](src/_common/animation/AppAnimChargeOrb.vue) — 1×
+- [ ] [src/_common/animation/AppAnimElectricity.vue](src/_common/animation/AppAnimElectricity.vue) — 1×
+- [ ] [src/_common/animation/AppAnimSlideshow.vue](src/_common/animation/AppAnimSlideshow.vue) — 4×
+- [ ] [src/_common/animation/AppAnimSlideshowImg.vue](src/_common/animation/AppAnimSlideshowImg.vue) — 1×
+- [ ] [src/_common/aspect-ratio/AppAspectRatio.vue](src/_common/aspect-ratio/AppAspectRatio.vue) — 2×
+- [ ] [src/_common/audio/scrubber/AppAudioScrubber.vue](src/_common/audio/scrubber/AppAudioScrubber.vue) — 2×
+- [ ] [src/_common/auth/AppAuthModal.vue](src/_common/auth/AppAuthModal.vue) — 1×
+- [ ] [src/_common/auth/join/AppAuthJoinForm.vue](src/_common/auth/join/AppAuthJoinForm.vue) — 2×
+- [ ] [src/_common/avatar/AppAvatarFrame.vue](src/_common/avatar/AppAvatarFrame.vue) — 3×
+- [ ] [src/_common/background/AppBackground.vue](src/_common/background/AppBackground.vue) — 1×
+- [ ] [src/_common/background/AppBackgroundFade.vue](src/_common/background/AppBackgroundFade.vue) — 3×
+- [ ] [src/_common/background/AppBackgroundSelector.vue](src/_common/background/AppBackgroundSelector.vue) — 5×
+- [ ] [src/_common/bean/AppBean.vue](src/_common/bean/AppBean.vue) — 2×
+- [ ] [src/_common/button/AppButtonPlaceholder.vue](src/_common/button/AppButtonPlaceholder.vue) — 1×
+- [ ] [src/_common/card/AppHoverCard.vue](src/_common/card/AppHoverCard.vue) — 1×
+- [ ] [src/_common/collectible/AppCollectibleResourceDetails.vue](src/_common/collectible/AppCollectibleResourceDetails.vue) — 12×
+- [ ] [src/_common/collectible/AppCollectibleThumb.vue](src/_common/collectible/AppCollectibleThumb.vue) — 6×
+- [ ] [src/_common/collectible/AppCollectibleThumbDetails.vue](src/_common/collectible/AppCollectibleThumbDetails.vue) — 10×
+- [ ] [src/_common/collectible/AppCollectibleUnlockedRibbon.vue](src/_common/collectible/AppCollectibleUnlockedRibbon.vue) — 2×
+- [ ] [src/_common/colorpicker/AppColorpicker.vue](src/_common/colorpicker/AppColorpicker.vue) — 1×
+- [ ] [src/_common/comment/AppCommentContent.vue](src/_common/comment/AppCommentContent.vue) — 1×
+- [ ] [src/_common/comment/FormComment.vue](src/_common/comment/FormComment.vue) — 2×
+- [ ] [src/_common/community/card-base/AppCommunityCardBase.vue](src/_common/community/card-base/AppCommunityCardBase.vue) — 1×
+- [ ] [src/_common/content/components/AppContentEmoji.vue](src/_common/content/components/AppContentEmoji.vue) — 1×
+- [ ] [src/_common/content/components/AppContentMediaItem.vue](src/_common/content/components/AppContentMediaItem.vue) — 1×
+- [ ] [src/_common/content/components/AppContentMediaUpload.vue](src/_common/content/components/AppContentMediaUpload.vue) — 1×
+- [ ] [src/_common/content/components/AppContentSticker.vue](src/_common/content/components/AppContentSticker.vue) — 1×
+- [ ] [src/_common/content/components/embed/AppContentEmbed.vue](src/_common/content/components/embed/AppContentEmbed.vue) — 1×
+- [ ] [src/_common/content/content-editor/AppContentEditor.vue](src/_common/content/content-editor/AppContentEditor.vue) — 2×
+- [ ] [src/_common/content/content-editor/controls/AppContentEditorBlockControls.vue](src/_common/content/content-editor/controls/AppContentEditorBlockControls.vue) — 1×
+- [ ] [src/_common/content/content-editor/controls/AppContentEditorInsetControls.vue](src/_common/content/content-editor/controls/AppContentEditorInsetControls.vue) — 1×
+- [ ] [src/_common/content/content-editor/controls/AppContentEditorTextControls.vue](src/_common/content/content-editor/controls/AppContentEditorTextControls.vue) — 1×
+- [ ] [src/_common/content/content-editor/controls/mention/AppContentEditorControlsMentionAutocomplete.vue](src/_common/content/content-editor/controls/mention/AppContentEditorControlsMentionAutocomplete.vue) — 1×
+- [ ] [src/_common/content/content-editor/modals/gif/AppGifModal.vue](src/_common/content/content-editor/modals/gif/AppGifModal.vue) — 3×
+- [ ] [src/_common/content/content-editor/modals/link/AppFormContentEditorLink.vue](src/_common/content/content-editor/modals/link/AppFormContentEditorLink.vue) — 1×
+- [ ] [src/_common/content/content-viewer/components/AppContentViewerMention.vue](src/_common/content/content-viewer/components/AppContentViewerMention.vue) — 2×
+- [ ] [src/_common/content/content-viewer/components/AppContentViewerParagraph.vue](src/_common/content/content-viewer/components/AppContentViewerParagraph.vue) — 1×
+- [ ] [src/_common/creator/AppCreatorsList.vue](src/_common/creator/AppCreatorsList.vue) — 1×
+- [ ] [src/_common/creator/experience/level-up-modal/AppCreatorExperienceLevelUpModal.vue](src/_common/creator/experience/level-up-modal/AppCreatorExperienceLevelUpModal.vue) — 3×
+- [ ] [src/_common/currency/AppCurrencyPill.vue](src/_common/currency/AppCurrencyPill.vue) — 1×
+- [ ] [src/_common/currency/AppCurrencyPillList.vue](src/_common/currency/AppCurrencyPillList.vue) — 1×
+- [ ] [src/_common/emoji/AppEmoji.vue](src/_common/emoji/AppEmoji.vue) — 1×
+- [ ] [src/_common/emoji/selector-modal/AppEmojiSelectorModal.vue](src/_common/emoji/selector-modal/AppEmojiSelectorModal.vue) — 5×
+- [ ] [src/_common/emoji/selector-modal/_group/AppEmojiSelectorGroup.vue](src/_common/emoji/selector-modal/_group/AppEmojiSelectorGroup.vue) — 4×
+- [ ] [src/_common/emoji/selector-modal/_group/AppEmojiSelectorGroupThumbnail.vue](src/_common/emoji/selector-modal/_group/AppEmojiSelectorGroupThumbnail.vue) — 3×
+- [ ] [src/_common/emoji/selector-modal/_group/item/AppEmojiSelectorGroupItemLazy.vue](src/_common/emoji/selector-modal/_group/item/AppEmojiSelectorGroupItemLazy.vue) — 1×
+- [ ] [src/_common/fireside/post/card/AppPostCardBase.vue](src/_common/fireside/post/card/AppPostCardBase.vue) — 4×
+- [ ] [src/_common/fireside/post/card/AppPostCardPlaceholder.vue](src/_common/fireside/post/card/AppPostCardPlaceholder.vue) — 1×
+- [ ] [src/_common/fireside/post/like/widget/AppFiresidePostLikeWidget.vue](src/_common/fireside/post/like/widget/AppFiresidePostLikeWidget.vue) — 2×
+- [ ] [src/_common/form-vue/AppFormControlPrefix.vue](src/_common/form-vue/AppFormControlPrefix.vue) — 1×
+- [ ] [src/_common/form-vue/controls/markdown/AppFormControlMarkdownMediaItems.vue](src/_common/form-vue/controls/markdown/AppFormControlMarkdownMediaItems.vue) — 1×
+- [ ] [src/_common/form-vue/controls/toggle-button/AppFormControlToggleButtonGroup.vue](src/_common/form-vue/controls/toggle-button/AppFormControlToggleButtonGroup.vue) — 1×
+- [ ] [src/_common/game/compat-icons/AppGameCompatIcons.vue](src/_common/game/compat-icons/AppGameCompatIcons.vue) — 1×
+- [ ] [src/_common/game/media-bar/AppGameMediaBar.vue](src/_common/game/media-bar/AppGameMediaBar.vue) — 1×
+- [ ] [src/_common/game/media-bar/item/AppGameMediaBarItem.vue](src/_common/game/media-bar/item/AppGameMediaBarItem.vue) — 2×
+- [ ] [src/_common/game/play-modal/AppGamePlayModal.vue](src/_common/game/play-modal/AppGamePlayModal.vue) — 1×
+- [ ] [src/_common/header/AppHeaderBar.vue](src/_common/header/AppHeaderBar.vue) — 1×
+- [ ] [src/_common/illustration/AppIllustration.vue](src/_common/illustration/AppIllustration.vue) — 3×
+- [ ] [src/_common/inventory/shop/AppShopProductDisplay.vue](src/_common/inventory/shop/AppShopProductDisplay.vue) — 5×
+- [ ] [src/_common/inventory/shop/product-modal/AppNewProductModal.vue](src/_common/inventory/shop/product-modal/AppNewProductModal.vue) — 5×
+- [ ] [src/_common/joltydex/AppJoltydexBrowser.vue](src/_common/joltydex/AppJoltydexBrowser.vue) — 5×
+- [ ] [src/_common/lightbox/item/AppLightboxItem.vue](src/_common/lightbox/item/AppLightboxItem.vue) — 1×
+- [ ] [src/_common/loading/AppLoadingBar.vue](src/_common/loading/AppLoadingBar.vue) — 2×
+- [ ] [src/_common/loading/AppLoadingFade.vue](src/_common/loading/AppLoadingFade.vue) — 1×
+- [ ] [src/_common/media-item/backdrop/AppMediaItemBackdrop.vue](src/_common/media-item/backdrop/AppMediaItemBackdrop.vue) — 1×
+- [ ] [src/_common/media-item/cover/AppMediaItemCover.vue](src/_common/media-item/cover/AppMediaItemCover.vue) — 1×
+- [ ] [src/_common/media-item/post/AppMediaItemPost.vue](src/_common/media-item/post/AppMediaItemPost.vue) — 2×
+- [ ] [src/_common/microtransaction/AppMicrotransactionItem.vue](src/_common/microtransaction/AppMicrotransactionItem.vue) — 6×
+- [ ] [src/_common/microtransaction/payment-form/AppMicrotransactionPaymentForm.vue](src/_common/microtransaction/payment-form/AppMicrotransactionPaymentForm.vue) — 1×
+- [ ] [src/_common/microtransaction/purchase-modal/AppPurchaseMicrotransactionModal.vue](src/_common/microtransaction/purchase-modal/AppPurchaseMicrotransactionModal.vue) — 4×
+- [ ] [src/_common/modal/AppModal.vue](src/_common/modal/AppModal.vue) — 1×
+- [ ] [src/_common/modal/AppModalFloatingHeader.vue](src/_common/modal/AppModalFloatingHeader.vue) — 2×
+- [ ] [src/_common/notification/AppNotificationBlip.vue](src/_common/notification/AppNotificationBlip.vue) — 1×
+- [ ] [src/_common/pagination/AppPageIndicator.vue](src/_common/pagination/AppPageIndicator.vue) — 2×
+- [ ] [src/_common/pagination/AppPageIndicatorCompact.vue](src/_common/pagination/AppPageIndicatorCompact.vue) — 3×
+- [ ] [src/_common/pagination/AppPageIndicatorCompactItem.vue](src/_common/pagination/AppPageIndicatorCompactItem.vue) — 1×
+- [ ] [src/_common/popcorn/AppPopcornKernel.vue](src/_common/popcorn/AppPopcornKernel.vue) — 4×
+- [ ] [src/_common/popper/AppPopper.vue](src/_common/popper/AppPopper.vue) — 1×
+- [ ] [src/_common/progress/AppCircularProgress.vue](src/_common/progress/AppCircularProgress.vue) — 5×
+- [ ] [src/_common/progress/AppProgressBar.vue](src/_common/progress/AppProgressBar.vue) — 1×
+- [ ] [src/_common/quest/AppQuestFrame.vue](src/_common/quest/AppQuestFrame.vue) — 2×
+- [ ] [src/_common/quest/AppQuestReward.vue](src/_common/quest/AppQuestReward.vue) — 5×
+- [ ] [src/_common/quest/AppQuestRewardThumbnail.vue](src/_common/quest/AppQuestRewardThumbnail.vue) — 8×
+- [ ] [src/_common/quest/AppQuestThumbnail.vue](src/_common/quest/AppQuestThumbnail.vue) — 4×
+- [ ] [src/_common/quest/reward/AppQuestRewardModal.vue](src/_common/quest/reward/AppQuestRewardModal.vue) — 4×
+- [ ] [src/_common/reaction/details-modal/AppReactionDetailsModal.vue](src/_common/reaction/details-modal/AppReactionDetailsModal.vue) — 2×
+- [ ] [src/_common/reaction/list/AppReactionList.vue](src/_common/reaction/list/AppReactionList.vue) — 4×
+- [ ] [src/_common/reaction/list/AppReactionListItem.vue](src/_common/reaction/list/AppReactionListItem.vue) — 3×
+- [ ] [src/_common/realm/AppRealmFullCard.vue](src/_common/realm/AppRealmFullCard.vue) — 2×
+- [ ] [src/_common/responsive-dimensions/AppResponsiveDimensions.vue](src/_common/responsive-dimensions/AppResponsiveDimensions.vue) — 1×
+- [ ] [src/_common/scroll/AppScrollAffix.vue](src/_common/scroll/AppScrollAffix.vue) — 2×
+- [ ] [src/_common/scroll/AppScrollAutoload.vue](src/_common/scroll/AppScrollAutoload.vue) — 1×
+- [ ] [src/_common/scroll/AppScrollScroller.vue](src/_common/scroll/AppScrollScroller.vue) — 1×
+- [ ] [src/_common/section/AppSectionTitle.vue](src/_common/section/AppSectionTitle.vue) — 2×
+- [ ] [src/_common/sheet/AppSheetButton.vue](src/_common/sheet/AppSheetButton.vue) — 1×
+- [ ] [src/_common/shell/notice/AppShellNotice.vue](src/_common/shell/notice/AppShellNotice.vue) — 3×
+- [ ] [src/_common/shell/notice/_base/AppShellNoticeBase.vue](src/_common/shell/notice/_base/AppShellNoticeBase.vue) — 8×
+- [ ] [src/_common/shell/notice/creator-experience/AppShellNoticeCreatorExperience.vue](src/_common/shell/notice/creator-experience/AppShellNoticeCreatorExperience.vue) — 2×
+- [ ] [src/_common/shell/notice/sticker-mastery/AppShellNoticeStickerMastery.vue](src/_common/shell/notice/sticker-mastery/AppShellNoticeStickerMastery.vue) — 4×
+- [ ] [src/_common/slider/AppSlider.vue](src/_common/slider/AppSlider.vue) — 3×
+- [ ] [src/_common/sticker/AppSticker.vue](src/_common/sticker/AppSticker.vue) — 2×
+- [ ] [src/_common/sticker/AppStickerMastery.vue](src/_common/sticker/AppStickerMastery.vue) — 5×
+- [ ] [src/_common/sticker/AppStickerPlacementList.vue](src/_common/sticker/AppStickerPlacementList.vue) — 1×
+- [ ] [src/_common/sticker/AppStickerSupporters.vue](src/_common/sticker/AppStickerSupporters.vue) — 2×
+- [ ] [src/_common/sticker/charge/AppStickerChargeCard.vue](src/_common/sticker/charge/AppStickerChargeCard.vue) — 4×
+- [ ] [src/_common/sticker/charge/AppStickerChargeTooltip.vue](src/_common/sticker/charge/AppStickerChargeTooltip.vue) — 1×
+- [ ] [src/_common/sticker/layer/AppStickerLayerDrawer.vue](src/_common/sticker/layer/AppStickerLayerDrawer.vue) — 10×
+- [ ] [src/_common/sticker/layer/AppStickerLayerDrawerItem.vue](src/_common/sticker/layer/AppStickerLayerDrawerItem.vue) — 8×
+- [ ] [src/_common/sticker/layer/AppStickerLayerGhost.vue](src/_common/sticker/layer/AppStickerLayerGhost.vue) — 5×
+- [ ] [src/_common/sticker/layer/AppStickerLayerPlacementMaskTarget.vue](src/_common/sticker/layer/AppStickerLayerPlacementMaskTarget.vue) — 1×
+- [ ] [src/_common/sticker/pack/AppStickerGrid.vue](src/_common/sticker/pack/AppStickerGrid.vue) — 2×
+- [ ] [src/_common/sticker/pack/AppStickerPack.vue](src/_common/sticker/pack/AppStickerPack.vue) — 3×
+- [ ] [src/_common/sticker/pack/open-modal/AppStickerPackOpenModal.vue](src/_common/sticker/pack/open-modal/AppStickerPackOpenModal.vue) — 19×
+- [ ] [src/_common/sticker/target/AppStickerTarget.vue](src/_common/sticker/target/AppStickerTarget.vue) — 1×
+- [ ] [src/_common/supporters/AppTopSupportersCard.vue](src/_common/supporters/AppTopSupportersCard.vue) — 10×
+- [ ] [src/_common/supporters/AppTopSupportersHeader.vue](src/_common/supporters/AppTopSupportersHeader.vue) — 2×
+- [ ] [src/_common/theme/bubble/AppThemeBubble.vue](src/_common/theme/bubble/AppThemeBubble.vue) — 2×
+- [ ] [src/_common/theme/theme-editor/AppThemeEditorFontSelector.vue](src/_common/theme/theme-editor/AppThemeEditorFontSelector.vue) — 2×
+- [ ] [src/_common/trophy/thumbnail/AppTrophyThumbnail.vue](src/_common/trophy/thumbnail/AppTrophyThumbnail.vue) — 1×
+- [ ] [src/_common/user/AppUserVerifiedWrapper.vue](src/_common/user/AppUserVerifiedWrapper.vue) — 3×
+- [ ] [src/_common/user/card/AppUserCard.vue](src/_common/user/card/AppUserCard.vue) — 1×
+- [ ] [src/_common/user/user-avatar/AppUserAvatar.vue](src/_common/user/user-avatar/AppUserAvatar.vue) — 1×
+- [ ] [src/_common/user/user-avatar/AppUserAvatarBubble.vue](src/_common/user/user-avatar/AppUserAvatarBubble.vue) — 1×
+- [ ] [src/_common/user/user-avatar/AppUserAvatarImg.vue](src/_common/user/user-avatar/AppUserAvatarImg.vue) — 2×
+- [ ] [src/_common/user/user-avatar/frame/FormUserAvatarFrame.vue](src/_common/user/user-avatar/frame/FormUserAvatarFrame.vue) — 1×
+- [ ] [src/_common/user/user-avatar/frame/_selector/AppUserAvatarFrameSelector.vue](src/_common/user/user-avatar/frame/_selector/AppUserAvatarFrameSelector.vue) — 2×
+- [ ] [src/_common/user/user-avatar/frame/_selector/AppUserAvatarFrameTile.vue](src/_common/user/user-avatar/frame/_selector/AppUserAvatarFrameTile.vue) — 6×
+- [ ] [src/_common/user/user-bar/AppUserBar.vue](src/_common/user/user-bar/AppUserBar.vue) — 3×
+- [ ] [src/_common/video/player/AppVideoPlayer.vue](src/_common/video/player/AppVideoPlayer.vue) — 5×
+- [ ] [src/_common/video/player/AppVideoPlayerScrubber.vue](src/_common/video/player/AppVideoPlayerScrubber.vue) — 6×
+- [ ] [src/_common/video/player/AppVideoPlayerVolume.vue](src/_common/video/player/AppVideoPlayerVolume.vue) — 2×
+- [ ] [src/_common/video/processing-progress/AppVideoProcessingProgress.vue](src/_common/video/processing-progress/AppVideoProcessingProgress.vue) — 3×
+
+### src/app/ (406 bindings, 125 files)
+
+- [ ] [src/app/components/activity/feed/AppActivityFeed.vue](src/app/components/activity/feed/AppActivityFeed.vue) — 1×
+- [ ] [src/app/components/activity/feed/_video-player/AppActivityFeedVideoPlayer.vue](src/app/components/activity/feed/_video-player/AppActivityFeedVideoPlayer.vue) — 3×
+- [ ] [src/app/components/activity/feed/item/AppActivityFeedItemPlaceholder.vue](src/app/components/activity/feed/item/AppActivityFeedItemPlaceholder.vue) — 10×
+- [ ] [src/app/components/activity/feed/notification/AppActivityFeedNotification.vue](src/app/components/activity/feed/notification/AppActivityFeedNotification.vue) — 1×
+- [ ] [src/app/components/activity/feed/post/AppActivityFeedPost.vue](src/app/components/activity/feed/post/AppActivityFeedPost.vue) — 4×
+- [ ] [src/app/components/activity/feed/post/AppActivityFeedPostAdvertisement.vue](src/app/components/activity/feed/post/AppActivityFeedPostAdvertisement.vue) — 11×
+- [ ] [src/app/components/activity/feed/post/AppActivityFeedPostArticle.vue](src/app/components/activity/feed/post/AppActivityFeedPostArticle.vue) — 2×
+- [ ] [src/app/components/activity/feed/post/AppActivityFeedPostBlocked.vue](src/app/components/activity/feed/post/AppActivityFeedPostBlocked.vue) — 1×
+- [ ] [src/app/components/activity/feed/post/AppActivityFeedPostMedia.vue](src/app/components/activity/feed/post/AppActivityFeedPostMedia.vue) — 5×
+- [ ] [src/app/components/activity/feed/post/AppActivityFeedPostVideo.vue](src/app/components/activity/feed/post/AppActivityFeedPostVideo.vue) — 1×
+- [ ] [src/app/components/activity/feed/post/AppActivityFeedPostWrapper.vue](src/app/components/activity/feed/post/AppActivityFeedPostWrapper.vue) — 1×
+- [ ] [src/app/components/chat/FormChatRoomSettings.vue](src/app/components/chat/FormChatRoomSettings.vue) — 1×
+- [ ] [src/app/components/chat/_list/AppChatListItem.vue](src/app/components/chat/_list/AppChatListItem.vue) — 3×
+- [ ] [src/app/components/chat/member-list/AppChatMemberListItem.vue](src/app/components/chat/member-list/AppChatMemberListItem.vue) — 2×
+- [ ] [src/app/components/chat/notification-growl/AppChatNotificationGrowl.vue](src/app/components/chat/notification-growl/AppChatNotificationGrowl.vue) — 5×
+- [ ] [src/app/components/chat/user-list/AppChatUserListItem.vue](src/app/components/chat/user-list/AppChatUserListItem.vue) — 4×
+- [ ] [src/app/components/chat/user-online-status/AppChatUserOnlineStatus.vue](src/app/components/chat/user-online-status/AppChatUserOnlineStatus.vue) — 2×
+- [ ] [src/app/components/chat/user-popover/AppChatUserPopover.vue](src/app/components/chat/user-popover/AppChatUserPopover.vue) — 8×
+- [ ] [src/app/components/chat/window/AppChatWindow.vue](src/app/components/chat/window/AppChatWindow.vue) — 5×
+- [ ] [src/app/components/chat/window/output/AppChatWindowOutputItem.vue](src/app/components/chat/window/output/AppChatWindowOutputItem.vue) — 4×
+- [ ] [src/app/components/chat/window/output/AppChatWindowOutputItemTime.vue](src/app/components/chat/window/output/AppChatWindowOutputItemTime.vue) — 2×
+- [ ] [src/app/components/chat/window/output/AppChatWindowOutputPlaceholder.vue](src/app/components/chat/window/output/AppChatWindowOutputPlaceholder.vue) — 4×
+- [ ] [src/app/components/client/status-bar/AppClientStatusBarPatchItem.vue](src/app/components/client/status-bar/AppClientStatusBarPatchItem.vue) — 1×
+- [ ] [src/app/components/comment/controls/AppCommentControls.vue](src/app/components/comment/controls/AppCommentControls.vue) — 4×
+- [ ] [src/app/components/community/channel/card/AppCommunityChannelCard.vue](src/app/components/community/channel/card/AppCommunityChannelCard.vue) — 3×
+- [ ] [src/app/components/community/channel/card/edit/AppCommunityChannelCardEdit.vue](src/app/components/community/channel/card/edit/AppCommunityChannelCardEdit.vue) — 2×
+- [ ] [src/app/components/content/components/AppContentChatInvite.vue](src/app/components/content/components/AppContentChatInvite.vue) — 2×
+- [ ] [src/app/components/content/target/AppContentTarget.vue](src/app/components/content/target/AppContentTarget.vue) — 1×
+- [ ] [src/app/components/content/target/AppContentTargetRealm.vue](src/app/components/content/target/AppContentTargetRealm.vue) — 2×
+- [ ] [src/app/components/content/target/manage-realms/AppContentTargetManageRealmsModal.vue](src/app/components/content/target/manage-realms/AppContentTargetManageRealmsModal.vue) — 1×
+- [ ] [src/app/components/forms/financials/AppFinancialsCheckmark.vue](src/app/components/forms/financials/AppFinancialsCheckmark.vue) — 1×
+- [ ] [src/app/components/forms/financials/AppFinancialsTosScroller.vue](src/app/components/forms/financials/AppFinancialsTosScroller.vue) — 1×
+- [ ] [src/app/components/forms/financials/FormFinancialsCreator.vue](src/app/components/forms/financials/FormFinancialsCreator.vue) — 1×
+- [ ] [src/app/components/forms/onboarding/AppOnboardingFollowsCommunityItem.vue](src/app/components/forms/onboarding/AppOnboardingFollowsCommunityItem.vue) — 3×
+- [ ] [src/app/components/forms/pill-selector/_item/AppFormsPillSelectorItem.vue](src/app/components/forms/pill-selector/_item/AppFormsPillSelectorItem.vue) — 1×
+- [ ] [src/app/components/forms/post/AppFormPost.vue](src/app/components/forms/post/AppFormPost.vue) — 1×
+- [ ] [src/app/components/forms/post/_media/item/FormPostMediaItem.vue](src/app/components/forms/post/_media/item/FormPostMediaItem.vue) — 1×
+- [ ] [src/app/components/forms/sticker/FormSticker.vue](src/app/components/forms/sticker/FormSticker.vue) — 8×
+- [ ] [src/app/components/game/badge/AppGameBadge.vue](src/app/components/game/badge/AppGameBadge.vue) — 1×
+- [ ] [src/app/components/game/community-badge/AppGameCommunityBadge.vue](src/app/components/game/community-badge/AppGameCommunityBadge.vue) — 1×
+- [ ] [src/app/components/game/grid/AppGameGrid.vue](src/app/components/game/grid/AppGameGrid.vue) — 2×
+- [ ] [src/app/components/joltydex/window/AppJoltydexWindow.vue](src/app/components/joltydex/window/AppJoltydexWindow.vue) — 6×
+- [ ] [src/app/components/page-container/AppPageContainer.vue](src/app/components/page-container/AppPageContainer.vue) — 2×
+- [ ] [src/app/components/page-header/AppPageHeader.vue](src/app/components/page-header/AppPageHeader.vue) — 2×
+- [ ] [src/app/components/page-header/AppPageHeaderAvatar.vue](src/app/components/page-header/AppPageHeaderAvatar.vue) — 1×
+- [ ] [src/app/components/poll/AppPollVoting.vue](src/app/components/poll/AppPollVoting.vue) — 2×
+- [ ] [src/app/components/post/AppPostContent.vue](src/app/components/post/AppPostContent.vue) — 2×
+- [ ] [src/app/components/post/AppPostHeader.vue](src/app/components/post/AppPostHeader.vue) — 9×
+- [ ] [src/app/components/post/add-placeholder/AppPostAddPlaceholder.vue](src/app/components/post/add-placeholder/AppPostAddPlaceholder.vue) — 1×
+- [ ] [src/app/components/post/controls/AppPostControlsStats.vue](src/app/components/post/controls/AppPostControlsStats.vue) — 1×
+- [ ] [src/app/components/post/controls/more/AppPostControlsMore.vue](src/app/components/post/controls/more/AppPostControlsMore.vue) — 2×
+- [ ] [src/app/components/quest/AppDailyQuests.vue](src/app/components/quest/AppDailyQuests.vue) — 3×
+- [ ] [src/app/components/quest/AppQuestTimer.vue](src/app/components/quest/AppQuestTimer.vue) — 1×
+- [ ] [src/app/components/quest/window/AppQuestWindow.vue](src/app/components/quest/window/AppQuestWindow.vue) — 20×
+- [ ] [src/app/components/shell/AppShell.vue](src/app/components/shell/AppShell.vue) — 1×
+- [ ] [src/app/components/shell/AppShellTopNav.vue](src/app/components/shell/AppShellTopNav.vue) — 3×
+- [ ] [src/app/components/shell/AppShellWindow.vue](src/app/components/shell/AppShellWindow.vue) — 3×
+- [ ] [src/app/components/shell/cbar/AppShellCbar.vue](src/app/components/shell/cbar/AppShellCbar.vue) — 1×
+- [ ] [src/app/components/shell/cbar/AppShellCbarItem.vue](src/app/components/shell/cbar/AppShellCbarItem.vue) — 2×
+- [ ] [src/app/components/shell/notification-popover/AppShellNotificationPopover.vue](src/app/components/shell/notification-popover/AppShellNotificationPopover.vue) — 1×
+- [ ] [src/app/components/shell/sidebar/AppShellSidebarBackpack.vue](src/app/components/shell/sidebar/AppShellSidebarBackpack.vue) — 9×
+- [ ] [src/app/components/shell/sidebar/AppShellSidebarChat.vue](src/app/components/shell/sidebar/AppShellSidebarChat.vue) — 1×
+- [ ] [src/app/components/shell/sidebar/AppShellSidebarJoltydex.vue](src/app/components/shell/sidebar/AppShellSidebarJoltydex.vue) — 3×
+- [ ] [src/app/components/shell/sidebar/_backpack/AppBackpackGift.vue](src/app/components/shell/sidebar/_backpack/AppBackpackGift.vue) — 6×
+- [ ] [src/app/components/shell/sidebar/_joltydex/AppJoltydexUser.vue](src/app/components/shell/sidebar/_joltydex/AppJoltydexUser.vue) — 1×
+- [ ] [src/app/components/shell/sidebar/_quests/AppQuestLogItem.vue](src/app/components/shell/sidebar/_quests/AppQuestLogItem.vue) — 2×
+- [ ] [src/app/components/sticker/AppStickerCollectibleWrapper.vue](src/app/components/sticker/AppStickerCollectibleWrapper.vue) — 1×
+- [ ] [src/app/components/timeout/AppTimeoutCountdown.vue](src/app/components/timeout/AppTimeoutCountdown.vue) — 1×
+- [ ] [src/app/components/vending-machine/modal/AppVendingMachineCurrencyCard.vue](src/app/components/vending-machine/modal/AppVendingMachineCurrencyCard.vue) — 5×
+- [ ] [src/app/components/vending-machine/modal/AppVendingMachineModal.vue](src/app/components/vending-machine/modal/AppVendingMachineModal.vue) — 22×
+- [ ] [src/app/components/vending-machine/modal/_product/AppVendingMachineProduct.vue](src/app/components/vending-machine/modal/_product/AppVendingMachineProduct.vue) — 9×
+- [ ] [src/app/components/vending-machine/modal/_purchase-modal/AppPurchaseShopProductModal.vue](src/app/components/vending-machine/modal/_purchase-modal/AppPurchaseShopProductModal.vue) — 8×
+- [ ] [src/app/components/vending-machine/modal/_purchase-modal/confirm/AppPurchaseShopProductConfirmModal.vue](src/app/components/vending-machine/modal/_purchase-modal/confirm/AppPurchaseShopProductConfirmModal.vue) — 2×
+- [ ] [src/app/components/vending-machine/modal/_purchase-modal/gift-recipient/AppGiftRecipientModal.vue](src/app/components/vending-machine/modal/_purchase-modal/gift-recipient/AppGiftRecipientModal.vue) — 7×
+- [ ] [src/app/views/communities/view/RouteCommunitiesView.vue](src/app/views/communities/view/RouteCommunitiesView.vue) — 1×
+- [ ] [src/app/views/communities/view/_context/AppCommunitiesViewContext.vue](src/app/views/communities/view/_context/AppCommunitiesViewContext.vue) — 1×
+- [ ] [src/app/views/dashboard/account/RouteDashAccount.vue](src/app/views/dashboard/account/RouteDashAccount.vue) — 3×
+- [ ] [src/app/views/dashboard/account/referrals/RouteDashAccountReferrals.vue](src/app/views/dashboard/account/referrals/RouteDashAccountReferrals.vue) — 5×
+- [ ] [src/app/views/dashboard/analytics/_report/AppAnalyticsReportRatingBreakdown.vue](src/app/views/dashboard/analytics/_report/AppAnalyticsReportRatingBreakdown.vue) — 1×
+- [ ] [src/app/views/dashboard/analytics/_report/AppAnalyticsReportTopComposition.vue](src/app/views/dashboard/analytics/_report/AppAnalyticsReportTopComposition.vue) — 1×
+- [ ] [src/app/views/dashboard/creator/RouteDashCreator.vue](src/app/views/dashboard/creator/RouteDashCreator.vue) — 3×
+- [ ] [src/app/views/dashboard/games/manage/game/RouteDashGamesManageGame.vue](src/app/views/dashboard/games/manage/game/RouteDashGamesManageGame.vue) — 1×
+- [ ] [src/app/views/dashboard/games/manage/game/_media-bar/AppGameManageMediaBar.vue](src/app/views/dashboard/games/manage/game/_media-bar/AppGameManageMediaBar.vue) — 2×
+- [ ] [src/app/views/dashboard/shop/AppDashShopProductType.vue](src/app/views/dashboard/shop/AppDashShopProductType.vue) — 1×
+- [ ] [src/app/views/dashboard/shop/overview/RouteDashShopOverview.vue](src/app/views/dashboard/shop/overview/RouteDashShopOverview.vue) — 1×
+- [ ] [src/app/views/dashboard/shop/overview/_item/AppDashShopItemImpl.vue](src/app/views/dashboard/shop/overview/_item/AppDashShopItemImpl.vue) — 6×
+- [ ] [src/app/views/dashboard/shop/product/RouteDashShopProduct.vue](src/app/views/dashboard/shop/product/RouteDashShopProduct.vue) — 1×
+- [ ] [src/app/views/dashboard/shop/product/_diff/AppShopProductDiff.vue](src/app/views/dashboard/shop/product/_diff/AppShopProductDiff.vue) — 5×
+- [ ] [src/app/views/dashboard/shop/product/_diff/AppShopProductDiffCard.vue](src/app/views/dashboard/shop/product/_diff/AppShopProductDiffCard.vue) — 5×
+- [ ] [src/app/views/dashboard/shop/product/_diff/AppShopProductDiffImg.vue](src/app/views/dashboard/shop/product/_diff/AppShopProductDiffImg.vue) — 11×
+- [ ] [src/app/views/dashboard/shop/product/_diff/AppShopProductDiffMetaEntry.vue](src/app/views/dashboard/shop/product/_diff/AppShopProductDiffMetaEntry.vue) — 6×
+- [ ] [src/app/views/dashboard/shop/product/_diff/AppShopProductDiffState.vue](src/app/views/dashboard/shop/product/_diff/AppShopProductDiffState.vue) — 2×
+- [ ] [src/app/views/dashboard/shop/product/_forms/FormShopProductBase.vue](src/app/views/dashboard/shop/product/_forms/FormShopProductBase.vue) — 4×
+- [ ] [src/app/views/dashboard/shop/product/_forms/FormShopProductStickerPack.vue](src/app/views/dashboard/shop/product/_forms/FormShopProductStickerPack.vue) — 4×
+- [ ] [src/app/views/dashboard/shop/product/_forms/_sticker-selector/AppFormStickerSelectorItem.vue](src/app/views/dashboard/shop/product/_forms/_sticker-selector/AppFormStickerSelectorItem.vue) — 3×
+- [ ] [src/app/views/dashboard/shop/product/_forms/_sticker-selector/AppFormStickerSelectorModal.vue](src/app/views/dashboard/shop/product/_forms/_sticker-selector/AppFormStickerSelectorModal.vue) — 2×
+- [ ] [src/app/views/discover/games/view/overview/RouteDiscoverGamesViewOverview.vue](src/app/views/discover/games/view/overview/RouteDiscoverGamesViewOverview.vue) — 2×
+- [ ] [src/app/views/discover/home/AppHomeSlider.vue](src/app/views/discover/home/AppHomeSlider.vue) — 3×
+- [ ] [src/app/views/discover/home/_home-default/AppDiscoverHomeBanner.vue](src/app/views/discover/home/_home-default/AppDiscoverHomeBanner.vue) — 2×
+- [ ] [src/app/views/discover/home/_home-default/AppDiscoverHomeRealms.vue](src/app/views/discover/home/_home-default/AppDiscoverHomeRealms.vue) — 1×
+- [ ] [src/app/views/download/RouteDownload.vue](src/app/views/download/RouteDownload.vue) — 1×
+- [ ] [src/app/views/home/AppHomeFeedMenu.vue](src/app/views/home/AppHomeFeedMenu.vue) — 3×
+- [ ] [src/app/views/landing/about/RouteLandingAbout.vue](src/app/views/landing/about/RouteLandingAbout.vue) — 1×
+- [ ] [src/app/views/landing/app/RouteLandingApp.vue](src/app/views/landing/app/RouteLandingApp.vue) — 4×
+- [ ] [src/app/views/landing/creators/AppCreatorMooMoo.vue](src/app/views/landing/creators/AppCreatorMooMoo.vue) — 1×
+- [ ] [src/app/views/landing/creators/RouteLandingCreators.vue](src/app/views/landing/creators/RouteLandingCreators.vue) — 8×
+- [ ] [src/app/views/landing/help/RouteLandingHelp.vue](src/app/views/landing/help/RouteLandingHelp.vue) — 1×
+- [ ] [src/app/views/landing/help/RouteLandingHelpCategory.vue](src/app/views/landing/help/RouteLandingHelpCategory.vue) — 4×
+- [ ] [src/app/views/landing/help/RouteLandingHelpIndex.vue](src/app/views/landing/help/RouteLandingHelpIndex.vue) — 2×
+- [ ] [src/app/views/landing/help/RouteLandingHelpPage.vue](src/app/views/landing/help/RouteLandingHelpPage.vue) — 1×
+- [ ] [src/app/views/post/_page-placeholder/AppPostPagePlaceholder.vue](src/app/views/post/_page-placeholder/AppPostPagePlaceholder.vue) — 1×
+- [ ] [src/app/views/profile/RouteProfile.vue](src/app/views/profile/RouteProfile.vue) — 5×
+- [ ] [src/app/views/profile/about/AppProfileAboutModal.vue](src/app/views/profile/about/AppProfileAboutModal.vue) — 1×
+- [ ] [src/app/views/profile/communities/AppProfileCommunitiesModal.vue](src/app/views/profile/communities/AppProfileCommunitiesModal.vue) — 7×
+- [ ] [src/app/views/profile/dogtags/AppProfileDogtagAutoscroll.vue](src/app/views/profile/dogtags/AppProfileDogtagAutoscroll.vue) — 2×
+- [ ] [src/app/views/profile/dogtags/AppProfileDogtags.vue](src/app/views/profile/dogtags/AppProfileDogtags.vue) — 1×
+- [ ] [src/app/views/profile/overview/AppProfileInfoCard.vue](src/app/views/profile/overview/AppProfileInfoCard.vue) — 13×
+- [ ] [src/app/views/profile/overview/RouteProfileOverview.vue](src/app/views/profile/overview/RouteProfileOverview.vue) — 1×
+- [ ] [src/app/views/profile/overview/shop/AppProfileShopButton.vue](src/app/views/profile/overview/shop/AppProfileShopButton.vue) — 3×
+- [ ] [src/app/views/profile/overview/shortcut/AppProfileShortcut.vue](src/app/views/profile/overview/shortcut/AppProfileShortcut.vue) — 2×
+- [ ] [src/app/views/profile/overview/shortcut/AppProfileShortcuts.vue](src/app/views/profile/overview/shortcut/AppProfileShortcuts.vue) — 1×
+- [ ] [src/app/views/profile/overview/stats/AppProfileStat.vue](src/app/views/profile/overview/stats/AppProfileStat.vue) — 1×
+- [ ] [src/app/views/profile/overview/stats/AppProfileStats.vue](src/app/views/profile/overview/stats/AppProfileStats.vue) — 1×
+- [ ] [src/app/views/search/results/RouteSearchResults.vue](src/app/views/search/results/RouteSearchResults.vue) — 2×
+- [ ] [src/app/views/styleguide/avatar-frame/AppAvatarFrameStyleguide.vue](src/app/views/styleguide/avatar-frame/AppAvatarFrameStyleguide.vue) — 5×
+
+### src/auth/ (1 bindings, 1 files)
+
+- [ ] [src/auth/components/AppCoverImg.vue](src/auth/components/AppCoverImg.vue) — 1×
+
+### src/checkout/ (4 bindings, 1 files)
+
+- [ ] [src/checkout/views/checkout/RouteCheckout.vue](src/checkout/views/checkout/RouteCheckout.vue) — 4×
+
+### src/gameserver/ (1 bindings, 1 files)
+
+- [ ] [src/gameserver/components/AppEmbedRom.vue](src/gameserver/components/AppEmbedRom.vue) — 1×

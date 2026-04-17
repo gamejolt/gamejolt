@@ -22,7 +22,7 @@ import AppScrollAffix from '~common/scroll/AppScrollAffix.vue';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 import { $gettext } from '~common/translate/translate.service';
 import AppUserCard from '~common/user/card/AppUserCard.vue';
-import { styleChangeBg, styleElevate } from '~styles/mixins';
+import { kElevateTransition } from '~styles/mixins';
 import { kBorderRadiusLg, kLayerAds } from '~styles/variables';
 import { getQuery } from '~utils/router';
 
@@ -96,7 +96,7 @@ const slicedRealms = computed(() => {
 <template>
 	<template v-if="hasSearch">
 		<template v-if="slicedRealms.length">
-			<div class="container">
+			<div class="gj-container">
 				<h3 class="-heading">
 					{{ $gettext(`Realms`) }}
 
@@ -153,9 +153,10 @@ const slicedRealms = computed(() => {
 				>
 					<AppAdWidget
 						unit-name="mpu"
+						class-override="change-bg-bg"
 						:style-override="{
-							...styleChangeBg('bg'),
-							...styleElevate(3),
+							boxShadow: `var(--shadow-elevate-1)`,
+							transition: kElevateTransition,
 							minWidth: `300px`,
 							paddingTop: `8px`,
 							paddingBottom: `8px`,
