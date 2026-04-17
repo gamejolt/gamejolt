@@ -673,54 +673,57 @@ async function cancelSale() {
 						<colgroup>
 							<col class="col-xs-4 col-sm-4 col-md-3" />
 						</colgroup>
-						<tr>
-							<th><AppTranslate>Timezone</AppTranslate></th>
-							<td>
-								{{ promotionalPricing.timezone }}
-								<div class="text-muted small">
-									<AppTranslate>
-										All times are based off this timezone.
-									</AppTranslate>
-								</div>
-							</td>
-						</tr>
-						<tr>
-							<th><AppTranslate>Start</AppTranslate></th>
-							<td>
-								{{ formatDate(saleStartLocal ?? new Date(), 'medium') }}
-								<AppTimeAgo
-									:date="promotionalPricing.start ?? 0"
-									is-future
-									class="text-muted small"
-								/>
-							</td>
-						</tr>
-						<tr>
-							<th><AppTranslate>End</AppTranslate></th>
-							<td>
-								{{ formatDate(saleEndLocal ?? new Date(), 'medium') }}
-								<AppTimeAgo
-									:date="promotionalPricing.end ?? 0"
-									is-future
-									class="text-muted small"
-								/>
-							</td>
-						</tr>
-						<tr>
-							<th><AppTranslate>Price</AppTranslate></th>
-							<td>
-								{{ formatCurrency(promotionalPricing.amount) }}
-								<small class="text-muted">
-									{{
-										(
-											((originalPricing!.amount - promotionalPricing.amount) /
-												originalPricing!.amount) *
-											100
-										).toFixed(0)
-									}}% off
-								</small>
-							</td>
-						</tr>
+						<tbody>
+							<tr>
+								<th><AppTranslate>Timezone</AppTranslate></th>
+								<td>
+									{{ promotionalPricing.timezone }}
+									<div class="text-muted small">
+										<AppTranslate>
+											All times are based off this timezone.
+										</AppTranslate>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<th><AppTranslate>Start</AppTranslate></th>
+								<td>
+									{{ formatDate(saleStartLocal ?? new Date(), 'medium') }}
+									<AppTimeAgo
+										:date="promotionalPricing.start ?? 0"
+										is-future
+										class="text-muted small"
+									/>
+								</td>
+							</tr>
+							<tr>
+								<th><AppTranslate>End</AppTranslate></th>
+								<td>
+									{{ formatDate(saleEndLocal ?? new Date(), 'medium') }}
+									<AppTimeAgo
+										:date="promotionalPricing.end ?? 0"
+										is-future
+										class="text-muted small"
+									/>
+								</td>
+							</tr>
+							<tr>
+								<th><AppTranslate>Price</AppTranslate></th>
+								<td>
+									{{ formatCurrency(promotionalPricing.amount) }}
+									<small class="text-muted">
+										{{
+											(
+												((originalPricing!.amount -
+													promotionalPricing.amount) /
+													originalPricing!.amount) *
+												100
+											).toFixed(0)
+										}}% off
+									</small>
+								</td>
+							</tr>
+						</tbody>
 					</table>
 
 					<br />

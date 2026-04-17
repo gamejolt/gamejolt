@@ -84,46 +84,48 @@ createAppRoute({
 
 					<div class="controls">
 						<table class="control-table">
-							<tr>
-								<td>
-									<AppButton
-										v-app-tooltip="$gettext('Jump Left')"
-										class="control-up-left"
-										circle
-										icon="chevron-up"
-										disabled
-									/>
-								</td>
-								<td>
-									<AppButton circle solid icon="chevron-up" disabled />
-								</td>
-								<td>
-									<AppButton
-										v-app-tooltip="$gettext('Jump Right')"
-										class="control-up-right"
-										circle
-										icon="chevron-up"
-										disabled
-									/>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<AppButton circle solid icon="chevron-left" disabled />
-								</td>
-								<td>
-									<AppButton
-										v-app-tooltip.bottom="$gettext('Pickup')"
-										circle
-										solid
-										icon="chevron-down"
-										disabled
-									/>
-								</td>
-								<td>
-									<AppButton circle solid icon="chevron-right" disabled />
-								</td>
-							</tr>
+							<tbody>
+								<tr>
+									<td>
+										<AppButton
+											v-app-tooltip="$gettext('Jump Left')"
+											class="control-up-left"
+											circle
+											icon="chevron-up"
+											disabled
+										/>
+									</td>
+									<td>
+										<AppButton circle solid icon="chevron-up" disabled />
+									</td>
+									<td>
+										<AppButton
+											v-app-tooltip="$gettext('Jump Right')"
+											class="control-up-right"
+											circle
+											icon="chevron-up"
+											disabled
+										/>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<AppButton circle solid icon="chevron-left" disabled />
+									</td>
+									<td>
+										<AppButton
+											v-app-tooltip.bottom="$gettext('Pickup')"
+											circle
+											solid
+											icon="chevron-down"
+											disabled
+										/>
+									</td>
+									<td>
+										<AppButton circle solid icon="chevron-right" disabled />
+									</td>
+								</tr>
+							</tbody>
 						</table>
 
 						<div v-if="!Screen.isXs" class="controls-center">
@@ -134,21 +136,23 @@ createAppRoute({
 						</div>
 
 						<table class="control-table">
-							<tr>
-								<td />
-								<td>
-									<AppButton v-app-tooltip="$gettext('Jump')" solid disabled>
-										A
-									</AppButton>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<AppButton v-app-tooltip="$gettext('Attack')" solid disabled>
-										B
-									</AppButton>
-								</td>
-							</tr>
+							<tbody>
+								<tr>
+									<td />
+									<td>
+										<AppButton v-app-tooltip="$gettext('Jump')" solid disabled>
+											A
+										</AppButton>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<AppButton v-app-tooltip="$gettext('Attack')" solid disabled>
+											B
+										</AppButton>
+									</td>
+								</tr>
+							</tbody>
 						</table>
 					</div>
 
