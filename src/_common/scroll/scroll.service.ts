@@ -247,6 +247,10 @@ export function usePageScrollSubscription(
 }
 
 function _afterSubscriptionsChanged() {
+	if (import.meta.env.SSR) {
+		return;
+	}
+
 	if (_onScrollCallbacks.length) {
 		window.document.addEventListener('scroll', _onScroll, {
 			passive: true,

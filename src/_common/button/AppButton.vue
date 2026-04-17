@@ -79,6 +79,16 @@ const ourTag = computed(() => {
 	return tag;
 });
 
+const componentAttrs = computed(() => {
+	if (ourTag.value === RouterLink) {
+		return { to };
+	}
+	if (ourTag.value === 'a') {
+		return { href, target };
+	}
+	return {};
+});
+
 const { hasSlot } = useDynamicSlots(toRef(() => dynamicSlots));
 </script>
 
@@ -108,9 +118,7 @@ const { hasSlot } = useDynamicSlots(toRef(() => dynamicSlots));
 				padding: 0,
 			})
 		"
-		:to="to"
-		:href="href"
-		:target="target"
+		v-bind="componentAttrs"
 		:disabled="disabled === true ? 'disabled' : null"
 		@click="emit('click', $event)"
 	>
