@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-frontend:
-    runs-on: blacksmith-4vcpu-ubuntu-latest
+    runs-on: blacksmith-2vcpu-ubuntu-2404
 
     steps:
       - uses: actions/checkout@v3
@@ -110,7 +110,7 @@ jobs:
 
   build-linux:
     needs: build-frontend
-    runs-on: blacksmith-4vcpu-ubuntu-latest
+    runs-on: blacksmith-2vcpu-ubuntu-2404
 
     env:
       GOPATH: /home/runner/go
