@@ -3,11 +3,11 @@ name: Build Desktop App
 on:
   push:
     tags:
-      - 'release/**'
+      - "release/**"
 
 jobs:
   build-frontend:
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-4vcpu-ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
@@ -16,7 +16,7 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          node-version: '16.20.0'
+          node-version: "16.20.0"
           cache: yarn
 
       - run: yarn install
@@ -33,7 +33,7 @@ jobs:
     runs-on: windows-2022
 
     env:
-      GOPATH: 'C:\go'
+      GOPATH: "C:\\go"
       GJPUSH_TOKEN: ${{ secrets.GJ_PUSH_TOKEN }}
       GJ_CERT_PASS: ${{ secrets.GJ_CERT_PASS }}
 
@@ -56,12 +56,12 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          node-version: '16.20.0'
+          node-version: "16.20.0"
           cache: yarn
 
       - uses: actions/setup-go@v2
         with:
-          go-version: '1.10.8'
+          go-version: "1.10.8"
 
       - uses: actions/download-artifact@v4
         with:
@@ -72,7 +72,8 @@ jobs:
       - run: tar -xvf desktop-build.tar -C build/desktop
 
       # Enable VS2015 toolset
-      - run: 'call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x64'
+      - run: "call \"C:\\Program Files\\Microsoft Visual
+          Studio\\2022\\Enterprise\\VC\\Auxiliary\\Build\\vcvarsall.bat\" x64"
         shell: cmd
 
       # GCC provided by MinGW needs to be <12 to compile joltron.
@@ -109,7 +110,7 @@ jobs:
 
   build-linux:
     needs: build-frontend
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-4vcpu-ubuntu-latest
 
     env:
       GOPATH: /home/runner/go
@@ -133,12 +134,12 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          node-version: '16.20.0'
+          node-version: "16.20.0"
           cache: yarn
 
       - uses: actions/setup-go@v2
         with:
-          go-version: '1.10.8'
+          go-version: "1.10.8"
 
       - uses: actions/download-artifact@v4
         with:
@@ -166,7 +167,6 @@ jobs:
         with:
           name: linux64-package
           path: build/desktop-app/linux64-package.tar.gz
-
   # TODO
   # build-mac:
   #   needs: build-frontend
