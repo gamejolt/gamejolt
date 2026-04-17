@@ -4211,7 +4211,7 @@ vscode-uri@^3.0.8:
   resolved "https://registry.yarnpkg.com/vscode-uri/-/vscode-uri-3.1.0.tgz#dd09ec5a66a38b5c3fffc774015713496d14e09c"
   integrity sha512-/BpdSx+yCQGnCvecbyXdxHDkuk55/G3xwnC0GqY4gmQ3j+A+g8kzzgB4Nk/SINjqn6+waqw3EgbVF2QKExkRxQ==
 
-vue-color@^3.3.3:
+vue-color@3.3.3:
   version "3.3.3"
   resolved "https://registry.yarnpkg.com/vue-color/-/vue-color-3.3.3.tgz#1b175fcbed92f774e4f8e76c75415d6ba1cef7c7"
   integrity sha512-FW/9JXFbCHfFEGv6SFUuK/SE+K61pHoL7lxJMQXcU+Zt7s36Ui1/tMDc3vzGXPrxxRBB+NSzFt+71nEaUJ29dQ==
