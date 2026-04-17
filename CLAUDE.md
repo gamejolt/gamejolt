@@ -4,6 +4,20 @@ This guide defines the conventions for all Vue components in this project. It is
 
 ---
 
+## Post-Work Checks
+
+After completing work, run lint and format checks **only on the files you modified** — never on the full `src/` tree. Do this once at the end, not between iterations.
+
+```sh
+# Replace with the actual modified paths, space-separated
+yarn eslint path/to/File1.vue path/to/File2.ts
+yarn prettier --check path/to/File1.vue path/to/File2.ts
+```
+
+Fix any issues reported (`--fix` for eslint, `--write` for prettier) before reporting the task as complete.
+
+---
+
 ## Script
 
 - Always `<script lang="ts" setup>` with TypeScript.
