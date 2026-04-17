@@ -2,6 +2,7 @@ import { copy, mkdirp, move, pathExists, writeFile } from 'fs-extra';
 import * as path from 'path';
 import * as readdirp from 'readdirp';
 import plist from 'simple-plist';
+
 import {
 	downloadFile,
 	extractTarGz,

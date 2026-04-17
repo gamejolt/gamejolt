@@ -1,5 +1,6 @@
 import { readFile, writeFile } from 'fs-extra';
 import * as path from 'path';
+
 import { activateJsonProperty, updateJsonProperty } from './build/packageJson';
 import { execShell } from './build/utils';
 

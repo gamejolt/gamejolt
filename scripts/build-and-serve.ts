@@ -17,6 +17,7 @@
  */
 
 import { readFileSync, remove } from 'fs-extra';
+
 import { acquirePrebuiltFFmpeg } from './build/desktop-app/ffmpeg-prebuilt';
 import { deactivateJsonProperty, patchPackageJson, updateJsonProperty } from './build/packageJson';
 import { gjSectionConfigs, type GjSectionName } from './build/section-config';

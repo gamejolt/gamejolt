@@ -1,4 +1,5 @@
 import { readFile } from 'fs-extra';
+
 import { gjSectionConfigs, gjSectionNames } from './section-config';
 
 const path = require('path') as typeof import('path');

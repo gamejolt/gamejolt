@@ -4,6 +4,7 @@ import type { RequestInit } from 'node-fetch';
 import fetch from 'node-fetch';
 import * as os from 'os';
 import * as path from 'path';
+
 import {
 	downloadFile,
 	isWindows,

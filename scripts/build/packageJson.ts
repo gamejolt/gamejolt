@@ -1,5 +1,6 @@
 import { readFile, writeFile } from 'fs-extra';
 import * as path from 'path';
+
 import { escapeRegex } from './utils';
 
 // These helper functions modify a json string using a dumb string replace.

@@ -1,4 +1,5 @@
 import { ConfigEnv as ViteConfigEnv } from 'vite';
+
 import { Options } from './vite-options';
 
 const path = require('path') as typeof import('path');
@@ -7,12 +8,12 @@ const cp = require('child_process') as typeof import('child_process');
 const treekill = require('tree-kill') as typeof import('tree-kill');
 
 const viteEnvKey = 'GJ_VITE_OPTS';
-function writeToViteEnv(gjOpts: Options, env: typeof process['env']) {
+function writeToViteEnv(gjOpts: Options, env: (typeof process)['env']) {
 	env[viteEnvKey] = Buffer.from(JSON.stringify(gjOpts), 'utf8').toString('base64');
 	return env;
 }
 
-export function readFromViteEnv(env: typeof process['env']): Options {
+export function readFromViteEnv(env: (typeof process)['env']): Options {
 	const marshalled = env[viteEnvKey];
 	if (marshalled === undefined) {
 		throw new Error(`Expected environment variable ${viteEnvKey} to be populated.`);

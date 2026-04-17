@@ -1,5 +1,6 @@
 import { readFile, writeFile } from 'fs-extra';
 import * as path from 'path';
+
 import { execShell, runShell } from './build/utils';
 
 const { version } = require('../package.json');
