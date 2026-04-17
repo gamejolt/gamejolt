@@ -245,10 +245,9 @@ function onMarkRead() {
 
 							<div class="-container">
 								<div class="-main">
-									<div
-										class="timeline-list-item-title timeline-list-item-title-small"
-										v-html="titleText"
-									/>
+									<!-- prettier-ignore -->
+									<!-- eslint-disable-next-line vue/no-v-html -->
+									<div class="timeline-list-item-title timeline-list-item-title-small" v-html="titleText" />
 
 									<div v-if="showTime" class="timeline-list-item-meta">
 										<AppTimeAgo :date="notification.added_on" />

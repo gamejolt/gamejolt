@@ -163,7 +163,7 @@ if (
 ) {
 	const _build = card.browserBuild;
 
-	// eslint-disable-next-line vue/no-mutating-props
+	 
 	card.extraBuilds.unshift({
 		type: _build.type,
 		icon: card.platformSupportInfo[_build.type].icon,
@@ -173,7 +173,7 @@ if (
 	});
 
 	// Clear out the browser build since it's not quick playable.
-	// eslint-disable-next-line vue/no-mutating-props
+	 
 	card.browserBuild = null;
 }
 

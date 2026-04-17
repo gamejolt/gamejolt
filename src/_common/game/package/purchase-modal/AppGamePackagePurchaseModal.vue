@@ -55,6 +55,7 @@ function bought() {
 	// Hack to show the sellable as bought without pulling from API.
 	sellable.is_owned = true;
 	if (game.sellable && game.sellable.id === sellable.id) {
+		 
 		game.sellable.is_owned = true;
 	}
 

@@ -13,8 +13,8 @@ export class GrecaptchaSdk {
 				const bootstrapLib = (d: Document, id: string) => {
 					(window as any).grecaptchaOnLoaded = () => resolve();
 
-					let js: HTMLScriptElement,
-						fjs = d.getElementsByTagName('script')[0];
+					let js: HTMLScriptElement;
+					const fjs = d.getElementsByTagName('script')[0];
 					if (!d.getElementById(id)) {
 						js = d.createElement('script');
 						js.id = id;

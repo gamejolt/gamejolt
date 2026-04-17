@@ -20,7 +20,6 @@ type Props = {
 	sticker: StickerModel;
 	selected: boolean;
 	disabled?: boolean;
-	onClick: Function;
 };
 const { sticker, selected, disabled } = defineProps<Props>();
 

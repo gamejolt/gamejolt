@@ -20,6 +20,7 @@ createAppRoute({
 
 <template>
 	<div>
+		<!-- eslint-disable-next-line vue/no-v-html -->
 		<div v-html="html" />
 	</div>
 </template>

@@ -139,7 +139,7 @@ function report() {
 function onInviewChange(isInView: boolean) {
 	if (isInView && post.notification) {
 		$readNotification(post.notification);
-		// eslint-disable-next-line vue/no-mutating-props
+		 
 		post.notification = undefined;
 	}
 }

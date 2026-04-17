@@ -18,7 +18,7 @@ const BorderWidth = kBorderWidthLg;
 
 type Props = {
 	to?: RouteLocationRaw;
-	onClick?: Function;
+	onClick?: (e: MouseEvent) => void;
 	borderColor?: string;
 	borderStyle?: 'solid' | 'dashed';
 	backgroundColor?: string;

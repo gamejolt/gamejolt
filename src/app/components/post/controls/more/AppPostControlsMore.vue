@@ -222,6 +222,7 @@ async function togglePin() {
 
 	const { resourceName, resourceId } = _getPinTarget();
 	await $togglePinOnFiresidePost(post, resourceName, resourceId);
+	 
 	post.is_pinned = !wasPinned;
 
 	if (wasPinned) {

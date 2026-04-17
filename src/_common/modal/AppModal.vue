@@ -29,9 +29,7 @@ const _modalBackdropChecks: (() => boolean)[] = [];
 </script>
 
 <script lang="ts" setup>
-// Note: `modal` prop is not destructured to avoid collision with `const modal = useModal()!;` below.
 type Props = {
-	modal?: object;
 	theme?: ThemeModel;
 	forceTheme?: 'dark' | 'light';
 };

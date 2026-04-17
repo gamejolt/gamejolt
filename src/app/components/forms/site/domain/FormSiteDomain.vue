@@ -65,12 +65,14 @@ function createUrl(baseDomain: string) {
 			<div class="radio">
 				<label>
 					<AppFormControlRadio value="io" />
+					<!-- eslint-disable-next-line vue/no-v-html -->
 					<span v-html="ioUrl" />
 				</label>
 			</div>
 			<div class="radio">
 				<label>
 					<AppFormControlRadio value="af" />
+					<!-- eslint-disable-next-line vue/no-v-html -->
 					<span v-html="afUrl" />
 					&mdash;
 					<router-link

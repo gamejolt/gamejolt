@@ -76,7 +76,7 @@ function showTakeover(event: MessageEvent) {
 		sizing: data.sizing === 'cover' || data.sizing === 'contain' ? data.sizing : undefined,
 	};
 
-	// eslint-disable-next-line vue/no-mutating-props
+	 
 	adSlot.showingCustom = true;
 }
 
@@ -119,7 +119,7 @@ function showNativePost(event: MessageEvent) {
 		actionText: typeof data.actionText === 'string' ? data.actionText : undefined,
 	};
 
-	// eslint-disable-next-line vue/no-mutating-props
+	 
 	adSlot.showingCustom = true;
 }
 </script>

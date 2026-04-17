@@ -29,7 +29,6 @@ const { routeStore, quickLinks } = defineProps<Props>();
 
 // Route store shouldn't change, so this is fine.
 provideProfileRouteStore(routeStore);
-// eslint-disable-next-line vue/no-setup-props-destructure
 const { user: routeUser, myUser, isMe, shareUrl } = routeStore;
 
 const modal = useModal()!;

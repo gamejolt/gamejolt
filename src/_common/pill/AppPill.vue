@@ -7,7 +7,7 @@ type Props = {
 	// In order to check if this event is bound, we need to specify it as a prop
 	// as well.
 	// https://github.com/vuejs/core/issues/5220
-	onClick?: Function;
+	onClick?: (e: MouseEvent) => void;
 	bleedImg?: boolean;
 };
 const { to, onClick: onClickProp, bleedImg } = defineProps<Props>();
@@ -33,7 +33,7 @@ const component = computed(() => {
 	return 'div';
 });
 
-function onClick(e: MouseEvent) {
+function handleClick(e: MouseEvent) {
 	if (component.value === 'div') {
 		return;
 	}
@@ -48,7 +48,7 @@ function onClick(e: MouseEvent) {
 		class="pill"
 		:class="{ '-bleed-img': bleedImg }"
 		:to="to"
-		@click="onClick"
+		@click="handleClick"
 	>
 		<span v-if="hasImg" class="-img">
 			<slot name="img" />

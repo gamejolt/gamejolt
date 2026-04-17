@@ -200,7 +200,7 @@ async function selectRealm(realm: RealmModel) {
 		return;
 	}
 
-	// eslint-disable-next-line vue/no-mutating-props
+	 
 	selectedRealms.push(realm);
 	await nextTick();
 	const offset = scrollController.element.value?.scrollWidth;
@@ -213,7 +213,6 @@ async function selectRealm(realm: RealmModel) {
 }
 
 function removeRealm(realm: RealmModel) {
-	// eslint-disable-next-line vue/no-mutating-props
 	arrayRemove(selectedRealms, i => i.id === realm.id);
 }
 

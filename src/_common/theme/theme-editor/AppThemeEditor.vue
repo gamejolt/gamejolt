@@ -83,8 +83,8 @@ async function refresh(initial = false) {
 	}
 }
 
-function updateField(field: string, content?: string) {
-	// eslint-disable-next-line vue/no-mutating-props
+function updateField(field: string, content?: unknown) {
+	 
 	theme[field] = content;
 	refresh();
 }
@@ -141,15 +141,19 @@ function updateField(field: string, content?: string) {
 								>
 									{{ $gettext(`clear`) }}
 								</a>
-								<AppColorpicker v-model="theme[definitionField]" />
+								<AppColorpicker
+									:model-value="theme[definitionField]"
+									@update:model-value="updateField(definitionField, $event)"
+								/>
 							</div>
 
 							<!-- Image -->
 							<AppThemeEditorImage
 								v-else-if="definition.definitions[definitionField].type === 'image'"
-								v-model="theme[definitionField]"
+								:model-value="theme[definitionField]"
 								type="sites-theme-image"
 								:parent-id="resourceId"
+								@update:model-value="updateField(definitionField, $event)"
 							/>
 
 							<!-- Font Family -->
@@ -157,8 +161,9 @@ function updateField(field: string, content?: string) {
 								v-else-if="
 									definition.definitions[definitionField].type === 'fontFamily'
 								"
-								v-model="theme[definitionField]"
+								:model-value="theme[definitionField]"
 								class="theme-editor-font-family"
+								@update:model-value="updateField(definitionField, $event)"
 							/>
 
 							<!-- Dropdown -->
@@ -168,7 +173,16 @@ function updateField(field: string, content?: string) {
 								"
 								class="theme-editor-dropdown"
 							>
-								<select v-model="theme[definitionField]" class="form-control">
+								<select
+									:value="theme[definitionField]"
+									class="form-control"
+									@change="
+										updateField(
+											definitionField,
+											($event.target as HTMLSelectElement).value
+										)
+									"
+								>
 									<option
 										v-for="option of definition.definitions[definitionField]
 											.options"
@@ -188,7 +202,16 @@ function updateField(field: string, content?: string) {
 								"
 								class="theme-editor-dropdown"
 							>
-								<select v-model="theme[definitionField]" class="form-control">
+								<select
+									:value="theme[definitionField]"
+									class="form-control"
+									@change="
+										updateField(
+											definitionField,
+											($event.target as HTMLSelectElement).value
+										)
+									"
+								>
 									<option :value="undefined">
 										{{ $gettext(`Repeat`) }}
 									</option>
@@ -212,7 +235,16 @@ function updateField(field: string, content?: string) {
 								"
 								class="theme-editor-dropdown"
 							>
-								<select v-model="theme[definitionField]" class="form-control">
+								<select
+									:value="theme[definitionField]"
+									class="form-control"
+									@change="
+										updateField(
+											definitionField,
+											($event.target as HTMLSelectElement).value
+										)
+									"
+								>
 									<option :value="undefined">
 										{{ $gettext(`Auto (Default)`) }}
 									</option>
@@ -233,7 +265,16 @@ function updateField(field: string, content?: string) {
 								"
 								class="theme-editor-dropdown"
 							>
-								<select v-model="theme[definitionField]" class="form-control">
+								<select
+									:value="theme[definitionField]"
+									class="form-control"
+									@change="
+										updateField(
+											definitionField,
+											($event.target as HTMLSelectElement).value
+										)
+									"
+								>
 									<option :value="undefined">
 										{{ $gettext(`Top`) }}
 									</option>
@@ -270,9 +311,15 @@ function updateField(field: string, content?: string) {
 								class="theme-editor-code"
 							>
 								<textarea
-									v-model="theme[definitionField]"
+									:value="theme[definitionField]"
 									class="form-control"
 									rows="15"
+									@input="
+										updateField(
+											definitionField,
+											($event.target as HTMLTextAreaElement).value
+										)
+									"
 								/>
 							</div>
 						</div>

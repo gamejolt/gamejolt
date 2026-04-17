@@ -36,10 +36,7 @@ import {
 	CreatorChangeRequestStatus,
 } from '~common/creator/change-request/creator-change-request.model';
 import { formatFilesize } from '~common/filters/filesize';
-import AppForm, {
-	createForm,
-	FormController,
-} from '~common/form-vue/AppForm.vue';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
 import AppFormButton from '~common/form-vue/AppFormButton.vue';
 import AppFormControl from '~common/form-vue/AppFormControl.vue';
 import AppFormControlError from '~common/form-vue/AppFormControlError.vue';
@@ -58,18 +55,11 @@ import {
 import { showErrorGrowl } from '~common/growls/growls.service';
 import AppLinkHelp from '~common/link/AppLinkHelp.vue';
 import { ModelStoreModel, storeModel } from '~common/model/model-store.service';
-import {
-	ShopProductModel,
-	ShopProductResource,
-} from '~common/shop/product/product-model';
+import { ShopProductModel, ShopProductResource } from '~common/shop/product/product-model';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 import { StickerPackModel } from '~common/sticker/pack/pack.model';
 import { StickerModel } from '~common/sticker/sticker.model';
-import {
-	kThemeBgOffset,
-	kThemeFg10,
-	kThemeGjOverlayNotice,
-} from '~common/theme/variables';
+import { kThemeBgOffset, kThemeFg10, kThemeGjOverlayNotice } from '~common/theme/variables';
 import { $gettext } from '~common/translate/translate.service';
 import { styleBorderRadiusLg, styleChangeBg } from '~styles/mixins';
 import { kBorderRadiusBase, kBorderWidthBase } from '~styles/variables';
@@ -660,7 +650,6 @@ type Props = {
 };
 const { data } = defineProps<Props>();
 
-// eslint-disable-next-line vue/no-setup-props-destructure
 const {
 	form,
 	baseModel,

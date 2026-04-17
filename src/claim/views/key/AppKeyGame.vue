@@ -162,6 +162,7 @@ function claim() {
 				}"
 			>
 				<AppJolticon icon="notice" />
+				<!-- eslint-disable-next-line vue/no-v-html -->
 				<span v-html="msg.message" />
 			</div>
 

@@ -10,8 +10,8 @@ export class YoutubeSdk {
 
 		if (!this.isBootstrapped) {
 			const bootstrapLib = (d: any, s: any, id: any) => {
-				let js: any,
-					fjs = d.getElementsByTagName(s)[0];
+				let js: any;
+				const fjs = d.getElementsByTagName(s)[0];
 				if (!d.getElementById(id)) {
 					js = d.createElement(s);
 					js.id = id;

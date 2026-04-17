@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { toRef, watch } from 'vue';
+import { computed, toRef, watch } from 'vue';
 
 import AppForm, { createForm } from '~common/form-vue/AppForm.vue';
 import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
@@ -12,6 +12,8 @@ type Props = {
 	mode: 'game' | 'user';
 };
 const { model, mode } = defineProps<Props>();
+
+const markdownMode = computed(() => `${mode}-site` as const);
 
 const form = createForm<SiteContentBlockModel>({
 	warnOnDiscard: false,
@@ -35,7 +37,7 @@ watch(
 	<AppForm :controller="form">
 		<AppFormGroup name="content_markdown" :label="$gettext('Content')" hide-label>
 			<AppFormControlMarkdown
-				:markdown-mode="(mode + '-site') as 'game-site' | 'user-site'"
+				:markdown-mode="markdownMode"
 				media-item-type="sites-content-image"
 			/>
 

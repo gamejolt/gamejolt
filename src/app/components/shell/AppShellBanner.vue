@@ -40,6 +40,7 @@ onUnmounted(() => {
 			<AppJolticon icon="remove" />
 		</a>
 
+		<!-- eslint-disable-next-line vue/no-v-html -->
 		<div class="-message" v-html="currentBanner.message" />
 	</div>
 </template>

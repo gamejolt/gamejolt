@@ -175,7 +175,7 @@ async function reloadBackgroundForm(retryOnDesync: boolean) {
 			// expected background in our list of backgrounds and manually
 			// assign that to our room.
 			const background = backgrounds.value.find(i => i.id === expectedBgId);
-			// eslint-disable-next-line vue/no-mutating-props
+			 
 			room.background = background;
 			isLoadingBackgrounds.value = false;
 		}

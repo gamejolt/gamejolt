@@ -11,28 +11,28 @@ function onItemClick(item: MinbarItem) {
 
 <template>
 	<div class="minbar">
-		<div class="minbar-items">
-			<transition v-for="(item, index) of Minbar.items" :key="index">
-				<a
-					class="minbar-item anim-fade-enter-up anim-fade-leave-shrink"
-					:class="{ active: item.isActive }"
-					@click="onItemClick(item)"
-				>
-					<transition>
-						<span
-							v-if="item.notificationCount"
-							class="tag tag-highlight notification-tag anim-fade-enter anim-fade-leave"
-						>
-							{{ item.notificationCount }}
-						</span>
-					</transition>
+		<TransitionGroup tag="div" class="minbar-items">
+			<a
+				v-for="item of Minbar.items"
+				:key="item.id"
+				class="minbar-item anim-fade-enter-up anim-fade-leave-shrink"
+				:class="{ active: item.isActive }"
+				@click="onItemClick(item)"
+			>
+				<Transition>
+					<span
+						v-if="item.notificationCount"
+						class="tag tag-highlight notification-tag anim-fade-enter anim-fade-leave"
+					>
+						{{ item.notificationCount }}
+					</span>
+				</Transition>
 
-					<div v-app-tooltip="item.title" class="minbar-item-thumb">
-						<img class="img-responsive" :src="item.thumb" alt="" />
-					</div>
-				</a>
-			</transition>
-		</div>
+				<div v-app-tooltip="item.title" class="minbar-item-thumb">
+					<img class="img-responsive" :src="item.thumb" alt="" />
+				</div>
+			</a>
+		</TransitionGroup>
 	</div>
 </template>
 

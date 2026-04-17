@@ -31,7 +31,7 @@ function onFormChanged(data: UnknownModelData | ModelData<StickerModel>) {
 		storeModel(StickerModel, data);
 	} else {
 		newSticker.value = storeModel(StickerModel, data);
-		// eslint-disable-next-line vue/no-mutating-props
+		 
 		stickers?.unshift(newSticker.value);
 	}
 }

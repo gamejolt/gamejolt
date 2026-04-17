@@ -205,7 +205,7 @@ watch(
 );
 
 function editMessage({ content, id }: FormModel) {
-	// eslint-disable-next-line vue/no-mutating-props
+	 
 	room.messageEditing = null;
 	// This shouldn't happen, but typescript complains without this.
 	if (!id) {
@@ -368,13 +368,13 @@ function onUpKeyPressed(event: KeyboardEvent) {
 		// of the content. This prevents it jump to the beginning of the line.
 		event.preventDefault();
 
-		// eslint-disable-next-line vue/no-mutating-props
+		 
 		room.messageEditing = lastMessage;
 	}
 }
 
 async function cancelEditing() {
-	// eslint-disable-next-line vue/no-mutating-props
+	 
 	room.messageEditing = null;
 	clearMsg();
 

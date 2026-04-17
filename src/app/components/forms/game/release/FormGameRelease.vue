@@ -124,7 +124,7 @@ const scheduledTimezoneOffset = computed(() => {
 const isScheduling = computed(() => form.formModel.isScheduled);
 
 function onBuildAdded(build: GameBuildModel) {
-	// eslint-disable-next-line vue/no-mutating-props
+	 
 	builds.push(build);
 }
 
@@ -142,7 +142,7 @@ function updateBuildLaunchOptions(
 
 	const newLaunchOptions = GameBuildLaunchOptionModel.populate(responseLaunchOptions);
 	for (const launchOption of newLaunchOptions) {
-		// eslint-disable-next-line vue/no-mutating-props
+		 
 		launchOptions.push(launchOption);
 	}
 }

@@ -26,7 +26,7 @@ function onSaved(_formModel: GamePlaylistModel, response: any) {
 </script>
 
 <template>
-	<AppModal :modal="modal">
+	<AppModal>
 		<div class="modal-controls">
 			<AppButton @click="modal.dismiss()">
 				<AppTranslate>Close</AppTranslate>

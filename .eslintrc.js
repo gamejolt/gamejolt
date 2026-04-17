@@ -10,6 +10,7 @@ module.exports = {
 		'plugin:@typescript-eslint/recommended',
 		'plugin:vue/vue3-recommended',
 	],
+	reportUnusedDisableDirectives: true,
 	rules: {
 		'no-empty': ['error', { allowEmptyCatch: true }],
 		'no-undef': 'off',
@@ -26,6 +27,7 @@ module.exports = {
 		'@typescript-eslint/no-unsafe-return': 'off',
 		'@typescript-eslint/no-unused-vars': 'off',
 		'@typescript-eslint/no-var-requires': 'off',
+		'vue/no-mutating-props': ['error', { shallowOnly: true }],
 		'vue/component-tags-order': [
 			'warn',
 			{

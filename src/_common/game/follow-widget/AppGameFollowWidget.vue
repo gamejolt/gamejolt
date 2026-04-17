@@ -69,7 +69,6 @@ const tooltip = computed(() =>
 	!game.is_following
 		? $gettext(
 				`Follow this game to add it to your Library and be notified when new posts are added.`
-				// eslint-disable-next-line no-mixed-spaces-and-tabs
 		  )
 		: undefined
 );
