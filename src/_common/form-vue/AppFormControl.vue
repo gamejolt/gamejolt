@@ -144,7 +144,7 @@ export function createFormControl<T>({
 		}
 	}
 
-	let _debounce: NodeJS.Timer | undefined;
+	let _debounce: NodeJS.Timeout | undefined;
 
 	function _validateDebounce(timeout: number) {
 		const token = form._validationToken;

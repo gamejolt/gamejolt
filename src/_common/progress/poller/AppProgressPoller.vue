@@ -15,7 +15,7 @@ const emit = defineEmits<{
 	error: [response: unknown];
 }>();
 
-let timeoutHandle: NodeJS.Timer | undefined;
+let timeoutHandle: NodeJS.Timeout | undefined;
 
 onMounted(() => {
 	check();

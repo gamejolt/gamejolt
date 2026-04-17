@@ -45,7 +45,7 @@ const maxContentWidth = ref(500);
 const scroller = createScroller();
 
 let _canAutoscroll = true;
-let _checkQueuedTimeout: NodeJS.Timer | undefined;
+let _checkQueuedTimeout: NodeJS.Timeout | undefined;
 let _isAutoscrolling = false;
 let _isOnScrollQueued = false;
 let _lastScrollMessageId: number | undefined;

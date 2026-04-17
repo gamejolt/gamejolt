@@ -42,7 +42,7 @@ export default {
 const { timeout, setTimeout } = useCommonStore();
 
 const isExpired = ref(false);
-const updateTimer = ref<NodeJS.Timer>();
+const updateTimer = ref<NodeJS.Timeout>();
 const isClearingResource = ref(false);
 
 createAppRoute({

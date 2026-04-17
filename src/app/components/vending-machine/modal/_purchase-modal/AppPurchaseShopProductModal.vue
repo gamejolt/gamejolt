@@ -95,7 +95,7 @@ const processingPurchaseCurrencyId = ref<string>();
 const giftUser = ref<UserModel>();
 const productOwner = ref<UserModel>();
 
-let timerBuilder: NodeJS.Timer | null = null;
+let timerBuilder: NodeJS.Timeout | null = null;
 const timeRemaining = ref<string>();
 const isExpired = ref(false);
 

@@ -15,7 +15,7 @@ type Props = {
 };
 const { competition } = defineProps<Props>();
 
-let updateTimer: NodeJS.Timer | null = null;
+let updateTimer: NodeJS.Timeout | null = null;
 const blocksData = ref<BlockData[]>([]);
 const titleText = ref('');
 

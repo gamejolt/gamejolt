@@ -8,7 +8,7 @@ export class ConnectionReconnect {
 	private checkUrl = 'https://s.gjcdn.net/img/offline-connection-check.png';
 
 	private timeoutMs = TIMEOUT_INITIAL;
-	private timeoutHandle?: NodeJS.Timer;
+	private timeoutHandle?: NodeJS.Timeout;
 
 	constructor(private failFn: () => void, private successFn: () => void) {}
 

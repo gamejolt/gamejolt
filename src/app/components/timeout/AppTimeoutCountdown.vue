@@ -5,7 +5,7 @@ type Props = {
 	expiresOn: number;
 };
 const { expiresOn } = defineProps<Props>();
-const updateTimer = ref<NodeJS.Timer>();
+const updateTimer = ref<NodeJS.Timeout>();
 const displayText = ref('');
 
 onMounted(() => {

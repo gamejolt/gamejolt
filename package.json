@@ -39,7 +39,7 @@
 		"@types/google_interactive_media_ads_types": "1.20241219.0",
 		"@types/grecaptcha": "2.0.35",
 		"@types/jstimezonedetect": "1.0.1",
-		"@types/node": "16.18.34",
+		"@types/node": "22.19.17",
 		"@types/node-fetch": "2.6.1",
 		"@types/nw.js": "0.13.14",
 		"@types/phoenix": "1.4.4",

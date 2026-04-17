@@ -15,7 +15,7 @@ type Props = {
 };
 const { endsOn, nowText = 'now', tag = 'span' } = defineProps<Props>();
 
-let interval: NodeJS.Timer | null = null;
+let interval: NodeJS.Timeout | null = null;
 
 const currentTime = ref(getCurrentServerTime());
 const readableTimeRough = ref(getReadableTime('rough'));

@@ -54,7 +54,7 @@ watch(
 	}
 );
 
-let successClearTimeout: NodeJS.Timer | undefined;
+let successClearTimeout: NodeJS.Timeout | undefined;
 
 function showSuccess() {
 	// Reset the timeout if it's already showing.

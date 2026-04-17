@@ -24,7 +24,7 @@ const chosenItemId = ref<number | null>(null);
 const isProcessing = ref(false);
 const areResultsReady = ref(false);
 const now = ref(Date.now());
-const dateRefresh = ref<NodeJS.Timer | null>(null);
+const dateRefresh = ref<NodeJS.Timeout | null>(null);
 
 const game = computed(() => post.game);
 const user = computed(() => post.user);

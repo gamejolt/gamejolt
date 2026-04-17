@@ -16,7 +16,7 @@ import { getActiveTooltip } from '~common/tooltip/tooltip-controller';
 
 const root = ref<null | HTMLElement>(null);
 const popperInstance = ref<null | Instance>(null);
-const popperTimeout = ref<null | NodeJS.Timer>(null);
+const popperTimeout = ref<null | NodeJS.Timeout>(null);
 
 const tooltip = computed(() => getActiveTooltip());
 

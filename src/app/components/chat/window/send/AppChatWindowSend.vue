@@ -55,10 +55,10 @@ const focusToken = createFocusToken();
 const isEditorFocused = ref(false);
 const typing = ref(false);
 
-const nextMessageTimeout = ref<NodeJS.Timer | null>(null);
+const nextMessageTimeout = ref<NodeJS.Timeout | null>(null);
 let lastMessageTimestamp: number | null = null;
 
-let typingTimeout: NodeJS.Timer | null = null;
+let typingTimeout: NodeJS.Timeout | null = null;
 
 const roomChannel = computed(() => chat.value.roomChannels.get(room.id));
 

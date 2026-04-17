@@ -41,7 +41,7 @@ const player = ref() as Ref<VideoPlayerController | undefined>;
 let previousTimestamp: number | undefined = undefined;
 
 const shouldLoadVideo = ref(false);
-const shouldLoadVideoTimer = ref(null) as Ref<NodeJS.Timer | null>;
+const shouldLoadVideoTimer = ref(null) as Ref<NodeJS.Timeout | null>;
 
 const focusedController = createScrollInview();
 

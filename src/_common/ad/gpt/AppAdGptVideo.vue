@@ -28,7 +28,7 @@ let adDisplayContainer: google.ima.AdDisplayContainer | null = null;
 let adsLoader: google.ima.AdsLoader | null = null;
 let adsManager: google.ima.AdsManager | null = null;
 
-let countdownTimer: NodeJS.Timer | null = null;
+let countdownTimer: NodeJS.Timeout | null = null;
 
 let autoplayRequiresMuted = false;
 

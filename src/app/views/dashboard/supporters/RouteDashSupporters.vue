@@ -53,7 +53,7 @@ type InitPayload = {
 </script>
 
 <script lang="ts" setup>
-let _sendAllInterval: NodeJS.Timer | null = null;
+let _sendAllInterval: NodeJS.Timeout | null = null;
 
 /**
  * Actions older than this cannot be thanked.
