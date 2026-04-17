@@ -1,24 +1,19 @@
 <script lang="ts" setup>
-import { PropType, toRefs } from 'vue';
-import { Api } from '../../api/api.service';
-import { Environment } from '../../environment/environment.service';
-import { showSuccessGrowl } from '../../growls/growls.service';
-import AppJolticon from '../../jolticon/AppJolticon.vue';
-import { GameModel } from '../game.model';
+import { Api } from '~common/api/api.service';
+import { Environment } from '~common/environment/environment.service';
+import { GameModel } from '~common/game/game.model';
+import { showSuccessGrowl } from '~common/growls/growls.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
 
-const props = defineProps({
-	game: {
-		type: Object as PropType<GameModel>,
-		required: true,
-	},
-});
-
-const { game } = toRefs(props);
+type Props = {
+	game: GameModel;
+};
+const { game } = defineProps<Props>();
 
 async function tag(tag: string) {
 	// It won't return what site api expects for output, so gotta catch.
 	try {
-		await Api.sendRequest(`/games/tags/tag/${game.value.id}/${tag}`, null, {
+		await Api.sendRequest(`/games/tags/tag/${game.id}/${tag}`, null, {
 			apiPath: '/moderate',
 			processPayload: false,
 		});
@@ -30,7 +25,7 @@ async function tag(tag: string) {
 async function untag(tag: string) {
 	// It won't return what site api expects for output, so gotta catch.
 	try {
-		await Api.sendRequest(`/games/tags/untag/${game.value.id}/${tag}`, null, {
+		await Api.sendRequest(`/games/tags/untag/${game.id}/${tag}`, null, {
 			apiPath: '/moderate',
 			processPayload: false,
 		});

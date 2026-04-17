@@ -1,0 +1,191 @@
+<script lang="ts" setup>
+import { computed, ref, watch } from 'vue';
+
+import { imageGameJoltClientLogo, imageGameJoltLogo, imageJolt } from '~app/img/images';
+import AppForm, { createForm } from '~common/form-vue/AppForm.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlSelect from '~common/form-vue/controls/AppFormControlSelect.vue';
+import AppFormControlTextarea from '~common/form-vue/controls/AppFormControlTextarea.vue';
+import AppFormControlTheme from '~common/form-vue/controls/AppFormControlTheme.vue';
+import AppFormControlToggle from '~common/form-vue/controls/AppFormControlToggle.vue';
+import AppTheme from '~common/theme/AppTheme.vue';
+import AppThemeSvg from '~common/theme/svg/AppThemeSvg.vue';
+import { ThemeModel } from '~common/theme/theme.model';
+import { useThemeStore } from '~common/theme/theme.store';
+
+interface FormModel {
+	file?: string;
+	color?: string;
+	theme?: null | ThemeModel;
+	custom?: string;
+	strictColors?: boolean;
+}
+
+const themeStore = useThemeStore();
+
+const form = createForm<FormModel>({
+	onInit() {
+		form.formModel.file = form.formModel.file || 'custom';
+		form.formModel.color = form.formModel.color || 'fill-offset';
+		form.formModel.theme = form.formModel.theme || themeStore.theme.value;
+		form.formModel.custom = form.formModel.custom || '';
+		form.formModel.strictColors = false;
+	},
+});
+
+const file = computed(() => form.formModel.file || 'custom');
+const bgColor = computed(() => form.formModel.color || 'fill-offset');
+const theme = computed(() => form.formModel.theme || themeStore.theme.value || undefined);
+const customFile = computed(() => form.formModel.custom || '');
+const strictColors = computed(() => !!form.formModel.strictColors);
+
+const SvgList = {
+	imageGameJoltLogo,
+	imageGameJoltClientLogo,
+	imageJolt,
+};
+const FillList = [
+	'fill-offset',
+	'fill-backdrop',
+	'fill-bg',
+	'fill-highlight',
+	'fill-notice',
+	'fill-gray',
+	'fill-dark',
+	'fill-darker',
+	'fill-darkest',
+	'fill-black',
+];
+
+const customSvg = ref('');
+
+watch(customFile, () => {
+	if (!customFile.value.length) {
+		return;
+	}
+
+	const svgString = customFile.value.trimStart();
+	customSvg.value = 'data:image/svg+xml;utf8,' + encodeURIComponent(svgString);
+});
+
+function parseSvgName(name: string) {
+	try {
+		return name.split('/assets/')[1].split('.')[0];
+	} catch {
+		return name;
+	}
+}
+</script>
+
+<template>
+	<AppTheme :theme="theme">
+		<section id="styleguide-theme-svg" class="section">
+			<h1 class="section-header">Theme SVG</h1>
+
+			<p>
+				See how our
+				<code>svg</code>
+				files display on different background colors with different themes, or paste your
+				own!
+			</p>
+
+			<AppForm :controller="form">
+				<div class="-selectors">
+					<!-- SVG File Selector -->
+					<AppFormGroup name="file" class="-selectors-item" label="Select SVG File">
+						<AppFormControlSelect :disabled="!!customFile.length">
+							<option value="custom">Custom SVG</option>
+
+							<option v-for="(path, key) of SvgList" :key="key" :value="path">
+								{{ parseSvgName(path) }}
+							</option>
+						</AppFormControlSelect>
+					</AppFormGroup>
+
+					<!-- Background Color Selector -->
+					<AppFormGroup name="color" class="-selectors-item" label="Select Background">
+						<AppFormControlSelect placeholder="Fill Color">
+							<option v-for="(color, key) of FillList" :key="key" :value="color">
+								{{ color }}
+							</option>
+						</AppFormControlSelect>
+					</AppFormGroup>
+
+					<AppFormGroup
+						name="strictColors"
+						class="-selectors-item"
+						label="Strict Colors?"
+					>
+						<AppFormControlToggle />
+					</AppFormGroup>
+
+					<!-- Theme Selector -->
+					<AppFormGroup name="theme" class="-selectors-item" label="Select Theme">
+						<AppFormControlTheme class="-selectors-item-theme" />
+					</AppFormGroup>
+				</div>
+
+				<!-- Custom SVG Input -->
+				<AppFormGroup name="custom" class="-custom -selectors-item" hide-label>
+					<AppFormControlTextarea
+						v-if="file === 'custom'"
+						placeholder="Paste an SVG file..."
+						rows="6"
+					/>
+				</AppFormGroup>
+
+				<!-- Output Area -->
+				<div class="-output-area" :class="bgColor">
+					<template v-if="file !== 'custom'">
+						<AppThemeSvg :src="file" :theme="theme" :strict-colors="strictColors" />
+					</template>
+					<template v-else-if="!customFile.length">
+						<span class="text-muted"> Waiting for Custom SVG... </span>
+					</template>
+					<template v-else>
+						<AppThemeSvg
+							:src="customSvg"
+							:theme="theme"
+							:strict-colors="strictColors"
+						/>
+					</template>
+				</div>
+			</AppForm>
+		</section>
+	</AppTheme>
+</template>
+
+<style lang="stylus" scoped>
+#styleguide-theme-svg
+	rounded-corners-lg()
+	change-bg('bg')
+	border: $border-width-base solid var(--theme-bg-subtle)
+	padding-left: 20px
+	padding-right: 20px
+
+.-selectors
+	full-bleed()
+	display: flex
+
+	&-item
+		flex: 2
+		margin: 0 20px
+
+		&:last-of-type
+			flex: 1
+
+		&-theme
+			height: 20px
+
+.-custom
+	margin: 8px 0
+
+.-output-area
+	rounded-corners-lg()
+	display: flex
+	flex-flow: row wrap
+	justify-content: center
+	align-items: center
+	min-height: 300px
+	padding: 20px
+</style>

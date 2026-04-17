@@ -1,23 +1,24 @@
 <script lang="ts" setup>
-import { onUnmounted, ref, toRef } from 'vue';
-import { styleBorderRadiusLg, styleChangeBg, styleWhen } from '../../../_styles/mixins';
-import { Analytics } from '../../analytics/analytics.service';
-import AppAnimElectricity from '../../animation/AppAnimElectricity.vue';
-import AppJolticon from '../../jolticon/AppJolticon.vue';
-import AppSlider from '../../slider/AppSlider.vue';
-import { vAppTooltip } from '../../tooltip/tooltip-directive';
-import AppStickerImg from '../AppStickerImg.vue';
+import { onUnmounted, ref, toRef, useTemplateRef } from 'vue';
+
+import { Analytics } from '~common/analytics/analytics.service';
+import AppAnimElectricity from '~common/animation/AppAnimElectricity.vue';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppSlider from '~common/slider/AppSlider.vue';
+import AppStickerImg from '~common/sticker/AppStickerImg.vue';
 import {
 	assignStickerStoreGhostCallback,
 	setStickerStoreActiveItem,
 	useStickerStore,
-} from '../sticker-store';
+} from '~common/sticker/sticker-store';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { styleBorderRadiusLg, styleChangeBg, styleWhen } from '~styles/mixins';
 
 const stickerStore = useStickerStore();
 const { ghostStickerSize, placedItem, isDragging, targetController, isChargingSticker } =
 	stickerStore;
 
-const root = ref<HTMLDivElement>();
+const root = useTemplateRef('root');
 
 /**
  * Used to hide the sticker until we get the proper positioning data. If we

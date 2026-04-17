@@ -1,6 +1,7 @@
 import { computed, ref, shallowReadonly } from 'vue';
-import { arrayRemove } from '../../utils/array';
-import { Modals } from '../modal/modal.service';
+
+import { Modals } from '~common/modal/modal.service';
+import { arrayRemove } from '~utils/array';
 
 type ContentFocusService = ReturnType<typeof createContentFocusService>;
 

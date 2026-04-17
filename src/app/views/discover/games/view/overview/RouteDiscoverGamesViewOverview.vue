@@ -1,75 +1,66 @@
 <script lang="ts">
-import { Ref, computed, ref } from 'vue';
+import { computed, Ref, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import AppFadeCollapse from '../../../../../../_common/AppFadeCollapse.vue';
-import AppAdStickyRail from '../../../../../../_common/ad/AppAdStickyRail.vue';
-import { useAdStore } from '../../../../../../_common/ad/ad-store';
-import AppAdWidget from '../../../../../../_common/ad/widget/AppAdWidget.vue';
-import { trackExperimentEngagement } from '../../../../../../_common/analytics/analytics.service';
-import { Api } from '../../../../../../_common/api/api.service';
-import AppButton from '../../../../../../_common/button/AppButton.vue';
-import { CommentModel, canCommentOnModel } from '../../../../../../_common/comment/comment-model';
-import {
-	getCommentStore,
-	useCommentStoreManager,
-} from '../../../../../../_common/comment/comment-store';
-import { configGuestNoAuthRequired } from '../../../../../../_common/config/config.service';
-import AppContentViewer from '../../../../../../_common/content/content-viewer/AppContentViewer.vue';
-import { formatNumber } from '../../../../../../_common/filters/number';
-import { FiresidePostModel } from '../../../../../../_common/fireside/post/post-model';
-import AppGameExternalPackageCard from '../../../../../../_common/game/external-package/card/AppGameExternalPackageCard.vue';
-import { GameModel } from '../../../../../../_common/game/game.model';
-import AppGameMediaBar from '../../../../../../_common/game/media-bar/AppGameMediaBar.vue';
-import AppGamePackageCard from '../../../../../../_common/game/package/card/AppGamePackageCard.vue';
-import AppGameSoundtrackCard from '../../../../../../_common/game/soundtrack/card/card.vue';
-import { HistoryTick } from '../../../../../../_common/history-tick/history-tick-service';
-import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
-import { AppLazyPlaceholder } from '../../../../../../_common/lazy/placeholder/placeholder';
-import { Meta } from '../../../../../../_common/meta/meta-service';
-import { storeModelList } from '../../../../../../_common/model/model-store.service';
-import { PartnerReferral } from '../../../../../../_common/partner-referral/partner-referral-service';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '../../../../../../_common/route/route-component';
-import { Screen } from '../../../../../../_common/screen/screen-service';
-import AppScrollAffix from '../../../../../../_common/scroll/AppScrollAffix.vue';
-import AppShareCard from '../../../../../../_common/share/card/AppShareCard.vue';
-import AppSpacer from '../../../../../../_common/spacer/AppSpacer.vue';
-import { kThemeBgSubtle } from '../../../../../../_common/theme/variables';
-import { $gettext } from '../../../../../../_common/translate/translate.service';
-import { styleChangeBg, styleElevate, styleWhen } from '../../../../../../_styles/mixins';
-import {
-	kBorderRadiusLg,
-	kBorderWidthSm,
-	kLayerAds,
-	kLineHeightComputed,
-} from '../../../../../../_styles/variables';
-import { getAbsoluteLink } from '../../../../../../utils/router';
-import AppActivityFeedPlaceholder from '../../../../../components/activity/feed/AppActivityFeedPlaceholder.vue';
-import { ActivityFeedService } from '../../../../../components/activity/feed/feed-service';
-import { ActivityFeedView } from '../../../../../components/activity/feed/view';
-import AppCommentOverview from '../../../../../components/comment/AppCommentOverview.vue';
-import AppCommentAddButton from '../../../../../components/comment/add-button/AppCommentAddButton.vue';
-import { showCommentModal } from '../../../../../components/comment/modal/modal.service';
+
+import AppActivityFeedPlaceholder from '~app/components/activity/feed/AppActivityFeedPlaceholder.vue';
+import { ActivityFeedService } from '~app/components/activity/feed/feed-service';
+import { ActivityFeedView } from '~app/components/activity/feed/view';
+import AppCommentAddButton from '~app/components/comment/add-button/AppCommentAddButton.vue';
+import AppCommentOverview from '~app/components/comment/AppCommentOverview.vue';
+import { showCommentModal } from '~app/components/comment/modal/modal.service';
 import {
 	CommentThreadModalPermalinkDeregister,
 	showCommentThreadModalFromPermalink,
 	watchForCommentThreadModalPermalink,
-} from '../../../../../components/comment/thread/modal.service';
-import AppGameCommunityBadge from '../../../../../components/game/community-badge/AppGameCommunityBadge.vue';
-import AppGameList from '../../../../../components/game/list/AppGameList.vue';
-import AppGameListPlaceholder from '../../../../../components/game/list/AppGameListPlaceholder.vue';
-import AppGameOgrs from '../../../../../components/game/ogrs/ogrs.vue';
-import { AppActivityFeedLazy } from '../../../../../components/lazy';
-import AppPageContainer from '../../../../../components/page-container/AppPageContainer.vue';
-import AppPostAddButton from '../../../../../components/post/add-button/AppPostAddButton.vue';
-import AppShellPageBackdrop from '../../../../../components/shell/AppShellPageBackdrop.vue';
-import AppUserKnownFollowers from '../../../../../components/user/known-followers/AppUserKnownFollowers.vue';
-import { useGameRouteController } from '../RouteDiscoverGamesView.vue';
-import AppDiscoverGamesViewOverviewSupporters from './AppDiscoverGamesViewOverviewSupporters.vue';
-import AppDiscoverGamesViewOverviewDetails from './_details/details.vue';
-import AppDiscoverGamesViewOverviewStatbar from './_statbar/statbar.vue';
+} from '~app/components/comment/thread/modal.service';
+import AppGameCommunityBadge from '~app/components/game/community-badge/AppGameCommunityBadge.vue';
+import AppGameList from '~app/components/game/list/AppGameList.vue';
+import AppGameListPlaceholder from '~app/components/game/list/AppGameListPlaceholder.vue';
+import AppGameOgrs from '~app/components/game/ogrs/AppGameOgrs.vue';
+import { AppActivityFeedLazy } from '~app/components/lazy';
+import AppPageContainer from '~app/components/page-container/AppPageContainer.vue';
+import AppPostAddButton from '~app/components/post/add-button/AppPostAddButton.vue';
+import AppShellPageBackdrop from '~app/components/shell/AppShellPageBackdrop.vue';
+import AppUserKnownFollowers from '~app/components/user/known-followers/AppUserKnownFollowers.vue';
+import AppGameDetails from '~app/views/discover/games/view/overview/_details/AppGameDetails.vue';
+import AppGameStatbar from '~app/views/discover/games/view/overview/_statbar/AppGameStatbar.vue';
+import AppDiscoverGamesViewOverviewSupporters from '~app/views/discover/games/view/overview/AppDiscoverGamesViewOverviewSupporters.vue';
+import { useGameRouteController } from '~app/views/discover/games/view/RouteDiscoverGamesView.vue';
+import { useAdStore } from '~common/ad/ad-store';
+import AppAdStickyRail from '~common/ad/AppAdStickyRail.vue';
+import AppAdWidget from '~common/ad/widget/AppAdWidget.vue';
+import { trackExperimentEngagement } from '~common/analytics/analytics.service';
+import { Api } from '~common/api/api.service';
+import AppFadeCollapse from '~common/AppFadeCollapse.vue';
+import AppButton from '~common/button/AppButton.vue';
+import { canCommentOnModel, CommentModel } from '~common/comment/comment-model';
+import { getCommentStore, useCommentStoreManager } from '~common/comment/comment-store';
+import { configGuestNoAuthRequired } from '~common/config/config.service';
+import AppContentViewer from '~common/content/content-viewer/AppContentViewer.vue';
+import { formatNumber } from '~common/filters/number';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import AppGameExternalPackageCard from '~common/game/external-package/card/AppGameExternalPackageCard.vue';
+import { GameModel } from '~common/game/game.model';
+import AppGameMediaBar from '~common/game/media-bar/AppGameMediaBar.vue';
+import AppGamePackageCard from '~common/game/package/card/AppGamePackageCard.vue';
+import AppGameSoundtrackCard from '~common/game/soundtrack/card/AppGameSoundtrackCard.vue';
+import { HistoryTick } from '~common/history-tick/history-tick-service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLazyPlaceholder from '~common/lazy/placeholder/AppLazyPlaceholder.vue';
+import { Meta } from '~common/meta/meta-service';
+import { storeModelList } from '~common/model/model-store.service';
+import { PartnerReferral } from '~common/partner-referral/partner-referral-service';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { Screen } from '~common/screen/screen-service';
+import AppScrollAffix from '~common/scroll/AppScrollAffix.vue';
+import AppShareCard from '~common/share/card/AppShareCard.vue';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import { kThemeBgSubtle } from '~common/theme/variables';
+import { $gettext } from '~common/translate/translate.service';
+import { TranslateDirective as vTranslate } from '~common/translate/translate-directive';
+import { styleChangeBg, styleElevate, styleWhen } from '~styles/mixins';
+import { kBorderRadiusLg, kBorderWidthSm, kLayerAds, kLineHeightComputed } from '~styles/variables';
+import { getAbsoluteLink } from '~utils/router';
 
 export default {
 	...defineAppRouteOptions({
@@ -266,12 +257,12 @@ async function reloadPreviewComments() {
 			<AppAdStickyRail show-left>
 				<AppPageContainer xl>
 					<template #left>
-						<AppDiscoverGamesViewOverviewStatbar />
+						<AppGameStatbar />
 
 						<AppShareCard
 							class="-share-card"
 							resource="game"
-							:url="shareLink"
+							:url="shareLink ?? ''"
 							bleed-padding
 						/>
 
@@ -426,8 +417,8 @@ async function reloadPreviewComments() {
 										<AppGamePackageCard
 											v-for="pkg of packages"
 											:key="pkg.id"
-											:game="game"
-											:sellable="pkg._sellable"
+											:game="game!"
+											:sellable="pkg._sellable!"
 											:package="pkg"
 											:releases="pkg._releases"
 											:builds="pkg._builds"
@@ -475,7 +466,7 @@ async function reloadPreviewComments() {
 									<hr />
 									<div class="row">
 										<div class="col-sm-6">
-											<AppDiscoverGamesViewOverviewDetails :game="game" />
+											<AppGameDetails />
 										</div>
 										<div class="col-sm-6">
 											<AppLazyPlaceholder :when="isOverviewLoaded">

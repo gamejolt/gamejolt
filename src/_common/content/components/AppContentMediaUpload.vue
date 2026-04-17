@@ -1,36 +1,30 @@
 <script lang="ts" setup>
 import { EditorView } from 'prosemirror-view';
-import { computed, onMounted, PropType, toRefs } from 'vue';
-import { Api, ApiProgressEvent } from '../../api/api.service';
-import { showErrorGrowl } from '../../growls/growls.service';
-import AppLoading from '../../loading/AppLoading.vue';
-import { MediaItemModel } from '../../media-item/media-item-model';
-import AppProgressBar from '../../progress/AppProgressBar.vue';
-import { $gettext } from '../../translate/translate.service';
-import { getMediaItemTypeForContext } from '../content-context';
+import { computed, onMounted } from 'vue';
+
+import { Api, ApiProgressEvent } from '~common/api/api.service';
+import { getMediaItemTypeForContext } from '~common/content/content-context';
+import { ContentEditorService } from '~common/content/content-editor/content-editor.service';
 import {
 	editorMediaUploadCancel,
 	editorMediaUploadFinalize,
-} from '../content-editor/content-editor-controller';
-import { ContentEditorService } from '../content-editor/content-editor.service';
-import { ContentEditorSchema } from '../content-editor/schemas/content-editor-schema';
-import { useContentOwnerController } from '../content-owner';
+} from '~common/content/content-editor/content-editor-controller';
+import { ContentEditorSchema } from '~common/content/content-editor/schemas/content-editor-schema';
+import { useContentOwnerController } from '~common/content/content-owner';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import AppLoading from '~common/loading/AppLoading.vue';
+import { MediaItemModel } from '~common/media-item/media-item-model';
+import AppProgressBar from '~common/progress/AppProgressBar.vue';
+import { $gettext } from '~common/translate/translate.service';
 
-const props = defineProps({
-	uploadId: {
-		type: String,
-		required: true,
-	},
-	editorView: {
-		type: Object as PropType<EditorView<ContentEditorSchema>>,
-		required: true,
-	},
-});
-
-const { uploadId } = toRefs(props);
+type Props = {
+	uploadId: string;
+	editorView: EditorView<ContentEditorSchema>;
+};
+const { uploadId } = defineProps<Props>();
 
 const owner = useContentOwnerController()!;
-const task = ContentEditorService.UploadTaskCache[uploadId.value]!;
+const task = ContentEditorService.UploadTaskCache[uploadId]!;
 const { file: taskfile, thumbnail, progress, isProcessing, updateProgress } = task;
 
 const placeholderMaxHeight = computed(() => {

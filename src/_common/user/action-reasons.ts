@@ -1,4 +1,4 @@
-import { $gettext } from '../translate/translate.service';
+import { $gettext } from '~common/translate/translate.service';
 
 export const REASON_SPAM = 'spam';
 export const REASON_OFF_TOPIC = 'off-topic';

@@ -1,16 +1,17 @@
 <script lang="ts" setup>
 import { toRef } from 'vue';
 import { useRouter } from 'vue-router';
-import { showBlockModal } from '../../../../../_common/block/modal/modal.service';
-import AppButton from '../../../../../_common/button/AppButton.vue';
-import { Environment } from '../../../../../_common/environment/environment.service';
-import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import AppPopper from '../../../../../_common/popper/AppPopper.vue';
-import { showReportModal } from '../../../../../_common/report/modal/modal.service';
-import { copyShareLink } from '../../../../../_common/share/share.service';
-import { useCommonStore } from '../../../../../_common/store/common-store';
-import { UserFriendshipState } from '../../../../../_common/user/friendship/friendship.model';
-import { useProfileRouteStore } from '../../RouteProfile.vue';
+
+import { useProfileRouteStore } from '~app/views/profile/RouteProfile.vue';
+import { showBlockModal } from '~common/block/modal/modal.service';
+import AppButton from '~common/button/AppButton.vue';
+import { Environment } from '~common/environment/environment.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppPopper from '~common/popper/AppPopper.vue';
+import { showReportModal } from '~common/report/modal/modal.service';
+import { copyShareLink } from '~common/share/share.service';
+import { useCommonStore } from '~common/store/common-store';
+import { UserFriendshipState } from '~common/user/friendship/friendship.model';
 
 const router = useRouter();
 

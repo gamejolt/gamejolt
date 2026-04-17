@@ -1,9 +1,9 @@
-import { RouteConfig } from 'vue-router';
+import { RouteRecordRaw } from 'vue-router';
 
-export const routeAuthApproveLogin: RouteConfig = {
+export const routeAuthApproveLogin: RouteRecordRaw = {
 	name: 'auth.approve-login',
 	path: '/login/approve',
-	component: () => import('./approve-login.vue'),
+	component: () => import('~auth/views/auth/approve-login/RouteApproveLogin.vue'),
 	meta: {
 		hideCoverImage: true,
 	},

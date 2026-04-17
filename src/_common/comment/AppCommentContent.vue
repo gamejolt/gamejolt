@@ -1,28 +1,23 @@
 <script lang="ts" setup>
-import { PropType, ref } from 'vue';
-import { kFontSizeBase } from '../../_styles/variables';
-import AppFadeCollapse from '../AppFadeCollapse.vue';
-import AppContentViewer from '../content/content-viewer/AppContentViewer.vue';
-import { isDynamicGoogleBot } from '../device/device.service';
-import { formatDate } from '../filters/date';
-import AppReactionList from '../reaction/list/AppReactionList.vue';
-import AppTranslate from '../translate/AppTranslate.vue';
-import { CommentModel } from './comment-model';
-import './comment.styl';
+import '~common/comment/comment.styl';
 
-defineProps({
-	comment: {
-		type: Object as PropType<CommentModel>,
-		required: true,
-	},
-	content: {
-		type: String,
-		default: '',
-	},
-	canReact: {
-		type: Boolean,
-	},
-});
+import { ref } from 'vue';
+
+import AppFadeCollapse from '~common/AppFadeCollapse.vue';
+import { CommentModel } from '~common/comment/comment-model';
+import AppContentViewer from '~common/content/content-viewer/AppContentViewer.vue';
+import { isDynamicGoogleBot } from '~common/device/device.service';
+import { formatDate } from '~common/filters/date';
+import AppReactionList from '~common/reaction/list/AppReactionList.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { kFontSizeBase } from '~styles/variables';
+
+type Props = {
+	comment: CommentModel;
+	content?: string;
+	canReact?: boolean;
+};
+const { comment, content = '', canReact } = defineProps<Props>();
 
 const canToggleContent = ref(false);
 const showFullContent = ref(false);

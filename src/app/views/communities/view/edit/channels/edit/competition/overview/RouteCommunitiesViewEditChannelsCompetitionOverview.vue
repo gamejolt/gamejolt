@@ -1,23 +1,22 @@
 <script lang="ts">
 import { computed, ref, toRef } from 'vue';
-import { Api } from '../../../../../../../../../_common/api/api.service';
-import AppButton from '../../../../../../../../../_common/button/AppButton.vue';
-import { $publishCommunityChannel } from '../../../../../../../../../_common/community/channel/channel.model';
-import { CommunityCompetitionVotingCategoryModel } from '../../../../../../../../../_common/community/competition/voting-category/voting-category.model';
-import { Environment } from '../../../../../../../../../_common/environment/environment.service';
-import { formatDuration } from '../../../../../../../../../_common/filters/duration';
-import { showSuccessGrowl } from '../../../../../../../../../_common/growls/growls.service';
-import AppJolticon from '../../../../../../../../../_common/jolticon/AppJolticon.vue';
-import { showModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '../../../../../../../../../_common/route/route-component';
-import AppTimeAgo from '../../../../../../../../../_common/time/AppTimeAgo.vue';
-import { vAppTooltip } from '../../../../../../../../../_common/tooltip/tooltip-directive';
-import { $gettext } from '../../../../../../../../../_common/translate/translate.service';
-import AppCommunityCompetitionDate from '../../../../../../../../components/community/competition/date/AppCommunityCompetitionDate.vue';
-import { useCommunityRouteStore } from '../../../../../view.store';
+
+import AppCommunityCompetitionDate from '~app/components/community/competition/date/AppCommunityCompetitionDate.vue';
+import { useCommunityRouteStore } from '~app/views/communities/view/view.store';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import { $publishCommunityChannel } from '~common/community/channel/channel.model';
+import { CommunityCompetitionVotingCategoryModel } from '~common/community/competition/voting-category/voting-category.model';
+import { Environment } from '~common/environment/environment.service';
+import { formatDuration } from '~common/filters/duration';
+import { showSuccessGrowl } from '~common/growls/growls.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { showModalConfirm } from '~common/modal/confirm/confirm-service';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import AppTimeAgo from '~common/time/AppTimeAgo.vue';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
 
 export default {
 	...defineAppRouteOptions({
@@ -169,7 +168,7 @@ createAppRoute({
 
 		<div v-if="channel.visibility === 'draft'" class="alert alert-notice">
 			<p>
-				<span v-translate><b>This jam is a draft</b> and only moderators can view it.</span>
+				<AppTranslate>This jam is a draft and only moderators can view it.</AppTranslate>
 			</p>
 			<p>
 				{{

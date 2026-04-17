@@ -1,25 +1,18 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-import AppButton from '../../../../../../_common/button/AppButton.vue';
-import AppModal from '../../../../../../_common/modal/AppModal.vue';
-import { useModal } from '../../../../../../_common/modal/modal.service';
-import AppSpacer from '../../../../../../_common/spacer/AppSpacer.vue';
-import { $gettext } from '../../../../../../_common/translate/translate.service';
-import AppUserAvatarBubble from '../../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
-import { UserModel } from '../../../../../../_common/user/user.model';
-import {
-	styleBorderRadiusLg,
-	styleChangeBg,
-	styleFlexCenter,
-} from '../../../../../../_styles/mixins';
-import { kFontSizeLarge, kFontSizeSmall } from '../../../../../../_styles/variables';
+import AppButton from '~common/button/AppButton.vue';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { UserModel } from '~common/user/user.model';
+import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
+import { styleBorderRadiusLg, styleChangeBg, styleFlexCenter } from '~styles/mixins';
+import { kFontSizeLarge, kFontSizeSmall } from '~styles/variables';
 
-defineProps({
-	giftUser: {
-		type: Object as PropType<UserModel>,
-		required: true,
-	},
-});
+type Props = {
+	giftUser: UserModel;
+};
+const { giftUser } = defineProps<Props>();
 
 const modal = useModal<boolean>()!;
 </script>

@@ -1,24 +1,25 @@
 <script lang="ts" setup>
-import { PropType, computed, toRefs } from 'vue';
-import AppHoverCard from '../../../../../../_common/card/AppHoverCard.vue';
-import { ShopProductModel } from '../../../../../../_common/shop/product/product-model';
-import { kThemeFgRgb } from '../../../../../../_common/theme/variables';
-import { routeDashShopProduct } from '../../product/product.route';
-import { getShopDashProductResourceParam, useShopDashStore } from '../../shop.store';
-import AppDashShopItemImpl from './AppDashShopItemImpl.vue';
+import { computed } from 'vue';
 
-const props = defineProps({
-	item: {
-		type: Object as PropType<ShopProductModel>,
-		required: true,
-	},
-});
+import AppDashShopItemImpl from '~app/views/dashboard/shop/overview/_item/AppDashShopItemImpl.vue';
+import { routeDashShopProduct } from '~app/views/dashboard/shop/product/product.route';
+import {
+	getShopDashProductResourceParam,
+	useShopDashStore,
+} from '~app/views/dashboard/shop/shop.store';
+import AppHoverCard from '~common/card/AppHoverCard.vue';
+import { ShopProductModel } from '~common/shop/product/product-model';
+import { kThemeFgRgb } from '~common/theme/variables';
 
-const { item } = toRefs(props);
+type Props = {
+	item: ShopProductModel;
+};
+const { item } = defineProps<Props>();
+
 const { getShopProductStates } = useShopDashStore()!;
 
-const itemStates = computed(() => getShopProductStates(item.value));
-const resourceParam = computed(() => getShopDashProductResourceParam(item.value));
+const itemStates = computed(() => getShopProductStates(item));
+const resourceParam = computed(() => getShopDashProductResourceParam(item));
 </script>
 
 <template>

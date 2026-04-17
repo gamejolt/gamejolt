@@ -1,45 +1,43 @@
 import { Channel } from 'phoenix';
 import { markRaw, reactive } from 'vue';
-import { Analytics } from '../../../_common/analytics/analytics.service';
-import { CommunityModel } from '../../../_common/community/community.model';
-import { ensureConfig } from '../../../_common/config/config.service';
-import { Environment } from '../../../_common/environment/environment.service';
-import { FiresidePostCommunityModel } from '../../../_common/fireside/post/community/community.model';
-import { FiresidePostModel } from '../../../_common/fireside/post/post-model';
-import { GameTrophyModel } from '../../../_common/game/trophy/trophy.model';
-import { showInfoGrowl } from '../../../_common/growls/growls.service';
-import {
-	NotificationModel,
-	NotificationType,
-} from '../../../_common/notification/notification-model';
-import { NotificationText } from '../../../_common/notification/notification-text.service';
-import Onboarding from '../../../_common/onboarding/onboarding.service';
-import { SettingFeedNotifications } from '../../../_common/settings/settings.service';
-import { SiteTrophyModel } from '../../../_common/site/trophy/trophy.model';
-import {
-	SocketController,
-	createSocketController,
-} from '../../../_common/socket/socket-controller';
-import { commonStore } from '../../../_common/store/common-store';
-import { $gettext } from '../../../_common/translate/translate.service';
-import { getTrophyImg } from '../../../_common/trophy/thumbnail/AppTrophyThumbnail.vue';
-import { UserGameTrophyModel } from '../../../_common/user/trophy/game-trophy.model';
-import { UserSiteTrophyModel } from '../../../_common/user/trophy/site-trophy.model';
-import { UserModel } from '../../../_common/user/user.model';
-import { arrayRemove } from '../../../utils/array';
-import { createLogger } from '../../../utils/logging';
-import { sleep } from '../../../utils/utils';
-import { uuidv4 } from '../../../utils/uuid';
-import { AppStore } from '../../store/index';
-import { router } from '../../views';
-import { gotoNotification } from '../activity/feed/notification/notification-routing';
-import { ChatClient, clearChat, connectChat, createChatClient } from '../chat/client';
+
+import { gotoNotification } from '~app/components/activity/feed/notification/notification-routing';
+import { ChatClient, clearChat, connectChat, createChatClient } from '~app/components/chat/client';
 import {
 	CommentTopicPayload,
-	GridCommentChannel,
 	createGridCommentChannel,
-} from './comment-channel';
-import { GridNotificationChannel, createGridNotificationChannel } from './notification-channel';
+	GridCommentChannel,
+} from '~app/components/grid/comment-channel';
+import {
+	createGridNotificationChannel,
+	GridNotificationChannel,
+} from '~app/components/grid/notification-channel';
+import { AppStore } from '~app/store/index';
+import { router } from '~app/views';
+import { Analytics } from '~common/analytics/analytics.service';
+import { CommunityModel } from '~common/community/community.model';
+import { ensureConfig } from '~common/config/config.service';
+import { Environment } from '~common/environment/environment.service';
+import { FiresidePostCommunityModel } from '~common/fireside/post/community/community.model';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import { GameTrophyModel } from '~common/game/trophy/trophy.model';
+import { showInfoGrowl } from '~common/growls/growls.service';
+import { NotificationModel, NotificationType } from '~common/notification/notification-model';
+import { NotificationText } from '~common/notification/notification-text.service';
+import Onboarding from '~common/onboarding/onboarding.service';
+import { SettingFeedNotifications } from '~common/settings/settings.service';
+import { SiteTrophyModel } from '~common/site/trophy/trophy.model';
+import { createSocketController, SocketController } from '~common/socket/socket-controller';
+import { commonStore } from '~common/store/common-store';
+import { $gettext } from '~common/translate/translate.service';
+import { getTrophyImg } from '~common/trophy/thumbnail/AppTrophyThumbnail.vue';
+import { UserGameTrophyModel } from '~common/user/trophy/game-trophy.model';
+import { UserSiteTrophyModel } from '~common/user/trophy/site-trophy.model';
+import { UserModel } from '~common/user/user.model';
+import { arrayRemove } from '~utils/array';
+import { createLogger } from '~utils/logging';
+import { sleep } from '~utils/utils';
+import { uuidv4 } from '~utils/uuid';
 
 type ClearNotificationsType =
 	// For the user's activity feed.

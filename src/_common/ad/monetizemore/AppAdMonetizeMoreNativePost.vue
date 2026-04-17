@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import AppActivityFeedPostAdvertisement from '../../../app/components/activity/feed/post/AppActivityFeedPostAdvertisement.vue';
+import AppActivityFeedPostAdvertisement from '~app/components/activity/feed/post/AppActivityFeedPostAdvertisement.vue';
 
 export type AdNativePostProps = {
 	mediaImg: string;

@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import AppButton from '../../../../_common/button/AppButton.vue';
-import AppModal from '../../../../_common/modal/AppModal.vue';
-import { useModal } from '../../../../_common/modal/modal.service';
-import { useCommonStore } from '../../../../_common/store/common-store';
-import FormUserAvatarFrame from '../../../../_common/user/user-avatar/frame/FormUserAvatarFrame.vue';
-import FormAvatar from '../../forms/avatar/avatar.vue';
+import FormAvatar from '~app/components/forms/avatar/FormAvatar.vue';
+import AppButton from '~common/button/AppButton.vue';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import { useCommonStore } from '~common/store/common-store';
+import FormUserAvatarFrame from '~common/user/user-avatar/frame/FormUserAvatarFrame.vue';
 
 const modal = useModal()!;
 const { user } = useCommonStore();
@@ -19,7 +19,7 @@ const { user } = useCommonStore();
 		</div>
 
 		<div class="modal-body">
-			<FormAvatar :model="user" />
+			<FormAvatar :model="user ?? undefined" />
 
 			<label class="control-label">
 				{{ $gettext(`Avatar frames`) }}

@@ -1,56 +1,37 @@
 <script lang="ts" setup>
-import { PropType, computed, ref, toRef, toRefs } from 'vue';
+import { computed, ref, toRef } from 'vue';
 import { useRoute } from 'vue-router';
-import { vAppAuthRequired } from '../../../../../_common/auth/auth-required-directive';
+
+import FormCommunityCompetitionVotingCast from '~app/components/forms/community/competition/voting/cast/FormCommunityCompetitionVotingCast.vue';
+import { vAppAuthRequired } from '~common/auth/auth-required-directive';
 import {
 	CommunityCompetitionModel,
 	CompetitionPeriodVoting,
-} from '../../../../../_common/community/competition/competition.model';
-import { CommunityCompetitionEntryModel } from '../../../../../_common/community/competition/entry/entry.model';
-import { CommunityCompetitionEntryVoteModel } from '../../../../../_common/community/competition/entry/vote/vote.model';
-import { CommunityCompetitionVotingCategoryModel } from '../../../../../_common/community/competition/voting-category/voting-category.model';
-import { Environment } from '../../../../../_common/environment/environment.service';
-import { formatNumber } from '../../../../../_common/filters/number';
-import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import { useCommonStore } from '../../../../../_common/store/common-store';
-import AppTimeAgo from '../../../../../_common/time/AppTimeAgo.vue';
-import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import { numberSort } from '../../../../../utils/array';
-import FormCommunityCompetitionVotingCast from '../../../forms/community/competition/voting/cast/cast.vue';
+} from '~common/community/competition/competition.model';
+import { CommunityCompetitionEntryModel } from '~common/community/competition/entry/entry.model';
+import { CommunityCompetitionEntryVoteModel } from '~common/community/competition/entry/vote/vote.model';
+import { CommunityCompetitionVotingCategoryModel } from '~common/community/competition/voting-category/voting-category.model';
+import { Environment } from '~common/environment/environment.service';
+import { formatNumber } from '~common/filters/number';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { useCommonStore } from '~common/store/common-store';
+import AppTimeAgo from '~common/time/AppTimeAgo.vue';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { TranslateDirective as vTranslate } from '~common/translate/translate-directive';
+import { numberSort } from '~utils/array';
 
-const props = defineProps({
-	competition: {
-		type: Object as PropType<CommunityCompetitionModel>,
-		required: true,
-	},
-	entry: {
-		type: Object as PropType<CommunityCompetitionEntryModel>,
-		required: true,
-	},
-	votingCategories: {
-		type: Array as PropType<CommunityCompetitionVotingCategoryModel[]>,
-		required: true,
-	},
-	userVotes: {
-		type: Array as PropType<CommunityCompetitionEntryVoteModel[]>,
-		required: true,
-	},
-	isParticipant: {
-		type: Boolean,
-		required: true,
-	},
-	isArchived: {
-		type: Boolean,
-		required: true,
-	},
-	isBlocked: {
-		type: Boolean,
-		required: true,
-	},
-});
-
-const { competition, entry, votingCategories } = toRefs(props);
+type Props = {
+	competition: CommunityCompetitionModel;
+	entry: CommunityCompetitionEntryModel;
+	votingCategories: CommunityCompetitionVotingCategoryModel[];
+	userVotes: CommunityCompetitionEntryVoteModel[];
+	isParticipant: boolean;
+	isArchived: boolean;
+	isBlocked: boolean;
+};
+const { competition, entry, votingCategories } = defineProps<Props>();
 
 const { user } = useCommonStore();
 const route = useRoute();
@@ -62,7 +43,7 @@ const loginUrl = computed(() => {
 
 	// Append the current entry modal hash to open it back up if there isn't one on the current url.
 	if (!route.hash) {
-		const entryHash = '#entry-' + entry.value.id;
+		const entryHash = '#entry-' + entry.id;
 		url += encodeURIComponent(entryHash);
 	}
 
@@ -71,23 +52,23 @@ const loginUrl = computed(() => {
 
 const shouldShow = computed(
 	() =>
-		competition.value.is_voting_enabled &&
-		competition.value.has_community_voting &&
-		competition.value.periodNum >= CompetitionPeriodVoting
+		competition.is_voting_enabled &&
+		competition.has_community_voting &&
+		competition.periodNum >= CompetitionPeriodVoting
 );
 
-const votingActive = toRef(() => competition.value.period === 'voting');
+const votingActive = toRef(() => competition.period === 'voting');
 
 const votingCategoryError = toRef(
-	() => competition.value.voting_type === 'categories' && votingCategories.value.length === 0
+	() => competition.voting_type === 'categories' && votingCategories.length === 0
 );
 
-const isOwner = toRef(() => entry.value.author.id === user.value?.id);
+const isOwner = toRef(() => entry.author.id === user.value?.id);
 
-const hasNoVotes = toRef(() => !entry.value.vote_results || entry.value.vote_results.length === 0);
+const hasNoVotes = toRef(() => !entry.vote_results || entry.vote_results.length === 0);
 
 const overallRank = computed(() => {
-	const overallResult = entry.value.vote_results.find(
+	const overallResult = entry.vote_results.find(
 		i => i.community_competition_voting_category_id === null
 	);
 	if (overallResult) {
@@ -99,21 +80,19 @@ const overallRank = computed(() => {
 
 const sortedVoteResults = computed(() => {
 	// Sort the vote results in the same manner as the categories are sorted.
-	const categoryResults = entry.value.vote_results
+	const categoryResults = entry.vote_results
 		.filter(i => i.community_competition_voting_category_id !== null)
 		.sort((a, b) =>
 			numberSort(
-				votingCategories.value.find(
-					i => i.id === a.community_competition_voting_category_id
-				)!.sort,
-				votingCategories.value.find(
-					i => i.id === b.community_competition_voting_category_id
-				)!.sort
+				votingCategories.find(i => i.id === a.community_competition_voting_category_id)!
+					.sort,
+				votingCategories.find(i => i.id === b.community_competition_voting_category_id)!
+					.sort
 			)
 		);
 
 	// Put the "overall" result last.
-	const overallResult = entry.value.vote_results.find(
+	const overallResult = entry.vote_results.find(
 		i => i.community_competition_voting_category_id === null
 	)!;
 
@@ -129,7 +108,7 @@ function getVotingCategoryDisplayName(votingCategoryId: number | null) {
 		return $gettext(`Overall`);
 	}
 
-	const category = votingCategories.value.find(i => i.id === votingCategoryId);
+	const category = votingCategories.find(i => i.id === votingCategoryId);
 	if (category) {
 		return category.name;
 	}
@@ -138,7 +117,7 @@ function getVotingCategoryDisplayName(votingCategoryId: number | null) {
 }
 
 function getVotingCategoryDescription(votingCategoryId: number | null) {
-	const category = votingCategories.value.find(i => i.id === votingCategoryId);
+	const category = votingCategories.find(i => i.id === votingCategoryId);
 	if (category) {
 		return category.description;
 	}
@@ -160,26 +139,24 @@ function getVotingCategoryDescription(votingCategoryId: number | null) {
 			</template>
 			<template v-else-if="isBlocked">
 				<div class="alert alert-notice">
-					<p v-translate>
-						<b>You have been blocked</b> from this community and cannot vote on jam
-						entries.
-					</p>
+					<AppTranslate tag="p">
+						You have been blocked from this community and cannot vote on jam entries.
+					</AppTranslate>
 				</div>
 			</template>
 			<template v-else-if="isArchived">
 				<div class="alert">
-					<p v-translate>
-						The channel for <b>this jam is archived</b> and voting is therefore
-						disabled.
-					</p>
+					<AppTranslate tag="p">
+						The channel for this jam is archived and voting is therefore disabled.
+					</AppTranslate>
 				</div>
 			</template>
 			<template v-else-if="votingCategoryError">
 				<div class="alert">
-					<p v-translate>
-						<b>Oops!</b> The Jam organizers wanted you to vote on multiple categories,
-						but they did not add any categories to vote on.
-					</p>
+					<AppTranslate tag="p">
+						Oops! The Jam organizers wanted you to vote on multiple categories, but they
+						did not add any categories to vote on.
+					</AppTranslate>
 				</div>
 			</template>
 			<template v-else-if="isOwner">
@@ -272,24 +249,24 @@ function getVotingCategoryDescription(votingCategoryId: number | null) {
 			</template>
 			<template v-else>
 				<p>
-					<span
-						v-translate="{
+					<AppTranslate
+						:translate-n="entry.vote_count"
+						translate-plural="This entry was voted on by %{ voteCount } people and its final ranking is #%{ rank } out of %{ entryCount } entries."
+						:translate-params="{
 							voteCount: entry.vote_count,
 							rank: overallRank,
 							entryCount: competition.entry_count,
 						}"
-						:translate-n="entry.vote_count"
-						translate-plural="This entry was voted on by <b>%{ voteCount }</b> people and its final ranking is <b>#%{ rank }</b> out of <b>%{ entryCount }</b> entries."
 					>
-						This entry was voted on by <b>%{ voteCount }</b> person and its final
-						ranking is <b>#%{ rank }</b> out of <b>%{ entryCount }</b> entries.
-					</span>
+						This entry was voted on by %{ voteCount } person and its final ranking is
+						#%{ rank } out of %{ entryCount } entries.
+					</AppTranslate>
 				</p>
 				<p>
-					<i v-translate>
+					<AppTranslate>
 						Overall rank is based on the weighted average, which takes into account all
 						ratings for all entries.
-					</i>
+					</AppTranslate>
 					<small v-if="!moreVoteResultInfoVisible">
 						[
 						<a @click="onClickMoreInfo"> {{ $gettext(`more info`) }}</a>

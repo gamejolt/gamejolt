@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import AppActivityFeedItemPlaceholder from './item/AppActivityFeedItemPlaceholder.vue';
+import AppActivityFeedItemPlaceholder from '~app/components/activity/feed/item/AppActivityFeedItemPlaceholder.vue';
 </script>
 
 <template>

@@ -1,35 +1,27 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import AppCard from '../../../../_common/card/AppCard.vue';
-import { showSuccessGrowl } from '../../../../_common/growls/growls.service';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import {
-	$removeUserAddress,
-	UserAddressModel,
-} from '../../../../_common/user/address/address.model';
-import AppUserAddressDetails from './AppUserAddressDetails.vue';
-import { showUserAddressEditModal } from './edit-modal/edit-modal.service';
+import AppUserAddressDetails from '~app/components/user/address/AppUserAddressDetails.vue';
+import { showUserAddressEditModal } from '~app/components/user/address/edit-modal/edit-modal.service';
+import AppButton from '~common/button/AppButton.vue';
+import AppCard from '~common/card/AppCard.vue';
+import { showSuccessGrowl } from '~common/growls/growls.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { showModalConfirm } from '~common/modal/confirm/confirm-service';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { $removeUserAddress, UserAddressModel } from '~common/user/address/address.model';
 
-const props = defineProps({
-	address: {
-		type: Object as PropType<UserAddressModel>,
-		required: true,
-	},
-	showRemove: {
-		type: Boolean,
-	},
-});
+type Props = {
+	address: UserAddressModel;
+	showRemove?: boolean;
+};
+const { address, showRemove } = defineProps<Props>();
 
-const emit = defineEmits({
-	remove: () => true,
-});
+const emit = defineEmits<{
+	remove: [];
+}>();
 
 function edit() {
-	showUserAddressEditModal(props.address);
+	showUserAddressEditModal(address);
 }
 
 async function remove() {
@@ -38,7 +30,7 @@ async function remove() {
 		return;
 	}
 
-	await $removeUserAddress(props.address);
+	await $removeUserAddress(address);
 
 	showSuccessGrowl(
 		$gettext(`Your address has successfully been removed.`),

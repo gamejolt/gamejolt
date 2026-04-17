@@ -28,7 +28,7 @@ export default function viteHtmlResolve(options?: HtmlResolvePluginOptions) {
 	const name2Id = new Map<string, number>();
 	const id2Name = new Map<number, string>();
 
-	function makeResolveTag(strToResolve) {
+	function makeResolveTag(strToResolve: string) {
 		let id: number;
 		if (name2Id.has(strToResolve)) {
 			id = name2Id.get(strToResolve)!;

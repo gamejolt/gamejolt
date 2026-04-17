@@ -1,41 +1,29 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType, computed, ref, toRefs } from 'vue';
+import { computed, CSSProperties, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { Api } from '../../../../../../../_common/api/api.service';
-import AppButton from '../../../../../../../_common/button/AppButton.vue';
-import AppIllustration from '../../../../../../../_common/illustration/AppIllustration.vue';
-import { illExtremeSadness } from '../../../../../../../_common/illustration/illustrations';
-import AppJolticon from '../../../../../../../_common/jolticon/AppJolticon.vue';
-import AppLoading from '../../../../../../../_common/loading/AppLoading.vue';
-import AppModal from '../../../../../../../_common/modal/AppModal.vue';
-import { useModal } from '../../../../../../../_common/modal/modal.service';
-import { storeModelList } from '../../../../../../../_common/model/model-store.service';
-import { StickerModel } from '../../../../../../../_common/sticker/sticker.model';
-import { $gettext } from '../../../../../../../_common/translate/translate.service';
-import { kFontSizeSmall } from '../../../../../../../_styles/variables';
-import { run } from '../../../../../../../utils/utils';
-import AppFormStickerSelectorItem from './AppFormStickerSelectorItem.vue';
 
-const props = defineProps({
-	stickerPackId: {
-		type: Number,
-		default: undefined,
-	},
-	premium: {
-		type: Boolean,
-		required: true,
-	},
-	currentStickers: {
-		type: Array as PropType<StickerModel[]>,
-		required: true,
-	},
-	availableSlots: {
-		type: Number,
-		required: true,
-	},
-});
+import AppFormStickerSelectorItem from '~app/views/dashboard/shop/product/_forms/_sticker-selector/AppFormStickerSelectorItem.vue';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import AppIllustration from '~common/illustration/AppIllustration.vue';
+import { illExtremeSadness } from '~common/illustration/illustrations';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLoading from '~common/loading/AppLoading.vue';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import { storeModelList } from '~common/model/model-store.service';
+import { StickerModel } from '~common/sticker/sticker.model';
+import { $gettext } from '~common/translate/translate.service';
+import { kFontSizeSmall } from '~styles/variables';
+import { run } from '~utils/utils';
 
-const { stickerPackId, premium, currentStickers, availableSlots } = toRefs(props);
+type Props = {
+	stickerPackId?: number;
+	premium: boolean;
+	currentStickers: StickerModel[];
+	availableSlots: number;
+};
+const { stickerPackId, premium, currentStickers, availableSlots } = defineProps<Props>();
 
 const router = useRouter();
 const modal = useModal()!;
@@ -45,26 +33,26 @@ const selectableStickers = ref<StickerModel[]>([]);
 const selectedStickers = ref<StickerModel[]>([]);
 
 /** Combined current in the pack and the newly selected */
-const combinedStickers = computed(() => currentStickers.value.concat(selectedStickers.value));
+const combinedStickers = computed(() => currentStickers.concat(selectedStickers.value));
 
 run(async () => {
 	let url = '/web/dash/creators/shop/packs/stickers';
-	if (stickerPackId?.value) {
-		url += `/${stickerPackId.value}`;
+	if (stickerPackId) {
+		url += `/${stickerPackId}`;
 	}
 
 	const payload = await Api.sendRequest(url);
 
 	selectableStickers.value = storeModelList(
 		StickerModel,
-		premium.value ? payload.selectablePremium : payload.selectableFree
-	).filter(i => !currentStickers.value.includes(i));
+		premium ? payload.selectablePremium : payload.selectableFree
+	).filter(i => !currentStickers.includes(i));
 
 	isLoading.value = false;
 });
 
 const modalError = computed(() => {
-	if (combinedStickers.value.length >= availableSlots.value) {
+	if (combinedStickers.value.length >= availableSlots) {
 		return $gettext(`You've hit the sticker limit for this pack.`);
 	}
 

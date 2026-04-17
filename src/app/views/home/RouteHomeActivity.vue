@@ -1,20 +1,21 @@
 <script lang="ts" setup>
 import { inject, ref, watch } from 'vue';
 import { RouterLink } from 'vue-router';
-import { Api } from '../../../_common/api/api.service';
-import AppButton from '../../../_common/button/AppButton.vue';
-import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
-import { illNoComments } from '../../../_common/illustration/illustrations';
-import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
-import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
-import AppActivityFeedPlaceholder from '../../components/activity/feed/AppActivityFeedPlaceholder.vue';
-import { ActivityFeedService } from '../../components/activity/feed/feed-service';
-import { useGridStore } from '../../components/grid/grid-store';
-import { AppActivityFeedLazy } from '../../components/lazy';
-import { useAppStore } from '../../store/index';
-import { routeDiscoverHome } from '../discover/home/home.route';
-import { RouteActivityFeedController } from './RouteHomeFeed.vue';
-import { shouldUseFYPDefault } from './home-feed.service';
+
+import AppActivityFeedPlaceholder from '~app/components/activity/feed/AppActivityFeedPlaceholder.vue';
+import { ActivityFeedService } from '~app/components/activity/feed/feed-service';
+import { useGridStore } from '~app/components/grid/grid-store';
+import { AppActivityFeedLazy } from '~app/components/lazy';
+import { useAppStore } from '~app/store/index';
+import { routeDiscoverHome } from '~app/views/discover/home/home.route';
+import { shouldUseFYPDefault } from '~app/views/home/home-feed.service';
+import { RouteActivityFeedController } from '~app/views/home/RouteHomeFeed.vue';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import AppIllustration from '~common/illustration/AppIllustration.vue';
+import { illNoComments } from '~common/illustration/illustrations';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
 
 defineOptions(
 	defineAppRouteOptions({

@@ -1,17 +1,14 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-import { styleWhen } from '../../../_styles/mixins';
-import { Environment } from '../../environment/environment.service';
-import { Screen } from '../../screen/screen-service';
-import AppUserAvatarImg from '../user-avatar/AppUserAvatarImg.vue';
-import { UserModel } from '../user.model';
+import { Environment } from '~common/environment/environment.service';
+import { Screen } from '~common/screen/screen-service';
+import { UserModel } from '~common/user/user.model';
+import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
+import { styleWhen } from '~styles/mixins';
 
-defineProps({
-	user: {
-		type: Object as PropType<UserModel | null | undefined>,
-		required: true,
-	},
-});
+type Props = {
+	user: UserModel | null | undefined;
+};
+const { user } = defineProps<Props>();
 </script>
 
 <template>

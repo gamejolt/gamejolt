@@ -1,40 +1,35 @@
 <script lang="ts" setup>
-import { PropType, ref } from 'vue';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import AppInviteCard from '../../../../_common/invite/AppInviteCard.vue';
-import AppModal from '../../../../_common/modal/AppModal.vue';
-import AppModalFloatingHeader from '../../../../_common/modal/AppModalFloatingHeader.vue';
-import { useModal } from '../../../../_common/modal/modal.service';
-import AppSectionTitle from '../../../../_common/section/AppSectionTitle.vue';
-import AppShareCard from '../../../../_common/share/card/AppShareCard.vue';
-import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
-import { kThemeFg10 } from '../../../../_common/theme/variables';
-import AppTimeAgo from '../../../../_common/time/AppTimeAgo.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { styleChangeBg } from '../../../../_styles/mixins';
-import AppProfileSocialLinks from '../AppProfileSocialLinks.vue';
-import { ProfileRouteStore, provideProfileRouteStore } from '../RouteProfile.vue';
-import AppProfileActionButtons from '../overview/AppProfileActionButtons.vue';
-import AppProfileBio from '../overview/AppProfileBio.vue';
+import { ref } from 'vue';
+
+import AppProfileSocialLinks from '~app/views/profile/AppProfileSocialLinks.vue';
+import AppProfileActionButtons from '~app/views/profile/overview/AppProfileActionButtons.vue';
+import AppProfileBio from '~app/views/profile/overview/AppProfileBio.vue';
 import AppProfileShortcuts, {
 	ProfileQuickLink,
-} from '../overview/shortcut/AppProfileShortcuts.vue';
+} from '~app/views/profile/overview/shortcut/AppProfileShortcuts.vue';
+import { ProfileRouteStore, provideProfileRouteStore } from '~app/views/profile/RouteProfile.vue';
+import AppButton from '~common/button/AppButton.vue';
+import AppInviteCard from '~common/invite/AppInviteCard.vue';
+import AppModal from '~common/modal/AppModal.vue';
+import AppModalFloatingHeader from '~common/modal/AppModalFloatingHeader.vue';
+import { useModal } from '~common/modal/modal.service';
+import AppSectionTitle from '~common/section/AppSectionTitle.vue';
+import AppShareCard from '~common/share/card/AppShareCard.vue';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import { kThemeFg10 } from '~common/theme/variables';
+import AppTimeAgo from '~common/time/AppTimeAgo.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { styleChangeBg } from '~styles/mixins';
 
-const props = defineProps({
-	routeStore: {
-		type: Object as PropType<ProfileRouteStore>,
-		required: true,
-	},
-	quickLinks: {
-		type: Array as PropType<ProfileQuickLink[]>,
-		required: true,
-	},
-});
+type Props = {
+	routeStore: ProfileRouteStore;
+	quickLinks: ProfileQuickLink[];
+};
+const { routeStore, quickLinks } = defineProps<Props>();
 
 // Route store shouldn't change, so this is fine.
-provideProfileRouteStore(props.routeStore);
-// eslint-disable-next-line vue/no-setup-props-destructure
-const { user: routeUser, myUser, isMe, shareUrl } = props.routeStore;
+provideProfileRouteStore(routeStore);
+const { user: routeUser, myUser, isMe, shareUrl } = routeStore;
 
 const modal = useModal()!;
 

@@ -1,31 +1,30 @@
 <script lang="ts" setup>
-import { PropType, nextTick, onUpdated, ref, toRef, toRefs, watch } from 'vue';
+import { nextTick, onUpdated, ref, toRef, watch } from 'vue';
 import { useRouter } from 'vue-router';
-import { Analytics } from '../../analytics/analytics.service';
-import { showErrorGrowl } from '../../growls/growls.service';
-import { createLightbox } from '../../lightbox/lightbox-helpers';
-import AppLoading from '../../loading/AppLoading.vue';
-import AppScrollScroller from '../../scroll/AppScrollScroller.vue';
-import { $gettext } from '../../translate/translate.service';
-import { GameScreenshotModel } from '../screenshot/screenshot.model';
-import { GameSketchfabModel } from '../sketchfab/sketchfab.model';
-import { GameVideoModel } from '../video/video.model';
-import AppGameMediaBarItem, { MediaBarItemMaxHeight } from './item/AppGameMediaBarItem.vue';
 
-const props = defineProps({
-	mediaItems: {
-		type: Array as PropType<(GameScreenshotModel | GameVideoModel | GameSketchfabModel)[]>,
-		required: true,
-	},
-});
+import { Analytics } from '~common/analytics/analytics.service';
+import AppGameMediaBarItem, {
+	MediaBarItemMaxHeight,
+} from '~common/game/media-bar/item/AppGameMediaBarItem.vue';
+import { GameScreenshotModel } from '~common/game/screenshot/screenshot.model';
+import { GameSketchfabModel } from '~common/game/sketchfab/sketchfab.model';
+import { GameVideoModel } from '~common/game/video/video.model';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import { createLightbox } from '~common/lightbox/lightbox-helpers';
+import AppLoading from '~common/loading/AppLoading.vue';
+import AppScrollScroller from '~common/scroll/AppScrollScroller.vue';
+import { $gettext } from '~common/translate/translate.service';
 
-const { mediaItems } = toRefs(props);
+type Props = {
+	mediaItems: (GameScreenshotModel | GameVideoModel | GameSketchfabModel)[];
+};
+const { mediaItems } = defineProps<Props>();
 const router = useRouter();
 
 const urlChecked = ref(false);
 const mediaBarHeight = ref(MediaBarItemMaxHeight + 40);
 
-const lightbox = createLightbox(mediaItems);
+const lightbox = createLightbox(toRef(() => mediaItems));
 
 const activeItem = toRef(() => (lightbox.isShowing ? lightbox.activeItem : null));
 
@@ -53,7 +52,7 @@ onUpdated(async () => {
 	// It seems like since we were changing state in the updated event it
 	// wasn't correctly seeing that the check URL updates the state. Using
 	// next tick to fix this.
-	if (typeof mediaItems.value !== 'undefined' && !urlChecked.value) {
+	if (typeof mediaItems !== 'undefined' && !urlChecked.value) {
 		urlChecked.value = true;
 		await nextTick();
 		checkUrl();
@@ -63,7 +62,7 @@ onUpdated(async () => {
 function setActiveItem(item: any) {
 	let index = item;
 	if (typeof item === 'object') {
-		index = mediaItems.value.findIndex(_item => _item.id === item.id);
+		index = mediaItems.findIndex(_item => _item.id === item.id);
 	}
 
 	go(index);
@@ -96,7 +95,7 @@ function checkUrl() {
 		}
 
 		if (id && type) {
-			const item = mediaItems.value.find(_item => _item.id === id);
+			const item = mediaItems.find(_item => _item.id === id);
 			if (item) {
 				setActiveItem(item);
 				trackEvent('permalink');

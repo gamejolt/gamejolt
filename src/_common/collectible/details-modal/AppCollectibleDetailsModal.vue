@@ -1,23 +1,17 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-import AppButton from '../../button/AppButton.vue';
-import { JoltydexFeed } from '../../joltydex/joltydex-feed';
-import AppModal from '../../modal/AppModal.vue';
-import { useModal } from '../../modal/modal.service';
-import { $gettext } from '../../translate/translate.service';
-import AppCollectibleThumbDetails from '../AppCollectibleThumbDetails.vue';
-import { CollectibleModel } from '../collectible.model';
+import AppButton from '~common/button/AppButton.vue';
+import AppCollectibleThumbDetails from '~common/collectible/AppCollectibleThumbDetails.vue';
+import { CollectibleModel } from '~common/collectible/collectible.model';
+import { JoltydexFeed } from '~common/joltydex/joltydex-feed';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import { $gettext } from '~common/translate/translate.service';
 
-defineProps({
-	collectible: {
-		type: Object as PropType<CollectibleModel>,
-		required: true,
-	},
-	feed: {
-		type: Object as PropType<JoltydexFeed>,
-		required: true,
-	},
-});
+type Props = {
+	collectible: CollectibleModel;
+	feed: JoltydexFeed;
+};
+const { collectible, feed } = defineProps<Props>();
 
 const modal = useModal()!;
 </script>

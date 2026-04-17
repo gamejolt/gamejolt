@@ -1,63 +1,59 @@
 <script lang="ts" setup>
-import { PropType, computed, ref, toRefs } from 'vue';
-import { useGridStore } from '../../../app/components/grid/grid-store';
-import { useAppStore } from '../../../app/store/index';
-import { CommunityJoinLocation } from '../../analytics/analytics.service';
-import { vAppAuthRequired } from '../../auth/auth-required-directive';
-import AppButton from '../../button/AppButton.vue';
-import { formatNumber } from '../../filters/number';
-import { showErrorGrowl } from '../../growls/growls.service';
-import { useCommonStore } from '../../store/common-store';
-import { vAppTooltip } from '../../tooltip/tooltip-directive';
-import { $gettext } from '../../translate/translate.service';
-import { CommunityModel } from '../community.model';
+import { computed, ref } from 'vue';
 
-const props = defineProps({
-	community: {
-		type: Object as PropType<CommunityModel>,
-		required: true,
-	},
-	location: {
-		type: String as PropType<CommunityJoinLocation>,
-		required: true,
-	},
-	block: {
-		type: Boolean,
-	},
-	hideCount: {
-		type: Boolean,
-	},
-	solid: {
-		type: Boolean,
-	},
-});
+import { useGridStore } from '~app/components/grid/grid-store';
+import { useAppStore } from '~app/store/index';
+import { CommunityJoinLocation } from '~common/analytics/analytics.service';
+import { vAppAuthRequired } from '~common/auth/auth-required-directive';
+import AppButton from '~common/button/AppButton.vue';
+import { CommunityModel } from '~common/community/community.model';
+import { formatNumber } from '~common/filters/number';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import { useCommonStore } from '~common/store/common-store';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { $gettext } from '~common/translate/translate.service';
+
+type Props = {
+	community: CommunityModel;
+	location: CommunityJoinLocation;
+	block?: boolean;
+	hideCount?: boolean;
+	solid?: boolean;
+	disabled?: boolean;
+};
+
+const {
+	community,
+	location,
+	block = false,
+	hideCount = false,
+	solid = false,
+	disabled = false,
+} = defineProps<Props>();
 
 const { joinCommunity, leaveCommunity } = useAppStore();
 const { user } = useCommonStore();
 const { grid } = useGridStore();
 
-const { community, location, hideCount } = toRefs(props);
 const isProcessing = ref(false);
 
 const badge = computed(() =>
-	!hideCount.value && community.value.member_count
-		? formatNumber(community.value.member_count)
-		: ''
+	!hideCount && community.member_count ? formatNumber(community.member_count) : ''
 );
 
 // Guests should always be allowed to attempt to join stuff.
 // When they log in, we can check if they are actually allowed.
 const canJoin = computed(
-	() => !user.value || (!!user.value.can_join_communities && !community.value.user_block)
+	() => !user.value || (!!user.value.can_join_communities && !community.user_block)
 );
 
 const isDisabled = computed(() => {
-	if (isProcessing.value) {
+	if (disabled || isProcessing.value) {
 		return true;
 	}
 
 	// Always allow users to leave a community
-	if (community.value.is_member) {
+	if (community.is_member) {
 		return false;
 	}
 
@@ -71,13 +67,13 @@ async function onClick() {
 
 	isProcessing.value = true;
 
-	if (!community.value.is_member) {
+	if (!community.is_member) {
 		try {
-			await joinCommunity(community.value, {
+			await joinCommunity(community, {
 				grid: grid.value,
-				location: location.value,
+				location: location,
 			});
-		} catch (e) {
+		} catch (e: any) {
 			console.log(e);
 			let message = $gettext(`Something has prevented you from joining this community.`);
 			if (e.errors && e.errors['limit-reached']) {
@@ -88,9 +84,9 @@ async function onClick() {
 		}
 	} else {
 		try {
-			await leaveCommunity(community.value, {
+			await leaveCommunity(community, {
 				grid: grid.value,
-				location: location.value,
+				location: location,
 				shouldConfirm: true,
 			});
 		} catch (e) {

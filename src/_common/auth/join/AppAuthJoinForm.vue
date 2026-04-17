@@ -1,24 +1,24 @@
 <script lang="ts" setup>
-import { toRefs } from 'vue';
 import { useRouter } from 'vue-router';
-import { Api } from '../../api/api.service';
-import AppButton from '../../button/AppButton.vue';
-import { Connection } from '../../connection/connection-service';
-import { Environment } from '../../environment/environment.service';
-import AppFormVue, { createForm, FormController } from '../../form-vue/AppForm.vue';
-import AppFormButton from '../../form-vue/AppFormButton.vue';
-import AppFormControl from '../../form-vue/AppFormControl.vue';
-import AppFormControlErrors from '../../form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../../form-vue/AppFormGroup.vue';
+
+import { Api } from '~common/api/api.service';
+import googleImage from '~common/auth/google-icon.svg';
+import AppButton from '~common/button/AppButton.vue';
+import { Connection } from '~common/connection/connection-service';
+import { Environment } from '~common/environment/environment.service';
+import AppFormVue, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
 import {
 	validateAvailability,
 	validateMaxLength,
 	validateMinLength,
 	validateUsername,
-} from '../../form-vue/validators';
-import { LinkedAccountProvider } from '../../linked-account/linked-account.model';
-import { LinkedAccounts } from '../../linked-account/linked-accounts.service';
-import googleImage from '../google-icon.svg';
+} from '~common/form-vue/validators';
+import { LinkedAccountProvider } from '~common/linked-account/linked-account.model';
+import { LinkedAccounts } from '~common/linked-account/linked-accounts.service';
 
 export type JoinFormModel = {
 	email: string;
@@ -27,23 +27,19 @@ export type JoinFormModel = {
 	token: string;
 };
 
-const props = defineProps({
-	overlay: {
-		type: Boolean,
-	},
-	blocked: {
-		type: Boolean,
-	},
-});
+type Props = {
+	overlay?: boolean;
+	blocked?: boolean;
+};
+defineProps<Props>();
 
-const emit = defineEmits({
-	submit: (_model: JoinFormModel) => true,
-});
+const emit = defineEmits<{
+	submit: [model: JoinFormModel];
+}>();
 
-const { overlay, blocked } = toRefs(props);
 const router = useRouter();
 
-const form: FormController<JoinFormModel> = createForm({
+const form: FormController<JoinFormModel> = createForm<JoinFormModel>({
 	warnOnDiscard: false,
 	onSubmit() {
 		return Api.sendRequest('/web/auth/join', form.formModel);

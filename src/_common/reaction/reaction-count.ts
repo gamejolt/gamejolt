@@ -1,11 +1,12 @@
 import { AxiosError } from 'axios';
-import { arrayRemove } from '../../utils/array';
-import { getCurrentServerTime } from '../../utils/server-time';
-import { Api } from '../api/api.service';
-import { showEmojiSelectorModal } from '../emoji/selector-modal/modal.service';
-import { showErrorGrowl } from '../growls/growls.service';
-import { PayloadError } from '../payload/payload-service';
-import { $gettext } from '../translate/translate.service';
+
+import { Api } from '~common/api/api.service';
+import { showEmojiSelectorModal } from '~common/emoji/selector-modal/modal.service';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import { PayloadError } from '~common/payload/payload-service';
+import { $gettext } from '~common/translate/translate.service';
+import { arrayRemove } from '~utils/array';
+import { getCurrentServerTime } from '~utils/server-time';
 
 export interface ReactionableModel {
 	id: number;

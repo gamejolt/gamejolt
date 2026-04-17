@@ -1,13 +1,14 @@
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import { ClientAutoStart } from '../../../../_common/client/safe-exports';
-import AppForm, { FormController, createForm } from '../../../../_common/form-vue/AppForm.vue';
-import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
-import AppFormControlErrors from '../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
-import { validateMinValue } from '../../../../_common/form-vue/validators';
+import { computed, useTemplateRef, watch } from 'vue';
+
+import AppButton from '~common/button/AppButton.vue';
+import { ClientAutoStart } from '~common/client/safe-exports';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlToggle from '~common/form-vue/controls/AppFormControlToggle.vue';
+import { validateMinValue } from '~common/form-vue/validators';
 import {
 	SettingAnimatedThumbnails,
 	SettingAutostartClient,
@@ -21,15 +22,16 @@ import {
 	SettingRestrictedBrowsing,
 	SettingThemeAlwaysOurs,
 	SettingThemeDark,
-} from '../../../../_common/settings/settings.service';
-import { useThemeStore } from '../../../../_common/theme/theme.store';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+} from '~common/settings/settings.service';
+import { useThemeStore } from '~common/theme/theme.store';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 type FormModel = {
 	chat_notify_friends_online: boolean;
 	restricted_browsing: boolean;
 	broadcast_modal: boolean;
 	animated_thumbnails: boolean;
+	parallax_backgrounds: boolean;
 	feed_notifications: boolean;
 	game_install_dir: string;
 	queue_when_playing: boolean;
@@ -45,7 +47,7 @@ type FormModel = {
 
 const { setDark, setAlwaysOurs } = useThemeStore();
 
-const gameInstallDir = ref<HTMLInputElement>();
+const gameInstallDir = useTemplateRef('gameInstallDir');
 
 const canClientAutostart = computed(() => ClientAutoStart?.canAutoStart);
 const browserNotificationsDisabled = computed(() => (Notification as any).permission === 'denied');
@@ -56,7 +58,7 @@ const form: FormController<FormModel> = createForm({
 		form.formModel['restricted_browsing'] = SettingRestrictedBrowsing.get();
 		form.formModel['broadcast_modal'] = SettingBroadcastModal.get();
 		form.formModel['animated_thumbnails'] = SettingAnimatedThumbnails.get();
-		form.formModel['parallax_backgrounds'] = SettingParallaxBackgrounds.get();
+		form.formModel.parallax_backgrounds = SettingParallaxBackgrounds.get();
 		form.formModel['feed_notifications'] = SettingFeedNotifications.get();
 		form.formModel['theme_dark'] = SettingThemeDark.get();
 		form.formModel['theme_always_ours'] = SettingThemeAlwaysOurs.get();
@@ -118,7 +120,7 @@ function _onChange() {
 /**
  * Just opens a file location dialog.
  */
-function changeLocation(elem: HTMLInputElement | undefined) {
+function changeLocation(elem: HTMLInputElement | null) {
 	elem?.click();
 }
 

@@ -1,8 +1,7 @@
 <script lang="ts">
-import { PropType } from 'vue';
-import { Jolticon } from '../../../../../_common/jolticon/AppJolticon.vue';
-import { ProfileTileAction } from '../RouteProfileOverview.vue';
-import AppProfileShortcut from './AppProfileShortcut.vue';
+import { ProfileTileAction } from '~app/views/profile/overview/RouteProfileOverview.vue';
+import AppProfileShortcut from '~app/views/profile/overview/shortcut/AppProfileShortcut.vue';
+import { Jolticon } from '~common/jolticon/AppJolticon.vue';
 
 export type ProfileQuickLink = {
 	label: string;
@@ -13,15 +12,11 @@ const itemWidth = 58;
 </script>
 
 <script lang="ts" setup>
-defineProps({
-	items: {
-		type: Array as PropType<ProfileQuickLink[]>,
-		required: true,
-	},
-	centered: {
-		type: Boolean,
-	},
-});
+type Props = {
+	items: ProfileQuickLink[];
+	centered?: boolean;
+};
+const { items, centered = false } = defineProps<Props>();
 </script>
 
 <template>

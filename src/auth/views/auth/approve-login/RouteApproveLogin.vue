@@ -1,0 +1,154 @@
+<script lang="ts">
+import { computed, ref } from 'vue';
+import { useRoute } from 'vue-router';
+
+import { authOnLogin, getRedirectUrl, redirectToDashboard } from '~common/auth/auth.service';
+import AppButton from '~common/button/AppButton.vue';
+import { Navigate } from '~common/navigate/navigate.service';
+import AppProgressPoller from '~common/progress/poller/AppProgressPoller.vue';
+import { defineAppRouteOptions } from '~common/route/route-component';
+import { createAppRoute } from '~common/route/route-component';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { RouteLocationRedirect } from '~utils/router';
+
+export default {
+	name: 'RouteApproveLogin',
+	...defineAppRouteOptions({
+		reloadOn: 'always',
+		async resolver({ route }) {
+			if (!import.meta.env.SSR) {
+				const pollingToken = sessionStorage.getItem('login-polling-token');
+				if (!pollingToken) {
+					return new RouteLocationRedirect({
+						name: 'auth.login',
+						query: { redirect: route.query.redirect || undefined },
+					});
+				}
+
+				sessionStorage.removeItem('login-polling-token');
+				return pollingToken;
+			}
+			return null;
+		},
+	}),
+};
+</script>
+
+<script lang="ts" setup>
+const route = useRoute();
+
+const pollingToken = ref<string | null>(null);
+const isExpired = ref(false);
+const isRejected = ref(false);
+
+const isPolling = computed(() => !isExpired.value && !isRejected.value);
+
+createAppRoute({
+	routeTitle: $gettext('Approve Login Location'),
+	onResolved({ payload }) {
+		pollingToken.value = payload;
+	},
+});
+
+async function onApproved() {
+	authOnLogin('email');
+
+	const location = getRedirectUrl(route.query.redirect as string);
+	if (location) {
+		// TODO(desktop-app-fixes) can this be an external url?
+		Navigate.goto(location);
+		return;
+	}
+
+	redirectToDashboard();
+}
+
+async function onError(e: any) {
+	if (e instanceof Error) {
+		throw e;
+	}
+
+	if (e.status && e.status === 'error' && e.reason) {
+		switch (e.reason) {
+			case 'expired':
+				isExpired.value = true;
+				return;
+
+			case 'rejected':
+				isRejected.value = true;
+				return;
+		}
+	}
+
+	console.error('Invalid looking response from polling blocked login', e);
+}
+</script>
+
+<template>
+	<div class="anim-fade-in-up">
+		<h2 class="section-header">
+			<AppTranslate>You must approve this device</AppTranslate>
+		</h2>
+
+		<p>
+			<AppTranslate>
+				We've sent you an email with a link to approve this device. We are doing this in
+				order to protect your account.
+			</AppTranslate>
+		</p>
+
+		<div v-if="isPolling" class="-polling">
+			<p class="small text-muted">
+				<AppTranslate>
+					If you don't see the email within a few minutes, please check your spam folder.
+					It might have gobbled it up.
+				</AppTranslate>
+			</p>
+		</div>
+		<template v-else>
+			<div class="-error alert alert-notice">
+				<AppTranslate v-if="isExpired">
+					Oh no! This login request has expired. Please try logging in again.
+				</AppTranslate>
+				<AppTranslate v-else-if="isRejected">
+					Oh no! This login request got rejected.
+				</AppTranslate>
+			</div>
+
+			<AppButton class="-back-button" :to="{ name: 'auth.login' }" block>
+				<AppTranslate>Go Back</AppTranslate>
+			</AppButton>
+		</template>
+
+		<!--
+			We poll to see if their account gets authorized or not.
+			When it does, we can log them in.
+		-->
+		<AppProgressPoller
+			v-if="pollingToken"
+			:url="`/web/auth/poll-blocked-login/${pollingToken}`"
+			@complete="onApproved"
+			@error="onError"
+		/>
+	</div>
+</template>
+
+<style lang="stylus" scoped>
+.-polling
+	display: flex
+	flex-direction: column
+	align-items: center
+	justify-content: center
+
+	.-loading
+		margin-bottom: 0
+
+.-error
+	display: flex
+	align-items: center
+	justify-content: center
+
+.-back-button
+	border-bottom: $border-width-base solid !important
+</style>

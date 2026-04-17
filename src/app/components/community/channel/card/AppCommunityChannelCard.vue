@@ -1,95 +1,65 @@
 <script lang="ts">
-import { PropType, computed, onMounted, ref, toRefs } from 'vue';
+import { computed, type HTMLAttributes, onMounted, ref, useTemplateRef } from 'vue';
 import { RouterLink } from 'vue-router';
-import {
-	CommunityModel,
-	CommunityPresetChannelType,
-} from '../../../../../_common/community/community.model';
-import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import AppMediaItemBackdrop from '../../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
-import { MediaItemModel } from '../../../../../_common/media-item/media-item-model';
-import { vAppObserveDimensions } from '../../../../../_common/observe-dimensions/observe-dimensions.directive';
-import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
+
+import { CommunityModel, CommunityPresetChannelType } from '~common/community/community.model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppMediaItemBackdrop from '~common/media-item/backdrop/AppMediaItemBackdrop.vue';
+import { MediaItemModel } from '~common/media-item/media-item-model';
+import { vAppObserveDimensions } from '~common/observe-dimensions/observe-dimensions.directive';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 
 export const CommunityChannelCardWidth = 270;
 export const CommunityChannelCardHeight = 70;
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	community: {
-		type: Object as PropType<CommunityModel>,
-		required: true,
-	},
-	path: {
-		type: String,
-		required: true,
-	},
-	label: {
-		type: String,
-		required: true,
-	},
-	backgroundItem: {
-		type: Object as PropType<MediaItemModel>,
-		default: undefined,
-	},
-	isActive: {
-		type: Boolean,
-	},
-	isUnread: {
-		type: Boolean,
-	},
-	sort: {
-		type: String,
-		default: undefined,
-	},
-	isLocked: {
-		type: Boolean,
-	},
-	isUnpublished: {
-		type: Boolean,
-	},
-	isArchived: {
-		type: Boolean,
-	},
-	channelType: {
-		type: String,
-		default: undefined,
-	},
-});
+type Props = {
+	community: CommunityModel;
+	path: string;
+	label: string;
+	backgroundItem?: MediaItemModel;
+	isActive?: boolean;
+	isUnread?: boolean;
+	sort?: string;
+	isLocked?: boolean;
+	isUnpublished?: boolean;
+	isArchived?: boolean;
+	channelType?: string;
+} & /* @vue-ignore */ Pick<HTMLAttributes, 'onClick'>;
 
 const {
 	community,
 	path,
 	label,
-	backgroundItem,
-	isActive,
-	isUnread,
-	sort,
-	isLocked,
-	isUnpublished,
-	isArchived,
-	channelType,
-} = toRefs(props);
+	backgroundItem = undefined,
+	isActive = false,
+	isUnread = false,
+	sort = undefined,
+	isLocked = false,
+	isUnpublished = false,
+	isArchived = false,
+	channelType = undefined,
+} = defineProps<Props>();
 
-const rootElem = ref<HTMLDivElement>();
+const rootElem = useTemplateRef('rootElem');
 const cardHeight = ref<number>(CommunityChannelCardHeight);
 
 const linkTo = computed(() => {
-	if (path.value === CommunityPresetChannelType.FEATURED) {
+	if (path === CommunityPresetChannelType.FEATURED) {
 		return {
 			name: 'communities.view.overview',
-			params: { path: community.value.path },
+			params: { path: community.path },
 		};
 	}
 
 	const link = {
 		name: 'communities.view.channel',
-		params: { path: community.value.path, channel: path.value },
+		params: { path: community.path, channel: path },
 	} as any;
 
-	if (sort?.value) {
-		link.query = { sort: sort.value };
+	if (sort) {
+		link.query = { sort: sort };
 	}
 
 	return link;

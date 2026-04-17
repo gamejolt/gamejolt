@@ -1,21 +1,20 @@
 <script lang="ts">
 import { computed, ref, toRef } from 'vue';
 import { useRoute } from 'vue-router';
-import { Api } from '../../../../_common/api/api.service';
-import AppCommunityCardCreatePlaceholder from '../../../../_common/community/card-create-placeholder/AppCommunityCardCreatePlaceholder.vue';
-import AppCommunityCard from '../../../../_common/community/card/AppCommunityCard.vue';
-import { CommunityModel } from '../../../../_common/community/community.model';
-import { HistoryCache } from '../../../../_common/history/cache/cache.service';
-import AppLoading from '../../../../_common/loading/AppLoading.vue';
-import { setAppPromotionCohort, useAppPromotionStore } from '../../../../_common/mobile-app/store';
-import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
-import { Screen } from '../../../../_common/screen/screen-service';
-import AppScrollInview, {
-	ScrollInviewConfig,
-} from '../../../../_common/scroll/inview/AppScrollInview.vue';
-import { useCommonStore } from '../../../../_common/store/common-store';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
+
+import AppShellPageBackdrop from '~app/components/shell/AppShellPageBackdrop.vue';
+import { Api } from '~common/api/api.service';
+import AppCommunityCard from '~common/community/card/AppCommunityCard.vue';
+import AppCommunityCardCreatePlaceholder from '~common/community/card-create-placeholder/AppCommunityCardCreatePlaceholder.vue';
+import { CommunityModel } from '~common/community/community.model';
+import { HistoryCache } from '~common/history/cache/cache.service';
+import AppLoading from '~common/loading/AppLoading.vue';
+import { setAppPromotionCohort, useAppPromotionStore } from '~common/mobile-app/store';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { Screen } from '~common/screen/screen-service';
+import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
+import { useCommonStore } from '~common/store/common-store';
+import { $gettext } from '~common/translate/translate.service';
 
 const endpoint = '/web/discover/communities';
 const InviewConfigLoadMore = new ScrollInviewConfig({ margin: `${Screen.height}px` });

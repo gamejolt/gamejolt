@@ -1,14 +1,11 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-import { ContentObject } from '../../content-object';
-import { useContentOwnerController } from '../../content-owner';
+import { ContentObject } from '~common/content/content-object';
+import { useContentOwnerController } from '~common/content/content-owner';
 
-defineProps({
-	contentData: {
-		type: Object as PropType<ContentObject>,
-		required: true,
-	},
-});
+type Props = {
+	contentData: ContentObject;
+};
+defineProps<Props>();
 
 const owner = useContentOwnerController()!;
 </script>

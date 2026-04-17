@@ -1,8 +1,12 @@
 import { Mark, MarkType, Node } from 'prosemirror-model';
 import { EditorState, Plugin, Transaction } from 'prosemirror-state';
-import { ContentEditorController, editorResolveNodePosition } from '../content-editor-controller';
-import { ContentEditorSchema } from '../schemas/content-editor-schema';
-import { UrlDetector } from './url-detector';
+
+import {
+	ContentEditorController,
+	editorResolveNodePosition,
+} from '~common/content/content-editor/content-editor-controller';
+import { UrlDetector } from '~common/content/content-editor/plugins/url-detector';
+import { ContentEditorSchema } from '~common/content/content-editor/schemas/content-editor-schema';
 
 type RegexResult = {
 	index: number;

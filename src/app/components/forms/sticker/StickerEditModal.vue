@@ -1,57 +1,43 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, Ref, toRefs } from 'vue';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import AppModal from '../../../../_common/modal/AppModal.vue';
-import { useModal } from '../../../../_common/modal/modal.service';
-import { storeModel } from '../../../../_common/model/model-store.service';
-import { ModelData, UnknownModelData } from '../../../../_common/model/model.service';
-import { StickerPackModel } from '../../../../_common/sticker/pack/pack.model';
-import { StickerModel } from '../../../../_common/sticker/sticker.model';
-import FormSticker from './FormSticker.vue';
+import { computed, Ref, ref } from 'vue';
 
-const props = defineProps({
-	sticker: {
-		type: Object as PropType<StickerModel>,
-		default: undefined,
-	},
-	stickers: {
-		type: Array as PropType<StickerModel[]>,
-		default: undefined,
-	},
-	updatePack: {
-		type: Function as PropType<(pack: StickerPackModel | undefined) => void>,
-		default: undefined,
-	},
-	emojiPrefix: {
-		type: String,
-		default: undefined,
-	},
-	canActivate: {
-		type: Boolean,
-	},
-	warnDeactivate: {
-		type: Boolean,
-	},
-});
+import FormSticker from '~app/components/forms/sticker/FormSticker.vue';
+import AppButton from '~common/button/AppButton.vue';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import { ModelData, UnknownModelData } from '~common/model/model.service';
+import { storeModel } from '~common/model/model-store.service';
+import { StickerPackModel } from '~common/sticker/pack/pack.model';
+import { StickerModel } from '~common/sticker/sticker.model';
 
-const { sticker, stickers, updatePack, emojiPrefix, canActivate, warnDeactivate } = toRefs(props);
+type Props = {
+	sticker?: StickerModel;
+	stickers?: StickerModel[];
+	updatePack?: (pack: StickerPackModel | undefined) => void;
+	emojiPrefix?: string;
+	canActivate?: boolean;
+	warnDeactivate?: boolean;
+};
+const { sticker, stickers, updatePack, emojiPrefix, canActivate, warnDeactivate } =
+	defineProps<Props>();
 
 const modal = useModal()!;
 
 const newSticker = ref() as Ref<StickerModel | undefined>;
-const model = computed(() => sticker?.value || newSticker.value);
+const model = computed(() => sticker || newSticker.value);
 
 function onFormChanged(data: UnknownModelData | ModelData<StickerModel>) {
 	if (model.value) {
 		storeModel(StickerModel, data);
 	} else {
 		newSticker.value = storeModel(StickerModel, data);
-		stickers?.value?.unshift(newSticker.value);
+
+		stickers?.unshift(newSticker.value);
 	}
 }
 
 function onPackChanged(data: StickerPackModel | undefined) {
-	updatePack?.value?.(data);
+	updatePack?.(data);
 }
 </script>
 

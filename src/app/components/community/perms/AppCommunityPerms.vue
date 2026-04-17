@@ -1,30 +1,22 @@
 <script lang="ts" setup>
-import { PropType, computed, toRefs } from 'vue';
-import { Perm } from '../../../../_common/collaborator/collaboratable';
-import { CommunityModel } from '../../../../_common/community/community.model';
+import { computed } from 'vue';
 
-const props = defineProps({
-	community: {
-		type: Object as PropType<CommunityModel>,
-		required: true,
-	},
-	required: {
-		type: String,
-		default: '',
-	},
-	either: {
-		type: Boolean,
-	},
-});
+import { Perm } from '~common/collaborator/collaboratable';
+import { CommunityModel } from '~common/community/community.model';
 
-const { community, required, either } = toRefs(props);
+type Props = {
+	community: CommunityModel;
+	required?: string;
+	either?: boolean;
+};
+const { community, required = '', either } = defineProps<Props>();
 
 const hasPerms = computed(() => {
-	const perms = required.value.split(',') as Perm[];
+	const perms = required.split(',') as Perm[];
 
-	return community.value.hasPerms(
+	return community.hasPerms(
 		perms.filter(perm => !!perm),
-		either.value
+		either
 	);
 });
 </script>

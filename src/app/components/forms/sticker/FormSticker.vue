@@ -1,20 +1,17 @@
 <script lang="ts" setup>
-import { computed, CSSProperties, onUnmounted, ref, Ref, toRaw, toRefs } from 'vue';
-import { Api } from '../../../../_common/api/api.service';
-import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
-import AppForm, {
-	createForm,
-	defineFormProps,
-	FormController,
-} from '../../../../_common/form-vue/AppForm.vue';
-import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
-import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
-import AppFormControlErrors from '../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormControlPrefix from '../../../../_common/form-vue/AppFormControlPrefix.vue';
-import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormStickySubmit from '../../../../_common/form-vue/AppFormStickySubmit.vue';
-import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
-import AppFormControlUpload from '../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
+import { computed, CSSProperties, onUnmounted, Ref, ref, toRaw } from 'vue';
+
+import { Api } from '~common/api/api.service';
+import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormControlPrefix from '~common/form-vue/AppFormControlPrefix.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormStickySubmit from '~common/form-vue/AppFormStickySubmit.vue';
+import AppFormControlToggle from '~common/form-vue/controls/AppFormControlToggle.vue';
+import AppFormControlUpload from '~common/form-vue/controls/upload/AppFormControlUpload.vue';
 import {
 	validateAvailability,
 	validateEmojiName,
@@ -24,48 +21,46 @@ import {
 	validateImageMinDimensions,
 	validateMaxLength,
 	validateMinLength,
-} from '../../../../_common/form-vue/validators';
-import { showErrorGrowl } from '../../../../_common/growls/growls.service';
-import AppLinkHelpDocs from '../../../../_common/link/AppLinkHelpDocs.vue';
-import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
-import { storeModel } from '../../../../_common/model/model-store.service';
-import { ModelData, UnknownModelData } from '../../../../_common/model/model.service';
-import { Screen } from '../../../../_common/screen/screen-service';
-import { StickerPackModel } from '../../../../_common/sticker/pack/pack.model';
-import { StickerModel } from '../../../../_common/sticker/sticker.model';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { styleBorderRadiusLg, styleChangeBg, styleFlexCenter } from '../../../../_styles/mixins';
-import { kLineHeightComputed } from '../../../../_styles/variables';
+} from '~common/form-vue/validators';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import AppLinkHelpDocs from '~common/link/AppLinkHelpDocs.vue';
+import { showModalConfirm } from '~common/modal/confirm/confirm-service';
+import { ModelData, UnknownModelData } from '~common/model/model.service';
+import { storeModel } from '~common/model/model-store.service';
+import { Screen } from '~common/screen/screen-service';
+import { StickerPackModel } from '~common/sticker/pack/pack.model';
+import { StickerModel } from '~common/sticker/sticker.model';
+import { $gettext } from '~common/translate/translate.service';
+import { TranslateDirective as vTranslate } from '~common/translate/translate-directive';
+import { styleBorderRadiusLg, styleChangeBg, styleFlexCenter } from '~styles/mixins';
+import { kLineHeightComputed } from '~styles/variables';
 
 type FormModel = Partial<StickerModel> & {
 	emoji_name: string;
 	file: File | undefined;
 };
 
-const props = defineProps({
-	...defineFormProps<StickerModel>(),
-	emojiPrefix: {
-		type: String,
-		default: '',
-	},
-	canActivate: {
-		type: Boolean,
-	},
-	warnDeactivate: {
-		type: Boolean,
-	},
-});
+type Props = {
+	model?: StickerModel;
+	emojiPrefix?: string;
+	canActivate?: boolean;
+	warnDeactivate?: boolean;
+};
+const {
+	model,
+	emojiPrefix: emojiPrefixProp = '',
+	canActivate,
+	warnDeactivate,
+} = defineProps<Props>();
 
-const emit = defineEmits({
-	changed: (_payloadSticker: UnknownModelData | ModelData<StickerModel>) => true,
-	pack: (_payloadPack: StickerPackModel | undefined) => true,
-});
-
-const { model, canActivate, warnDeactivate } = toRefs(props);
+const emit = defineEmits<{
+	changed: [payloadSticker: UnknownModelData | ModelData<StickerModel>];
+	pack: [payloadPack: StickerPackModel | undefined];
+}>();
 
 const emojiNameMinLength = ref(3);
 const emojiNameMaxLength = ref(30);
-const emojiPrefix = ref(props.emojiPrefix);
+const emojiPrefix = ref(emojiPrefixProp);
 
 const minNameLength = ref(3);
 const maxNameLength = ref(50);
@@ -75,8 +70,8 @@ const maxSize = ref(400);
 const aspectRatio = ref(1);
 
 const loadUrl = computed(() => {
-	if (model?.value) {
-		return `/web/dash/creators/stickers/save/${model.value.id}`;
+	if (model) {
+		return `/web/dash/creators/stickers/save/${model.id}`;
 	}
 	return `/web/dash/creators/stickers/save`;
 });
@@ -84,15 +79,15 @@ const loadUrl = computed(() => {
 const form: FormController<FormModel> = createForm({
 	loadUrl,
 	model: ref({
-		...model?.value,
+		...model,
 		is_active: false,
-		emoji_name: model?.value?.emoji?.short_name || '',
+		emoji_name: model?.emoji?.short_name || '',
 	} as FormModel),
 	onInit() {
-		if (!model?.value) {
-			form.formModel.is_active = canActivate?.value === true;
+		if (!model) {
+			form.formModel.is_active = canActivate === true;
 		} else {
-			form.formModel.is_active = model.value.is_active === true;
+			form.formModel.is_active = model.is_active === true;
 		}
 	},
 	onLoad(payload) {
@@ -108,11 +103,10 @@ const form: FormController<FormModel> = createForm({
 
 		if (payload.sticker) {
 			storeModel(StickerModel, payload.sticker);
-			emojiPrefix.value = model?.value?.emoji?.prefix ?? emojiPrefix.value;
-			form.formModel.emoji_name =
-				model?.value?.emoji?.short_name ?? form.formModel.emoji_name;
+			emojiPrefix.value = model?.emoji?.prefix ?? emojiPrefix.value;
+			form.formModel.emoji_name = model?.emoji?.short_name ?? form.formModel.emoji_name;
 
-			form.formModel.is_active = (model?.value?.is_active ?? payload.is_active) === true;
+			form.formModel.is_active = (model?.is_active ?? payload.is_active) === true;
 		}
 	},
 	onSubmit() {
@@ -151,20 +145,20 @@ onUnmounted(() => {
 const processedFileData = ref() as Ref<{ file: File; url: string } | undefined>;
 const imgUrl = computed(() => getImgUrl());
 const canToggleActive = computed(() => {
-	if (canActivate.value) {
+	if (canActivate) {
 		return true;
 	}
 
-	if (model?.value) {
-		return model.value.is_active === true;
+	if (model) {
+		return model.is_active === true;
 	}
 
 	return false;
 });
 
 function getImgUrl(): string | undefined {
-	if (model?.value) {
-		return model.value.img_url;
+	if (model) {
+		return model.img_url;
 	}
 
 	// If we weren't provided a model to edit, try grabbing one from our file.
@@ -220,34 +214,23 @@ const stickerGridItems = computed(() => {
 });
 
 const validateNameAvailabilityPath = computed(() => {
-	if (model?.value) {
-		return `/web/dash/creators/stickers/check-field-availability/${model.value.id}/name`;
+	if (model) {
+		return `/web/dash/creators/stickers/check-field-availability/${model.id}/name`;
 	}
 	return `/web/dash/creators/stickers/check-field-availability/0/name`;
 });
 
 const validateEmojiAvailabilityPath = computed(() => {
-	if (model?.value) {
-		return `/web/dash/creators/stickers/check-field-availability/${model.value.id}/emojiName`;
+	if (model) {
+		return `/web/dash/creators/stickers/check-field-availability/${model.id}/emojiName`;
 	}
 	return `/web/dash/creators/stickers/check-field-availability/0/emojiName`;
 });
 
-async function onClickIsActive() {
-	if (!model?.value) {
-		return;
-	}
-
-	if (!model.value.is_active) {
-		return;
-	}
-
-	if (!warnDeactivate.value) {
-		return;
-	}
-
-	if (form.formModel.is_active) {
-		return;
+async function beforeChangeIsActive(next: boolean) {
+	// Only warn when deactivating a currently-active sticker.
+	if (next || !model || !model.is_active || !warnDeactivate) {
+		return true;
 	}
 
 	const response = await showModalConfirm(
@@ -257,10 +240,7 @@ async function onClickIsActive() {
 		$gettext(`Deactivate Sticker`),
 		'yes'
 	);
-	// If "no" is selected, turn is_active toggle back on.
-	if (!response) {
-		form.formModel.is_active = true;
-	}
+	return !!response;
 }
 </script>
 
@@ -268,7 +248,10 @@ async function onClickIsActive() {
 	<!-- FormSticker -->
 	<AppForm :controller="form">
 		<AppFormGroup name="is_active" :label="$gettext(`Enable sticker`)" tiny-label-margin>
-			<AppFormControlToggle :disabled="!canToggleActive" @click="onClickIsActive" />
+			<AppFormControlToggle
+				:disabled="!canToggleActive"
+				:before-change="beforeChangeIsActive"
+			/>
 		</AppFormGroup>
 
 		<AppFormGroup
@@ -387,7 +370,7 @@ async function onClickIsActive() {
 							:src="imgUrl"
 							draggable="false"
 							style="user-select: none"
-							ondragstart="return false"
+							@dragstart.prevent
 						/>
 						<div
 							v-else

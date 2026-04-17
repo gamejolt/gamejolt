@@ -1,18 +1,16 @@
 <script lang="ts">
 import { computed, Ref, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { Api } from '../../../../../_common/api/api.service';
-import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '../../../../../_common/route/route-component';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
-import { ActivityFeedView } from '../../../../components/activity/feed/view';
-import { AppActivityFeedLazy } from '../../../../components/lazy';
-import AppPostAddButton from '../../../../components/post/add-button/AppPostAddButton.vue';
-import { useRealmRouteStore } from '../view.store';
+
+import { ActivityFeedService } from '~app/components/activity/feed/feed-service';
+import { ActivityFeedView } from '~app/components/activity/feed/view';
+import { AppActivityFeedLazy } from '~app/components/lazy';
+import AppPostAddButton from '~app/components/post/add-button/AppPostAddButton.vue';
+import { useRealmRouteStore } from '~app/views/realms/view/view.store';
+import { Api } from '~common/api/api.service';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { $gettext } from '~common/translate/translate.service';
 
 export default {
 	...defineAppRouteOptions({

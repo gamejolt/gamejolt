@@ -1,24 +1,20 @@
 <script lang="ts" setup>
 import { computed, onMounted } from 'vue';
-import { useEscapeStack } from '../../../../_common/escape-stack/escape-stack.service';
-import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
-import { illNoComments, illNoCommentsSmall } from '../../../../_common/illustration/illustrations';
-import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
-import {
-	QuestModel,
-	QuestPriority,
-	QuestRepeatType,
-	QuestSeries,
-} from '../../../../_common/quest/quest-model';
-import { Screen } from '../../../../_common/screen/screen-service';
-import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { numberSort } from '../../../../utils/array';
-import { run } from '../../../../utils/utils';
-import { useAppStore } from '../../../store/index';
-import { fetchAllQuests, useQuestStore } from '../../../store/quest';
-import AppDailyQuests from '../../quest/AppDailyQuests.vue';
-import AppQuestLogItem from './_quests/AppQuestLogItem.vue';
+
+import AppDailyQuests from '~app/components/quest/AppDailyQuests.vue';
+import AppQuestLogItem from '~app/components/shell/sidebar/_quests/AppQuestLogItem.vue';
+import { useAppStore } from '~app/store/index';
+import { fetchAllQuests, useQuestStore } from '~app/store/quest';
+import { useEscapeStack } from '~common/escape-stack/escape-stack.service';
+import AppIllustration from '~common/illustration/AppIllustration.vue';
+import { illNoComments, illNoCommentsSmall } from '~common/illustration/illustrations';
+import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
+import { QuestModel, QuestPriority, QuestRepeatType, QuestSeries } from '~common/quest/quest-model';
+import { Screen } from '~common/screen/screen-service';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { numberSort } from '~utils/array';
+import { run } from '~utils/utils';
 
 const questChunkSorting = {
 	'Daily Quests': 0,

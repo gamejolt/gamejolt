@@ -1,13 +1,14 @@
 import { Node } from 'prosemirror-model';
 import { Decoration, EditorView, NodeView } from 'prosemirror-view';
-import { ContentEditorController } from '../content-editor-controller';
-import { ContentEditorSchema } from '../schemas/content-editor-schema';
-import { CustomButtonNodeView } from './custom-button';
-import { EmbedNodeView } from './embed';
-import { EmojiNodeView } from './emoji';
-import { GifNodeView } from './gif';
-import { MediaItemNodeView } from './media-item';
-import { MediaUploadNodeView } from './media-upload';
+
+import { ContentEditorController } from '~common/content/content-editor/content-editor-controller';
+import { CustomButtonNodeView } from '~common/content/content-editor/node-views/custom-button';
+import { EmbedNodeView } from '~common/content/content-editor/node-views/embed';
+import { EmojiNodeView } from '~common/content/content-editor/node-views/emoji';
+import { GifNodeView } from '~common/content/content-editor/node-views/gif';
+import { MediaItemNodeView } from '~common/content/content-editor/node-views/media-item';
+import { MediaUploadNodeView } from '~common/content/content-editor/node-views/media-upload';
+import { ContentEditorSchema } from '~common/content/content-editor/schemas/content-editor-schema';
 
 type NodeViewList = {
 	[name: string]: (

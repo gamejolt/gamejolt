@@ -1,5 +1,6 @@
 import { RouteLocationNormalized } from 'vue-router';
-import { commonStore } from '../../../_common/store/common-store';
+
+import { commonStore } from '~common/store/common-store';
 
 export const HOME_FEED_FYP = 'fyp' as const;
 export const HOME_FEED_ACTIVITY = 'activity' as const;

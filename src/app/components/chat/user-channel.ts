@@ -1,13 +1,6 @@
 import { Presence } from 'phoenix';
 import { computed, markRaw, shallowReadonly } from 'vue';
-import { BackgroundModel } from '../../../_common/background/background.model';
-import { importNoSSR } from '../../../_common/code-splitting';
-import { useContentFocusService } from '../../../_common/content-focus/content-focus.service';
-import { storeModel } from '../../../_common/model/model-store.service';
-import { UnknownModelData } from '../../../_common/model/model.service';
-import { createSocketChannelController } from '../../../_common/socket/socket-controller';
-import { arrayRemove } from '../../../utils/array';
-import type { TabLeaderInterface } from '../../../utils/tab-leader';
+
 import {
 	ChatClient,
 	closeChatRoom,
@@ -15,13 +8,21 @@ import {
 	newChatNotification,
 	recollectChatRoomMembers,
 	updateChatRoomLastMessageOn,
-} from './client';
-import { ChatMessageModel } from './message';
-import { ChatNotificationGrowl } from './notification-growl/notification-growl.service';
-import { ChatRoomModel } from './room';
-import { ChatUser } from './user';
+} from '~app/components/chat/client';
+import { ChatMessageModel } from '~app/components/chat/message';
+import { ChatNotificationGrowl } from '~app/components/chat/notification-growl/notification-growl.service';
+import { ChatRoomModel } from '~app/components/chat/room';
+import { ChatUser } from '~app/components/chat/user';
+import { BackgroundModel } from '~common/background/background.model';
+import { importNoSSR } from '~common/code-splitting';
+import { useContentFocusService } from '~common/content-focus/content-focus.service';
+import { UnknownModelData } from '~common/model/model.service';
+import { storeModel } from '~common/model/model-store.service';
+import { createSocketChannelController } from '~common/socket/socket-controller';
+import { arrayRemove } from '~utils/array';
+import type { TabLeaderInterface } from '~utils/tab-leader';
 
-const TabLeaderLazy = importNoSSR(async () => await import('../../../utils/tab-leader'));
+const TabLeaderLazy = importNoSSR(async () => await import('~utils/tab-leader'));
 
 export type ChatUserChannel = ReturnType<typeof createChatUserChannel>;
 

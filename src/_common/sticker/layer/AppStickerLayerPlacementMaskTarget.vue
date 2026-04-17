@@ -1,11 +1,12 @@
 <script lang="ts">
-import { computed, onMounted, PropType, ref, toRaw, toRefs } from 'vue';
+import { computed, onMounted, ref, toRaw } from 'vue';
+
 import {
 	getRectForStickerTarget,
 	StickerLayerController,
 	StickerLayerTargetRect,
-} from './layer-controller';
-import { StickerLayerItem } from './layer-item';
+} from '~common/sticker/layer/layer-controller';
+import { StickerLayerItem } from '~common/sticker/layer/layer-item';
 
 // How much extra padding (in px) should we put around each target for the
 // cutout that we make?
@@ -24,18 +25,11 @@ export function getStickerLayerTargetBoundingBox(rect: StickerLayerTargetRect) {
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	target: {
-		type: Object as PropType<StickerLayerItem>,
-		required: true,
-	},
-	layer: {
-		type: Object as PropType<StickerLayerController>,
-		required: true,
-	},
-});
-
-const { target, layer } = toRefs(props);
+type Props = {
+	target: StickerLayerItem;
+	layer: StickerLayerController;
+};
+const { target, layer } = defineProps<Props>();
 
 const _x = ref(0);
 const _y = ref(0);
@@ -50,10 +44,10 @@ const styles = computed(() => {
 	};
 });
 
-const isHovered = computed(() => toRaw(layer.value.hoveredTarget.value) === toRaw(target.value));
+const isHovered = computed(() => toRaw(layer.hoveredTarget.value) === toRaw(target));
 
 onMounted(() => {
-	const rect = getRectForStickerTarget(layer.value, target.value);
+	const rect = getRectForStickerTarget(layer, target);
 	if (!rect) {
 		return;
 	}

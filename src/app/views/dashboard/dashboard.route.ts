@@ -1,17 +1,18 @@
 import { RouteRecordRaw } from 'vue-router';
-import { routeDashAccount } from './account/account.route';
-import { routeDashAccountMobileNav } from './account/mobile-nav.route';
-import { routeDashAnalytics } from './analytics/analytics.route';
-import { routeDashCommunities } from './communities/communities.route';
-import { routeDashCreator } from './creator/creator.route';
-import { routeDashGames } from './games/games.route';
-import { routeDashLinking } from './linking/linking.route';
-import { routeDashShop } from './shop/shop.route';
-import { routeDashSupporters } from './supporters/supporters.route';
+
+import { routeDashAccount } from '~app/views/dashboard/account/account.route';
+import { routeDashAccountMobileNav } from '~app/views/dashboard/account/mobile-nav.route';
+import { routeDashAnalytics } from '~app/views/dashboard/analytics/analytics.route';
+import { routeDashCommunities } from '~app/views/dashboard/communities/communities.route';
+import { routeDashCreator } from '~app/views/dashboard/creator/creator.route';
+import { routeDashGames } from '~app/views/dashboard/games/games.route';
+import { routeDashLinking } from '~app/views/dashboard/linking/linking.route';
+import { routeDashShop } from '~app/views/dashboard/shop/shop.route';
+import { routeDashSupporters } from '~app/views/dashboard/supporters/supporters.route';
 
 export const routeDash: RouteRecordRaw = {
 	path: '/dashboard',
-	component: () => import('./RouteDashboard.vue'),
+	component: () => import('~app/views/dashboard/RouteDashboard.vue'),
 	children: [
 		routeDashAccount,
 		routeDashAccountMobileNav,

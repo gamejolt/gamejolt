@@ -1,7 +1,8 @@
 <script lang="ts" setup>
-import Cropper from 'cropperjs';
 import 'cropperjs/dist/cropper.css';
-import { PropType, onBeforeUnmount, onMounted, ref, toRefs, watch } from 'vue';
+
+import Cropper from 'cropperjs';
+import { onBeforeUnmount, onMounted, useTemplateRef, watch } from 'vue';
 
 interface CropData {
 	x: number;
@@ -10,52 +11,18 @@ interface CropData {
 	y2: number;
 }
 
-const props = defineProps({
-	src: {
-		type: String,
-		required: true,
-	},
-	cropValue: {
-		type: Object as PropType<CropData>,
-		default: undefined,
-	},
-	aspectRatio: {
-		type: Number,
-		default: undefined,
-	},
-	minAspectRatio: {
-		type: Number,
-		default: undefined,
-	},
-	maxAspectRatio: {
-		type: Number,
-		default: undefined,
-	},
-	minWidth: {
-		type: Number,
-		default: undefined,
-	},
-	minHeight: {
-		type: Number,
-		default: undefined,
-	},
-	maxWidth: {
-		type: Number,
-		default: undefined,
-	},
-	maxHeight: {
-		type: Number,
-		default: undefined,
-	},
-	disabled: {
-		type: Boolean,
-	},
-});
-
-const emit = defineEmits({
-	input: (_cop: CropData) => true,
-});
-
+type Props = {
+	src: string;
+	cropValue?: CropData;
+	aspectRatio?: number;
+	minAspectRatio?: number;
+	maxAspectRatio?: number;
+	minWidth?: number;
+	minHeight?: number;
+	maxWidth?: number;
+	maxHeight?: number;
+	disabled?: boolean;
+};
 const {
 	src,
 	cropValue,
@@ -67,14 +34,17 @@ const {
 	maxWidth,
 	maxHeight,
 	disabled,
-} = toRefs(props);
+} = defineProps<Props>();
+
+const emit = defineEmits<{
+	input: [cop: CropData];
+}>();
 
 let cropper: Cropper;
-const refImg = ref<HTMLImageElement>();
+const refImg = useTemplateRef('refImg');
 
 onMounted(() => {
-	const useAspectRatio =
-		minAspectRatio?.value && maxAspectRatio?.value ? undefined : aspectRatio?.value;
+	const useAspectRatio = minAspectRatio && maxAspectRatio ? undefined : aspectRatio;
 
 	cropper = new Cropper(refImg.value!, {
 		aspectRatio: useAspectRatio,
@@ -85,23 +55,23 @@ onMounted(() => {
 		autoCropArea: 1,
 		checkCrossOrigin: false,
 		ready: () => {
-			if (disabled.value) {
+			if (disabled) {
 				onDisabledChange();
 			}
 
-			if (cropValue?.value) {
+			if (cropValue) {
 				onCropValueChange();
 			}
 
 			// If the aspect ratio is outside a set min/max aspect ratio, resize the crop box.
-			if (minAspectRatio?.value && maxAspectRatio?.value && !aspectRatio?.value) {
+			if (minAspectRatio && maxAspectRatio && !aspectRatio) {
 				const containerData = cropper!.getContainerData();
 				const cropBoxData = cropper!.getCropBoxData();
 				const aspectRatio = cropBoxData.width / cropBoxData.height;
 
-				if (aspectRatio < minAspectRatio.value || aspectRatio > maxAspectRatio.value) {
+				if (aspectRatio < minAspectRatio || aspectRatio > maxAspectRatio) {
 					const newCropBoxWidth =
-						cropBoxData.height * ((minAspectRatio.value + maxAspectRatio.value) / 2);
+						cropBoxData.height * ((minAspectRatio + maxAspectRatio) / 2);
 
 					cropper!.setCropBoxData({
 						left: (containerData.width - newCropBoxWidth) / 2,
@@ -113,18 +83,16 @@ onMounted(() => {
 		crop: e => {
 			// Have to do it like this since the cropper doesn't allow
 			// img-relative minimums.
-			if (minWidth?.value && minHeight?.value) {
-				const widthDiff = Math.abs(e.detail.width - minWidth.value);
-				const heightDiff = Math.abs(e.detail.height - minHeight.value);
+			if (minWidth && minHeight) {
+				const widthDiff = Math.abs(e.detail.width - minWidth);
+				const heightDiff = Math.abs(e.detail.height - minHeight);
 
 				if (
-					(e.detail.width < minWidth.value && widthDiff > 0.5) ||
-					(e.detail.height < minHeight.value && heightDiff > 0.5)
+					(e.detail.width < minWidth && widthDiff > 0.5) ||
+					(e.detail.height < minHeight && heightDiff > 0.5)
 				) {
-					const targetWidth =
-						e.detail.width < minWidth.value ? minWidth.value : e.detail.width;
-					const targetHeight =
-						e.detail.height < minHeight.value ? minHeight.value : e.detail.height;
+					const targetWidth = e.detail.width < minWidth ? minWidth : e.detail.width;
+					const targetHeight = e.detail.height < minHeight ? minHeight : e.detail.height;
 					cropper!.setData(
 						Object.assign({}, e.detail, {
 							width: targetWidth,
@@ -136,20 +104,17 @@ onMounted(() => {
 			}
 
 			// Enforce aspect ratios.
-			if (minAspectRatio?.value && maxAspectRatio?.value && !aspectRatio?.value) {
+			if (minAspectRatio && maxAspectRatio && !aspectRatio) {
 				const cropBoxData = cropper!.getCropBoxData();
 				const containerData = cropper!.getContainerData();
 				const aspectRatio = cropBoxData.width / cropBoxData.height;
 
-				if (
-					aspectRatio < minAspectRatio.value &&
-					Math.abs(aspectRatio - minAspectRatio.value) > 0.01
-				) {
-					let targetWidth = cropBoxData.height * minAspectRatio.value;
+				if (aspectRatio < minAspectRatio && Math.abs(aspectRatio - minAspectRatio) > 0.01) {
+					let targetWidth = cropBoxData.height * minAspectRatio;
 					let targetHeight = cropBoxData.height;
 					if (targetWidth > containerData.width) {
 						targetWidth = containerData.width;
-						targetHeight = targetWidth / minAspectRatio.value;
+						targetHeight = targetWidth / minAspectRatio;
 					}
 					cropper!.setCropBoxData({
 						width: targetWidth,
@@ -157,11 +122,11 @@ onMounted(() => {
 					});
 					return;
 				} else if (
-					aspectRatio > maxAspectRatio.value &&
-					Math.abs(aspectRatio - maxAspectRatio.value) > 0.01
+					aspectRatio > maxAspectRatio &&
+					Math.abs(aspectRatio - maxAspectRatio) > 0.01
 				) {
 					cropper!.setCropBoxData({
-						width: cropBoxData.height * maxAspectRatio.value,
+						width: cropBoxData.height * maxAspectRatio,
 					});
 					return;
 				}
@@ -181,19 +146,25 @@ onBeforeUnmount(() => {
 });
 
 watch(
-	() => aspectRatio?.value,
+	() => aspectRatio,
 	aspectRatio => {
 		cropper?.setAspectRatio(aspectRatio || 0);
 	}
 );
 
-watch(src, () => {
-	cropper?.replace(src.value);
-});
+watch(
+	() => src,
+	() => {
+		cropper?.replace(src);
+	}
+);
 
-watch(disabled, () => {
-	onDisabledChange();
-});
+watch(
+	() => disabled,
+	() => {
+		onDisabledChange();
+	}
+);
 
 /**
  * This gets called when bootstrapping the component with data, and when
@@ -201,7 +172,7 @@ watch(disabled, () => {
  * above still for further processing..
  */
 watch(
-	() => cropValue?.value,
+	() => cropValue,
 	() => onCropValueChange()
 );
 
@@ -229,52 +200,52 @@ function getCropperDataAsCropData(): CropData {
 		height: Math.abs(crop.y - crop.y2),
 	};
 
-	if (minWidth?.value && rect.width < minWidth.value) {
-		rect.width = minWidth.value;
+	if (minWidth && rect.width < minWidth) {
+		rect.width = minWidth;
 	}
 
-	if (maxWidth?.value && rect.width > maxWidth.value) {
-		rect.width = maxWidth.value;
+	if (maxWidth && rect.width > maxWidth) {
+		rect.width = maxWidth;
 	}
 
-	if (minHeight?.value && rect.height < minHeight.value) {
-		rect.height = minHeight.value;
+	if (minHeight && rect.height < minHeight) {
+		rect.height = minHeight;
 	}
 
-	if (maxHeight?.value && rect.height > maxHeight.value) {
-		rect.height = maxHeight.value;
+	if (maxHeight && rect.height > maxHeight) {
+		rect.height = maxHeight;
 	}
 
 	const ratio = rect.width / rect.height;
 	const imgWidth = refImg.value!.width;
 	const imgHeight = refImg.value!.height;
 
-	if (minAspectRatio?.value && maxAspectRatio?.value) {
+	if (minAspectRatio && maxAspectRatio) {
 		let targetWidth = rect.width;
 		let targetHeight = rect.height;
 
-		if (ratio < minAspectRatio.value) {
-			targetWidth = rect.height * minAspectRatio.value;
+		if (ratio < minAspectRatio) {
+			targetWidth = rect.height * minAspectRatio;
 
 			if (targetWidth > imgWidth) {
 				targetWidth = imgWidth;
-				targetHeight = targetWidth / minAspectRatio.value;
+				targetHeight = targetWidth / minAspectRatio;
 
 				if (targetHeight > imgHeight) {
 					targetHeight = imgHeight;
-					targetWidth = targetHeight * minAspectRatio.value;
+					targetWidth = targetHeight * minAspectRatio;
 				}
 			}
-		} else if (ratio > maxAspectRatio.value) {
-			targetHeight = rect.width / maxAspectRatio.value;
+		} else if (ratio > maxAspectRatio) {
+			targetHeight = rect.width / maxAspectRatio;
 
 			if (targetHeight > imgHeight) {
 				targetHeight = rect.height;
-				targetWidth = targetHeight * maxAspectRatio.value;
+				targetWidth = targetHeight * maxAspectRatio;
 
 				if (targetWidth > imgWidth) {
 					targetWidth = imgWidth;
-					targetHeight = targetWidth / maxAspectRatio.value;
+					targetHeight = targetWidth / maxAspectRatio;
 				}
 			}
 		}
@@ -303,7 +274,7 @@ function onDisabledChange() {
 		return;
 	}
 
-	if (disabled.value) {
+	if (disabled) {
 		cropper.disable();
 	} else {
 		cropper.enable();
@@ -315,12 +286,12 @@ function onCropValueChange() {
 		return;
 	}
 
-	if (cropValue?.value) {
+	if (cropValue) {
 		cropper.setData({
-			x: cropValue.value.x,
-			y: cropValue.value.y,
-			width: cropValue.value.x2 - cropValue.value.x,
-			height: cropValue.value.y2 - cropValue.value.y,
+			x: cropValue.x,
+			y: cropValue.y,
+			width: cropValue.x2 - cropValue.x,
+			height: cropValue.y2 - cropValue.y,
 			rotate: 0,
 			scaleX: 1,
 			scaleY: 1,

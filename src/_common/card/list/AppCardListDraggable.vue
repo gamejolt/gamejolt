@@ -1,18 +1,17 @@
 <script lang="ts" setup>
-import { ref, watch, toRaw } from 'vue';
-import VueDraggable from 'vuedraggable';
-import { useCardList } from './AppCardList.vue';
+import { ref, watch } from 'vue';
+import { VueDraggable } from 'vue-draggable-plus';
 
-defineProps({
-	itemKey: {
-		type: String,
-		required: true,
-	},
-});
+import { useCardList } from '~common/card/list/AppCardList.vue';
 
-const emit = defineEmits({
-	change: (_items: any[]) => true,
-});
+type Props = {
+	itemKey: string;
+};
+const { itemKey } = defineProps<Props>();
+
+const emit = defineEmits<{
+	change: [items: any[]];
+}>();
 
 const { items } = useCardList()!;
 
@@ -38,15 +37,14 @@ function onDraggableSort() {
 
 <template>
 	<VueDraggable
-		:list="modifiableItems"
-		:item-key="itemKey"
-		v-bind="{ handle: '.card-drag-handle', delay: 100, delayOnTouchOnly: true }"
+		v-model="modifiableItems"
+		handle=".card-drag-handle"
+		:delay="100"
+		:delay-on-touch-only="true"
 		@sort="onDraggableSort"
 	>
-		<template #item="{ element, index }: any">
-			<div>
-				<slot name="item" :element="element" :index="index" />
-			</div>
-		</template>
+		<div v-for="(element, index) in modifiableItems" :key="(element as any)[itemKey]">
+			<slot name="item" :element :index />
+		</div>
 	</VueDraggable>
 </template>

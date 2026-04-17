@@ -1,13 +1,14 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
-import AppButton from '../../../_common/button/AppButton.vue';
-import { Jolticon } from '../../../_common/jolticon/AppJolticon.vue';
-import AppLinkExternal from '../../../_common/link/AppLinkExternal.vue';
-import { LinkedAccountProvider } from '../../../_common/linked-account/linked-account.model';
-import { Screen } from '../../../_common/screen/screen-service';
-import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
-import { $gettext } from '../../../_common/translate/translate.service';
-import { useProfileRouteStore } from './RouteProfile.vue';
+
+import { useProfileRouteStore } from '~app/views/profile/RouteProfile.vue';
+import AppButton from '~common/button/AppButton.vue';
+import { Jolticon } from '~common/jolticon/AppJolticon.vue';
+import AppLinkExternal from '~common/link/AppLinkExternal.vue';
+import { LinkedAccountProvider } from '~common/linked-account/linked-account.model';
+import { Screen } from '~common/screen/screen-service';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import { $gettext } from '~common/translate/translate.service';
 
 const { user, linkedAccounts } = useProfileRouteStore()!;
 

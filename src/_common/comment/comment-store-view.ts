@@ -1,5 +1,5 @@
-import { CommentModel } from './comment-model';
-import { CommentStoreModel } from './comment-store';
+import { CommentModel } from '~common/comment/comment-model';
+import { CommentStoreModel } from '~common/comment/comment-store';
 
 export interface CommentStoreView {
 	getParents(storeModel: CommentStoreModel): CommentModel[];

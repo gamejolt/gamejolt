@@ -1,42 +1,35 @@
 <script lang="ts" setup>
-import { PropType, onMounted, ref, toRef, toRefs } from 'vue';
-import { Api } from '../../../../_common/api/api.service';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import AppLoading from '../../../../_common/loading/AppLoading.vue';
-import AppModal from '../../../../_common/modal/AppModal.vue';
-import AppModalFloatingHeader from '../../../../_common/modal/AppModalFloatingHeader.vue';
-import { useModal } from '../../../../_common/modal/modal.service';
-import AppSectionTitle from '../../../../_common/section/AppSectionTitle.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { UserModel } from '../../../../_common/user/user.model';
-import AppFollowerList from '../../../components/follower/list/AppFollowerList.vue';
+import { onMounted, ref, toRef } from 'vue';
 
-const props = defineProps({
-	user: {
-		type: Object as PropType<UserModel>,
-		required: true,
-	},
-});
+import AppFollowerList from '~app/components/follower/list/AppFollowerList.vue';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import AppLoading from '~common/loading/AppLoading.vue';
+import AppModal from '~common/modal/AppModal.vue';
+import AppModalFloatingHeader from '~common/modal/AppModalFloatingHeader.vue';
+import { useModal } from '~common/modal/modal.service';
+import AppSectionTitle from '~common/section/AppSectionTitle.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { UserModel } from '~common/user/user.model';
 
-const { user } = toRefs(props);
+type Props = {
+	user: UserModel;
+};
+const { user } = defineProps<Props>();
 
 const modal = useModal()!;
 
 const isBootstrapped = ref(false);
 const users = ref<UserModel[]>([]);
 
-const loadUrl = toRef(() => `/web/profile/followers/@${user.value.username}`);
+const loadUrl = toRef(() => `/web/profile/followers/@${user.username}`);
 
 onMounted(async () => {
 	try {
 		const payload = await Api.sendRequest(loadUrl.value, undefined, { detach: true });
 		users.value = UserModel.populate(payload.users);
 	} catch (e) {
-		console.error(
-			'Something went wrong fetching followers for this user',
-			user.value.username,
-			e
-		);
+		console.error('Something went wrong fetching followers for this user', user.username, e);
 	} finally {
 		isBootstrapped.value = true;
 	}

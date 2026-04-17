@@ -1,17 +1,16 @@
 <script lang="ts" setup>
 import { createTextMaskInputElement } from 'text-mask-core/dist/textMaskCore';
-import { PropType, ref, Ref } from 'vue';
-import { provideFormControlHooks } from './form-control-hooks';
+import { Ref, ref } from 'vue';
 
-const props = defineProps({
-	mask: {
-		type: Array as PropType<(string | RegExp)[]>,
-		required: true,
-	},
-});
+import { provideFormControlHooks } from '~common/form-vue/form-control-hooks';
+
+type Props = {
+	mask: (string | RegExp)[];
+};
+const { mask } = defineProps<Props>();
 
 let inputMask: any;
-let el: Ref<HTMLInputElement | undefined>;
+let el: Ref<HTMLInputElement | null | undefined>;
 
 provideFormControlHooks({
 	afterMount({ controlVal }, inputElem) {
@@ -20,7 +19,7 @@ provideFormControlHooks({
 		if (el.value) {
 			inputMask = createTextMaskInputElement({
 				inputElement: el.value,
-				mask: props.mask,
+				mask: mask,
 			});
 			inputMask.update(controlVal.value);
 		}

@@ -1,9 +1,10 @@
 <script lang="ts">
 import { parseToRgb, transparentize } from 'polished';
-import { InjectionKey, MaybeRefOrGetter, PropType, computed, inject, provide, toRef } from 'vue';
-import AppStyle from '../AppStyle.vue';
-import { DefaultTheme, ThemeModel } from './theme.model';
-import { useThemeStore } from './theme.store';
+import { computed, inject, InjectionKey, MaybeRefOrGetter, provide, toRef } from 'vue';
+
+import AppStyle from '~common/AppStyle.vue';
+import { DefaultTheme, ThemeModel } from '~common/theme/theme.model';
+import { useThemeStore } from '~common/theme/theme.store';
 
 // This needs to be global so that we can generate an ID for each component.
 let _inc = 0;
@@ -63,31 +64,26 @@ function createThemeData(options: {
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	isRoot: {
-		type: Boolean,
-	},
-	theme: {
-		type: Object as PropType<ThemeModel>,
-		default: null,
-	},
-	forceDark: {
-		type: Boolean,
-	},
-	forceLight: {
-		type: Boolean,
-	},
-});
+import { HTMLAttributes } from 'vue';
+
+type AppThemeProps = {
+	isRoot?: boolean;
+	theme?: ThemeModel | null;
+	forceDark?: boolean;
+	forceLight?: boolean;
+} & /* @vue-ignore */ Pick<HTMLAttributes, 'onMouseover' | 'onMouseout'>;
+
+const { isRoot, theme: propTheme = null, forceDark, forceLight } = defineProps<AppThemeProps>();
 
 const { theme: storeTheme, isDark: storeIsDark } = useThemeStore();
 
 // Not reactive on purpose.
 const scopeId = ++_inc;
 const id = 'theme-' + scopeId;
-const selector = props.isRoot ? ':root' : '#' + id;
+const selector = isRoot ? ':root' : '#' + id;
 
-const theme = computed(() => props.theme ?? storeTheme.value ?? DefaultTheme);
-const isDark = computed(() => (storeIsDark.value && !props.forceLight) || props.forceDark);
+const theme = computed(() => propTheme ?? storeTheme.value ?? DefaultTheme);
+const isDark = computed(() => (storeIsDark.value && !forceLight) || forceDark);
 
 provide(
 	ThemeDataKey,

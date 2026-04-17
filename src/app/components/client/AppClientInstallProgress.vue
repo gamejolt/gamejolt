@@ -1,27 +1,28 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
-import { formatDuration } from '../../../_common/filters/duration';
-import AppProgressBar from '../../../_common/progress/AppProgressBar.vue';
-import { LocalDbPackage, LocalDbPackagePatchState } from './local-db/package/package.model';
+import { computed } from 'vue';
 
-const props = defineProps({
-	localPackage: {
-		type: Object as PropType<LocalDbPackage>,
-		required: true,
-	},
-});
+import {
+	LocalDbPackage,
+	LocalDbPackagePatchState,
+} from '~app/components/client/local-db/package/package.model';
+import { formatDuration } from '~common/filters/duration';
+import AppProgressBar from '~common/progress/AppProgressBar.vue';
+import { TranslateDirective as vTranslate } from '~common/translate/translate-directive';
 
-const { localPackage } = toRefs(props);
+type Props = {
+	localPackage: LocalDbPackage;
+};
+const { localPackage } = defineProps<Props>();
 
 const patchState = computed(() => {
-	if (!localPackage.value) {
+	if (!localPackage) {
 		return null;
 	}
 
 	const state =
-		localPackage.value.install_state !== null
-			? localPackage.value.install_state
-			: localPackage.value.update_state;
+		localPackage.install_state !== null
+			? localPackage.install_state
+			: localPackage.update_state;
 	if (state === null) {
 		return null;
 	}
@@ -32,9 +33,9 @@ const patchState = computed(() => {
 const packageProgress = computed(() => {
 	const state = patchState.value;
 	if (state === LocalDbPackagePatchState.DOWNLOADING) {
-		return localPackage.value.download_progress;
+		return localPackage.download_progress;
 	} else if (state === LocalDbPackagePatchState.UNPACKING) {
-		return localPackage.value.unpack_progress;
+		return localPackage.unpack_progress;
 	}
 	return null;
 });

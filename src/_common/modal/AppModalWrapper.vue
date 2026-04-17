@@ -1,18 +1,16 @@
 <script lang="ts" setup>
 import { provide } from 'vue';
-import { PropType } from 'vue';
-import { Modal, ModalKey } from './modal.service';
 
-const props = defineProps({
-	modal: {
-		type: Object as PropType<Modal>,
-		required: true,
-	},
-});
+import { Modal, ModalKey } from '~common/modal/modal.service';
 
-provide(ModalKey, props.modal);
+type Props = {
+	modal: Modal;
+};
+const { modal } = defineProps<Props>();
+
+provide(ModalKey, modal);
 </script>
 
 <template>
-	<Component :is="modal.component" v-bind="modal.props" />
+	<component :is="modal.component" v-bind="modal.props" />
 </template>

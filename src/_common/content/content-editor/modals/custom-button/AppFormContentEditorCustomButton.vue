@@ -1,26 +1,26 @@
 <script lang="ts" setup>
 import { toRef } from 'vue';
-import AppForm, {
-	FormController,
-	createForm,
-	defineFormProps,
-} from '../../../../form-vue/AppForm.vue';
-import AppFormButton from '../../../../form-vue/AppFormButton.vue';
-import AppFormControl from '../../../../form-vue/AppFormControl.vue';
-import AppFormGroup from '../../../../form-vue/AppFormGroup.vue';
-import { validateMinLength } from '../../../../form-vue/validators.js';
-import { CustomButtonData } from './custom-button-modal.service';
 
-const props = defineProps({
-	...defineFormProps<CustomButtonData>(true),
-});
+import { CustomButtonData } from '~common/content/content-editor/modals/custom-button/custom-button-modal.service';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import { validateMinLength } from '~common/form-vue/validators.js';
 
-const emit = defineEmits({
-	submit: (_model: CustomButtonData) => true,
-});
+type FormModel = CustomButtonData;
 
-const form: FormController<CustomButtonData> = createForm({
-	model: toRef(props, 'model'),
+type Props = {
+	model: FormModel;
+};
+const { model } = defineProps<Props>();
+
+const emit = defineEmits<{
+	submit: [model: FormModel];
+}>();
+
+const form: FormController<FormModel> = createForm<FormModel>({
+	model: toRef(() => model),
 	onInit() {
 		form.formModel.customButtonId ??= '';
 	},

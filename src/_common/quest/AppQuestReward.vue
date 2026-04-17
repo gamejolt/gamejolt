@@ -1,5 +1,15 @@
 <script lang="ts">
-import { PropType, computed, toRefs } from 'vue';
+import { computed } from 'vue';
+
+import { formatNumber } from '~common/filters/number';
+import { useOnHover } from '~common/on/useOnHover';
+import AppQuestRewardThumbnail from '~common/quest/AppQuestRewardThumbnail.vue';
+import { QuestRewardTypes } from '~common/quest/quest-objective-reward-model';
+import { QuestRewardModel } from '~common/quest/quest-reward-model';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import { kThemeFg, kThemeFgMuted } from '~common/theme/variables';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { $gettext } from '~common/translate/translate.service';
 import {
 	styleBorderRadiusLg,
 	styleChangeBg,
@@ -9,17 +19,8 @@ import {
 	styleOverlayTextShadow,
 	styleTyped,
 	styleWhen,
-} from '../../_styles/mixins';
-import { kFontSizeBase, kFontSizeTiny } from '../../_styles/variables';
-import { formatNumber } from '../filters/number';
-import { useOnHover } from '../on/useOnHover';
-import AppSpacer from '../spacer/AppSpacer.vue';
-import { kThemeFg, kThemeFgMuted } from '../theme/variables';
-import { vAppTooltip } from '../tooltip/tooltip-directive';
-import { $gettext } from '../translate/translate.service';
-import AppQuestRewardThumbnail from './AppQuestRewardThumbnail.vue';
-import { QuestRewardTypes } from './quest-objective-reward-model';
-import { QuestRewardModel } from './quest-reward-model';
+} from '~styles/mixins';
+import { kFontSizeBase, kFontSizeTiny } from '~styles/variables';
 
 const itemsWithCount = new Set([
 	QuestRewardTypes.Sticker,
@@ -31,17 +32,13 @@ const itemsWithCount = new Set([
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	reward: {
-		type: Object as PropType<QuestRewardModel>,
-		required: true,
-	},
-});
-
-const { reward } = toRefs(props);
+type Props = {
+	reward: QuestRewardModel;
+};
+const { reward } = defineProps<Props>();
 
 const displayCount = computed(() => {
-	const { type, amount } = reward.value;
+	const { type, amount } = reward;
 	if ((itemsWithCount.has(type) && amount >= 1) || amount > 1) {
 		return `x${formatNumber(amount)}`;
 	}
@@ -49,11 +46,11 @@ const displayCount = computed(() => {
 });
 
 const subtitle = computed(() => {
-	if (reward.value.is_secret) {
+	if (reward.is_secret) {
 		return $gettext(`Secret`);
 	}
 
-	switch (reward.value.type) {
+	switch (reward.type) {
 		case QuestRewardTypes.Sticker:
 			return $gettext(`Sticker`);
 		case QuestRewardTypes.SiteTrophy:

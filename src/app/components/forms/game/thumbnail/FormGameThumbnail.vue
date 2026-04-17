@@ -1,34 +1,34 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRef, watch } from 'vue';
-import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
-import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
-import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormControlCrop from '../../../../../_common/form-vue/controls/AppFormControlCrop.vue';
-import AppFormControlUpload from '../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
+import { computed, type Ref, ref, toRef, watch } from 'vue';
+
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlCrop from '~common/form-vue/controls/AppFormControlCrop.vue';
+import AppFormControlUpload from '~common/form-vue/controls/upload/AppFormControlUpload.vue';
 import {
 	validateFilesize,
 	validateImageMaxDimensions,
 	validateImageMinDimensions,
-} from '../../../../../_common/form-vue/validators';
-import { $saveGameThumbnail, GameModel } from '../../../../../_common/game/game.model';
-import AppLinkHelp from '../../../../../_common/link/AppLinkHelp.vue';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
+} from '~common/form-vue/validators';
+import { $saveGameThumbnail, GameModel } from '~common/game/game.model';
+import AppLinkHelp from '~common/link/AppLinkHelp.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { TranslateDirective as vTranslate } from '~common/translate/translate-directive';
 
 type FormModel = GameModel & {
 	thumb_crop: any;
 };
 
-const props = defineProps({
-	game: {
-		type: Object as PropType<GameModel>,
-		required: true,
-	},
-});
+type Props = {
+	game: GameModel;
+};
+const { game } = defineProps<Props>();
 
-const emit = defineEmits({
-	submit: (_game: GameModel) => true,
-});
+const emit = defineEmits<{
+	submit: [game: GameModel];
+}>();
 
 const maxFilesize = ref(0);
 const minWidth = ref(0);
@@ -37,13 +37,13 @@ const maxWidth = ref(0);
 const maxHeight = ref(0);
 const cropAspectRatio = ref(0);
 
-const form: FormController<FormModel> = createForm({
-	modelClass: GameModel,
+const form: FormController<FormModel> = createForm<FormModel>({
+	modelClass: GameModel as any,
 	modelSaveHandler: $saveGameThumbnail,
-	model: toRef(props, 'game'),
+	model: toRef(() => game) as Ref<FormModel | undefined>,
 	warnOnDiscard: false,
 	resetOnSubmit: true,
-	loadUrl: computed(() => `/web/dash/developer/games/thumbnail/save/${props.game.id}`),
+	loadUrl: computed(() => `/web/dash/developer/games/thumbnail/save/${game.id}`),
 	onInit() {
 		form.formModel.thumb_crop = crop.value;
 	},
@@ -75,8 +75,6 @@ watch(crop, newCrop => (form.formModel.thumb_crop = newCrop));
  * if it's too small to crop to signal to the form to remove the cropper.
  */
 const canCrop = computed(() => {
-	const game = props.game;
-
 	if (!game.thumbnail_media_item) {
 		return false;
 	}

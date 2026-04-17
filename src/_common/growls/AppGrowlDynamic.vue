@@ -1,19 +1,16 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-import { Growl } from './growls.service';
+import { Growl } from '~common/growls/growls.service';
 
-defineProps({
-	growl: {
-		type: Object as PropType<Growl>,
-		required: true,
-	},
-});
+type Props = {
+	growl: Growl;
+};
+defineProps<Props>();
 
-const emit = defineEmits({
-	close: () => true,
-});
+const emit = defineEmits<{
+	close: [];
+}>();
 </script>
 
 <template>
-	<Component :is="growl.component" v-bind="growl.props" @close="emit('close')" />
+	<component :is="growl.component" v-bind="growl.props" @close="emit('close')" />
 </template>

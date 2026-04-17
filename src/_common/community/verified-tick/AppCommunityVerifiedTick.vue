@@ -1,30 +1,21 @@
 <script lang="ts" setup>
-import { PropType, computed, toRefs } from 'vue';
-import AppJolticon from '../../jolticon/AppJolticon.vue';
-import { vAppTooltip } from '../../tooltip/tooltip-directive';
-import { $gettext } from '../../translate/translate.service';
-import { CommunityModel } from '../community.model';
+import { computed } from 'vue';
 
-const props = defineProps({
-	community: {
-		type: Object as PropType<CommunityModel>,
-		required: true,
-	},
-	big: {
-		type: Boolean,
-	},
-	small: {
-		type: Boolean,
-	},
-	noTooltip: {
-		type: Boolean,
-	},
-});
+import { CommunityModel } from '~common/community/community.model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { $gettext } from '~common/translate/translate.service';
 
-const { community, noTooltip } = toRefs(props);
+type Props = {
+	community: CommunityModel;
+	big?: boolean;
+	small?: boolean;
+	noTooltip?: boolean;
+};
+const { community, big, small, noTooltip } = defineProps<Props>();
 
 const tooltip = computed(() => {
-	if (community.value.is_verified && !noTooltip.value) {
+	if (community.is_verified && !noTooltip) {
 		return $gettext('Verified Community');
 	}
 });

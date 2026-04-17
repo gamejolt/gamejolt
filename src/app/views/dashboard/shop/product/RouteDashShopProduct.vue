@@ -1,27 +1,25 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { AvatarFrameModel } from '../../../../../_common/avatar/frame.model';
-import { BackgroundModel } from '../../../../../_common/background/background.model';
-import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import AppLoading from '../../../../../_common/loading/AppLoading.vue';
+
+import FormShopProductAvatarFrame from '~app/views/dashboard/shop/product/_forms/FormShopProductAvatarFrame.vue';
+import FormShopProductBackground from '~app/views/dashboard/shop/product/_forms/FormShopProductBackground.vue';
+import FormShopProductSticker from '~app/views/dashboard/shop/product/_forms/FormShopProductSticker.vue';
+import FormShopProductStickerPack from '~app/views/dashboard/shop/product/_forms/FormShopProductStickerPack.vue';
 import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '../../../../../_common/route/route-component';
-import { ShopProductResource } from '../../../../../_common/shop/product/product-model';
-import { StickerPackModel } from '../../../../../_common/sticker/pack/pack.model';
-import { StickerModel } from '../../../../../_common/sticker/sticker.model';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import {
-	ShopDashProductResourceParam,
 	getShopDashProductResourceFromParam,
+	ShopDashProductResourceParam,
 	useShopDashStore,
-} from '../shop.store';
-import FormShopProductAvatarFrame from './_forms/FormShopProductAvatarFrame.vue';
-import FormShopProductBackground from './_forms/FormShopProductBackground.vue';
-import FormShopProductSticker from './_forms/FormShopProductSticker.vue';
-import FormShopProductStickerPack from './_forms/FormShopProductStickerPack.vue';
+} from '~app/views/dashboard/shop/shop.store';
+import { AvatarFrameModel } from '~common/avatar/frame.model';
+import { BackgroundModel } from '~common/background/background.model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLoading from '~common/loading/AppLoading.vue';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { ShopProductResource } from '~common/shop/product/product-model';
+import { StickerPackModel } from '~common/sticker/pack/pack.model';
+import { StickerModel } from '~common/sticker/sticker.model';
+import { $gettext } from '~common/translate/translate.service';
 
 defineOptions(
 	defineAppRouteOptions({

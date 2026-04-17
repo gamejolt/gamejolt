@@ -1,38 +1,37 @@
 <script lang="ts">
 import { computed, ref, toRef } from 'vue';
 import { RouteLocationNormalized, RouteLocationRaw, RouterLink, useRoute } from 'vue-router';
-import { Api } from '../../../../../../../../../_common/api/api.service';
-import AppButton from '../../../../../../../../../_common/button/AppButton.vue';
+
+import AppCommunityCompetitionDate from '~app/components/community/competition/date/AppCommunityCompetitionDate.vue';
+import { showEntryFromCommunityCompetitionEntryModal } from '~app/components/community/competition/entry/modal/modal.service';
+import { useCommunityRouteStore } from '~app/views/communities/view/view.store';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
 import {
 	CompetitionPeriodPreComp,
 	CompetitionPeriodVoting,
-} from '../../../../../../../../../_common/community/competition/competition.model';
+} from '~common/community/competition/competition.model';
 import {
 	$hideCommunityCompetitionEntry,
 	$unhideCommunityCompetitionEntry,
 	CommunityCompetitionEntryModel,
-} from '../../../../../../../../../_common/community/competition/entry/entry.model';
-import { showSuccessGrowl } from '../../../../../../../../../_common/growls/growls.service';
-import AppIllustration from '../../../../../../../../../_common/illustration/AppIllustration.vue';
-import { illNoCommentsSmall } from '../../../../../../../../../_common/illustration/illustrations';
-import AppJolticon from '../../../../../../../../../_common/jolticon/AppJolticon.vue';
-import AppLoading from '../../../../../../../../../_common/loading/AppLoading.vue';
-import { showModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
-import AppPagination from '../../../../../../../../../_common/pagination/AppPagination.vue';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '../../../../../../../../../_common/route/route-component';
-import { vAppNoAutoscroll } from '../../../../../../../../../_common/scroll/auto-scroll/no-autoscroll.directive';
-import AppTimeAgo from '../../../../../../../../../_common/time/AppTimeAgo.vue';
-import { vAppTooltip } from '../../../../../../../../../_common/tooltip/tooltip-directive';
-import { $gettext } from '../../../../../../../../../_common/translate/translate.service';
-import AppUserVerifiedTick from '../../../../../../../../../_common/user/AppUserVerifiedTick.vue';
-import AppUserCardHover from '../../../../../../../../../_common/user/card/AppUserCardHover.vue';
-import AppUserAvatarImg from '../../../../../../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
-import AppCommunityCompetitionDate from '../../../../../../../../components/community/competition/date/AppCommunityCompetitionDate.vue';
-import { showEntryFromCommunityCompetitionEntryModal } from '../../../../../../../../components/community/competition/entry/modal/modal.service';
-import { useCommunityRouteStore } from '../../../../../view.store';
+} from '~common/community/competition/entry/entry.model';
+import { showSuccessGrowl } from '~common/growls/growls.service';
+import AppIllustration from '~common/illustration/AppIllustration.vue';
+import { illNoCommentsSmall } from '~common/illustration/illustrations';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLoading from '~common/loading/AppLoading.vue';
+import { showModalConfirm } from '~common/modal/confirm/confirm-service';
+import AppPagination from '~common/pagination/AppPagination.vue';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { vAppNoAutoscroll } from '~common/scroll/auto-scroll/no-autoscroll.directive';
+import AppTimeAgo from '~common/time/AppTimeAgo.vue';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
+import AppUserVerifiedTick from '~common/user/AppUserVerifiedTick.vue';
+import AppUserCardHover from '~common/user/card/AppUserCardHover.vue';
+import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
 
 type Payload = {
 	entryCount: number;
@@ -259,20 +258,20 @@ createAppRoute({
 
 			<template v-else>
 				<p class="help-block">
-					<span v-translate="{ count: entryCount }">
-						<b>%{ count }</b> total entries have been submitted.
-					</span>
+					<AppTranslate :translate-params="{ count: entryCount }">
+						%{ count } total entries have been submitted.
+					</AppTranslate>
 					<br />
 					<template v-if="entryCount > competition.entry_count">
-						<span
-							v-translate="{
+						<AppTranslate
+							:translate-params="{
 								count: entryCount - competition.entry_count,
 								visibleCount: competition.entry_count,
 							}"
 						>
-							<b>%{ count }</b> have been hidden, resulting in
-							<b>%{ visibleCount }</b> visible entries.
-						</span>
+							%{ count } have been hidden, resulting in %{ visibleCount } visible
+							entries.
+						</AppTranslate>
 					</template>
 					<template v-else>
 						{{ $gettext(`No entries have been hidden.`) }}

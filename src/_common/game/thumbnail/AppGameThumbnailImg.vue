@@ -1,43 +1,31 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRefs } from 'vue';
-import AppAspectRatio from '../../aspect-ratio/AppAspectRatio.vue';
-import { useContentFocusService } from '../../content-focus/content-focus.service';
-import AppImgResponsive from '../../img/AppImgResponsive.vue';
-import AppJolticon from '../../jolticon/AppJolticon.vue';
-import AppMediaItemBackdrop from '../../media-item/backdrop/AppMediaItemBackdrop.vue';
-import { Screen } from '../../screen/screen-service';
-import AppVideo from '../../video/AppVideo.vue';
-import { getVideoPlayerFromSources } from '../../video/player/controller';
-import { GameModel } from '../game.model';
+import { computed, ref } from 'vue';
 
-const props = defineProps({
-	game: {
-		type: Object as PropType<GameModel>,
-		required: true,
-	},
-	hideMedia: {
-		type: Boolean,
-	},
-	hideJolticon: {
-		type: Boolean,
-	},
-	animate: {
-		type: Boolean,
-	},
-	radius: {
-		type: String as PropType<'md' | 'lg' | 'sm'>,
-		default: 'lg',
-	},
-});
+import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
+import { useContentFocusService } from '~common/content-focus/content-focus.service';
+import { GameModel } from '~common/game/game.model';
+import AppImgResponsive from '~common/img/AppImgResponsive.vue';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppMediaItemBackdrop from '~common/media-item/backdrop/AppMediaItemBackdrop.vue';
+import { Screen } from '~common/screen/screen-service';
+import AppVideo from '~common/video/AppVideo.vue';
+import { getVideoPlayerFromSources } from '~common/video/player/controller';
 
-const { game, animate } = toRefs(props);
+type Props = {
+	game: GameModel;
+	hideMedia?: boolean;
+	hideJolticon?: boolean;
+	animate?: boolean;
+	radius?: 'md' | 'lg' | 'sm';
+};
+const { game, hideMedia, hideJolticon, animate, radius = 'lg' } = defineProps<Props>();
 const { hasContentFocus } = useContentFocusService();
 
 const isThumbnailLoaded = ref(import.meta.env.SSR);
 
-const mediaItem = computed(() => game.value.thumbnail_media_item);
+const mediaItem = computed(() => game.thumbnail_media_item);
 const hasVideo = computed(
-	() => mediaItem.value?.is_animated && Screen.isDesktop && !import.meta.env.SSR && animate.value
+	() => mediaItem.value?.is_animated && Screen.isDesktop && !import.meta.env.SSR && animate
 );
 const shouldPlayVideo = computed(() => hasVideo.value && hasContentFocus.value);
 const videoController = computed(() => {

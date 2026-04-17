@@ -1,103 +1,86 @@
 <script lang="ts" setup>
-import { computed, CSSProperties, PropType, StyleValue, toRefs } from 'vue';
-import {
-	styleBorderRadiusLg,
-	styleChangeBg,
-	styleElevate,
-	styleWhen,
-} from '../../../_styles/mixins';
-import { kBorderWidthLg } from '../../../_styles/variables';
-import AppAspectRatio from '../../aspect-ratio/AppAspectRatio.vue';
-import AppQuestFrame from '../../quest/AppQuestFrame.vue';
-import AppSpacer from '../../spacer/AppSpacer.vue';
-import AppUserAvatar from '../../user/user-avatar/AppUserAvatar.vue';
-import AppStickerImg from '../AppStickerImg.vue';
-import AppStickerMastery from '../AppStickerMastery.vue';
-import { useStickerStore } from '../sticker-store';
-import { StickerModel } from '../sticker.model';
+import { computed, CSSProperties, HTMLAttributes, StyleValue } from 'vue';
 
-const props = defineProps({
-	sticker: {
-		type: Object as PropType<StickerModel>,
-		required: true,
-	},
-	count: {
-		type: Number,
-		default: undefined,
-	},
-	size: {
-		type: Number,
-		default: 64,
-	},
+import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
+import AppQuestFrame from '~common/quest/AppQuestFrame.vue';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import AppStickerImg from '~common/sticker/AppStickerImg.vue';
+import AppStickerMastery from '~common/sticker/AppStickerMastery.vue';
+import { StickerModel } from '~common/sticker/sticker.model';
+import { useStickerStore } from '~common/sticker/sticker-store';
+import AppUserAvatar from '~common/user/user-avatar/AppUserAvatar.vue';
+import { styleBorderRadiusLg, styleChangeBg, styleElevate, styleWhen } from '~styles/mixins';
+import { kBorderWidthLg } from '~styles/variables';
+
+type Props = {
+	sticker: StickerModel;
+	count?: number;
+	size?: number;
 	/**
 	 * Ignores the {@link size} prop and instead sizes to the constraints of the
 	 * parent, using a 1:1 ratio.
 	 */
-	fitParent: {
-		type: Boolean,
-	},
+	fitParent?: boolean;
 	/**
 	 * Removes grabbing cursor styling.
 	 */
-	noDrag: {
-		type: Boolean,
-	},
-	hideCount: {
-		type: Boolean,
-	},
-	showCreator: {
-		type: Boolean,
-	},
-	showMastery: {
-		type: Boolean,
-	},
-	creatorSize: {
-		type: Number,
-		default: 16,
-	},
-});
+	noDrag?: boolean;
+	hideCount?: boolean;
+	showCreator?: boolean;
+	showMastery?: boolean;
+	creatorSize?: number;
+} & /* @vue-ignore */ Pick<HTMLAttributes, 'onMousedown' | 'onTouchstart'>;
 
-const { sticker, count, size, fitParent, noDrag, hideCount } = toRefs(props);
+const {
+	sticker,
+	count,
+	size = 64,
+	fitParent,
+	noDrag,
+	hideCount,
+	showCreator,
+	showMastery,
+	creatorSize = 16,
+} = defineProps<Props>();
+
 const { streak, isDragging, sticker: storeSticker } = useStickerStore();
 
-const displayCount = computed(() => count?.value || 0);
+const displayCount = computed(() => count || 0);
 const shouldFade = computed(() => {
-	if (hideCount.value) {
+	if (hideCount) {
 		return false;
 	}
 	return !displayCount.value;
 });
 
 const currentStreak = computed(() => {
-	if (streak.value?.sticker.id !== sticker.value.id) {
+	if (streak.value?.sticker.id !== sticker.id) {
 		return 0;
 	}
 	return streak.value.count;
 });
 
 const itemStyling = computed(() => {
-	const itemSize = fitParent.value ? '100%' : `${size.value}px`;
+	const itemSize = fitParent ? '100%' : `${size}px`;
 	const result: StyleValue = {
 		width: itemSize,
 		height: itemSize,
 	};
-	if (!noDrag.value) {
+	if (!noDrag) {
 		result.cursor = isDragging.value ? 'grabbing' : 'grab';
 	}
 	return result;
 });
 
 const isPeeled = computed(
-	() =>
-		storeSticker.value?.id === sticker.value.id ||
-		(typeof count?.value === 'number' && count.value < 1)
+	() => storeSticker.value?.id === sticker.id || (typeof count === 'number' && count < 1)
 );
 
 // NOTE: Says unused for me, but it's in the template. Check before deleting.
-const slotName = computed(() => (sticker.value.is_event ? 'above' : 'default'));
+const slotName = computed(() => (sticker.is_event ? 'above' : 'default'));
 
 function onContextMenu(event: Event) {
-	if (noDrag.value) {
+	if (noDrag) {
 		return;
 	}
 	event.preventDefault();

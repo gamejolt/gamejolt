@@ -1,8 +1,8 @@
-import { Api } from '../../../../_common/api/api.service';
-import { GamePlaylistModel } from '../../../../_common/game-playlist/game-playlist.model';
-import { Model } from '../../../../_common/model/model.service';
-import { commonStore } from '../../../../_common/store/common-store';
-import { UserModel } from '../../../../_common/user/user.model';
+import { Api } from '~common/api/api.service';
+import { GamePlaylistModel } from '~common/game-playlist/game-playlist.model';
+import { Model } from '~common/model/model.service';
+import { commonStore } from '~common/store/common-store';
+import { UserModel } from '~common/user/user.model';
 
 export const enum GameCollectionType {
 	Followed = 'followed',

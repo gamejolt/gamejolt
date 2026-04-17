@@ -1,20 +1,19 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 import { RouteLocationRaw, RouterLink } from 'vue-router';
-import { trackHomeFeedSwitch } from '../../../_common/analytics/analytics.service';
-import { Screen } from '../../../_common/screen/screen-service';
+
+import { useAppStore } from '~app/store';
 import {
-	kThemeBg,
-	kThemeBiBg,
-	kThemeBiFg,
-	kThemeGjOverlayNotice,
-} from '../../../_common/theme/variables';
-import { $gettext } from '../../../_common/translate/translate.service';
-import { styleBorderRadiusLg, styleElevate, styleWhen } from '../../../_styles/mixins';
-import { kBorderWidthLg } from '../../../_styles/variables';
-import { assertNever } from '../../../utils/utils';
-import { useAppStore } from '../../store';
-import { HomeFeedService, HomeFeedTabTypes as HomeFeedTabType } from './home-feed.service';
+	HomeFeedService,
+	HomeFeedTabTypes as HomeFeedTabType,
+} from '~app/views/home/home-feed.service';
+import { trackHomeFeedSwitch } from '~common/analytics/analytics.service';
+import { Screen } from '~common/screen/screen-service';
+import { kThemeBg, kThemeBiBg, kThemeBiFg, kThemeGjOverlayNotice } from '~common/theme/variables';
+import { $gettext } from '~common/translate/translate.service';
+import { styleBorderRadiusLg, styleElevate, styleWhen } from '~styles/mixins';
+import { kBorderWidthLg } from '~styles/variables';
+import { assertNever } from '~utils/utils';
 
 type Props = {
 	tabs: HomeFeedTabType[];

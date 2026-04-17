@@ -1,25 +1,26 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { Api } from '../../../../_common/api/api.service';
-import { Connection } from '../../../../_common/connection/connection-service';
-import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
-import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
-import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
-import AppFormControlErrors from '../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
 
-interface RetrieveLoginFormModel {
+import { Api } from '~common/api/api.service';
+import { Connection } from '~common/connection/connection-service';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import { $gettext } from '~common/translate/translate.service';
+
+type FormModel = {
 	email: string;
-}
+};
 
-const emit = defineEmits({
-	submit: () => true,
-});
+const emit = defineEmits<{
+	submit: [];
+}>();
 
 const invalidEmail = ref(false);
 
-const form: FormController<RetrieveLoginFormModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	warnOnDiscard: false,
 	onInit() {
 		invalidEmail.value = false;

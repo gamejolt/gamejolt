@@ -1,38 +1,29 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
-import { FiresidePostModel } from '../fireside/post/post-model';
-import { Screen } from '../screen/screen-service';
-import { UserModel } from '../user/user.model';
-import AppStickerSupporters from './AppStickerSupporters.vue';
-import AppStickerReactions from './reactions/AppStickerReactions.vue';
-import { StickerCount } from './sticker-count';
-import { StickerTargetController } from './target/target-controller';
+import { computed } from 'vue';
 
-const props = defineProps({
-	stickerTargetController: {
-		type: Object as PropType<StickerTargetController>,
-		required: true,
-	},
-	supporters: {
-		type: Array as PropType<UserModel[]>,
-		required: true,
-	},
-	stickers: {
-		type: Array as PropType<StickerCount[]>,
-		required: true,
-	},
-});
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import { Screen } from '~common/screen/screen-service';
+import AppStickerSupporters from '~common/sticker/AppStickerSupporters.vue';
+import AppStickerReactions from '~common/sticker/reactions/AppStickerReactions.vue';
+import { StickerCount } from '~common/sticker/sticker-count';
+import { StickerTargetController } from '~common/sticker/target/target-controller';
+import { UserModel } from '~common/user/user.model';
 
-const emit = defineEmits({
-	show: () => true,
-});
+type Props = {
+	stickerTargetController: StickerTargetController;
+	supporters: UserModel[];
+	stickers: StickerCount[];
+};
+const { stickerTargetController } = defineProps<Props>();
 
-const { stickerTargetController } = toRefs(props);
+const emit = defineEmits<{
+	show: [];
+}>();
 
 // We only allow this type of model to show the supporters currently.
 const supportersModel = computed(() =>
-	stickerTargetController.value.model instanceof FiresidePostModel
-		? stickerTargetController.value.model
+	stickerTargetController.model instanceof FiresidePostModel
+		? stickerTargetController.model
 		: undefined
 );
 </script>

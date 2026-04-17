@@ -1,19 +1,17 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRefs } from 'vue';
-import AppGameThumbnail from '../../../../_common/game/thumbnail/AppGameThumbnail.vue';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import AppClientGameButtons from '../../../components/client/game-buttons/AppClientGameButtons.vue';
-import { LocalDbGame } from '../../../components/client/local-db/game/game.model';
-import { useClientLibraryStore } from '../../../store/client-library/index';
+import { computed, ref } from 'vue';
 
-const props = defineProps({
-	game: {
-		type: Object as PropType<LocalDbGame>,
-		required: true,
-	},
-});
+import AppClientGameButtons from '~app/components/client/game-buttons/AppClientGameButtons.vue';
+import { LocalDbGame } from '~app/components/client/local-db/game/game.model';
+import { useClientLibraryStore } from '~app/store/client-library/index';
+import AppGameThumbnail from '~common/game/thumbnail/AppGameThumbnail.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
-const { game } = toRefs(props);
+type Props = {
+	game: LocalDbGame;
+};
+const { game } = defineProps<Props>();
+
 const { packagesByGameId, packages } = useClientLibraryStore();
 
 const isHovering = ref(false);
@@ -21,21 +19,21 @@ const isShowingOptions = ref(false);
 const isShowingLaunchOptions = ref(false);
 
 const hasMultiplePackages = computed(() => {
-	const len = packagesByGameId.value[game.value.id]?.length ?? 0;
+	const len = packagesByGameId.value[game.id]?.length ?? 0;
 	return len > 1;
 });
 
 const packageVersion = computed(() => {
-	const firstPackage = packagesByGameId.value[game.value.id]?.[0] ?? null;
+	const firstPackage = packagesByGameId.value[game.id]?.[0] ?? null;
 	return firstPackage?.release.version_number ?? '0.0.0';
 });
 
 const isInstalling = computed(() => {
-	return packages.value.some(i => !!i.install_state && i.game_id === game.value.id);
+	return packages.value.some(i => !!i.install_state && i.game_id === game.id);
 });
 
 const isUpdating = computed(() => {
-	return packages.value.some(i => !!i.update_state && i.game_id === game.value.id);
+	return packages.value.some(i => !!i.update_state && i.game_id === game.id);
 });
 
 const shouldShowControls = computed(() => {

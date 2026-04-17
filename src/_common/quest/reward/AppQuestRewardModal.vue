@@ -1,17 +1,18 @@
 <script lang="ts">
-import { nextTick, onMounted, onUnmounted, PropType, ref, Ref, toRefs } from 'vue';
-import { sleep } from '../../../utils/utils';
-import { illBackpackClosed, illBackpackOpen } from '../../img/ill/illustrations';
-import AppJolticon, { Jolticon } from '../../jolticon/AppJolticon.vue';
-import AppModal from '../../modal/AppModal.vue';
-import { useModal } from '../../modal/modal.service';
-import AppPopcornKettle from '../../popcorn/AppPopcornKettle.vue';
-import { createPopcornKettleController } from '../../popcorn/popcorn-kettle-controller';
-import { Screen } from '../../screen/screen-service';
-import AppSpacer from '../../spacer/AppSpacer.vue';
-import AppThemeSvg from '../../theme/svg/AppThemeSvg.vue';
-import AppQuestThumbnail from '../AppQuestThumbnail.vue';
-import { QuestModel } from '../quest-model';
+import { nextTick, onMounted, onUnmounted, Ref, ref, useTemplateRef } from 'vue';
+
+import { illBackpackClosed, illBackpackOpen } from '~common/img/ill/illustrations';
+import AppJolticon, { Jolticon } from '~common/jolticon/AppJolticon.vue';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import AppPopcornKettle from '~common/popcorn/AppPopcornKettle.vue';
+import { createPopcornKettleController } from '~common/popcorn/popcorn-kettle-controller';
+import AppQuestThumbnail from '~common/quest/AppQuestThumbnail.vue';
+import { QuestModel } from '~common/quest/quest-model';
+import { Screen } from '~common/screen/screen-service';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import AppThemeSvg from '~common/theme/svg/AppThemeSvg.vue';
+import { sleep } from '~utils/utils';
 
 export interface QuestRewardData {
 	key: string;
@@ -62,27 +63,17 @@ const DurationThumbnail = 3_000;
 <script lang="ts" setup>
 const modal = useModal<boolean>()!;
 
-const props = defineProps({
-	quest: {
-		type: Object as PropType<QuestModel>,
-		required: true,
-	},
-	rewards: {
-		type: Array as PropType<QuestRewardData[]>,
-		required: true,
-	},
-	title: {
-		type: String,
-		default: undefined,
-	},
-});
-
-const { quest, rewards, title } = toRefs(props);
+type Props = {
+	quest: QuestModel;
+	rewards: QuestRewardData[];
+	title?: string;
+};
+const { quest, rewards, title } = defineProps<Props>();
 
 const kettleController = createPopcornKettleController();
 
-const backpackEnter = ref<HTMLElement>();
-const backpackOpen = ref<HTMLElement>();
+const backpackEnter = useTemplateRef('backpackEnter');
+const backpackOpen = useTemplateRef('backpackOpen');
 
 const isClosing = ref(false);
 
@@ -96,7 +87,7 @@ async function afterMount() {
 	_isMounted = true;
 
 	await nextTick();
-	if (rewards.value.length > 0) {
+	if (rewards.length > 0) {
 		await startBackpackFlow();
 	} else {
 		await startAvatarFlow();
@@ -120,7 +111,7 @@ async function startBackpackFlow() {
 	const radians = Math.asin(opposite / hypo);
 	const angle = radians / (Math.PI / 180);
 
-	for (const { amount, img_url, icon, isCondensed } of rewards.value) {
+	for (const { amount, img_url, icon, isCondensed } of rewards) {
 		const kernelCount = isCondensed ? 1 : amount;
 
 		for (let i = 0; i < kernelCount; i++) {
@@ -172,7 +163,7 @@ async function closeBackpack() {
 }
 
 function playAnimation(
-	element: Ref<HTMLElement | undefined>,
+	element: Readonly<Ref<HTMLElement | null>>,
 	{ reverse }: { reverse?: boolean } = {}
 ) {
 	if (!element.value) {

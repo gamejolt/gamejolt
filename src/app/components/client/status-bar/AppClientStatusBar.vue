@@ -1,14 +1,15 @@
 <script lang="ts" setup>
 import { computed, onUnmounted, ref, watch } from 'vue';
 import { RouterLink } from 'vue-router';
-import { ClientUpdater } from '../../../../_common/client/client-updater.service';
-import { Client } from '../../../../_common/client/client.service';
-import { formatNumber } from '../../../../_common/filters/number';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { useClientLibraryStore } from '../../../store/client-library/index';
-import AppClientStatusBarPatchItem from './AppClientStatusBarPatchItem.vue';
+
+import AppClientStatusBarPatchItem from '~app/components/client/status-bar/AppClientStatusBarPatchItem.vue';
+import { useClientLibraryStore } from '~app/store/client-library/index';
+import { Client } from '~common/client/client.service';
+import { ClientUpdater } from '~common/client/client-updater.service';
+import { formatNumber } from '~common/filters/number';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 const { gamesById, numPatching, currentlyPatching, currentlyPlaying } = useClientLibraryStore();
 

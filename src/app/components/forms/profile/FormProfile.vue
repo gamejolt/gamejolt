@@ -1,51 +1,48 @@
 <script lang="ts" setup>
 import { formatDistanceToNow } from 'date-fns';
-import { computed, onUnmounted, PropType, ref, shallowReactive, toRefs } from 'vue';
-import { ContextCapabilities } from '../../../../_common/content/content-context';
-import { DogtagModel, DogtagType } from '../../../../_common/dogtag/dogtag-model';
-import { Environment } from '../../../../_common/environment/environment.service';
-import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
-import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
-import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
-import AppFormControlErrors from '../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormStickySubmit from '../../../../_common/form-vue/AppFormStickySubmit.vue';
-import AppFormControlContent from '../../../../_common/form-vue/controls/AppFormControlContent.vue';
-import AppFormControlSelect from '../../../../_common/form-vue/controls/AppFormControlSelect.vue';
-import AppFormControlTheme from '../../../../_common/form-vue/controls/AppFormControlTheme.vue';
-import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
-import AppFormControlToggleButton from '../../../../_common/form-vue/controls/toggle-button/AppFormControlToggleButton.vue';
-import AppFormControlToggleButtonGroup from '../../../../_common/form-vue/controls/toggle-button/AppFormControlToggleButtonGroup.vue';
+import { computed, onUnmounted, type Ref, ref, shallowReactive, toRef } from 'vue';
+
+import { ContextCapabilities } from '~common/content/content-context';
+import { DogtagModel, DogtagType } from '~common/dogtag/dogtag-model';
+import { Environment } from '~common/environment/environment.service';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormStickySubmit from '~common/form-vue/AppFormStickySubmit.vue';
+import AppFormControlContent from '~common/form-vue/controls/AppFormControlContent.vue';
+import AppFormControlSelect from '~common/form-vue/controls/AppFormControlSelect.vue';
+import AppFormControlTheme from '~common/form-vue/controls/AppFormControlTheme.vue';
+import AppFormControlToggle from '~common/form-vue/controls/AppFormControlToggle.vue';
+import AppFormControlToggleButton from '~common/form-vue/controls/toggle-button/AppFormControlToggleButton.vue';
+import AppFormControlToggleButtonGroup from '~common/form-vue/controls/toggle-button/AppFormControlToggleButtonGroup.vue';
 import {
 	validateAvailability,
 	validateContentMaxLength,
 	validateMaxLength,
 	validateMinLength,
 	validateUsername,
-} from '../../../../_common/form-vue/validators';
-import { DefaultTheme } from '../../../../_common/theme/theme.model';
-import { useThemeStore } from '../../../../_common/theme/theme.store';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { $saveUser, UserModel } from '../../../../_common/user/user.model';
-import { arrayUnique } from '../../../../utils/array';
+} from '~common/form-vue/validators';
+import { DefaultTheme } from '~common/theme/theme.model';
+import { useThemeStore } from '~common/theme/theme.store';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { $saveUser, UserModel } from '~common/user/user.model';
+import { arrayUnique } from '~utils/array';
 
 type FormModel = UserModel & {
 	pronoun_dogtags: number[];
 };
 
-const props = defineProps({
-	user: {
-		type: Object as PropType<UserModel>,
-		required: true,
-	},
-});
+type Props = {
+	user: UserModel;
+};
+const { user } = defineProps<Props>();
 
-const { user } = toRefs(props);
-
-const emit = defineEmits({
-	submit: (_model: UserModel) => true,
-});
+const emit = defineEmits<{
+	submit: [model: UserModel];
+}>();
 
 const { setFormTheme } = useThemeStore();
 
@@ -76,10 +73,10 @@ const mentionsSettingOptions = computed(() => {
 	];
 });
 
-const form: FormController<FormModel> = createForm({
-	modelClass: UserModel,
+const form: FormController<FormModel> = createForm<FormModel>({
+	modelClass: UserModel as any,
 	modelSaveHandler: $saveUser,
-	model: user,
+	model: toRef(() => user) as Ref<FormModel | undefined>,
 	loadUrl: '/web/dash/profile/save',
 	reloadOnSubmit: true,
 	onLoad(payload) {

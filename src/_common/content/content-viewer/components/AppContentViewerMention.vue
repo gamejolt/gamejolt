@@ -1,30 +1,32 @@
 <script lang="ts" setup>
-import { CSSProperties, ref, toRefs, watch } from 'vue';
+import { CSSProperties, ref, watch } from 'vue';
 import { RouterLink } from 'vue-router';
-import { styleChangeBg } from '../../../../_styles/mixins';
-import AppJolticon from '../../../jolticon/AppJolticon.vue';
-import AppUserCardHover from '../../../user/card/AppUserCardHover.vue';
-import AppUserCreatorBadge from '../../../user/creator/AppUserCreatorBadge.vue';
-import { UserModel } from '../../../user/user.model';
-import { useContentOwnerController } from '../../content-owner';
 
-const props = defineProps({
-	username: {
-		type: String,
-		required: true,
-	},
-});
+import { useContentOwnerController } from '~common/content/content-owner';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppUserCardHover from '~common/user/card/AppUserCardHover.vue';
+import AppUserCreatorBadge from '~common/user/creator/AppUserCreatorBadge.vue';
+import { UserModel } from '~common/user/user.model';
+import { styleChangeBg } from '~styles/mixins';
 
-const { username } = toRefs(props);
+type Props = {
+	username: string;
+};
+const { username } = defineProps<Props>();
+
 const { hydrator } = useContentOwnerController()!;
 
 const user = ref<UserModel | null>(null);
 
-watch(username, () => _hydrateUser(), { immediate: true });
+watch(
+	() => username,
+	() => _hydrateUser(),
+	{ immediate: true }
+);
 
 function _hydrateUser() {
 	// Make sure we never execute a promise if we don't have to, it would break SSR.
-	hydrator.useData<any>('username', username.value, data => {
+	hydrator.useData<any>('username', username, data => {
 		if (data !== null) {
 			user.value = new UserModel(data);
 		}

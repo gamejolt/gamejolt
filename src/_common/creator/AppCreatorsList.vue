@@ -1,72 +1,59 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
-import AppPostCardPlaceholder from '../fireside/post/card/AppPostCardPlaceholder.vue';
-import { FiresidePostModel } from '../fireside/post/post-model';
-import { Screen } from '../screen/screen-service';
-import AppScrollScroller from '../scroll/AppScrollScroller.vue';
-import AppCreatorCard, { AppCreatorCardAspectRatio } from './AppCreatorCard.vue';
+import { computed } from 'vue';
 
-const props = defineProps({
-	isLoading: {
-		type: Boolean,
-	},
-	listType: {
-		type: String as PropType<'scroll' | 'grid'>,
-		required: true,
-	},
-	posts: {
-		type: Array as PropType<FiresidePostModel[]>,
-		required: true,
-	},
+import AppCreatorCard, { AppCreatorCardAspectRatio } from '~common/creator/AppCreatorCard.vue';
+import AppPostCardPlaceholder from '~common/fireside/post/card/AppPostCardPlaceholder.vue';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import { Screen } from '~common/screen/screen-service';
+import AppScrollScroller from '~common/scroll/AppScrollScroller.vue';
 
-	fancyHover: {
-		type: Boolean,
-	},
-	gridColumnsDesktop: {
-		type: Number,
-		default: 4,
-	},
-	gridColumnsSm: {
-		type: Number,
-		default: 3,
-	},
-	gridColumnsXs: {
-		type: Number,
-		default: 2,
-	},
-});
-
-const { isLoading, listType, posts, fancyHover, gridColumnsDesktop, gridColumnsSm, gridColumnsXs } =
-	toRefs(props);
+type Props = {
+	isLoading?: boolean;
+	listType: 'scroll' | 'grid';
+	posts: FiresidePostModel[];
+	fancyHover?: boolean;
+	gridColumnsDesktop?: number;
+	gridColumnsSm?: number;
+	gridColumnsXs?: number;
+};
+const {
+	isLoading,
+	listType,
+	posts,
+	fancyHover,
+	gridColumnsDesktop = 4,
+	gridColumnsSm = 3,
+	gridColumnsXs = 2,
+} = defineProps<Props>();
 
 const displayPosts = computed(() => {
-	if (listType.value !== 'grid') {
-		return posts.value;
+	if (listType !== 'grid') {
+		return posts;
 	}
 
 	let count: number;
 	if (Screen.isXs) {
-		count = gridColumnsXs.value * 3;
+		count = gridColumnsXs * 3;
 	} else if (Screen.isSm) {
-		count = gridColumnsSm.value * 2;
+		count = gridColumnsSm * 2;
 	} else {
-		count = gridColumnsDesktop.value * 2;
+		count = gridColumnsDesktop * 2;
 	}
 
-	return posts.value.slice(0, count);
+	return posts.slice(0, count);
 });
 
 const placeholderCount = computed(() => {
-	if (listType.value === 'scroll') {
+	if (listType === 'scroll') {
 		return 4;
 	}
 
 	if (Screen.isXs) {
-		return gridColumnsXs.value;
+		return gridColumnsXs;
 	} else if (Screen.isSm) {
-		return gridColumnsSm.value;
+		return gridColumnsSm;
 	} else {
-		return gridColumnsDesktop.value;
+		return gridColumnsDesktop;
 	}
 });
 </script>
@@ -95,7 +82,7 @@ const placeholderCount = computed(() => {
 			<slot name="left" />
 
 			<template v-if="isLoading">
-				<template v-for="i of placeholderCount" :key="i">
+				<template v-for="_i of placeholderCount" :key="_i">
 					<div class="-creator-card">
 						<AppPostCardPlaceholder :aspect-ratio="AppCreatorCardAspectRatio" />
 					</div>

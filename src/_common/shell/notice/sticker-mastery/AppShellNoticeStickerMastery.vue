@@ -1,15 +1,16 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType, computed, ref, toRefs } from 'vue';
-import { styleFlexCenter } from '../../../../_styles/mixins';
-import { kBorderWidthLg, kFontSizeLarge, kFontSizeTiny } from '../../../../_styles/variables';
-import { clampNumber } from '../../../../utils/number';
-import { sleep } from '../../../../utils/utils';
-import AppJolticon, { Jolticon } from '../../../jolticon/AppJolticon.vue';
-import AppCircularProgress from '../../../progress/AppCircularProgress.vue';
-import AppStickerImg from '../../../sticker/AppStickerImg.vue';
-import { $gettext } from '../../../translate/translate.service';
-import AppShellNoticeBase from '../_base/AppShellNoticeBase.vue';
-import { StickerMasteryNotice } from '../notice.service';
+import { computed, CSSProperties, ref } from 'vue';
+
+import AppJolticon, { Jolticon } from '~common/jolticon/AppJolticon.vue';
+import AppCircularProgress from '~common/progress/AppCircularProgress.vue';
+import AppShellNoticeBase from '~common/shell/notice/_base/AppShellNoticeBase.vue';
+import { StickerMasteryNotice } from '~common/shell/notice/notice.service';
+import AppStickerImg from '~common/sticker/AppStickerImg.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { styleFlexCenter } from '~styles/mixins';
+import { kBorderWidthLg, kFontSizeLarge, kFontSizeTiny } from '~styles/variables';
+import { clampNumber } from '~utils/number';
+import { sleep } from '~utils/utils';
 
 interface BaseContent {
 	type: string;
@@ -33,26 +34,19 @@ interface JolticonContent extends BaseContent {
 
 type PercentData = TextContent | StickerContent | JolticonContent;
 
-const props = defineProps({
-	noticeId: {
-		type: Number,
-		required: true,
-	},
-	data: {
-		type: Object as PropType<StickerMasteryNotice>,
-		required: true,
-	},
-});
-
-const { noticeId, data } = toRefs(props);
+type Props = {
+	noticeId: number;
+	data: StickerMasteryNotice;
+};
+const { noticeId, data } = defineProps<Props>();
 
 const percentTransitionMs = 500;
 const progressStrokeWidth = kBorderWidthLg.value * 2;
 let squareInCircleData: { diameter: number; squareDimension: number } | undefined = undefined;
 
 const masteryData = computed(() => {
-	const maxProgress = Math.max(1, data.value.max);
-	const progress = clampNumber(data.value.progress, 0, maxProgress);
+	const maxProgress = Math.max(1, data.max);
+	const progress = clampNumber(data.progress, 0, maxProgress);
 	const isMax = progress >= maxProgress;
 
 	const currentPercent = clampNumber(progress / maxProgress, 0, 1);

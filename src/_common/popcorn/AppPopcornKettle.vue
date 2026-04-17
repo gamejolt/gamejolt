@@ -1,22 +1,21 @@
 <script lang="ts">
-import { computed, PropType, toRef, useSlots } from 'vue';
-import AppPopcornKernel from './AppPopcornKernel.vue';
+import { computed, useSlots } from 'vue';
+
+import AppPopcornKernel from '~common/popcorn/AppPopcornKernel.vue';
 import {
 	createPopcornKettleController,
 	PopcornKettleController,
 	providePopcornKettleController,
-} from './popcorn-kettle-controller';
+} from '~common/popcorn/popcorn-kettle-controller';
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	controller: {
-		type: Object as PropType<PopcornKettleController>,
-		default: undefined,
-	},
-});
+type Props = {
+	controller?: PopcornKettleController;
+};
+const { controller } = defineProps<Props>();
 
-const c = toRef(props, 'controller').value ?? createPopcornKettleController();
+const c = controller ?? createPopcornKettleController();
 const { kernels } = c;
 
 providePopcornKettleController(c);

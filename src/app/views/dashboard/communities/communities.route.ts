@@ -1,8 +1,9 @@
 import { RouteRecordRaw } from 'vue-router';
-import { routeDashCommunitiesAdd } from './add/add.route';
+
+import { routeDashCommunitiesAdd } from '~app/views/dashboard/communities/add/add.route';
 
 export const routeDashCommunities: RouteRecordRaw = {
 	path: 'communities',
-	component: () => import('./RouteDashCommunities.vue'),
+	component: () => import('~app/views/dashboard/communities/RouteDashCommunities.vue'),
 	children: [routeDashCommunitiesAdd],
 };

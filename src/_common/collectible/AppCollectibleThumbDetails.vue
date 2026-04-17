@@ -1,47 +1,45 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType, computed, toRefs } from 'vue';
-import { styleBorderRadiusBase, styleFlexCenter, styleWhen } from '../../_styles/mixins';
-import { kBorderRadiusBase, kFontSizeLarge, kFontSizeSmall } from '../../_styles/variables';
-import { showPurchaseShopProductModal } from '../../app/components/vending-machine/modal/_purchase-modal/modal.service';
-import { isInstance } from '../../utils/utils';
-import AppAspectRatio from '../aspect-ratio/AppAspectRatio.vue';
-import AppButton from '../button/AppButton.vue';
-import { PurchasableProductType } from '../inventory/shop/product-owner-helpers';
-import { JoltydexFeed } from '../joltydex/joltydex-feed';
-import AppCircularProgress from '../progress/AppCircularProgress.vue';
-import AppStickerMastery from '../sticker/AppStickerMastery.vue';
-import AppStickerPack, { StickerPackRatio } from '../sticker/pack/AppStickerPack.vue';
-import { StickerPackModel } from '../sticker/pack/pack.model';
-import { kThemeFg10, kThemeFgMuted } from '../theme/variables';
-import { $gettext } from '../translate/translate.service';
-import { AcquisitionMethod } from './acquisition.model';
-import { CollectibleModel, CollectibleType, getCollectibleResourceId } from './collectible.model';
+import { computed, CSSProperties } from 'vue';
 
-const props = defineProps({
-	collectible: {
-		type: Object as PropType<CollectibleModel>,
-		required: true,
-	},
-	feed: {
-		type: Object as PropType<JoltydexFeed>,
-		required: true,
-	},
-});
+import { showPurchaseShopProductModal } from '~app/components/vending-machine/modal/_purchase-modal/modal.service';
+import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
+import AppButton from '~common/button/AppButton.vue';
+import { AcquisitionMethod } from '~common/collectible/acquisition.model';
+import {
+	CollectibleModel,
+	CollectibleType,
+	getCollectibleResourceId,
+} from '~common/collectible/collectible.model';
+import { PurchasableProductType } from '~common/inventory/shop/product-owner-helpers';
+import { JoltydexFeed } from '~common/joltydex/joltydex-feed';
+import AppCircularProgress from '~common/progress/AppCircularProgress.vue';
+import AppStickerMastery from '~common/sticker/AppStickerMastery.vue';
+import AppStickerPack, { StickerPackRatio } from '~common/sticker/pack/AppStickerPack.vue';
+import { StickerPackModel } from '~common/sticker/pack/pack.model';
+import { kThemeFg10, kThemeFgMuted } from '~common/theme/variables';
+import { $gettext } from '~common/translate/translate.service';
+import { styleBorderRadiusBase, styleFlexCenter, styleWhen } from '~styles/mixins';
+import { kBorderRadiusBase, kFontSizeLarge, kFontSizeSmall } from '~styles/variables';
+import { isInstance } from '~utils/utils';
 
-const { collectible, feed } = toRefs(props);
+type Props = {
+	collectible: CollectibleModel;
+	feed: JoltydexFeed;
+};
+const { collectible, feed } = defineProps<Props>();
 
-const maybePacks = computed(() => feed.value.getAcquisitionPacks(collectible.value.acquisition));
+const maybePacks = computed(() => feed.getAcquisitionPacks(collectible.acquisition));
 
 const stickerMasteryInfo = computed(() => {
-	if (typeof collectible.value.sticker_mastery !== 'number') {
+	if (typeof collectible.sticker_mastery !== 'number') {
 		return undefined;
 	}
 
-	if (collectible.value.sticker_mastery === 0) {
+	if (collectible.sticker_mastery === 0) {
 		return $gettext(`You haven't used this sticker yet. Use it to gain mastery!`);
 	}
 
-	if (collectible.value.sticker_mastery !== 100) {
+	if (collectible.sticker_mastery !== 100) {
 		return $gettext(
 			`Use this sticker to gain mastery. Once you master it, you'll be able to use it for emojis and reactions!`
 		);
@@ -51,12 +49,12 @@ const stickerMasteryInfo = computed(() => {
 });
 
 const collectibleResourceAcquisition = computed(() => {
-	const productType = collectible.value.type;
+	const productType = collectible.type;
 	if (!productType || productType === CollectibleType.Sticker) {
 		return null;
 	}
 	// Ignore if we have no shop purchase acquisitions.
-	if (collectible.value.acquisition.every(i => i.method !== AcquisitionMethod.ShopPurchase)) {
+	if (collectible.acquisition.every(i => i.method !== AcquisitionMethod.ShopPurchase)) {
 		return null;
 	}
 
@@ -71,7 +69,7 @@ const collectibleResourceAcquisition = computed(() => {
 	}
 	return {
 		resource,
-		resourceId: getCollectibleResourceId(collectible.value),
+		resourceId: getCollectibleResourceId(collectible),
 	};
 });
 

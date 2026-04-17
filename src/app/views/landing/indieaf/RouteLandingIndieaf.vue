@@ -1,15 +1,16 @@
 <script lang="ts">
 import { computed, ref } from 'vue';
 import { RouterLink } from 'vue-router';
-import AppAuthJoin from '../../../../_common/auth/join/AppAuthJoin.vue';
-import { Meta } from '../../../../_common/meta/meta-service';
-import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
-import { vAppScrollTo } from '../../../../_common/scroll/to/to.directive';
-import { AppSocialFacebookLike } from '../../../../_common/social/facebook/like/like';
-import { AppSocialTwitterShare } from '../../../../_common/social/twitter/share/share';
-import { useCommonStore } from '../../../../_common/store/common-store';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import socialImage from './social.png';
+
+import socialImage from '~app/views/landing/indieaf/social.png';
+import AppAuthJoin from '~common/auth/join/AppAuthJoin.vue';
+import { Meta } from '~common/meta/meta-service';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { vAppScrollTo } from '~common/scroll/to/to.directive';
+import AppSocialFacebookLike from '~common/social/facebook/like/AppSocialFacebookLike.vue';
+import AppSocialTwitterShare from '~common/social/twitter/share/AppSocialTwitterShare.vue';
+import { useCommonStore } from '~common/store/common-store';
+import { $gettext } from '~common/translate/translate.service';
 
 const assetPaths = import.meta.glob('./*.(svg|jpg|png)', { eager: true, as: 'url' });
 
@@ -74,7 +75,7 @@ createAppRoute({
 
 							<span class="dot-separator hidden-xs" />
 
-							<AppSocialFacebookLike />
+							<AppSocialFacebookLike url="https://gamejolt.com/landing/indieaf" />
 						</div>
 						<br />
 
@@ -296,4 +297,4 @@ createAppRoute({
 @import url('https://fonts.googleapis.com/css?family=Megrim');
 </style>
 
-<style lang="stylus" src="./indieaf.styl" scoped></style>
+<style lang="stylus" src="~app/views/landing/indieaf/indieaf.styl" scoped></style>

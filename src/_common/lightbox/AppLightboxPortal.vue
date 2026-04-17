@@ -1,16 +1,17 @@
 <script lang="ts" setup>
 import { nextTick, ref, toRef, watch } from 'vue';
-import { Analytics } from '../analytics/analytics.service';
-import AppButton from '../button/AppButton.vue';
-import { EscapeStack, EscapeStackCallback } from '../escape-stack/escape-stack.service';
-import AppJolticon from '../jolticon/AppJolticon.vue';
-import { Screen, onScreenResize } from '../screen/screen-service';
-import AppShortkey from '../shortkey/AppShortkey.vue';
-import { EventSubscription } from '../system/event/event-topic';
-import AppTouch, { AppTouchInput } from '../touch/AppTouch.vue';
-import { $gettext } from '../translate/translate.service';
-import AppLightboxItem from './item/AppLightboxItem.vue';
-import { getActiveLightbox } from './lightbox-helpers';
+
+import { Analytics } from '~common/analytics/analytics.service';
+import AppButton from '~common/button/AppButton.vue';
+import { EscapeStack, EscapeStackCallback } from '~common/escape-stack/escape-stack.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLightboxItem from '~common/lightbox/item/AppLightboxItem.vue';
+import { getActiveLightbox } from '~common/lightbox/lightbox-helpers';
+import { onScreenResize, Screen } from '~common/screen/screen-service';
+import AppShortkey from '~common/shortkey/AppShortkey.vue';
+import { EventSubscription } from '~common/system/event/event-topic';
+import AppTouch, { AppTouchInput } from '~common/touch/AppTouch.vue';
+import { $gettext } from '~common/translate/translate.service';
 
 // The class we add to the document body when we have an active lightbox.
 const lightboxClass = 'media-bar-lightbox-open';
@@ -218,5 +219,5 @@ function panEnd(event: AppTouchInput) {
 	</div>
 </template>
 
-<style lang="stylus" src="./lightbox-global.styl"></style>
-<style lang="stylus" src="./lightbox.styl" scoped></style>
+<style lang="stylus" src="~common/lightbox/lightbox-global.styl"></style>
+<style lang="stylus" src="~common/lightbox/lightbox.styl" scoped></style>

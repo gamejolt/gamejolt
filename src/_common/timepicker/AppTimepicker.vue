@@ -1,20 +1,17 @@
 <script lang="ts" setup>
-import { computed, ref, toRefs, watch } from 'vue';
-import { $gettext } from '../translate/translate.service';
-import AppJolticon from '../jolticon/AppJolticon.vue';
+import { computed, ref, watch } from 'vue';
 
-const props = defineProps({
-	value: {
-		type: Date,
-		required: true,
-	},
-});
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { $gettext } from '~common/translate/translate.service';
 
-const emit = defineEmits({
-	change: (_date: Date) => true,
-});
+type Props = {
+	value: Date;
+};
+const { value: modelValue } = defineProps<Props>();
 
-const { value: modelValue } = toRefs(props);
+const emit = defineEmits<{
+	change: [date: Date];
+}>();
 const hours = ref('');
 const minutes = ref('');
 const meridian = ref('');
@@ -23,14 +20,14 @@ const _meridians = computed(() => {
 	return [$gettext('AM'), $gettext('PM')];
 });
 
-watch(modelValue, _onTimeValueChanged, { immediate: true });
+watch(() => modelValue, _onTimeValueChanged, { immediate: true });
 
 function _onTimeValueChanged() {
-	const newHours = getValidHours(modelValue.value.getHours()),
-		newMinutes = getValidMinutes(modelValue.value.getMinutes());
+	const newHours = getValidHours(modelValue.getHours()),
+		newMinutes = getValidMinutes(modelValue.getMinutes());
 	hours.value = newHours === 0 ? '12' : _pad(newHours);
 	minutes.value = _pad(newMinutes);
-	meridian.value = modelValue.value.getHours() < 12 ? _meridians.value[0] : _meridians.value[1];
+	meridian.value = modelValue.getHours() < 12 ? _meridians.value[0] : _meridians.value[1];
 }
 
 function getValidHours(hours: number) {
@@ -56,8 +53,8 @@ function updateHours() {
 		hours.value = _pad(newHours);
 	}
 
-	const newValue = new Date(modelValue.value);
-	if (modelValue.value.getHours() >= 12) {
+	const newValue = new Date(modelValue);
+	if (modelValue.getHours() >= 12) {
 		// If we're working with meridians and it's currently on 'PM' we need to
 		// add 12 hours. This way for 1pm it'll submit hour 1 as hour 13 as the
 		// actual value.
@@ -70,7 +67,7 @@ function updateHours() {
 			// e.g. if the time is 1pm and we give it hour 13 it'll remain 13.
 			// To fix this, we just modify this.hours directly to fix the
 			// display value.
-			if (newHours === modelValue.value.getHours()) {
+			if (newHours === modelValue.getHours()) {
 				hours.value = newHours === 12 ? '12' : _pad(newHours - 12);
 			}
 		}
@@ -78,7 +75,7 @@ function updateHours() {
 		newHours -= 12;
 	}
 	newValue.setHours(newHours);
-	newValue.setDate(modelValue.value.getDate());
+	newValue.setDate(modelValue.getDate());
 	emit('change', newValue);
 }
 
@@ -89,15 +86,15 @@ function updateMinutes() {
 		minutes.value = _pad(newMinutes);
 	}
 
-	const newValue = new Date(modelValue.value);
+	const newValue = new Date(modelValue);
 	newValue.setMinutes(newMinutes);
-	newValue.setDate(modelValue.value.getDate());
+	newValue.setDate(modelValue.getDate());
 	emit('change', newValue);
 }
 
 function addMinutes(minutes: number) {
-	const newValue = new Date(modelValue.value.getTime() + minutes * 60000);
-	newValue.setDate(modelValue.value.getDate());
+	const newValue = new Date(modelValue.getTime() + minutes * 60000);
+	newValue.setDate(modelValue.getDate());
 	emit('change', newValue);
 }
 
@@ -106,7 +103,7 @@ function addHours(hours: number) {
 }
 
 function toggleMeridian() {
-	addHours(12 * (modelValue.value.getHours() < 12 ? 1 : -1));
+	addHours(12 * (modelValue.getHours() < 12 ? 1 : -1));
 }
 
 function _pad(value: any) {

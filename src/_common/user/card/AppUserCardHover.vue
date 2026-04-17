@@ -1,53 +1,37 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRefs, watch } from 'vue';
-import { Api } from '../../api/api.service';
-import AppPopper from '../../popper/AppPopper.vue';
-import { Screen } from '../../screen/screen-service';
-import { UserModel } from '../user.model';
-import AppUserCard from './AppUserCard.vue';
+import { computed, ref, watch } from 'vue';
 
-const props = defineProps({
-	user: {
-		type: Object as PropType<UserModel | null | undefined>,
-		default: undefined,
-	},
-	disabled: {
-		type: Boolean,
-	},
-	hoverDelay: {
-		type: Number,
-		default: 500,
-		validator: val => typeof val === 'number' && val >= 0,
-	},
-	noStats: {
-		type: Boolean,
-	},
-	disableFollowWidget: {
-		type: Boolean,
-	},
+import { Api } from '~common/api/api.service';
+import AppPopper from '~common/popper/AppPopper.vue';
+import { Screen } from '~common/screen/screen-service';
+import AppUserCard from '~common/user/card/AppUserCard.vue';
+import { UserModel } from '~common/user/user.model';
+
+type Props = {
+	user?: UserModel | null;
+	disabled?: boolean;
+	hoverDelay?: number;
+	noStats?: boolean;
+	disableFollowWidget?: boolean;
 	/**
 	 * Query selector that {@link AppPopper} can use to teleport the popover
 	 * content.
 	 */
-	to: {
-		type: String,
-		default: undefined,
-	},
-});
+	to?: string;
+};
+const { user, disabled, hoverDelay = 500, noStats, to } = defineProps<Props>();
 
-const emit = defineEmits({
-	show: () => true,
-	hide: () => true,
-	hovered: () => true,
-	unhovered: () => true,
-});
-
-const { user, disabled, hoverDelay, noStats, to } = toRefs(props);
+const emit = defineEmits<{
+	show: [];
+	hide: [];
+	hovered: [];
+	unhovered: [];
+}>();
 
 const isShowing = ref(false);
 const isLoaded = ref(false);
 
-const isDisabled = computed(() => Screen.isXs || !!disabled.value || import.meta.env.SSR);
+const isDisabled = computed(() => Screen.isXs || !!disabled || import.meta.env.SSR);
 
 const component = computed(() => {
 	return isDisabled.value ? 'span' : AppPopper;
@@ -59,9 +43,9 @@ const componentProps = computed(() => {
 		: {
 				placement: 'top',
 				trigger: 'hover',
-				showDelay: hoverDelay.value,
+				showDelay: hoverDelay,
 				block: true,
-				to: to?.value,
+				to: to,
 		  };
 });
 
@@ -77,7 +61,7 @@ const componentOn = computed(() => {
 });
 
 function onUserChange() {
-	if (user?.value) {
+	if (user) {
 		isLoaded.value = false;
 	}
 }
@@ -85,7 +69,7 @@ function onUserChange() {
 function onShow() {
 	emit('show');
 	isShowing.value = true;
-	if (!isLoaded.value && !noStats.value) {
+	if (!isLoaded.value && !noStats) {
 		fetchCardInfo();
 	}
 }
@@ -104,21 +88,21 @@ function onMouseLeave() {
 }
 
 async function fetchCardInfo() {
-	if (!user?.value) {
+	if (!user) {
 		return;
 	}
 
-	const response = await Api.sendRequest('/web/profile/card/' + user.value.id, undefined, {
+	const response = await Api.sendRequest('/web/profile/card/' + user.id, undefined, {
 		detach: true,
 	});
 
 	isLoaded.value = true;
 
 	// Assign to the user to make sure the following status is up to date.
-	user.value.assign(response.user);
+	user.assign(response.user);
 }
 
-watch(() => user?.value?.id, onUserChange);
+watch(() => user?.id, onUserChange);
 </script>
 
 <template>

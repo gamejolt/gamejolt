@@ -1,10 +1,11 @@
 <script lang="ts">
 import { toRef } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
-import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
-import { buildPayloadErrorForStatusCode } from '../../../_common/payload/payload-service';
-import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
-import { $gettext } from '../../../_common/translate/translate.service';
+
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { buildPayloadErrorForStatusCode } from '~common/payload/payload-service';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { $gettext } from '~common/translate/translate.service';
 
 const ActionUnsubscribeNotification = 'unsubscribe-notification';
 const ActionUnsubscribeGJ = 'unsubscribe-gj';

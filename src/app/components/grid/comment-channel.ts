@@ -1,12 +1,10 @@
 import { shallowReadonly } from 'vue';
-import { CommentModel } from '../../../_common/comment/comment-model';
-import { getModel } from '../../../_common/model/model-store.service';
-import {
-	RealtimeReactionsPayload,
-	updateReactionCount,
-} from '../../../_common/reaction/reaction-count';
-import { createSocketChannelController } from '../../../_common/socket/socket-controller';
-import { GridClient } from './client.service';
+
+import { GridClient } from '~app/components/grid/client.service';
+import { CommentModel } from '~common/comment/comment-model';
+import { getModel } from '~common/model/model-store.service';
+import { RealtimeReactionsPayload, updateReactionCount } from '~common/reaction/reaction-count';
+import { createSocketChannelController } from '~common/socket/socket-controller';
 
 export type GridCommentChannel = ReturnType<typeof createGridCommentChannel>;
 

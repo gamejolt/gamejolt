@@ -1,7 +1,8 @@
 import { RouteRecordRaw } from 'vue-router';
-import { routeForumsChannelsView } from './channels/view/view.route';
-import { routeForumsLanding } from './landing/landing.route';
-import { routeForumsTopicsView } from './topics/view/view.route';
+
+import { routeForumsChannelsView } from '~app/views/forums/channels/view/view.route';
+import { routeForumsLanding } from '~app/views/forums/landing/landing.route';
+import { routeForumsTopicsView } from '~app/views/forums/topics/view/view.route';
 
 // We need to redirect old forum categories over to our new channels.
 const path = '/community/forums/:slug/';
@@ -18,7 +19,7 @@ const routeForumsChannelsRedirects: RouteRecordRaw[] = [
 
 export const routeForums: RouteRecordRaw = {
 	path: '/forums',
-	component: () => import('./RouteForums.vue'),
+	component: () => import('~app/views/forums/RouteForums.vue'),
 	children: [
 		routeForumsLanding,
 		routeForumsChannelsView,

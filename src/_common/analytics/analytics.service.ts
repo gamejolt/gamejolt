@@ -8,20 +8,21 @@ import {
 } from 'firebase/analytics';
 import { unref, watch } from 'vue';
 import { Router } from 'vue-router';
-import { arrayRemove } from '../../utils/array';
-import { createLogger } from '../../utils/logging';
-import { AuthMethod } from '../auth/auth.service';
-import { CommentVoteType } from '../comment/vote/vote-model';
-import { ConfigOption, ensureConfig } from '../config/config.service';
-import { Currency } from '../currency/currency-type';
-import { DeviceArch, DeviceOs, isDynamicGoogleBot } from '../device/device.service';
-import { getFirebaseApp } from '../firebase/firebase.service';
-import { AppPromotionSource } from '../mobile-app/store';
-import { onRouteChangeAfter } from '../route/route-component';
-import { SettingThemeDark } from '../settings/settings.service';
-import { ShareProvider, ShareResource } from '../share/share.service';
-import { CommonStore, commonStore } from '../store/common-store';
-import { getTranslationLang } from '../translate/translate.service';
+
+import { AuthMethod } from '~common/auth/auth.service';
+import { CommentVoteType } from '~common/comment/vote/vote-model';
+import { ConfigOption, ensureConfig } from '~common/config/config.service';
+import { Currency } from '~common/currency/currency-type';
+import { DeviceArch, DeviceOs, isDynamicGoogleBot } from '~common/device/device.service';
+import { getFirebaseApp } from '~common/firebase/firebase.service';
+import { AppPromotionSource } from '~common/mobile-app/store';
+import { onRouteChangeAfter } from '~common/route/route-component';
+import { SettingThemeDark } from '~common/settings/settings.service';
+import { ShareProvider, ShareResource } from '~common/share/share.service';
+import { CommonStore, commonStore } from '~common/store/common-store';
+import { getTranslationLang } from '~common/translate/translate.service';
+import { arrayRemove } from '~utils/array';
+import { createLogger } from '~utils/logging';
 
 export const SOCIAL_NETWORK_FB = 'facebook';
 export const SOCIAL_NETWORK_TWITTER = 'twitter';

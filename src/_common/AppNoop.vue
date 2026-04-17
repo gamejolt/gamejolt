@@ -1,8 +1,4 @@
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script lang="ts" setup></script>
 
-export default defineComponent({
-	name: 'AppNoop',
-	render: () => null,
-});
-</script>
+<!-- eslint-disable-next-line vue/valid-template-root -->
+<template></template>

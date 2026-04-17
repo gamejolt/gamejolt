@@ -1,11 +1,12 @@
 <script lang="ts" setup>
 import { RouterLink } from 'vue-router';
-import { showTranslateLangSelectorModal } from '../../../_common/translate/lang-selector/lang-selector-modal.service';
-import { routeLandingHelpRedirect } from '../../views/landing/help/help.route';
-import { routeLegalCookies } from '../../views/legal/cookies/cookies.route';
-import { routeLegalPrivacy } from '../../views/legal/privacy/privacy.route';
-import { routeLegalSafety } from '../../views/legal/safety/safety.route';
-import { routeLegalTerms } from '../../views/legal/terms/terms.route';
+
+import { routeLandingHelpRedirect } from '~app/views/landing/help/help.route';
+import { routeLegalCookies } from '~app/views/legal/cookies/cookies.route';
+import { routeLegalPrivacy } from '~app/views/legal/privacy/privacy.route';
+import { routeLegalSafety } from '~app/views/legal/safety/safety.route';
+import { routeLegalTerms } from '~app/views/legal/terms/terms.route';
+import { showTranslateLangSelectorModal } from '~common/translate/lang-selector/lang-selector-modal.service';
 
 function showLangSelector() {
 	showTranslateLangSelectorModal();

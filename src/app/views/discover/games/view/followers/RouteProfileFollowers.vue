@@ -1,15 +1,13 @@
 <script lang="ts">
 import { computed, ref, toRef } from 'vue';
 import { RouteLocationNormalized, useRoute } from 'vue-router';
-import { Api } from '../../../../../../_common/api/api.service';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '../../../../../../_common/route/route-component';
-import { UserModel } from '../../../../../../_common/user/user.model';
-import AppFollowerList from '../../../../../components/follower/list/AppFollowerList.vue';
-import AppShellPageBackdrop from '../../../../../components/shell/AppShellPageBackdrop.vue';
-import { useGameRouteController } from '../RouteDiscoverGamesView.vue';
+
+import AppFollowerList from '~app/components/follower/list/AppFollowerList.vue';
+import AppShellPageBackdrop from '~app/components/shell/AppShellPageBackdrop.vue';
+import { useGameRouteController } from '~app/views/discover/games/view/RouteDiscoverGamesView.vue';
+import { Api } from '~common/api/api.service';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { UserModel } from '~common/user/user.model';
 
 function getFetchUrl(route: RouteLocationNormalized) {
 	return `/web/discover/games/followers/${route.params.id}`;

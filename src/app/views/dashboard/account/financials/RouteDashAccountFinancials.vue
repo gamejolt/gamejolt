@@ -1,15 +1,13 @@
 <script lang="ts">
 import { computed } from 'vue';
 import { RouterView } from 'vue-router';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '../../../../../_common/route/route-component';
-import AppSheetButton from '../../../../../_common/sheet/AppSheetButton.vue';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import { useAccountRouteController } from '../RouteDashAccount.vue';
-import { routeDashAccountFinancialsCreators } from './creators/creators.route';
-import { routeDashAccountFinancialsMarketplace } from './marketplace/marketplace.route';
+
+import { routeDashAccountFinancialsCreators } from '~app/views/dashboard/account/financials/creators/creators.route';
+import { routeDashAccountFinancialsMarketplace } from '~app/views/dashboard/account/financials/marketplace/marketplace.route';
+import { useAccountRouteController } from '~app/views/dashboard/account/RouteDashAccount.vue';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import AppSheetButton from '~common/sheet/AppSheetButton.vue';
+import { $gettext } from '~common/translate/translate.service';
 
 export default {
 	...defineAppRouteOptions({

@@ -1,4 +1,4 @@
-import { MetaContainer } from './meta-container';
+import { MetaContainer } from '~common/meta/meta-container';
 
 export class TwitterMetaContainer {
 	readonly meta = new MetaContainer();

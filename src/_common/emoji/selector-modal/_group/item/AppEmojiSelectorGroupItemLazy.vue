@@ -1,34 +1,20 @@
 <script lang="ts" setup>
-import { PropType, toRefs } from 'vue';
-import { ScrollInviewConfig } from '../../../../scroll/inview/AppScrollInview.vue';
-import { EmojiGroupData } from '../../../../store/common-store';
-import { EmojiModel } from '../../../emoji.model';
-import AppEmojiSelectorGroupItem from './AppEmojiSelectorGroupItem.vue';
+import { EmojiModel } from '~common/emoji/emoji.model';
+import AppEmojiSelectorGroupItem from '~common/emoji/selector-modal/_group/item/AppEmojiSelectorGroupItem.vue';
+import { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
+import { EmojiGroupData } from '~common/store/common-store';
 
-const props = defineProps({
-	groupData: {
-		type: Object as PropType<EmojiGroupData>,
-		required: true,
-	},
-	isInview: {
-		type: Boolean,
-		required: true,
-	},
-	inviewConfig: {
-		type: Object as PropType<ScrollInviewConfig>,
-		default: undefined,
-	},
-	emoji: {
-		type: Object as PropType<EmojiModel>,
-		default: undefined,
-	},
-});
+type Props = {
+	groupData: EmojiGroupData;
+	isInview: boolean;
+	inviewConfig?: ScrollInviewConfig;
+	emoji?: EmojiModel;
+};
+const { groupData, isInview, inviewConfig, emoji } = defineProps<Props>();
 
-const { groupData, isInview, emoji } = toRefs(props);
-
-const emit = defineEmits({
-	select: (_emoji: EmojiModel) => true,
-});
+const emit = defineEmits<{
+	select: [emoji: EmojiModel];
+}>();
 </script>
 
 <!--

@@ -1,39 +1,25 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
-import { formatDate } from '../../../../../_common/filters/date';
-import { kThemeFgMuted } from '../../../../../_common/theme/variables';
-import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-import { kFontSizeTiny } from '../../../../../_styles/variables';
-import { ChatMessageModel } from '../../message';
-import { ChatRoomModel } from '../../room';
+import { computed } from 'vue';
 
-const props = defineProps({
-	message: {
-		type: Object as PropType<ChatMessageModel>,
-		required: true,
-	},
-	room: {
-		type: Object as PropType<ChatRoomModel>,
-		required: true,
-	},
-	timestampMarginLeft: {
-		type: Number,
-		default: 0,
-	},
-	showAmPm: {
-		type: Boolean,
-	},
-});
+import { ChatMessageModel } from '~app/components/chat/message';
+import { ChatRoomModel } from '~app/components/chat/room';
+import { formatDate } from '~common/filters/date';
+import { kThemeFgMuted } from '~common/theme/variables';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { kFontSizeTiny } from '~styles/variables';
 
-const { message, timestampMarginLeft, showAmPm } = toRefs(props);
+type Props = {
+	message: ChatMessageModel;
+	room: ChatRoomModel;
+	timestampMarginLeft?: number;
+	showAmPm?: boolean;
+};
+const { message, timestampMarginLeft = 0, showAmPm } = defineProps<Props>();
 
 const loggedOn = computed(() => {
 	return {
-		template: formatDate(
-			message.value.logged_on,
-			showAmPm.value ? 'shortTime' : 'shortTimeNoMeridiem'
-		),
-		tooltip: formatDate(message.value.logged_on, 'medium'),
+		template: formatDate(message.logged_on, showAmPm ? 'shortTime' : 'shortTimeNoMeridiem'),
+		tooltip: formatDate(message.logged_on, 'medium'),
 	};
 });
 </script>

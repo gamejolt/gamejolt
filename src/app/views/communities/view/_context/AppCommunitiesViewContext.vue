@@ -1,22 +1,24 @@
 <script lang="ts" setup>
-import { PropType, computed, provide } from 'vue';
+import { computed, provide } from 'vue';
 import { useRoute } from 'vue-router';
-import { isEditingCommunity } from '../../../../../_common/community/community.model';
-import { CommunityChannelCardWidth } from '../../../../components/community/channel/card/AppCommunityChannelCard.vue';
-import { useAppStore } from '../../../../store';
-import AppCommunitiesViewCard from '../_card/AppCommunitiesViewCard.vue';
-import AppNavChannels from '../_nav/channels/AppNavChannels.vue';
-import AppNavEdit from '../_nav/edit/AppNavEdit.vue';
-import { CommunityRouteStore, CommunityRouteStoreKey } from '../view.store';
 
-const props = defineProps({
-	routeStore: {
-		type: Object as PropType<CommunityRouteStore>,
-		required: true,
-	},
-});
+import { CommunityChannelCardWidth } from '~app/components/community/channel/card/AppCommunityChannelCard.vue';
+import { useAppStore } from '~app/store';
+import AppCommunitiesViewCard from '~app/views/communities/view/_card/AppCommunitiesViewCard.vue';
+import AppNavChannels from '~app/views/communities/view/_nav/channels/AppNavChannels.vue';
+import AppNavEdit from '~app/views/communities/view/_nav/edit/AppNavEdit.vue';
+import {
+	CommunityRouteStore,
+	CommunityRouteStoreKey,
+} from '~app/views/communities/view/view.store';
+import { isEditingCommunity } from '~common/community/community.model';
 
-provide(CommunityRouteStoreKey, props.routeStore);
+type Props = {
+	routeStore: CommunityRouteStore;
+};
+const { routeStore } = defineProps<Props>();
+
+provide(CommunityRouteStoreKey, routeStore);
 
 const { toggleLeftPane } = useAppStore();
 const route = useRoute();

@@ -1,6 +1,7 @@
 import { FirebaseApp, initializeApp } from 'firebase/app';
-import { isDynamicGoogleBot } from '../device/device.service';
-import { Environment } from '../environment/environment.service';
+
+import { isDynamicGoogleBot } from '~common/device/device.service';
+import { Environment } from '~common/environment/environment.service';
 
 const firebaseConfig = {
 	apiKey: 'AIzaSyB8-lpXgBHQKGd92EkkDEc_4eIl4tpk_AA',

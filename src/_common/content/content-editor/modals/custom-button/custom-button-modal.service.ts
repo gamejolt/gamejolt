@@ -1,5 +1,5 @@
-import { showModal } from '../../../../modal/modal.service';
-import AppContentEditorCustomButtonModal from './AppContentEditorCustomButtonModal.vue';
+import AppContentEditorCustomButtonModal from '~common/content/content-editor/modals/custom-button/AppContentEditorCustomButtonModal.vue';
+import { showModal } from '~common/modal/modal.service';
 
 export type CustomButtonData = {
 	customButtonId: string;

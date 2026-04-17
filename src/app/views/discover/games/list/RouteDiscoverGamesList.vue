@@ -1,35 +1,33 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
-import AppAdTakeoverBackground from '../../../../../_common/ad/AppAdTakeoverBackground.vue';
-import AppAdTakeoverFloat from '../../../../../_common/ad/AppAdTakeoverFloat.vue';
-import { Api } from '../../../../../_common/api/api.service';
-import { formatDate } from '../../../../../_common/filters/date';
-import { formatFuzzynumber } from '../../../../../_common/filters/fuzzynumber';
-import AppGameAddBanner from '../../../../../_common/game/add-banner/AppGameAddBanner.vue';
-import { HistoryCache } from '../../../../../_common/history/cache/cache.service';
-import { Meta } from '../../../../../_common/meta/meta-service';
+
 import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '../../../../../_common/route/route-component';
-import { Screen } from '../../../../../_common/screen/screen-service';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import { arrayShuffle } from '../../../../../utils/array';
-import { RouteLocationRedirect, getParam } from '../../../../../utils/router';
-import { titleCase } from '../../../../../utils/string';
-import {
-	GameFilteringContainer,
 	checkGameFilteringRoute,
-} from '../../../../components/game/filtering/container';
-import AppGameGrid from '../../../../components/game/grid/AppGameGrid.vue';
-import AppGameListing from '../../../../components/game/listing/AppGameListing.vue';
-import { GameListingContainer } from '../../../../components/game/listing/listing-container-service';
-import AppShellPageBackdrop from '../../../../components/shell/AppShellPageBackdrop.vue';
-import AppStoreBanner from '../../../../components/store-banner/AppStoreBanner.vue';
-import { StoreBannerModel } from '../../../../components/store-banner/store-banner-model';
-import AppTagList from '../../../../components/tag/list/list.vue';
-import { TagsInfo } from '../../../../components/tag/tags-info.service';
+	GameFilteringContainer,
+} from '~app/components/game/filtering/container';
+import AppGameGrid from '~app/components/game/grid/AppGameGrid.vue';
+import AppGameListing from '~app/components/game/listing/AppGameListing.vue';
+import { GameListingContainer } from '~app/components/game/listing/listing-container-service';
+import AppShellPageBackdrop from '~app/components/shell/AppShellPageBackdrop.vue';
+import AppStoreBanner from '~app/components/store-banner/AppStoreBanner.vue';
+import { StoreBannerModel } from '~app/components/store-banner/store-banner-model';
+import AppTagList from '~app/components/tag/list/AppTagList.vue';
+import { TagsInfo } from '~app/components/tag/tags-info.service';
+import AppAdTakeoverBackground from '~common/ad/AppAdTakeoverBackground.vue';
+import AppAdTakeoverFloat from '~common/ad/AppAdTakeoverFloat.vue';
+import { Api } from '~common/api/api.service';
+import { formatDate } from '~common/filters/date';
+import { formatFuzzynumber } from '~common/filters/fuzzynumber';
+import AppGameAddBanner from '~common/game/add-banner/AppGameAddBanner.vue';
+import { HistoryCache } from '~common/history/cache/cache.service';
+import { Meta } from '~common/meta/meta-service';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { Screen } from '~common/screen/screen-service';
+import { $gettext } from '~common/translate/translate.service';
+import { arrayShuffle } from '~utils/array';
+import { getParam, RouteLocationRedirect } from '~utils/router';
+import { titleCase } from '~utils/string';
 
 const listingKey = 'CachedListing';
 

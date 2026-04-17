@@ -1,22 +1,20 @@
 <script lang="ts">
-import { Ref, computed, ref } from 'vue';
-import { Api } from '../../../../../../_common/api/api.service';
-import { formatCurrency } from '../../../../../../_common/filters/currency';
-import { formatDate } from '../../../../../../_common/filters/date';
-import { GamePackageModel } from '../../../../../../_common/game/package/package.model';
-import { Geo } from '../../../../../../_common/geo/geo.service';
-import AppMicrotransactionItem from '../../../../../../_common/microtransaction/AppMicrotransactionItem.vue';
-import { MicrotransactionProductModel } from '../../../../../../_common/microtransaction/product.model';
-import { OrderModel } from '../../../../../../_common/order/order.model';
-import { OrderPaymentMethod } from '../../../../../../_common/order/payment/payment.model';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '../../../../../../_common/route/route-component';
-import { Screen } from '../../../../../../_common/screen/screen-service';
-import { $gettext } from '../../../../../../_common/translate/translate.service';
-import { useAccountRouteController } from '../../RouteDashAccount.vue';
-import AppGamePackagePreview from './AppGamePackagePreview.vue';
+import { computed, Ref, ref } from 'vue';
+
+import AppGamePackagePreview from '~app/views/dashboard/account/purchases/view/AppGamePackagePreview.vue';
+import { useAccountRouteController } from '~app/views/dashboard/account/RouteDashAccount.vue';
+import { Api } from '~common/api/api.service';
+import { formatCurrency } from '~common/filters/currency';
+import { formatDate } from '~common/filters/date';
+import { GamePackageModel } from '~common/game/package/package.model';
+import { Geo } from '~common/geo/geo.service';
+import AppMicrotransactionItem from '~common/microtransaction/AppMicrotransactionItem.vue';
+import { MicrotransactionProductModel } from '~common/microtransaction/product.model';
+import { OrderModel } from '~common/order/order.model';
+import { OrderPaymentMethod } from '~common/order/payment/payment.model';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { Screen } from '~common/screen/screen-service';
+import { $gettext } from '~common/translate/translate.service';
 
 export default {
 	...defineAppRouteOptions({

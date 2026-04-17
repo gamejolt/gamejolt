@@ -1,4 +1,4 @@
-import { UserModel } from '../../../../_common/user/user.model';
+import { UserModel } from '~common/user/user.model';
 
 export class CommunitySidebarData {
 	owner: UserModel;

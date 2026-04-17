@@ -1,36 +1,30 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
-import AppJolticon from '../jolticon/AppJolticon.vue';
-import { vAppTooltip } from '../tooltip/tooltip-directive';
-import { $gettext } from '../translate/translate.service';
-import AppUserCreatorBadge from './creator/AppUserCreatorBadge.vue';
-import { UserCommonFields } from './user.model';
+import { computed } from 'vue';
 
-const props = defineProps({
-	user: {
-		type: Object as PropType<UserCommonFields>,
-		required: true,
-	},
-	highlight: {
-		type: Boolean,
-	},
-	big: {
-		type: Boolean,
-	},
-	small: {
-		type: Boolean,
-	},
-	tiny: {
-		type: Boolean,
-	},
-	verticalAlign: {
-		type: Boolean,
-	},
-});
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { $gettext } from '~common/translate/translate.service';
+import AppUserCreatorBadge from '~common/user/creator/AppUserCreatorBadge.vue';
+import { UserCommonFields } from '~common/user/user.model';
 
-const { user, highlight, big, small, verticalAlign } = toRefs(props);
+type Props = {
+	user: UserCommonFields;
+	highlight?: boolean;
+	big?: boolean;
+	small?: boolean;
+	tiny?: boolean;
+	verticalAlign?: boolean;
+};
+const {
+	user,
+	highlight = false,
+	big = false,
+	small = false,
+	tiny = false,
+	verticalAlign = false,
+} = defineProps<Props>();
 
-const isVerified = computed(() => user.value.is_verified);
+const isVerified = computed(() => user.is_verified);
 const icon = computed(() => (isVerified.value ? 'verified' : undefined));
 const tooltip = computed(() => (isVerified.value ? $gettext(`Verified account`) : undefined));
 </script>

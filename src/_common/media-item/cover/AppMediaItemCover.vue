@@ -1,35 +1,27 @@
 <script lang="ts" setup>
-import { ref, toRefs, watch } from 'vue';
-import { useResizeObserver } from '../../../utils/resize-observer';
-import AppImgResponsive from '../../img/AppImgResponsive.vue';
-import { Ruler } from '../../ruler/ruler-service';
-import { Screen } from '../../screen/screen-service';
-import AppMediaItemBackdrop from '../backdrop/AppMediaItemBackdrop.vue';
-import { MediaItemModel } from '../media-item-model';
+import { ref, useTemplateRef, watch } from 'vue';
 
-const props = defineProps({
-	mediaItem: {
-		type: MediaItemModel,
-		required: true,
-	},
-	maxHeight: {
-		type: Number,
-		default: undefined,
-	},
-	blur: {
-		type: Boolean,
-	},
-});
+import AppImgResponsive from '~common/img/AppImgResponsive.vue';
+import AppMediaItemBackdrop from '~common/media-item/backdrop/AppMediaItemBackdrop.vue';
+import { MediaItemModel } from '~common/media-item/media-item-model';
+import { Ruler } from '~common/ruler/ruler-service';
+import { Screen } from '~common/screen/screen-service';
+import { useResizeObserver } from '~utils/resize-observer';
 
-const { mediaItem, maxHeight, blur } = toRefs(props);
+type Props = {
+	mediaItem: MediaItemModel;
+	maxHeight?: number;
+	blur?: boolean;
+};
+const { mediaItem, maxHeight, blur } = defineProps<Props>();
 
-const emit = defineEmits({
-	loaded: () => true,
-});
+const emit = defineEmits<{
+	loaded: [];
+}>();
 
 const isLoaded = ref(false);
 const height = ref('auto');
-const el = ref<HTMLElement>();
+const el = useTemplateRef('el');
 
 if (import.meta.env.SSR) {
 	recalcHeight();
@@ -37,12 +29,12 @@ if (import.meta.env.SSR) {
 }
 
 useResizeObserver({ target: el, callback: recalcHeight });
-watch([mediaItem, maxHeight], recalcHeight);
+watch([() => mediaItem, () => maxHeight], recalcHeight);
 
 function recalcHeight() {
-	if (mediaItem.value) {
+	if (mediaItem) {
 		if (el.value) {
-			const newDimensions = mediaItem.value.getDimensions(Ruler.width(el.value), undefined, {
+			const newDimensions = mediaItem.getDimensions(Ruler.width(el.value), undefined, {
 				force: true,
 			});
 
@@ -53,8 +45,8 @@ function recalcHeight() {
 				newDimensions.height *= 1.4;
 			}
 
-			if (maxHeight?.value && newDimensions.height > maxHeight.value) {
-				newDimensions.height = maxHeight.value;
+			if (maxHeight && newDimensions.height > maxHeight) {
+				newDimensions.height = maxHeight;
 			}
 
 			height.value = newDimensions.height + 'px';
@@ -87,8 +79,8 @@ function onLoadChange(newIsLoaded: boolean) {
 					<AppImgResponsive
 						v-show="isLoaded"
 						:src="mediaItem.mediaserver_url"
-						@imgloadchange="onLoadChange"
 						alt=""
+						@imgloadchange="onLoadChange"
 					/>
 				</AppMediaItemBackdrop>
 			</div>

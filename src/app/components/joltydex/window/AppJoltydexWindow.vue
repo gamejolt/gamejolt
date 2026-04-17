@@ -1,54 +1,49 @@
 <script lang="ts" setup>
-import { computed, nextTick, onMounted, onUnmounted, ref, toRefs, watch } from 'vue';
-import { trackJoltydex } from '../../../../_common/analytics/analytics.service';
-import { Api } from '../../../../_common/api/api.service';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import AppHeaderBar from '../../../../_common/header/AppHeaderBar.vue';
-import AppJoltydexBrowser from '../../../../_common/joltydex/AppJoltydexBrowser.vue';
-import { Screen } from '../../../../_common/screen/screen-service';
-import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
-import { kThemeFgMuted } from '../../../../_common/theme/variables';
-import AppUserAvatarBubble from '../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
-import { UserModel } from '../../../../_common/user/user.model';
-import { styleTextOverflow } from '../../../../_styles/mixins';
-import { kFontSizeLarge, kFontSizeSmall } from '../../../../_styles/variables';
-import { useAppStore } from '../../../store/index';
-import { useJoltydexStore } from '../../../store/joltydex';
-import AppShellWindow from '../../shell/AppShellWindow.vue';
-import { showVendingMachineModal } from '../../vending-machine/modal/modal.service';
+import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
 
-const props = defineProps({
-	selectedUser: {
-		type: UserModel,
-		required: true,
-	},
-});
+import AppShellWindow from '~app/components/shell/AppShellWindow.vue';
+import { showVendingMachineModal } from '~app/components/vending-machine/modal/modal.service';
+import { useAppStore } from '~app/store/index';
+import { useJoltydexStore } from '~app/store/joltydex';
+import { trackJoltydex } from '~common/analytics/analytics.service';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import AppHeaderBar from '~common/header/AppHeaderBar.vue';
+import AppJoltydexBrowser from '~common/joltydex/AppJoltydexBrowser.vue';
+import { Screen } from '~common/screen/screen-service';
+import AppScrollScroller from '~common/scroll/AppScrollScroller.vue';
+import { kThemeFgMuted } from '~common/theme/variables';
+import { UserModel } from '~common/user/user.model';
+import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
+import { styleTextOverflow } from '~styles/mixins';
+import { kFontSizeLarge, kFontSizeSmall } from '~styles/variables';
 
-const { selectedUser } = toRefs(props);
+type Props = {
+	selectedUser: UserModel;
+};
+const { selectedUser } = defineProps<Props>();
 const { selectedJoltydexUser } = useJoltydexStore();
 const { toggleLeftPane } = useAppStore();
 
 onMounted(() => {
-	trackJoltydex({ action: 'show-collection', collectionId: selectedUser.value.id });
+	trackJoltydex({ action: 'show-collection', collectionId: selectedUser.id });
 });
 
 onUnmounted(async () => {
 	// Wait a tick in case a different quest window was opened and changed the activeQuestId.
 	await nextTick();
 
-	if (selectedUser.value === selectedJoltydexUser.value) {
+	if (selectedUser === selectedJoltydexUser.value) {
 		selectedJoltydexUser.value = undefined;
 	}
 });
 
 let isLoadingSales = false;
 const userWithSales = ref<number>();
-const hasSale = computed(
-	() => !!userWithSales.value && userWithSales.value === selectedUser.value.id
-);
+const hasSale = computed(() => !!userWithSales.value && userWithSales.value === selectedUser.id);
 
 watch(
-	selectedUser,
+	() => selectedUser,
 	async (newUser, oldUser) => {
 		if (newUser.id !== oldUser?.id) {
 			userWithSales.value = undefined;
@@ -65,7 +60,7 @@ watch(
 				},
 				{ detach: true }
 			);
-			if (payload.hasSales && selectedUser.value.id === newUser.id) {
+			if (payload.hasSales && selectedUser.id === newUser.id) {
 				userWithSales.value = newUser.id;
 			}
 		} finally {

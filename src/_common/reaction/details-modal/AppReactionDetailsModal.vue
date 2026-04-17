@@ -1,19 +1,20 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, Ref, shallowRef, toRefs } from 'vue';
-import { kFontSizeBase, kGridGutterWidth } from '../../../_styles/variables';
-import { Api } from '../../api/api.service';
-import AppButton from '../../button/AppButton.vue';
-import AppLoadingFade from '../../loading/AppLoadingFade.vue';
-import AppModal, { AppModalInterface } from '../../modal/AppModal.vue';
-import AppModalFloatingHeader from '../../modal/AppModalFloatingHeader.vue';
-import { useModal } from '../../modal/modal.service';
-import AppScrollAutoload from '../../scroll/AppScrollAutoload.vue';
-import { kThemeFgMuted } from '../../theme/variables';
-import { $gettext } from '../../translate/translate.service';
-import AppUserList from '../../user/list/AppUserList.vue';
-import { UserModel } from '../../user/user.model';
-import AppReactionList from '../list/AppReactionList.vue';
-import { ReactionableModel, ReactionCount } from '../reaction-count';
+import { computed, Ref, ref, shallowRef, useTemplateRef } from 'vue';
+
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
+import AppModal from '~common/modal/AppModal.vue';
+import AppModalFloatingHeader from '~common/modal/AppModalFloatingHeader.vue';
+import { useModal } from '~common/modal/modal.service';
+import AppReactionList from '~common/reaction/list/AppReactionList.vue';
+import { ReactionableModel, ReactionCount } from '~common/reaction/reaction-count';
+import AppScrollAutoload from '~common/scroll/AppScrollAutoload.vue';
+import { kThemeFgMuted } from '~common/theme/variables';
+import { $gettext } from '~common/translate/translate.service';
+import AppUserList from '~common/user/list/AppUserList.vue';
+import { UserModel } from '~common/user/user.model';
+import { kFontSizeBase, kGridGutterWidth } from '~styles/variables';
 
 const perPage = 30;
 
@@ -27,21 +28,14 @@ interface ReactionDetailsFeed {
 	reachedEnd: Ref<boolean>;
 }
 
-const props = defineProps({
-	model: {
-		type: Object as PropType<ReactionableModel>,
-		required: true,
-	},
-	initialReaction: {
-		type: Object as PropType<ReactionCount>,
-		default: undefined,
-	},
-});
-
-const { model, initialReaction } = toRefs(props);
+type Props = {
+	model: ReactionableModel;
+	initialReaction?: ReactionCount;
+};
+const { model, initialReaction } = defineProps<Props>();
 
 const modal = useModal<void>()!;
-const rootModal = ref<AppModalInterface>();
+const rootModal = useTemplateRef('rootModal');
 
 const selectedReaction = ref(null) as Ref<ReactionCount | null>;
 const reactionFeeds = shallowRef(new Map<number, ReactionDetailsFeed>());
@@ -91,7 +85,7 @@ function selectReaction(reaction: ReactionCount) {
 	}
 }
 
-selectReaction(initialReaction?.value || model.value.reaction_counts[0]);
+selectReaction(initialReaction || model.reaction_counts[0]);
 
 async function bootstrapFeed(feed: ReactionDetailsFeed) {
 	if (feed.isBootstrapped.value || feed.isLoadingMore.value) {
@@ -168,8 +162,8 @@ async function loadMore(feed: ReactionDetailsFeed | null) {
 
 function getQueryParamsForFeed(feed: ReactionDetailsFeed, newPage: number) {
 	return [
-		`resource=${model.value.resourceName}`,
-		`resourceId=${model.value.id}`,
+		`resource=${model.resourceName}`,
+		`resourceId=${model.id}`,
 		`emojiId=${feed.reaction.id}`,
 		`page=${newPage}`,
 		`perPage=${perPage}`,

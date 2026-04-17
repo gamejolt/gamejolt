@@ -1,13 +1,15 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { Api } from '../../../_common/api/api.service';
-import { GameBundleModel } from '../../../_common/game-bundle/game-bundle.model';
-import { GameModel } from '../../../_common/game/game.model';
-import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
-import { $gettext } from '../../../_common/translate/translate.service';
-import AppInvalidKey from '../../components/AppInvalidKey.vue';
-import FormRetrieve from '../../components/forms/FormRetrieve.vue';
+
+import AppInvalidKey from '~claim/components/AppInvalidKey.vue';
+import FormRetrieve from '~claim/components/forms/FormRetrieve.vue';
+import { Api } from '~common/api/api.service';
+import { GameModel } from '~common/game/game.model';
+import { GameBundleModel } from '~common/game-bundle/game-bundle.model';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
 
 interface SuccessPayload {
 	error: false;
@@ -134,11 +136,9 @@ function onSubmit() {
 					{{ $gettext(`Please enter your email address to retrieve your keys.`) }}
 				</template>
 				<template v-if="resourceTitle">
-					<span v-translate="{ resource: resourceTitle }">
-						Please enter your email address to retrieve your keys for
-						<b>%{ resource }</b>
-						.
-					</span>
+					<AppTranslate :translate-params="{ resource: resourceTitle }">
+						Please enter your email address to retrieve your keys for %{ resource }.
+					</AppTranslate>
 				</template>
 				{{ ' ' }}
 				{{ $gettext(`We will email you a link to your download(s).`) }}

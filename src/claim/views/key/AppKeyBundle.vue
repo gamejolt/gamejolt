@@ -1,36 +1,28 @@
 <script lang="ts" setup>
-import { ref, toRefs } from 'vue';
-import AppButton from '../../../_common/button/AppButton.vue';
-import { GameBundleModel } from '../../../_common/game-bundle/game-bundle.model';
-import { GameModel } from '../../../_common/game/game.model';
-import AppGameThumbnail from '../../../_common/game/thumbnail/AppGameThumbnail.vue';
-import { useCommonStore } from '../../../_common/store/common-store';
-import { $gettext } from '../../../_common/translate/translate.service';
+import { ref } from 'vue';
 
-const props = defineProps({
-	payload: {
-		type: Object,
-		required: true,
-	},
-	loginUrl: {
-		type: String,
-		required: true,
-	},
-	accessKey: {
-		type: String,
-		default: undefined,
-	},
-});
+import AppButton from '~common/button/AppButton.vue';
+import { GameModel } from '~common/game/game.model';
+import AppGameThumbnail from '~common/game/thumbnail/AppGameThumbnail.vue';
+import { GameBundleModel } from '~common/game-bundle/game-bundle.model';
+import { useCommonStore } from '~common/store/common-store';
+import { $gettext } from '~common/translate/translate.service';
 
-const emit = defineEmits({
-	claim: (_bundle: GameBundleModel) => true,
-});
+type Props = {
+	payload: any;
+	loginUrl: string;
+	accessKey?: string;
+};
+const { payload, loginUrl, accessKey } = defineProps<Props>();
 
-const { payload } = toRefs(props);
+const emit = defineEmits<{
+	claim: [bundle: GameBundleModel];
+}>();
+
 const { user } = useCommonStore();
 
-let bundle = ref(new GameBundleModel(payload.value.bundle));
-let games = ref(GameModel.populate(payload.value.games));
+let bundle = ref(new GameBundleModel(payload.bundle));
+let games = ref(GameModel.populate(payload.games));
 
 function claim() {
 	emit('claim', bundle.value);

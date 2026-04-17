@@ -1,15 +1,12 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
-import AppUserAvatarImg from '../../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
-import AppCommunityOverlayPill from './AppCommunityOverlayPill.vue';
+import AppCommunityOverlayPill from '~app/views/discover/home/_home-slider/AppCommunityOverlayPill.vue';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
 
-defineProps({
-	post: {
-		type: Object as PropType<FiresidePostModel>,
-		required: true,
-	},
-});
+type Props = {
+	post: FiresidePostModel;
+};
+defineProps<Props>();
 </script>
 
 <template>

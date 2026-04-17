@@ -1,7 +1,8 @@
 import { h } from 'vue';
-import { WidgetCompilerWidget } from '../widget';
-import { AppWidgetCompiler } from '../widget-compiler';
-import { WidgetCompilerContext } from '../widget-compiler.service';
+
+import AppWidgetCompiler from '~common/widget-compiler/AppWidgetCompiler.vue';
+import { WidgetCompilerWidget } from '~common/widget-compiler/widget';
+import { WidgetCompilerContext } from '~common/widget-compiler/widget-compiler.service';
 
 export class WidgetCompilerWidgetGameDescription extends WidgetCompilerWidget {
 	readonly name = 'game-description';

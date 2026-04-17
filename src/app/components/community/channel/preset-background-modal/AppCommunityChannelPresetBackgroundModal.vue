@@ -1,40 +1,34 @@
 <script lang="ts" setup>
-import { PropType, ref, toRefs } from 'vue';
-import AppButton from '../../../../../_common/button/AppButton.vue';
+import { ref } from 'vue';
+
+import FormCommunityChannelPresetBackground from '~app/components/forms/community/channel/preset-background/FormCommunityChannelPresetBackground.vue';
+import AppButton from '~common/button/AppButton.vue';
 import {
 	CommunityModel,
 	CommunityPresetChannelType,
 	getCommunityChannelBackground,
-} from '../../../../../_common/community/community.model';
-import AppModal from '../../../../../_common/modal/AppModal.vue';
-import { useModal } from '../../../../../_common/modal/modal.service';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import FormCommunityChannelPresetBackground from '../../../forms/community/channel/preset-background/FormCommunityChannelPresetBackground.vue';
+} from '~common/community/community.model';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import { $gettext } from '~common/translate/translate.service';
 
-const props = defineProps({
-	community: {
-		type: Object as PropType<CommunityModel>,
-		required: true,
-	},
-	presetType: {
-		type: String as PropType<CommunityPresetChannelType>,
-		required: true,
-	},
-});
-
-const { community, presetType } = toRefs(props);
+type Props = {
+	community: CommunityModel;
+	presetType: CommunityPresetChannelType;
+};
+const { community, presetType } = defineProps<Props>();
 
 const modal = useModal()!;
 
-const background = getCommunityChannelBackground(community.value, presetType.value);
+const background = getCommunityChannelBackground(community, presetType);
 const previousBackgroundId = ref(background?.id || null);
 
 function onSubmit(inputCommunity: CommunityModel) {
-	const background = getCommunityChannelBackground(inputCommunity, presetType.value);
+	const background = getCommunityChannelBackground(inputCommunity, presetType);
 	const newBackgroundId = (background && background.id) || null;
 
 	if (previousBackgroundId.value === newBackgroundId) {
-		modal.resolve(community.value);
+		modal.resolve(community);
 	}
 	previousBackgroundId.value = newBackgroundId;
 }

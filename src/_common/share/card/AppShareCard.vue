@@ -1,38 +1,26 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-import AppJolticon from '../../jolticon/AppJolticon.vue';
-import AppTranslate from '../../translate/AppTranslate.vue';
-import AppShareControl from '../AppShareControl.vue';
-import { ShareProvider, ShareResource } from '../share.service';
-import AppShareCardTile from './AppShareCardTile.vue';
-import { showShareModal } from './_modal/modal.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppShareControl from '~common/share/AppShareControl.vue';
+import { showShareModal } from '~common/share/card/_modal/modal.service';
+import AppShareCardTile from '~common/share/card/AppShareCardTile.vue';
+import { ShareProvider, ShareResource } from '~common/share/share.service';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
-const props = defineProps({
-	resource: {
-		type: String as PropType<ShareResource>,
-		required: true,
-	},
-	url: {
-		type: String,
-		required: true,
-	},
-	hideHeading: {
-		type: Boolean,
-	},
-	bleedPadding: {
-		type: Boolean,
-	},
-	offsetColor: {
-		type: Boolean,
-	},
-});
+type Props = {
+	resource: ShareResource;
+	url: string;
+	hideHeading?: boolean;
+	bleedPadding?: boolean;
+	offsetColor?: boolean;
+};
+const { resource, url } = defineProps<Props>();
 
 const providers: ShareProvider[] = ['facebook', 'twitter'];
 
 function openShareModal() {
 	showShareModal({
-		resource: props.resource,
-		url: props.url,
+		resource: resource,
+		url: url,
 	});
 }
 </script>

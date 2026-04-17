@@ -1,13 +1,16 @@
 <script lang="ts" setup>
-import { computed } from 'vue';
-import { trackCbarControlClick } from '../../../../_common/analytics/analytics.service';
-import AppCommunityAddWidget from '../../../../_common/community/add-widget/AppCommunityAddWidget.vue';
-import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
-import { useAppStore } from '../../../store';
-import { CBAR_WIDTH } from '../AppShell.vue';
-import AppShellCbarCommunity from './AppShellCbarCommunity.vue';
-import AppShellCbarControls from './AppShellCbarControls.vue';
-import AppShellCbarItem from './AppShellCbarItem.vue';
+import { computed, HTMLAttributes } from 'vue';
+
+import { CBAR_WIDTH } from '~app/components/shell/AppShell.vue';
+import AppShellCbarCommunity from '~app/components/shell/cbar/AppShellCbarCommunity.vue';
+import AppShellCbarControls from '~app/components/shell/cbar/AppShellCbarControls.vue';
+import AppShellCbarItem from '~app/components/shell/cbar/AppShellCbarItem.vue';
+import { useAppStore } from '~app/store';
+import { trackCbarControlClick } from '~common/analytics/analytics.service';
+import AppCommunityAddWidget from '~common/community/add-widget/AppCommunityAddWidget.vue';
+import AppScrollScroller from '~common/scroll/AppScrollScroller.vue';
+
+defineProps</* @vue-ignore */ Pick<HTMLAttributes, 'onClick' | 'onContextmenu'>>();
 
 const { hasCbar, activeCommunity, communities, visibleLeftPane } = useAppStore();
 

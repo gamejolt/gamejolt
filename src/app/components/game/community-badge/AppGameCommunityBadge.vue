@@ -1,18 +1,16 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
 import { RouterLink } from 'vue-router';
-import { CommunityModel } from '../../../../_common/community/community.model';
-import { formatNumber } from '../../../../_common/filters/number';
-import AppMediaItemBackdrop from '../../../../_common/media-item/backdrop/AppMediaItemBackdrop.vue';
-import AppTheme from '../../../../_common/theme/AppTheme.vue';
-import { $ngettext } from '../../../../_common/translate/translate.service';
 
-defineProps({
-	community: {
-		type: Object as PropType<CommunityModel>,
-		required: true,
-	},
-});
+import { CommunityModel } from '~common/community/community.model';
+import { formatNumber } from '~common/filters/number';
+import AppMediaItemBackdrop from '~common/media-item/backdrop/AppMediaItemBackdrop.vue';
+import AppTheme from '~common/theme/AppTheme.vue';
+import { $ngettext } from '~common/translate/translate.service';
+
+type Props = {
+	community: CommunityModel;
+};
+defineProps<Props>();
 </script>
 
 <template>

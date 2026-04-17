@@ -1,6 +1,10 @@
 import '@vue/runtime-core';
 
 declare module 'vue' {
+	interface IntrinsicElementAttributes {
+		applet: any;
+	}
+
 	interface ComponentCustomProperties {
 		GJ_SECTION: typeof GJ_SECTION;
 		GJ_ENVIRONMENT: typeof GJ_ENVIRONMENT;

@@ -1,22 +1,20 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
+import { computed, type HTMLAttributes } from 'vue';
 import { RouterLink } from 'vue-router';
-import { vAppAuthRequired } from '../../auth/auth-required-directive';
-import { showErrorGrowl } from '../../growls/growls.service';
-import AppJolticon from '../../jolticon/AppJolticon.vue';
-import { useCommonStore } from '../../store/common-store';
-import { TooltipPlacement } from '../../tooltip/tooltip-controller';
-import { vAppTooltip } from '../../tooltip/tooltip-directive';
-import { $gettext } from '../../translate/translate.service';
 
-const props = defineProps({
-	tooltipPlacement: {
-		type: String as PropType<TooltipPlacement>,
-		default: 'bottom',
-	},
-});
+import { vAppAuthRequired } from '~common/auth/auth-required-directive';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { useCommonStore } from '~common/store/common-store';
+import { TooltipPlacement } from '~common/tooltip/tooltip-controller';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { $gettext } from '~common/translate/translate.service';
 
-const { tooltipPlacement } = toRefs(props);
+type Props = {
+	tooltipPlacement?: TooltipPlacement;
+} & /* @vue-ignore */ Pick<HTMLAttributes, 'onContextmenu' | 'onClick'>;
+
+const { tooltipPlacement = 'bottom' } = defineProps<Props>();
 
 const { user } = useCommonStore();
 
@@ -32,7 +30,7 @@ const tooltip = computed(() => {
 
 	return {
 		content,
-		placement: tooltipPlacement.value,
+		placement: tooltipPlacement,
 	};
 });
 

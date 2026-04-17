@@ -1,26 +1,17 @@
 <script lang="ts" setup>
-import AppFadeCollapse from '../../../../_common/AppFadeCollapse.vue';
-import AppContentViewer from '../../../../_common/content/content-viewer/AppContentViewer.vue';
-import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
-import AppProfileSocialLinks from '../AppProfileSocialLinks.vue';
-import { useProfileRouteStore } from '../RouteProfile.vue';
+import AppProfileSocialLinks from '~app/views/profile/AppProfileSocialLinks.vue';
+import { useProfileRouteStore } from '~app/views/profile/RouteProfile.vue';
+import AppFadeCollapse from '~common/AppFadeCollapse.vue';
+import AppContentViewer from '~common/content/content-viewer/AppContentViewer.vue';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
 
-defineProps({
-	showFullDescription: {
-		type: Boolean,
-		required: true,
-	},
-	canToggleDescription: {
-		type: Boolean,
-		required: true,
-	},
-	noBioText: {
-		type: String,
-		default: '',
-	},
-});
+type Props = {
+	noBioText?: string;
+};
+const { noBioText = '' } = defineProps<Props>();
 
-const emit = defineEmits(['update:canToggleDescription', 'update:showFullDescription']);
+const showFullDescription = defineModel<boolean>('showFullDescription', { required: true });
+const canToggleDescription = defineModel<boolean>('canToggleDescription', { required: true });
 
 const { user: routeUser, isOverviewLoaded } = useProfileRouteStore()!;
 </script>
@@ -45,8 +36,8 @@ const { user: routeUser, isOverviewLoaded } = useProfileRouteStore()!;
 			:collapse-height="200"
 			:is-open="showFullDescription"
 			:animate="false"
-			@require-change="emit('update:canToggleDescription', $event)"
-			@expand="emit('update:showFullDescription', true)"
+			@require-change="canToggleDescription = $event"
+			@expand="showFullDescription = true"
 		>
 			<AppContentViewer v-if="routeUser.hasBio" :source="routeUser.bio_content" />
 			<div v-else-if="noBioText.length" class="small text-muted">
@@ -61,7 +52,7 @@ const { user: routeUser, isOverviewLoaded } = useProfileRouteStore()!;
 		<a
 			v-if="canToggleDescription"
 			class="hidden-text-expander"
-			@click="emit('update:showFullDescription', !showFullDescription)"
+			@click="showFullDescription = !showFullDescription"
 		/>
 	</template>
 </template>

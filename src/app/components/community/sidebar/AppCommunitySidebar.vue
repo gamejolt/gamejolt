@@ -1,37 +1,31 @@
 <script lang="ts" setup>
-import { PropType, computed, ref, toRef, toRefs, watch } from 'vue';
+import { computed, ref, toRef, watch } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
-import { Api } from '../../../../_common/api/api.service';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import { CommunityModel } from '../../../../_common/community/community.model';
-import { formatNumber } from '../../../../_common/filters/number';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import { showReportModal } from '../../../../_common/report/modal/modal.service';
-import AppShareCard from '../../../../_common/share/card/AppShareCard.vue';
-import { useCommonStore } from '../../../../_common/store/common-store';
-import AppTimeAgo from '../../../../_common/time/AppTimeAgo.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
-import AppUserCreatorBadge from '../../../../_common/user/creator/AppUserCreatorBadge.vue';
-import AppUserAvatarList from '../../../../_common/user/user-avatar/AppUserAvatarList.vue';
-import { UserModel } from '../../../../_common/user/user.model';
-import { getAbsoluteLink } from '../../../../utils/router';
-import AppGameList from '../../game/list/AppGameList.vue';
-import AppCommunityDescription from '../description/AppCommunityDescription.vue';
-import { CommunitySidebarData } from './sidebar-data';
 
-const props = defineProps({
-	community: {
-		type: Object as PropType<CommunityModel>,
-		required: true,
-	},
-	sidebarData: {
-		type: Object as PropType<CommunitySidebarData>,
-		required: true,
-	},
-});
+import AppCommunityDescription from '~app/components/community/description/AppCommunityDescription.vue';
+import { CommunitySidebarData } from '~app/components/community/sidebar/sidebar-data';
+import AppGameList from '~app/components/game/list/AppGameList.vue';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import { CommunityModel } from '~common/community/community.model';
+import { formatNumber } from '~common/filters/number';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { showReportModal } from '~common/report/modal/modal.service';
+import AppShareCard from '~common/share/card/AppShareCard.vue';
+import { useCommonStore } from '~common/store/common-store';
+import AppTimeAgo from '~common/time/AppTimeAgo.vue';
+import { $gettext } from '~common/translate/translate.service';
+import AppUserCardHover from '~common/user/card/AppUserCardHover.vue';
+import AppUserCreatorBadge from '~common/user/creator/AppUserCreatorBadge.vue';
+import { UserModel } from '~common/user/user.model';
+import AppUserAvatarList from '~common/user/user-avatar/AppUserAvatarList.vue';
+import { getAbsoluteLink } from '~utils/router';
 
-const { community, sidebarData } = toRefs(props);
+type Props = {
+	community: CommunityModel;
+	sidebarData: CommunitySidebarData;
+};
+const { community, sidebarData } = defineProps<Props>();
 const { user } = useCommonStore();
 const router = useRouter();
 
@@ -45,7 +39,7 @@ const loadedAllCollaborators = ref(false);
 const gameListCollapsed = ref(true);
 
 watch(
-	() => sidebarData.value.collaborators,
+	() => sidebarData.collaborators,
 	collaborators => {
 		currentCollaborators.value = collaborators;
 	},
@@ -53,7 +47,7 @@ watch(
 );
 
 watch(
-	() => sidebarData.value.collaboratorCount,
+	() => sidebarData.collaboratorCount,
 	collaboratorCount => {
 		currentCollaboratorCount.value = collaboratorCount;
 	},
@@ -61,26 +55,23 @@ watch(
 );
 
 const shouldShowKnownMembers = computed(
-	() =>
-		!!user.value && sidebarData.value.knownMembers && sidebarData.value.knownMembers.length > 0
+	() => !!user.value && sidebarData.knownMembers && sidebarData.knownMembers.length > 0
 );
 
-const shareUrl = computed(() => getAbsoluteLink(router, community.value.routeLocation));
+const shareUrl = computed(() => getAbsoluteLink(router, community.routeLocation));
 
 const hasMoreCollaborators = toRef(
-	() => currentCollaboratorCount.value > sidebarData.value.initialCollaboratorCount
+	() => currentCollaboratorCount.value > sidebarData.initialCollaboratorCount
 );
 
 const moderators = computed<UserModel[]>(() => {
 	const mods = [];
-	if (sidebarData.value.owner) {
-		mods.push(sidebarData.value.owner);
+	if (sidebarData.owner) {
+		mods.push(sidebarData.owner);
 	}
 	if (currentCollaborators.value) {
 		if (collaboratorListCollapsed.value) {
-			mods.push(
-				...currentCollaborators.value.slice(0, sidebarData.value.initialCollaboratorCount)
-			);
+			mods.push(...currentCollaborators.value.slice(0, sidebarData.initialCollaboratorCount));
 		} else {
 			mods.push(...currentCollaborators.value);
 		}
@@ -90,7 +81,7 @@ const moderators = computed<UserModel[]>(() => {
 
 // We only show visible games. Collaborators with the right permissions also get hidden games,
 // but to avoid confusion we don't show them in the sidebar. They do show when editing the community.
-const filteredGames = computed(() => community.value.games?.filter(i => i.isVisible));
+const filteredGames = computed(() => community.games?.filter(i => i.isVisible));
 
 const shouldShowGames = toRef(() => filteredGames.value && filteredGames.value.length);
 
@@ -110,7 +101,7 @@ const visibleGames = computed(() => {
 	return filteredGames.value;
 });
 
-const shouldShowReport = computed(() => !community.value.hasPerms());
+const shouldShowReport = computed(() => !community.hasPerms());
 
 function toggleCollaboratorList() {
 	if (isLoadingMoreCollaborators.value) {
@@ -131,7 +122,7 @@ async function loadAllCollaborators() {
 
 	isLoadingMoreCollaborators.value = true;
 
-	const payload = await Api.sendRequest(`/web/communities/collaborators/${community.value.id}`);
+	const payload = await Api.sendRequest(`/web/communities/collaborators/${community.id}`);
 
 	const collaborators = UserModel.populate(payload.collaborators);
 	currentCollaborators.value = collaborators;
@@ -146,7 +137,7 @@ function toggleGamesList() {
 }
 
 function onClickReport() {
-	showReportModal(community.value);
+	showReportModal(community);
 }
 </script>
 

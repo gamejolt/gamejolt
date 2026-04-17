@@ -1,14 +1,14 @@
 <script lang="ts" setup>
-import { useEscapeStack } from '../escape-stack/escape-stack.service';
+import { useEscapeStack } from '~common/escape-stack/escape-stack.service';
 
 /**
  * Done in its own component for performance reasons, so it only has to execute
  * this code when showing.
  */
 
-const emit = defineEmits({
-	trigger: () => true,
-});
+const emit = defineEmits<{
+	trigger: [];
+}>();
 
 useEscapeStack(() => emit('trigger'));
 </script>

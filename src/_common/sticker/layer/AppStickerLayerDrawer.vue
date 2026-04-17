@@ -7,8 +7,33 @@ import {
 	onMounted,
 	ref,
 	toRef,
+	useTemplateRef,
 	watch,
 } from 'vue';
+
+import { showVendingMachineModal } from '~app/components/vending-machine/modal/modal.service';
+import { Analytics } from '~common/analytics/analytics.service';
+import AppAnimElectricity from '~common/animation/AppAnimElectricity.vue';
+import AppButton from '~common/button/AppButton.vue';
+import { EscapeStack, EscapeStackCallback } from '~common/escape-stack/escape-stack.service';
+import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
+import { vAppObserveDimensions } from '~common/observe-dimensions/observe-dimensions.directive';
+import AppPageIndicatorCompact from '~common/pagination/AppPageIndicatorCompact.vue';
+import { Ruler } from '~common/ruler/ruler-service';
+import { onScreenResize, Screen } from '~common/screen/screen-service';
+import AppScrollScroller from '~common/scroll/AppScrollScroller.vue';
+import AppStickerLayerDrawerItem from '~common/sticker/layer/AppStickerLayerDrawerItem.vue';
+import { StickerModel, StickerStack } from '~common/sticker/sticker.model';
+import {
+	closeStickerDrawer,
+	commitStickerStoreItemPlacement,
+	setStickerDrawerHeight,
+	setStickerStoreActiveItem,
+	useStickerStore,
+} from '~common/sticker/sticker-store';
+import { useEventSubscription } from '~common/system/event/event-topic';
+import { kThemePrimary, kThemePrimaryFg } from '~common/theme/variables';
+import AppTouch, { AppTouchInput } from '~common/touch/AppTouch.vue';
 import {
 	styleBorderRadiusLg,
 	styleCaret,
@@ -16,31 +41,8 @@ import {
 	styleElevate,
 	styleTextOverflow,
 	styleWhen,
-} from '../../../_styles/mixins';
-import { kBorderRadiusLg, kStrongEaseOut } from '../../../_styles/variables';
-import { showVendingMachineModal } from '../../../app/components/vending-machine/modal/modal.service';
-import { Analytics } from '../../analytics/analytics.service';
-import AppAnimElectricity from '../../animation/AppAnimElectricity.vue';
-import AppButton from '../../button/AppButton.vue';
-import { EscapeStack, EscapeStackCallback } from '../../escape-stack/escape-stack.service';
-import AppLoadingFade from '../../loading/AppLoadingFade.vue';
-import { vAppObserveDimensions } from '../../observe-dimensions/observe-dimensions.directive';
-import AppPageIndicatorCompact from '../../pagination/AppPageIndicatorCompact.vue';
-import { Ruler } from '../../ruler/ruler-service';
-import { onScreenResize, Screen } from '../../screen/screen-service';
-import AppScrollScroller from '../../scroll/AppScrollScroller.vue';
-import { useEventSubscription } from '../../system/event/event-topic';
-import { kThemePrimary, kThemePrimaryFg } from '../../theme/variables';
-import AppTouch, { AppTouchInput } from '../../touch/AppTouch.vue';
-import {
-	closeStickerDrawer,
-	commitStickerStoreItemPlacement,
-	setStickerDrawerHeight,
-	setStickerStoreActiveItem,
-	useStickerStore,
-} from '../sticker-store';
-import { StickerModel, StickerStack } from '../sticker.model';
-import AppStickerLayerDrawerItem from './AppStickerLayerDrawerItem.vue';
+} from '~styles/mixins';
+import { kBorderRadiusLg, kStrongEaseOut } from '~styles/variables';
 
 const stickerStore = useStickerStore();
 const {
@@ -71,9 +73,9 @@ const _stickersPerRow = ref(5);
 const overflowTopBarText = ref(true);
 const isConfirmingPlacement = ref(false);
 
-const root = ref<HTMLDivElement>();
-const content = ref<HTMLDivElement>();
-const slider = ref<HTMLDivElement>();
+const root = useTemplateRef('root');
+const content = useTemplateRef('content');
+const slider = useTemplateRef('slider');
 
 const showPlaceButton = toRef(() => !!placedItem.value);
 const hasStickers = toRef(() => !!items.value.length);

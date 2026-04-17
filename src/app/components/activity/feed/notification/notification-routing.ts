@@ -1,38 +1,36 @@
 import { Router } from 'vue-router';
-import { CommentModel, getCommentUrl } from '../../../../../_common/comment/comment-model';
-import { CommunityModel } from '../../../../../_common/community/community.model';
+
+import { showGiftActionModal } from '~app/components/gift/modal.service';
+import { AppStore } from '~app/store/index';
+import { routeDashAccountEdit } from '~app/views/dashboard/account/edit/edit.route';
+import { routeDashSupporters } from '~app/views/dashboard/supporters/supporters.route';
+import { CommentModel, getCommentUrl } from '~common/comment/comment-model';
+import { CommunityModel } from '~common/community/community.model';
 import {
 	CommunityUserNotificationModel,
 	CommunityUserNotificationType,
-} from '../../../../../_common/community/user-notification/user-notification.model';
-import { showCreatorExperienceLevelUpModal } from '../../../../../_common/creator/experience/level-up-modal/modal.service';
-import { CreatorExperienceLevelModel } from '../../../../../_common/creator/experience/level.model';
-import { Environment } from '../../../../../_common/environment/environment.service';
-import { FiresidePostCommunityModel } from '../../../../../_common/fireside/post/community/community.model';
-import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
-import { ForumPostModel, getForumPostUrl } from '../../../../../_common/forum/post/post.model';
-import { GameModel } from '../../../../../_common/game/game.model';
-import { showErrorGrowl } from '../../../../../_common/growls/growls.service';
-import { InventoryShopGiftModel } from '../../../../../_common/inventory/shop/inventory-shop-gift.model';
-import { MentionModel } from '../../../../../_common/mention/mention.model';
-import { Navigate } from '../../../../../_common/navigate/navigate.service';
-import {
-	NotificationModel,
-	NotificationType,
-} from '../../../../../_common/notification/notification-model';
-import { QuestNotificationModel } from '../../../../../_common/quest/quest-notification-model';
-import { SupporterActionModel } from '../../../../../_common/supporters/action.model';
-import { showSupporterMessageModal } from '../../../../../_common/supporters/message/modal.service';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import { showTrophyModal } from '../../../../../_common/trophy/modal/modal.service';
-import { UserBaseTrophyModel } from '../../../../../_common/user/trophy/user-base-trophy.model';
-import { UserModel } from '../../../../../_common/user/user.model';
-import { RouteLocationDefinition, isKnownRoute } from '../../../../../utils/router';
-import { assertNever } from '../../../../../utils/utils';
-import { AppStore } from '../../../../store/index';
-import { routeDashAccountEdit } from '../../../../views/dashboard/account/edit/edit.route';
-import { routeDashSupporters } from '../../../../views/dashboard/supporters/supporters.route';
-import { showGiftActionModal } from '../../../gift/modal.service';
+} from '~common/community/user-notification/user-notification.model';
+import { CreatorExperienceLevelModel } from '~common/creator/experience/level.model';
+import { showCreatorExperienceLevelUpModal } from '~common/creator/experience/level-up-modal/modal.service';
+import { Environment } from '~common/environment/environment.service';
+import { FiresidePostCommunityModel } from '~common/fireside/post/community/community.model';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import { ForumPostModel, getForumPostUrl } from '~common/forum/post/post.model';
+import { GameModel } from '~common/game/game.model';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import { InventoryShopGiftModel } from '~common/inventory/shop/inventory-shop-gift.model';
+import { MentionModel } from '~common/mention/mention.model';
+import { Navigate } from '~common/navigate/navigate.service';
+import { NotificationModel, NotificationType } from '~common/notification/notification-model';
+import { QuestNotificationModel } from '~common/quest/quest-notification-model';
+import { SupporterActionModel } from '~common/supporters/action.model';
+import { showSupporterMessageModal } from '~common/supporters/message/modal.service';
+import { $gettext } from '~common/translate/translate.service';
+import { showTrophyModal } from '~common/trophy/modal/modal.service';
+import { UserBaseTrophyModel } from '~common/user/trophy/user-base-trophy.model';
+import { UserModel } from '~common/user/user.model';
+import { isKnownRoute, RouteLocationDefinition } from '~utils/router';
+import { assertNever } from '~utils/utils';
 
 function getRouteLocationForModel(
 	model:

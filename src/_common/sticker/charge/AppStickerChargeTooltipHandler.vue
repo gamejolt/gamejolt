@@ -1,46 +1,42 @@
 <script lang="ts" setup>
-import { PropType, ref, toRefs, watch } from 'vue';
-import { Screen } from '../../screen/screen-service';
+import { ref, useTemplateRef, watch } from 'vue';
+
+import { Screen } from '~common/screen/screen-service';
 
 type StickerChargeTooltipTrigger = 'hover' | 'focus';
 
-const props = defineProps({
-	trigger: {
-		type: String as PropType<StickerChargeTooltipTrigger>,
-		required: true,
-	},
-	disabled: {
-		type: Boolean,
-	},
-	inline: {
-		type: Boolean,
-	},
-});
+type Props = {
+	trigger: StickerChargeTooltipTrigger;
+	disabled?: boolean;
+	inline?: boolean;
+};
+const { trigger, disabled, inline } = defineProps<Props>();
 
-const { trigger, disabled, inline } = toRefs(props);
+const emit = defineEmits<{
+	show: [];
+	hide: [];
+}>();
 
-const emit = defineEmits({
-	show: () => true,
-	hide: () => true,
-});
-
-const root = ref<HTMLDivElement>();
+const root = useTemplateRef('root');
 
 let canClearFocus = false;
 const isFocused = ref(false);
 
-watch(disabled, isDisabled => {
-	if (isDisabled) {
-		onBlur();
+watch(
+	() => disabled,
+	isDisabled => {
+		if (isDisabled) {
+			onBlur();
+		}
 	}
-});
+);
 
 // Reset our state when this changes. Otherwise there may be issues syncing
 // state between hover/focus states.
-watch(trigger, onBlur);
+watch(() => trigger, onBlur);
 
 function onMouseHoverHelp(isHovering: boolean) {
-	if (disabled.value) {
+	if (disabled) {
 		return;
 	}
 
@@ -52,7 +48,7 @@ function onMouseHoverHelp(isHovering: boolean) {
 }
 
 async function onFocus() {
-	if (disabled.value) {
+	if (disabled) {
 		return;
 	}
 
@@ -69,7 +65,7 @@ function onBlur() {
 
 function onClick() {
 	if (isFocused.value && canClearFocus) {
-		root.value?.blur();
+		(root.value as HTMLElement | null)?.blur();
 	}
 }
 </script>

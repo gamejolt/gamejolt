@@ -1,22 +1,20 @@
 <script lang="ts">
 import { computed, ref } from 'vue';
-import { Api } from '../../../../../../../_common/api/api.service';
-import { formatNumber } from '../../../../../../../_common/filters/number';
-import { GameTrophyModel } from '../../../../../../../_common/game/trophy/trophy.model';
-import AppNavTabList from '../../../../../../../_common/nav/tab-list/AppNavTabList.vue';
+
+import { useGameRouteController } from '~app/views/discover/games/view/RouteDiscoverGamesView.vue';
+import { Api } from '~common/api/api.service';
+import { formatNumber } from '~common/filters/number';
+import { GameTrophyModel } from '~common/game/trophy/trophy.model';
+import AppNavTabList from '~common/nav/tab-list/AppNavTabList.vue';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { useCommonStore } from '~common/store/common-store';
+import { $gettext } from '~common/translate/translate.service';
+import AppTrophyCompletion from '~common/trophy/AppTrophyCompletion.vue';
+import AppTrophyList from '~common/trophy/list/AppTrophyList.vue';
 import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '../../../../../../../_common/route/route-component';
-import { useCommonStore } from '../../../../../../../_common/store/common-store';
-import { $gettext } from '../../../../../../../_common/translate/translate.service';
-import AppTrophyCompletion from '../../../../../../../_common/trophy/AppTrophyCompletion.vue';
-import AppTrophyList from '../../../../../../../_common/trophy/list/AppTrophyList.vue';
-import {
-	UserGameTrophyModel,
 	indexAchievedGameTrophies,
-} from '../../../../../../../_common/user/trophy/game-trophy.model';
-import { useGameRouteController } from '../../RouteDiscoverGamesView.vue';
+	UserGameTrophyModel,
+} from '~common/user/trophy/game-trophy.model';
 
 export default {
 	...defineAppRouteOptions({

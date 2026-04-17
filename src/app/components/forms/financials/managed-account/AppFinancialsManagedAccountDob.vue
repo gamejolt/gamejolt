@@ -1,16 +1,14 @@
 <script lang="ts" setup>
-import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormControlSelect from '../../../../../_common/form-vue/controls/AppFormControlSelect.vue';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import { useFormManagedAccount } from './managed-account.vue';
+import { useFormManagedAccount } from '~app/components/forms/financials/managed-account/FormFinancialsManagedAccount.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlSelect from '~common/form-vue/controls/AppFormControlSelect.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
-defineProps({
-	namePrefix: {
-		type: String,
-		required: true,
-	},
-});
+type Props = {
+	namePrefix: string;
+};
+defineProps<Props>();
 
 const { getStripeField, requiresField } = useFormManagedAccount()!;
 

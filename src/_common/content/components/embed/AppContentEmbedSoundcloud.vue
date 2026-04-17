@@ -1,17 +1,15 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-const props = defineProps({
-	trackId: {
-		type: String,
-		required: true,
-	},
-});
+type Props = {
+	trackId: string;
+};
+const { trackId } = defineProps<Props>();
 
 const embedSrc = computed(
 	() =>
 		'https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/' +
-		props.trackId +
+		trackId +
 		'&amp;color=2f7f6f'
 );
 </script>

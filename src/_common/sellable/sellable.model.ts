@@ -1,9 +1,9 @@
-import { GamePackageModel } from '../game/package/package.model';
-import { LinkedKeyModel } from '../linked-key/linked-key.model';
-import { MicrotransactionProductModel } from '../microtransaction/product.model';
-import { storeModel } from '../model/model-store.service';
-import { Model } from '../model/model.service';
-import { SellablePricingModel } from './pricing/pricing.model';
+import { GamePackageModel } from '~common/game/package/package.model';
+import { LinkedKeyModel } from '~common/linked-key/linked-key.model';
+import { MicrotransactionProductModel } from '~common/microtransaction/product.model';
+import { Model } from '~common/model/model.service';
+import { storeModel } from '~common/model/model-store.service';
+import { SellablePricingModel } from '~common/sellable/pricing/pricing.model';
 
 export const enum SellableType {
 	Free = 'free',

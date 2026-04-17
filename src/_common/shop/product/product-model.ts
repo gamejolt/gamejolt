@@ -1,8 +1,8 @@
-import { assertNever } from '../../../utils/utils';
-import { AvatarFrameModel } from '../../avatar/frame.model';
-import { BackgroundModel } from '../../background/background.model';
-import { StickerPackModel } from '../../sticker/pack/pack.model';
-import { StickerModel } from '../../sticker/sticker.model';
+import { AvatarFrameModel } from '~common/avatar/frame.model';
+import { BackgroundModel } from '~common/background/background.model';
+import { StickerPackModel } from '~common/sticker/pack/pack.model';
+import { StickerModel } from '~common/sticker/sticker.model';
+import { assertNever } from '~utils/utils';
 
 /**
  * All the models that can be in the shop.

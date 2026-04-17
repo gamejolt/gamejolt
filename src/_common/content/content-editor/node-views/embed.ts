@@ -1,9 +1,10 @@
 import { Node } from 'prosemirror-model';
-import { isChildElement } from '../../../../utils/dom';
-import AppContentEmbed from '../../components/embed/AppContentEmbed.vue';
-import { ContentEditorService } from '../content-editor.service';
-import { ContentEditorSchema } from '../schemas/content-editor-schema';
-import { BaseNodeView, NodeViewRenderData } from './base';
+
+import AppContentEmbed from '~common/content/components/embed/AppContentEmbed.vue';
+import { ContentEditorService } from '~common/content/content-editor/content-editor.service';
+import { BaseNodeView, NodeViewRenderData } from '~common/content/content-editor/node-views/base';
+import { ContentEditorSchema } from '~common/content/content-editor/schemas/content-editor-schema';
+import { isChildElement } from '~utils/dom';
 
 export class EmbedNodeView extends BaseNodeView {
 	private props: NodeViewRenderData['props'] = {};

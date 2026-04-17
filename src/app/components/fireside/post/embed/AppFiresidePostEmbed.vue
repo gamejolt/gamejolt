@@ -1,55 +1,45 @@
 <script lang="ts">
-import { PropType, computed, ref, toRef, toRefs } from 'vue';
+import { computed, ref, toRef } from 'vue';
+
 import {
 	FiresidePostEmbedModel,
 	TYPE_SKETCHFAB,
 	TYPE_YOUTUBE,
-} from '../../../../../_common/fireside/post/embed/embed.model';
-import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import { Navigate } from '../../../../../_common/navigate/navigate.service';
-import AppResponsiveDimensions from '../../../../../_common/responsive-dimensions/AppResponsiveDimensions.vue';
-import { Screen } from '../../../../../_common/screen/screen-service';
-import AppScrollInview, {
-	ScrollInviewConfig,
-} from '../../../../../_common/scroll/inview/AppScrollInview.vue';
-import AppSketchfabEmbed from '../../../../../_common/sketchfab/embed/AppSketchfabEmbed.vue';
-import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import AppVideoEmbed from '../../../../../_common/video/embed/AppVideoEmbed.vue';
+} from '~common/fireside/post/embed/embed.model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { Navigate } from '~common/navigate/navigate.service';
+import AppResponsiveDimensions from '~common/responsive-dimensions/AppResponsiveDimensions.vue';
+import { Screen } from '~common/screen/screen-service';
+import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
+import AppSketchfabEmbed from '~common/sketchfab/embed/AppSketchfabEmbed.vue';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { $gettext } from '~common/translate/translate.service';
+import AppVideoEmbed from '~common/video/embed/AppVideoEmbed.vue';
 
 const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height * 0.5}px` });
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	embed: {
-		type: Object as PropType<FiresidePostEmbedModel>,
-		required: true,
-	},
-	hideOutview: {
-		type: Boolean,
-		default: true,
-	},
-});
-
-const { embed, hideOutview } = toRefs(props);
+type Props = {
+	embed: FiresidePostEmbedModel;
+	hideOutview?: boolean;
+};
+const { embed, hideOutview = true } = defineProps<Props>();
 
 const isOpen = ref(false);
 const shouldAutoplay = ref(true);
 const isInview = ref(true);
 
-const shouldShow = toRef(
-	() => embed.value.type === TYPE_YOUTUBE || embed.value.type === TYPE_SKETCHFAB
-);
+const shouldShow = toRef(() => embed.type === TYPE_YOUTUBE || embed.type === TYPE_SKETCHFAB);
 
 const thumbUrl = computed(() => {
-	if (embed.value.metadata && embed.value.metadata.image_media_item) {
-		return embed.value.metadata.image_media_item.mediaserver_url;
+	if (embed.metadata && embed.metadata.image_media_item) {
+		return embed.metadata.image_media_item.mediaserver_url;
 	}
 
-	switch (embed.value.type) {
+	switch (embed.type) {
 		case TYPE_YOUTUBE: {
-			const videoId = embed.value.extraData.videoId;
+			const videoId = embed.extraData.videoId;
 			return `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
 		}
 	}
@@ -58,11 +48,11 @@ const thumbUrl = computed(() => {
 });
 
 const title = computed(() => {
-	if (embed.value.metadata && embed.value.metadata.title) {
-		return embed.value.metadata.title;
+	if (embed.metadata && embed.metadata.title) {
+		return embed.metadata.title;
 	}
 
-	switch (embed.value.type) {
+	switch (embed.type) {
 		case TYPE_YOUTUBE:
 			return $gettext(`YouTube`);
 		case TYPE_SKETCHFAB:
@@ -73,24 +63,21 @@ const title = computed(() => {
 });
 
 const website = computed(() => {
-	if (embed.value.metadata && embed.value.metadata.site_url) {
+	if (embed.metadata && embed.metadata.site_url) {
 		// Node SSR doesn't support the URL api.
 		if (import.meta.env.SSR) {
-			return embed.value.metadata.site_url;
+			return embed.metadata.site_url;
 		}
 
-		const url = new URL(embed.value.metadata.site_url);
+		const url = new URL(embed.metadata.site_url);
 		let website = url.hostname;
-		if (
-			embed.value.metadata.site_name &&
-			embed.value.metadata.site_name !== embed.value.metadata.url
-		) {
-			website = embed.value.metadata.site_name + ' | ' + website;
+		if (embed.metadata.site_name && embed.metadata.site_name !== embed.metadata.url) {
+			website = embed.metadata.site_name + ' | ' + website;
 		}
 		return website;
 	}
 
-	switch (embed.value.type) {
+	switch (embed.type) {
 		case TYPE_YOUTUBE:
 			return 'youtube.com';
 		case TYPE_SKETCHFAB:
@@ -101,26 +88,26 @@ const website = computed(() => {
 });
 
 const description = computed(() => {
-	if (embed.value.metadata) {
-		if (embed.value.metadata.description) {
-			return embed.value.metadata.description.replace('\n', ' ');
+	if (embed.metadata) {
+		if (embed.metadata.description) {
+			return embed.metadata.description.replace('\n', ' ');
 		}
 
-		if (embed.value.metadata.site_name) {
-			return embed.value.metadata.site_name;
+		if (embed.metadata.site_name) {
+			return embed.metadata.site_name;
 		}
 
-		return embed.value.metadata.site_url;
+		return embed.metadata.site_url;
 	}
 
-	return embed.value.url;
+	return embed.url;
 });
 
-const shouldShowEmbedContent = toRef(() => isInview.value || !hideOutview.value);
-const imageAlt = toRef(() => embed.value.metadata?.image_alt);
+const shouldShowEmbedContent = toRef(() => isInview.value || !hideOutview);
+const imageAlt = toRef(() => embed.metadata?.image_alt ?? undefined);
 
 const playIcon = computed(() => {
-	switch (embed.value.type) {
+	switch (embed.type) {
 		case TYPE_SKETCHFAB:
 			return 'sketchfab';
 		case TYPE_YOUTUBE:
@@ -131,14 +118,14 @@ const playIcon = computed(() => {
 });
 
 function onClick() {
-	if (embed.value.is_processing) {
+	if (embed.is_processing) {
 		return;
 	}
 
 	if (!isOpen.value) {
 		isOpen.value = true;
 	} else {
-		Navigate.newWindow(embed.value.url);
+		Navigate.newWindow(embed.url);
 	}
 }
 
@@ -189,7 +176,7 @@ function onInviewChanged(isInviewNew: boolean) {
 		</template>
 
 		<template v-else>
-			<div v-if="!isOpen" class="-thumb" :alt="imageAlt">
+			<div v-if="!isOpen" class="-thumb" :aria-label="imageAlt">
 				<div class="-thumb-img-container">
 					<img v-if="thumbUrl" :src="thumbUrl" class="-thumb-img" />
 				</div>

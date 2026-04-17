@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import AppStyle from '../../../_common/AppStyle.vue';
+import AppStyle from '~common/AppStyle.vue';
 
 /**
  * This component will at least fill the full height of the viewport. We mostly

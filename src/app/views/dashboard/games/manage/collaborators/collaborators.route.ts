@@ -3,5 +3,8 @@ import { RouteRecordRaw } from 'vue-router';
 export const routeDashGamesManageCollaborators: RouteRecordRaw = {
 	name: 'dash.games.manage.collaborators',
 	path: 'collaborators',
-	component: () => import('./RouteDashGamesManageCollaborators.vue'),
+	component: () =>
+		import(
+			'~app/views/dashboard/games/manage/collaborators/RouteDashGamesManageCollaborators.vue'
+		),
 };

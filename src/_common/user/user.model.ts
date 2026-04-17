@@ -1,20 +1,20 @@
-import type { RouteLocationDefinition } from '../../utils/router';
-import { trackUserFollow, UserFollowLocation } from '../analytics/analytics.service';
-import { Api } from '../api/api.service';
-import { AvatarFrameModel } from '../avatar/frame.model';
-import { CommentableModel } from '../comment/comment-model';
-import { ContentContainerModel } from '../content/content-container-model';
-import { ContentContext } from '../content/content-context';
-import { ContentSetCache } from '../content/content-set-cache';
-import { DogtagData } from '../dogtag/dogtag-data';
-import { showErrorGrowl } from '../growls/growls.service';
-import { MediaItemModel } from '../media-item/media-item-model';
-import { showModalConfirm } from '../modal/confirm/confirm-service';
-import { storeModel } from '../model/model-store.service';
-import { Model } from '../model/model.service';
-import { Registry } from '../registry/registry.service';
-import { ThemeModel } from '../theme/theme.model';
-import { $gettext } from '../translate/translate.service';
+import { trackUserFollow, UserFollowLocation } from '~common/analytics/analytics.service';
+import { Api } from '~common/api/api.service';
+import { AvatarFrameModel } from '~common/avatar/frame.model';
+import { CommentableModel } from '~common/comment/comment-model';
+import { ContentContainerModel } from '~common/content/content-container-model';
+import { ContentContext } from '~common/content/content-context';
+import { ContentSetCache } from '~common/content/content-set-cache';
+import { DogtagData } from '~common/dogtag/dogtag-data';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import { MediaItemModel } from '~common/media-item/media-item-model';
+import { showModalConfirm } from '~common/modal/confirm/confirm-service';
+import { Model } from '~common/model/model.service';
+import { storeModel } from '~common/model/model-store.service';
+import { Registry } from '~common/registry/registry.service';
+import { ThemeModel } from '~common/theme/theme.model';
+import { $gettext } from '~common/translate/translate.service';
+import type { RouteLocationDefinition } from '~utils/router';
 /**
  * When you have code that needs to work on either User | ChatUser, you can use
  * this interface to specify it only works with the fields that are common to

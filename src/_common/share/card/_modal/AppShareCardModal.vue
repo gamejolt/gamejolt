@@ -1,22 +1,16 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-import AppModal from '../../../modal/AppModal.vue';
-import { useModal } from '../../../modal/modal.service';
-import { copyShareLink, ShareProvider, ShareResource } from '../../share.service';
-import AppShareCardTile from '../AppShareCardTile.vue';
-import AppButton from '../../../button/AppButton.vue';
-import AppTranslate from '../../../translate/AppTranslate.vue';
+import AppButton from '~common/button/AppButton.vue';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import AppShareCardTile from '~common/share/card/AppShareCardTile.vue';
+import { copyShareLink, ShareProvider, ShareResource } from '~common/share/share.service';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
-const props = defineProps({
-	resource: {
-		type: String as PropType<ShareResource>,
-		required: true,
-	},
-	url: {
-		type: String,
-		required: true,
-	},
-});
+type Props = {
+	resource: ShareResource;
+	url: string;
+};
+const { resource, url } = defineProps<Props>();
 
 const modal = useModal<void>()!;
 
@@ -31,7 +25,7 @@ const providers: ShareProvider[] = [
 ];
 
 function copyLink() {
-	copyShareLink(props.url, props.resource);
+	copyShareLink(url, resource);
 }
 </script>
 

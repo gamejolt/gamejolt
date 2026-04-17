@@ -1,11 +1,12 @@
 <script lang="ts">
 import { computed, ref } from 'vue';
-import { Api } from '../../../../_common/api/api.service';
-import { authOnJoin, redirectToOnboarding } from '../../../../_common/auth/auth.service';
-import { showErrorGrowl } from '../../../../_common/growls/growls.service';
-import AppProgressPoller from '../../../../_common/progress/poller/AppProgressPoller.vue';
-import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
-import { $gettext } from '../../../../_common/translate/translate.service';
+
+import { Api } from '~common/api/api.service';
+import { authOnJoin, redirectToOnboarding } from '~common/auth/auth.service';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import AppProgressPoller from '~common/progress/poller/AppProgressPoller.vue';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { $gettext } from '~common/translate/translate.service';
 
 export default {
 	...defineAppRouteOptions({

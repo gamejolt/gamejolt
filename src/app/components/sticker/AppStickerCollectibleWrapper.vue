@@ -1,33 +1,28 @@
 <script lang="ts" setup>
-import { PropType, toRef, toRefs } from 'vue';
-import { showCollectibleResourceDetailsModal } from '../../../_common/collectible/resource-details-modal/modal.service';
-import { EmojiModel } from '../../../_common/emoji/emoji.model';
-import { StickerModel } from '../../../_common/sticker/sticker.model';
-import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
-import { isInstance } from '../../../utils/utils';
+import { toRef } from 'vue';
 
-const props = defineProps({
-	data: {
-		type: Object as PropType<EmojiModel | StickerModel>,
-		default: undefined,
-	},
-	showTooltip: {
-		type: Boolean,
-	},
-});
+import { showCollectibleResourceDetailsModal } from '~common/collectible/resource-details-modal/modal.service';
+import { EmojiModel } from '~common/emoji/emoji.model';
+import { StickerModel } from '~common/sticker/sticker.model';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { isInstance } from '~utils/utils';
 
-const { data, showTooltip } = toRefs(props);
+type Props = {
+	data?: EmojiModel | StickerModel;
+	showTooltip?: boolean;
+};
+const { data, showTooltip } = defineProps<Props>();
 
 function onWrapperClick(event: Event) {
-	if (data?.value) {
+	if (data) {
 		event.stopPropagation();
-		showCollectibleResourceDetailsModal({ item: data.value });
+		showCollectibleResourceDetailsModal({ item: data });
 	}
 }
 
 const tooltip = toRef(() => {
-	if (showTooltip.value && data?.value) {
-		return isInstance(data.value, EmojiModel) ? data.value.commandString : data.value.name;
+	if (showTooltip && data) {
+		return isInstance(data, EmojiModel) ? data.commandString : data.name;
 	}
 	return undefined;
 });

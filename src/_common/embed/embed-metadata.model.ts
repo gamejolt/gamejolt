@@ -1,5 +1,5 @@
-import { MediaItemModel } from '../media-item/media-item-model';
-import { Model } from '../model/model.service';
+import { MediaItemModel } from '~common/media-item/media-item-model';
+import { Model } from '~common/model/model.service';
 
 export class EmbedMetadataModel extends Model {
 	declare url: string;

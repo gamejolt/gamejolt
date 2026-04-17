@@ -1,38 +1,29 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType, computed, toRefs } from 'vue';
-import { styleFlexCenter, styleWhen } from '../../_styles/mixins';
-import AppPageIndicatorCompactItem from './AppPageIndicatorCompactItem.vue';
+import { computed, CSSProperties } from 'vue';
 
-const props = defineProps({
-	count: {
-		type: Number,
-		required: true,
-	},
-	current: {
-		type: Number,
-		required: true,
-	},
-	innerStyles: {
-		type: Object as PropType<CSSProperties>,
-		default: undefined,
-	},
-});
+import AppPageIndicatorCompactItem from '~common/pagination/AppPageIndicatorCompactItem.vue';
+import { styleFlexCenter, styleWhen } from '~styles/mixins';
 
-const { count, current } = toRefs(props);
+type Props = {
+	count: number;
+	current: number;
+	innerStyles?: CSSProperties;
+};
+const { count, current, innerStyles } = defineProps<Props>();
 
 const sizeBase = 8;
 
-const displayCount = computed(() => Math.min(count.value, 5));
+const displayCount = computed(() => Math.min(count, 5));
 const edgeCount = computed(() => Math.floor(displayCount.value / 2));
 
 function shouldShowItem(offset: number) {
 	const itemsPerEdge = edgeCount.value;
-	if (current.value <= itemsPerEdge) {
+	if (current <= itemsPerEdge) {
 		return offset <= displayCount.value;
-	} else if (current.value >= count.value - itemsPerEdge) {
-		return count.value - offset < displayCount.value;
+	} else if (current >= count - itemsPerEdge) {
+		return count - offset < displayCount.value;
 	}
-	return offset === current.value || Math.abs(offset - current.value) <= itemsPerEdge;
+	return offset === current || Math.abs(offset - current) <= itemsPerEdge;
 }
 </script>
 

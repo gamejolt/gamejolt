@@ -1,29 +1,26 @@
 <script lang="ts" setup>
-import { PropType, ref, toRef, toRefs } from 'vue';
-import AppButton from '../../../../../_common/button/AppButton.vue';
-import { FiresidePostCommunityModel } from '../../../../../_common/fireside/post/community/community.model';
-import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
-import AppModal from '../../../../../_common/modal/AppModal.vue';
-import { useModal } from '../../../../../_common/modal/modal.service';
-import { getDatalistOptions } from '../../../../../_common/settings/datalist-options.service';
-import { useCommonStore } from '../../../../../_common/store/common-store';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import { REASON_OTHER } from '../../../../../_common/user/action-reasons';
-import FormCommunityEjectPost, { FormModel } from '../form/form.vue';
-import { CommunityEjectPostModalResult } from './modal.service';
+import { ref, toRef } from 'vue';
 
-const props = defineProps({
-	firesidePostCommunity: {
-		type: Object as PropType<FiresidePostCommunityModel>,
-		required: true,
-	},
-	post: {
-		type: Object as PropType<FiresidePostModel>,
-		required: true,
-	},
-});
+import FormCommunityEjectPost, {
+	EjectPostFormModel as FormModel,
+} from '~app/components/community/eject-post/form/FormCommunityEjectPost.vue';
+import { CommunityEjectPostModalResult } from '~app/components/community/eject-post/modal/modal.service';
+import AppButton from '~common/button/AppButton.vue';
+import { FiresidePostCommunityModel } from '~common/fireside/post/community/community.model';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import { getDatalistOptions } from '~common/settings/datalist-options.service';
+import { useCommonStore } from '~common/store/common-store';
+import { $gettext } from '~common/translate/translate.service';
+import { TranslateDirective as vTranslate } from '~common/translate/translate-directive';
+import { REASON_OTHER } from '~common/user/action-reasons';
 
-const { firesidePostCommunity, post } = toRefs(props);
+type Props = {
+	firesidePostCommunity: FiresidePostCommunityModel;
+	post: FiresidePostModel;
+};
+const { firesidePostCommunity, post } = defineProps<Props>();
 
 const { user } = useCommonStore();
 const modal = useModal()!;
@@ -31,7 +28,7 @@ const reasonFormModel = ref<FormModel | null>(null);
 
 // Do not show the form when the logged in user is the author of the post.
 // It does not make sense to let them notify themselves.
-const shouldShowForm = toRef(() => post.value.user.id !== user.value!.id);
+const shouldShowForm = toRef(() => post.user.id !== user.value!.id);
 
 reasonFormModel.value = {
 	notifyUser: 'no',
@@ -61,7 +58,7 @@ function onEject() {
 	if (result.reasonType === REASON_OTHER && result.reason) {
 		const options = getDatalistOptions(
 			'community-eject',
-			firesidePostCommunity.value.community.id.toString()
+			firesidePostCommunity.community.id.toString()
 		);
 		options.unshiftItem(result.reason);
 	}

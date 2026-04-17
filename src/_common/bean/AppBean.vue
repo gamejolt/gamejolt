@@ -1,32 +1,21 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
-import AppAspectRatio from '../aspect-ratio/AppAspectRatio.vue';
-import { beans } from './beans';
+import { computed } from 'vue';
 
-const props = defineProps({
-	variant: {
-		type: Number as PropType<1 | 2>,
-		default: 1,
-		validator: val => typeof val === 'number' && 0 < val && val <= beans.length,
-	},
-	flip: {
-		type: Boolean,
-	},
+import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
+import { beans } from '~common/bean/beans';
+
+type Props = {
+	variant?: 1 | 2;
+	flip?: boolean;
 	/**
 	 * Removes the `max-width` and `max-height` from the default slot child.
 	 */
-	noClamp: {
-		type: Boolean,
-	},
-	bgColor: {
-		type: String,
-		default: 'var(--theme-bg-offset)',
-	},
-});
+	noClamp?: boolean;
+	bgColor?: string;
+};
+const { variant = 1, flip, noClamp, bgColor = 'var(--theme-bg-offset)' } = defineProps<Props>();
 
-const { variant, flip, noClamp } = toRefs(props);
-
-const bean = computed(() => beans[variant.value - 1]);
+const bean = computed(() => beans[variant - 1]);
 </script>
 
 <template>

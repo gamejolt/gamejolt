@@ -1,42 +1,37 @@
 <script lang="ts" setup>
-import { PropType, ref, toRefs, watch } from 'vue';
-import { Api } from '../../../_common/api/api.service';
-import AppExpand from '../../../_common/expand/AppExpand.vue';
-import { formatCurrency } from '../../../_common/filters/currency';
-import AppForm, { FormController, createForm } from '../../../_common/form-vue/AppForm.vue';
-import AppFormButton from '../../../_common/form-vue/AppFormButton.vue';
-import AppFormControl from '../../../_common/form-vue/AppFormControl.vue';
-import AppFormControlError from '../../../_common/form-vue/AppFormControlError.vue';
-import AppFormControlErrors from '../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormControlMask from '../../../_common/form-vue/AppFormControlMask.vue';
-import AppFormGroup from '../../../_common/form-vue/AppFormGroup.vue';
-import AppFormControlCheckbox from '../../../_common/form-vue/controls/AppFormControlCheckbox.vue';
-import AppFormControlSelect from '../../../_common/form-vue/controls/AppFormControlSelect.vue';
+import { ref, watch } from 'vue';
+
+import { Api } from '~common/api/api.service';
+import AppExpand from '~common/expand/AppExpand.vue';
+import { formatCurrency } from '~common/filters/currency';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormControlError from '~common/form-vue/AppFormControlError.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormControlMask from '~common/form-vue/AppFormControlMask.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlCheckbox from '~common/form-vue/controls/AppFormControlCheckbox.vue';
+import AppFormControlSelect from '~common/form-vue/controls/AppFormControlSelect.vue';
 import {
 	validateCreditCard,
 	validateCreditCardExpiration,
 	validateMaxLength,
 	validatePattern,
-} from '../../../_common/form-vue/validators';
-import { Geo, GeoRegion } from '../../../_common/geo/geo.service';
-import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
-import AppLoading from '../../../_common/loading/AppLoading.vue';
-import { OrderModel } from '../../../_common/order/order.model';
-import { useCommonStore } from '../../../_common/store/common-store';
-import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
+} from '~common/form-vue/validators';
+import { Geo, GeoRegion } from '~common/geo/geo.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLoading from '~common/loading/AppLoading.vue';
+import { OrderModel } from '~common/order/order.model';
+import { useCommonStore } from '~common/store/common-store';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 
-const props = defineProps({
-	cards: {
-		type: Array as PropType<any[]>,
-		required: true,
-	},
-	order: {
-		type: Object as PropType<OrderModel>,
-		required: true,
-	},
-});
+type Props = {
+	cards: any[];
+	order: OrderModel;
+};
+const { cards, order } = defineProps<Props>();
 
-const { cards, order } = toRefs(props);
 const { user } = useCommonStore();
 
 const stripeError = ref<string | null>(null);
@@ -81,9 +76,9 @@ type FormModel = {
 	postcode: string;
 };
 
-const emit = defineEmits({
-	submit: (_response: any) => true,
-});
+const emit = defineEmits<{
+	submit: [response: any];
+}>();
 
 const form: FormController<FormModel> = createForm({
 	// modelClass: Game,
@@ -92,8 +87,8 @@ const form: FormController<FormModel> = createForm({
 	onInit() {
 		form.formModel.country = 'us';
 		form.formModel.selectedCard = 0;
-		if (cards.value && cards.value.length) {
-			form.formModel.selectedCard = cards.value[0].id;
+		if (cards && cards.length) {
+			form.formModel.selectedCard = cards[0].id;
 		}
 
 		form.formModel.save_card = true;
@@ -132,20 +127,23 @@ const form: FormController<FormModel> = createForm({
 				address_zip: form.formModel.postcode,
 			};
 
-			const response = await new Promise<StripeCardTokenResponse>((resolve, reject) => {
-				window.Stripe.card.createToken(formData, (_status, stripeResponse) => {
-					if (stripeResponse.error) {
-						stripeError.value = stripeResponse.error.message;
-						reject(stripeResponse);
-					} else {
-						resolve(stripeResponse);
+			const response = await new Promise<any>((resolve, reject) => {
+				(window as any).Stripe.card.createToken(
+					formData,
+					(_status: any, stripeResponse: any) => {
+						if (stripeResponse.error) {
+							stripeError.value = stripeResponse.error.message;
+							reject(stripeResponse);
+						} else {
+							resolve(stripeResponse);
+						}
 					}
-				});
+				);
 			});
 			const data = {
 				save_card: false,
 				token: response.id,
-				amount: order.value.amount / 100,
+				amount: order.amount / 100,
 
 				fullname: form.formModel.fullname,
 				country: form.formModel.country,
@@ -158,11 +156,11 @@ const form: FormController<FormModel> = createForm({
 				data.save_card = form.formModel.save_card;
 			}
 
-			return Api.sendRequest('/web/checkout/charge/' + order.value.hash, data);
+			return Api.sendRequest('/web/checkout/charge/' + order.hash, data);
 		} else {
 			// Existing/saved card
 			const data = { payment_source: form.formModel.selectedCard };
-			return Api.sendRequest('/web/checkout/charge/' + order.value.hash, data);
+			return Api.sendRequest('/web/checkout/charge/' + order.hash, data);
 		}
 	},
 	onSubmitSuccess(response) {
@@ -201,7 +199,7 @@ function selectCard(card?: any) {
 async function _getTax() {
 	let address: any = {};
 	if (form.formModel.selectedCard !== 0) {
-		const card: any = cards.value.find(i => i.id === form.formModel.selectedCard);
+		const card: any = cards.find((i: any) => i.id === form.formModel.selectedCard);
 		if (!card) {
 			return;
 		}
@@ -216,7 +214,7 @@ async function _getTax() {
 	}
 
 	const data = {
-		amount: order.value.amount,
+		amount: order.amount,
 		country: address.country,
 		region: address.region,
 	};

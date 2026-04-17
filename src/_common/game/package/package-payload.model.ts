@@ -1,9 +1,9 @@
-import { SellableModel } from '../../sellable/sellable.model';
-import { GameBuildModel } from '../build/build.model';
-import { GameBuildLaunchOptionModel } from '../build/launch-option/launch-option.model';
-import { GameExternalPackageModel } from '../external-package/external-package.model';
-import { GameReleaseModel } from '../release/release.model';
-import { GamePackageModel } from './package.model';
+import { GameBuildModel } from '~common/game/build/build.model';
+import { GameBuildLaunchOptionModel } from '~common/game/build/launch-option/launch-option.model';
+import { GameExternalPackageModel } from '~common/game/external-package/external-package.model';
+import { GamePackageModel } from '~common/game/package/package.model';
+import { GameReleaseModel } from '~common/game/release/release.model';
+import { SellableModel } from '~common/sellable/sellable.model';
 
 export class GamePackagePayloadModel {
 	packages: GamePackageModel[];

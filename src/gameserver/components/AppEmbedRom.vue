@@ -1,15 +1,15 @@
 <script lang="ts" setup>
 import { onMounted } from 'vue';
-import { GameBuildEmulator } from '../../_common/game/build/build.model';
-import { loadScript } from '../../utils/utils';
-import { useGameserverStore } from '../store/index';
+
+import { GameBuildEmulator } from '~common/game/build/build.model';
+import { useGameserverStore } from '~gameserver/store/index';
+import { loadScript } from '~utils/utils';
 
 declare const RetroJolt: any;
 
 const RetroJoltBaseUrl = 'https://gamejolt.net/retrojolt/1';
 
 const { url, build } = useGameserverStore();
-let emulator: any;
 
 onMounted(async () => {
 	await loadScript(`${RetroJoltBaseUrl}/retrojolt.js`);
@@ -55,7 +55,7 @@ onMounted(async () => {
 });
 
 function _gb() {
-	emulator = new RetroJolt({
+	new RetroJolt({
 		loadingImg: `${RetroJoltBaseUrl}/loading.gif`,
 		scale: 4,
 		js: `${RetroJoltBaseUrl}/drivers/mamegb.js`,
@@ -72,7 +72,7 @@ function _gb() {
 }
 
 function _gbc() {
-	emulator = new RetroJolt({
+	new RetroJolt({
 		loadingImg: `${RetroJoltBaseUrl}/loading.gif`,
 		scale: 4,
 		js: `${RetroJoltBaseUrl}/drivers/mamegbc.js`,
@@ -89,7 +89,7 @@ function _gbc() {
 }
 
 function _gba() {
-	emulator = new RetroJolt({
+	new RetroJolt({
 		loadingImg: `${RetroJoltBaseUrl}/loading.gif`,
 		scale: 3,
 		js: `${RetroJoltBaseUrl}/drivers/mamegba.js`,
@@ -106,7 +106,7 @@ function _gba() {
 }
 
 function _nes() {
-	emulator = new RetroJolt({
+	new RetroJolt({
 		loadingImg: `${RetroJoltBaseUrl}/loading.gif`,
 		scale: 2,
 		js: `${RetroJoltBaseUrl}/drivers/mamenes.js`,
@@ -122,7 +122,7 @@ function _nes() {
 }
 
 function _vboy() {
-	emulator = new RetroJolt({
+	new RetroJolt({
 		loadingImg: `${RetroJoltBaseUrl}/loading.gif`,
 		js: `${RetroJoltBaseUrl}/drivers/mamevirtualboy.js`,
 		driver: 'vboy',
@@ -137,7 +137,7 @@ function _vboy() {
 }
 
 function _genesis() {
-	emulator = new RetroJolt({
+	new RetroJolt({
 		loadingImg: `${RetroJoltBaseUrl}/loading.gif`,
 		scale: 2,
 		js: `${RetroJoltBaseUrl}/drivers/mamegenesis.js`,
@@ -153,7 +153,7 @@ function _genesis() {
 }
 
 function _snes() {
-	emulator = new RetroJolt({
+	new RetroJolt({
 		loadingImg: `${RetroJoltBaseUrl}/loading.gif`,
 		scale: 2,
 		js: `${RetroJoltBaseUrl}/drivers/mamesnes.js`,
@@ -170,7 +170,7 @@ function _snes() {
 }
 
 function _c64() {
-	emulator = new RetroJolt({
+	new RetroJolt({
 		loadingImg: `${RetroJoltBaseUrl}/loading.gif`,
 		scale: 2,
 		js: `${RetroJoltBaseUrl}/drivers/mamec64.js`,
@@ -188,7 +188,7 @@ function _c64() {
 }
 
 function _zx() {
-	emulator = new RetroJolt({
+	new RetroJolt({
 		loadingImg: `${RetroJoltBaseUrl}/loading.gif`,
 		scale: 2,
 		js: `${RetroJoltBaseUrl}/drivers/mamespectrum.js`,
@@ -205,7 +205,7 @@ function _zx() {
 }
 
 function _atari2600() {
-	emulator = new RetroJolt({
+	new RetroJolt({
 		loadingImg: `${RetroJoltBaseUrl}/loading.gif`,
 		scale: 2,
 		js: `${RetroJoltBaseUrl}/drivers/mamea2600.js`,
@@ -233,7 +233,7 @@ function _cpc() {
 
 	const gameName = pieces.join('.');
 
-	emulator = new RetroJolt({
+	new RetroJolt({
 		loadingImg: `${RetroJoltBaseUrl}/loading.gif`,
 		scale: 2,
 		js: `${RetroJoltBaseUrl}/drivers/mameamstrad.js`,
@@ -248,7 +248,7 @@ function _cpc() {
 }
 
 function _msx() {
-	emulator = new RetroJolt({
+	new RetroJolt({
 		loadingImg: `${RetroJoltBaseUrl}/loading.gif`,
 		scale: 2,
 		js: `${RetroJoltBaseUrl}/drivers/mamemsx.js`,

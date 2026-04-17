@@ -1,22 +1,17 @@
 <script lang="ts" setup>
-import { computed, reactive, toRefs } from 'vue';
-import { arrayChunk } from '../../utils/array';
-import { formatDate } from '../filters/date';
-import AppJolticon from '../jolticon/AppJolticon.vue';
-import { DatepickerDate, DatepickerFormatMonthTitle, useDatepicker } from './AppDatepicker.vue';
+import { computed, reactive } from 'vue';
 
-const props = defineProps({
-	modelValue: {
-		type: Date,
-		required: true,
-	},
-});
+import {
+	DatepickerDate,
+	DatepickerFormatMonthTitle,
+	useDatepicker,
+} from '~common/datepicker/AppDatepicker.vue';
+import { formatDate } from '~common/filters/date';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { arrayChunk } from '~utils/array';
 
-const emit = defineEmits({
-	'update:modelValue': (_modelValue: Date) => true,
-});
+const modelValue = defineModel<Date>({ required: true });
 
-const { modelValue } = toRefs(props);
 const { createDate, toggleMode } = useDatepicker();
 
 const title = computed(() => formatDate(modelValue.value, DatepickerFormatMonthTitle));
@@ -35,11 +30,11 @@ const rows = computed(() => {
 function move(direction: number) {
 	const newValue = new Date(modelValue.value);
 	newValue.setFullYear(newValue.getFullYear() + direction);
-	emit('update:modelValue', newValue);
+	modelValue.value = newValue;
 }
 
 function select(date: Date) {
-	emit('update:modelValue', date);
+	modelValue.value = date;
 	toggleMode();
 }
 </script>

@@ -1,15 +1,14 @@
 <script lang="ts" setup>
-import { DeepReadonly, PropType } from 'vue';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import AppUserCard from '../../../../../_common/user/card/AppUserCard.vue';
-import { ReportComponent } from '../../../../components/site-analytics/site-analytics-service';
+import { DeepReadonly } from 'vue';
 
-defineProps({
-	reportData: {
-		type: Object as PropType<DeepReadonly<ReportComponent>>,
-		required: true,
-	},
-});
+import { ReportComponent } from '~app/components/site-analytics/site-analytics-service';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import AppUserCard from '~common/user/card/AppUserCard.vue';
+
+type Props = {
+	reportData: DeepReadonly<ReportComponent>;
+};
+defineProps<Props>();
 </script>
 
 <template>

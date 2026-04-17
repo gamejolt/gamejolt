@@ -1,49 +1,36 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
-import AppDatetimePicker from '../../datetime-picker/AppDatetimePicker.vue';
-import {
-	createFormControl,
-	defineFormControlEmits,
-	defineFormControlProps,
-} from '../AppFormControl.vue';
-import { validateMaxDate, validateMinDate } from '../validators';
 
-const props = defineProps({
-	...defineFormControlProps(),
-	timezoneOffset: {
-		type: Number,
-		required: true,
-	},
-	minDate: {
-		type: Number,
-		default: undefined,
-	},
-	maxDate: {
-		type: Number,
-		default: undefined,
-	},
-});
+import AppDatetimePicker from '~common/datetime-picker/AppDatetimePicker.vue';
+import { createFormControl, FormControlEmits } from '~common/form-vue/AppFormControl.vue';
+import { FormValidator, validateMaxDate, validateMinDate } from '~common/form-vue/validators';
 
-const emit = defineEmits({
-	...defineFormControlEmits(),
-});
+type Props = {
+	disabled?: boolean;
+	validators?: FormValidator[];
+	timezoneOffset: number;
+	minDate?: number;
+	maxDate?: number;
+};
+const { validators = [], timezoneOffset, minDate, maxDate } = defineProps<Props>();
+
+const emit = defineEmits<FormControlEmits>();
 
 const { id, controlVal, applyValue } = createFormControl({
 	initialValue: Date.now(),
 	validators: computed(() => {
-		const validators = [...props.validators];
+		const _validators = [...validators];
 
-		if (props.minDate) {
-			validators.push(validateMinDate(props.minDate));
+		if (minDate) {
+			_validators.push(validateMinDate(minDate));
 		}
 
-		if (props.maxDate) {
-			validators.push(validateMaxDate(props.maxDate));
+		if (maxDate) {
+			_validators.push(validateMaxDate(maxDate));
 		}
 
-		return validators;
+		return _validators;
 	}),
-	// eslint-disable-next-line vue/require-explicit-emits
 	onChange: val => emit('changed', val),
 });
 

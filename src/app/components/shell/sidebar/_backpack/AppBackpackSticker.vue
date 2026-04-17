@@ -1,19 +1,13 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-import AppStickerLayerDrawerItem from '../../../../../_common/sticker/layer/AppStickerLayerDrawerItem.vue';
-import { StickerModel } from '../../../../../_common/sticker/sticker.model';
-import AppStickerCollectibleWrapper from '../../../sticker/AppStickerCollectibleWrapper.vue';
+import AppStickerCollectibleWrapper from '~app/components/sticker/AppStickerCollectibleWrapper.vue';
+import AppStickerLayerDrawerItem from '~common/sticker/layer/AppStickerLayerDrawerItem.vue';
+import { StickerModel } from '~common/sticker/sticker.model';
 
-defineProps({
-	sticker: {
-		type: Object as PropType<StickerModel>,
-		required: true,
-	},
-	count: {
-		type: Number,
-		default: undefined,
-	},
-});
+type Props = {
+	sticker: StickerModel;
+	count?: number;
+};
+const { sticker, count } = defineProps<Props>();
 </script>
 
 <template>

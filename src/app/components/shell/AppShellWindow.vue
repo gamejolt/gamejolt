@@ -1,26 +1,16 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType, computed } from 'vue';
-import { Screen } from '../../../_common/screen/screen-service';
-import { buildCSSPixelValue, kBorderRadiusLg } from '../../../_styles/variables';
+import { computed, CSSProperties } from 'vue';
 
-defineProps({
-	/**
-	 * Function that causes the window to close.
-	 */
-	closeCallback: {
-		type: Function as PropType<() => void>,
-		required: true,
-	},
-	/**
-	 * The breakpoint at which the window should resize to avoid covering the
-	 * cbar + sidebar.
-	 */
-	avoidSidebar: {
-		type: String as PropType<'sm-up' | 'md-up'>,
-		required: true,
-		validator: val => typeof val === 'string' && ['sm-up', 'md-up'].includes(val),
-	},
-});
+import { Screen } from '~common/screen/screen-service';
+import { buildCSSPixelValue, kBorderRadiusLg } from '~styles/variables';
+
+type Props = {
+	/** Function that causes the window to close. */
+	closeCallback: () => void;
+	/** The breakpoint at which the window should resize to avoid covering the cbar + sidebar. */
+	avoidSidebar: 'sm-up' | 'md-up';
+};
+const { closeCallback, avoidSidebar } = defineProps<Props>();
 
 const zeroPx = buildCSSPixelValue(0);
 const windowBorderRadius = computed(() => {

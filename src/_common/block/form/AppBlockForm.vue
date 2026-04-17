@@ -1,35 +1,30 @@
 <script lang="ts" setup>
-import { PropType, toRefs } from 'vue';
-import { Api } from '../../api/api.service';
-import AppForm, { FormController, createForm } from '../../form-vue/AppForm.vue';
-import AppFormButton from '../../form-vue/AppFormButton.vue';
-import AppFormGroup from '../../form-vue/AppFormGroup.vue';
-import AppFormControlToggle from '../../form-vue/controls/AppFormControlToggle.vue';
-import AppLinkHelp from '../../link/AppLinkHelp.vue';
-import { $gettext } from '../../translate/translate.service';
-import { UserModel } from '../../user/user.model';
+import { Api } from '~common/api/api.service';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlToggle from '~common/form-vue/controls/AppFormControlToggle.vue';
+import AppLinkHelp from '~common/link/AppLinkHelp.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { UserModel } from '~common/user/user.model';
 
-interface BlockFormModel {
+type FormModel = {
 	removeComments: boolean;
-}
+};
 
-const props = defineProps({
-	user: {
-		type: Object as PropType<UserModel>,
-		required: true,
-	},
-});
+type Props = {
+	user: UserModel;
+};
+const { user } = defineProps<Props>();
 
-const emit = defineEmits({
-	submit: () => true,
-});
+const emit = defineEmits<{
+	submit: [];
+}>();
 
-const { user } = toRefs(props);
-
-const form: FormController<BlockFormModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	onSubmit() {
 		const data = {
-			username: user.value.username,
+			username: user.username,
 			removeComments: !!form.formModel.removeComments,
 		};
 

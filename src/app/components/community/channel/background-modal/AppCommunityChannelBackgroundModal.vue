@@ -1,23 +1,21 @@
 <script lang="ts" setup>
-import { PropType, ref, toRefs } from 'vue';
-import AppButton from '../../../../../_common/button/AppButton.vue';
-import { CommunityChannelModel } from '../../../../../_common/community/channel/channel.model';
-import AppModal from '../../../../../_common/modal/AppModal.vue';
-import { useModal } from '../../../../../_common/modal/modal.service';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import FormCommunityChannelBackground from '../../../forms/community/channel/background/FormCommunityChannelBackground.vue';
+import { ref } from 'vue';
 
-const props = defineProps({
-	channel: {
-		type: Object as PropType<CommunityChannelModel>,
-		required: true,
-	},
-});
+import FormCommunityChannelBackground from '~app/components/forms/community/channel/background/FormCommunityChannelBackground.vue';
+import AppButton from '~common/button/AppButton.vue';
+import { CommunityChannelModel } from '~common/community/channel/channel.model';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import { $gettext } from '~common/translate/translate.service';
 
-const { channel } = toRefs(props);
+type Props = {
+	channel: CommunityChannelModel;
+};
+const { channel } = defineProps<Props>();
+
 const modal = useModal()!;
 
-const previousBackgroundId = ref(channel.value.background?.id || null);
+const previousBackgroundId = ref(channel.background?.id || null);
 
 function onSubmit(channel: CommunityChannelModel) {
 	const newBackgroundId = (channel.background && channel.background.id) || null;

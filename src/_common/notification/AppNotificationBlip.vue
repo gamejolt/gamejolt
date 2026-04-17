@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { kThemeGjOverlayNotice } from '../theme/variables';
+import { kThemeGjOverlayNotice } from '~common/theme/variables';
 </script>
 
 <template>

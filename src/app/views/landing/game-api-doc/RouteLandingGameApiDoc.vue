@@ -1,12 +1,12 @@
 <script lang="ts">
 import { computed } from 'vue';
 import { RouterView, useRoute } from 'vue-router';
-import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
-import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
 
-import nav from '../../../../lib/doc-game-api/v1.x/nav.json';
-import { imageJolt } from '../../../img/images';
+import { imageJolt } from '~app/img/images';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import AppThemeSvg from '~common/theme/svg/AppThemeSvg.vue';
+import { $gettext } from '~common/translate/translate.service';
+import nav from '~lib/doc-game-api/v1.x/nav.json';
 
 export default {
 	...defineAppRouteOptions({
@@ -17,6 +17,8 @@ export default {
 
 <script lang="ts" setup>
 const route = useRoute();
+
+console.log('nav', nav);
 
 function inPath(url: string, exact = false) {
 	if (exact) {

@@ -1,6 +1,6 @@
-import { MediaItemModel } from '../media-item/media-item-model';
-import { Model } from '../model/model.service';
-import { QuestRewardTypes } from './quest-objective-reward-model';
+import { MediaItemModel } from '~common/media-item/media-item-model';
+import { Model } from '~common/model/model.service';
+import { QuestRewardTypes } from '~common/quest/quest-objective-reward-model';
 
 /**
  * A reward for completing a quest objective that has not been achieved yet.

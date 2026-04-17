@@ -1,17 +1,9 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
+import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
-import { UserFollowLocation } from '../../../_common/analytics/analytics.service';
-import { FiresidePostModel } from '../../../_common/fireside/post/post-model';
-import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
-import { Screen } from '../../../_common/screen/screen-service';
-import AppTimeAgo from '../../../_common/time/AppTimeAgo.vue';
-import AppTranslate from '../../../_common/translate/AppTranslate.vue';
-import AppUserCardHover from '../../../_common/user/card/AppUserCardHover.vue';
-import AppUserFollowButton from '../../../_common/user/follow/AppUserFollowButton.vue';
-import AppUserAvatarBubble from '../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
-import AppActivityFeedPostTime from '../activity/feed/post/AppActivityFeedPostTime.vue';
-import { ActivityFeedView } from '../activity/feed/view';
+
+import AppActivityFeedPostTime from '~app/components/activity/feed/post/AppActivityFeedPostTime.vue';
+import { ActivityFeedView } from '~app/components/activity/feed/view';
 import {
 	PostHeaderAvatarStyles,
 	PostHeaderBylineGameStyles,
@@ -22,45 +14,39 @@ import {
 	PostHeaderMetaStyles,
 	PostHeaderStyles,
 	PostHeaderTimeStyles,
-} from './post-styles';
+} from '~app/components/post/post-styles';
+import { UserFollowLocation } from '~common/analytics/analytics.service';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { Screen } from '~common/screen/screen-service';
+import AppTimeAgo from '~common/time/AppTimeAgo.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import AppUserCardHover from '~common/user/card/AppUserCardHover.vue';
+import AppUserFollowButton from '~common/user/follow/AppUserFollowButton.vue';
+import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
 
-const props = defineProps({
-	post: {
-		type: Object as PropType<FiresidePostModel>,
-		required: true,
-	},
-	followLocation: {
-		type: String as PropType<UserFollowLocation>,
-		required: true,
-	},
-	feed: {
-		type: Object as PropType<ActivityFeedView>,
-		default: undefined,
-	},
-	showPinned: {
-		type: Boolean,
-	},
-	dateLink: {
-		type: String as PropType<string>,
-		default: undefined,
-	},
-});
+type Props = {
+	post: FiresidePostModel;
+	followLocation: UserFollowLocation;
+	feed?: ActivityFeedView;
+	showPinned?: boolean;
+	dateLink?: string;
+};
+const { post, followLocation, feed, showPinned, dateLink } = defineProps<Props>();
 
-const { post, feed, showPinned, dateLink } = toRefs(props);
+const user = computed(() => post.displayUser);
+const overlay = computed(() => !!post.background);
 
-const user = computed(() => post.value.displayUser);
-const overlay = computed(() => !!post.value.background);
-
-const game = computed(() => post.value.game);
+const game = computed(() => post.game);
 const gameUrl = computed(() => game.value?.getUrl());
 
 const shouldShowFollow = computed(() => {
 	// Don't show follow for game posts. Only for user posts.
-	if (!feed?.value?.shouldShowFollow || post.value.game) {
+	if (!feed?.shouldShowFollow || post.game) {
 		return false;
 	}
 
-	if (post.value.user.blocked_you) {
+	if (post.user.blocked_you) {
 		return false;
 	}
 

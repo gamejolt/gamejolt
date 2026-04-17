@@ -1,35 +1,29 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType, ref, toRaw, toRefs } from 'vue';
-import {
-	styleAbsoluteFill,
-	styleFlexCenter,
-	styleMaxWidthForOptions,
-} from '../../../../_styles/mixins';
-import { Api } from '../../../api/api.service';
-import AppAspectRatio from '../../../aspect-ratio/AppAspectRatio.vue';
-import AppBackground from '../../../background/AppBackground.vue';
-import { BackgroundModel } from '../../../background/background.model';
-import AppButton from '../../../button/AppButton.vue';
-import AppExpand from '../../../expand/AppExpand.vue';
-import AppIllustration from '../../../illustration/AppIllustration.vue';
-import { illPointyThing } from '../../../illustration/illustrations';
-import AppMediaItemBackdrop from '../../../media-item/backdrop/AppMediaItemBackdrop.vue';
-import AppModal from '../../../modal/AppModal.vue';
-import { useModal } from '../../../modal/modal.service';
-import { Screen } from '../../../screen/screen-service';
-import AppSpacer from '../../../spacer/AppSpacer.vue';
-import { useCommonStore } from '../../../store/common-store';
-import AppUserAvatarBubble from '../../../user/user-avatar/AppUserAvatarBubble.vue';
-import { UserAvatarFrameModel } from '../../../user/user-avatar/frame/frame.model';
+import { CSSProperties, ref, toRaw } from 'vue';
 
-const props = defineProps({
-	product: {
-		type: Object as PropType<UserAvatarFrameModel | BackgroundModel>,
-		required: true,
-	},
-});
+import { Api } from '~common/api/api.service';
+import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
+import AppBackground from '~common/background/AppBackground.vue';
+import { BackgroundModel } from '~common/background/background.model';
+import AppButton from '~common/button/AppButton.vue';
+import AppExpand from '~common/expand/AppExpand.vue';
+import AppIllustration from '~common/illustration/AppIllustration.vue';
+import { illPointyThing } from '~common/illustration/illustrations';
+import AppMediaItemBackdrop from '~common/media-item/backdrop/AppMediaItemBackdrop.vue';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import { Screen } from '~common/screen/screen-service';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import { useCommonStore } from '~common/store/common-store';
+import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
+import { UserAvatarFrameModel } from '~common/user/user-avatar/frame/frame.model';
+import { styleAbsoluteFill, styleFlexCenter, styleMaxWidthForOptions } from '~styles/mixins';
 
-const { product } = toRefs(props);
+type ProductModel = UserAvatarFrameModel | BackgroundModel;
+type Props = {
+	product: ProductModel;
+};
+const { product } = defineProps<Props>();
 
 const { user: myUser } = useCommonStore();
 const modal = useModal()!;
@@ -37,14 +31,14 @@ const modal = useModal()!;
 const equipFrameState = ref<'done' | 'processing' | 'standby'>('standby');
 
 async function equipAvatarFrame() {
-	if (equipFrameState.value !== 'standby' || !isUserAvatarFrame(product.value)) {
+	if (equipFrameState.value !== 'standby' || !isUserAvatarFrame(product)) {
 		return;
 	}
 	equipFrameState.value = 'processing';
 	try {
 		const response = await Api.sendRequest(
 			`/web/dash/profile/save`,
-			{ avatar_frame: product.value.avatar_frame.id },
+			{ avatar_frame: product.avatar_frame.id },
 			{ detach: true }
 		);
 
@@ -64,11 +58,11 @@ async function equipAvatarFrame() {
 	}
 }
 
-function isUserAvatarFrame(item: typeof props.product): item is UserAvatarFrameModel {
+function isUserAvatarFrame(item: ProductModel): item is UserAvatarFrameModel {
 	return toRaw(item) instanceof UserAvatarFrameModel;
 }
 
-function isBackground(item: typeof props.product): item is BackgroundModel {
+function isBackground(item: ProductModel): item is BackgroundModel {
 	return toRaw(item) instanceof BackgroundModel;
 }
 

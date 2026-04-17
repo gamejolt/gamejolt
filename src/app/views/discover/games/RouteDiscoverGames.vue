@@ -1,8 +1,9 @@
 <script lang="ts">
 import { computed } from 'vue';
 import { RouterView, useRoute } from 'vue-router';
-import { setAppPromotionCohort, useAppPromotionStore } from '../../../../_common/mobile-app/store';
-import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
+
+import { setAppPromotionCohort, useAppPromotionStore } from '~common/mobile-app/store';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 
 export default {
 	...defineAppRouteOptions({

@@ -1,7 +1,7 @@
-import { getDeviceArch, getDeviceOS, isDynamicGoogleBot } from '../device/device.service';
-import { Environment } from '../environment/environment.service';
-import { PartnerReferral } from '../partner-referral/partner-referral-service';
-import { Referrer } from '../referrer/referrer.service';
+import { getDeviceArch, getDeviceOS, isDynamicGoogleBot } from '~common/device/device.service';
+import { Environment } from '~common/environment/environment.service';
+import { PartnerReferral } from '~common/partner-referral/partner-referral-service';
+import { Referrer } from '~common/referrer/referrer.service';
 
 export interface BeaconOptions {
 	sourceResource?: string;
@@ -40,7 +40,7 @@ class HistoryTickService {
 			return;
 		}
 
-		return new Promise(resolve => {
+		return new Promise<void>(resolve => {
 			const queryParams: string[] = [];
 
 			// Cache busting.
@@ -94,8 +94,8 @@ class HistoryTickService {
 
 			// Always resolve.
 			img.onload = img.onerror = () => {
-				delete img.onload;
-				delete img.onerror;
+				delete (img as any).onload;
+				delete (img as any).onerror;
 				resolve();
 			};
 

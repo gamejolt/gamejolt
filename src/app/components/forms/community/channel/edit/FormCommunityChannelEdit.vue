@@ -1,63 +1,55 @@
 <script lang="ts" setup>
-import { PropType, toRef, toRefs } from 'vue';
+import { toRef } from 'vue';
+
+import { showCommunityChannelBackgroundModal } from '~app/components/community/channel/background-modal/background-modal.service';
+import AppCommunityChannelCardEdit from '~app/components/community/channel/card/edit/AppCommunityChannelCardEdit.vue';
+import AppFormCommunityChannelPermissions from '~app/components/forms/community/channel/_permissions/FormCommunityChannelPermissions.vue';
 import {
 	$saveCommunityChannel,
 	CommunityChannelModel,
-} from '../../../../../../_common/community/channel/channel.model';
-import { CommunityModel } from '../../../../../../_common/community/community.model';
-import AppForm, {
-	FormController,
-	createForm,
-	defineFormProps,
-} from '../../../../../../_common/form-vue/AppForm.vue';
-import AppFormButton from '../../../../../../_common/form-vue/AppFormButton.vue';
-import AppFormControl from '../../../../../../_common/form-vue/AppFormControl.vue';
-import AppFormControlError from '../../../../../../_common/form-vue/AppFormControlError.vue';
-import AppFormControlErrors from '../../../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../../../../../../_common/form-vue/AppFormGroup.vue';
+} from '~common/community/channel/channel.model';
+import { CommunityModel } from '~common/community/community.model';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormControlError from '~common/form-vue/AppFormControlError.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
 import {
 	validateAvailability,
 	validateMaxLength,
 	validateMinLength,
 	validatePattern,
-} from '../../../../../../_common/form-vue/validators';
-import { showCommunityChannelBackgroundModal } from '../../../../community/channel/background-modal/background-modal.service';
-import AppCommunityChannelCardEdit from '../../../../community/channel/card/edit/AppCommunityChannelCardEdit.vue';
-import AppFormCommunityChannelPermissions from '../_permissions/permissions.vue';
+} from '~common/form-vue/validators';
 
-interface FormModel extends CommunityChannelModel {
+type FormModel = CommunityChannelModel & {
 	permission_posting?: string;
-}
+};
 
-const props = defineProps({
-	community: {
-		type: Object as PropType<CommunityModel>,
-		required: true,
-	},
-	...defineFormProps<CommunityChannelModel>(true),
-});
+type Props = {
+	community: CommunityModel;
+	model: FormModel;
+};
+const { community, model } = defineProps<Props>();
 
-const emit = defineEmits({
-	backgroundChange: (_model: CommunityChannelModel) => true,
-	submit: (_model: CommunityChannelModel) => true,
-});
+const emit = defineEmits<{
+	backgroundChange: [model: CommunityChannelModel];
+	submit: [model: CommunityChannelModel];
+}>();
 
-const { community, model } = toRefs(props);
+const modelRef = toRef(() => model);
 
 const titleAvailabilityUrl = toRef(
-	() =>
-		`/web/dash/communities/channels/check-field-availability/${community.value.id}/${
-			model.value!.id
-		}`
+	() => `/web/dash/communities/channels/check-field-availability/${community.id}/${model!.id}`
 );
 const loadUrl = toRef(
-	() => `/web/dash/communities/channels/save/${community.value.id}/${form.formModel.id}`
+	() => `/web/dash/communities/channels/save/${community.id}/${form.formModel.id}`
 );
 
-const shouldShowPermissions = toRef(() => model.value && !model.value.is_archived);
+const shouldShowPermissions = toRef(() => model && !model.is_archived);
 
-const form: FormController<FormModel> = createForm({
-	model,
+const form: FormController<FormModel> = createForm<FormModel>({
+	model: modelRef,
 	modelClass: CommunityChannelModel,
 	loadUrl,
 	modelSaveHandler: $saveCommunityChannel,

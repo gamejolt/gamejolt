@@ -1,68 +1,47 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
-import { vAppAuthRequired } from '../../../../_common/auth/auth-required-directive';
-import { CommunityChannelModel } from '../../../../_common/community/channel/channel.model';
-import { CommunityModel } from '../../../../_common/community/community.model';
-import {
-	$createFiresidePost,
-	FiresidePostModel,
-} from '../../../../_common/fireside/post/post-model';
-import { GameModel } from '../../../../_common/game/game.model';
-import { RealmModel } from '../../../../_common/realm/realm-model';
-import { useCommonStore } from '../../../../_common/store/common-store';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
-import AppUserAvatarBubble from '../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
-import { showPostEditModal } from '../edit-modal/edit-modal-service';
+import { computed } from 'vue';
 
-const props = defineProps({
-	game: {
-		type: Object as PropType<GameModel>,
-		default: undefined,
-	},
-	community: {
-		type: Object as PropType<CommunityModel>,
-		default: undefined,
-	},
-	channel: {
-		type: Object as PropType<CommunityChannelModel>,
-		default: undefined,
-	},
-	realm: {
-		type: Object as PropType<RealmModel>,
-		default: undefined,
-	},
-	placeholder: {
-		type: String,
-		default: '',
-	},
-	previewOnly: {
-		type: Boolean,
-	},
-});
+import { showPostEditModal } from '~app/components/post/edit-modal/edit-modal-service';
+import { vAppAuthRequired } from '~common/auth/auth-required-directive';
+import { CommunityChannelModel } from '~common/community/channel/channel.model';
+import { CommunityModel } from '~common/community/community.model';
+import { $createFiresidePost, FiresidePostModel } from '~common/fireside/post/post-model';
+import { GameModel } from '~common/game/game.model';
+import { RealmModel } from '~common/realm/realm-model';
+import { useCommonStore } from '~common/store/common-store';
+import { $gettext } from '~common/translate/translate.service';
+import AppUserCardHover from '~common/user/card/AppUserCardHover.vue';
+import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
 
-const emit = defineEmits({
-	add: (_post: FiresidePostModel) => true,
-});
+type Props = {
+	game?: GameModel;
+	community?: CommunityModel;
+	channel?: CommunityChannelModel;
+	realm?: RealmModel;
+	placeholder?: string;
+	previewOnly?: boolean;
+};
+const { game, community, channel, realm, placeholder = '', previewOnly } = defineProps<Props>();
 
-const { placeholder, previewOnly, game, community, channel, realm } = toRefs(props);
+const emit = defineEmits<{
+	add: [post: FiresidePostModel];
+}>();
+
 const { user } = useCommonStore();
 
-const placeholderMessage = computed(
-	() => placeholder.value || $gettext(`So, what's on your mind?`)
-);
+const placeholderMessage = computed(() => placeholder || $gettext(`So, what's on your mind?`));
 
 async function open() {
-	if (previewOnly.value) {
+	if (previewOnly) {
 		return;
 	}
 
-	const postProvider = $createFiresidePost(game?.value ? game.value.id : 0);
+	const postProvider = $createFiresidePost(game ? game.id : 0);
 
 	const post = await showPostEditModal(postProvider, {
-		community: community?.value,
-		channel: channel?.value,
-		realm: realm?.value,
+		community,
+		channel,
+		realm,
 	});
 
 	if (!post) {
@@ -89,4 +68,4 @@ async function open() {
 	</div>
 </template>
 
-<style lang="stylus" src="./add-button.styl" scoped></style>
+<style lang="stylus" src="~app/components/post/add-button/add-button.styl" scoped></style>

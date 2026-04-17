@@ -1,6 +1,10 @@
 export function objectEquals(a: object, b: object) {
-	const aProps = Object.getOwnPropertyNames(a).filter(i => a.propertyIsEnumerable(i));
-	const bProps = Object.getOwnPropertyNames(b).filter(i => b.propertyIsEnumerable(i));
+	const aProps = Object.getOwnPropertyNames(a).filter(i =>
+		Object.prototype.propertyIsEnumerable.call(a, i)
+	);
+	const bProps = Object.getOwnPropertyNames(b).filter(i =>
+		Object.prototype.propertyIsEnumerable.call(b, i)
+	);
 
 	if (aProps.length !== bProps.length) {
 		return false;

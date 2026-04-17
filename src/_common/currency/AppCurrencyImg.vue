@@ -1,40 +1,25 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType, computed, toRefs } from 'vue';
-import AppIllustration from '../illustration/AppIllustration.vue';
-import { Currency } from './currency-type';
+import { computed, CSSProperties } from 'vue';
 
-const props = defineProps({
-	currency: {
-		type: Object as PropType<Currency>,
-		required: true,
-	},
-	assetSize: {
-		type: String as PropType<'small' | 'large'>,
-		default: 'small',
-	},
-	maxWidth: {
-		type: [Number, String],
-		default: 20,
-		validator: value =>
-			(typeof value === 'number' && value >= 0) ||
-			(typeof value === 'string' && value.length > 0),
-	},
+import { Currency } from '~common/currency/currency-type';
+import AppIllustration from '~common/illustration/AppIllustration.vue';
+
+type Props = {
+	currency: Currency;
+	assetSize?: 'small' | 'large';
+	maxWidth?: number | string;
 	/**
 	 * Only affects currency assets that are IllustrationAssets.
 	 */
-	illStyles: {
-		type: Object as PropType<CSSProperties>,
-		default: undefined,
-	},
-});
-
-const { currency, assetSize, maxWidth } = toRefs(props);
+	illStyles?: CSSProperties;
+};
+const { currency, assetSize = 'small', maxWidth = 20, illStyles } = defineProps<Props>();
 
 const asset = computed(() => {
-	if (assetSize.value === 'small') {
-		return currency.value.smallAsset;
+	if (assetSize === 'small') {
+		return currency.smallAsset;
 	}
-	return currency.value.asset;
+	return currency.asset;
 });
 </script>
 

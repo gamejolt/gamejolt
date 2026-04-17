@@ -5,32 +5,36 @@ import {
 	nextTick,
 	onMounted,
 	onUnmounted,
-	PropType,
 	ref,
-	toRefs,
+	useTemplateRef,
 } from 'vue';
-import { arrayRemove } from '../../../../utils/array';
-import { sleep } from '../../../../utils/utils';
-import { Api } from '../../../api/api.service';
-import AppButton from '../../../button/AppButton.vue';
-import { markProductAsUnlocked } from '../../../collectible/collectible.model';
-import { showErrorGrowl } from '../../../growls/growls.service';
-import { ImgHelper } from '../../../img/helper/helper-service';
-import { illBackpackClosed, illBackpackOpen } from '../../../img/ill/illustrations';
-import AppLoading from '../../../loading/AppLoading.vue';
-import AppModal from '../../../modal/AppModal.vue';
-import { useModal } from '../../../modal/modal.service';
-import { storeModelList } from '../../../model/model-store.service';
-import { Screen } from '../../../screen/screen-service';
-import AppSpacer from '../../../spacer/AppSpacer.vue';
-import AppThemeSvg from '../../../theme/svg/AppThemeSvg.vue';
-import { $gettext } from '../../../translate/translate.service';
-import AppStickerImg from '../../AppStickerImg.vue';
-import { CreatorStickersMap, sortStickerStacks, useStickerStore } from '../../sticker-store';
-import { StickerModel, StickerStack } from '../../sticker.model';
-import AppStickerPack from '../AppStickerPack.vue';
-import { showStickerPackContentsModal } from '../contents-modal/modal.service';
-import { UserStickerPackModel } from '../user-pack.model';
+
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import { markProductAsUnlocked } from '~common/collectible/collectible.model';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import { ImgHelper } from '~common/img/helper/helper-service';
+import { illBackpackClosed, illBackpackOpen } from '~common/img/ill/illustrations';
+import AppLoading from '~common/loading/AppLoading.vue';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import { storeModelList } from '~common/model/model-store.service';
+import { Screen } from '~common/screen/screen-service';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import AppStickerImg from '~common/sticker/AppStickerImg.vue';
+import AppStickerPack from '~common/sticker/pack/AppStickerPack.vue';
+import { showStickerPackContentsModal } from '~common/sticker/pack/contents-modal/modal.service';
+import { UserStickerPackModel } from '~common/sticker/pack/user-pack.model';
+import { StickerModel, StickerStack } from '~common/sticker/sticker.model';
+import {
+	CreatorStickersMap,
+	sortStickerStacks,
+	useStickerStore,
+} from '~common/sticker/sticker-store';
+import AppThemeSvg from '~common/theme/svg/AppThemeSvg.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { arrayRemove } from '~utils/array';
+import { sleep } from '~utils/utils';
 
 const DurationStickerShow = 500;
 const DurationStickerStash = 750;
@@ -115,21 +119,15 @@ export const packOpenFallbackError = $gettext(
 <script lang="ts" setup>
 const modal = useModal()!;
 
-const props = defineProps({
-	pack: {
-		type: Object as PropType<UserStickerPackModel>,
-		required: true,
-	},
+type Props = {
+	pack: UserStickerPackModel;
 	/**
 	 * Set to `true` if we want to open the pack immediately and display
 	 * results, otherwise we'll ask them to confirm the pack opening.
 	 */
-	openImmediate: {
-		type: Boolean,
-	},
-});
-
-const { pack } = toRefs(props);
+	openImmediate?: boolean;
+};
+const { pack, openImmediate } = defineProps<Props>();
 
 const {
 	stickerPacks: myPacks,
@@ -139,9 +137,9 @@ const {
 	allStickers,
 } = useStickerStore();
 
-const root = ref<HTMLDivElement>();
-const packSlice = ref<HTMLDivElement>();
-const packTrash = ref<HTMLDivElement>();
+const root = useTemplateRef('root');
+const packSlice = useTemplateRef('packSlice');
+const packTrash = useTemplateRef('packTrash');
 
 const stage = ref<PackOpenStage>('confirm');
 const openedStickers = ref<StickerModel[]>([]);
@@ -175,7 +173,7 @@ async function afterMount() {
 	}
 	_isMounted = true;
 
-	if (props.openImmediate) {
+	if (openImmediate) {
 		setStage('pack-open');
 	}
 }
@@ -184,7 +182,7 @@ async function _openPack() {
 	let errorMessage: string | null = null;
 
 	try {
-		const packId = pack.value.id;
+		const packId = pack.id;
 		const payload = await Api.sendRequest(
 			`/web/stickers/open-pack/${packId}`,
 			{},

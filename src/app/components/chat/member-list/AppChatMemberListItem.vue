@@ -1,34 +1,25 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import { Screen } from '../../../../_common/screen/screen-service';
-import { kThemePrimary } from '../../../../_common/theme/variables';
-import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import AppUserAvatarBubble from '../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
-import { useGridStore } from '../../grid/grid-store';
-import AppChatListItem from '../_list/AppChatListItem.vue';
-import { isUserOnline } from '../client';
-import { ChatRoomModel } from '../room';
-import { ChatUser, getChatUserRoleData } from '../user';
-import AppChatUserOnlineStatus from '../user-online-status/AppChatUserOnlineStatus.vue';
-import AppChatUserPopover from '../user-popover/AppChatUserPopover.vue';
+import { computed } from 'vue';
 
-const props = defineProps({
-	user: {
-		type: Object as PropType<ChatUser>,
-		required: true,
-	},
-	room: {
-		type: Object as PropType<ChatRoomModel>,
-		required: true,
-	},
-	horizontalPadding: {
-		type: Number,
-		default: undefined,
-	},
-});
+import AppChatListItem from '~app/components/chat/_list/AppChatListItem.vue';
+import { isUserOnline } from '~app/components/chat/client';
+import { ChatRoomModel } from '~app/components/chat/room';
+import { ChatUser, getChatUserRoleData } from '~app/components/chat/user';
+import AppChatUserOnlineStatus from '~app/components/chat/user-online-status/AppChatUserOnlineStatus.vue';
+import AppChatUserPopover from '~app/components/chat/user-popover/AppChatUserPopover.vue';
+import { useGridStore } from '~app/components/grid/grid-store';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { Screen } from '~common/screen/screen-service';
+import { kThemePrimary } from '~common/theme/variables';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
 
-const { user, room } = toRefs(props);
+type Props = {
+	user: ChatUser;
+	room: ChatRoomModel;
+	horizontalPadding?: number;
+};
+const { user, room, horizontalPadding } = defineProps<Props>();
 const { chatUnsafe: chat } = useGridStore();
 
 const isOnline = computed(() => {
@@ -36,10 +27,10 @@ const isOnline = computed(() => {
 		return null;
 	}
 
-	return isUserOnline(chat.value, user.value.id);
+	return isUserOnline(chat.value, user.id);
 });
 
-const roleData = computed(() => getChatUserRoleData(room.value, user.value));
+const roleData = computed(() => getChatUserRoleData(room, user));
 </script>
 
 <template>

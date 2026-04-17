@@ -1,39 +1,31 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType, computed, ref, toRefs, watch, watchEffect } from 'vue';
-import { PageScrollSubscriptionTimeout, usePageScrollSubscription } from '../scroll/scroll.service';
-import { SettingParallaxBackgrounds } from '../settings/settings.service';
-import { BackgroundModel, getBackgroundCSSProperties } from './background.model';
+import { computed, CSSProperties, useTemplateRef, watch, watchEffect } from 'vue';
 
-const props = defineProps({
-	background: {
-		type: Object as PropType<BackgroundModel>,
-		required: true,
-	},
-	backgroundStyle: {
-		type: Object as PropType<CSSProperties>,
-		default: undefined,
-	},
-	scrollDirection: {
-		type: String,
-		default: undefined,
-	},
-	enablePageScroll: {
-		type: Boolean,
-	},
-});
+import { BackgroundModel, getBackgroundCSSProperties } from '~common/background/background.model';
+import {
+	PageScrollSubscriptionTimeout,
+	usePageScrollSubscription,
+} from '~common/scroll/scroll.service';
+import { SettingParallaxBackgrounds } from '~common/settings/settings.service';
 
-const { background, backgroundStyle, scrollDirection, enablePageScroll } = toRefs(props);
+type Props = {
+	background: BackgroundModel;
+	backgroundStyle?: CSSProperties;
+	scrollDirection?: string;
+	enablePageScroll?: boolean;
+};
+const { background, backgroundStyle, scrollDirection, enablePageScroll } = defineProps<Props>();
 
-const root = ref<HTMLElement>();
+const root = useTemplateRef('root');
 
-const shouldParallax = computed(() => enablePageScroll.value && SettingParallaxBackgrounds.get());
+const shouldParallax = computed(() => enablePageScroll && SettingParallaxBackgrounds.get());
 
 const baseStyles = computed(() => {
 	// We're casting this to CSSStyleDeclaration so that we can more easily
 	// apply to the style property.
 	return {
-		...getBackgroundCSSProperties(background.value),
-		...backgroundStyle?.value,
+		...getBackgroundCSSProperties(background),
+		...backgroundStyle,
 	} as CSSStyleDeclaration;
 });
 
@@ -57,7 +49,7 @@ function attachPageOffsetBackgroundStyles(top: number) {
 	if (!root.value) {
 		return;
 	}
-	if (!shouldParallax.value || scrollDirection?.value) {
+	if (!shouldParallax.value || scrollDirection) {
 		root.value.style.backgroundPosition = baseStyles.value.backgroundPosition;
 		root.value.style.transition = '';
 	} else {

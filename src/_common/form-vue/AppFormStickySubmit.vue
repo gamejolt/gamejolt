@@ -1,9 +1,10 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
-import AppEmoji from '../emoji/AppEmoji.vue';
-import AppScrollAffix from '../scroll/AppScrollAffix.vue';
-import { $gettext } from '../translate/translate.service';
-import { useForm } from './AppForm.vue';
+
+import AppEmoji from '~common/emoji/AppEmoji.vue';
+import { useForm } from '~common/form-vue/AppForm.vue';
+import AppScrollAffix from '~common/scroll/AppScrollAffix.vue';
+import { $gettext } from '~common/translate/translate.service';
 
 const form = useForm();
 

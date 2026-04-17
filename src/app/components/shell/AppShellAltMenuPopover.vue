@@ -1,25 +1,25 @@
 <script lang="ts" setup>
 import { RouterLink } from 'vue-router';
-import { trackAppPromotionClick } from '../../../_common/analytics/analytics.service';
-import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
-import AppLinkExternal from '../../../_common/link/AppLinkExternal.vue';
-import AppPopper from '../../../_common/popper/AppPopper.vue';
-import { Screen } from '../../../_common/screen/screen-service';
-import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
-import AppUserCreatorBadge from '../../../_common/user/creator/AppUserCreatorBadge.vue';
+
+import { ClientSystemReportModal } from '~app/components/client/safe-exports';
+import AppShellAltMenuDevelopers from '~app/components/shell/AppShellAltMenuDevelopers.vue';
+import AppShellAltMenuExtra from '~app/components/shell/AppShellAltMenuExtra.vue';
 import {
 	routeLandingHelpIndex,
 	routeLandingHelpRedirect,
-} from '../../views/landing/help/help.route';
-import { ClientSystemReportModal } from '../client/safe-exports';
-import AppShellAltMenuDevelopers from './AppShellAltMenuDevelopers.vue';
-import AppShellAltMenuExtra from './AppShellAltMenuExtra.vue';
+} from '~app/views/landing/help/help.route';
+import { trackAppPromotionClick } from '~common/analytics/analytics.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLinkExternal from '~common/link/AppLinkExternal.vue';
+import AppPopper from '~common/popper/AppPopper.vue';
+import { Screen } from '~common/screen/screen-service';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import AppUserCreatorBadge from '~common/user/creator/AppUserCreatorBadge.vue';
 
-defineProps({
-	showStore: {
-		type: Boolean,
-	},
-});
+type Props = {
+	showStore?: boolean;
+};
+const { showStore } = defineProps<Props>();
 
 function showSystemReport() {
 	ClientSystemReportModal?.show();

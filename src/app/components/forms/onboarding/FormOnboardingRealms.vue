@@ -1,18 +1,25 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
-import AppForm, { FormController, createForm } from '../../../../_common/form-vue/AppForm.vue';
-import Onboarding from '../../../../_common/onboarding/onboarding.service';
-import AppRealmFullCard from '../../../../_common/realm/AppRealmFullCard.vue';
-import { RealmModel } from '../../../../_common/realm/realm-model';
-import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
+
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import Onboarding from '~common/onboarding/onboarding.service';
+import AppRealmFullCard from '~common/realm/AppRealmFullCard.vue';
+import { RealmModel } from '~common/realm/realm-model';
+import AppScrollScroller from '~common/scroll/AppScrollScroller.vue';
 
 type FormModel = {
 	// nothing
 };
 
-const emit = defineEmits({
-	next: () => true,
-});
+type Props = {
+	user?: object;
+	isSocialRegistration?: boolean;
+};
+defineProps<Props>();
+
+const emit = defineEmits<{
+	next: [];
+}>();
 
 const realms = ref<RealmModel[]>([]);
 

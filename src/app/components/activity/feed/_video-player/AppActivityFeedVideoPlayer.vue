@@ -1,23 +1,22 @@
 <script lang="ts" setup>
-import { PropType, Ref, computed, onBeforeUnmount, ref, toRefs, watch } from 'vue';
-import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import { MediaItemModel } from '../../../../../_common/media-item/media-item-model';
-import AppScrollInview, {
-	createScrollInview,
-} from '../../../../../_common/scroll/inview/AppScrollInview.vue';
-import { SettingVideoPlayerFeedAutoplay } from '../../../../../_common/settings/settings.service';
-import { VideoSourceArray } from '../../../../../_common/video/AppVideo.vue';
+import { computed, onBeforeUnmount, Ref, ref, watch } from 'vue';
+
+import { InviewConfigFocused } from '~app/components/activity/feed/view';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { MediaItemModel } from '~common/media-item/media-item-model';
+import AppScrollInview, { createScrollInview } from '~common/scroll/inview/AppScrollInview.vue';
+import { SettingVideoPlayerFeedAutoplay } from '~common/settings/settings.service';
+import { VideoSourceArray } from '~common/video/AppVideo.vue';
 import AppVideoPlayer, {
 	createDenseReadableTimestamp,
-} from '../../../../../_common/video/player/AppVideoPlayer.vue';
+} from '~common/video/player/AppVideoPlayer.vue';
 import {
-	VideoPlayerController,
 	createVideoPlayerController,
 	queueVideoTimeChange,
-} from '../../../../../_common/video/player/controller';
-import { styleBorderRadiusBase, styleOverlayTextShadow } from '../../../../../_styles/mixins';
-import { kFontSizeLarge, kFontSizeSmall } from '../../../../../_styles/variables';
-import { InviewConfigFocused } from '../view';
+	VideoPlayerController,
+} from '~common/video/player/controller';
+import { styleBorderRadiusBase, styleOverlayTextShadow } from '~styles/mixins';
+import { kFontSizeLarge, kFontSizeSmall } from '~styles/variables';
 
 /**
  * How much time in ms to wait before loading the video player in once this item
@@ -26,23 +25,16 @@ import { InviewConfigFocused } from '../view';
  */
 const LoadDelay = 300;
 
-const props = defineProps({
-	mediaItem: {
-		type: Object as PropType<MediaItemModel>,
-		required: true,
-	},
-	manifests: {
-		type: Object as PropType<VideoSourceArray>,
-		required: true,
-	},
-});
+type Props = {
+	mediaItem: MediaItemModel;
+	manifests: VideoSourceArray;
+};
+const { manifests } = defineProps<Props>();
 
-const { mediaItem, manifests } = toRefs(props);
-
-const emit = defineEmits({
-	play: () => true,
-	time: (_timestamp: number) => true,
-});
+const emit = defineEmits<{
+	play: [];
+	time: [timestamp: number];
+}>();
 
 const autoplay = ref(SettingVideoPlayerFeedAutoplay.get());
 const player = ref() as Ref<VideoPlayerController | undefined>;
@@ -104,7 +96,7 @@ watch(
 
 watch(shouldLoadVideo, shouldLoad => {
 	if (shouldLoad) {
-		player.value = createVideoPlayerController(manifests.value, 'feed');
+		player.value = createVideoPlayerController(manifests, 'feed');
 
 		if (previousTimestamp) {
 			queueVideoTimeChange(player.value, previousTimestamp);

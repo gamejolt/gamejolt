@@ -3,8 +3,8 @@ import {
 	SOCIAL_ACTION_LIKE,
 	SOCIAL_ACTION_SEND,
 	SOCIAL_NETWORK_FB,
-} from '../../../analytics/analytics.service';
-import { isDynamicGoogleBot } from '../../../device/device.service';
+} from '~common/analytics/analytics.service';
+import { isDynamicGoogleBot } from '~common/device/device.service';
 
 function setupEvents() {
 	(window as any).FB.Event.subscribe('edge.create', (url: string) => {

@@ -1,11 +1,12 @@
 import { Socket } from 'phoenix';
 import { markRaw, ref, shallowReadonly, shallowRef } from 'vue';
-import { CancelToken } from '../../utils/cancel-token';
-import { createLogger } from '../../utils/logging';
-import { sleep } from '../../utils/utils';
-import { Api } from '../api/api.service';
-import { getCookie } from '../cookie/cookie.service';
-import { CommonStore } from '../store/common-store';
+
+import { Api } from '~common/api/api.service';
+import { getCookie } from '~common/cookie/cookie.service';
+import { CommonStore } from '~common/store/common-store';
+import { CancelToken } from '~utils/cancel-token';
+import { createLogger } from '~utils/logging';
+import { sleep } from '~utils/utils';
 
 // These are the features we support for Grid to know and behave properly.
 const SupportedFeatures = ['chat_member_watching', 'communities_via_notification_channel'];

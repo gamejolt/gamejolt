@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import AppButton from '../../button/AppButton.vue';
-import { Navigate } from '../../navigate/navigate.service';
-import { $gettext } from '../../translate/translate.service';
+import AppButton from '~common/button/AppButton.vue';
+import { Navigate } from '~common/navigate/navigate.service';
+import { $gettext } from '~common/translate/translate.service';
 
 function retry() {
 	Navigate.reload();

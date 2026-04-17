@@ -1,21 +1,15 @@
 <script lang="ts" setup>
-import { toRef, useSlots } from 'vue';
-import './item-content.styl';
+import '~common/timeline-list/item/item-content.styl';
 
-defineProps({
-	isActive: {
-		type: Boolean,
-	},
-	isNew: {
-		type: Boolean,
-	},
-	isThread: {
-		type: Boolean,
-	},
-	isLast: {
-		type: Boolean,
-	},
-});
+import { toRef, useSlots } from 'vue';
+
+type Props = {
+	isActive?: boolean;
+	isNew?: boolean;
+	isThread?: boolean;
+	isLast?: boolean;
+};
+const { isActive = false, isNew = false, isThread = false, isLast = false } = defineProps<Props>();
 
 const slots = useSlots();
 

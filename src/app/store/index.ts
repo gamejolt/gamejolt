@@ -1,28 +1,29 @@
-import { computed, inject, InjectionKey, ref, Ref, shallowRef, ShallowRef, watch } from 'vue';
+import { computed, inject, InjectionKey, Ref, ref, ShallowRef, shallowRef, watch } from 'vue';
 import { Router } from 'vue-router';
-import { CommunityJoinLocation } from '../../_common/analytics/analytics.service';
-import { Api } from '../../_common/api/api.service';
-import { Backdrop, BackdropController } from '../../_common/backdrop/backdrop.service';
+
+import { ActivityFeedState } from '~app/components/activity/feed/state';
+import { checkBroadcastModal } from '~app/components/broadcast-modal/broadcast-modal.service';
+import type { GridClient } from '~app/components/grid/client.service';
+import { CommunityStates } from '~app/store/community-state';
+import { LibraryStore } from '~app/store/library';
+import { QuestStore } from '~app/store/quest';
+import { CommunityJoinLocation } from '~common/analytics/analytics.service';
+import { Api } from '~common/api/api.service';
+import { Backdrop, BackdropController } from '~common/backdrop/backdrop.service';
 import {
 	CommunityModel,
 	joinCommunity as joinCommunityModel,
 	leaveCommunity as leaveCommunityModel,
-} from '../../_common/community/community.model';
-import { Connection } from '../../_common/connection/connection-service';
-import { registerContentFocusWatcher as registerFocusWatcher } from '../../_common/content-focus/content-focus.service';
-import { showSuccessGrowl } from '../../_common/growls/growls.service';
-import { showModalConfirm } from '../../_common/modal/confirm/confirm-service';
-import { Screen } from '../../_common/screen/screen-service';
-import { SidebarStore } from '../../_common/sidebar/sidebar.store';
-import { StickerStore } from '../../_common/sticker/sticker-store';
-import { CommonStore } from '../../_common/store/common-store';
-import { $gettext } from '../../_common/translate/translate.service';
-import { ActivityFeedState } from '../components/activity/feed/state';
-import { checkBroadcastModal } from '../components/broadcast-modal/broadcast-modal.service';
-import type { GridClient } from '../components/grid/client.service';
-import { CommunityStates } from './community-state';
-import { LibraryStore } from './library';
-import { QuestStore } from './quest';
+} from '~common/community/community.model';
+import { Connection } from '~common/connection/connection-service';
+import { registerContentFocusWatcher as registerFocusWatcher } from '~common/content-focus/content-focus.service';
+import { showSuccessGrowl } from '~common/growls/growls.service';
+import { showModalConfirm } from '~common/modal/confirm/confirm-service';
+import { Screen } from '~common/screen/screen-service';
+import { SidebarStore } from '~common/sidebar/sidebar.store';
+import { StickerStore } from '~common/sticker/sticker-store';
+import { CommonStore } from '~common/store/common-store';
+import { $gettext } from '~common/translate/translate.service';
 
 export type TogglableLeftPane =
 	| ''

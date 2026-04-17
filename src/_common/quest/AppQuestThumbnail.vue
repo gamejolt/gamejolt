@@ -1,12 +1,13 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
-import { styleElevate, styleFlexCenter, styleOverlayTextShadow } from '../../_styles/mixins';
-import { kFontSizeBase, kFontSizeTiny } from '../../_styles/variables';
-import AppImgResponsive from '../img/AppImgResponsive.vue';
-import AppJolticon, { Jolticon } from '../jolticon/AppJolticon.vue';
-import { kThemeGjOverlayNotice, kThemePrimary, kThemePrimaryFg } from '../theme/variables';
-import AppQuestFrame from './AppQuestFrame.vue';
-import { QuestModel } from './quest-model';
+import { computed } from 'vue';
+
+import AppImgResponsive from '~common/img/AppImgResponsive.vue';
+import AppJolticon, { Jolticon } from '~common/jolticon/AppJolticon.vue';
+import AppQuestFrame from '~common/quest/AppQuestFrame.vue';
+import { QuestModel } from '~common/quest/quest-model';
+import { kThemeGjOverlayNotice, kThemePrimary, kThemePrimaryFg } from '~common/theme/variables';
+import { styleElevate, styleFlexCenter, styleOverlayTextShadow } from '~styles/mixins';
+import { kFontSizeBase, kFontSizeTiny } from '~styles/variables';
 
 interface QuestBlipState {
 	bgColor: string;
@@ -14,17 +15,13 @@ interface QuestBlipState {
 	icon: Jolticon | null;
 }
 
-const props = defineProps({
-	quest: {
-		type: Object as PropType<QuestModel>,
-		required: true,
-	},
-});
-
-const { quest } = toRefs(props);
+type Props = {
+	quest: QuestModel;
+};
+const { quest } = defineProps<Props>();
 
 const questBlipState = computed<QuestBlipState | undefined>(() => {
-	const q = quest.value;
+	const q = quest;
 	if (q.has_activity) {
 		return {
 			bgColor: kThemeGjOverlayNotice,

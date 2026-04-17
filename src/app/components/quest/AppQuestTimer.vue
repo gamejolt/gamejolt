@@ -1,30 +1,19 @@
 <script lang="ts">
-import { PropType, computed, onMounted, onUnmounted, ref, toRefs } from 'vue';
-import { shorthandReadableTime } from '../../../_common/filters/duration';
-import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
-import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
-import { getCurrentServerTime } from '../../../utils/server-time';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
+
+import { shorthandReadableTime } from '~common/filters/duration';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { getCurrentServerTime } from '~utils/server-time';
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	endsOn: {
-		type: Number,
-		required: true,
-	},
-	nowText: {
-		type: String,
-		default: 'now',
-		validator: val => typeof val === 'string' && val.length > 0,
-	},
-	tag: {
-		type: String as PropType<'span' | 'div'>,
-		default: 'span',
-		validator: val => val === 'span' || val === 'div',
-	},
-});
-
-const { endsOn } = toRefs(props);
+type Props = {
+	endsOn: number;
+	nowText?: string;
+	tag?: 'span' | 'div';
+};
+const { endsOn, nowText = 'now', tag = 'span' } = defineProps<Props>();
 
 let interval: NodeJS.Timer | null = null;
 
@@ -32,7 +21,7 @@ const currentTime = ref(getCurrentServerTime());
 const readableTimeRough = ref(getReadableTime('rough'));
 const readableTimeExact = ref(getReadableTime('exact'));
 
-const hasEnded = computed(() => endsOn.value - currentTime.value <= 0);
+const hasEnded = computed(() => endsOn - currentTime.value <= 0);
 
 onMounted(() => {
 	if (!interval) {
@@ -49,11 +38,11 @@ onUnmounted(() => {
 });
 
 function getReadableTime(precision: 'rough' | 'exact') {
-	return shorthandReadableTime(endsOn.value, {
+	return shorthandReadableTime(endsOn, {
 		allowFuture: true,
 		precision,
 		joiner: ', ',
-		nowText: 'now',
+		nowText,
 	});
 }
 
@@ -65,7 +54,8 @@ function updateTimer() {
 </script>
 
 <template>
-	<span
+	<component
+		:is="tag"
 		v-app-tooltip.touchable="hasEnded ? undefined : readableTimeExact"
 		:style="{
 			whiteSpace: `nowrap`,
@@ -84,5 +74,5 @@ function updateTimer() {
 				{{ ' ' + readableTimeRough }}
 			</span>
 		</template>
-	</span>
+	</component>
 </template>

@@ -1,51 +1,45 @@
 <script lang="ts" setup>
-import { PropType, computed, onMounted, ref, toRefs } from 'vue';
-import { arrayRemove } from '../../../utils/array';
-import { Api } from '../../api/api.service';
-import { FiresidePostModel } from '../../fireside/post/post-model';
-import AppForm, { FormController, createForm } from '../../form-vue/AppForm.vue';
-import AppFormButton from '../../form-vue/AppFormButton.vue';
-import AppFormControl from '../../form-vue/AppFormControl.vue';
-import AppFormControlErrors from '../../form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../../form-vue/AppFormGroup.vue';
-import AppFormControlCheckbox from '../../form-vue/controls/AppFormControlCheckbox.vue';
-import AppFormControlRadio from '../../form-vue/controls/AppFormControlRadio.vue';
-import AppFormControlTextarea from '../../form-vue/controls/AppFormControlTextarea.vue';
-import { validateMaxLength } from '../../form-vue/validators';
-import { GameModel } from '../../game/game.model';
-import { $gettext } from '../../translate/translate.service';
+import { computed, onMounted, ref } from 'vue';
 
-interface FormModel {
+import { Api } from '~common/api/api.service';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlCheckbox from '~common/form-vue/controls/AppFormControlCheckbox.vue';
+import AppFormControlRadio from '~common/form-vue/controls/AppFormControlRadio.vue';
+import AppFormControlTextarea from '~common/form-vue/controls/AppFormControlTextarea.vue';
+import { validateMaxLength } from '~common/form-vue/validators';
+import { GameModel } from '~common/game/game.model';
+import { $gettext } from '~common/translate/translate.service';
+import { arrayRemove } from '~utils/array';
+
+type FormModel = {
 	reason: string;
 	context: string[];
 	description: string;
 	source: string;
-}
+};
 
-const props = defineProps({
-	type: {
-		type: String,
-		required: true,
-	},
-	resource: {
-		type: Object as PropType<any>,
-		required: true,
-	},
-});
+type Props = {
+	type: string;
+	resource: any;
+};
+const { type, resource } = defineProps<Props>();
 
-const emit = defineEmits({
-	submit: () => true,
-});
+const emit = defineEmits<{
+	submit: [];
+}>();
 
-const { type, resource } = toRefs(props);
-
-const form: FormController<FormModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	warnOnDiscard: false,
 	loadUrl: '/web/report',
 	onSubmit() {
 		const data = {
-			resourceName: type.value,
-			resourceId: resource.value.id,
+			resourceName: type,
+			resourceId: resource.id,
 			reason: form.formModel.reason,
 			context: form.formModel.context as string[] | undefined,
 			description: form.formModel.description,
@@ -109,7 +103,7 @@ interface Reason {
 }
 
 const reasons = computed<Reason[]>(() => {
-	switch (type.value) {
+	switch (type) {
 		case 'Game':
 			return [
 				{
@@ -181,13 +175,13 @@ const reasons = computed<Reason[]>(() => {
 			// For a devlog post of a game that is maturity restricted, we don't want to show the "explicit" report option.
 			// Those devlog posts can be explicit, and we don't want to encourage false reports.
 			const isAdultGamePost =
-				resource.value instanceof FiresidePostModel &&
-				resource.value.game instanceof GameModel &&
-				resource.value.game.tigrs_age === 3;
+				resource instanceof FiresidePostModel &&
+				resource.game instanceof GameModel &&
+				resource.game.tigrs_age === 3;
 
 			// However, in cases where the post may be shown outside of the game page, we won't disable reporting.
 			const onlyShowsOnGame =
-				!resource.value.post_to_user_profile && resource.value.communities.length === 0;
+				!resource.post_to_user_profile && resource.communities.length === 0;
 
 			if (isAdultGamePost && onlyShowsOnGame) {
 				arrayRemove(reasons, i => i.radioValue === 'explicit');

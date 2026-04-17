@@ -4,26 +4,29 @@ import {
 	inject,
 	InjectionKey,
 	onUnmounted,
-	PropType,
 	provide,
 	Ref,
 	ref,
 	shallowReadonly,
-	toRefs,
 	watch,
 } from 'vue';
 import { useRoute } from 'vue-router';
-import AppAlertBox from '../../../../_common/alert/AppAlertBox.vue';
-import { vAppAuthRequired } from '../../../../_common/auth/auth-required-directive';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import { CollaboratorModel } from '../../../../_common/collaborator/collaborator.model';
+
+import { DisplayMode } from '~app/components/comment/modal/modal.service';
+import AppCommentWidgetComment from '~app/components/comment/widget/AppCommentWidgetComment.vue';
+import type { DeregisterOnConnected } from '~app/components/grid/client.service';
+import { useGridStore } from '~app/components/grid/grid-store';
+import AppAlertBox from '~common/alert/AppAlertBox.vue';
+import { vAppAuthRequired } from '~common/auth/auth-required-directive';
+import AppButton from '~common/button/AppButton.vue';
+import { CollaboratorModel } from '~common/collaborator/collaborator.model';
 import {
 	canCommentOnModel,
 	CommentableModel,
 	CommentModel,
 	CommentSort,
 	getCommentModelResourceName,
-} from '../../../../_common/comment/comment-model';
+} from '~common/comment/comment-model';
 import {
 	commentStoreFetch,
 	commentStoreFetchThread,
@@ -36,31 +39,27 @@ import {
 	lockCommentStore,
 	releaseCommentStore,
 	useCommentStoreManager,
-} from '../../../../_common/comment/comment-store';
+} from '~common/comment/comment-store';
 import {
 	CommentStoreSliceView,
 	CommentStoreThreadView,
 	CommentStoreView,
-} from '../../../../_common/comment/comment-store-view';
-import { Environment } from '../../../../_common/environment/environment.service';
-import { formatNumber } from '../../../../_common/filters/number';
-import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
-import { illNoComments } from '../../../../_common/illustration/illustrations';
-import { FormCommentLazy } from '../../../../_common/lazy';
-import AppLoading from '../../../../_common/loading/AppLoading.vue';
-import AppMessageThread from '../../../../_common/message-thread/AppMessageThread.vue';
-import AppMessageThreadAdd from '../../../../_common/message-thread/AppMessageThreadAdd.vue';
-import { storeModel } from '../../../../_common/model/model-store.service';
-import { Model } from '../../../../_common/model/model.service';
-import AppNavTabList from '../../../../_common/nav/tab-list/AppNavTabList.vue';
-import { useCommonStore } from '../../../../_common/store/common-store';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { UserModel } from '../../../../_common/user/user.model';
-import type { DeregisterOnConnected } from '../../grid/client.service';
-import { useGridStore } from '../../grid/grid-store';
-import { DisplayMode } from '../modal/modal.service';
-import AppCommentWidgetComment from './AppCommentWidgetComment.vue';
+} from '~common/comment/comment-store-view';
+import { Environment } from '~common/environment/environment.service';
+import { formatNumber } from '~common/filters/number';
+import AppIllustration from '~common/illustration/AppIllustration.vue';
+import { illNoComments } from '~common/illustration/illustrations';
+import { FormCommentLazy } from '~common/lazy';
+import AppLoading from '~common/loading/AppLoading.vue';
+import AppMessageThread from '~common/message-thread/AppMessageThread.vue';
+import AppMessageThreadAdd from '~common/message-thread/AppMessageThreadAdd.vue';
+import { Model } from '~common/model/model.service';
+import { storeModel } from '~common/model/model-store.service';
+import AppNavTabList from '~common/nav/tab-list/AppNavTabList.vue';
+import { useCommonStore } from '~common/store/common-store';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { UserModel } from '~common/user/user.model';
 
 let incrementer = 0;
 
@@ -390,47 +389,39 @@ export function useCommentWidget() {
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	model: {
-		type: Object as PropType<Model & CommentableModel>,
-		required: true,
-	},
-	autofocus: {
-		type: Boolean,
-	},
-	threadCommentId: {
-		type: Number,
-		default: null,
-	},
-	showAdd: {
-		type: Boolean,
-		default: true,
-	},
-	showTabs: {
-		type: Boolean,
-		default: true,
-	},
-	initialTab: {
-		type: String as PropType<CommentSort>,
-		default: null,
-	},
-	displayMode: {
-		type: String as PropType<DisplayMode>,
-		default: null,
-	},
-});
+import { toRef } from 'vue';
 
-const { displayMode } = toRefs(props);
+type Props = {
+	model: Model & CommentableModel;
+	autofocus?: boolean;
+	threadCommentId?: number | null;
+	showAdd?: boolean;
+	showTabs?: boolean;
+	initialTab?: CommentSort | null;
+	displayMode?: DisplayMode | null;
+};
+const {
+	model,
+	autofocus,
+	threadCommentId = null,
+	showAdd = true,
+	showTabs = true,
+	initialTab = null,
+	displayMode = null,
+} = defineProps<Props>();
 
-const emit = defineEmits({
-	error: (_e: any) => true,
-	add: (_comment: CommentModel) => true,
-	edit: (_comment: CommentModel) => true,
-	remove: (_comment: CommentModel) => true,
-});
+const emit = defineEmits<{
+	error: [e: any];
+	add: [comment: CommentModel];
+	edit: [comment: CommentModel];
+	remove: [comment: CommentModel];
+}>();
 
 const c = createCommentWidget({
-	...toRefs(props),
+	model: toRef(() => model),
+	threadCommentId: toRef(() => threadCommentId),
+	showTabs: toRef(() => showTabs),
+	initialTab: toRef(() => initialTab),
 	onError: e => emit('error', e),
 	onAdd: comment => emit('add', comment),
 	onEdit: comment => emit('edit', comment),
@@ -464,7 +455,7 @@ const {
 } = c;
 
 const placeholder = computed(() => {
-	if (!resourceOwner.value || displayMode?.value !== 'shouts') {
+	if (!resourceOwner.value || displayMode !== 'shouts') {
 		return undefined;
 	}
 

@@ -7,57 +7,53 @@ import {
 	ref,
 	shallowRef,
 	toRef,
-	toRefs,
 	watch,
 	watchEffect,
 } from 'vue';
 import { RouterLink } from 'vue-router';
-import { Api } from '../../../../_common/api/api.service';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import { ContextCapabilities } from '../../../../_common/content/content-context';
-import { formatNumber } from '../../../../_common/filters/number';
-import { showSuccessGrowl } from '../../../../_common/growls/growls.service';
-import AppHeaderBar from '../../../../_common/header/AppHeaderBar.vue';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import { getModel } from '../../../../_common/model/model-store.service';
-import { Screen } from '../../../../_common/screen/screen-service';
-import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
-import { SettingChatGroupShowMembers } from '../../../../_common/settings/settings.service';
-import { kThemeBacklight, kThemeBacklightFg } from '../../../../_common/theme/variables';
-import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import AppUserVerifiedTick from '../../../../_common/user/AppUserVerifiedTick.vue';
-import AppUserAvatarBubble from '../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
-import { styleFlexCenter } from '../../../../_styles/mixins';
-import { useAppStore } from '../../../store';
-import { useGridStore } from '../../grid/grid-store';
-import AppShellWindow from '../../shell/AppShellWindow.vue';
-import { closeChatRoom } from '../client';
-import FormChatRoomSettings from '../FormChatRoomSettings.vue';
-import { showChatInviteModal } from '../invite-modal/invite-modal.service';
-import AppChatMemberList from '../member-list/AppChatMemberList.vue';
-import { ChatRoomModel, getChatRoomTitle } from '../room';
-import { ChatRoomChannel, createChatRoomChannel } from '../room-channel';
-import AppChatUserOnlineStatus from '../user-online-status/AppChatUserOnlineStatus.vue';
-import AppChatWindowOutput from './output/AppChatWindowOutput.vue';
-import AppChatWindowOutputPlaceholder from './output/AppChatWindowOutputPlaceholder.vue';
-import AppChatWindowSend from './send/AppChatWindowSend.vue';
+
+import { closeChatRoom } from '~app/components/chat/client';
+import FormChatRoomSettings from '~app/components/chat/FormChatRoomSettings.vue';
+import { showChatInviteModal } from '~app/components/chat/invite-modal/invite-modal.service';
+import AppChatMemberList from '~app/components/chat/member-list/AppChatMemberList.vue';
+import { ChatRoomModel, getChatRoomTitle } from '~app/components/chat/room';
+import { ChatRoomChannel, createChatRoomChannel } from '~app/components/chat/room-channel';
+import AppChatUserOnlineStatus from '~app/components/chat/user-online-status/AppChatUserOnlineStatus.vue';
+import AppChatWindowOutput from '~app/components/chat/window/output/AppChatWindowOutput.vue';
+import AppChatWindowOutputPlaceholder from '~app/components/chat/window/output/AppChatWindowOutputPlaceholder.vue';
+import AppChatWindowSend from '~app/components/chat/window/send/AppChatWindowSend.vue';
+import { useGridStore } from '~app/components/grid/grid-store';
+import AppShellWindow from '~app/components/shell/AppShellWindow.vue';
+import { useAppStore } from '~app/store';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import { ContextCapabilities } from '~common/content/content-context';
+import { formatNumber } from '~common/filters/number';
+import { showSuccessGrowl } from '~common/growls/growls.service';
+import AppHeaderBar from '~common/header/AppHeaderBar.vue';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { getModel } from '~common/model/model-store.service';
+import { Screen } from '~common/screen/screen-service';
+import AppScrollScroller from '~common/scroll/AppScrollScroller.vue';
+import { SettingChatGroupShowMembers } from '~common/settings/settings.service';
+import { kThemeBacklight, kThemeBacklightFg } from '~common/theme/variables';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
+import AppUserVerifiedTick from '~common/user/AppUserVerifiedTick.vue';
+import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
+import { styleFlexCenter } from '~styles/mixins';
 
 type SidebarTab = 'settings' | 'members';
 
-const props = defineProps({
-	roomId: {
-		type: Number,
-		required: true,
-	},
-});
+type Props = {
+	roomId: number;
+};
+const { roomId } = defineProps<Props>();
 
-const emit = defineEmits({
-	'focus-change': (_focused: boolean) => true,
-});
-
-const { roomId } = toRefs(props);
+const emit = defineEmits<{
+	'focus-change': [focused: boolean];
+}>();
 const { closeChatPane } = useAppStore();
 const { chatUnsafe: chat } = useGridStore();
 
@@ -78,7 +74,7 @@ const headerAvatarStyles: CSSProperties = {
 
 // Set up the room with connection logic.
 let destroyed = false;
-const room = shallowRef(getModel(ChatRoomModel, roomId.value));
+const room = shallowRef(getModel(ChatRoomModel, roomId));
 const roomChannel = shallowRef<ChatRoomChannel>();
 
 const contentCapabilities = ref(ContextCapabilities.getPlaceholder());
@@ -86,13 +82,13 @@ const maxContentLength = ref(1_000);
 
 async function joinChannel() {
 	roomChannel.value = createChatRoomChannel(chat.value, {
-		roomId: roomId.value,
+		roomId: roomId,
 		instanced: false,
 	});
 
 	const payloads = await Promise.all([
 		roomChannel.value.joinPromise,
-		Api.sendRequest(`/web/chat/rooms/get-message-content-capabilities/${roomId.value}`),
+		Api.sendRequest(`/web/chat/rooms/get-message-content-capabilities/${roomId}`),
 	]);
 
 	// Short circuit if this component is gone by the time the connection was

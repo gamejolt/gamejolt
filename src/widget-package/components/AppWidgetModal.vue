@@ -1,16 +1,15 @@
 <script lang="ts" setup>
-import AppButton from '../../_common/button/AppButton.vue';
-import AppScrollScroller from '../../_common/scroll/AppScrollScroller.vue';
+import AppButton from '~common/button/AppButton.vue';
+import AppScrollScroller from '~common/scroll/AppScrollScroller.vue';
 
-defineProps({
-	hideClose: {
-		type: Boolean,
-	},
-});
+type Props = {
+	hideClose?: boolean;
+};
+const { hideClose } = defineProps<Props>();
 
-const emit = defineEmits({
-	close: () => true,
-});
+const emit = defineEmits<{
+	close: [];
+}>();
 
 function close() {
 	emit('close');

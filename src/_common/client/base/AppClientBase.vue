@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
-import { getDeviceOS } from '../../device/device.service';
-import { AppClientMacAppMenu } from '../mac-app-menu/mac-app-menu';
-import AppClientTray from '../tray/AppClientTray.vue';
+
+import AppClientMacAppMenu from '~common/client/mac-app-menu/AppClientMacAppMenu.vue';
+import AppClientTray from '~common/client/tray/AppClientTray.vue';
+import { getDeviceOS } from '~common/device/device.service';
 
 const os = computed(() => getDeviceOS());
 </script>

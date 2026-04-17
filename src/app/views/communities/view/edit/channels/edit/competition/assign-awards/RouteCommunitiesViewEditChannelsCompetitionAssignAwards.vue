@@ -1,15 +1,14 @@
 <script lang="ts">
-import { computed, ref, toRef } from 'vue';
+import { computed, provide, ref, toRef } from 'vue';
 import { RouterView, useRoute } from 'vue-router';
-import { Api } from '../../../../../../../../../_common/api/api.service';
-import AppButton from '../../../../../../../../../_common/button/AppButton.vue';
-import { CommunityCompetitionAwardModel } from '../../../../../../../../../_common/community/competition/award/award.model';
-import AppLoading from '../../../../../../../../../_common/loading/AppLoading.vue';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '../../../../../../../../../_common/route/route-component';
-import { $gettext } from '../../../../../../../../../_common/translate/translate.service';
+
+import { AssignAwardsRouteControllerKey } from '~app/views/communities/view/edit/channels/edit/competition/assign-awards/assign-awards.store';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import { CommunityCompetitionAwardModel } from '~common/community/competition/award/award.model';
+import AppLoading from '~common/loading/AppLoading.vue';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { $gettext } from '~common/translate/translate.service';
 
 export default {
 	...defineAppRouteOptions({
@@ -60,6 +59,11 @@ function onUnassignAward(awardId: number) {
 		currAward.entry_count--;
 	}
 }
+
+provide(AssignAwardsRouteControllerKey, {
+	onAssignAward,
+	onUnassignAward,
+});
 
 createAppRoute({
 	onResolved({ payload }) {
@@ -123,7 +127,7 @@ createAppRoute({
 					{{ award.name }}
 				</AppButton>
 			</div>
-			<RouterView @assign="onAssignAward($event)" @unassign="onUnassignAward($event)" />
+			<RouterView />
 		</template>
 	</div>
 </template>

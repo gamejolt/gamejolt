@@ -1,25 +1,17 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
 import { RouterLink } from 'vue-router';
-import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import { kThemeFg } from '../../../../../_common/theme/variables';
-import { kFontSizeTiny } from '../../../../../_styles/variables';
-import { ProfileQuickLink } from './AppProfileShortcuts.vue';
 
-defineProps({
-	item: {
-		type: Object as PropType<ProfileQuickLink>,
-		required: true,
-	},
-	width: {
-		type: Number,
-		required: true,
-	},
-	tag: {
-		type: String,
-		default: 'div',
-	},
-});
+import { ProfileQuickLink } from '~app/views/profile/overview/shortcut/AppProfileShortcuts.vue';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { kThemeFg } from '~common/theme/variables';
+import { kFontSizeTiny } from '~styles/variables';
+
+type Props = {
+	item: ProfileQuickLink;
+	width: number;
+	tag?: string;
+};
+const { item, width, tag = 'div' } = defineProps<Props>();
 </script>
 
 <template>

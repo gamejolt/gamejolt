@@ -1,24 +1,17 @@
 <script lang="ts" setup>
-import { validatePattern } from '../../../../../_common/form-vue/validators';
-import { useFormManagedAccount } from './managed-account.vue';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormControl from '../../../../../_common/form-vue/AppFormControl.vue';
+import { useFormManagedAccount } from '~app/components/forms/financials/managed-account/FormFinancialsManagedAccount.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import { validatePattern } from '~common/form-vue/validators';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
-defineProps({
-	namePrefix: {
-		type: String,
-		required: true,
-	},
-	countryCode: {
-		type: String,
-		required: true,
-	},
-	isForceRequired: {
-		type: Boolean,
-	},
-});
+type Props = {
+	namePrefix: string;
+	countryCode: string;
+	isForceRequired?: boolean;
+};
+defineProps<Props>();
 
 const { requiresField, getStripeField } = useFormManagedAccount()!;
 </script>

@@ -1,22 +1,13 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-import { RealmModel } from './realm-model';
+import { RealmModel } from '~common/realm/realm-model';
 
-defineProps({
-	realm: {
-		type: Object as PropType<RealmModel>,
-		required: true,
-	},
-	overlay: {
-		type: Boolean,
-	},
-	small: {
-		type: Boolean,
-	},
-	tiny: {
-		type: Boolean,
-	},
-});
+type Props = {
+	realm: RealmModel;
+	overlay?: boolean;
+	small?: boolean;
+	tiny?: boolean;
+};
+defineProps<Props>();
 </script>
 
 <template>

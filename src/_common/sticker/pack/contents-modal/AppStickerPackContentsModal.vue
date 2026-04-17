@@ -1,24 +1,21 @@
 <script lang="ts" setup>
-import { PropType, ref, toRefs, watch } from 'vue';
-import { CancelToken } from '../../../../utils/cancel-token';
-import { Api } from '../../../api/api.service';
-import AppButton from '../../../button/AppButton.vue';
-import AppModal from '../../../modal/AppModal.vue';
-import { useModal } from '../../../modal/modal.service';
-import { storeModelList } from '../../../model/model-store.service';
-import AppSpacer from '../../../spacer/AppSpacer.vue';
-import { StickerModel } from '../../sticker.model';
-import AppStickerGrid from '../AppStickerGrid.vue';
-import { StickerPackModel } from '../pack.model';
+import { ref, watch } from 'vue';
 
-const props = defineProps({
-	pack: {
-		type: Object as PropType<StickerPackModel>,
-		required: true,
-	},
-});
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import { storeModelList } from '~common/model/model-store.service';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import AppStickerGrid from '~common/sticker/pack/AppStickerGrid.vue';
+import { StickerPackModel } from '~common/sticker/pack/pack.model';
+import { StickerModel } from '~common/sticker/sticker.model';
+import { CancelToken } from '~utils/cancel-token';
 
-const { pack } = toRefs(props);
+type Props = {
+	pack: StickerPackModel;
+};
+const { pack } = defineProps<Props>();
 
 const modal = useModal()!;
 
@@ -28,7 +25,7 @@ const stickers = ref<StickerModel[]>([]);
 let cancelToken = new CancelToken();
 
 watch(
-	pack,
+	() => pack,
 	async () => {
 		cancelToken.cancel();
 		cancelToken = new CancelToken();
@@ -40,7 +37,7 @@ watch(
 			`/mobile/sticker`,
 			{
 				packContents: {
-					packId: pack.value.id,
+					packId: pack.id,
 				},
 			},
 			{ detach: true }

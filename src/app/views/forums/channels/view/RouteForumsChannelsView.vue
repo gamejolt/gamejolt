@@ -1,22 +1,20 @@
 <script lang="ts">
 import { computed, ref } from 'vue';
-import { Api } from '../../../../../_common/api/api.service';
-import { formatNumber } from '../../../../../_common/filters/number';
-import { ForumChannelModel } from '../../../../../_common/forum/channel/channel.model';
-import { ForumTopicModel } from '../../../../../_common/forum/topic/topic.model';
-import AppNavTabList from '../../../../../_common/nav/tab-list/AppNavTabList.vue';
-import AppPagination from '../../../../../_common/pagination/AppPagination.vue';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '../../../../../_common/route/route-component';
-import { Screen } from '../../../../../_common/screen/screen-service';
-import { Scroll } from '../../../../../_common/scroll/scroll.service';
-import { $gettext, $ngettext } from '../../../../../_common/translate/translate.service';
-import AppForumBreadcrumbs from '../../../../components/forum/breadcrumbs/breadcrumbs.vue';
-import AppForumRules from '../../../../components/forum/rules/rules.vue';
-import AppForumTopicList from '../../../../components/forum/topic-list/topic-list.vue';
-import AppPageHeader from '../../../../components/page-header/AppPageHeader.vue';
+
+import AppForumBreadcrumbs from '~app/components/forum/breadcrumbs/AppForumBreadcrumbs.vue';
+import AppForumRules from '~app/components/forum/rules/AppForumRules.vue';
+import AppForumTopicList from '~app/components/forum/topic-list/AppForumTopicList.vue';
+import AppPageHeader from '~app/components/page-header/AppPageHeader.vue';
+import { Api } from '~common/api/api.service';
+import { formatNumber } from '~common/filters/number';
+import { ForumChannelModel } from '~common/forum/channel/channel.model';
+import { ForumTopicModel } from '~common/forum/topic/topic.model';
+import AppNavTabList from '~common/nav/tab-list/AppNavTabList.vue';
+import AppPagination from '~common/pagination/AppPagination.vue';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { Screen } from '~common/screen/screen-service';
+import { Scroll } from '~common/scroll/scroll.service';
+import { $gettext, $ngettext } from '~common/translate/translate.service';
 
 const sort = 'archived';
 
@@ -113,7 +111,9 @@ createAppRoute({
 
 				<template v-if="stickyTopics.length">
 					<AppForumTopicList
-						:topics="stickyTopics"
+						:topics="(stickyTopics as any)"
+						:sort="sort"
+						:use-upvotes="channel.type === 'voting'"
 						:post-count-per-page="postCountPerPage"
 					/>
 

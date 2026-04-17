@@ -1,15 +1,14 @@
 <script lang="ts" setup>
-import { PropType, ref } from 'vue';
-import AppFadeCollapse from '../../../../_common/AppFadeCollapse.vue';
-import { CommunityModel } from '../../../../_common/community/community.model';
-import AppContentViewer from '../../../../_common/content/content-viewer/AppContentViewer.vue';
+import { ref } from 'vue';
 
-defineProps({
-	community: {
-		type: Object as PropType<CommunityModel>,
-		required: true,
-	},
-});
+import AppFadeCollapse from '~common/AppFadeCollapse.vue';
+import { CommunityModel } from '~common/community/community.model';
+import AppContentViewer from '~common/content/content-viewer/AppContentViewer.vue';
+
+type Props = {
+	community: CommunityModel;
+};
+defineProps<Props>();
 
 const canToggleDescription = ref(false);
 const isDescriptionOpen = ref(false);

@@ -1,10 +1,15 @@
 import { onUnmounted, ref, shallowReadonly, toRef } from 'vue';
-import { arrayRemove } from '../../utils/array';
-import { sleep } from '../../utils/utils';
-import { Ruler } from '../ruler/ruler-service';
-import { AppAutoscrollAnchor } from './auto-scroll/anchor';
+
+import { Ruler } from '~common/ruler/ruler-service';
+import { arrayRemove } from '~utils/array';
+import { sleep } from '~utils/utils';
 
 export type ScrollContext = HTMLElement | HTMLDocument;
+
+export type AutoscrollAnchorState = {
+	scrollTo: number | undefined;
+	keyChanged: boolean;
+};
 
 interface ScrollToOptions {
 	animate?: boolean;
@@ -14,7 +19,7 @@ interface ScrollToOptions {
 
 class ScrollService {
 	shouldAutoScroll = true;
-	autoscrollAnchor?: AppAutoscrollAnchor;
+	autoscrollAnchor?: AutoscrollAnchorState;
 	offsetTop = 0;
 
 	/**

@@ -1,69 +1,54 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs, useSlots } from 'vue';
+import { computed, useSlots } from 'vue';
 import { RouterLink } from 'vue-router';
-import { PostOpenSource, trackPostOpen } from '../../../analytics/analytics.service';
-import { ContentRules } from '../../../content/content-rules';
-import AppContentViewer from '../../../content/content-viewer/AppContentViewer.vue';
-import { Environment } from '../../../environment/environment.service';
-import { formatFuzzynumber } from '../../../filters/fuzzynumber';
-import AppJolticon from '../../../jolticon/AppJolticon.vue';
-import AppUserAvatar from '../../../user/user-avatar/AppUserAvatar.vue';
-import { VideoPlayerControllerContext } from '../../../video/player/controller';
-import { FiresidePostModel } from '../post-model';
-import AppPostCardBase from './AppPostCardBase.vue';
+
+import { PostOpenSource, trackPostOpen } from '~common/analytics/analytics.service';
+import { ContentRules } from '~common/content/content-rules';
+import AppContentViewer from '~common/content/content-viewer/AppContentViewer.vue';
+import { Environment } from '~common/environment/environment.service';
+import { formatFuzzynumber } from '~common/filters/fuzzynumber';
+import AppPostCardBase from '~common/fireside/post/card/AppPostCardBase.vue';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppUserAvatar from '~common/user/user-avatar/AppUserAvatar.vue';
+import { VideoPlayerControllerContext } from '~common/video/player/controller';
 
 const displayRules = new ContentRules({
 	truncateLinks: true,
 	inlineParagraphs: true,
 });
 
-const props = defineProps({
-	post: {
-		type: Object as PropType<FiresidePostModel>,
-		required: true,
-	},
-	source: {
-		type: String as PropType<PostOpenSource>,
-		required: true,
-	},
-	videoContext: {
-		type: String as PropType<VideoPlayerControllerContext>,
-		default: undefined,
-	},
-	withUser: {
-		type: Boolean,
-	},
-	noLink: {
-		type: Boolean,
-	},
+type Props = {
+	post: FiresidePostModel;
+	source: PostOpenSource;
+	videoContext?: VideoPlayerControllerContext;
+	withUser?: boolean;
+	noLink?: boolean;
 	/**
 	 * Shows a preview of the post lead below the post card. Only has an effect
 	 * if the post has media.
 	 */
-	showMediaPostLead: {
-		type: Boolean,
-	},
-});
-
-const { post, source, videoContext, withUser, noLink } = toRefs(props);
+	showMediaPostLead?: boolean;
+};
+const { post, source, videoContext, withUser, noLink, showMediaPostLead } = defineProps<Props>();
 const slots = useSlots();
 
 const mediaItem = computed(() => {
-	if (post.value?.hasMedia) {
-		return post.value.media[0];
-	} else if (post.value?.hasVideo) {
-		return post.value.videos[0].posterMediaItem;
+	if (post?.hasMedia) {
+		return post.media[0];
+	} else if (post?.hasVideo) {
+		return post.videos[0].posterMediaItem;
 	}
 	return undefined;
 });
 
-const background = computed(() => post.value.background);
+const background = computed(() => post.background);
 const overlay = computed(() => !!background.value || !!mediaItem.value);
 
 const hasOverlayContent = computed(() => !!slots.overlay);
 
 const votedOnPoll = computed(() => {
-	const poll = post.value?.poll;
+	const poll = post?.poll;
 	for (let i = 0; i < (poll?.items.length ?? 0); i++) {
 		if (poll?.items[i].is_voted) {
 			return true;
@@ -73,13 +58,13 @@ const votedOnPoll = computed(() => {
 });
 
 const likedPost = computed(() => {
-	if (post.value?.user_like) {
+	if (post?.user_like) {
 		return true;
 	}
 	return false;
 });
 
-const userLink = computed(() => Environment.wttfBaseUrl + post.value?.user.url);
+const userLink = computed(() => Environment.wttfBaseUrl + post?.user.url);
 </script>
 
 <template>

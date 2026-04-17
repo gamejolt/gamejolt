@@ -1,11 +1,12 @@
 import { parse } from 'qs';
 import { computed, inject, InjectionKey, ref } from 'vue';
-import { Api } from '../../_common/api/api.service';
-import { Environment } from '../../_common/environment/environment.service';
-import { GameBuildModel } from '../../_common/game/build/build.model';
-import { GameModel } from '../../_common/game/game.model';
-import { GamePackageModel } from '../../_common/game/package/package.model';
-import { Meta } from '../../_common/meta/meta-service';
+
+import { Api } from '~common/api/api.service';
+import { Environment } from '~common/environment/environment.service';
+import { GameBuildModel } from '~common/game/build/build.model';
+import { GameModel } from '~common/game/game.model';
+import { GamePackageModel } from '~common/game/package/package.model';
+import { Meta } from '~common/meta/meta-service';
 
 export const GameserverStoreKey: InjectionKey<GameserverStore> = Symbol('gameserver-store');
 

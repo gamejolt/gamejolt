@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
-import AppImgResponsive from '../img/AppImgResponsive.vue';
-import { getMediaItemImageSrc, MediaItemModel } from './media-item-model';
+
+import AppImgResponsive from '~common/img/AppImgResponsive.vue';
+import { getMediaItemImageSrc, MediaItemModel } from '~common/media-item/media-item-model';
 
 type Props = {
 	mediaItem: MediaItemModel;

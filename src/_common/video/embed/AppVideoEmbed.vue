@@ -1,39 +1,31 @@
 <script lang="ts" setup>
-import { PropType, nextTick, onMounted, ref, toRefs, watch } from 'vue';
-import { Ruler } from '../../ruler/ruler-service';
-import { onScreenResize } from '../../screen/screen-service';
-import { useEventSubscription } from '../../system/event/event-topic';
+import { nextTick, onMounted, ref, useTemplateRef, watch } from 'vue';
 
-const props = defineProps({
-	videoProvider: {
-		type: String as PropType<'youtube' | 'vimeo'>,
-		required: true,
-	},
-	videoId: {
-		type: String,
-		required: true,
-	},
-	maxVideoHeight: {
-		type: Number,
-		default: 0,
-	},
-	maxVideoWidth: {
-		type: Number,
-		default: 0,
-	},
-	autoplay: {
-		type: Boolean,
-	},
-});
+import { Ruler } from '~common/ruler/ruler-service';
+import { onScreenResize } from '~common/screen/screen-service';
+import { useEventSubscription } from '~common/system/event/event-topic';
 
-const { videoProvider, videoId, maxVideoHeight, maxVideoWidth, autoplay } = toRefs(props);
+type Props = {
+	videoProvider: 'youtube' | 'vimeo';
+	videoId: string;
+	maxVideoHeight?: number;
+	maxVideoWidth?: number;
+	autoplay?: boolean;
+};
+const {
+	videoProvider,
+	videoId,
+	maxVideoHeight = 0,
+	maxVideoWidth = 0,
+	autoplay,
+} = defineProps<Props>();
 
 const VIDEO_RATIO = 0.5625; // 16:9
 
 const embedUrl = ref('');
 const width = ref<number | 'auto'>('auto');
 const height = ref<number | 'auto'>('auto');
-const innerElem = ref<HTMLElement>();
+const innerElem = useTemplateRef('innerElem');
 
 useEventSubscription(onScreenResize, () => recalculateDimensions());
 
@@ -42,29 +34,29 @@ onMounted(() => {
 });
 
 watch(
-	videoId,
+	() => videoId,
 	() => {
-		if (!videoId.value) {
+		if (!videoId) {
 			return;
 		}
 
 		let url: string;
 		const queryParams = [];
 
-		if (videoProvider.value === 'youtube') {
-			url = 'https://www.youtube.com/embed/' + videoId.value;
+		if (videoProvider === 'youtube') {
+			url = 'https://www.youtube.com/embed/' + videoId;
 
 			// Youtube forcefully displays recommended videos on their widgets.
 			// Using rel=0 makes it at least only show other videos from the same channel.
 			// https://developers.google.com/youtube/player_parameters#release_notes_08_23_2018
 			queryParams.push('rel=0');
-		} else if (videoProvider.value === 'vimeo') {
-			url = 'https://player.vimeo.com/video/' + videoId.value;
+		} else if (videoProvider === 'vimeo') {
+			url = 'https://player.vimeo.com/video/' + videoId;
 		} else {
 			throw new Error('Invalid video provider.');
 		}
 
-		if (autoplay.value) {
+		if (autoplay) {
 			queryParams.push('autoplay=1');
 		}
 
@@ -77,8 +69,8 @@ watch(
 	{ immediate: true }
 );
 
-watch(maxVideoWidth, recalculateDimensions);
-watch(maxVideoHeight, recalculateDimensions);
+watch(() => maxVideoWidth, recalculateDimensions);
+watch(() => maxVideoHeight, recalculateDimensions);
 
 async function recalculateDimensions() {
 	await nextTick();
@@ -89,14 +81,14 @@ async function recalculateDimensions() {
 
 	width.value = Ruler.width(innerElem.value);
 
-	if (maxVideoWidth.value) {
-		width.value = Math.min(maxVideoWidth.value, width.value);
+	if (maxVideoWidth) {
+		width.value = Math.min(maxVideoWidth, width.value);
 	}
 
 	height.value = width.value * VIDEO_RATIO;
 
-	if (maxVideoHeight.value && height.value > maxVideoHeight.value) {
-		height.value = maxVideoHeight.value;
+	if (maxVideoHeight && height.value > maxVideoHeight) {
+		height.value = maxVideoHeight;
 		width.value = height.value / VIDEO_RATIO;
 	}
 }
@@ -111,8 +103,6 @@ async function recalculateDimensions() {
 				nwdisable
 				nwfaketop
 				frameborder="0"
-				webkitallowfullscreen
-				mozallowfullscreen
 				allowfullscreen
 				:width="width"
 				:height="height"
@@ -125,8 +115,6 @@ async function recalculateDimensions() {
 				nwdisable
 				nwfaketop
 				frameborder="0"
-				webkitallowfullscreen
-				mozallowfullscreen
 				allowfullscreen
 				:width="width"
 				:height="height"

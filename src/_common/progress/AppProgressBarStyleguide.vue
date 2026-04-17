@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
-import AppButton from '../button/AppButton.vue';
-import AppProgressBar from './AppProgressBar.vue';
+
+import AppButton from '~common/button/AppButton.vue';
+import AppProgressBar from '~common/progress/AppProgressBar.vue';
 
 const progress = ref(0);
 </script>

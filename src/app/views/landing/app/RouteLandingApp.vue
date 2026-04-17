@@ -1,42 +1,37 @@
 <script lang="ts">
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
-import {
-	trackAppDownload,
-	trackAppPromotionClick,
-} from '../../../../_common/analytics/analytics.service';
-import { Api } from '../../../../_common/api/api.service';
-import AppBackground from '../../../../_common/background/AppBackground.vue';
-import { BackgroundModel } from '../../../../_common/background/background.model';
-import AppBean from '../../../../_common/bean/AppBean.vue';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import AppContactLink from '../../../../_common/contact-link/AppContactLink.vue';
-import { DeviceArch, DeviceOs, getDeviceOS } from '../../../../_common/device/device.service';
-import {
-	chooseBestGameBuild,
-	pluckInstallableGameBuilds,
-} from '../../../../_common/game/game.model';
-import { GamePackagePayloadModel } from '../../../../_common/game/package/package-payload.model';
-import { HistoryTick } from '../../../../_common/history-tick/history-tick-service';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import { Meta } from '../../../../_common/meta/meta-service';
-import AppMobileAppButtons from '../../../../_common/mobile-app/AppMobileAppButtons.vue';
-import { getAppUrl, useAppPromotionStore } from '../../../../_common/mobile-app/store';
-import { storeModel, storeModelList } from '../../../../_common/model/model-store.service';
-import { Navigate } from '../../../../_common/navigate/navigate.service';
-import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
-import { Screen } from '../../../../_common/screen/screen-service';
-import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
-import { kThemeGjOverlayNotice } from '../../../../_common/theme/variables';
-import { styleFlexCenter, styleWhen } from '../../../../_styles/mixins';
-import { kFontSizeLarge } from '../../../../_styles/variables';
-import { arrayShuffle } from '../../../../utils/array';
-import { useFullscreenHeight } from '../../../../utils/fullscreen';
-import laptopImage from './laptop.webp';
-import mobileImage from './mobile.webp';
-import footerImage from './peek-jelly.png';
-import qrImage from './qr.png';
-import socialImage from './social.jpg';
+
+import laptopImage from '~app/views/landing/app/laptop.webp';
+import mobileImage from '~app/views/landing/app/mobile.webp';
+import footerImage from '~app/views/landing/app/peek-jelly.png';
+import qrImage from '~app/views/landing/app/qr.png';
+import socialImage from '~app/views/landing/app/social.jpg';
+import { trackAppDownload, trackAppPromotionClick } from '~common/analytics/analytics.service';
+import { Api } from '~common/api/api.service';
+import AppBackground from '~common/background/AppBackground.vue';
+import { BackgroundModel } from '~common/background/background.model';
+import AppBean from '~common/bean/AppBean.vue';
+import AppButton from '~common/button/AppButton.vue';
+import AppContactLink from '~common/contact-link/AppContactLink.vue';
+import { DeviceArch, DeviceOs, getDeviceOS } from '~common/device/device.service';
+import { chooseBestGameBuild, pluckInstallableGameBuilds } from '~common/game/game.model';
+import { GamePackagePayloadModel } from '~common/game/package/package-payload.model';
+import { HistoryTick } from '~common/history-tick/history-tick-service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { Meta } from '~common/meta/meta-service';
+import AppMobileAppButtons from '~common/mobile-app/AppMobileAppButtons.vue';
+import { getAppUrl, useAppPromotionStore } from '~common/mobile-app/store';
+import { storeModel, storeModelList } from '~common/model/model-store.service';
+import { Navigate } from '~common/navigate/navigate.service';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { Screen } from '~common/screen/screen-service';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import { kThemeGjOverlayNotice } from '~common/theme/variables';
+import { styleFlexCenter, styleWhen } from '~styles/mixins';
+import { kFontSizeLarge } from '~styles/variables';
+import { arrayShuffle } from '~utils/array';
+import { useFullscreenHeight } from '~utils/fullscreen';
 
 export default {
 	...defineAppRouteOptions({

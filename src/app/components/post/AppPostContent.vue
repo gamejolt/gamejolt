@@ -1,41 +1,30 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRefs } from 'vue';
-import AppFadeCollapse from '../../../_common/AppFadeCollapse.vue';
-import { ComponentProps } from '../../../_common/component-helpers';
-import { ContentRules } from '../../../_common/content/content-rules';
-import AppContentViewer from '../../../_common/content/content-viewer/AppContentViewer.vue';
-import { FiresidePostModel } from '../../../_common/fireside/post/post-model';
-import AppStickerTarget from '../../../_common/sticker/target/AppStickerTarget.vue';
-import { StickerTargetController } from '../../../_common/sticker/target/target-controller';
-import { PostContentContainerStyles, PostContentLeadStyles } from './post-styles';
+import { computed, ref } from 'vue';
 
-const props = defineProps({
-	post: {
-		type: Object as PropType<FiresidePostModel>,
-		required: true,
-	},
-	stickerTargetController: {
-		type: Object as PropType<StickerTargetController>,
-		required: true,
-	},
-	truncateLinks: {
-		type: Boolean,
-	},
+import {
+	PostContentContainerStyles,
+	PostContentLeadStyles,
+} from '~app/components/post/post-styles';
+import AppFadeCollapse from '~common/AppFadeCollapse.vue';
+import { ComponentProps } from '~common/component-helpers';
+import { ContentRules } from '~common/content/content-rules';
+import AppContentViewer from '~common/content/content-viewer/AppContentViewer.vue';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import AppStickerTarget from '~common/sticker/target/AppStickerTarget.vue';
+import { StickerTargetController } from '~common/sticker/target/target-controller';
+
+type Props = {
+	post: FiresidePostModel;
+	stickerTargetController: StickerTargetController;
+	truncateLinks?: boolean;
 	/**
 	 * The component we'll use to wrap the content viewer.
 	 */
-	wrapperComponent: {
-		type: [Object, String] as PropType<any>,
-		default: undefined,
-	},
-	wrapperComponentProps: {
-		type: Object as PropType<ComponentProps<any>>,
-		default: undefined,
-	},
-});
-
+	wrapperComponent?: any;
+	wrapperComponentProps?: ComponentProps<any>;
+};
 const { post, stickerTargetController, truncateLinks, wrapperComponent, wrapperComponentProps } =
-	toRefs(props);
+	defineProps<Props>();
 
 // For feeds we want to truncate links, the full links can be seen:
 // - on the post page
@@ -44,12 +33,12 @@ const { post, stickerTargetController, truncateLinks, wrapperComponent, wrapperC
 const isLeadOpen = ref(false);
 const canToggleLead = ref(false);
 
-const displayRules = computed(() => new ContentRules({ truncateLinks: truncateLinks.value }));
-const overlay = computed(() => !!post.value.background);
+const displayRules = computed(() => new ContentRules({ truncateLinks }));
+const overlay = computed(() => !!post.background);
 
 const componentProps = computed(
 	() =>
-		wrapperComponentProps?.value || {
+		wrapperComponentProps || {
 			collapseHeight: 400,
 			isOpen: isLeadOpen.value,
 			animate: false,

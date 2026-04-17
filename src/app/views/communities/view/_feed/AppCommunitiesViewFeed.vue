@@ -1,38 +1,36 @@
 <script lang="ts" setup>
-import { PropType, computed, toRef, toRefs } from 'vue';
+import { computed, toRef } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
-import { Api } from '../../../../../_common/api/api.service';
-import { CommunityChannelModel } from '../../../../../_common/community/channel/channel.model';
-import { CommunityModel } from '../../../../../_common/community/community.model';
-import { EventItemModel } from '../../../../../_common/event-item/event-item.model';
-import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
-import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
-import { illNoCommentsSmall } from '../../../../../_common/illustration/illustrations';
-import AppNavTabList from '../../../../../_common/nav/tab-list/AppNavTabList.vue';
-import { useCommonStore } from '../../../../../_common/store/common-store';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import AppActivityFeed from '../../../../components/activity/feed/AppActivityFeed.vue';
-import AppActivityFeedPlaceholder from '../../../../components/activity/feed/AppActivityFeedPlaceholder.vue';
-import { ActivityFeedView } from '../../../../components/activity/feed/view';
-import AppPostAddButton from '../../../../components/post/add-button/AppPostAddButton.vue';
-import AppBlockedNotice from '../_blocked-notice/AppBlockedNotice.vue';
-import { isVirtualChannel, useCommunityRouteStore } from '../view.store';
 
-const props = defineProps({
-	// It's optional since it may not have loaded into the page yet. In that
-	// case, we show a placeholder and wait.
-	feed: {
-		type: Object as PropType<ActivityFeedView | null>,
-		default: null,
-	},
-});
+import AppActivityFeed from '~app/components/activity/feed/AppActivityFeed.vue';
+import AppActivityFeedPlaceholder from '~app/components/activity/feed/AppActivityFeedPlaceholder.vue';
+import { ActivityFeedView } from '~app/components/activity/feed/view';
+import AppPostAddButton from '~app/components/post/add-button/AppPostAddButton.vue';
+import AppBlockedNotice from '~app/views/communities/view/_blocked-notice/AppBlockedNotice.vue';
+import { isVirtualChannel, useCommunityRouteStore } from '~app/views/communities/view/view.store';
+import { Api } from '~common/api/api.service';
+import { CommunityChannelModel } from '~common/community/channel/channel.model';
+import { CommunityModel } from '~common/community/community.model';
+import { EventItemModel } from '~common/event-item/event-item.model';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import AppIllustration from '~common/illustration/AppIllustration.vue';
+import { illNoCommentsSmall } from '~common/illustration/illustrations';
+import AppNavTabList from '~common/nav/tab-list/AppNavTabList.vue';
+import { useCommonStore } from '~common/store/common-store';
+import { $gettext } from '~common/translate/translate.service';
+import { TranslateDirective as vTranslate } from '~common/translate/translate-directive';
 
-const emit = defineEmits({
-	'add-post': (_post: FiresidePostModel) => true,
-	'load-new': () => true,
-});
+// feed is optional since it may not have loaded into the page yet. In that
+// case, we show a placeholder and wait.
+type Props = {
+	feed?: ActivityFeedView | null;
+};
+const { feed = null } = defineProps<Props>();
 
-const { feed } = toRefs(props);
+const emit = defineEmits<{
+	'add-post': [post: FiresidePostModel];
+	'load-new': [];
+}>();
 const routeStore = useCommunityRouteStore()!;
 const { user } = useCommonStore();
 const route = useRoute();
@@ -75,7 +73,7 @@ const shouldShowTabs = computed(() => {
 		return false;
 	}
 
-	if (!feed?.value || feed.value.hasItems) {
+	if (!feed || feed.hasItems) {
 		return true;
 	}
 
@@ -114,28 +112,28 @@ function onLoadedNew() {
 
 function onPostUnfeatured(eventItem: EventItemModel, communityInput: CommunityModel) {
 	if (
-		feed?.value &&
+		feed &&
 		channel.value === routeStore.frontpageChannel &&
 		community.value.id === communityInput.id
 	) {
-		feed.value.remove([eventItem]);
+		feed.remove([eventItem]);
 	}
 }
 
 function onPostRejected(eventItem: EventItemModel, communityInput: CommunityModel) {
-	if (feed?.value && community.value.id === communityInput.id) {
-		feed.value.remove([eventItem]);
+	if (feed && community.value.id === communityInput.id) {
+		feed.remove([eventItem]);
 	}
 }
 
 function onPostMovedChannel(eventItem: EventItemModel, movedTo: CommunityChannelModel) {
 	if (
-		feed?.value &&
+		feed &&
 		community.value.id === movedTo.community_id &&
 		!isVirtualChannel(routeStore, channel.value) &&
 		channel.value.title !== movedTo.title
 	) {
-		feed.value.remove([eventItem]);
+		feed.remove([eventItem]);
 	}
 }
 </script>

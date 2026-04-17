@@ -1,45 +1,33 @@
 <script lang="ts" setup>
-import { PropType, computed, toRef, toRefs } from 'vue';
-import AppButton from '../button/AppButton.vue';
-import AppCard from '../card/AppCard.vue';
-import AppJolticon from '../jolticon/AppJolticon.vue';
-import { $gettext } from '../translate/translate.service';
+import { computed, toRef } from 'vue';
+
+import AppButton from '~common/button/AppButton.vue';
+import AppCard from '~common/card/AppCard.vue';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import {
-	LinkedAccountModel,
-	LinkedAccountProvider,
 	getLinkedAccountPlatformIcon,
 	getLinkedAccountProviderDisplayName,
-} from './linked-account.model';
+	LinkedAccountModel,
+	LinkedAccountProvider,
+} from '~common/linked-account/linked-account.model';
+import { $gettext } from '~common/translate/translate.service';
 
-const props = defineProps({
-	provider: {
-		type: String as PropType<LinkedAccountProvider>,
-		required: true,
-	},
-	account: {
-		type: Object as PropType<LinkedAccountModel | null>,
-		default: null,
-	},
-	preview: {
-		type: Boolean,
-	},
-	spanWidth: {
-		type: Boolean,
-	},
-	disabled: {
-		type: Boolean,
-	},
-});
+type Props = {
+	provider: LinkedAccountProvider;
+	account?: LinkedAccountModel | null;
+	preview?: boolean;
+	spanWidth?: boolean;
+	disabled?: boolean;
+};
+const { provider, account = null, preview, disabled } = defineProps<Props>();
 
-const emit = defineEmits({
-	sync: (_provider: string) => true,
-	unlink: (_provider: string) => true,
-	link: (_provider: string) => true,
-});
+const emit = defineEmits<{
+	sync: [provider: string];
+	unlink: [provider: string];
+	link: [provider: string];
+}>();
 
-const { account, provider } = toRefs(props);
-
-const actualProvider = toRef(() => (account.value ? account.value.provider : provider.value));
+const actualProvider = toRef(() => (account ? account.provider : provider));
 
 const providerIcon = computed(() => {
 	const provider = actualProvider.value;
@@ -52,14 +40,14 @@ const providerName = computed(() => {
 });
 
 const platformLink = toRef(() => {
-	if (account.value) {
-		return account.value.platformLink;
+	if (account) {
+		return account.platformLink;
 	}
 	return undefined;
 });
 
 const isAccountSet = toRef(() => {
-	return !!account.value && account.value.provider_id && account.value.name;
+	return !!account && account.provider_id && account.name;
 });
 
 function onSync() {
@@ -103,15 +91,15 @@ function onLink() {
 					{{ $gettext(`Link Now`) }}
 				</AppButton>
 			</template>
-			<template v-else>
+			<template v-else-if="account">
 				<p>
 					<strong v-if="platformLink">
 						<a :href="platformLink" target="_blank">
-							{{ account.name }}
+							{{ account!.name }}
 						</a>
 					</strong>
 					<span v-else>
-						{{ account.name }}
+						{{ account!.name }}
 					</span>
 				</p>
 

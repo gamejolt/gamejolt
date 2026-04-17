@@ -1,23 +1,21 @@
 <script lang="ts">
 import { computed, ref, toRef } from 'vue';
 import { RouterLink } from 'vue-router';
-import { Api } from '../../../../../../../_common/api/api.service';
-import AppButton from '../../../../../../../_common/button/AppButton.vue';
-import AppExpand from '../../../../../../../_common/expand/AppExpand.vue';
-import { formatNumber } from '../../../../../../../_common/filters/number';
-import AppGraphWidget from '../../../../../../../_common/graph/AppGraphWidget.vue';
-import AppJolticon from '../../../../../../../_common/jolticon/AppJolticon.vue';
-import AppProgressBar from '../../../../../../../_common/progress/AppProgressBar.vue';
-import AppProgressPoller from '../../../../../../../_common/progress/poller/AppProgressPoller.vue';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '../../../../../../../_common/route/route-component';
-import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
-import { $gettext } from '../../../../../../../_common/translate/translate.service';
-import AppCommunityPerms from '../../../../../../components/community/perms/AppCommunityPerms.vue';
-import { AppGamePerms } from '../../../../../../components/game/perms/perms';
-import { useGameDashRouteController } from '../../manage.store';
+
+import AppCommunityPerms from '~app/components/community/perms/AppCommunityPerms.vue';
+import AppGamePerms from '~app/components/game/perms/AppGamePerms.vue';
+import { useGameDashRouteController } from '~app/views/dashboard/games/manage/manage.store';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import AppExpand from '~common/expand/AppExpand.vue';
+import { formatNumber } from '~common/filters/number';
+import AppGraphWidget from '~common/graph/AppGraphWidget.vue';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppProgressBar from '~common/progress/AppProgressBar.vue';
+import AppProgressPoller from '~common/progress/poller/AppProgressPoller.vue';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { $gettext } from '~common/translate/translate.service';
 
 export default {
 	...defineAppRouteOptions({

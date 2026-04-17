@@ -1,7 +1,9 @@
 import { reactive } from 'vue';
-import { arrayRemove } from '../../utils/array';
+
+import { arrayRemove } from '~utils/array';
 
 export interface MinbarItem {
+	id: number;
 	isActive?: boolean;
 	notificationCount?: number;
 	title: string;
@@ -15,11 +17,14 @@ class MinbarService {
 
 export const Minbar = reactive(/** @__PURE__ */ new MinbarService()) as MinbarService;
 
-export function addMinbarItem(item: MinbarItem) {
-	Minbar.items.push(item);
-	return item;
+let _nextItemId = 0;
+
+export function addMinbarItem(item: Omit<MinbarItem, 'id'>) {
+	const withId: MinbarItem = { ...item, id: ++_nextItemId };
+	Minbar.items.push(withId);
+	return withId;
 }
 
 export function removeMinbarItem(item: MinbarItem) {
-	arrayRemove(Minbar.items, i => i === item);
+	arrayRemove(Minbar.items, i => i.id === item.id);
 }

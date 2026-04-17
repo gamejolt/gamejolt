@@ -1,17 +1,17 @@
-import { IllustrationAsset } from './AppIllustration.vue';
-import illCreatorInfographicPath from './img/creator-infographic.png';
-import illEndOfFeedPath from './img/end-of-feed.png';
-import illExtremeSadnessSmallPath from './img/extreme-sadness-small.png';
-import illExtremeSadnessPath from './img/extreme-sadness.png';
-import illJoltydexBrowsePath from './img/joltydex-browse.png';
-import illMaintenancePath from './img/maintenance.png';
-import illMobileKikkersteinPath from './img/mobile-kikkerstein.png';
-import illNoChatPath from './img/no-chat.png';
-import illNoCommentsSmallPath from './img/no-comments-small.png';
-import illNoCommentsPath from './img/no-comments.png';
-import illPointyThingPath from './img/pointy-thing.png';
-import illStreamingJellyPath from './img/streaming-jelly.png';
-import illTimeOutPath from './img/time-out.png';
+import { IllustrationAsset } from '~common/illustration/AppIllustration.vue';
+import illCreatorInfographicPath from '~common/illustration/img/creator-infographic.png';
+import illEndOfFeedPath from '~common/illustration/img/end-of-feed.png';
+import illExtremeSadnessPath from '~common/illustration/img/extreme-sadness.png';
+import illExtremeSadnessSmallPath from '~common/illustration/img/extreme-sadness-small.png';
+import illJoltydexBrowsePath from '~common/illustration/img/joltydex-browse.png';
+import illMaintenancePath from '~common/illustration/img/maintenance.png';
+import illMobileKikkersteinPath from '~common/illustration/img/mobile-kikkerstein.png';
+import illNoChatPath from '~common/illustration/img/no-chat.png';
+import illNoCommentsPath from '~common/illustration/img/no-comments.png';
+import illNoCommentsSmallPath from '~common/illustration/img/no-comments-small.png';
+import illPointyThingPath from '~common/illustration/img/pointy-thing.png';
+import illStreamingJellyPath from '~common/illustration/img/streaming-jelly.png';
+import illTimeOutPath from '~common/illustration/img/time-out.png';
 
 export const illStreamingJelly: IllustrationAsset = {
 	path: illStreamingJellyPath,

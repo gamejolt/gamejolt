@@ -1,23 +1,19 @@
 <script lang="ts" setup>
-import AppButton from '../../button/AppButton.vue';
-import AppExpand from '../../expand/AppExpand.vue';
-import { Screen } from '../../screen/screen-service';
-import { useCardList } from './AppCardList.vue';
+import AppButton from '~common/button/AppButton.vue';
+import { useCardList } from '~common/card/list/AppCardList.vue';
+import AppExpand from '~common/expand/AppExpand.vue';
+import { Jolticon } from '~common/jolticon/AppJolticon.vue';
+import { Screen } from '~common/screen/screen-service';
 
-defineProps({
-	label: {
-		type: String,
-		required: true,
-	},
-	icon: {
-		type: String,
-		default: '',
-	},
-});
+type Props = {
+	label: string;
+	icon?: Jolticon;
+};
+const { icon } = defineProps<Props>();
 
-const emit = defineEmits({
-	toggle: () => true,
-});
+const emit = defineEmits<{
+	toggle: [];
+}>();
 
 const { isAdding } = useCardList()!;
 </script>
@@ -38,4 +34,4 @@ const { isAdding } = useCardList()!;
 	</div>
 </template>
 
-<style lang="stylus" src="./list-common.styl" scoped></style>
+<style lang="stylus" src="~common/card/list/list-common.styl" scoped></style>

@@ -1,75 +1,51 @@
 <script lang="ts" setup>
-import { PropType, computed, toRefs } from 'vue';
-import { styleWhen } from '../../../_styles/mixins';
-import { buildCSSPixelValue } from '../../../_styles/variables';
-import { ComponentProps } from '../../component-helpers';
-import { Screen } from '../../screen/screen-service';
-import AppScrollScroller, { createScroller } from '../../scroll/AppScrollScroller.vue';
-import { showReactionDetailsModal } from '../details-modal/modal.service';
-import { ReactionCount, ReactionableModel, toggleReactionOnResource } from '../reaction-count';
-import AppReactionListItem from './AppReactionListItem.vue';
+import { computed } from 'vue';
+
+import { ComponentProps } from '~common/component-helpers';
+import { showReactionDetailsModal } from '~common/reaction/details-modal/modal.service';
+import AppReactionListItem from '~common/reaction/list/AppReactionListItem.vue';
+import {
+	ReactionableModel,
+	ReactionCount,
+	toggleReactionOnResource,
+} from '~common/reaction/reaction-count';
+import { Screen } from '~common/screen/screen-service';
+import AppScrollScroller, { createScroller } from '~common/scroll/AppScrollScroller.vue';
+import { styleWhen } from '~styles/mixins';
+import { buildCSSPixelValue } from '~styles/variables';
 
 type ClickAction = 'toggle' | 'emit-click';
 type ContextAction = 'show-details' | 'emit-context';
 
-const props = defineProps({
-	model: {
-		type: Object as PropType<ReactionableModel>,
-		required: true,
-	},
-	listType: {
-		type: String as PropType<'wrap' | 'h-scroll'>,
-		default: 'wrap',
-	},
-	focusedId: {
-		type: Number,
-		default: undefined,
-	},
-	clickAction: {
-		type: String as PropType<ClickAction>,
-		default: undefined,
-	},
-	contextAction: {
-		type: String as PropType<ContextAction>,
-		default: undefined,
-	},
-	hoverScroll: {
-		type: Boolean,
-	},
-	hoverScrollBleed: {
-		type: Number,
-		default: 0,
-	},
-	hoverScrollWidth: {
-		type: Number,
-		default: 24,
-	},
-	sansMarginBottom: {
-		type: Boolean,
-		default: false,
-	},
-});
-
+type Props = {
+	model: ReactionableModel;
+	listType?: 'wrap' | 'h-scroll';
+	focusedId?: number;
+	clickAction?: ClickAction;
+	contextAction?: ContextAction;
+	hoverScroll?: boolean;
+	hoverScrollBleed?: number;
+	hoverScrollWidth?: number;
+	sansMarginBottom?: boolean;
+};
 const {
 	model,
-	listType,
-	focusedId,
+	listType = 'wrap',
 	clickAction,
 	contextAction,
-	hoverScroll,
-	hoverScrollBleed,
-	hoverScrollWidth,
-} = toRefs(props);
+	hoverScrollBleed = 0,
+	hoverScrollWidth = 24,
+} = defineProps<Props>();
 
-const emit = defineEmits({
-	'item-click': (_reaction: ReactionCount) => true,
-	'item-context': (_reaction: ReactionCount) => true,
-});
+const emit = defineEmits<{
+	'item-click': [reaction: ReactionCount];
+	'item-context': [reaction: ReactionCount];
+}>();
 
 const scrollController = createScroller();
 
-const reactions = computed(() => model.value.reaction_counts);
-const useScroller = computed(() => listType.value === 'h-scroll');
+const reactions = computed(() => model.reaction_counts);
+const useScroller = computed(() => listType === 'h-scroll');
 const scrollerProps = computed(() => {
 	if (!useScroller.value) {
 		return {};
@@ -82,15 +58,15 @@ const scrollerProps = computed(() => {
 });
 
 function onItemClick(reaction: ReactionCount) {
-	if (!clickAction?.value) {
+	if (!clickAction) {
 		return;
 	}
 
-	if (clickAction.value === 'emit-click') {
+	if (clickAction === 'emit-click') {
 		emit('item-click', reaction);
-	} else if (clickAction.value === 'toggle') {
+	} else if (clickAction === 'toggle') {
 		toggleReactionOnResource({
-			model: model.value,
+			model,
 			emojiId: reaction.id,
 			imgUrl: reaction.img_url,
 			prefix: reaction.prefix,
@@ -100,15 +76,15 @@ function onItemClick(reaction: ReactionCount) {
 }
 
 function onItemContext(reaction: ReactionCount) {
-	if (!contextAction?.value) {
+	if (!contextAction) {
 		return;
 	}
 
-	if (contextAction.value === 'emit-context') {
+	if (contextAction === 'emit-context') {
 		emit('item-context', reaction);
-	} else if (contextAction.value === 'show-details') {
+	} else if (contextAction === 'show-details') {
 		showReactionDetailsModal({
-			model: model.value,
+			model,
 			initialReaction: reaction,
 		});
 	}

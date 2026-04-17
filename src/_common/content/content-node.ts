@@ -1,5 +1,5 @@
-import { ContentObject, ContentObjectType } from './content-object';
-import { MarkObject, MarkObjectType } from './mark-object';
+import { ContentObject, ContentObjectType } from '~common/content/content-object';
+import { MarkObject, MarkObjectType } from '~common/content/mark-object';
 
 export abstract class ContentNode {
 	protected _content: ContentObject[];

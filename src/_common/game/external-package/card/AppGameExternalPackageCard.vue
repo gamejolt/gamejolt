@@ -1,32 +1,29 @@
 <script lang="ts" setup>
-import { PropType, computed, ref, toRefs } from 'vue';
-import AppFadeCollapse from '../../../AppFadeCollapse.vue';
-import { Analytics } from '../../../analytics/analytics.service';
-import AppButton from '../../../button/AppButton.vue';
-import AppCard from '../../../card/AppCard.vue';
-import AppJolticon from '../../../jolticon/AppJolticon.vue';
-import { Navigate } from '../../../navigate/navigate.service';
-import { vAppTooltip } from '../../../tooltip/tooltip-directive';
-import { $gettext } from '../../../translate/translate.service';
-import { GameBuildPlatformSupportInfo } from '../../build/build.model';
-import { GameExternalPackageModel } from '../external-package.model';
+import { computed, ref } from 'vue';
 
-const props = defineProps({
-	package: {
-		type: Object as PropType<GameExternalPackageModel>,
-		required: true,
-	},
-});
+import { Analytics } from '~common/analytics/analytics.service';
+import AppFadeCollapse from '~common/AppFadeCollapse.vue';
+import AppButton from '~common/button/AppButton.vue';
+import AppCard from '~common/card/AppCard.vue';
+import { GameBuildPlatformSupportInfo } from '~common/game/build/build.model';
+import { GameExternalPackageModel } from '~common/game/external-package/external-package.model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { Navigate } from '~common/navigate/navigate.service';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { $gettext } from '~common/translate/translate.service';
 
-const { package: gamePackage } = toRefs(props);
+type Props = {
+	package: GameExternalPackageModel;
+};
+const { package: gamePackage } = defineProps<Props>();
 
 const showFullDescription = ref(false);
 const canToggleDescription = ref(false);
 
 const platforms = computed(() => {
 	const platforms = [];
-	for (const prop in gamePackage.value) {
-		if (!(gamePackage.value as any)[prop]) {
+	for (const prop in gamePackage) {
+		if (!(gamePackage as any)[prop]) {
 			continue;
 		}
 
@@ -47,7 +44,7 @@ const platforms = computed(() => {
 function gotoExternal() {
 	Analytics.trackEvent('game-package-card', 'download', 'external');
 
-	Navigate.newWindow(gamePackage.value.url);
+	Navigate.newWindow(gamePackage.url);
 }
 </script>
 

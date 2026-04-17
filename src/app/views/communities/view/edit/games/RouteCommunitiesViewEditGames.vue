@@ -1,26 +1,24 @@
 <script lang="ts">
 import { ref, toRef } from 'vue';
 import { RouterLink } from 'vue-router';
-import { Api } from '../../../../../../_common/api/api.service';
-import AppButton from '../../../../../../_common/button/AppButton.vue';
-import AppCardList from '../../../../../../_common/card/list/AppCardList.vue';
-import AppCardListDraggable from '../../../../../../_common/card/list/AppCardListDraggable.vue';
-import AppCardListItem from '../../../../../../_common/card/list/AppCardListItem.vue';
-import { $saveCommunityGameSort } from '../../../../../../_common/community/community.model';
-import { GameModel } from '../../../../../../_common/game/game.model';
-import AppGameThumbnailImg from '../../../../../../_common/game/thumbnail/AppGameThumbnailImg.vue';
-import { showErrorGrowl } from '../../../../../../_common/growls/growls.service';
-import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '../../../../../../_common/route/route-component';
-import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
-import { $gettext } from '../../../../../../_common/translate/translate.service';
-import { showCommunityLinkGameModal } from '../../../../../components/community/link-game-modal/link-game-modal.service';
-import AppCommunityPerms from '../../../../../components/community/perms/AppCommunityPerms.vue';
-import AppCommunitiesViewPageContainer from '../../_page-container/page-container.vue';
-import { useCommunityRouteStore } from '../../view.store';
+
+import { showCommunityLinkGameModal } from '~app/components/community/link-game-modal/link-game-modal.service';
+import AppCommunityPerms from '~app/components/community/perms/AppCommunityPerms.vue';
+import AppCommunityPageContainer from '~app/views/communities/view/_page-container/AppCommunityPageContainer.vue';
+import { useCommunityRouteStore } from '~app/views/communities/view/view.store';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import AppCardList from '~common/card/list/AppCardList.vue';
+import AppCardListDraggable from '~common/card/list/AppCardListDraggable.vue';
+import AppCardListItem from '~common/card/list/AppCardListItem.vue';
+import { $saveCommunityGameSort } from '~common/community/community.model';
+import { GameModel } from '~common/game/game.model';
+import AppGameThumbnailImg from '~common/game/thumbnail/AppGameThumbnailImg.vue';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { $gettext } from '~common/translate/translate.service';
 
 export default {
 	...defineAppRouteOptions({
@@ -113,7 +111,7 @@ createAppRoute({
 </script>
 
 <template>
-	<AppCommunitiesViewPageContainer>
+	<AppCommunityPageContainer>
 		<AppCommunityPerms :community="community" required="community-channels">
 			<h2 class="section-header">
 				{{ $gettext(`Linked Games`) }}
@@ -203,5 +201,5 @@ createAppRoute({
 				</AppCardListDraggable>
 			</AppCardList>
 		</AppCommunityPerms>
-	</AppCommunitiesViewPageContainer>
+	</AppCommunityPageContainer>
 </template>

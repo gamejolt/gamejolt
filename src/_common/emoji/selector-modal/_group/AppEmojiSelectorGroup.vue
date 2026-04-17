@@ -1,42 +1,36 @@
 <script lang="ts">
-import { computed, CSSProperties, PropType, ref, toRefs } from 'vue';
-import { kFontSizeBase } from '../../../../_styles/variables';
-import { Api } from '../../../api/api.service';
-import { Screen } from '../../../screen/screen-service';
-import AppScrollInview, { ScrollInviewConfig } from '../../../scroll/inview/AppScrollInview.vue';
-import { EmojiGroupData } from '../../../store/common-store';
-import { EmojiModel } from '../../emoji.model';
-import AppEmojiSelectorGroupThumbnail from './AppEmojiSelectorGroupThumbnail.vue';
-import AppEmojiSelectorGroupItemLazy from './item/AppEmojiSelectorGroupItemLazy.vue';
+import { computed, CSSProperties, ref } from 'vue';
+
+import { Api } from '~common/api/api.service';
+import { EmojiModel } from '~common/emoji/emoji.model';
+import AppEmojiSelectorGroupThumbnail from '~common/emoji/selector-modal/_group/AppEmojiSelectorGroupThumbnail.vue';
+import AppEmojiSelectorGroupItemLazy from '~common/emoji/selector-modal/_group/item/AppEmojiSelectorGroupItemLazy.vue';
+import { Screen } from '~common/screen/screen-service';
+import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
+import { EmojiGroupData } from '~common/store/common-store';
+import { kFontSizeBase } from '~styles/variables';
 
 const GroupInviewConfig = new ScrollInviewConfig({ margin: `${Screen.height / 2}px` });
 const EmojiInviewConfig = new ScrollInviewConfig({ margin: `200px` });
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	groupData: {
-		type: Object as PropType<EmojiGroupData>,
-		required: true,
-	},
-	gridStyles: {
-		type: Object as PropType<CSSProperties>,
-		required: true,
-	},
-});
-
-const { groupData } = toRefs(props);
+type Props = {
+	groupData: EmojiGroupData;
+	gridStyles: CSSProperties;
+};
+const { groupData } = defineProps<Props>();
 
 const inview = ref(false);
 
-const emit = defineEmits({
-	inview: () => true,
-	outview: () => true,
-	'select-emoji': (_emoji: EmojiModel) => true,
-});
+const emit = defineEmits<{
+	inview: [];
+	outview: [];
+	'select-emoji': [emoji: EmojiModel];
+}>();
 
 const itemCount = computed(() => {
-	return Math.max(groupData.value.group.emojis.length, groupData.value.group.num_emojis);
+	return Math.max(groupData.group.emojis.length, groupData.group.num_emojis);
 });
 
 function onInview() {

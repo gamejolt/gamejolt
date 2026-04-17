@@ -1,23 +1,18 @@
 <script lang="ts">
 import { computed } from 'vue';
-import AppLinkHelp from '../../../../../_common/link/AppLinkHelp.vue';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '../../../../../_common/route/route-component';
-import {
-	ShopProductModel,
-	ShopProductResource,
-} from '../../../../../_common/shop/product/product-model';
-import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
-import { StickerPackRatio } from '../../../../../_common/sticker/pack/AppStickerPack.vue';
-import { StickerPackModel } from '../../../../../_common/sticker/pack/pack.model';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import { touchUser } from '../../../../../_common/user/user.model';
-import { isInstance } from '../../../../../utils/utils';
-import { useShopDashStore } from '../shop.store';
-import AppDashShopItem from './_item/AppDashShopItem.vue';
-import AppDashShopItemAdd from './_item/AppDashShopItemAdd.vue';
+
+import AppDashShopItem from '~app/views/dashboard/shop/overview/_item/AppDashShopItem.vue';
+import AppDashShopItemAdd from '~app/views/dashboard/shop/overview/_item/AppDashShopItemAdd.vue';
+import { useShopDashStore } from '~app/views/dashboard/shop/shop.store';
+import AppLinkHelp from '~common/link/AppLinkHelp.vue';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { ShopProductModel, ShopProductResource } from '~common/shop/product/product-model';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import { StickerPackRatio } from '~common/sticker/pack/AppStickerPack.vue';
+import { StickerPackModel } from '~common/sticker/pack/pack.model';
+import { $gettext } from '~common/translate/translate.service';
+import { touchUser } from '~common/user/user.model';
+import { isInstance } from '~utils/utils';
 
 export default {
 	...defineAppRouteOptions({

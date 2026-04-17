@@ -1,54 +1,46 @@
 <script lang="ts" setup>
-import { Sketch as VuePicker } from '@ckpack/vue-color';
-import { ref, toRefs, watch } from 'vue';
-import AppButton from '../button/AppButton.vue';
-import AppPopper from '../popper/AppPopper.vue';
-import { Popper } from '../popper/popper.service';
-import { $gettext } from '../translate/translate.service';
+import 'vue-color/style.css';
 
-type VueTouch = {
-	hex: string | null;
-};
+import { computed, ref, watch } from 'vue';
+import { ChromePicker } from 'vue-color';
 
-const props = defineProps({
-	modelValue: {
-		type: String,
-		required: true,
+import AppButton from '~common/button/AppButton.vue';
+import AppPopper from '~common/popper/AppPopper.vue';
+import { Popper } from '~common/popper/popper.service';
+import { $gettext } from '~common/translate/translate.service';
+
+const modelValue = defineModel<string>({ required: true });
+
+// Empty string = "no selection" — the swatch shows a checkerboard.
+const colors = ref<string>('');
+
+// The picker itself can't be fed an empty value (vue-color@3.3.3 would
+// emit `null` back if the input wasn't a parseable color), so wrap with
+// a fallback and ignore null/empty emits.
+const pickerValue = computed<string>({
+	get: () => colors.value || '#000000',
+	set: val => {
+		if (val) {
+			colors.value = val;
+		}
 	},
-});
-
-const emit = defineEmits({
-	'update:modelValue': (_modelValue: string) => true,
-});
-
-const { modelValue } = toRefs(props);
-const colors = ref<VueTouch>({
-	hex: null,
 });
 
 watch(
 	modelValue,
 	() => {
-		colors.value = {
-			hex: modelValue?.value ?? '',
-		};
+		colors.value = modelValue.value;
 	},
 	{ immediate: true }
 );
 
-function onChange(value: VueTouch) {
-	colors.value = value;
-}
-
 function accept() {
-	emit('update:modelValue', colors.value.hex!);
+	modelValue.value = colors.value;
 	Popper.hideAll();
 }
 
 function cancel() {
-	colors.value = {
-		hex: modelValue?.value ?? '',
-	};
+	colors.value = modelValue.value;
 	Popper.hideAll();
 }
 </script>
@@ -58,16 +50,15 @@ function cancel() {
 		<AppPopper>
 			<div
 				class="color"
-				:class="{ empty: !colors.hex }"
+				:class="{ empty: !colors }"
 				:style="{
-					backgroundColor: colors.hex || undefined,
+					backgroundColor: colors || undefined,
 				}"
 			/>
 
 			<template #popover>
 				<div class="colorpicker-popover">
-					<!-- eslint-disable-next-line vue/v-on-event-hyphenation -->
-					<VuePicker :model-value="colors" @update:modelValue="onChange" />
+					<ChromePicker v-model="pickerValue" />
 
 					<div class="colorpicker-well">
 						<div class="col">
@@ -118,10 +109,8 @@ function cancel() {
 		padding: 0 5px
 
 .colorpicker-popover
-	.vc_sketch
+	::v-deep(.vc-chrome-picker)
 		margin-left: auto
 		margin-right: auto
-
-	::v-deep(.vue-color__sketch)
 		box-shadow: none
 </style>

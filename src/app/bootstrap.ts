@@ -1,28 +1,30 @@
+import '~app/main.styl';
+
 import { defineAsyncComponent } from 'vue';
-import { bootstrapCommon } from '../_common/bootstrap';
-import { setContentEmojiWrapper } from '../_common/content/components/AppContentEmoji.vue';
-import { setChatInviteComponent } from '../_common/content/content-viewer/components/AppContentViewerChatInvite.vue';
-import { initGamePlayModal } from '../_common/game/play-modal/play-modal.service';
-import { addModalBackdropCheck } from '../_common/modal/AppModal.vue';
-import handlePayloadActions from '../_common/payload/payload-actions.service';
-import { Payload } from '../_common/payload/payload-service';
-import { Registry } from '../_common/registry/registry.service';
-import { Scroll } from '../_common/scroll/scroll.service';
-import { SidebarStoreKey, createSidebarStore } from '../_common/sidebar/sidebar.store';
-import { StickerStoreKey, createStickerStore } from '../_common/sticker/sticker-store';
-import { initSafeExportsForClient } from './components/client/safe-exports';
-import { GridStoreKey, createGridStore } from './components/grid/grid-store';
-import './main.styl';
-import { BannerStoreKey, createBannerStore } from './store/banner';
-import { AppStoreKey, createAppStore } from './store/index';
-import { JoltydexStoreKey, createJoltydexStore } from './store/joltydex';
-import { LibraryStoreKey, createLibraryStore } from './store/library';
-import { QuestStoreKey, createQuestStore } from './store/quest';
-import { router } from './views/index';
+
+import { initSafeExportsForClient } from '~app/components/client/safe-exports';
+import { createGridStore, GridStoreKey } from '~app/components/grid/grid-store';
+import { BannerStoreKey, createBannerStore } from '~app/store/banner';
+import { AppStoreKey, createAppStore } from '~app/store/index';
+import { createJoltydexStore, JoltydexStoreKey } from '~app/store/joltydex';
+import { createLibraryStore, LibraryStoreKey } from '~app/store/library';
+import { createQuestStore, QuestStoreKey } from '~app/store/quest';
+import { router } from '~app/views/index';
+import { bootstrapCommon } from '~common/bootstrap';
+import { setContentEmojiWrapper } from '~common/content/components/AppContentEmoji.vue';
+import { setChatInviteComponent } from '~common/content/content-viewer/components/AppContentViewerChatInvite.vue';
+import { initGamePlayModal } from '~common/game/play-modal/play-modal.service';
+import { addModalBackdropCheck } from '~common/modal/AppModal.vue';
+import handlePayloadActions from '~common/payload/payload-actions.service';
+import { Payload } from '~common/payload/payload-service';
+import { Registry } from '~common/registry/registry.service';
+import { Scroll } from '~common/scroll/scroll.service';
+import { createSidebarStore, SidebarStoreKey } from '~common/sidebar/sidebar.store';
+import { createStickerStore, StickerStoreKey } from '~common/sticker/sticker-store';
 
 export async function createApp() {
 	const { app, commonStore } = await bootstrapCommon({
-		appComponentLoader: async () => (await import('./AppMain.vue')).default,
+		appComponentLoader: async () => (await import('~app/AppMain.vue')).default,
 		initSectionSafeExportsForClient: initSafeExportsForClient,
 		router,
 	});
@@ -60,7 +62,7 @@ export async function createApp() {
 	app.provide(JoltydexStoreKey, joltydexStore);
 
 	if (GJ_IS_DESKTOP_APP) {
-		const { bootstrapClient } = await import('./bootstrap-client');
+		const { bootstrapClient } = await import('~app/bootstrap-client');
 		await bootstrapClient(app, appStore, commonStore);
 	}
 
@@ -68,14 +70,14 @@ export async function createApp() {
 	// needs to render a component from app. Set the component it should render
 	// here.
 	const AppContentChatInview = defineAsyncComponent(
-		() => import('./components/content/components/AppContentChatInvite.vue')
+		() => import('~app/components/content/components/AppContentChatInvite.vue')
 	);
 	setChatInviteComponent(AppContentChatInview);
 
 	// AppContentEmoji needs this, but lives in _common. Need to assign the
 	// wrapping component here as well.
 	const AppStickerCollectibleWrapper = defineAsyncComponent(
-		() => import('./components/sticker/AppStickerCollectibleWrapper.vue')
+		() => import('~app/components/sticker/AppStickerCollectibleWrapper.vue')
 	);
 	setContentEmojiWrapper(AppStickerCollectibleWrapper);
 

@@ -1,56 +1,45 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRef, toRefs } from 'vue';
+import { computed, toRef, useTemplateRef } from 'vue';
 import { RouterLink } from 'vue-router';
-import { styleWhen } from '../../../_styles/mixins';
-import { getMediaserverUrlForBounds } from '../../../utils/image';
-import AppButton from '../../button/AppButton.vue';
-import { formatFuzzynumber } from '../../filters/fuzzynumber';
-import { formatNumber } from '../../filters/number';
-import AppLoading from '../../loading/AppLoading.vue';
-import { useCommonStore } from '../../store/common-store';
-import AppTheme from '../../theme/AppTheme.vue';
-import AppTranslate from '../../translate/AppTranslate.vue';
-import AppUserDogtag from '../AppUserDogtag.vue';
-import AppUserFollowButton from '../follow/AppUserFollowButton.vue';
-import AppUserAvatarBubble from '../user-avatar/AppUserAvatarBubble.vue';
-import AppUserAvatarImg from '../user-avatar/AppUserAvatarImg.vue';
-import { UserModel } from '../user.model';
 
-const props = defineProps({
-	user: {
-		type: Object as PropType<UserModel>,
-		required: true,
-	},
-	isLoading: {
-		type: Boolean,
-	},
-	elevate: {
-		type: Boolean,
-	},
-	noStats: {
-		type: Boolean,
-	},
-	disableFollowWidget: {
-		type: Boolean,
-	},
-});
+import AppButton from '~common/button/AppButton.vue';
+import { formatFuzzynumber } from '~common/filters/fuzzynumber';
+import { formatNumber } from '~common/filters/number';
+import AppLoading from '~common/loading/AppLoading.vue';
+import { useCommonStore } from '~common/store/common-store';
+import AppTheme from '~common/theme/AppTheme.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import AppUserDogtag from '~common/user/AppUserDogtag.vue';
+import AppUserFollowButton from '~common/user/follow/AppUserFollowButton.vue';
+import { UserModel } from '~common/user/user.model';
+import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
+import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
+import { styleWhen } from '~styles/mixins';
+import { getMediaserverUrlForBounds } from '~utils/image';
 
-const { user, isLoading, elevate } = toRefs(props);
+type Props = {
+	user: UserModel;
+	isLoading?: boolean;
+	elevate?: boolean;
+	noStats?: boolean;
+	disableFollowWidget?: boolean;
+};
+const { user, isLoading, elevate } = defineProps<Props>();
 
-const headerElement = ref<HTMLElement>();
+const headerElement = useTemplateRef('headerElement');
 
 const { user: sessionUser } = useCommonStore();
 
-const followerCount = toRef(() => user.value.follower_count || 0);
-const followingCount = toRef(() => user.value.following_count || 0);
-const postCount = toRef(() => user.value.post_count || 0);
-const gameCount = toRef(() => user.value.game_count || 0);
-const likeCount = toRef(() => user.value.like_count || 0);
-const dogtags = toRef(() => user.value.dogtags || []);
-const showTags = toRef(() => !!user.value.follows_you || dogtags.value.length > 0);
+const followerCount = toRef(() => user.follower_count || 0);
+const followingCount = toRef(() => user.following_count || 0);
+const postCount = toRef(() => user.post_count || 0);
+const gameCount = toRef(() => user.game_count || 0);
+const likeCount = toRef(() => user.like_count || 0);
+const dogtags = toRef(() => user.dogtags || []);
+const showTags = toRef(() => !!user.follows_you || dogtags.value.length > 0);
 
 const headerBackgroundImage = computed(() => {
-	let src = user.value.header_media_item?.mediaserver_url;
+	let src = user.header_media_item?.mediaserver_url;
 	if (src) {
 		const { offsetWidth, offsetHeight } = headerElement.value || {};
 		src = getMediaserverUrlForBounds({
@@ -223,4 +212,4 @@ const headerBackgroundImage = computed(() => {
 	</AppTheme>
 </template>
 
-<style lang="stylus" src="./common.styl" scoped></style>
+<style lang="stylus" src="~common/user/card/common.styl" scoped></style>

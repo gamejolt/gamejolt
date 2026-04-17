@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import AppJolticon from '../../jolticon/AppJolticon.vue';
-import { ClientHistoryNavigator } from './history-navigator.service';
+import { ClientHistoryNavigator } from '~common/client/history-navigator/history-navigator.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
 </script>
 
 <template>

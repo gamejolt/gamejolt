@@ -1,11 +1,11 @@
-import { RouteLocationDefinition } from '../../utils/router';
-import { RealmFollowSource, trackRealmFollow } from '../analytics/analytics.service';
-import { Api } from '../api/api.service';
-import { showErrorGrowl } from '../growls/growls.service';
-import { MediaItemModel } from '../media-item/media-item-model';
-import { showModalConfirm } from '../modal/confirm/confirm-service';
-import { Model } from '../model/model.service';
-import { $gettext } from '../translate/translate.service';
+import { RealmFollowSource, trackRealmFollow } from '~common/analytics/analytics.service';
+import { Api } from '~common/api/api.service';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import { MediaItemModel } from '~common/media-item/media-item-model';
+import { showModalConfirm } from '~common/modal/confirm/confirm-service';
+import { Model } from '~common/model/model.service';
+import { $gettext } from '~common/translate/translate.service';
+import { RouteLocationDefinition } from '~utils/router';
 
 export class RealmModel extends Model {
 	declare name: string;

@@ -1,36 +1,27 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-import { CommunityModel } from '../../../../_common/community/community.model';
-import AppCreatorsList from '../../../../_common/creator/AppCreatorsList.vue';
-import { FiresidePostModel } from '../../../../_common/fireside/post/post-model';
-import { RealmModel } from '../../../../_common/realm/realm-model';
-import AppUserCreatorBadge from '../../../../_common/user/creator/AppUserCreatorBadge.vue';
-import { FeaturedItemModel } from '../../../components/featured-item/featured-item.model';
-import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
-import AppDiscoverHomeBanner from './_home-default/AppDiscoverHomeBanner.vue';
-import AppDiscoverHomeRealms from './_home-default/AppDiscoverHomeRealms.vue';
+import { FeaturedItemModel } from '~app/components/featured-item/featured-item.model';
+import AppShellPageBackdrop from '~app/components/shell/AppShellPageBackdrop.vue';
+import AppDiscoverHomeBanner from '~app/views/discover/home/_home-default/AppDiscoverHomeBanner.vue';
+import AppDiscoverHomeRealms from '~app/views/discover/home/_home-default/AppDiscoverHomeRealms.vue';
+import { CommunityModel } from '~common/community/community.model';
+import AppCreatorsList from '~common/creator/AppCreatorsList.vue';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import { RealmModel } from '~common/realm/realm-model';
+import AppUserCreatorBadge from '~common/user/creator/AppUserCreatorBadge.vue';
 
-defineProps({
-	isBootstrapped: {
-		type: Boolean,
-	},
-	featuredItem: {
-		type: Object as PropType<FeaturedItemModel>,
-		default: null,
-	},
-	featuredCommunities: {
-		type: Array as PropType<CommunityModel[]>,
-		default: () => [],
-	},
-	featuredRealms: {
-		type: Array as PropType<RealmModel[]>,
-		default: () => [],
-	},
-	creatorPosts: {
-		type: Array as PropType<FiresidePostModel[]>,
-		default: () => [],
-	},
-});
+type Props = {
+	isBootstrapped?: boolean;
+	featuredItem?: FeaturedItemModel;
+	featuredCommunities?: CommunityModel[];
+	featuredRealms?: RealmModel[];
+	creatorPosts?: FiresidePostModel[];
+};
+const {
+	isBootstrapped,
+	featuredItem,
+	featuredRealms = [],
+	creatorPosts = [],
+} = defineProps<Props>();
 
 const cardColumnsDesktop = 4;
 const cardColumnsSm = 3;

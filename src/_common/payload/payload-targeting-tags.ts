@@ -1,4 +1,4 @@
-import { AdStore, setAdsTargetingTags } from '../ad/ad-store';
+import { AdStore, setAdsTargetingTags } from '~common/ad/ad-store';
 
 interface PayloadData {
 	/** Targeting tags. */

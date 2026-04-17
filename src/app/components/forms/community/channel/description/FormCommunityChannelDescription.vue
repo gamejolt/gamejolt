@@ -1,43 +1,41 @@
 <script lang="ts" setup>
-import { ref, toRefs } from 'vue';
+import { ref, toRef } from 'vue';
+
 import {
 	$saveCommunityChannelDescription,
 	CommunityChannelModel,
-} from '../../../../../../_common/community/channel/channel.model';
-import { ContextCapabilities } from '../../../../../../_common/content/content-context';
-import AppForm, {
-	FormController,
-	createForm,
-	defineFormProps,
-} from '../../../../../../_common/form-vue/AppForm.vue';
-import AppFormButton from '../../../../../../_common/form-vue/AppFormButton.vue';
-import AppFormControlErrors from '../../../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../../../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormControlContent from '../../../../../../_common/form-vue/controls/AppFormControlContent.vue';
+} from '~common/community/channel/channel.model';
+import { ContextCapabilities } from '~common/content/content-context';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlContent from '~common/form-vue/controls/AppFormControlContent.vue';
 import {
 	validateContentMaxLength,
 	validateContentNoActiveUploads,
 	validateContentRequired,
-} from '../../../../../../_common/form-vue/validators';
-import AppTranslate from '../../../../../../_common/translate/AppTranslate.vue';
+} from '~common/form-vue/validators';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
-const props = defineProps({
-	...defineFormProps<CommunityChannelModel>(true),
-});
+type FormModel = CommunityChannelModel;
 
-const { model } = toRefs(props);
+type Props = {
+	model: FormModel;
+};
+const { model } = defineProps<Props>();
 
 const lengthLimit = ref(5_000);
 const descriptionContentCapabilities = ref(ContextCapabilities.getPlaceholder());
 
-const form: FormController<CommunityChannelModel> = createForm({
-	loadUrl: `/web/dash/communities/description/save-channel/${model.value.id}`,
-	model,
+const form: FormController<FormModel> = createForm<FormModel>({
+	loadUrl: `/web/dash/communities/description/save-channel/${model.id}`,
+	model: toRef(() => model),
 	modelClass: CommunityChannelModel,
 	modelSaveHandler: $saveCommunityChannelDescription,
 	onLoad(payload) {
 		lengthLimit.value = payload.lengthLimit;
-		form.formModel.description_content = model.value.description_content ?? '';
+		form.formModel.description_content = model.description_content ?? '';
 
 		descriptionContentCapabilities.value = ContextCapabilities.fromPayloadList(
 			payload.contentCapabilities

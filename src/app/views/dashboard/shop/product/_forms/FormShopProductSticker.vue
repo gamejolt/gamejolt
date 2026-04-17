@@ -1,42 +1,43 @@
 <script lang="ts" setup>
-import { computed, ref, toRefs } from 'vue';
-import { defineFormProps } from '../../../../../../_common/form-vue/AppForm.vue';
-import AppFormControl from '../../../../../../_common/form-vue/AppFormControl.vue';
-import AppFormControlErrors from '../../../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormControlPrefix from '../../../../../../_common/form-vue/AppFormControlPrefix.vue';
-import AppFormGroup from '../../../../../../_common/form-vue/AppFormGroup.vue';
+import { computed, ref } from 'vue';
+
+import FormShopProductBase, {
+	createShopProductBaseForm,
+} from '~app/views/dashboard/shop/product/_forms/FormShopProductBase.vue';
+import AppDashShopProductHeader from '~app/views/dashboard/shop/product/AppDashShopProductHeader.vue';
+import { ShopDashProductType, useShopDashStore } from '~app/views/dashboard/shop/shop.store';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormControlPrefix from '~common/form-vue/AppFormControlPrefix.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
 import {
 	validateAvailability,
 	validateEmojiName,
 	validateMaxLength,
 	validateMinLength,
-} from '../../../../../../_common/form-vue/validators';
-import AppLinkHelp from '../../../../../../_common/link/AppLinkHelp.vue';
-import { ShopProductResource } from '../../../../../../_common/shop/product/product-model';
-import { StickerModel } from '../../../../../../_common/sticker/sticker.model';
-import { $gettext } from '../../../../../../_common/translate/translate.service';
-import { ShopDashProductType, useShopDashStore } from '../../shop.store';
-import AppDashShopProductHeader from '../AppDashShopProductHeader.vue';
-import FormShopProductBase, { createShopProductBaseForm } from './FormShopProductBase.vue';
+} from '~common/form-vue/validators';
+import AppLinkHelp from '~common/link/AppLinkHelp.vue';
+import { ShopProductResource } from '~common/shop/product/product-model';
+import { StickerModel } from '~common/sticker/sticker.model';
+import { $gettext } from '~common/translate/translate.service';
 
-const props = defineProps({
-	...defineFormProps<StickerModel>(),
-});
-
-const { model } = toRefs(props);
+type Props = {
+	model?: StickerModel;
+};
+const { model } = defineProps<Props>();
 
 const emojiNameMinLength = ref(3);
 const emojiNameMaxLength = ref(30);
-const emojiPrefix = ref(props.model?.emoji?.prefix);
+const emojiPrefix = ref(model?.emoji?.prefix);
 
 const shopStore = useShopDashStore()!;
 
 const data = createShopProductBaseForm({
 	shopStore,
 	resource: ShopProductResource.Sticker,
-	baseModel: model?.value,
+	baseModel: model,
 	fields: {
-		emoji_name: model?.value?.emoji?.short_name ?? '',
+		emoji_name: model?.emoji?.short_name ?? '',
 	},
 	onLoad({ payload }) {
 		emojiNameMinLength.value = payload.emojiNameMinLength || emojiNameMinLength.value;

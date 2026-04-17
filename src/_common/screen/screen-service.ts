@@ -1,7 +1,8 @@
 import { reactive, ref, toRef } from 'vue';
-import { debounce } from '../../utils/utils';
-import { getDeviceType } from '../device/device.service';
-import { EventTopic } from '../system/event/event-topic';
+
+import { getDeviceType } from '~common/device/device.service';
+import { EventTopic } from '~common/system/event/event-topic';
+import { debounce } from '~utils/utils';
 
 export const Screen = createScreenService();
 export const onScreenResize = new EventTopic<void>();

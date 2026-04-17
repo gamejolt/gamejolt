@@ -1,39 +1,34 @@
 <script lang="ts" setup>
-import { PropType, computed, toRefs } from 'vue';
+import { computed } from 'vue';
 import { RouteLocationRaw, useRouter } from 'vue-router';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import AppForm, { FormController, createForm } from '../../../../_common/form-vue/AppForm.vue';
-import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
-import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormStickySubmit from '../../../../_common/form-vue/AppFormStickySubmit.vue';
-import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
-import AppModal from '../../../../_common/modal/AppModal.vue';
-import { useModal } from '../../../../_common/modal/modal.service';
+
+import { routeNotifications } from '~app/views/notifications/notifications.route';
+import { NOTIFICATION_FILTER_QUERY } from '~app/views/notifications/RouteNotifications.vue';
+import AppButton from '~common/button/AppButton.vue';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormStickySubmit from '~common/form-vue/AppFormStickySubmit.vue';
+import AppFormControlToggle from '~common/form-vue/controls/AppFormControlToggle.vue';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
 import {
-	NotificationFeedTypes,
 	getNotificationFeedTypeLabels,
-} from '../../../../_common/notification/notification-model';
-import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
-import { useCommonStore } from '../../../../_common/store/common-store';
-import { stringSort } from '../../../../utils/array';
-import { NOTIFICATION_FILTER_QUERY } from '../RouteNotifications.vue';
-import { routeNotifications } from '../notifications.route';
+	NotificationFeedTypes,
+} from '~common/notification/notification-model';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import { useCommonStore } from '~common/store/common-store';
+import { stringSort } from '~utils/array';
 
-interface FormModel {
+type FormModel = {
 	[k: string]: boolean;
-}
+};
 
-const props = defineProps({
-	filters: {
-		type: Array as PropType<string[]>,
-		required: true,
-	},
-	replaceRoute: {
-		type: Boolean,
-	},
-});
-
-const { filters, replaceRoute } = toRefs(props);
+type Props = {
+	filters: string[];
+	replaceRoute?: boolean;
+};
+const { filters, replaceRoute } = defineProps<Props>();
 
 const modal = useModal()!;
 const router = useRouter();
@@ -41,10 +36,10 @@ const { user } = useCommonStore();
 
 const notificationLabels = computed(() => getNotificationFeedTypeLabels(user.value!));
 
-const form: FormController<FormModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	onInit() {
 		NotificationFeedTypes.sort((a, b) => stringSort(a, b)).forEach(i => {
-			form.formModel[i] = filters.value.includes(i);
+			form.formModel[i] = filters.includes(i);
 		});
 	},
 	async onSubmit() {
@@ -69,7 +64,7 @@ const form: FormController<FormModel> = createForm({
 			query,
 		};
 
-		if (replaceRoute.value) {
+		if (replaceRoute) {
 			router.replace(routeData);
 		} else {
 			router.push(routeData);
@@ -127,11 +122,11 @@ function assignAll(value: boolean) {
 					@click.capture.stop="toggleField(option)"
 				>
 					<AppFormGroup
-						v-if="notificationLabels[option]"
+						v-if="(notificationLabels as Record<string, string>)[option]"
 						class="-group"
 						:name="option"
 						label-class="-group-link"
-						:label="notificationLabels[option]"
+						:label="(notificationLabels as Record<string, string>)[option]"
 					>
 						<template #inline-control>
 							<AppFormControlToggle />

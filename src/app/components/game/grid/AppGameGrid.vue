@@ -1,18 +1,19 @@
 <script lang="ts">
-import { PropType, computed, toRef, toRefs } from 'vue';
-import draggable from 'vuedraggable';
-import AppAdFeedParent from '../../../../_common/ad/AppAdFeedParent.vue';
-import AppAdTakeoverFloat from '../../../../_common/ad/AppAdTakeoverFloat.vue';
-import { useAdStore } from '../../../../_common/ad/ad-store';
-import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
-import { formatNumber } from '../../../../_common/filters/number';
-import { GameModel } from '../../../../_common/game/game.model';
-import AppGameThumbnail from '../../../../_common/game/thumbnail/AppGameThumbnail.vue';
-import { Screen } from '../../../../_common/screen/screen-service';
-import AppScrollAffix from '../../../../_common/scroll/AppScrollAffix.vue';
-import { styleWhen } from '../../../../_styles/mixins';
-import { kLayerAds } from '../../../../_styles/variables';
-import AppGameThumbnailControls from '../thumbnail/AppGameThumbnailControls.vue';
+import { computed, toRef } from 'vue';
+import { VueDraggable } from 'vue-draggable-plus';
+
+import AppGameThumbnailControls from '~app/components/game/thumbnail/AppGameThumbnailControls.vue';
+import { useAdStore } from '~common/ad/ad-store';
+import AppAdFeedParent from '~common/ad/AppAdFeedParent.vue';
+import AppAdTakeoverFloat from '~common/ad/AppAdTakeoverFloat.vue';
+import AppAdWidget from '~common/ad/widget/AppAdWidget.vue';
+import { formatNumber } from '~common/filters/number';
+import { GameModel } from '~common/game/game.model';
+import AppGameThumbnail from '~common/game/thumbnail/AppGameThumbnail.vue';
+import { Screen } from '~common/screen/screen-service';
+import AppScrollAffix from '~common/scroll/AppScrollAffix.vue';
+import { styleWhen } from '~styles/mixins';
+import { kLayerAds } from '~styles/variables';
 
 export const GameGridRowSizeSm = 2;
 export const GameGridRowSizeMd = 3;
@@ -22,51 +23,38 @@ let idCounter = 0;
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	games: {
-		type: Array as PropType<GameModel[]>,
-		default: () => [],
-	},
-	gamesCount: {
-		type: Number,
-		default: 0,
-	},
-	currentPage: {
-		type: Number,
-		default: 0,
-	},
-	truncateToFit: {
-		type: Boolean,
-	},
-	scrollable: {
-		type: Boolean,
-	},
-	forceScrollable: {
-		type: Boolean,
-	},
-	showAds: {
-		type: Boolean,
-	},
-	canReorder: {
-		type: Boolean,
-	},
-	eventLabel: {
-		type: String,
-		default: undefined,
-	},
-});
+type Props = {
+	games?: GameModel[];
+	gamesCount?: number;
+	currentPage?: number;
+	truncateToFit?: boolean;
+	scrollable?: boolean;
+	forceScrollable?: boolean;
+	showAds?: boolean;
+	canReorder?: boolean;
+	eventLabel?: string;
+};
+const {
+	games = [],
+	gamesCount = 0,
+	currentPage = 0,
+	truncateToFit,
+	scrollable,
+	forceScrollable,
+	showAds,
+	canReorder,
+} = defineProps<Props>();
 
-const emit = defineEmits({
-	sort: (_games: GameModel[]) => true,
-});
+const emit = defineEmits<{
+	sort: [games: GameModel[]];
+}>();
 
-const { canReorder, showAds, truncateToFit, scrollable, forceScrollable, games } = toRefs(props);
 const { shouldShow: globalShouldShowAds } = useAdStore();
 
 const id = ++idCounter;
 
-const shouldShowAds = toRef(() => !canReorder.value && showAds.value && globalShouldShowAds.value);
-const isScrollable = toRef(() => (Screen.isXs && scrollable.value) || forceScrollable.value);
+const shouldShowAds = toRef(() => !canReorder && showAds && globalShouldShowAds.value);
+const isScrollable = toRef(() => (Screen.isXs && scrollable) || forceScrollable);
 const shouldShowStickyAd = toRef(() => Screen.width >= 2100);
 
 const rowSize = toRef(() => {
@@ -78,7 +66,7 @@ const rowSize = toRef(() => {
 		return GameGridRowSizeLg;
 	}
 
-	return games.value.length;
+	return games.length;
 });
 
 /**
@@ -88,18 +76,18 @@ const rowSize = toRef(() => {
  */
 const processedGames = computed({
 	get: () => {
-		if (!truncateToFit.value || isScrollable.value) {
-			return games.value;
+		if (!truncateToFit || isScrollable.value) {
+			return games;
 		}
 
-		let chunkSize = Math.max(1, Math.floor(games.value.length / rowSize.value)) * rowSize.value;
+		let chunkSize = Math.max(1, Math.floor(games.length / rowSize.value)) * rowSize.value;
 
 		// Subtract one for the ad slot.
 		if (Screen.isDesktop && shouldShowAds.value) {
 			chunkSize -= 1;
 		}
 
-		return games.value.slice(0, chunkSize);
+		return games.slice(0, chunkSize);
 	},
 	set: games => {
 		emit('sort', games);
@@ -182,23 +170,21 @@ function shouldShowAd(index: number) {
 				</div>
 
 				<template v-if="canReorder">
-					<draggable
-						v-model="processedGames"
-						v-bind="{ delay: 100, delayOnTouchOnly: true }"
-						item-key="id"
-					>
-						<template #item="{ element }">
-							<div class="_game-grid-item">
-								<AppAdTakeoverFloat>
-									<AppGameThumbnail :game="element">
-										<slot name="thumbnail-controls" :game="element">
-											<AppGameThumbnailControls :game="element" />
-										</slot>
-									</AppGameThumbnail>
-								</AppAdTakeoverFloat>
-							</div>
-						</template>
-					</draggable>
+					<VueDraggable v-model="processedGames" :delay="100" :delay-on-touch-only="true">
+						<div
+							v-for="element in processedGames"
+							:key="element.id"
+							class="_game-grid-item"
+						>
+							<AppAdTakeoverFloat>
+								<AppGameThumbnail :game="element">
+									<slot name="thumbnail-controls" :game="element">
+										<AppGameThumbnailControls :game="element" />
+									</slot>
+								</AppGameThumbnail>
+							</AppAdTakeoverFloat>
+						</div>
+					</VueDraggable>
 				</template>
 
 				<template v-else>
@@ -229,4 +215,4 @@ function shouldShowAd(index: number) {
 	</div>
 </template>
 
-<style lang="stylus" src="./grid.styl"></style>
+<style lang="stylus" src="~app/components/game/grid/grid.styl"></style>

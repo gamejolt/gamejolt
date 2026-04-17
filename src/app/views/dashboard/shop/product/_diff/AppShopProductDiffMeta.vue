@@ -1,8 +1,9 @@
 <script lang="ts">
-import { PropType, computed, toRefs } from 'vue';
-import { StickerModel } from '../../../../../../_common/sticker/sticker.model';
-import { useShopDashStore } from '../../shop.store';
-import AppShopProductDiffMetaEntry from './AppShopProductDiffMetaEntry.vue';
+import { computed } from 'vue';
+
+import AppShopProductDiffMetaEntry from '~app/views/dashboard/shop/product/_diff/AppShopProductDiffMetaEntry.vue';
+import { useShopDashStore } from '~app/views/dashboard/shop/shop.store';
+import { StickerModel } from '~common/sticker/sticker.model';
 
 export function parseProductDiffEntry(key: string, val: any, extras: { stickers: StickerModel[] }) {
 	const newEntry: [string, any] = [key, val];
@@ -25,31 +26,18 @@ export function parseProductDiffEntry(key: string, val: any, extras: { stickers:
 </script>
 
 <script lang="ts" setup generic="T extends Record<string, any>">
-const props = defineProps({
-	current: {
-		type: Object as PropType<T & { name: string }>,
-		required: true,
-	},
-	other: {
-		type: Object as PropType<T & { name: string }>,
-		default: undefined,
-	},
-	diffBackground: {
-		type: String,
-		default: undefined,
-	},
-	diffColor: {
-		type: String,
-		default: undefined,
-	},
-});
-
-const { current, other } = toRefs(props);
+type Props = {
+	current: T & { name: string };
+	other?: T & { name: string };
+	diffBackground?: string;
+	diffColor?: string;
+};
+const { current, other, diffBackground, diffColor } = defineProps<Props>();
 
 const { stickers } = useShopDashStore()!;
 
 const entries = computed(() =>
-	Object.entries(current.value).map(([key, val]) =>
+	Object.entries(current).map(([key, val]) =>
 		parseProductDiffEntry(key, val, { stickers: stickers.value.items })
 	)
 );

@@ -1,26 +1,20 @@
 <script lang="ts" setup>
-import { PropType, computed, toRefs } from 'vue';
+import { computed } from 'vue';
 import { RouteLocationRaw, RouterLink } from 'vue-router';
-import { styleBorderRadiusLg, styleWhen } from '../../_styles/mixins';
-import { kFontSizeLarge } from '../../_styles/variables';
-import AppJolticon, { Jolticon } from '../jolticon/AppJolticon.vue';
-import AppOnHover from '../on/AppOnHover.vue';
-import { kThemeBg, kThemeBiBg, kThemeBiFg, kThemeFg } from '../theme/variables';
 
-const props = defineProps({
-	icon: {
-		type: String as PropType<Jolticon>,
-		required: true,
-	},
-	to: {
-		type: null as unknown as PropType<RouteLocationRaw>,
-		default: undefined,
-	},
-});
+import AppJolticon, { Jolticon } from '~common/jolticon/AppJolticon.vue';
+import AppOnHover from '~common/on/AppOnHover.vue';
+import { kThemeBg, kThemeBiBg, kThemeBiFg, kThemeFg } from '~common/theme/variables';
+import { styleBorderRadiusLg, styleWhen } from '~styles/mixins';
+import { kFontSizeLarge } from '~styles/variables';
 
-const { to } = toRefs(props);
+type Props = {
+	icon: Jolticon;
+	to?: RouteLocationRaw;
+};
+const { icon, to } = defineProps<Props>();
 
-const ourTag = computed(() => (to?.value ? RouterLink : 'div'));
+const ourTag = computed(() => (to ? RouterLink : 'div'));
 </script>
 
 <template>

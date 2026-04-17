@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import AppBackdrop from './AppBackdrop.vue';
-import { Backdrop, BackdropController } from './backdrop.service';
+import AppBackdrop from '~common/backdrop/AppBackdrop.vue';
+import { Backdrop, BackdropController } from '~common/backdrop/backdrop.service';
 
 function getTargetForBackdrop(backdrop: BackdropController) {
 	if (backdrop.context) {

@@ -1,39 +1,30 @@
 <script lang="ts" setup>
-import { PropType, computed, toRef, toRefs } from 'vue';
-import { ContentDocument } from '../../content/content-document';
+import { computed, toRef } from 'vue';
 
-const props = defineProps({
-	tags: {
-		type: Array as PropType<string[]>,
-		required: true,
-	},
-	text: {
-		type: String,
-		required: true,
-	},
-	content: {
-		type: Array as PropType<ContentDocument[]>,
-		required: true,
-	},
-});
+import { ContentDocument } from '~common/content/content-document';
 
-const emit = defineEmits({
-	tag: (_tag: string) => true,
-});
+type Props = {
+	tags: string[];
+	text: string;
+	content: ContentDocument[];
+};
+const { tags, text, content } = defineProps<Props>();
 
-const { tags, text, content } = toRefs(props);
+const emit = defineEmits<{
+	tag: [tag: string];
+}>();
 
 const shouldShow = toRef(
-	() => tags.value.length && recommendedTags.value.length + otherTags.value.length > 0
+	() => tags.length && recommendedTags.value.length + otherTags.value.length > 0
 );
 
 const lcText = computed(() => {
 	let newText = '';
-	if (text.value) {
-		newText += text.value.toLowerCase();
+	if (text) {
+		newText += text.toLowerCase();
 	}
-	if (!!content?.value && content.value.length > 0) {
-		for (const contentDocument of content.value) {
+	if (!!content && content.length > 0) {
+		for (const contentDocument of content) {
 			newText += contentDocument
 				.getChildrenByType('text')
 				.map(i => i.text)
@@ -46,16 +37,16 @@ const lcText = computed(() => {
 });
 
 const recommendedTags = computed(() => {
-	if (tags.value.length === 0) {
+	if (tags.length === 0) {
 		return [];
 	}
 
-	return tags.value
+	return tags
 		.map(t => {
 			const count = lcText.value.split(t.toLowerCase()).length - 1;
 			let hashtagCount = 0;
-			if (!!content?.value && content.value.length > 0) {
-				for (const contentDocument of content.value) {
+			if (!!content && content.length > 0) {
+				for (const contentDocument of content) {
 					hashtagCount += contentDocument
 						.getMarks('tag')
 						.map(i => i.attrs.tag as string)
@@ -82,22 +73,20 @@ const recommendedTags = computed(() => {
 });
 
 const otherTags = computed(() => {
-	if (tags.value.length === 0) {
+	if (tags.length === 0) {
 		return [];
 	}
 
 	const recommended = recommendedTags.value;
 
-	if (!!content?.value && content.value.length > 0) {
+	if (!!content && content.length > 0) {
 		let contentTags = [] as string[];
-		for (const contentDocument of content.value) {
+		for (const contentDocument of content) {
 			contentTags.push(...contentDocument.getMarks('tag').map(i => i.attrs.tag));
 		}
-		return tags.value.filter(
-			t => recommended!.indexOf(t) === -1 && contentTags!.indexOf(t) === -1
-		);
+		return tags.filter(t => recommended!.indexOf(t) === -1 && contentTags!.indexOf(t) === -1);
 	} else {
-		return tags.value.filter(
+		return tags.filter(
 			t =>
 				recommended!.indexOf(t) === -1 &&
 				lcText.value.split('#' + t.toLowerCase()).length - 1 === 0

@@ -1,17 +1,18 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
-import { trackCbarControlClick } from '../../../../_common/analytics/analytics.service';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import { Screen } from '../../../../_common/screen/screen-service';
-import { useCommonStore } from '../../../../_common/store/common-store';
-import { DefaultTheme } from '../../../../_common/theme/theme.model';
-import { useThemeStore } from '../../../../_common/theme/theme.store';
-import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import { TogglableLeftPane, useAppStore } from '../../../store/index';
-import { useQuestStore } from '../../../store/quest';
-import { useGridStore } from '../../grid/grid-store';
-import { showVendingMachineModal } from '../../vending-machine/modal/modal.service';
-import AppShellCbarItem from './AppShellCbarItem.vue';
+
+import { useGridStore } from '~app/components/grid/grid-store';
+import AppShellCbarItem from '~app/components/shell/cbar/AppShellCbarItem.vue';
+import { showVendingMachineModal } from '~app/components/vending-machine/modal/modal.service';
+import { TogglableLeftPane, useAppStore } from '~app/store/index';
+import { useQuestStore } from '~app/store/quest';
+import { trackCbarControlClick } from '~common/analytics/analytics.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { Screen } from '~common/screen/screen-service';
+import { useCommonStore } from '~common/store/common-store';
+import { DefaultTheme } from '~common/theme/theme.model';
+import { useThemeStore } from '~common/theme/theme.store';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 
 const { activeCommunity, visibleLeftPane, toggleLeftPane } = useAppStore();
 const { user, showInitialPackWatermark } = useCommonStore();

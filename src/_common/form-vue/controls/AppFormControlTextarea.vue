@@ -1,45 +1,51 @@
 <script lang="ts" setup>
-import { ref, toRef } from 'vue';
-import {
-	createFormControl,
-	defineFormControlEmits,
-	defineFormControlProps,
-	defineFormControlValidateProps,
-} from '../AppFormControl.vue';
-import { useFormGroup } from '../AppFormGroup.vue';
+import { TextareaHTMLAttributes, toRef, useTemplateRef } from 'vue';
 
-const props = defineProps({
-	...defineFormControlProps(),
-	...defineFormControlValidateProps(),
-});
+import { createFormControl, FormControlEmits } from '~common/form-vue/AppFormControl.vue';
+import { useFormGroup } from '~common/form-vue/AppFormGroup.vue';
+import { FormValidator } from '~common/form-vue/validators';
 
-const emit = defineEmits({
-	...defineFormControlEmits(),
-	paste: (_event: ClipboardEvent) => true,
-});
+type Props = {
+	disabled?: boolean;
+	validators?: FormValidator[];
+	validateDelay?: number;
+	validateOnBlur?: boolean;
+} & /* @vue-ignore */ Pick<TextareaHTMLAttributes, 'rows' | 'maxlength'>;
+
+const {
+	disabled,
+	validators = [],
+	validateDelay = 0,
+	validateOnBlur = false,
+} = defineProps<Props>();
+
+const emit = defineEmits<
+	FormControlEmits & {
+		paste: [event: ClipboardEvent];
+	}
+>();
 
 const { name } = useFormGroup()!;
 
 const { id, controlVal, applyValue, applyBlur } = createFormControl({
 	initialValue: '',
-	validators: toRef(props, 'validators'),
-	// eslint-disable-next-line vue/require-explicit-emits
+	validators: toRef(() => validators),
 	onChange: val => emit('changed', val),
 });
 
-const root = ref<HTMLTextAreaElement>();
+const root = useTemplateRef('root');
 
 function onChange() {
 	applyValue(root.value?.value || '', {
-		validateDelay: props.validateDelay,
-		validateOnBlur: props.validateOnBlur,
+		validateDelay: validateDelay,
+		validateOnBlur: validateOnBlur,
 	});
 }
 
 function onBlur() {
-	if (props.validateOnBlur) {
+	if (validateOnBlur) {
 		applyBlur({
-			validateDelay: props.validateDelay,
+			validateDelay: validateDelay,
 		});
 	}
 }

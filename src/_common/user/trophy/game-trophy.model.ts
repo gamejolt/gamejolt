@@ -1,7 +1,7 @@
-import { arrayIndexBy } from '../../../utils/array';
-import { GameModel } from '../../game/game.model';
-import { GameTrophyModel } from '../../game/trophy/trophy.model';
-import { UserBaseTrophyModel } from './user-base-trophy.model';
+import { GameModel } from '~common/game/game.model';
+import { GameTrophyModel } from '~common/game/trophy/trophy.model';
+import { UserBaseTrophyModel } from '~common/user/trophy/user-base-trophy.model';
+import { arrayIndexBy } from '~utils/array';
 
 export class UserGameTrophyModel extends UserBaseTrophyModel {
 	declare game_id: number;

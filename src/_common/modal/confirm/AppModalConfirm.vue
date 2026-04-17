@@ -1,24 +1,15 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-import AppButton from '../../button/AppButton.vue';
-import { $gettext } from '../../translate/translate.service';
-import AppModal from '../AppModal.vue';
-import { useModal } from '../modal.service';
+import AppButton from '~common/button/AppButton.vue';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import { $gettext } from '~common/translate/translate.service';
 
-defineProps({
-	message: {
-		type: String,
-		required: true,
-	},
-	title: {
-		type: String,
-		required: true,
-	},
-	buttonType: {
-		type: String as PropType<'ok' | 'yes'>,
-		required: true,
-	},
-});
+type Props = {
+	message: string;
+	title: string;
+	buttonType: 'ok' | 'yes';
+};
+defineProps<Props>();
 
 const modal = useModal()!;
 </script>

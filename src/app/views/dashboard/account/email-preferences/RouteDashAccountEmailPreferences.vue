@@ -1,15 +1,13 @@
 <script lang="ts">
 import { ref } from 'vue';
-import { Api } from '../../../../../_common/api/api.service';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '../../../../../_common/route/route-component';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import { UserModel } from '../../../../../_common/user/user.model';
-import FormEmailPreferences from '../../../../components/forms/email-preferences/FormEmailPreferences.vue';
-import { IntentService } from '../../../../components/intent/intent.service';
-import { useAccountRouteController } from '../RouteDashAccount.vue';
+
+import FormEmailPreferences from '~app/components/forms/email-preferences/FormEmailPreferences.vue';
+import { IntentService } from '~app/components/intent/intent.service';
+import { useAccountRouteController } from '~app/views/dashboard/account/RouteDashAccount.vue';
+import { Api } from '~common/api/api.service';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { $gettext } from '~common/translate/translate.service';
+import { UserModel } from '~common/user/user.model';
 
 export default {
 	...defineAppRouteOptions({

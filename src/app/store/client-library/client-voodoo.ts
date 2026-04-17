@@ -1,8 +1,8 @@
-import { Analytics } from '../../../_common/analytics/analytics.service';
-import { getExecutable } from '../../../_common/client/client-voodoo-imports';
-import { showErrorGrowl } from '../../../_common/growls/growls.service';
-import { isErrnoException } from '../../../utils/utils.client';
-import { showClientAntiVirusModal } from '../../components/client/anti-virus-modal/anti-virus-modal.service';
+import { showClientAntiVirusModal } from '~app/components/client/anti-virus-modal/anti-virus-modal.service';
+import { Analytics } from '~common/analytics/analytics.service';
+import { getExecutable } from '~common/client/client-voodoo-imports';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import { isErrnoException } from '~utils/utils.client';
 
 const path = require('path') as typeof import('path');
 

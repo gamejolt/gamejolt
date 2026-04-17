@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 import { toRef } from 'vue';
-import AppCommunityCardBase from '../../../../../_common/community/card-base/AppCommunityCardBase.vue';
-import AppEditableThumbnail from '../_editable-thumbnail/AppEditableThumbnail.vue';
-import { useCommunityRouteStore } from '../view.store';
+
+import AppEditableThumbnail from '~app/views/communities/view/_editable-thumbnail/AppEditableThumbnail.vue';
+import { useCommunityRouteStore } from '~app/views/communities/view/view.store';
+import AppCommunityCardBase from '~common/community/card-base/AppCommunityCardBase.vue';
 
 const routeStore = useCommunityRouteStore()!;
 

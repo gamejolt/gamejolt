@@ -1,46 +1,47 @@
 <script lang="ts">
 import { computed, ref, toRef } from 'vue';
 import { useRoute } from 'vue-router';
-import { Api } from '../../../../_common/api/api.service';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import { formatNumber } from '../../../../_common/filters/number';
-import { GameBundleModel } from '../../../../_common/game-bundle/game-bundle.model';
-import { GamePlaylistModel } from '../../../../_common/game-playlist/game-playlist.model';
-import { GameModel } from '../../../../_common/game/game.model';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
-import { Meta } from '../../../../_common/meta/meta-service';
-import AppPopper from '../../../../_common/popper/AppPopper.vue';
-import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
-import { Screen } from '../../../../_common/screen/screen-service';
-import { useCommonStore } from '../../../../_common/store/common-store';
-import { useThemeStore } from '../../../../_common/theme/theme.store';
-import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { UserModel } from '../../../../_common/user/user.model';
-import { enforceLocation } from '../../../../utils/router';
+
 import {
 	GameCollectionModel,
 	GameCollectionType,
 	GameCollectionUserTypes,
-} from '../../../components/game/collection/collection.model';
-import AppGameCollectionFollowWidget from '../../../components/game/collection/follow-widget/follow-widget.vue';
-import AppGameCollectionThumbnail from '../../../components/game/collection/thumbnail/AppGameCollectionThumbnail.vue';
-import { GameFilteringContainer } from '../../../components/game/filtering/container';
-import AppGameGrid from '../../../components/game/grid/AppGameGrid.vue';
-import AppGameListing from '../../../components/game/listing/AppGameListing.vue';
-import { GameListingContainer } from '../../../components/game/listing/listing-container-service';
-import AppPageHeader from '../../../components/page-header/AppPageHeader.vue';
-import AppPageHeaderControls from '../../../components/page-header/controls/controls.vue';
-import AppShellPageBackdrop from '../../../components/shell/AppShellPageBackdrop.vue';
-import { useAppStore } from '../../../store/index';
+} from '~app/components/game/collection/collection.model';
+import AppGameCollectionFollowWidget from '~app/components/game/collection/follow-widget/AppGameCollectionFollowWidget.vue';
+import AppGameCollectionThumbnail from '~app/components/game/collection/thumbnail/AppGameCollectionThumbnail.vue';
+import { GameFilteringContainer } from '~app/components/game/filtering/container';
+import AppGameGrid from '~app/components/game/grid/AppGameGrid.vue';
+import AppGameListing from '~app/components/game/listing/AppGameListing.vue';
+import { GameListingContainer } from '~app/components/game/listing/listing-container-service';
+import AppPageHeader from '~app/components/page-header/AppPageHeader.vue';
+import AppPageHeaderControls from '~app/components/page-header/controls/AppPageHeaderControls.vue';
+import AppShellPageBackdrop from '~app/components/shell/AppShellPageBackdrop.vue';
+import { useAppStore } from '~app/store/index';
 import {
 	libraryEditPlaylist,
 	libraryRemoveGameFromPlaylist,
 	libraryRemovePlaylist,
 	libraryUnfollowGame,
 	useLibraryStore,
-} from '../../../store/library';
+} from '~app/store/library';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import { formatNumber } from '~common/filters/number';
+import { GameModel } from '~common/game/game.model';
+import { GameBundleModel } from '~common/game-bundle/game-bundle.model';
+import { GamePlaylistModel } from '~common/game-playlist/game-playlist.model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
+import { Meta } from '~common/meta/meta-service';
+import AppPopper from '~common/popper/AppPopper.vue';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { Screen } from '~common/screen/screen-service';
+import { useCommonStore } from '~common/store/common-store';
+import { useThemeStore } from '~common/theme/theme.store';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { $gettext } from '~common/translate/translate.service';
+import { UserModel } from '~common/user/user.model';
+import { enforceLocation } from '~utils/router';
 
 const CollectionThemeKey = 'collection';
 
@@ -686,8 +687,8 @@ async function loadMore() {
 		<AppShellPageBackdrop>
 			<AppGameListing
 				v-if="listing && filtering"
-				:listing="listing"
-				:filtering="filtering"
+				:listing="listing as any"
+				:filtering="filtering as any"
 				hide-section-nav
 				:is-loading="isLoading"
 				@load="loadMore"

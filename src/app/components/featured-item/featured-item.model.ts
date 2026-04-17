@@ -1,7 +1,7 @@
-import { CommunityModel } from '../../../_common/community/community.model';
-import { GameModel } from '../../../_common/game/game.model';
-import { MediaItemModel } from '../../../_common/media-item/media-item-model';
-import { Model } from '../../../_common/model/model.service';
+import { CommunityModel } from '~common/community/community.model';
+import { GameModel } from '~common/game/game.model';
+import { MediaItemModel } from '~common/media-item/media-item-model';
+import { Model } from '~common/model/model.service';
 
 export class FeaturedItemModel extends Model {
 	// Hero:

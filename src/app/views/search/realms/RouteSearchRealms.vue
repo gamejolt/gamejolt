@@ -1,11 +1,12 @@
 <script lang="ts">
 import { computed } from 'vue';
-import AppRealmFullCard from '../../../../_common/realm/AppRealmFullCard.vue';
-import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { getQuery } from '../../../../utils/router';
-import { sendSearch } from '../../../components/search/search-service';
-import { useSearchRouteController } from '../RouteSearch.vue';
+
+import { sendSearch } from '~app/components/search/search-service';
+import { useSearchRouteController } from '~app/views/search/RouteSearch.vue';
+import AppRealmFullCard from '~common/realm/AppRealmFullCard.vue';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { $gettext } from '~common/translate/translate.service';
+import { getQuery } from '~utils/router';
 
 export default {
 	...defineAppRouteOptions({

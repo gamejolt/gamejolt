@@ -1,27 +1,28 @@
 import { Schema } from 'prosemirror-model';
 import { schema as basicSchema } from 'prosemirror-schema-basic';
-import { ContextCapabilities } from '../../content-context';
-import { ContentObjectType } from '../../content-object';
-import { customLink, link } from './specs/marks/link-markspec';
-import { mention } from './specs/marks/mention-markspec';
-import { strike } from './specs/marks/strike-markspec';
-import { tag } from './specs/marks/tag-markspec';
-import { blockquote } from './specs/nodes/blockquote-nodespec';
-import { bulletList } from './specs/nodes/bullet-list-nodespec';
-import { codeBlock } from './specs/nodes/code-block-nodespec';
-import { customButton } from './specs/nodes/custom-button-nodespec';
-import { embed } from './specs/nodes/embed-nodespec';
-import { gif } from './specs/nodes/gif-nodespec';
-import { gjEmoji } from './specs/nodes/gj-emoji-nodespec';
-import { hardBreak } from './specs/nodes/hard-break-nodespec';
-import { heading } from './specs/nodes/heading-nodespec';
-import { hr } from './specs/nodes/hr-nodespec';
-import { listItem } from './specs/nodes/list-item-nodespec';
-import { mediaItem } from './specs/nodes/media-item-nodespec';
-import { mediaUpload } from './specs/nodes/media-upload-nodespec';
-import { orderedList } from './specs/nodes/ordered-list-nodespec';
-import { paragraph } from './specs/nodes/paragraph-nodespec';
-import { spoiler } from './specs/nodes/spoiler-nodespec';
+
+import { ContextCapabilities } from '~common/content/content-context';
+import { customLink, link } from '~common/content/content-editor/schemas/specs/marks/link-markspec';
+import { mention } from '~common/content/content-editor/schemas/specs/marks/mention-markspec';
+import { strike } from '~common/content/content-editor/schemas/specs/marks/strike-markspec';
+import { tag } from '~common/content/content-editor/schemas/specs/marks/tag-markspec';
+import { blockquote } from '~common/content/content-editor/schemas/specs/nodes/blockquote-nodespec';
+import { bulletList } from '~common/content/content-editor/schemas/specs/nodes/bullet-list-nodespec';
+import { codeBlock } from '~common/content/content-editor/schemas/specs/nodes/code-block-nodespec';
+import { customButton } from '~common/content/content-editor/schemas/specs/nodes/custom-button-nodespec';
+import { embed } from '~common/content/content-editor/schemas/specs/nodes/embed-nodespec';
+import { gif } from '~common/content/content-editor/schemas/specs/nodes/gif-nodespec';
+import { gjEmoji } from '~common/content/content-editor/schemas/specs/nodes/gj-emoji-nodespec';
+import { hardBreak } from '~common/content/content-editor/schemas/specs/nodes/hard-break-nodespec';
+import { heading } from '~common/content/content-editor/schemas/specs/nodes/heading-nodespec';
+import { hr } from '~common/content/content-editor/schemas/specs/nodes/hr-nodespec';
+import { listItem } from '~common/content/content-editor/schemas/specs/nodes/list-item-nodespec';
+import { mediaItem } from '~common/content/content-editor/schemas/specs/nodes/media-item-nodespec';
+import { mediaUpload } from '~common/content/content-editor/schemas/specs/nodes/media-upload-nodespec';
+import { orderedList } from '~common/content/content-editor/schemas/specs/nodes/ordered-list-nodespec';
+import { paragraph } from '~common/content/content-editor/schemas/specs/nodes/paragraph-nodespec';
+import { spoiler } from '~common/content/content-editor/schemas/specs/nodes/spoiler-nodespec';
+import { ContentObjectType } from '~common/content/content-object';
 
 export class ContentEditorSchema extends Schema<
 	| 'text'

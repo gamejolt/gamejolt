@@ -1,7 +1,7 @@
-import { MediaItemModel } from '../../media-item/media-item-model';
-import { ModelStoreModel } from '../../model/model-store.service';
-import { ShopProductResource } from '../../shop/product/product-model';
-import { UserModel } from '../../user/user.model';
+import { MediaItemModel } from '~common/media-item/media-item-model';
+import { ModelStoreModel } from '~common/model/model-store.service';
+import { ShopProductResource } from '~common/shop/product/product-model';
+import { UserModel } from '~common/user/user.model';
 
 export const enum CreatorChangeRequestStatus {
 	Initial = 'initial',

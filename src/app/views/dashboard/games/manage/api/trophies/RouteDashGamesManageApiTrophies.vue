@@ -1,32 +1,27 @@
 <script lang="ts">
 import { computed, nextTick, ref } from 'vue';
-import { Api } from '../../../../../../../_common/api/api.service';
-import AppCardList from '../../../../../../../_common/card/list/AppCardList.vue';
-import AppCardListAdd from '../../../../../../../_common/card/list/AppCardListAdd.vue';
-import AppCardListDraggable from '../../../../../../../_common/card/list/AppCardListDraggable.vue';
-import AppCardListItem from '../../../../../../../_common/card/list/AppCardListItem.vue';
+
+import FormGameTrophy from '~app/components/forms/game/trophy/FormGameTrophy.vue';
+import { useGameDashRouteController } from '~app/views/dashboard/games/manage/manage.store';
+import { Api } from '~common/api/api.service';
+import AppCardList from '~common/card/list/AppCardList.vue';
+import AppCardListAdd from '~common/card/list/AppCardListAdd.vue';
+import AppCardListDraggable from '~common/card/list/AppCardListDraggable.vue';
+import AppCardListItem from '~common/card/list/AppCardListItem.vue';
 import {
 	$removeGameTrophy,
 	$saveSortGameTrophy,
 	GameTrophyModel,
-} from '../../../../../../../_common/game/trophy/trophy.model';
-import AppJolticon from '../../../../../../../_common/jolticon/AppJolticon.vue';
-import AppLinkHelp from '../../../../../../../_common/link/AppLinkHelp.vue';
-import { showModalConfirm } from '../../../../../../../_common/modal/confirm/confirm-service';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '../../../../../../../_common/route/route-component';
-import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
-import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
-import { $gettext } from '../../../../../../../_common/translate/translate.service';
-import {
-	BaseTrophyDifficulties,
-	BaseTrophyDifficulty,
-} from '../../../../../../../_common/trophy/base-trophy.model';
-import AppTrophyThumbnail from '../../../../../../../_common/trophy/thumbnail/AppTrophyThumbnail.vue';
-import FormGameTrophy from '../../../../../../components/forms/game/trophy/trophy.vue';
-import { useGameDashRouteController } from '../../manage.store';
+} from '~common/game/trophy/trophy.model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLinkHelp from '~common/link/AppLinkHelp.vue';
+import { showModalConfirm } from '~common/modal/confirm/confirm-service';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { Scroll } from '~common/scroll/scroll.service';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { $gettext } from '~common/translate/translate.service';
+import { BaseTrophyDifficulties, BaseTrophyDifficulty } from '~common/trophy/base-trophy.model';
+import AppTrophyThumbnail from '~common/trophy/thumbnail/AppTrophyThumbnail.vue';
 
 const trophyLabels = {
 	[BaseTrophyDifficulty.Bronze]: $gettext('Bronze'),
@@ -291,7 +286,8 @@ createAppRoute({
 
 								<template #body>
 									<FormGameTrophy
-										:game="game"
+										:game="game!"
+										:difficulty="difficulty"
 										:model="trophy"
 										@submit="onTrophyEdited"
 									/>
@@ -305,7 +301,7 @@ createAppRoute({
 						@toggle="isAdding[difficulty] = !isAdding[difficulty]"
 					>
 						<FormGameTrophy
-							:game="game"
+							:game="game!"
 							:difficulty="difficulty"
 							@submit="onTrophyAdded"
 						/>

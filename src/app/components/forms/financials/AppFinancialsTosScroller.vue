@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { kThemeBgOffset } from '../../../../_common/theme/variables';
-import { styleScrollable } from '../../../../_styles/mixins';
-import { kBorderWidthBase, kFontSizeSmall } from '../../../../_styles/variables';
+import { kThemeBgOffset } from '~common/theme/variables';
+import { styleScrollable } from '~styles/mixins';
+import { kBorderWidthBase, kFontSizeSmall } from '~styles/variables';
 </script>
 
 <template>

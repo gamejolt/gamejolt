@@ -1,29 +1,35 @@
 <script lang="ts">
-import { computed, inject, PropType, provide, reactive, ref, toRefs } from 'vue';
-import { useAdStore } from '../../../../_common/ad/ad-store';
-import AppAdFeedParent from '../../../../_common/ad/AppAdFeedParent.vue';
-import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import { CommunityChannelModel } from '../../../../_common/community/channel/channel.model';
-import { CommunityModel } from '../../../../_common/community/community.model';
-import { EventItemModel, EventItemType } from '../../../../_common/event-item/event-item.model';
-import AppExpand from '../../../../_common/expand/AppExpand.vue';
-import { FiresidePostModel } from '../../../../_common/fireside/post/post-model';
-import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
-import { illEndOfFeed } from '../../../../_common/illustration/illustrations';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import AppLoading from '../../../../_common/loading/AppLoading.vue';
-import { Screen } from '../../../../_common/screen/screen-service';
-import AppScrollInview, {
-	ScrollInviewConfig,
-} from '../../../../_common/scroll/inview/AppScrollInview.vue';
-import { Scroll } from '../../../../_common/scroll/scroll.service';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { styleWhen } from '../../../../_styles/mixins';
-import { kPostItemPaddingVertical, kPostItemPaddingXsVertical } from '../../post/post-styles';
-import AppActivityFeedItem from './item/AppActivityFeedItem.vue';
-import AppActivityFeedNewButton from './new-button/AppActivityFeedNewButton.vue';
-import { ActivityFeedInterfaceKey, ActivityFeedKey, ActivityFeedView } from './view';
+import { computed, inject, provide, reactive, ref } from 'vue';
+
+import AppActivityFeedItem from '~app/components/activity/feed/item/AppActivityFeedItem.vue';
+import AppActivityFeedNewButton from '~app/components/activity/feed/new-button/AppActivityFeedNewButton.vue';
+import {
+	ActivityFeedInterfaceKey,
+	ActivityFeedKey,
+	ActivityFeedView,
+} from '~app/components/activity/feed/view';
+import {
+	kPostItemPaddingVertical,
+	kPostItemPaddingXsVertical,
+} from '~app/components/post/post-styles';
+import { useAdStore } from '~common/ad/ad-store';
+import AppAdFeedParent from '~common/ad/AppAdFeedParent.vue';
+import AppAdWidget from '~common/ad/widget/AppAdWidget.vue';
+import AppButton from '~common/button/AppButton.vue';
+import { CommunityChannelModel } from '~common/community/channel/channel.model';
+import { CommunityModel } from '~common/community/community.model';
+import { EventItemModel, EventItemType } from '~common/event-item/event-item.model';
+import AppExpand from '~common/expand/AppExpand.vue';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import AppIllustration from '~common/illustration/AppIllustration.vue';
+import { illEndOfFeed } from '~common/illustration/illustrations';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLoading from '~common/loading/AppLoading.vue';
+import { Screen } from '~common/screen/screen-service';
+import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
+import { Scroll } from '~common/scroll/scroll.service';
+import { $gettext } from '~common/translate/translate.service';
+import { styleWhen } from '~styles/mixins';
 
 const InviewConfigShowNew = new ScrollInviewConfig({ margin: `-${Scroll.offsetTop}px` });
 const InviewConfigLoadMore = new ScrollInviewConfig({ margin: `${Screen.height * 1.5}px` });
@@ -54,32 +60,26 @@ export function useActivityFeedInterface() {
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	feed: {
-		type: Object as PropType<ActivityFeedView>,
-		required: true,
-	},
-	showAds: {
-		type: Boolean,
-	},
-});
+type Props = {
+	feed: ActivityFeedView;
+	showAds?: boolean;
+};
+const { feed, showAds } = defineProps<Props>();
 
-const emit = defineEmits({
-	'edit-post': (_eventItem: EventItemModel) => true,
-	'publish-post': (_eventItem: EventItemModel) => true,
-	'remove-post': (_eventItem: EventItemModel) => true,
-	'feature-post': (_eventItem: EventItemModel, _community: CommunityModel) => true,
-	'unfeature-post': (_eventItem: EventItemModel, _community: CommunityModel) => true,
-	'move-channel-post': (_eventItem: EventItemModel, _: any) => true,
-	'reject-post': (_eventItem: EventItemModel, _community: CommunityModel) => true,
-	'load-new': () => true,
-	'load-more': () => true,
-});
-
-const { feed, showAds } = toRefs(props);
+const emit = defineEmits<{
+	'edit-post': [eventItem: EventItemModel];
+	'publish-post': [eventItem: EventItemModel];
+	'remove-post': [eventItem: EventItemModel];
+	'feature-post': [eventItem: EventItemModel, community: CommunityModel];
+	'unfeature-post': [eventItem: EventItemModel, community: CommunityModel];
+	'move-channel-post': [eventItem: EventItemModel, _: any];
+	'reject-post': [eventItem: EventItemModel, community: CommunityModel];
+	'load-new': [];
+	'load-more': [];
+}>();
 const { shouldShow: globalShouldShowAds } = useAdStore();
 
-provide(ActivityFeedKey, feed.value);
+provide(ActivityFeedKey, feed);
 
 provide(
 	ActivityFeedInterfaceKey,
@@ -98,42 +98,33 @@ provide(
 
 const isNewButtonInview = ref(false);
 
-/**
- * We save the scroll position every time it changes. When clicking back to
- * the same feed we can scroll to the previous position that way. We don't
- * set a default so that vue doesn't watch it.
- */
-const container = ref<HTMLDivElement>();
-
-const shouldShowLoadMore = computed(
-	() => !feed.value.reachedEnd && !feed.value.isLoadingMore && feed.value.hasItems
-);
-const lastPostScrollId = computed(() => feed.value.state.endScrollId);
-const newCount = computed(() => feed.value.newCount);
-const shouldShowAds = computed(() => showAds.value && globalShouldShowAds.value);
+const shouldShowLoadMore = computed(() => !feed.reachedEnd && !feed.isLoadingMore && feed.hasItems);
+const lastPostScrollId = computed(() => feed.state.endScrollId);
+const newCount = computed(() => feed.newCount);
+const shouldShowAds = computed(() => showAds && globalShouldShowAds.value);
 
 function onNewButtonInview() {
 	isNewButtonInview.value = true;
 }
 
 function onPostEdited(eventItem: EventItemModel) {
-	feed.value.update(eventItem);
+	feed.update(eventItem);
 	emit('edit-post', eventItem);
 }
 
 function onPostPublished(eventItem: EventItemModel) {
-	feed.value.update(eventItem);
+	feed.update(eventItem);
 	emit('publish-post', eventItem);
 }
 
 function onPostRemoved(eventItem: EventItemModel) {
-	feed.value.remove([eventItem]);
+	feed.remove([eventItem]);
 	emit('remove-post', eventItem);
 }
 
 function onPostPinned(eventItem: EventItemModel) {
 	// Pin the passed in item, and unpin all others.
-	for (const item of feed.value.items) {
+	for (const item of feed.items) {
 		if (
 			item.feedItem instanceof EventItemModel &&
 			item.feedItem.type === EventItemType.PostAdd &&
@@ -157,7 +148,7 @@ function onPostUnpinned(eventItem: EventItemModel) {
 
 // Auto-loading while scrolling.
 function onScrollLoadMore() {
-	if (!feed.value.shouldScrollLoadMore) {
+	if (!feed.shouldScrollLoadMore) {
 		return;
 	}
 
@@ -165,12 +156,12 @@ function onScrollLoadMore() {
 }
 
 function loadMoreButton() {
-	feed.value.timesLoaded = 0;
+	feed.timesLoaded = 0;
 	loadMore();
 }
 
 function loadMore() {
-	feed.value.loadMore();
+	feed.loadMore();
 	emit('load-more');
 }
 
@@ -179,8 +170,8 @@ async function loadNew() {
 		return;
 	}
 
-	await feed.value.reload();
-	feed.value.newCount = 0;
+	await feed.reload();
+	feed.newCount = 0;
 	emit('load-new');
 	// Make sure this is after the emitter so we remove the button before resetting
 	isNewButtonInview.value = false;
@@ -208,7 +199,7 @@ function shouldShowAd(index: number) {
 	Basically anytime the feed state's items are replaced so that the references
 	to them get picked up again.
 	-->
-	<div :key="feed.id" ref="container" class="activity-feed">
+	<div :key="feed.id" class="activity-feed">
 		<template v-if="newCount > 0 || feed.isLoadingNew">
 			<AppScrollInview :config="InviewConfigShowNew" @inview="onNewButtonInview">
 				<AppExpand v-if="!feed.isLoadingNew" :when="isNewButtonInview">

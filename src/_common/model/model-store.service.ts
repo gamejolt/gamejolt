@@ -1,5 +1,6 @@
 import { reactive, ref } from 'vue';
-import { Api, type RequestOptions } from '../api/api.service';
+
+import { Api, type RequestOptions } from '~common/api/api.service';
 
 export type ModelSaveRequestOptions = RequestOptions & { data?: any };
 

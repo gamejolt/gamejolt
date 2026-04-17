@@ -1,22 +1,19 @@
 <script lang="ts" setup>
-import { PropType, computed, toRef, toRefs } from 'vue';
-import AppButton from '../../../../../../../../_common/button/AppButton.vue';
-import AppCardListItem from '../../../../../../../../_common/card/list/AppCardListItem.vue';
-import { CommunityChannelModel } from '../../../../../../../../_common/community/channel/channel.model';
-import AppJolticon from '../../../../../../../../_common/jolticon/AppJolticon.vue';
-import { vAppTooltip } from '../../../../../../../../_common/tooltip/tooltip-directive';
-import { $gettext } from '../../../../../../../../_common/translate/translate.service';
-import { showCommunityRemoveChannelModal } from '../../../../../../../components/community/remove-channel/modal/modal.service';
-import { useCommunityRouteStore } from '../../../../view.store';
+import { computed, toRef } from 'vue';
 
-const props = defineProps({
-	channel: {
-		type: Object as PropType<CommunityChannelModel>,
-		required: true,
-	},
-});
+import { showCommunityRemoveChannelModal } from '~app/components/community/remove-channel/modal/modal.service';
+import { useCommunityRouteStore } from '~app/views/communities/view/view.store';
+import AppButton from '~common/button/AppButton.vue';
+import AppCardListItem from '~common/card/list/AppCardListItem.vue';
+import { CommunityChannelModel } from '~common/community/channel/channel.model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { $gettext } from '~common/translate/translate.service';
 
-const { channel } = toRefs(props);
+type Props = {
+	channel: CommunityChannelModel;
+};
+const { channel } = defineProps<Props>();
 
 const routeStore = useCommunityRouteStore()!;
 const community = toRef(() => routeStore.community);
@@ -28,12 +25,12 @@ const canRemoveChannel = computed(() => {
 	}
 
 	// Draft channels can always be removed because they don't count towards the active channels.
-	if (channel.value.visibility === 'draft') {
+	if (channel.visibility === 'draft') {
 		return true;
 	}
 
 	// Same as Draft channels, archived channels don't count towards active channels.
-	if (channel.value.is_archived) {
+	if (channel.is_archived) {
 		return true;
 	}
 
@@ -42,10 +39,7 @@ const canRemoveChannel = computed(() => {
 
 const canEditChannel = computed(() => {
 	// When it's a competition channel, mods with competition perms can edit.
-	if (
-		channel.value.type === 'competition' &&
-		community.value.hasPerms('community-competitions')
-	) {
+	if (channel.type === 'competition' && community.value.hasPerms('community-competitions')) {
 		return true;
 	}
 

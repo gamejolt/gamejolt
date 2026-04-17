@@ -1,28 +1,17 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-import { styleChangeBg, styleWhen } from '../../_styles/mixins';
-import { formatNumber } from '../filters/number';
-import { ThemeColor } from '../theme/variables';
-import AppCurrencyImg from './AppCurrencyImg.vue';
-import { Currency } from './currency-type';
+import AppCurrencyImg from '~common/currency/AppCurrencyImg.vue';
+import { Currency } from '~common/currency/currency-type';
+import { formatNumber } from '~common/filters/number';
+import { ThemeColor } from '~common/theme/variables';
+import { styleChangeBg, styleWhen } from '~styles/mixins';
 
-defineProps({
-	currency: {
-		type: Object as PropType<Currency>,
-		required: true,
-	},
-	amount: {
-		type: Number,
-		required: true,
-	},
-	fillColor: {
-		type: String as PropType<ThemeColor>,
-		default: 'bg-offset' as ThemeColor,
-	},
-	overlay: {
-		type: Boolean,
-	},
-});
+type Props = {
+	currency: Currency;
+	amount: number;
+	fillColor?: ThemeColor;
+	overlay?: boolean;
+};
+const { currency, amount, fillColor = 'bg-offset', overlay } = defineProps<Props>();
 </script>
 
 <template>

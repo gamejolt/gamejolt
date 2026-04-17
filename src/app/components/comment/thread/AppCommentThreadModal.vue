@@ -1,50 +1,39 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRefs } from 'vue';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import AppCommentDisabledCheck from '../../../../_common/comment/AppCommentDisabledCheck.vue';
+import { computed, ref } from 'vue';
+
+import AppCommentWidget from '~app/components/comment/widget/AppCommentWidget.vue';
+import AppButton from '~common/button/AppButton.vue';
+import AppCommentDisabledCheck from '~common/comment/AppCommentDisabledCheck.vue';
 import {
 	CommentableModel,
 	CommentModel,
 	getCommentModelResourceName,
-} from '../../../../_common/comment/comment-model';
+} from '~common/comment/comment-model';
 import {
 	commentStoreHandleAdd,
 	getCommentStore,
 	useCommentStoreManager,
-} from '../../../../_common/comment/comment-store';
-import { FormCommentLazy } from '../../../../_common/lazy';
-import AppMessageThreadAdd from '../../../../_common/message-thread/AppMessageThreadAdd.vue';
-import AppModal from '../../../../_common/modal/AppModal.vue';
-import { useModal } from '../../../../_common/modal/modal.service';
-import { Model } from '../../../../_common/model/model.service';
-import { useCommonStore } from '../../../../_common/store/common-store';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import AppCommentWidget from '../widget/AppCommentWidget.vue';
+} from '~common/comment/comment-store';
+import { FormCommentLazy } from '~common/lazy';
+import AppMessageThreadAdd from '~common/message-thread/AppMessageThreadAdd.vue';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import { Model } from '~common/model/model.service';
+import { useCommonStore } from '~common/store/common-store';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
 
-const props = defineProps({
-	commentId: {
-		type: Number,
-		required: true,
-	},
-	model: {
-		type: Object as PropType<Model & CommentableModel>,
-		required: true,
-	},
-	displayMode: {
-		type: String,
-		required: true,
-	},
-	autofocus: {
-		type: Boolean,
-	},
-});
+type Props = {
+	commentId: number;
+	model: Model & CommentableModel;
+	displayMode: string;
+	autofocus?: boolean;
+};
+const { commentId, model } = defineProps<Props>();
 
-const emit = defineEmits({
-	add: (_comment: CommentModel) => true,
-});
-
-const { commentId, model, autofocus } = toRefs(props);
+const emit = defineEmits<{
+	add: [comment: CommentModel];
+}>();
 
 const { user } = useCommonStore();
 const commentManager = useCommentStoreManager()!;
@@ -54,13 +43,9 @@ const hasError = ref(false);
 const isEditorFocused = ref(false);
 
 const parent = computed(() => {
-	const store = getCommentStore(
-		commentManager,
-		getCommentModelResourceName(model.value),
-		model.value.id
-	);
+	const store = getCommentStore(commentManager, getCommentModelResourceName(model), model.id);
 	if (store) {
-		const comment = store.comments.find(c => c.id === commentId.value);
+		const comment = store.comments.find(c => c.id === commentId);
 		if (comment && comment.parent_id) {
 			const parent = store.comments.find(c => c.id === comment.parent_id);
 			return parent;

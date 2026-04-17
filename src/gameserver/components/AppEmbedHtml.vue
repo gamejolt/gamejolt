@@ -1,12 +1,11 @@
 <script lang="ts" setup>
-import { useGameserverStore } from '../store/index';
+import { useGameserverStore } from '~gameserver/store/index';
 
 const { url, embedWidth, embedHeight } = useGameserverStore();
 </script>
 
 <template>
 	<iframe
-		type="text/html"
 		style="overflow: none"
 		:width="embedWidth"
 		:height="embedHeight"

@@ -1,50 +1,36 @@
 <script lang="ts">
-import { PropType, computed, ref, toRefs } from 'vue';
+import { computed, ref } from 'vue';
 import { RouterLink } from 'vue-router';
-import AppPostCardBase from '../fireside/post/card/AppPostCardBase.vue';
-import { FiresidePostModel } from '../fireside/post/post-model';
-import { useCommonStore } from '../store/common-store';
-import AppUserFollowButton from '../user/follow/AppUserFollowButton.vue';
-import AppUserAvatarImg from '../user/user-avatar/AppUserAvatarImg.vue';
-import { $toggleUserFollow } from '../user/user.model';
+
+import AppPostCardBase from '~common/fireside/post/card/AppPostCardBase.vue';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import { useCommonStore } from '~common/store/common-store';
+import AppUserFollowButton from '~common/user/follow/AppUserFollowButton.vue';
+import { $toggleUserFollow } from '~common/user/user.model';
+import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
 
 export const AppCreatorCardAspectRatio = 11 / 17;
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	post: {
-		type: Object as PropType<FiresidePostModel>,
-		required: true,
-	},
-	fancyHover: {
-		type: Boolean,
-	},
-	noVideo: {
-		type: Boolean,
-	},
-	noLink: {
-		type: Boolean,
-	},
-	followButtonType: {
-		type: String as PropType<'with-count' | 'no-count'>,
-		default: undefined,
-	},
-	followOnClick: {
-		type: Boolean,
-	},
-});
-
-const { post, fancyHover, noVideo, noLink, followButtonType, followOnClick } = toRefs(props);
+type Props = {
+	post: FiresidePostModel;
+	fancyHover?: boolean;
+	noVideo?: boolean;
+	noLink?: boolean;
+	followButtonType?: 'with-count' | 'no-count';
+	followOnClick?: boolean;
+};
+const { post, fancyHover, noVideo, noLink, followButtonType, followOnClick } = defineProps<Props>();
 
 const isHovered = ref(false);
 const isProcessing = ref(false);
 
 const { user: sessionUser } = useCommonStore();
 
-const user = computed(() => post.value.displayUser);
+const user = computed(() => post.displayUser);
 const isMe = computed(() => sessionUser.value?.id === user.value.id);
-const hasFollowOnClick = computed(() => followOnClick.value && !isMe.value);
+const hasFollowOnClick = computed(() => followOnClick && !isMe.value);
 
 async function onClick(event: Event) {
 	if (!hasFollowOnClick.value) {

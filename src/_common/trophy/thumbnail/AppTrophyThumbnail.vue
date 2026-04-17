@@ -1,16 +1,17 @@
 <script lang="ts">
-import { PropType, computed, onMounted, ref, toRefs } from 'vue';
-import AppImgResponsive from '../../img/AppImgResponsive.vue';
-import { vAppTooltip } from '../../tooltip/tooltip-directive';
-import { BaseTrophyDifficulty, BaseTrophyModel } from '../base-trophy.model';
-import bronzeSecretImage from './bronze-secret.png';
-import bronzeImage from './bronze.png';
-import goldSecretImage from './gold-secret.png';
-import goldImage from './gold.png';
-import platinumSecretImage from './platinum-secret.png';
-import platinumImage from './platinum.png';
-import silverSecretImage from './silver-secret.png';
-import silverImage from './silver.png';
+import { computed, type HTMLAttributes, onMounted, ref, useTemplateRef } from 'vue';
+
+import AppImgResponsive from '~common/img/AppImgResponsive.vue';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { BaseTrophyDifficulty, BaseTrophyModel } from '~common/trophy/base-trophy.model';
+import bronzeImage from '~common/trophy/thumbnail/bronze.png';
+import bronzeSecretImage from '~common/trophy/thumbnail/bronze-secret.png';
+import goldImage from '~common/trophy/thumbnail/gold.png';
+import goldSecretImage from '~common/trophy/thumbnail/gold-secret.png';
+import platinumImage from '~common/trophy/thumbnail/platinum.png';
+import platinumSecretImage from '~common/trophy/thumbnail/platinum-secret.png';
+import silverImage from '~common/trophy/thumbnail/silver.png';
+import silverSecretImage from '~common/trophy/thumbnail/silver-secret.png';
 
 const imgMapping: any = {
 	bronze: bronzeImage,
@@ -53,37 +54,33 @@ const BaseHeight = 35;
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	trophy: {
-		type: Object as PropType<BaseTrophyModel>,
-		required: true,
-	},
-	noTooltip: {
-		type: Boolean,
-	},
-	noDifficulty: {
-		type: Boolean,
-	},
-	noHighlight: {
-		type: Boolean,
-	},
-});
+type Props = {
+	trophy: BaseTrophyModel;
+	noTooltip?: boolean;
+	noDifficulty?: boolean;
+	noHighlight?: boolean;
+} & /* @vue-ignore */ Pick<HTMLAttributes, 'onClick'>;
 
-const { trophy, noTooltip, noDifficulty, noHighlight } = toRefs(props);
+const {
+	trophy,
+	noTooltip = false,
+	noDifficulty = false,
+	noHighlight = false,
+} = defineProps<Props>();
 
-const thumbElem = ref<HTMLElement | null>(null);
+const thumbElem = useTemplateRef('thumb');
 const thumbWidth = ref(BaseWidth);
 
 const tooltip = computed(() => {
-	if (noTooltip.value) {
+	if (noTooltip) {
 		return '';
 	}
-	return trophy.value.title;
+	return trophy.title;
 });
 
-const hasThumbnailImg = computed(() => trophy.value.has_thumbnail && trophy.value.isInfoRevealed);
+const hasThumbnailImg = computed(() => trophy.has_thumbnail && trophy.isInfoRevealed);
 
-const imgSrc = computed(() => getTrophyImg(trophy.value));
+const imgSrc = computed(() => getTrophyImg(trophy));
 
 const imgMultiplier = computed(() => {
 	const val = Math.floor(thumbWidth.value / 34);

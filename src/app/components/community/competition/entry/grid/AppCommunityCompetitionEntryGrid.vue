@@ -1,67 +1,55 @@
 <script lang="ts" setup>
-import { PropType, computed, toRef, toRefs } from 'vue';
+import { computed, toRef } from 'vue';
+
+import AppCommunityCompetitionEntryThumbnail from '~app/components/community/competition/entry/thumbnail/AppCommunityCompetitionEntryThumbnail.vue';
 import {
 	CommunityCompetitionModel,
 	CompetitionPeriodVoting,
-} from '../../../../../../_common/community/competition/competition.model';
-import { CommunityCompetitionEntryModel } from '../../../../../../_common/community/competition/entry/entry.model';
-import { CommunityCompetitionVotingCategoryModel } from '../../../../../../_common/community/competition/voting-category/voting-category.model';
-import { formatNumber } from '../../../../../../_common/filters/number';
-import AppCommunityCompetitionEntryThumbnail from '../thumbnail/AppCommunityCompetitionEntryThumbnail.vue';
+} from '~common/community/competition/competition.model';
+import { CommunityCompetitionEntryModel } from '~common/community/competition/entry/entry.model';
+import { CommunityCompetitionVotingCategoryModel } from '~common/community/competition/voting-category/voting-category.model';
+import { formatNumber } from '~common/filters/number';
 
-const props = defineProps({
-	competition: {
-		type: Object as PropType<CommunityCompetitionModel>,
-		required: true,
-	},
-	entries: {
-		type: Array as PropType<CommunityCompetitionEntryModel[]>,
-		required: true,
-	},
-	currentPage: {
-		type: Number,
-		default: 0,
-	},
-	pageCount: {
-		type: Number,
-		default: 0,
-	},
-	numPlaceholders: {
-		type: Number,
-		default: 6,
-	},
-	category: {
-		type: Object as PropType<CommunityCompetitionVotingCategoryModel>,
-		default: undefined,
-	},
-	showRemove: {
-		type: Boolean,
-	},
-});
+type Props = {
+	competition: CommunityCompetitionModel;
+	entries: CommunityCompetitionEntryModel[];
+	currentPage?: number;
+	pageCount?: number;
+	numPlaceholders?: number;
+	category?: CommunityCompetitionVotingCategoryModel;
+	showRemove?: boolean;
+};
+const {
+	competition,
+	entries,
+	currentPage = 0,
+	pageCount = 0,
+	numPlaceholders = 6,
+	category,
+	showRemove,
+} = defineProps<Props>();
 
-const emit = defineEmits({
-	remove: (_entry: CommunityCompetitionEntryModel) => true,
-});
-
-const { competition, numPlaceholders } = toRefs(props);
+const emit = defineEmits<{
+	remove: [entry: CommunityCompetitionEntryModel];
+}>();
 
 const shouldShowThumbnailRanks = toRef(
 	() =>
-		competition.value.is_voting_enabled &&
-		competition.value.has_community_voting &&
-		competition.value.are_results_calculated
+		competition.is_voting_enabled &&
+		competition.has_community_voting &&
+		competition.are_results_calculated
 );
 
 const shouldShowThumbnailAwards = toRef(
 	() =>
-		competition.value.is_voting_enabled &&
-		competition.value.has_awards &&
-		competition.value.periodNum >= CompetitionPeriodVoting
+		competition.is_voting_enabled &&
+		competition.has_awards &&
+		competition.periodNum >= CompetitionPeriodVoting
 );
 
 const placeholderCount = computed(() => {
 	const iterators = [];
-	for (let i = 0; i < numPlaceholders.value; i++) {
+	for (let i = 0; i < numPlaceholders; i++) {
 		iterators.push(i);
 	}
 	return iterators;
@@ -116,4 +104,8 @@ function emitRemove(entry: CommunityCompetitionEntryModel) {
 	</div>
 </template>
 
-<style lang="stylus" src="./grid.styl" scoped></style>
+<style
+	lang="stylus"
+	src="~app/components/community/competition/entry/grid/grid.styl"
+	scoped
+></style>

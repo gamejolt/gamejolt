@@ -1,18 +1,15 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-import AppChatList from '../_list/AppChatList.vue';
-import { ChatRoomModel } from '../room';
-import { ChatUser } from '../user';
-import AppChatUserListItem from './AppChatUserListItem.vue';
+import AppChatList from '~app/components/chat/_list/AppChatList.vue';
+import { ChatRoomModel } from '~app/components/chat/room';
+import { ChatUser } from '~app/components/chat/user';
+import AppChatUserListItem from '~app/components/chat/user-list/AppChatUserListItem.vue';
 
 type UserListEntries = (ChatUser | ChatRoomModel)[];
 
-defineProps({
-	entries: {
-		type: Array as PropType<UserListEntries>,
-		required: true,
-	},
-});
+type Props = {
+	entries: UserListEntries;
+};
+const { entries } = defineProps<Props>();
 </script>
 
 <template>

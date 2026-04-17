@@ -1,44 +1,35 @@
 <script lang="ts" setup>
-import { PropType, ref, toRaw, toRefs, watch } from 'vue';
-import { Api } from '../../api/api.service';
-import AppButton from '../../button/AppButton.vue';
-import { Environment } from '../../environment/environment.service';
-import AppLoading from '../../loading/AppLoading.vue';
-import { SiteContentBlockModel } from '../../site/content-block/content-block-model';
-import { SiteModel } from '../../site/site-model';
-import { vAppTooltip } from '../../tooltip/tooltip-directive';
-import FormContentBlockEditor from './editor-form.vue';
+import { ref, toRaw, useTemplateRef, watch } from 'vue';
+
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import FormContentBlockEditor from '~common/content-block/editor/FormContentBlockEditor.vue';
+import { Environment } from '~common/environment/environment.service';
+import AppLoading from '~common/loading/AppLoading.vue';
+import { SiteContentBlockModel } from '~common/site/content-block/content-block-model';
+import { SiteModel } from '~common/site/site-model';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 
 const PreviewDebounce = 3000;
 
-const props = defineProps({
-	site: {
-		type: Object as PropType<SiteModel>,
-		required: true,
-	},
-	windowId: {
-		type: String,
-		required: true,
-	},
-	contentBlock: {
-		type: Object as PropType<SiteContentBlockModel>,
-		required: true,
-	},
-});
+type Props = {
+	site: SiteModel;
+	windowId: string;
+	contentBlock: SiteContentBlockModel;
+};
+const { site, windowId, contentBlock } = defineProps<Props>();
 
-const emit = defineEmits({
-	change: (_content: string) => true,
-});
-
-const { site, windowId, contentBlock } = toRefs(props);
+const emit = defineEmits<{
+	change: [content: string];
+}>();
 
 const isPreviewLoading = ref(false);
 const previewIndex = ref(0);
 const previewTimeout = ref<NodeJS.Timer | null>(null);
-const rootElem = ref<HTMLDivElement>();
+const rootElem = useTemplateRef('rootElem');
 
 watch(
-	() => contentBlock.value.content_markdown,
+	() => contentBlock.content_markdown,
 	(content: string, oldContent: string) => {
 		if (content !== oldContent) {
 			emit('change', content);
@@ -63,7 +54,7 @@ async function _fetchPreview() {
 		const nextPreviewIndex = previewIndex.value + 1;
 		const response = await Api.sendRequest(
 			'/web/dash/sites/content-preview',
-			{ content: contentBlock.value.content_markdown },
+			{ content: contentBlock.content_markdown },
 			{ ignorePayloadUser: true }
 		);
 
@@ -79,16 +70,16 @@ async function _fetchPreview() {
 }
 
 function compiled(compiledContent: string) {
-	contentBlock.value.content_compiled = compiledContent;
+	contentBlock.content_compiled = compiledContent;
 	refresh();
 }
 
 function refresh() {
-	const iframe = document.getElementById(windowId.value) as HTMLIFrameElement | undefined;
+	const iframe = document.getElementById(windowId) as HTMLIFrameElement | undefined;
 	if (iframe && iframe.contentWindow) {
 		const msg = {
 			type: 'content-update',
-			block: toRaw(contentBlock.value),
+			block: toRaw(contentBlock),
 		};
 		iframe.contentWindow.postMessage(msg, '*');
 	}
@@ -142,7 +133,7 @@ function insertAtCaret(text: string) {
 
 	txtarea.scrollTop = scrollPos;
 
-	contentBlock.value.content_markdown = txtarea.value;
+	contentBlock.content_markdown = txtarea.value;
 }
 </script>
 

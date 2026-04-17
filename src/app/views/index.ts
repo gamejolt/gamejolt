@@ -1,25 +1,25 @@
-import { initRouter } from '../../utils/router';
-import { routeCommunitiesView } from './communities/view/view.route';
-import { routeDash } from './dashboard/dashboard.route';
-import { routeDiscover } from './discover/discover.route';
-import { routeDownload } from './download/download.route';
-import { routeForums } from './forums/forums.route';
-import { routeHome } from './home/home.route';
-import { routeIntent } from './intent/intent.route';
-import { routeLandingCreators } from './landing/creators/creators.route';
-import { routeLanding } from './landing/landing.route';
-import { routeLegal } from './legal/legal.route';
-import { routeLibrary } from './library/library.route';
-import { routeNotifications } from './notifications/notifications.route';
-import { routePost } from './post/post.route';
-import { routeProfile } from './profile/profile.route';
-import { routeQuests } from './quests/quests.route';
-import { routeRealmsView } from './realms/view/view.route';
-import { routeSearch } from './search/search.route';
-import { routeStyleguide } from './styleguide/styleguide.route';
-import { routeTimeout } from './timeout/timeout.route';
-import { routeWelcome } from './welcome/welcome.route';
-import { routeWeplay } from './weplay/weplay.route';
+import { routeCommunitiesView } from '~app/views/communities/view/view.route';
+import { routeDash } from '~app/views/dashboard/dashboard.route';
+import { routeDiscover } from '~app/views/discover/discover.route';
+import { routeDownload } from '~app/views/download/download.route';
+import { routeForums } from '~app/views/forums/forums.route';
+import { routeHome } from '~app/views/home/home.route';
+import { routeIntent } from '~app/views/intent/intent.route';
+import { routeLandingCreators } from '~app/views/landing/creators/creators.route';
+import { routeLanding } from '~app/views/landing/landing.route';
+import { routeLegal } from '~app/views/legal/legal.route';
+import { routeLibrary } from '~app/views/library/library.route';
+import { routeNotifications } from '~app/views/notifications/notifications.route';
+import { routePost } from '~app/views/post/post.route';
+import { routeProfile } from '~app/views/profile/profile.route';
+import { routeQuests } from '~app/views/quests/quests.route';
+import { routeRealmsView } from '~app/views/realms/view/view.route';
+import { routeSearch } from '~app/views/search/search.route';
+import { routeStyleguide } from '~app/views/styleguide/styleguide.route';
+import { routeTimeout } from '~app/views/timeout/timeout.route';
+import { routeWelcome } from '~app/views/welcome/welcome.route';
+import { routeWeplay } from '~app/views/weplay/weplay.route';
+import { initRouter } from '~utils/router';
 
 const routes = [
 	routeHome,

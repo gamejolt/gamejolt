@@ -1,19 +1,17 @@
 <script lang="ts">
 import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
-import AppAlertBox from '../../../../../../_common/alert/AppAlertBox.vue';
-import AppContactLink from '../../../../../../_common/contact-link/AppContactLink.vue';
-import AppIllustration from '../../../../../../_common/illustration/AppIllustration.vue';
-import { illEndOfFeed } from '../../../../../../_common/illustration/illustrations';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '../../../../../../_common/route/route-component';
-import AppSpacer from '../../../../../../_common/spacer/AppSpacer.vue';
-import { useCommonStore } from '../../../../../../_common/store/common-store';
-import { userCanAccessCreatorForm } from '../../../../../../_common/user/user.model';
-import FormFinancialsCreator from '../../../../../components/forms/financials/FormFinancialsCreator.vue';
-import { routeLandingCreators } from '../../../../landing/creators/creators.route';
+
+import FormFinancialsCreator from '~app/components/forms/financials/FormFinancialsCreator.vue';
+import { routeLandingCreators } from '~app/views/landing/creators/creators.route';
+import AppAlertBox from '~common/alert/AppAlertBox.vue';
+import AppContactLink from '~common/contact-link/AppContactLink.vue';
+import AppIllustration from '~common/illustration/AppIllustration.vue';
+import { illEndOfFeed } from '~common/illustration/illustrations';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import { useCommonStore } from '~common/store/common-store';
+import { userCanAccessCreatorForm } from '~common/user/user.model';
 
 export default {
 	...defineAppRouteOptions({

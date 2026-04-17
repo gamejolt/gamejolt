@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import AppLinkExternal from '../../_common/link/AppLinkExternal.vue';
-import AppTranslate from '../../_common/translate/AppTranslate.vue';
-import { useGameserverStore } from '../store/index';
+import AppLinkExternal from '~common/link/AppLinkExternal.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { useGameserverStore } from '~gameserver/store/index';
 
 const { build, username, token, javaArchive, javaCodebase, embedWidth, embedHeight } =
 	useGameserverStore();
@@ -9,7 +9,8 @@ const { build, username, token, javaArchive, javaCodebase, embedWidth, embedHeig
 
 <template>
 	<div v-if="build" style="margin: 0 auto; text-align: center">
-		<applet
+		<component
+			:is="'applet'"
 			:code="build.java_class_name"
 			:archive="javaArchive"
 			:codebase="javaCodebase"
@@ -39,6 +40,6 @@ const { build, username, token, javaArchive, javaCodebase, embedWidth, embedHeig
 					style="border-style: none"
 				/>
 			</AppLinkExternal>
-		</applet>
+		</component>
 	</div>
 </template>

@@ -1,26 +1,23 @@
 <script lang="ts" setup>
-import { PropType, computed, toRefs } from 'vue';
-import { CommunityModel } from '../../../../../_common/community/community.model';
-import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import AppTimeAgo from '../../../../../_common/time/AppTimeAgo.vue';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import { getCommunityBlockReasons } from '../../../../../_common/user/action-reasons';
+import { computed } from 'vue';
 
-const props = defineProps({
-	community: {
-		type: Object as PropType<CommunityModel>,
-		required: true,
-	},
-});
+import { CommunityModel } from '~common/community/community.model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppTimeAgo from '~common/time/AppTimeAgo.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { getCommunityBlockReasons } from '~common/user/action-reasons';
 
-const { community } = toRefs(props);
+type Props = {
+	community: CommunityModel;
+};
+const { community } = defineProps<Props>();
 
 const communityBlockReason = computed(() => {
-	if (!community.value.user_block) {
+	if (!community.user_block) {
 		return '';
 	}
 
-	const reason = community.value.user_block.reason;
+	const reason = community.user_block.reason;
 	const reasons = getCommunityBlockReasons();
 	if (reasons[reason]) {
 		return reasons[reason];

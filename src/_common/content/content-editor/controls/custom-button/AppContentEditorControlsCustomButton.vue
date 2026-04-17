@@ -1,12 +1,13 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
-import AppJolticon from '../../../../jolticon/AppJolticon.vue';
-import { vAppTooltip } from '../../../../tooltip/tooltip-directive';
+
 import {
 	editorInsertCustomButton,
 	useContentEditorController,
-} from '../../content-editor-controller';
-import { showContentEditorCustomButtonModal } from '../../modals/custom-button/custom-button-modal.service.js';
+} from '~common/content/content-editor/content-editor-controller';
+import { showContentEditorCustomButtonModal } from '~common/content/content-editor/modals/custom-button/custom-button-modal.service.js';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 
 const controller = useContentEditorController()!;
 const visible = computed(() => controller.scope.isFocused && controller.capabilities.gif);

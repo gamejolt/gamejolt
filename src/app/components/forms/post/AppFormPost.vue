@@ -1,41 +1,42 @@
 <script lang="ts" setup>
 import { addWeeks, startOfDay } from 'date-fns';
 import { determine } from 'jstimezonedetect';
-import { PropType, computed, nextTick, ref, toRefs, watch } from 'vue';
-import { trackPostPublish } from '../../../../_common/analytics/analytics.service';
-import { Api } from '../../../../_common/api/api.service';
-import { BackgroundModel } from '../../../../_common/background/background.model';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import { CommunityChannelModel } from '../../../../_common/community/channel/channel.model';
-import { CommunityModel } from '../../../../_common/community/community.model';
-import { ContextCapabilities } from '../../../../_common/content/content-context';
-import AppExpand from '../../../../_common/expand/AppExpand.vue';
-import { FiresidePostCommunityModel } from '../../../../_common/fireside/post/community/community.model';
+import { computed, nextTick, type Ref, ref, toRef, watch } from 'vue';
+
+import AppContentTargets from '~app/components/content/AppContentTargets.vue';
+import { CONTENT_TARGET_HEIGHT } from '~app/components/content/target/AppContentTarget.vue';
+import AppFormPostMedia from '~app/components/forms/post/_media/FormPostMedia.vue';
+import AppFormPostVideo, { VideoStatus } from '~app/components/forms/post/_video/FormPostVideo.vue';
+import { trackPostPublish } from '~common/analytics/analytics.service';
+import { Api } from '~common/api/api.service';
+import { BackgroundModel } from '~common/background/background.model';
+import AppButton from '~common/button/AppButton.vue';
+import { CommunityChannelModel } from '~common/community/channel/channel.model';
+import { CommunityModel } from '~common/community/community.model';
+import { ContextCapabilities } from '~common/content/content-context';
+import AppExpand from '~common/expand/AppExpand.vue';
+import { FiresidePostCommunityModel } from '~common/fireside/post/community/community.model';
 import {
 	$saveFiresidePost,
 	FiresidePostAllowComments,
 	FiresidePostModel,
 	FiresidePostStatus,
 	FiresidePostType,
-} from '../../../../_common/fireside/post/post-model';
-import { FiresidePostRealmModel } from '../../../../_common/fireside/post/realm/realm.model';
-import { FiresidePostVideoModel } from '../../../../_common/fireside/post/video/video-model';
-import AppForm, {
-	FormController,
-	createForm,
-	defineFormProps,
-} from '../../../../_common/form-vue/AppForm.vue';
-import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
-import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
-import AppFormControlErrors from '../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormLegend from '../../../../_common/form-vue/AppFormLegend.vue';
-import AppFormControlBackground from '../../../../_common/form-vue/controls/AppFormControlBackground.vue';
-import AppFormControlCheckbox from '../../../../_common/form-vue/controls/AppFormControlCheckbox.vue';
-import AppFormControlContent from '../../../../_common/form-vue/controls/AppFormControlContent.vue';
-import AppFormControlDate from '../../../../_common/form-vue/controls/AppFormControlDate.vue';
-import AppFormControlSelect from '../../../../_common/form-vue/controls/AppFormControlSelect.vue';
-import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
+} from '~common/fireside/post/post-model';
+import { FiresidePostRealmModel } from '~common/fireside/post/realm/realm.model';
+import { FiresidePostVideoModel } from '~common/fireside/post/video/video-model';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormLegend from '~common/form-vue/AppFormLegend.vue';
+import AppFormControlBackground from '~common/form-vue/controls/AppFormControlBackground.vue';
+import AppFormControlCheckbox from '~common/form-vue/controls/AppFormControlCheckbox.vue';
+import AppFormControlContent from '~common/form-vue/controls/AppFormControlContent.vue';
+import AppFormControlDate from '~common/form-vue/controls/AppFormControlDate.vue';
+import AppFormControlSelect from '~common/form-vue/controls/AppFormControlSelect.vue';
+import AppFormControlToggle from '~common/form-vue/controls/AppFormControlToggle.vue';
 import {
 	validateContentMaxLength,
 	validateContentNoActiveUploads,
@@ -43,28 +44,24 @@ import {
 	validateMaxLength,
 	validateMaxValue,
 	validateMinValue,
-} from '../../../../_common/form-vue/validators';
-import { showErrorGrowl } from '../../../../_common/growls/growls.service';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import { KeyGroupModel } from '../../../../_common/key-group/key-group.model';
-import { MediaItemModel } from '../../../../_common/media-item/media-item-model';
-import { storeModelList } from '../../../../_common/model/model-store.service';
-import AppProgressBar from '../../../../_common/progress/AppProgressBar.vue';
-import { RealmModel } from '../../../../_common/realm/realm-model';
-import { Screen } from '../../../../_common/screen/screen-service';
-import { SettingPostBackgroundId } from '../../../../_common/settings/settings.service';
-import { useCommonStore } from '../../../../_common/store/common-store';
-import AppTheme from '../../../../_common/theme/AppTheme.vue';
-import { Timezone, TimezoneData } from '../../../../_common/timezone/timezone.service';
-import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
-import { arrayRemove } from '../../../../utils/array';
-import AppContentTargets from '../../content/AppContentTargets.vue';
-import { CONTENT_TARGET_HEIGHT } from '../../content/target/AppContentTarget.vue';
-import AppFormPostMedia from './_media/media.vue';
-import AppFormPostVideo, { VideoStatus } from './_video/video.vue';
+} from '~common/form-vue/validators';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { KeyGroupModel } from '~common/key-group/key-group.model';
+import { MediaItemModel } from '~common/media-item/media-item-model';
+import { storeModelList } from '~common/model/model-store.service';
+import AppProgressBar from '~common/progress/AppProgressBar.vue';
+import { RealmModel } from '~common/realm/realm-model';
+import { Screen } from '~common/screen/screen-service';
+import { SettingPostBackgroundId } from '~common/settings/settings.service';
+import { useCommonStore } from '~common/store/common-store';
+import AppTheme from '~common/theme/AppTheme.vue';
+import { Timezone, TimezoneData } from '~common/timezone/timezone.service';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
+import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
+import { arrayRemove } from '~utils/array';
 
 type FormPostModel = FiresidePostModel & {
 	mediaItemIds: number[];
@@ -99,33 +96,26 @@ const MAX_POLL_ITEMS = 10;
 const MIN_POLL_DURATION = 5;
 const MAX_POLL_DURATION = 20160;
 
-const props = defineProps({
-	defaultCommunity: {
-		type: Object as PropType<CommunityModel | null>,
-		default: null,
-	},
-	defaultChannel: {
-		type: Object as PropType<CommunityChannelModel | null>,
-		default: null,
-	},
-	defaultRealm: {
-		type: Object as PropType<RealmModel | null>,
-		default: null,
-	},
-	overlay: {
-		type: Boolean,
-		default: false,
-	},
-	...defineFormProps<FiresidePostModel>(true),
-});
+type Props = {
+	defaultCommunity?: CommunityModel | null;
+	defaultChannel?: CommunityChannelModel | null;
+	defaultRealm?: RealmModel | null;
+	overlay?: boolean;
+	model: FiresidePostModel;
+};
+const {
+	defaultCommunity = null,
+	defaultChannel = null,
+	defaultRealm = null,
+	overlay = false,
+	model,
+} = defineProps<Props>();
 
-const emit = defineEmits({
-	submit: (_data: FiresidePostModel) => true,
-	videoUploadStatusChange: (_status: VideoStatus) => true,
-	backgroundChange: (_background?: BackgroundModel) => true,
-});
-
-const { defaultCommunity, defaultChannel, defaultRealm, overlay, model } = toRefs(props);
+const emit = defineEmits<{
+	submit: [data: FiresidePostModel];
+	videoUploadStatusChange: [status: VideoStatus];
+	backgroundChange: [background?: BackgroundModel];
+}>();
 
 const { user } = useCommonStore();
 
@@ -166,12 +156,12 @@ const scrollingKey = ref(1);
 const uploadingVideoStatus = ref(VideoStatus.IDLE);
 const isShowingMoreOptions = ref(false);
 
-const form: FormController<FormPostModel> = createForm({
-	model,
-	modelClass: FiresidePostModel,
-	loadUrl: computed(() => `/web/posts/manage/save/${model.value.id}`),
+const form: FormController<FormPostModel> = createForm<FormPostModel>({
+	model: toRef(() => model) as Ref<FormPostModel | undefined>,
+	modelClass: FiresidePostModel as any,
+	loadUrl: computed(() => `/web/posts/manage/save/${model.id}`),
 	onInit: async () => {
-		const _model = model.value;
+		const _model = model;
 
 		isNewPost.value = _model.status === FiresidePostStatus.Temp;
 		isSavedDraftPost.value = _model.status === FiresidePostStatus.Draft;
@@ -284,18 +274,18 @@ const form: FormController<FormPostModel> = createForm({
 			);
 		}
 
-		if (defaultRealm.value) {
-			attachRealm(defaultRealm.value);
+		if (defaultRealm) {
+			attachRealm(defaultRealm);
 		}
 
 		if (
-			defaultCommunity.value &&
-			defaultChannel.value &&
-			defaultCommunity.value.postableChannels.some(
-				channel => channel.title === defaultChannel.value!.title
+			defaultCommunity &&
+			defaultChannel &&
+			defaultCommunity.postableChannels.some(
+				channel => channel.title === defaultChannel!.title
 			)
 		) {
-			attachCommunity(defaultCommunity.value, defaultChannel.value);
+			attachCommunity(defaultCommunity, defaultChannel);
 		}
 
 		if (payload.targetableCommunities) {
@@ -362,8 +352,8 @@ const form: FormController<FormPostModel> = createForm({
 		return $saveFiresidePost(form.formModel);
 	},
 	onSubmitSuccess() {
-		Object.assign(model.value, form.formModel);
-		emit('submit', model.value);
+		Object.assign(model, form.formModel);
+		emit('submit', model);
 	},
 });
 
@@ -394,7 +384,7 @@ const hasPoll = computed(() => {
 });
 
 const isPollEditable = computed(() => {
-	const poll = model.value.poll;
+	const poll = model.poll;
 	if (poll) {
 		return !poll.end_time;
 	}
@@ -449,7 +439,7 @@ const possibleCommunities = computed(() => {
 	return targetableCommunities.value.filter(c1 => {
 		// Also exclude the default community. If it is specified,
 		// it'll be force-added through the pill-incomplete component.
-		if (c1.id === defaultCommunity?.value?.id) {
+		if (c1.id === defaultCommunity?.id) {
 			return false;
 		}
 
@@ -461,7 +451,7 @@ const incompleteDefaultCommunity = computed(() => {
 	// The default community is considered incomplete if the channel for it
 	// needs to be selected (default channel is null or the community is not attached to the post).
 
-	const community = defaultCommunity.value;
+	const community = defaultCommunity;
 
 	if (!(community instanceof CommunityModel)) {
 		return null;
@@ -487,12 +477,12 @@ const submitButtonsEnabled = computed(
 );
 
 const shouldShowAuthorOptions = computed(() => {
-	if (!model.value.game || !user.value) {
+	if (!model.game || !user.value) {
 		return false;
 	}
 
 	// Original post authors can always choose whether to share the post on their profile.
-	if (user.value.id === model.value.user.id) {
+	if (user.value.id === model.user.id) {
 		return true;
 	}
 
@@ -500,7 +490,7 @@ const shouldShowAuthorOptions = computed(() => {
 	// We can't toggle on sharing the post to profile because its not our post.
 	// We can only toggle "as game owner" if the post isn't already shared
 	// on the author's profile.
-	return !model.value.post_to_user_profile;
+	return !model.post_to_user_profile;
 });
 
 watch(

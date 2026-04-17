@@ -1,30 +1,21 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, useSlots } from 'vue';
-import { uuidv4 } from '../../utils/uuid';
-import { getTranslation, interpolateTranslation, TranslationContext } from './translate.service';
+import { computed, ref, useSlots } from 'vue';
 
-const props = defineProps({
-	tag: {
-		type: String,
-		default: 'span',
-	},
-	translateN: {
-		type: Number,
-		default: undefined,
-	},
-	translatePlural: {
-		type: String,
-		default: undefined,
-	},
-	translateParams: {
-		type: Object as PropType<TranslationContext>,
-		default: undefined,
-	},
-	translateComment: {
-		type: String,
-		default: undefined,
-	},
-});
+import {
+	getTranslation,
+	interpolateTranslation,
+	TranslationContext,
+} from '~common/translate/translate.service';
+import { uuidv4 } from '~utils/uuid';
+
+type Props = {
+	tag?: string;
+	translateN?: number;
+	translatePlural?: string;
+	translateParams?: TranslationContext;
+	translateComment?: string;
+};
+const { tag = 'span', translateN, translatePlural, translateParams } = defineProps<Props>();
 
 const slots = useSlots();
 
@@ -32,28 +23,22 @@ const slots = useSlots();
 const slotContent = slots.default?.()?.[0].children?.toString().trim();
 const msgid = ref(slotContent ?? '');
 
-const isPlural = computed(
-	() => props.translateN !== undefined && props.translatePlural !== undefined
-);
+const isPlural = computed(() => translateN !== undefined && translatePlural !== undefined);
 
-if (!isPlural.value && (props.translateN !== undefined || props.translatePlural)) {
+if (!isPlural.value && (translateN !== undefined || translatePlural)) {
 	throw new Error(
 		`"translate-n" and "translate-plural" attributes must be used together: ${msgid.value}.`
 	);
 }
 
 const translation = computed(() => {
-	const str = getTranslation(
-		msgid.value,
-		props.translateN,
-		isPlural.value ? props.translatePlural : null
-	);
+	const str = getTranslation(msgid.value, translateN, isPlural.value ? translatePlural : null);
 
-	if (!props.translateParams) {
+	if (!translateParams) {
 		return str;
 	}
 
-	return interpolateTranslation(str, props.translateParams, {});
+	return interpolateTranslation(str, translateParams, {});
 });
 
 // TODO(vue3): we should see if we can get rid of this now with vue3

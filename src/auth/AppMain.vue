@@ -1,11 +1,12 @@
 <script lang="ts" setup>
 import { onMounted } from 'vue';
 import { RouterView } from 'vue-router';
-import { AppClientBase } from '../_common/client/safe-exports';
-import { Connection } from '../_common/connection/connection-service';
-import AppErrorPage from '../_common/error/page/AppErrorPage.vue';
-import AppCommonShell from '../_common/shell/AppCommonShell.vue';
-import { loadCurrentLanguage } from '../_common/translate/translate.service';
+
+import { AppClientBase } from '~common/client/safe-exports';
+import { Connection } from '~common/connection/connection-service';
+import AppErrorPage from '~common/error/page/AppErrorPage.vue';
+import AppCommonShell from '~common/shell/AppCommonShell.vue';
+import { loadCurrentLanguage } from '~common/translate/translate.service';
 
 onMounted(() => {
 	loadCurrentLanguage();

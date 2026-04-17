@@ -1,23 +1,16 @@
 <script lang="ts" setup>
 import { Player as ShakaPlayer, polyfill } from 'shaka-player';
-import { markRaw, onBeforeUnmount, PropType, toRefs } from 'vue';
-import AppVideo from '../AppVideo.vue';
-import { trackVideoPlayerEvent, VideoPlayerController } from './controller';
+import { markRaw, onBeforeUnmount } from 'vue';
 
-const props = defineProps({
-	player: {
-		type: Object as PropType<VideoPlayerController>,
-		required: true,
-	},
-	autoplay: {
-		type: Boolean,
-	},
-	allowDegradedAutoplay: {
-		type: Boolean,
-	},
-});
+import AppVideo from '~common/video/AppVideo.vue';
+import { trackVideoPlayerEvent, VideoPlayerController } from '~common/video/player/controller';
 
-const { player, allowDegradedAutoplay } = toRefs(props);
+type Props = {
+	player: VideoPlayerController;
+	autoplay?: boolean;
+	allowDegradedAutoplay?: boolean;
+};
+const { player, autoplay = false, allowDegradedAutoplay = false } = defineProps<Props>();
 
 let video: HTMLVideoElement | undefined;
 let shakaPlayer: ShakaPlayer | undefined;
@@ -38,7 +31,7 @@ async function initShakaWithVideo(newVideo: HTMLVideoElement) {
 	video = markRaw(newVideo);
 	polyfill.installAll();
 	if (!ShakaPlayer.isBrowserSupported()) {
-		trackVideoPlayerEvent(player.value, 'browser-unsupported');
+		trackVideoPlayerEvent(player, 'browser-unsupported');
 		console.error('Browser not supported for video streaming.');
 		return false;
 	}
@@ -62,7 +55,7 @@ async function initShakaWithVideo(newVideo: HTMLVideoElement) {
 
 	shakaPlayer.addEventListener('error', onErrorEvent);
 
-	if (player.value.sources.length === 0) {
+	if (player.sources.length === 0) {
 		throw new Error(`No manifests to load.`);
 	}
 
@@ -70,7 +63,7 @@ async function initShakaWithVideo(newVideo: HTMLVideoElement) {
 
 	// We go with the first one that loads in properly. This way if DASH is
 	// unsupported in the browser, we fallback to HLS.
-	for (const { src: manifestUrl, type: manifestType } of player.value.sources) {
+	for (const { src: manifestUrl, type: manifestType } of player.sources) {
 		if (isDestroyed) {
 			return false;
 		}
@@ -86,10 +79,10 @@ async function initShakaWithVideo(newVideo: HTMLVideoElement) {
 	}
 
 	if (!chosenManifestType) {
-		trackVideoPlayerEvent(player.value, 'load-manifest-failed');
+		trackVideoPlayerEvent(player, 'load-manifest-failed');
 		return false;
 	}
-	trackVideoPlayerEvent(player.value, 'load-manifest', chosenManifestType);
+	trackVideoPlayerEvent(player, 'load-manifest', chosenManifestType);
 
 	return setupShakaEvents();
 }
@@ -124,12 +117,7 @@ function setupShakaEvents() {
 				return;
 			}
 
-			trackVideoPlayerEvent(
-				player.value,
-				'bitrate-change',
-				eventAction,
-				`${next.videoBandwidth}`
-			);
+			trackVideoPlayerEvent(player, 'bitrate-change', eventAction, `${next.videoBandwidth}`);
 		}
 	});
 	return true;

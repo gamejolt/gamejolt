@@ -1,18 +1,16 @@
 <script lang="ts">
 import { useRoute } from 'vue-router';
-import AppEditableOverlay from '../../../../../../_common/editable-overlay/AppEditableOverlay.vue';
-import AppExpand from '../../../../../../_common/expand/AppExpand.vue';
-import AppMediaItemCover from '../../../../../../_common/media-item/cover/AppMediaItemCover.vue';
-import AppNavTabList from '../../../../../../_common/nav/tab-list/AppNavTabList.vue';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '../../../../../../_common/route/route-component';
-import { Screen } from '../../../../../../_common/screen/screen-service';
-import { showGameHeaderModal } from '../../../../../components/game/header-modal/header-modal.service';
-import { useGameDashRouteController } from '../manage.store';
-import AppManageGameMediaBar from './_media-bar/media-bar.vue';
-import AppManageGameNav from './_nav/nav.vue';
+
+import { showGameHeaderModal } from '~app/components/game/header-modal/header-modal.service';
+import AppGameManageMediaBar from '~app/views/dashboard/games/manage/game/_media-bar/AppGameManageMediaBar.vue';
+import AppGameManageNav from '~app/views/dashboard/games/manage/game/_nav/AppGameManageNav.vue';
+import { useGameDashRouteController } from '~app/views/dashboard/games/manage/manage.store';
+import AppEditableOverlay from '~common/editable-overlay/AppEditableOverlay.vue';
+import AppExpand from '~common/expand/AppExpand.vue';
+import AppMediaItemCover from '~common/media-item/cover/AppMediaItemCover.vue';
+import AppNavTabList from '~common/nav/tab-list/AppNavTabList.vue';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { Screen } from '~common/screen/screen-service';
 
 export default {
 	...defineAppRouteOptions({
@@ -63,13 +61,13 @@ createAppRoute({});
 		</AppExpand>
 
 		<AppExpand :when="route.name === 'dash.games.manage.game.design'">
-			<AppManageGameMediaBar :game="game!" :media-items="media" />
+			<AppGameManageMediaBar :game="game!" :media-items="media" />
 		</AppExpand>
 
 		<div v-if="Screen.isMobile" class="container">
 			<br />
 			<AppNavTabList>
-				<AppManageGameNav />
+				<AppGameManageNav />
 			</AppNavTabList>
 		</div>
 
@@ -78,7 +76,7 @@ createAppRoute({});
 				<div class="row">
 					<div v-if="Screen.isDesktop" class="col-md-2">
 						<nav class="platform-list">
-							<AppManageGameNav />
+							<AppGameManageNav />
 						</nav>
 					</div>
 					<div class="col-xs-12 col-md-10">

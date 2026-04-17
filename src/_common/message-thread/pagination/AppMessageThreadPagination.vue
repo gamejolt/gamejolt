@@ -1,36 +1,23 @@
 <script lang="ts" setup>
-import { toRef, toRefs } from 'vue';
-import AppPagination from '../../pagination/AppPagination.vue';
-import AppTimelineListItem from '../../timeline-list/item/AppTimelineListItem.vue';
+import { toRef } from 'vue';
 
-const props = defineProps({
-	itemsPerPage: {
-		type: Number,
-		required: true,
-	},
-	totalItems: {
-		type: Number,
-		required: true,
-	},
-	currentPage: {
-		type: Number,
-		required: true,
-	},
-	pager: {
-		type: Boolean,
-	},
-	preventUrlChange: {
-		type: Boolean,
-	},
-});
+import AppPagination from '~common/pagination/AppPagination.vue';
+import AppTimelineListItem from '~common/timeline-list/item/AppTimelineListItem.vue';
 
-const { totalItems, itemsPerPage } = toRefs(props);
+type Props = {
+	itemsPerPage: number;
+	totalItems: number;
+	currentPage: number;
+	pager?: boolean;
+	preventUrlChange?: boolean;
+};
+const { itemsPerPage, totalItems, currentPage, pager, preventUrlChange } = defineProps<Props>();
 
-const emit = defineEmits({
-	pagechange: (..._args: any[]) => true,
-});
+const emit = defineEmits<{
+	pagechange: [...args: any[]];
+}>();
 
-const hasPages = toRef(() => totalItems.value > itemsPerPage.value);
+const hasPages = toRef(() => totalItems > itemsPerPage);
 
 function pageChange(...args: any[]) {
 	emit('pagechange', args);

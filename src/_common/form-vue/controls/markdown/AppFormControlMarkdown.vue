@@ -1,48 +1,34 @@
 <script lang="ts" setup>
-import { PropType, toRef } from 'vue';
-import { Environment } from '../../../environment/environment.service';
-import AppTranslate from '../../../translate/AppTranslate.vue';
-import { useForm } from '../../AppForm.vue';
-import {
-	createFormControl,
-	defineFormControlEmits,
-	defineFormControlProps,
-} from '../../AppFormControl.vue';
-import { useFormGroup } from '../../AppFormGroup.vue';
-import { vAppFormAutosize } from '../../autosize.directive';
-import { vAppFocusWhen } from '../../focus-when.directive';
-import AppFormControlMarkdownMediaItems from './AppFormControlMarkdownMediaItems.vue';
-import AppJolticon from '../../../jolticon/AppJolticon.vue';
+import { toRef } from 'vue';
 
-const props = defineProps({
-	...defineFormControlProps(),
-	markdownMode: {
-		type: String as PropType<'game-site' | 'user-site'>,
-		required: true,
-	},
-	mediaItemType: {
-		type: String,
-		required: true,
-	},
-	disabled: {
-		type: Boolean,
-	},
-	focus: {
-		type: Boolean,
-	},
-});
+import { Environment } from '~common/environment/environment.service';
+import { useForm } from '~common/form-vue/AppForm.vue';
+import { createFormControl, FormControlEmits } from '~common/form-vue/AppFormControl.vue';
+import { useFormGroup } from '~common/form-vue/AppFormGroup.vue';
+import { vAppFormAutosize } from '~common/form-vue/autosize.directive';
+import AppFormControlMarkdownMediaItems from '~common/form-vue/controls/markdown/AppFormControlMarkdownMediaItems.vue';
+import { vAppFocusWhen } from '~common/form-vue/focus-when.directive';
+import { FormValidator } from '~common/form-vue/validators';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
-const emit = defineEmits({
-	...defineFormControlEmits(),
-});
+type Props = {
+	disabled?: boolean;
+	validators?: FormValidator[];
+	markdownMode: 'game-site' | 'user-site';
+	mediaItemType: string;
+	focus?: boolean;
+};
+const { disabled, validators = [], markdownMode, mediaItemType, focus } = defineProps<Props>();
+
+const emit = defineEmits<FormControlEmits>();
 
 const form = useForm()!;
 const { name } = useFormGroup()!;
 
 const { id, controlVal, applyValue } = createFormControl({
 	initialValue: '',
-	validators: toRef(props, 'validators'),
-	// eslint-disable-next-line vue/require-explicit-emits
+	validators: toRef(() => validators),
 	onChange: val => emit('changed', val),
 	alwaysOptional: true,
 });

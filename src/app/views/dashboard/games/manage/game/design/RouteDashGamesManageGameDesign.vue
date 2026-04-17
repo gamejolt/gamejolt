@@ -1,14 +1,15 @@
 <script lang="ts">
 import { computed } from 'vue';
-import { Api } from '../../../../../../../_common/api/api.service';
+
+import FormGameDesign from '~app/components/forms/game/design/FormGameDesign.vue';
 import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '../../../../../../../_common/route/route-component';
-import { useThemeStore } from '../../../../../../../_common/theme/theme.store';
-import { $gettext } from '../../../../../../../_common/translate/translate.service';
-import FormGameDesign from '../../../../../../components/forms/game/design/design.vue';
-import { ManageGameThemeKey, useGameDashRouteController } from '../../manage.store';
+	ManageGameThemeKey,
+	useGameDashRouteController,
+} from '~app/views/dashboard/games/manage/manage.store';
+import { Api } from '~common/api/api.service';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { useThemeStore } from '~common/theme/theme.store';
+import { $gettext } from '~common/translate/translate.service';
 
 export default {
 	...defineAppRouteOptions({

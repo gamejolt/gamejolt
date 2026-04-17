@@ -1,33 +1,35 @@
 <script lang="ts" setup>
-import { CSSProperties, Ref, computed, onMounted, ref, toRefs } from 'vue';
-import { Api } from '../../../../_common/api/api.service';
-import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import AppCurrencyPillList from '../../../../_common/currency/AppCurrencyPillList.vue';
-import { CurrencyType } from '../../../../_common/currency/currency-type';
-import {
-	featureMicrotransactions,
-	fetchFeatureToggles,
-} from '../../../../_common/features/features.service';
-import AppIllustration from '../../../../_common/illustration/AppIllustration.vue';
-import { illNoCommentsSmall } from '../../../../_common/illustration/illustrations';
-import { InventoryShopProductSaleModel } from '../../../../_common/inventory/shop/inventory-shop-product-sale.model';
-import { InventoryShopSectionModel } from '../../../../_common/inventory/shop/inventory-shop-section.model';
-import { PurchasableProductType } from '../../../../_common/inventory/shop/product-owner-helpers';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
-import AppModal from '../../../../_common/modal/AppModal.vue';
-import AppModalFloatingHeader from '../../../../_common/modal/AppModalFloatingHeader.vue';
-import { useModal } from '../../../../_common/modal/modal.service';
-import { storeModel, storeModelList } from '../../../../_common/model/model-store.service';
-import AppOnHover from '../../../../_common/on/AppOnHover.vue';
-import { Screen } from '../../../../_common/screen/screen-service';
-import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
-import { StickerPackRatio } from '../../../../_common/sticker/pack/AppStickerPack.vue';
-import { StickerPackModel } from '../../../../_common/sticker/pack/pack.model';
-import { useCommonStore } from '../../../../_common/store/common-store';
-import AppTheme from '../../../../_common/theme/AppTheme.vue';
-import { useThemeStore } from '../../../../_common/theme/theme.store';
+import { computed, CSSProperties, onMounted, Ref, ref } from 'vue';
+
+import AppVendingMachineProduct from '~app/components/vending-machine/modal/_product/AppVendingMachineProduct.vue';
+import { showPurchaseShopProductModal } from '~app/components/vending-machine/modal/_purchase-modal/modal.service';
+import AppVendingMachineCurrencyCard from '~app/components/vending-machine/modal/AppVendingMachineCurrencyCard.vue';
+import imageVance from '~app/components/vending-machine/modal/vance.png';
+import { Api } from '~common/api/api.service';
+import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
+import AppButton from '~common/button/AppButton.vue';
+import AppCurrencyPillList from '~common/currency/AppCurrencyPillList.vue';
+import { CurrencyType } from '~common/currency/currency-type';
+import { featureMicrotransactions, fetchFeatureToggles } from '~common/features/features.service';
+import AppIllustration from '~common/illustration/AppIllustration.vue';
+import { illNoCommentsSmall } from '~common/illustration/illustrations';
+import { InventoryShopProductSaleModel } from '~common/inventory/shop/inventory-shop-product-sale.model';
+import { InventoryShopSectionModel } from '~common/inventory/shop/inventory-shop-section.model';
+import { PurchasableProductType } from '~common/inventory/shop/product-owner-helpers';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
+import AppModal from '~common/modal/AppModal.vue';
+import AppModalFloatingHeader from '~common/modal/AppModalFloatingHeader.vue';
+import { useModal } from '~common/modal/modal.service';
+import { storeModel, storeModelList } from '~common/model/model-store.service';
+import AppOnHover from '~common/on/AppOnHover.vue';
+import { Screen } from '~common/screen/screen-service';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import { StickerPackRatio } from '~common/sticker/pack/AppStickerPack.vue';
+import { StickerPackModel } from '~common/sticker/pack/pack.model';
+import { useCommonStore } from '~common/store/common-store';
+import AppTheme from '~common/theme/AppTheme.vue';
+import { useThemeStore } from '~common/theme/theme.store';
 import {
 	kThemeBgActual,
 	kThemeBgBackdrop,
@@ -35,11 +37,11 @@ import {
 	kThemeFg,
 	kThemeFgMuted,
 	kThemePrimary,
-} from '../../../../_common/theme/variables';
-import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import AppUserAvatarBubble from '../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
-import { UserModel } from '../../../../_common/user/user.model';
+} from '~common/theme/variables';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { $gettext } from '~common/translate/translate.service';
+import { UserModel } from '~common/user/user.model';
+import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
 import {
 	kElevateTransition,
 	styleBorderRadiusLg,
@@ -50,7 +52,7 @@ import {
 	styleTextOverflow,
 	styleTyped,
 	styleWhen,
-} from '../../../../_styles/mixins';
+} from '~styles/mixins';
 import {
 	kBorderWidthBase,
 	kFontFamilyDisplay,
@@ -60,14 +62,10 @@ import {
 	kFontSizeSmall,
 	kLineHeightBase,
 	kStrongEaseOut,
-} from '../../../../_styles/variables';
-import { numberSort } from '../../../../utils/array';
-import { getMediaserverUrlForBounds } from '../../../../utils/image';
-import { run } from '../../../../utils/utils';
-import AppVendingMachineCurrencyCard from './AppVendingMachineCurrencyCard.vue';
-import AppVendingMachineProduct from './_product/AppVendingMachineProduct.vue';
-import { showPurchaseShopProductModal } from './_purchase-modal/modal.service';
-import imageVance from './vance.png';
+} from '~styles/variables';
+import { numberSort } from '~utils/array';
+import { getMediaserverUrlForBounds } from '~utils/image';
+import { run } from '~utils/utils';
 
 interface Section {
 	id: number;
@@ -77,14 +75,10 @@ interface Section {
 	sales: InventoryShopProductSaleModel[];
 }
 
-const props = defineProps({
-	userId: {
-		type: Number,
-		default: undefined,
-	},
-});
-
-const { userId } = toRefs(props);
+type Props = {
+	userId?: number;
+};
+const { userId } = defineProps<Props>();
 
 const { isDark } = useThemeStore();
 const { user: authUser, coinBalance, joltbuxBalance } = useCommonStore();
@@ -124,8 +118,8 @@ async function init() {
 
 	let productUrl = `/web/inventory/shop/sales`;
 	const productUrlParams: string[] = [`include_unpurchasable=true`];
-	if (userId?.value) {
-		productUrlParams.push(`userId=${userId.value}`);
+	if (userId) {
+		productUrlParams.push(`userId=${userId}`);
 	}
 	if (productUrlParams.length) {
 		productUrl += `?${productUrlParams.join('&')}`;

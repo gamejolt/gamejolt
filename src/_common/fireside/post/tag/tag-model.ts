@@ -1,4 +1,4 @@
-import { Model } from '../../../model/model.service';
+import { Model } from '~common/model/model.service';
 
 export class FiresidePostTagModel extends Model {
 	declare fireside_post_id: number;

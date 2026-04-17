@@ -1,30 +1,24 @@
 <script lang="ts" setup>
-import { PropType, computed, toRefs } from 'vue';
-import { formatNumber } from '../../filters/number';
-import { GameTrophyModel } from '../../game/trophy/trophy.model';
-import AppJolticon from '../../jolticon/AppJolticon.vue';
-import AppTimeAgo from '../../time/AppTimeAgo.vue';
-import { vAppTooltip } from '../../tooltip/tooltip-directive';
+import { computed } from 'vue';
+
+import { formatNumber } from '~common/filters/number';
+import { GameTrophyModel } from '~common/game/trophy/trophy.model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppTimeAgo from '~common/time/AppTimeAgo.vue';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import AppTrophyThumbnail from '~common/trophy/thumbnail/AppTrophyThumbnail.vue';
 import {
-	UserGameTrophyModel,
 	indexAchievedGameTrophies,
-} from '../../user/trophy/game-trophy.model';
-import AppTrophyThumbnail from '../thumbnail/AppTrophyThumbnail.vue';
+	UserGameTrophyModel,
+} from '~common/user/trophy/game-trophy.model';
 
-const props = defineProps({
-	trophies: {
-		type: Array as PropType<GameTrophyModel[]>,
-		required: true,
-	},
-	achieved: {
-		type: Array as PropType<UserGameTrophyModel[]>,
-		required: true,
-	},
-});
+type Props = {
+	trophies: GameTrophyModel[];
+	achieved: UserGameTrophyModel[];
+};
+const { achieved } = defineProps<Props>();
 
-const { achieved } = toRefs(props);
-
-const achievedIndexed = computed(() => indexAchievedGameTrophies(achieved.value));
+const achievedIndexed = computed(() => indexAchievedGameTrophies(achieved));
 </script>
 
 <template>

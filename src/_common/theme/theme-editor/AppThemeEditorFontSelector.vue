@@ -1,8 +1,9 @@
 <script lang="ts" setup>
-import { PropType, computed, nextTick, ref, toRefs, watch } from 'vue';
-import { Api } from '../../api/api.service';
-import { $gettext } from '../../translate/translate.service';
-import AppThemeEditorFontSelectorStyleInjector from './AppThemeEditorFontSelectorStyleInjector.vue';
+import { computed, nextTick, ref, useTemplateRef, watch } from 'vue';
+
+import { Api } from '~common/api/api.service';
+import AppThemeEditorFontSelectorStyleInjector from '~common/theme/theme-editor/AppThemeEditorFontSelectorStyleInjector.vue';
+import { $gettext } from '~common/translate/translate.service';
 
 interface FontDefinition {
 	family: string;
@@ -11,20 +12,9 @@ interface FontDefinition {
 	};
 }
 
-const props = defineProps({
-	modelValue: {
-		type: Object as PropType<FontDefinition>,
-		default: undefined,
-	},
-});
+const modelValue = defineModel<FontDefinition>();
 
-const emit = defineEmits({
-	'update:modelValue': (_font?: FontDefinition) => true,
-});
-
-const { modelValue } = toRefs(props);
-
-const list = ref<HTMLElement>();
+const list = useTemplateRef('list');
 const selectedFont = ref<FontDefinition | null>(null);
 
 const isSelectorShowing = ref(false);
@@ -47,9 +37,9 @@ const fontListFiltered = computed(() => {
 
 // Copy to our value when the model changes.
 watch(
-	() => modelValue?.value,
+	modelValue,
 	() => {
-		selectedFont.value = modelValue?.value || null;
+		selectedFont.value = modelValue.value || null;
 		updateFontDefinitions();
 	},
 	{ immediate: true }
@@ -108,7 +98,7 @@ function clearSelectedFont() {
 }
 
 function updateValue(font?: FontDefinition) {
-	emit('update:modelValue', font);
+	modelValue.value = font;
 }
 
 async function getFontList(): Promise<FontDefinition[]> {

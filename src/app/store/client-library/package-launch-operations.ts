@@ -1,12 +1,16 @@
-import type { OldLaunchInstance, LaunchInstance as TypeofLaunchInstance } from 'client-voodoo';
+import type { LaunchInstance as TypeofLaunchInstance, OldLaunchInstance } from 'client-voodoo';
 import type { Ref } from 'vue';
-import { Api } from '../../../_common/api/api.service';
-import { LaunchInstance, Launcher } from '../../../_common/client/client-voodoo-imports';
-import { $gettext } from '../../../_common/translate/translate.service';
-import { arrayRemove } from '../../../utils/array';
-import type { LocalDbPackage } from '../../components/client/local-db/package/package.model';
-import { handleClientVoodooError, trackClientVoodooOperation } from './client-voodoo';
-import type ClientLibraryPackageDataMutations from './package-data-mutations';
+
+import type { LocalDbPackage } from '~app/components/client/local-db/package/package.model';
+import {
+	handleClientVoodooError,
+	trackClientVoodooOperation,
+} from '~app/store/client-library/client-voodoo';
+import type ClientLibraryPackageDataMutations from '~app/store/client-library/package-data-mutations';
+import { Api } from '~common/api/api.service';
+import { Launcher, LaunchInstance } from '~common/client/client-voodoo-imports';
+import { $gettext } from '~common/translate/translate.service';
+import { arrayRemove } from '~utils/array';
 
 export default class ClientLibraryPackageLaunchOperations {
 	constructor(

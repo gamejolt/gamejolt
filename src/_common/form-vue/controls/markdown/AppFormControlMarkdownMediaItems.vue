@@ -1,53 +1,47 @@
 <script lang="ts" setup>
 import { computed, ref, toRef } from 'vue';
-import { Api, ApiProgressEvent } from '../../../api/api.service';
-import AppButton from '../../../button/AppButton.vue';
-import { Clipboard } from '../../../clipboard/clipboard-service';
-import { MediaItemModel } from '../../../media-item/media-item-model';
-import { vAppTooltip } from '../../../tooltip/tooltip-directive';
-import AppTranslate from '../../../translate/AppTranslate.vue';
-import { $gettext } from '../../../translate/translate.service';
-import AppForm, { FormController, createForm, defineFormProps } from '../../AppForm.vue';
-import AppFormControlErrors from '../../AppFormControlErrors.vue';
-import AppFormGroup from '../../AppFormGroup.vue';
-import { validateFilesize, validateImageMaxDimensions } from '../../validators';
-import AppFormControlUpload from '../upload/AppFormControlUpload.vue';
 
-interface FormModel {
+import { Api, ApiProgressEvent } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import { Clipboard } from '~common/clipboard/clipboard-service';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlUpload from '~common/form-vue/controls/upload/AppFormControlUpload.vue';
+import { validateFilesize, validateImageMaxDimensions } from '~common/form-vue/validators';
+import { MediaItemModel } from '~common/media-item/media-item-model';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
+
+type FormModel = {
 	type: string;
 	parent_id: number;
 	image: File | null;
 	_progress: ApiProgressEvent | null;
-}
+};
 
-const props = defineProps({
-	...defineFormProps<FormModel>(),
-	type: {
-		type: String,
-		required: true,
-	},
-	parentId: {
-		type: Number,
-		required: true,
-	},
-	disabled: {
-		type: Boolean,
-	},
-});
+type Props = {
+	model?: FormModel;
+	type: string;
+	parentId: number;
+	disabled?: boolean;
+};
+const { model, type, parentId, disabled } = defineProps<Props>();
 
 const mediaItems = ref([] as MediaItemModel[]);
 const maxFilesize = ref(0);
 const maxWidth = ref(0);
 const maxHeight = ref(0);
 
-const form: FormController<FormModel> = createForm({
-	model: toRef(props, 'model'),
+const form: FormController<FormModel> = createForm<FormModel>({
+	model: toRef(() => model),
 	loadUrl: `/web/dash/media-items`,
 	loadData: computed(() => form.formModel),
 	reloadOnSubmit: true,
 	onInit() {
-		form.formModel['type'] = props.type;
-		form.formModel['parent_id'] = props.parentId;
+		form.formModel['type'] = type;
+		form.formModel['parent_id'] = parentId;
 		form.formModel['image'] = null;
 	},
 	onLoad(response) {

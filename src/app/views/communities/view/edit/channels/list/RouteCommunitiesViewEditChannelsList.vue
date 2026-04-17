@@ -1,31 +1,30 @@
 <script lang="ts">
 import { computed, ref, toRef } from 'vue';
-import AppCardList from '../../../../../../../_common/card/list/AppCardList.vue';
-import AppCardListAdd from '../../../../../../../_common/card/list/AppCardListAdd.vue';
-import AppCardListDraggable from '../../../../../../../_common/card/list/AppCardListDraggable.vue';
+
+import AppCommunityPerms from '~app/components/community/perms/AppCommunityPerms.vue';
+import FormCommunityChannelAdd from '~app/components/forms/community/channel/add/FormCommunityChannelAdd.vue';
+import AppCommunityPageContainer from '~app/views/communities/view/_page-container/AppCommunityPageContainer.vue';
+import AppCommunitiesEditChannelListItem from '~app/views/communities/view/edit/channels/list/_item/AppCommunitiesEditChannelListItem.vue';
+import AppChannelPresetItem from '~app/views/communities/view/edit/channels/list/_preset-item/AppChannelPresetItem.vue';
+import {
+	loadArchivedChannels,
+	updateCommunity,
+	useCommunityRouteStore,
+} from '~app/views/communities/view/view.store';
+import AppCardList from '~common/card/list/AppCardList.vue';
+import AppCardListAdd from '~common/card/list/AppCardListAdd.vue';
+import AppCardListDraggable from '~common/card/list/AppCardListDraggable.vue';
 import {
 	$saveCommunityChannelSort,
 	$saveCommunityChannelSortArchived,
 	CommunityChannelModel,
-} from '../../../../../../../_common/community/channel/channel.model';
-import {
-	CommunityModel,
-	CommunityPresetChannelType,
-} from '../../../../../../../_common/community/community.model';
-import { showErrorGrowl } from '../../../../../../../_common/growls/growls.service';
-import AppJolticon from '../../../../../../../_common/jolticon/AppJolticon.vue';
-import AppLoading from '../../../../../../../_common/loading/AppLoading.vue';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '../../../../../../../_common/route/route-component';
-import { $gettext } from '../../../../../../../_common/translate/translate.service';
-import AppCommunityPerms from '../../../../../../components/community/perms/AppCommunityPerms.vue';
-import FormCommunityChannelAdd from '../../../../../../components/forms/community/channel/add/FormCommunityChannelAdd.vue';
-import AppCommunitiesViewPageContainer from '../../../_page-container/page-container.vue';
-import { loadArchivedChannels, updateCommunity, useCommunityRouteStore } from '../../../view.store';
-import AppCommunitiesEditChannelListItem from './_item/AppCommunitiesEditChannelListItem.vue';
-import AppCommunitiesEditChannelListPresetItem from './_preset-item/preset-item.vue';
+} from '~common/community/channel/channel.model';
+import { CommunityModel, CommunityPresetChannelType } from '~common/community/community.model';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLoading from '~common/loading/AppLoading.vue';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { $gettext } from '~common/translate/translate.service';
 
 const communityPresetChannels = [
 	CommunityPresetChannelType.FEATURED,
@@ -83,10 +82,10 @@ function onChannelAdded(channel: CommunityChannelModel) {
 	isShowingChannelAdd.value = false;
 }
 
-function onPresetListItemSaved(community: CommunityModel) {
+function onPresetListItemSaved() {
 	// Since the preset channels are stored on the community, we have to let
 	// the routeStore know to update the community with the new information.
-	updateCommunity(routeStore, community);
+	updateCommunity(routeStore, community.value);
 }
 
 function onActivate(item: typeof activeItem.value) {
@@ -114,7 +113,7 @@ createAppRoute({});
 </script>
 
 <template>
-	<AppCommunitiesViewPageContainer>
+	<AppCommunityPageContainer>
 		<AppCommunityPerms
 			:community="community"
 			required="community-channels,community-competitions"
@@ -137,7 +136,7 @@ createAppRoute({});
 			<AppCardList
 				v-if="hasFullChannelsPermission"
 				:items="communityPresetChannels"
-				:active-item="activeItem"
+				:active-item="(activeItem as any)"
 				:is-adding="isShowingChannelAdd"
 				@activate="onActivate"
 			>
@@ -153,7 +152,7 @@ createAppRoute({});
 					/>
 				</AppCardListAdd>
 
-				<AppCommunitiesEditChannelListPresetItem
+				<AppChannelPresetItem
 					v-for="presetType of communityPresetChannels"
 					:key="presetType"
 					:community="community"
@@ -204,7 +203,7 @@ createAppRoute({});
 				</template>
 			</template>
 		</AppCommunityPerms>
-	</AppCommunitiesViewPageContainer>
+	</AppCommunityPageContainer>
 </template>
 
 <style lang="stylus" scoped>

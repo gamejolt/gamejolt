@@ -1,6 +1,6 @@
-import { PointerPosition } from '../sticker-store';
-import { StickerTargetController } from '../target/target-controller';
-import { StickerLayerTargetRect } from './layer-controller';
+import { StickerLayerTargetRect } from '~common/sticker/layer/layer-controller';
+import { PointerPosition } from '~common/sticker/sticker-store';
+import { StickerTargetController } from '~common/sticker/target/target-controller';
 
 export class StickerLayerItem {
 	constructor(

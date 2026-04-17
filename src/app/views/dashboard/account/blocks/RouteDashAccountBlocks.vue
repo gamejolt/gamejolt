@@ -1,25 +1,23 @@
 <script lang="ts">
 import { ref, toRef } from 'vue';
-import { Api } from '../../../../../_common/api/api.service';
-import AppButton from '../../../../../_common/button/AppButton.vue';
-import AppCardList from '../../../../../_common/card/list/AppCardList.vue';
-import AppCardListAdd from '../../../../../_common/card/list/AppCardListAdd.vue';
-import { showErrorGrowl, showSuccessGrowl } from '../../../../../_common/growls/growls.service';
-import AppLinkHelp from '../../../../../_common/link/AppLinkHelp.vue';
-import AppLoading from '../../../../../_common/loading/AppLoading.vue';
-import { showModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '../../../../../_common/route/route-component';
-import AppTimeAgo from '../../../../../_common/time/AppTimeAgo.vue';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import AppUserVerifiedTick from '../../../../../_common/user/AppUserVerifiedTick.vue';
-import { UserBlockModel } from '../../../../../_common/user/block/block.model';
-import AppUserAvatar from '../../../../../_common/user/user-avatar/AppUserAvatar.vue';
-import { arrayRemove } from '../../../../../utils/array';
-import FormUserBlock from '../../../../components/forms/user/block/block.vue';
-import { useAccountRouteController } from '../RouteDashAccount.vue';
+
+import FormUserBlock from '~app/components/forms/user/block/FormUserBlock.vue';
+import { useAccountRouteController } from '~app/views/dashboard/account/RouteDashAccount.vue';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import AppCardList from '~common/card/list/AppCardList.vue';
+import AppCardListAdd from '~common/card/list/AppCardListAdd.vue';
+import { showErrorGrowl, showSuccessGrowl } from '~common/growls/growls.service';
+import AppLinkHelp from '~common/link/AppLinkHelp.vue';
+import AppLoading from '~common/loading/AppLoading.vue';
+import { showModalConfirm } from '~common/modal/confirm/confirm-service';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import AppTimeAgo from '~common/time/AppTimeAgo.vue';
+import { $gettext } from '~common/translate/translate.service';
+import AppUserVerifiedTick from '~common/user/AppUserVerifiedTick.vue';
+import { UserBlockModel } from '~common/user/block/block.model';
+import AppUserAvatar from '~common/user/user-avatar/AppUserAvatar.vue';
+import { arrayRemove } from '~utils/array';
 
 export default {
 	...defineAppRouteOptions({

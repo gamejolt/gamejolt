@@ -1,42 +1,31 @@
 <script lang="ts" setup>
-import { PropType, toRefs } from 'vue';
-import { CommunityChannelModel } from '../../../../../_common/community/channel/channel.model';
-import { CommunityModel } from '../../../../../_common/community/community.model';
-import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import AppFormsPillSelectorCommunities from '../../../forms/pill-selector/communities/AppFormsPillSelectorCommunities.vue';
-import AppContentTarget from '../AppContentTarget.vue';
+import AppContentTarget from '~app/components/content/target/AppContentTarget.vue';
+import AppFormsPillSelectorCommunities from '~app/components/forms/pill-selector/communities/AppFormsPillSelectorCommunities.vue';
+import { CommunityChannelModel } from '~common/community/channel/channel.model';
+import { CommunityModel } from '~common/community/community.model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
-const props = defineProps({
-	communities: {
-		type: Array as PropType<CommunityModel[]>,
-		required: true,
-	},
-	initialCommunity: {
-		type: Object as PropType<CommunityModel>,
-		default: undefined,
-	},
-	noChannel: {
-		type: Boolean,
-		default: false,
-	},
-});
+type Props = {
+	communities: CommunityModel[];
+	initialCommunity?: CommunityModel;
+	noChannel?: boolean;
+};
+const { communities, initialCommunity, noChannel = false } = defineProps<Props>();
 
-const { communities, initialCommunity, noChannel } = toRefs(props);
-
-const emit = defineEmits({
-	selectCommunity: (_community: CommunityModel) => true,
-	selectChannel: (_channel: CommunityChannelModel) => true,
-	select: (_community: CommunityModel, _channel?: CommunityChannelModel) => true,
-	show: () => true,
-});
+const emit = defineEmits<{
+	selectCommunity: [community: CommunityModel];
+	selectChannel: [channel: CommunityChannelModel];
+	select: [community: CommunityModel, channel?: CommunityChannelModel];
+	show: [];
+}>();
 
 function onSelectCommunity(community: CommunityModel) {
 	emit('selectCommunity', community);
 
 	// If channels are disabled, it's enough to select a community, so also emit
 	// the 'select' event.
-	if (noChannel.value) {
+	if (noChannel) {
 		emit('select', community);
 	}
 }

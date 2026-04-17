@@ -1,26 +1,24 @@
 <script lang="ts" setup>
-import { PropType, onMounted, ref, toRefs } from 'vue';
-import { Api } from '../../../../api/api.service';
-import AppButton from '../../../../button/AppButton.vue';
-import { GameModel } from '../../../../game/game.model';
-import AppGameThumbnail from '../../../../game/thumbnail/AppGameThumbnail.vue';
-import AppGameThumbnailImg from '../../../../game/thumbnail/AppGameThumbnailImg.vue';
-import { showErrorGrowl } from '../../../../growls/growls.service';
-import AppLoading from '../../../../loading/AppLoading.vue';
-import AppModal from '../../../../modal/AppModal.vue';
-import { useModal } from '../../../../modal/modal.service';
-import { $gettext } from '../../../../translate/translate.service';
-import { CommunityCompetitionModel } from '../../competition.model';
-import { CommunityCompetitionEntryModel } from '../entry.model';
+import { onMounted, ref } from 'vue';
 
-const props = defineProps({
-	competition: {
-		type: Object as PropType<CommunityCompetitionModel>,
-		required: true,
-	},
-});
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import { CommunityCompetitionModel } from '~common/community/competition/competition.model';
+import { CommunityCompetitionEntryModel } from '~common/community/competition/entry/entry.model';
+import { GameModel } from '~common/game/game.model';
+import AppGameThumbnail from '~common/game/thumbnail/AppGameThumbnail.vue';
+import AppGameThumbnailImg from '~common/game/thumbnail/AppGameThumbnailImg.vue';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import AppLoading from '~common/loading/AppLoading.vue';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
 
-const { competition } = toRefs(props);
+type Props = {
+	competition: CommunityCompetitionModel;
+};
+const { competition } = defineProps<Props>();
 
 const modal = useModal()!;
 
@@ -37,7 +35,7 @@ async function loadGames() {
 	isLoading.value = true;
 
 	const payload = await Api.sendRequest(
-		`/web/communities/competitions/entries/list-games/${competition.value.id}`
+		`/web/communities/competitions/entries/list-games/${competition.id}`
 	);
 
 	if (payload.games) {
@@ -60,7 +58,7 @@ async function onClickSubmit() {
 
 	try {
 		const payload = await Api.sendRequest(
-			`/web/communities/competitions/entries/submit-game/${competition.value.id}/${selectedGame.value.id}`,
+			`/web/communities/competitions/entries/submit-game/${competition.id}/${selectedGame.value.id}`,
 			{},
 			{
 				noErrorRedirect: true,
@@ -130,10 +128,10 @@ async function onClickSubmit() {
 			</template>
 			<div v-else class="alert">
 				<p>{{ $gettext(`You have no games available to be submitted.`) }}</p>
-				<p v-translate>
-					To enter a game into the jam, upload it to Game Jolt first,
-					<b>make sure it is published</b>, then return to this page.
-				</p>
+				<AppTranslate tag="p">
+					To enter a game into the jam, upload it to Game Jolt first, make sure it is
+					published, then return to this page.
+				</AppTranslate>
 				<AppButton :to="{ name: 'dash.games.add' }">
 					{{ $gettext(`Add Game`) }}
 				</AppButton>

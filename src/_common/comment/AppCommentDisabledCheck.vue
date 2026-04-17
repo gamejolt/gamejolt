@@ -1,17 +1,12 @@
 <script lang="ts" setup>
-import { PropType, toRefs } from 'vue';
-import AppAlertBox from '../alert/AppAlertBox.vue';
-import AppTranslate from '../translate/AppTranslate.vue';
-import { CommentableModel } from './comment-model';
+import AppAlertBox from '~common/alert/AppAlertBox.vue';
+import { CommentableModel } from '~common/comment/comment-model';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
-const props = defineProps({
-	model: {
-		type: Object as PropType<CommentableModel>,
-		required: true,
-	},
-});
-
-const { model } = toRefs(props);
+type Props = {
+	model: CommentableModel;
+};
+const { model } = defineProps<Props>();
 </script>
 
 <template>

@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import { useFormManagedAccount } from './managed-account.vue';
-import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormControl from '../../../../../_common/form-vue/AppFormControl.vue';
-import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
+import { useFormManagedAccount } from '~app/components/forms/financials/managed-account/FormFinancialsManagedAccount.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 const { getStripeField, requiresField } = useFormManagedAccount()!;
 </script>

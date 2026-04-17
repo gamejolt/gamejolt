@@ -1,15 +1,18 @@
 <script lang="ts">
 import { computed, ref } from 'vue';
-import { Api } from '../../../../_common/api/api.service';
-import AppContentViewer from '../../../../_common/content/content-viewer/AppContentViewer.vue';
-import { Environment } from '../../../../_common/environment/environment.service';
-import { Meta } from '../../../../_common/meta/meta-service';
-import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
-import AppShareCard from '../../../../_common/share/card/AppShareCard.vue';
-import { useCommonStore } from '../../../../_common/store/common-store';
-import { kThemeFgMuted } from '../../../../_common/theme/variables';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { HelpPageModel } from '../../../components/help/page/page.model';
+
+import { HelpPageModel } from '~app/components/help/page/page.model';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import AppContentViewer from '~common/content/content-viewer/AppContentViewer.vue';
+import { Environment } from '~common/environment/environment.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { Meta } from '~common/meta/meta-service';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import AppShareCard from '~common/share/card/AppShareCard.vue';
+import { useCommonStore } from '~common/store/common-store';
+import { kThemeFgMuted } from '~common/theme/variables';
+import { $gettext } from '~common/translate/translate.service';
 
 export default {
 	...defineAppRouteOptions({

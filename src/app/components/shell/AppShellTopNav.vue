@@ -1,47 +1,52 @@
 <script lang="ts" setup>
-import { computed, defineAsyncComponent, ref } from 'vue';
+import { computed, defineAsyncComponent, ref, useTemplateRef } from 'vue';
 import { RouterLink } from 'vue-router';
+
+import { useGridStore } from '~app/components/grid/grid-store';
+import AppSearch from '~app/components/search/AppSearch.vue';
+import { CBAR_WIDTH } from '~app/components/shell/AppShell.vue';
+import { imageGameJoltLogo, imageJolt } from '~app/img/images';
+import { useAppStore } from '~app/store/index';
+import { useQuestStore } from '~app/store/quest';
 import {
 	trackAppPromotionClick,
 	trackExperimentEngagement,
-} from '../../../_common/analytics/analytics.service';
-import AppButton from '../../../_common/button/AppButton.vue';
-import { AppClientHistoryNavigator } from '../../../_common/client/safe-exports';
-import { configShowStoreInMoreMenu } from '../../../_common/config/config.service';
-import { AppConfigLoaded } from '../../../_common/config/loaded';
-import { Connection } from '../../../_common/connection/connection-service';
-import { Environment } from '../../../_common/environment/environment.service';
-import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
-import AppNotificationBlip from '../../../_common/notification/AppNotificationBlip.vue';
-import { vAppObserveDimensions } from '../../../_common/observe-dimensions/observe-dimensions.directive';
-import { Screen } from '../../../_common/screen/screen-service';
-import { useCommonStore } from '../../../_common/store/common-store';
-import AppThemeSvg from '../../../_common/theme/svg/AppThemeSvg.vue';
-import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
-import { styleWhen } from '../../../_styles/mixins';
-import { imageGameJoltLogo, imageJolt } from '../../img/images';
-import { useAppStore } from '../../store/index';
-import { useQuestStore } from '../../store/quest';
-import { useGridStore } from '../grid/grid-store';
-import AppSearch from '../search/AppSearch.vue';
-import { CBAR_WIDTH } from './AppShell.vue';
+} from '~common/analytics/analytics.service';
+import AppButton from '~common/button/AppButton.vue';
+import { AppClientHistoryNavigator } from '~common/client/safe-exports';
+import AppConfigLoaded from '~common/config/AppConfigLoaded.vue';
+import { configShowStoreInMoreMenu } from '~common/config/config.service';
+import { Connection } from '~common/connection/connection-service';
+import { Environment } from '~common/environment/environment.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppNotificationBlip from '~common/notification/AppNotificationBlip.vue';
+import { vAppObserveDimensions } from '~common/observe-dimensions/observe-dimensions.directive';
+import { Screen } from '~common/screen/screen-service';
+import { useCommonStore } from '~common/store/common-store';
+import AppThemeSvg from '~common/theme/svg/AppThemeSvg.vue';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { styleWhen } from '~styles/mixins';
 
-const AppShellAccountPopover = defineAsyncComponent(() => import('./AppShellAccountPopover.vue'));
+const AppShellAccountPopover = defineAsyncComponent(
+	() => import('~app/components/shell/AppShellAccountPopover.vue')
+);
 const AppShellFriendRequestPopover = defineAsyncComponent(
-	() => import('./friend-request-popover/AppShellFriendRequestPopover.vue')
+	() => import('~app/components/shell/friend-request-popover/AppShellFriendRequestPopover.vue')
 );
 const AppShellNotificationPopover = defineAsyncComponent(
-	() => import('./notification-popover/AppShellNotificationPopover.vue')
+	() => import('~app/components/shell/notification-popover/AppShellNotificationPopover.vue')
 );
-const AppShellAltMenuPopover = defineAsyncComponent(() => import('./AppShellAltMenuPopover.vue'));
+const AppShellAltMenuPopover = defineAsyncComponent(
+	() => import('~app/components/shell/AppShellAltMenuPopover.vue')
+);
 
 const { visibleLeftPane, hasCbar, unreadActivityCount, toggleCbarMenu } = useAppStore();
 const { isUserTimedOut, user, userBootstrapped, showInitialPackWatermark } = useCommonStore();
 const { chat } = useGridStore();
 const { questActivityIds } = useQuestStore();
 
-const left = ref<HTMLDivElement>();
-const right = ref<HTMLDivElement>();
+const left = useTemplateRef('left');
+const right = useTemplateRef('right');
 const baseMinColWidth = ref<number>();
 
 const shouldShowSearch = computed(() => !Screen.isXs && !isUserTimedOut.value);

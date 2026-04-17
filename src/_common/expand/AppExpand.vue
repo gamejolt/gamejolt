@@ -1,26 +1,18 @@
 <script lang="ts" setup>
-import { nextTick, onMounted, ref, toRefs, watch } from 'vue';
+import { nextTick, onMounted, ref, useTemplateRef, watch } from 'vue';
 
-const props = defineProps({
-	when: {
-		type: Boolean,
-	},
-	animateInitial: {
-		type: Boolean,
-	},
-	expandHeight: {
-		type: String,
-		default: undefined,
-	},
-});
+type Props = {
+	when?: boolean;
+	animateInitial?: boolean;
+	expandHeight?: string;
+};
+const { when, animateInitial, expandHeight } = defineProps<Props>();
 
-const { when, animateInitial, expandHeight } = toRefs(props);
-
-const root = ref<HTMLElement>();
+const root = useTemplateRef('root');
 const inDom = ref(false);
 
 watch(
-	() => expandHeight?.value,
+	() => expandHeight,
 	(value, oldValue) => {
 		if (!root.value) {
 			return;
@@ -35,14 +27,14 @@ watch(
 );
 
 onMounted(async () => {
-	inDom.value = when.value;
+	inDom.value = when;
 
 	if (inDom.value && root.value) {
-		root.value.style.height = expandHeight?.value ?? 'auto';
+		root.value.style.height = expandHeight ?? 'auto';
 
 		// This simulates having it closed and then showing immediately to
 		// slide it out.
-		if (animateInitial.value) {
+		if (animateInitial) {
 			root.value.style.height = '0';
 			inDom.value = false;
 			await nextTick();
@@ -50,11 +42,11 @@ onMounted(async () => {
 		}
 	}
 
-	watch(when, onWhenWatch);
+	watch(() => when, onWhenWatch);
 });
 
 async function onWhenWatch() {
-	if (!expandHeight?.value) {
+	if (!expandHeight) {
 		await nextTick();
 	}
 
@@ -63,15 +55,15 @@ async function onWhenWatch() {
 		return;
 	}
 
-	const getHeight = () => expandHeight?.value ?? elem.scrollHeight + 'px';
+	const getHeight = () => expandHeight ?? elem.scrollHeight + 'px';
 
-	if (when.value) {
+	if (when) {
 		// Show in DOM as soon as possible.
 		// This will get the correct height to expand out to.
 		inDom.value = true;
 		elem.classList.add('-transition');
 
-		if (!expandHeight?.value) {
+		if (!expandHeight) {
 			await nextTick();
 		}
 
@@ -103,10 +95,10 @@ function afterTransition() {
 		return;
 	}
 
-	if (when.value) {
+	if (when) {
 		elem.classList.remove('-transition');
-		elem.style.height = expandHeight?.value ?? 'auto';
-	} else if (!when.value) {
+		elem.style.height = expandHeight ?? 'auto';
+	} else if (!when) {
 		elem.classList.remove('-transition');
 		inDom.value = false;
 	}

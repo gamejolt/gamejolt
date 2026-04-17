@@ -1,19 +1,18 @@
 <script lang="ts" setup>
-import { computed, PropType } from 'vue';
-import { ContentObject } from '../../content-object';
-import { useContentOwnerController } from '../../content-owner';
-import { renderContentChildren } from './AppContentViewerBaseComponent.vue';
+import { computed } from 'vue';
 
-const props = defineProps({
-	contentData: {
-		type: Object as PropType<ContentObject>,
-		required: true,
-	},
-});
+import { ContentObject } from '~common/content/content-object';
+import { useContentOwnerController } from '~common/content/content-owner';
+import { renderContentChildren } from '~common/content/content-viewer/components/AppContentViewerBaseComponent.vue';
+
+type Props = {
+	contentData: ContentObject;
+};
+const { contentData } = defineProps<Props>();
 
 const { contentRules } = useContentOwnerController()!;
 
-const children = computed(() => renderContentChildren(props.contentData.content));
+const children = computed(() => renderContentChildren(contentData.content));
 </script>
 
 <template>

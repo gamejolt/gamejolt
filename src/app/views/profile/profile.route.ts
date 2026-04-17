@@ -1,13 +1,14 @@
 import { RouteRecordRaw } from 'vue-router';
-import { routeProfileLibrary } from './library/library.route';
-import { routeProfileOverview } from './overview/overview.route';
-import { routeProfilePostView } from './post/view.route';
-import { routeProfileTrophies } from './trophies/trophies.route';
-import { routeProfileVideos } from './videos/videos.route';
+
+import { routeProfileLibrary } from '~app/views/profile/library/library.route';
+import { routeProfileOverview } from '~app/views/profile/overview/overview.route';
+import { routeProfilePostView } from '~app/views/profile/post/view.route';
+import { routeProfileTrophies } from '~app/views/profile/trophies/trophies.route';
+import { routeProfileVideos } from '~app/views/profile/videos/videos.route';
 
 export const routeProfile: RouteRecordRaw = {
 	path: '/@:username',
-	component: () => import('./RouteProfile.vue'),
+	component: () => import('~app/views/profile/RouteProfile.vue'),
 	children: [
 		routeProfileOverview,
 		routeProfileLibrary,

@@ -1,23 +1,17 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import { CommunityModel } from '../../../../_common/community/community.model';
-import AppModal from '../../../../_common/modal/AppModal.vue';
-import { useModal } from '../../../../_common/modal/modal.service';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { UserModel } from '../../../../_common/user/user.model';
-import FormCommunityBlock from '../../forms/community/ban/FormCommunityBlock.vue';
+import FormCommunityBlock from '~app/components/forms/community/ban/FormCommunityBlock.vue';
+import AppButton from '~common/button/AppButton.vue';
+import { CommunityModel } from '~common/community/community.model';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import { $gettext } from '~common/translate/translate.service';
+import { UserModel } from '~common/user/user.model';
 
-defineProps({
-	community: {
-		type: Object as PropType<CommunityModel>,
-		required: true,
-	},
-	user: {
-		type: Object as PropType<UserModel>,
-		required: true,
-	},
-});
+type Props = {
+	community: CommunityModel;
+	user: UserModel;
+};
+defineProps<Props>();
 
 const modal = useModal()!;
 

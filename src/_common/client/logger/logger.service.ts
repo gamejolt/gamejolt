@@ -1,4 +1,4 @@
-import { Logger } from '../client-voodoo-imports';
+import { Logger } from '~common/client/client-voodoo-imports';
 
 export class ClientLogger {
 	static getLogInfo() {

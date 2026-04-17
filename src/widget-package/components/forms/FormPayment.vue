@@ -1,28 +1,28 @@
-<script lang="ts" s setup>
+<script lang="ts" setup>
 import { computed, ref } from 'vue';
-import { setup } from 'vue-class-component';
-import AppButton from '../../../_common/button/AppButton.vue';
-import { formatCurrency } from '../../../_common/filters/currency';
-import AppForm, { createForm, FormController } from '../../../_common/form-vue/AppForm.vue';
-import AppFormControl from '../../../_common/form-vue/AppFormControl.vue';
-import AppFormControlPrefix from '../../../_common/form-vue/AppFormControlPrefix.vue';
-import AppFormGroup from '../../../_common/form-vue/AppFormGroup.vue';
-import { validateMinValue } from '../../../_common/form-vue/validators';
-import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
-import { useCommonStore } from '../../../_common/store/common-store';
-import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
-import AppUserAvatarImg from '../../../_common/user/user-avatar/AppUserAvatarImg.vue';
-import { PaymentData, useWidgetPackageStore } from '../../store/index';
-import AppWidgetModal from '../AppWidgetModal.vue';
-import FormAddress from './FormAddress.vue';
 
-interface FormModel {
+import AppButton from '~common/button/AppButton.vue';
+import { formatCurrency } from '~common/filters/currency';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormControlPrefix from '~common/form-vue/AppFormControlPrefix.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import { validateMinValue } from '~common/form-vue/validators';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { useCommonStore } from '~common/store/common-store';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
+import AppWidgetModal from '~widget-package/components/AppWidgetModal.vue';
+import FormAddress from '~widget-package/components/forms/FormAddress.vue';
+import { PaymentData, useWidgetPackageStore } from '~widget-package/store/index';
+
+type FormModel = {
 	email: string;
 	amount: string;
-}
+};
 
 const { payment, checkout, ...store } = useWidgetPackageStore();
-const { user } = setup(() => useCommonStore());
+const { user } = useCommonStore();
 
 const isShowingAddress = ref(false);
 const paymentMethod = ref<PaymentData['method']>('cc-stripe');
@@ -57,7 +57,7 @@ const formError = computed(() => {
 	return undefined;
 });
 
-const form: FormController<FormModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	onInit: () => {
 		form.formModel.amount = (price.value! / 100).toFixed(2);
 	},

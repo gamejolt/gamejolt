@@ -1,13 +1,14 @@
 import { computed, CSSProperties, MaybeRefOrGetter, toValue } from 'vue';
-import { Screen } from '../../../_common/screen/screen-service';
-import { kThemeFgMuted, kThemeLink } from '../../../_common/theme/variables';
+
+import { Screen } from '~common/screen/screen-service';
+import { kThemeFgMuted, kThemeLink } from '~common/theme/variables';
 import {
 	styleBorderRadiusLg,
 	styleChangeBg,
 	styleElevate,
 	styleTextOverflow,
 	styleWhen,
-} from '../../../_styles/mixins';
+} from '~styles/mixins';
 import {
 	buildCSSPixelValue,
 	kBorderWidthBase,
@@ -15,7 +16,7 @@ import {
 	kGridGutterWidth,
 	kGridGutterWidthXs,
 	kLineHeightComputed,
-} from '../../../_styles/variables';
+} from '~styles/variables';
 
 export const kPostBorderWidth = kBorderWidthBase;
 export const kPostItemPadding = buildCSSPixelValue(kGridGutterWidth.value / 2);

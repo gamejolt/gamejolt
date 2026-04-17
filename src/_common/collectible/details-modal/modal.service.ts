@@ -1,7 +1,8 @@
 import { defineAsyncComponent } from 'vue';
-import { JoltydexFeed } from '../../joltydex/joltydex-feed';
-import { showModal } from '../../modal/modal.service';
-import { CollectibleModel } from '../collectible.model';
+
+import { CollectibleModel } from '~common/collectible/collectible.model';
+import { JoltydexFeed } from '~common/joltydex/joltydex-feed';
+import { showModal } from '~common/modal/modal.service';
 
 export async function showCollectibleDetailsModal({
 	collectible,
@@ -12,7 +13,9 @@ export async function showCollectibleDetailsModal({
 }) {
 	return await showModal<void>({
 		modalId: 'CollectibleDetails',
-		component: defineAsyncComponent(() => import('./AppCollectibleDetailsModal.vue')),
+		component: defineAsyncComponent(
+			() => import('~common/collectible/details-modal/AppCollectibleDetailsModal.vue')
+		),
 		props: {
 			collectible,
 			feed,

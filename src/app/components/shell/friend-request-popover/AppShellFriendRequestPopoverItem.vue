@@ -1,36 +1,32 @@
 <script lang="ts">
-import { computed, PropType, ref, toRefs } from 'vue';
+import { computed, ref } from 'vue';
 import { RouterLink } from 'vue-router';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import AppCard from '../../../../_common/card/AppCard.vue';
-import { Screen } from '../../../../_common/screen/screen-service';
-import AppScrollInview, {
-	ScrollInviewConfig,
-} from '../../../../_common/scroll/inview/AppScrollInview.vue';
-import { useCommonStore } from '../../../../_common/store/common-store';
-import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import AppUserVerifiedTick from '../../../../_common/user/AppUserVerifiedTick.vue';
-import { UserFriendshipModel } from '../../../../_common/user/friendship/friendship.model';
-import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
+
+import AppButton from '~common/button/AppButton.vue';
+import AppCard from '~common/card/AppCard.vue';
+import { Screen } from '~common/screen/screen-service';
+import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
+import { useCommonStore } from '~common/store/common-store';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import AppUserVerifiedTick from '~common/user/AppUserVerifiedTick.vue';
+import { UserFriendshipModel } from '~common/user/friendship/friendship.model';
+import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
 
 const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height / 2}px` });
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	request: {
-		type: Object as PropType<UserFriendshipModel>,
-		required: true,
-	},
-});
+type Props = {
+	request: UserFriendshipModel;
+};
+const { request } = defineProps<Props>();
 
-const emit = defineEmits({
-	cancel: () => true,
-	accept: () => true,
-	reject: () => true,
-});
+const emit = defineEmits<{
+	cancel: [];
+	accept: [];
+	reject: [];
+}>();
 
-const { request } = toRefs(props);
 const { user } = useCommonStore();
 
 const isInview = ref(false);
@@ -38,8 +34,8 @@ const isInview = ref(false);
 /**
  * Is it a request we sent?
  */
-const isPending = computed(() => request.value.target_user.id !== user.value!.id);
-const them = computed(() => request.value.getThem(user.value!));
+const isPending = computed(() => request.target_user.id !== user.value!.id);
+const them = computed(() => request.getThem(user.value!));
 </script>
 
 <template>

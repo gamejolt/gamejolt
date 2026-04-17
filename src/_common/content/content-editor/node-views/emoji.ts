@@ -1,5 +1,5 @@
-import AppContentEmoji from '../../components/AppContentEmoji.vue';
-import { BaseNodeView } from './base';
+import AppContentEmoji from '~common/content/components/AppContentEmoji.vue';
+import { BaseNodeView } from '~common/content/content-editor/node-views/base';
 
 export class EmojiNodeView extends BaseNodeView {
 	mounted() {

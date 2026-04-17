@@ -1,33 +1,29 @@
 <script lang="ts" setup>
-import { ref, toRefs } from 'vue';
-import { useForm } from '../../../../../_common/form-vue/AppForm.vue';
-import AppFinancialsManagedAccountAddress from './AppFinancialsManagedAccountAddress.vue';
-import AppFinancialsManagedAccountContact from './AppFinancialsManagedAccountContact.vue';
-import AppFinancialsManagedAccountDob from './AppFinancialsManagedAccountDob.vue';
+import { ref, toRef } from 'vue';
+
+import AppFinancialsManagedAccountAddress from '~app/components/forms/financials/managed-account/AppFinancialsManagedAccountAddress.vue';
+import AppFinancialsManagedAccountContact from '~app/components/forms/financials/managed-account/AppFinancialsManagedAccountContact.vue';
+import AppFinancialsManagedAccountDob from '~app/components/forms/financials/managed-account/AppFinancialsManagedAccountDob.vue';
 import AppFinancialsManagedAccountDocument, {
 	AppFinancialsManagedAccountDocumentInterface,
-} from './AppFinancialsManagedAccountDocument.vue';
-import AppFinancialsManagedAccountName from './AppFinancialsManagedAccountName.vue';
-import AppFinancialsManagedAccountSsn from './AppFinancialsManagedAccountSsn.vue';
-import { ManagedAccountFormModel } from './managed-account.vue';
+} from '~app/components/forms/financials/managed-account/AppFinancialsManagedAccountDocument.vue';
+import AppFinancialsManagedAccountName from '~app/components/forms/financials/managed-account/AppFinancialsManagedAccountName.vue';
+import AppFinancialsManagedAccountSsn from '~app/components/forms/financials/managed-account/AppFinancialsManagedAccountSsn.vue';
+import { ManagedAccountFormModel } from '~app/components/forms/financials/managed-account/FormFinancialsManagedAccount.vue';
+import { useForm } from '~common/form-vue/AppForm.vue';
 
 export interface AppFinancialsManagedAccountPersonInterface {
 	namePrefix: string;
 	uploadDocuments: (stripePublishableKey: string) => Promise<[string, string]>;
 }
 
-const props = defineProps({
-	namePrefix: {
-		type: String,
-		required: true,
-	},
-	countryCode: {
-		type: String,
-		default: null,
-	},
-});
+type Props = {
+	namePrefix: string;
+	countryCode?: string;
+};
+const { namePrefix, countryCode } = defineProps<Props>();
 
-const { namePrefix } = toRefs(props);
+const namePrefixRef = toRef(() => namePrefix);
 const form = useForm<ManagedAccountFormModel>()!;
 
 const idDocument = ref<AppFinancialsManagedAccountDocumentInterface>();
@@ -37,12 +33,12 @@ async function uploadDocuments(stripePublishableKey: string) {
 	let idDocumentRequest: Promise<string> = Promise.resolve('');
 	let additionalDocumentRequest: Promise<string> = Promise.resolve('');
 
-	if (form.formModel[`${namePrefix.value}.verification.status`] !== 'verified') {
-		if (form.formModel[`${namePrefix.value}.verification.document.front`]) {
+	if (form.formModel[`${namePrefix}.verification.status`] !== 'verified') {
+		if (form.formModel[`${namePrefix}.verification.document.front`]) {
 			idDocumentRequest = idDocument.value!.uploadDocument(stripePublishableKey);
 		}
 
-		if (form.formModel[`${namePrefix.value}.verification.additional_document.front`]) {
+		if (form.formModel[`${namePrefix}.verification.additional_document.front`]) {
 			additionalDocumentRequest =
 				additionalDocument.value!.uploadDocument(stripePublishableKey);
 		}
@@ -52,7 +48,7 @@ async function uploadDocuments(stripePublishableKey: string) {
 }
 
 defineExpose({
-	namePrefix,
+	namePrefix: namePrefixRef,
 	uploadDocuments,
 });
 </script>
@@ -86,7 +82,11 @@ defineExpose({
 		<!--
 			SSN
 		-->
-		<AppFinancialsManagedAccountSsn :name-prefix="namePrefix" :country-code="countryCode" />
+		<AppFinancialsManagedAccountSsn
+			v-if="countryCode"
+			:name-prefix="namePrefix"
+			:country-code="countryCode"
+		/>
 
 		<!--
 			Personal ID Verification

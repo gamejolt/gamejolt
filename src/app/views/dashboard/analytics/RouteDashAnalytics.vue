@@ -1,37 +1,13 @@
 <script lang="ts">
-import { computed, ComputedRef, onMounted, Ref, ref } from 'vue';
+import { computed, ComputedRef, onMounted, Ref, ref, useTemplateRef } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
-import { Api } from '../../../../_common/api/api.service';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import AppCurrencyImg from '../../../../_common/currency/AppCurrencyImg.vue';
-import { CurrencyType } from '../../../../_common/currency/currency-type';
-import AppExpand from '../../../../_common/expand/AppExpand.vue';
-import { formatCurrency, formatGemsCurrency } from '../../../../_common/filters/currency';
-import { formatDate } from '../../../../_common/filters/date';
-import { formatNumber } from '../../../../_common/filters/number';
-import { GameModel } from '../../../../_common/game/game.model';
-import { GamePackageModel } from '../../../../_common/game/package/package.model';
-import { GameReleaseModel } from '../../../../_common/game/release/release.model';
-import AppGraph from '../../../../_common/graph/AppGraph.vue';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import AppLoading from '../../../../_common/loading/AppLoading.vue';
-import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
-import { Screen } from '../../../../_common/screen/screen-service';
-import AppScrollAffix from '../../../../_common/scroll/AppScrollAffix.vue';
-import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
-import { vAppScrollWhen } from '../../../../_common/scroll/scroll-when.directive';
-import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
-import { useCommonStore } from '../../../../_common/store/common-store';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { UserModel } from '../../../../_common/user/user.model';
-import { useResizeObserver } from '../../../../utils/resize-observer';
-import AppPageHeader from '../../../components/page-header/AppPageHeader.vue';
-import AppPageHeaderControls from '../../../components/page-header/controls/controls.vue';
+
+import AppPageHeader from '~app/components/page-header/AppPageHeader.vue';
+import AppPageHeaderControls from '~app/components/page-header/controls/AppPageHeaderControls.vue';
 import {
 	createSiteAnalyticsReport,
 	SiteAnalyticsReport,
-} from '../../../components/site-analytics/report-service';
+} from '~app/components/site-analytics/report-service';
 import {
 	Metric,
 	MetricKey,
@@ -55,11 +31,36 @@ import {
 	ReportTopSources,
 	ResourceName,
 	SiteAnalytics,
-} from '../../../components/site-analytics/site-analytics-service';
-import AppAnalyticsReportRatingBreakdown from './_report/AppAnalyticsReportRatingBreakdown.vue';
-import AppAnalyticsReportSimpleStat from './_report/AppAnalyticsReportSimpleStat.vue';
-import AppAnalyticsReportTopComposition from './_report/AppAnalyticsReportTopComposition.vue';
-import AppAnalyticsReportUserGrid from './_report/AppAnalyticsReportUserGrid.vue';
+} from '~app/components/site-analytics/site-analytics-service';
+import AppAnalyticsReportRatingBreakdown from '~app/views/dashboard/analytics/_report/AppAnalyticsReportRatingBreakdown.vue';
+import AppAnalyticsReportSimpleStat from '~app/views/dashboard/analytics/_report/AppAnalyticsReportSimpleStat.vue';
+import AppAnalyticsReportTopComposition from '~app/views/dashboard/analytics/_report/AppAnalyticsReportTopComposition.vue';
+import AppAnalyticsReportUserGrid from '~app/views/dashboard/analytics/_report/AppAnalyticsReportUserGrid.vue';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import AppCurrencyImg from '~common/currency/AppCurrencyImg.vue';
+import { CurrencyType } from '~common/currency/currency-type';
+import AppExpand from '~common/expand/AppExpand.vue';
+import { formatCurrency, formatGemsCurrency } from '~common/filters/currency';
+import { formatDate } from '~common/filters/date';
+import { formatNumber } from '~common/filters/number';
+import { GameModel } from '~common/game/game.model';
+import { GamePackageModel } from '~common/game/package/package.model';
+import { GameReleaseModel } from '~common/game/release/release.model';
+import AppGraph from '~common/graph/AppGraph.vue';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLoading from '~common/loading/AppLoading.vue';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { Screen } from '~common/screen/screen-service';
+import AppScrollAffix from '~common/scroll/AppScrollAffix.vue';
+import AppScrollScroller from '~common/scroll/AppScrollScroller.vue';
+import { vAppScrollWhen } from '~common/scroll/scroll-when.directive';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import { useCommonStore } from '~common/store/common-store';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { UserModel } from '~common/user/user.model';
+import { useResizeObserver } from '~utils/resize-observer';
 
 export default {
 	...defineAppRouteOptions({
@@ -108,7 +109,7 @@ const nextYear = ref(0);
 /** For iterating over the metrics available without worrying about undefined values */
 const availableMetricsBang = computed(() => availableMetrics.value as Required<MetricMap>);
 
-const metricsElem = ref<HTMLDivElement>();
+const metricsElem = useTemplateRef('metricsElem');
 const metricsHeight = ref('0');
 
 const { gems } = CurrencyType;
@@ -580,7 +581,10 @@ function _metricChanged() {
 
 		<template v-if="metricData[selectedMetric.key]">
 			<AppExpand :when="period === 'monthly' && !!metricData[selectedMetric.key].graph">
-				<AppGraph :dataset="metricData[selectedMetric.key].graph" />
+				<AppGraph
+					v-if="metricData[selectedMetric.key].graph"
+					:dataset="metricData[selectedMetric.key].graph"
+				/>
 			</AppExpand>
 
 			<div ref="metricsElem" class="-metric-stats-wrapper">
@@ -631,7 +635,7 @@ function _metricChanged() {
 									</div>
 
 									<AppGraph
-										v-if="period === 'monthly' && metricData[metric.key]"
+										v-if="period === 'monthly' && metricData[metric.key]?.graph"
 										:dataset="metricData[metric.key].graph"
 										background-variant
 									/>

@@ -1,10 +1,11 @@
 <script lang="ts">
 import { RouterView } from 'vue-router';
-import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
-import { Screen } from '../../../../_common/screen/screen-service';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import AppPageHeader from '../../../components/page-header/AppPageHeader.vue';
-import butterfliesImage from './butterflies.png';
+
+import AppPageHeader from '~app/components/page-header/AppPageHeader.vue';
+import butterfliesImage from '~app/views/forums/landing/butterflies.png';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { Screen } from '~common/screen/screen-service';
+import { $gettext } from '~common/translate/translate.service';
 
 export default {
 	...defineAppRouteOptions({

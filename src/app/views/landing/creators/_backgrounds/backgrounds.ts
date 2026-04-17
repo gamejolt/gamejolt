@@ -1,6 +1,6 @@
-import bgApplyDesktop from './apply-desktop.png';
-import bgApplySm from './apply-sm.png';
-import bgApplyXs from './apply-xs.png';
+import bgApplyDesktop from '~app/views/landing/creators/_backgrounds/apply-desktop.png';
+import bgApplySm from '~app/views/landing/creators/_backgrounds/apply-sm.png';
+import bgApplyXs from '~app/views/landing/creators/_backgrounds/apply-xs.png';
 
 interface CreatorBackground {
 	src: string;

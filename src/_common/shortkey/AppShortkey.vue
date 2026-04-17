@@ -1,18 +1,16 @@
 <script lang="ts" setup>
-import { useShortkey } from './shortkey-service';
+import { useShortkey } from '~common/shortkey/shortkey-service';
 
-const props = defineProps({
-	shortkey: {
-		type: String,
-		required: true,
-	},
-});
+type Props = {
+	shortkey: string;
+};
+const { shortkey } = defineProps<Props>();
 
-const emit = defineEmits({
-	press: (_e: KeyboardEvent) => true,
-});
+const emit = defineEmits<{
+	press: [e: KeyboardEvent];
+}>();
 
-useShortkey(props.shortkey, e => emit('press', e));
+useShortkey(shortkey, e => emit('press', e));
 </script>
 
 <template>

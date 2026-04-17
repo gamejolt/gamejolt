@@ -1,4 +1,4 @@
-import { createApp } from './bootstrap';
+import { createApp } from '~site-editor/bootstrap';
 
 async function start() {
 	const { app, router } = await createApp();

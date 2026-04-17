@@ -1,18 +1,14 @@
 <script lang="ts" setup>
-import { computed, toRefs } from 'vue';
+import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
 
-const props = defineProps({
-	tag: {
-		type: String,
-		required: true,
-	},
-});
-
-const { tag } = toRefs(props);
+type Props = {
+	tag: string;
+};
+const { tag } = defineProps<Props>();
 
 const url = computed(() => {
-	const searchTerm = encodeURIComponent(`#${tag.value}`);
+	const searchTerm = encodeURIComponent(`#${tag}`);
 	return `/search?q=${searchTerm}`;
 });
 </script>

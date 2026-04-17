@@ -1,25 +1,21 @@
 <script lang="ts" setup>
-import { ref, toRefs, watch } from 'vue';
+import { useTemplateRef, watch } from 'vue';
 
-const props = defineProps({
-	fontDefinitions: {
-		type: String,
-		required: true,
-	},
-});
+type Props = {
+	fontDefinitions: string;
+};
+const { fontDefinitions } = defineProps<Props>();
 
-const { fontDefinitions } = toRefs(props);
+const styleElem = useTemplateRef('styleElem');
 
-const styleElem = ref<HTMLStyleElement | null>(null);
-
-watch(fontDefinitions, onDefinitionsChanged);
+watch(() => fontDefinitions, onDefinitionsChanged);
 
 function onDefinitionsChanged() {
 	if (!styleElem.value) {
 		return;
 	}
 
-	styleElem.value.innerHTML = fontDefinitions.value;
+	styleElem.value.innerHTML = fontDefinitions;
 }
 </script>
 

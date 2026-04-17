@@ -1,20 +1,17 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-import AppButton from '../../../button/AppButton.vue';
-import AppModal from '../../../modal/AppModal.vue';
-import { useModal } from '../../../modal/modal.service';
-import AppSpacer from '../../../spacer/AppSpacer.vue';
-import AppTranslate from '../../../translate/AppTranslate.vue';
-import AppUserFollowButton from '../../follow/AppUserFollowButton.vue';
-import AppUserAvatarImg from '../../user-avatar/AppUserAvatarImg.vue';
-import { UserModel } from '../../user.model';
+import AppButton from '~common/button/AppButton.vue';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import AppUserFollowButton from '~common/user/follow/AppUserFollowButton.vue';
+import { UserModel } from '~common/user/user.model';
+import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
 
-defineProps({
-	user: {
-		type: Object as PropType<UserModel>,
-		required: true,
-	},
-});
+type Props = {
+	user: UserModel;
+};
+const { user } = defineProps<Props>();
 
 const modal = useModal<boolean>()!;
 </script>

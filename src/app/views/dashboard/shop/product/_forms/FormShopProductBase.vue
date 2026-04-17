@@ -1,11 +1,10 @@
 <script lang="ts">
 import {
-	CSSProperties,
-	PropType,
-	Ref,
 	computed,
+	CSSProperties,
 	nextTick,
 	onUnmounted,
+	Ref,
 	ref,
 	shallowReadonly,
 	toRaw,
@@ -13,31 +12,37 @@ import {
 	watch,
 } from 'vue';
 import { useRouter } from 'vue-router';
-import AppAlertBox from '../../../../../../_common/alert/AppAlertBox.vue';
-import { Api } from '../../../../../../_common/api/api.service';
-import { AvatarFrameModel } from '../../../../../../_common/avatar/frame.model';
+
+import { routeDashShopOverview } from '~app/views/dashboard/shop/overview/overview.route';
+import AppShopProductDiff from '~app/views/dashboard/shop/product/_diff/AppShopProductDiff.vue';
+import {
+	getShopDashProductType,
+	ShopDashGroup,
+	ShopDashProductType,
+	ShopDashStore,
+} from '~app/views/dashboard/shop/shop.store';
+import AppAlertBox from '~common/alert/AppAlertBox.vue';
+import { Api } from '~common/api/api.service';
+import { AvatarFrameModel } from '~common/avatar/frame.model';
 import {
 	BackgroundDefaultScale,
 	BackgroundModel,
 	BackgroundScaling,
 	getBackgroundCSSProperties,
-} from '../../../../../../_common/background/background.model';
-import { ComponentProps } from '../../../../../../_common/component-helpers';
+} from '~common/background/background.model';
+import { ComponentProps } from '~common/component-helpers';
 import {
 	CreatorChangeRequestModel,
 	CreatorChangeRequestStatus,
-} from '../../../../../../_common/creator/change-request/creator-change-request.model';
-import { formatFilesize } from '../../../../../../_common/filters/filesize';
-import AppForm, {
-	FormController,
-	createForm,
-} from '../../../../../../_common/form-vue/AppForm.vue';
-import AppFormButton from '../../../../../../_common/form-vue/AppFormButton.vue';
-import AppFormControl from '../../../../../../_common/form-vue/AppFormControl.vue';
-import AppFormControlError from '../../../../../../_common/form-vue/AppFormControlError.vue';
-import AppFormControlErrors from '../../../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../../../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormControlUpload from '../../../../../../_common/form-vue/controls/upload/AppFormControlUpload.vue';
+} from '~common/creator/change-request/creator-change-request.model';
+import { formatFilesize } from '~common/filters/filesize';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormControlError from '~common/form-vue/AppFormControlError.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlUpload from '~common/form-vue/controls/upload/AppFormControlUpload.vue';
 import {
 	validateAvailability,
 	validateFilesize,
@@ -46,37 +51,22 @@ import {
 	validateImageMinDimensions,
 	validateMaxLength,
 	validateMinLength,
-} from '../../../../../../_common/form-vue/validators';
-import { showErrorGrowl } from '../../../../../../_common/growls/growls.service';
-import AppLinkHelp from '../../../../../../_common/link/AppLinkHelp.vue';
-import { ModelStoreModel, storeModel } from '../../../../../../_common/model/model-store.service';
-import {
-	ShopProductModel,
-	ShopProductResource,
-} from '../../../../../../_common/shop/product/product-model';
-import AppSpacer from '../../../../../../_common/spacer/AppSpacer.vue';
-import { StickerPackModel } from '../../../../../../_common/sticker/pack/pack.model';
-import { StickerModel } from '../../../../../../_common/sticker/sticker.model';
-import {
-	kThemeBgOffset,
-	kThemeFg10,
-	kThemeGjOverlayNotice,
-} from '../../../../../../_common/theme/variables';
-import { $gettext } from '../../../../../../_common/translate/translate.service';
-import { styleBorderRadiusLg, styleChangeBg } from '../../../../../../_styles/mixins';
-import { kBorderRadiusBase, kBorderWidthBase } from '../../../../../../_styles/variables';
-import { arrayRemove, arrayUnique, numberSort } from '../../../../../../utils/array';
-import { isAnimatedPng } from '../../../../../../utils/image';
-import { objectOmit } from '../../../../../../utils/object';
-import { assertNever, isInstance, run } from '../../../../../../utils/utils';
-import { routeDashShopOverview } from '../../overview/overview.route';
-import {
-	ShopDashGroup,
-	ShopDashProductType,
-	ShopDashStore,
-	getShopDashProductType,
-} from '../../shop.store';
-import AppShopProductDiff from '../_diff/AppShopProductDiff.vue';
+} from '~common/form-vue/validators';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import AppLinkHelp from '~common/link/AppLinkHelp.vue';
+import { ModelStoreModel, storeModel } from '~common/model/model-store.service';
+import { ShopProductModel, ShopProductResource } from '~common/shop/product/product-model';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import { StickerPackModel } from '~common/sticker/pack/pack.model';
+import { StickerModel } from '~common/sticker/sticker.model';
+import { kThemeBgOffset, kThemeFg10, kThemeGjOverlayNotice } from '~common/theme/variables';
+import { $gettext } from '~common/translate/translate.service';
+import { styleBorderRadiusLg, styleChangeBg } from '~styles/mixins';
+import { kBorderRadiusBase, kBorderWidthBase } from '~styles/variables';
+import { arrayRemove, arrayUnique, numberSort } from '~utils/array';
+import { isAnimatedPng } from '~utils/image';
+import { objectOmit } from '~utils/object';
+import { assertNever, isInstance, run } from '~utils/utils';
 
 interface BaseFields {
 	name: string;
@@ -242,7 +232,9 @@ export function createShopProductBaseForm<
 		return result + `?is_premium=${productType.value === ShopDashProductType.Premium ? 1 : 0}`;
 	});
 
-	const form: FormController<typeof initialFormModel.value> = createForm({
+	type FormModel = typeof initialFormModel.value;
+
+	const form: FormController<FormModel> = createForm<FormModel>({
 		// Clone the initial model. Forms are overwriting non-model data passed into here.
 		model: initialFormModel,
 		loadUrl,
@@ -653,14 +645,11 @@ export function createShopProductBaseForm<
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	data: {
-		type: Object as PropType<ShopProductBaseForm>,
-		required: true,
-	},
-});
+type Props = {
+	data: ShopProductBaseForm;
+};
+const { data } = defineProps<Props>();
 
-// eslint-disable-next-line vue/no-setup-props-destructure
 const {
 	form,
 	baseModel,
@@ -690,7 +679,7 @@ const {
 	maxNameLength,
 	getFieldAvailabilityUrl,
 	changeRequest,
-} = props.data;
+} = data;
 
 const productTypeSelectorStyle: CSSProperties = {
 	...styleBorderRadiusLg,

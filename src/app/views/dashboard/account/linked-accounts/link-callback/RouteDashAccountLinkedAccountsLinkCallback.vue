@@ -1,18 +1,16 @@
 <script lang="ts">
 import { RouteLocationNormalized, useRoute, useRouter } from 'vue-router';
-import { Api } from '../../../../../../_common/api/api.service';
-import { showErrorGrowl, showSuccessGrowl } from '../../../../../../_common/growls/growls.service';
+
+import { Api } from '~common/api/api.service';
+import { showErrorGrowl, showSuccessGrowl } from '~common/growls/growls.service';
 import {
+	getLinkedAccountProviderDisplayName,
 	LinkedAccountModel,
 	LinkedAccountProvider,
-	getLinkedAccountProviderDisplayName,
-} from '../../../../../../_common/linked-account/linked-account.model';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '../../../../../../_common/route/route-component';
-import { useCommonStore } from '../../../../../../_common/store/common-store';
-import { $gettext } from '../../../../../../_common/translate/translate.service';
+} from '~common/linked-account/linked-account.model';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { useCommonStore } from '~common/store/common-store';
+import { $gettext } from '~common/translate/translate.service';
 
 export default {
 	...defineAppRouteOptions({

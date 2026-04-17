@@ -1,24 +1,21 @@
 <script lang="ts">
-import { computed, PropType, ref, toRefs } from 'vue';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
-import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
-import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
-import AppFormControlErrors from '../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormStickySubmit from '../../../../_common/form-vue/AppFormStickySubmit.vue';
-import AppFormControlCheckbox from '../../../../_common/form-vue/controls/AppFormControlCheckbox.vue';
-import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
-import { validateAvailability, validateMaxLength } from '../../../../_common/form-vue/validators';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import AppLoadingFade from '../../../../_common/loading/AppLoadingFade.vue';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import {
-	$saveUserEmailPreferences,
-	$toggleUserEmails,
-	UserModel,
-} from '../../../../_common/user/user.model';
+import { computed, type Ref, ref, toRef } from 'vue';
+
+import AppButton from '~common/button/AppButton.vue';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormStickySubmit from '~common/form-vue/AppFormStickySubmit.vue';
+import AppFormControlCheckbox from '~common/form-vue/controls/AppFormControlCheckbox.vue';
+import AppFormControlToggle from '~common/form-vue/controls/AppFormControlToggle.vue';
+import { validateAvailability, validateMaxLength } from '~common/form-vue/validators';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { $saveUserEmailPreferences, $toggleUserEmails, UserModel } from '~common/user/user.model';
 
 type FormModel = UserModel & {
 	notifications: string[];
@@ -26,21 +23,19 @@ type FormModel = UserModel & {
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	user: {
-		type: Object as PropType<UserModel>,
-		required: true,
-	},
-});
+type Props = {
+	user: UserModel;
+};
+const { user } = defineProps<Props>();
 
-const { user } = toRefs(props);
+const userRef = toRef(() => user);
 
 const isTogglingEmails = ref(false);
 
-const form: FormController<FormModel> = createForm({
-	modelClass: UserModel,
+const form: FormController<FormModel> = createForm<FormModel>({
+	modelClass: UserModel as any,
 	modelSaveHandler: $saveUserEmailPreferences,
-	model: user,
+	model: userRef as Ref<FormModel | undefined>,
 	onInit() {
 		const notifications = [];
 		for (const i of notificationTypes.value) {
@@ -111,12 +106,12 @@ const notificationTypes = computed(() => {
 });
 
 const emailsDisabled = computed(() => {
-	return user.value.newsletter === false;
+	return user.newsletter === false;
 });
 
 async function toggleEmails(state: boolean) {
 	isTogglingEmails.value = true;
-	await $toggleUserEmails(user.value, state);
+	await $toggleUserEmails(user, state);
 	isTogglingEmails.value = false;
 }
 </script>
@@ -193,11 +188,7 @@ async function toggleEmails(state: boolean) {
 					<AppTranslate>Updates from Game Jolt</AppTranslate>
 				</legend>
 
-				<AppFormGroup
-					name="notify_gj_news"
-					:label="$gettext(`News and product changes`)"
-					disabled
-				>
+				<AppFormGroup name="notify_gj_news" :label="$gettext(`News and product changes`)">
 					<template #inline-control>
 						<AppFormControlToggle :disabled="emailsDisabled" />
 					</template>

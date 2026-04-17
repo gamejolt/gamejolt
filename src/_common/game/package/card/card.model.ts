@@ -1,16 +1,16 @@
-import { arrayUnique } from '../../../../utils/array';
-import { getDeviceArch, getDeviceOS } from '../../../device/device.service';
-import { Jolticon } from '../../../jolticon/AppJolticon.vue';
-import { LinkedKeyModel } from '../../../linked-key/linked-key.model';
-import { SellableModel } from '../../../sellable/sellable.model';
+import { getDeviceArch, getDeviceOS } from '~common/device/device.service';
 import {
-	GameBuildPlatformSupportInfo,
-	GameBuildType,
 	canInstallGameBuild,
 	canRunGameBuild,
 	type GameBuildModel,
-} from '../../build/build.model';
-import { GameReleaseModel } from '../../release/release.model';
+	GameBuildPlatformSupportInfo,
+	GameBuildType,
+} from '~common/game/build/build.model';
+import { GameReleaseModel } from '~common/game/release/release.model';
+import { Jolticon } from '~common/jolticon/AppJolticon.vue';
+import { LinkedKeyModel } from '~common/linked-key/linked-key.model';
+import { SellableModel } from '~common/sellable/sellable.model';
+import { arrayUnique } from '~utils/array';
 
 interface ExtraBuild {
 	type: string;

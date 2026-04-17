@@ -1,13 +1,14 @@
 import { inject, InjectionKey } from 'vue';
-import { Analytics } from '../../../../_common/analytics/analytics.service';
-import { Api, RequestOptions } from '../../../../_common/api/api.service';
-import { CommunityModel } from '../../../../_common/community/community.model';
-import { EventItemModel } from '../../../../_common/event-item/event-item.model';
-import { NotificationModel } from '../../../../_common/notification/notification-model';
-import { ScrollInviewConfig } from '../../../../_common/scroll/inview/AppScrollInview.vue';
-import { ActivityFeedInterface } from './AppActivityFeed.vue';
-import { ActivityFeedInput, ActivityFeedItem } from './item-service';
-import { ActivityFeedState } from './state';
+
+import { ActivityFeedInterface } from '~app/components/activity/feed/AppActivityFeed.vue';
+import { ActivityFeedInput, ActivityFeedItem } from '~app/components/activity/feed/item-service';
+import { ActivityFeedState } from '~app/components/activity/feed/state';
+import { Analytics } from '~common/analytics/analytics.service';
+import { Api, RequestOptions } from '~common/api/api.service';
+import { CommunityModel } from '~common/community/community.model';
+import { EventItemModel } from '~common/event-item/event-item.model';
+import { NotificationModel } from '~common/notification/notification-model';
+import { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
 
 const ScrollDirectionFrom = 'from';
 const ScrollDirectionTo = 'to';

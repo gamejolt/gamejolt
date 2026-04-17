@@ -1,56 +1,42 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType, computed, toRefs } from 'vue';
-import AppAspectRatio from '../../../../../../_common/aspect-ratio/AppAspectRatio.vue';
-import { AvatarFrameModel } from '../../../../../../_common/avatar/frame.model';
-import AppBackground from '../../../../../../_common/background/AppBackground.vue';
-import { BackgroundModel } from '../../../../../../_common/background/background.model';
-import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
-import { ShopProductModel } from '../../../../../../_common/shop/product/product-model';
-import AppStickerLayerDrawerItem from '../../../../../../_common/sticker/layer/AppStickerLayerDrawerItem.vue';
-import AppStickerPack from '../../../../../../_common/sticker/pack/AppStickerPack.vue';
-import { StickerPackModel } from '../../../../../../_common/sticker/pack/pack.model';
-import { StickerModel } from '../../../../../../_common/sticker/sticker.model';
+import { computed, CSSProperties } from 'vue';
+
+import AppDashShopProductType from '~app/views/dashboard/shop/AppDashShopProductType.vue';
+import {
+	getShopDashProductType,
+	ShopDashProductStates,
+} from '~app/views/dashboard/shop/shop.store';
+import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
+import { AvatarFrameModel } from '~common/avatar/frame.model';
+import AppBackground from '~common/background/AppBackground.vue';
+import { BackgroundModel } from '~common/background/background.model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { ShopProductModel } from '~common/shop/product/product-model';
+import AppStickerLayerDrawerItem from '~common/sticker/layer/AppStickerLayerDrawerItem.vue';
+import AppStickerPack from '~common/sticker/pack/AppStickerPack.vue';
+import { StickerPackModel } from '~common/sticker/pack/pack.model';
+import { StickerModel } from '~common/sticker/sticker.model';
 import {
 	kThemeBiBg,
 	kThemeBiFg,
 	kThemeFg,
 	kThemeFg10,
 	kThemeGjOverlayNotice,
-} from '../../../../../../_common/theme/variables';
-import AppUserAvatarBubble from '../../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
-import {
-	styleBorderRadiusLg,
-	styleFlexCenter,
-	styleLineClamp,
-	styleWhen,
-} from '../../../../../../_styles/mixins';
-import { kFontSizeTiny } from '../../../../../../_styles/variables';
-import { isInstance } from '../../../../../../utils/utils';
-import AppDashShopProductType from '../../AppDashShopProductType.vue';
-import { ShopDashProductStates, getShopDashProductType } from '../../shop.store';
+} from '~common/theme/variables';
+import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
+import { styleBorderRadiusLg, styleFlexCenter, styleLineClamp, styleWhen } from '~styles/mixins';
+import { kFontSizeTiny } from '~styles/variables';
+import { isInstance } from '~utils/utils';
 
-const props = defineProps({
-	item: {
-		type: Object as PropType<ShopProductModel>,
-		required: true,
-	},
-	borderRadius: {
-		type: Number,
-		required: true,
-	},
-	hovered: {
-		type: Boolean,
-		required: true,
-	},
-	itemStates: {
-		type: Object as PropType<ShopDashProductStates>,
-		required: true,
-	},
-});
+type Props = {
+	item: ShopProductModel;
+	borderRadius: number;
+	hovered: boolean;
+	itemStates: ShopDashProductStates;
+};
+const { item, borderRadius, hovered, itemStates } = defineProps<Props>();
 
-const { item, borderRadius, hovered } = toRefs(props);
-
-const productType = computed(() => getShopDashProductType(item.value));
+const productType = computed(() => getShopDashProductType(item));
 
 const baseInfoTagStyles: CSSProperties = {
 	...styleBorderRadiusLg,

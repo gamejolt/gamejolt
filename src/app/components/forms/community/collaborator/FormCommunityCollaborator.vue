@@ -1,52 +1,46 @@
 <script lang="ts" setup>
-import { PropType, toRefs } from 'vue';
+import { toRef } from 'vue';
+
 import {
 	$inviteCollaborator,
 	CollaboratorModel,
 	CollaboratorRole,
-} from '../../../../../_common/collaborator/collaborator.model';
-import { CommunityModel } from '../../../../../_common/community/community.model';
-import AppForm, {
-	FormController,
-	createForm,
-	defineFormProps,
-} from '../../../../../_common/form-vue/AppForm.vue';
-import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
-import AppFormControl from '../../../../../_common/form-vue/AppFormControl.vue';
-import AppFormControlError from '../../../../../_common/form-vue/AppFormControlError.vue';
-import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormControlPrefix from '../../../../../_common/form-vue/AppFormControlPrefix.vue';
-import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormControlRadio from '../../../../../_common/form-vue/controls/AppFormControlRadio.vue';
-import {
-	validateAvailability,
-	validateMaxLength,
-} from '../../../../../_common/form-vue/validators';
+} from '~common/collaborator/collaborator.model';
+import { CommunityModel } from '~common/community/community.model';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormControlError from '~common/form-vue/AppFormControlError.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormControlPrefix from '~common/form-vue/AppFormControlPrefix.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlRadio from '~common/form-vue/controls/AppFormControlRadio.vue';
+import { validateAvailability, validateMaxLength } from '~common/form-vue/validators';
 
-const props = defineProps({
-	community: {
-		type: Object as PropType<CommunityModel>,
-		required: true,
-	},
-	...defineFormProps<CollaboratorModel>(),
-});
+type FormModel = CollaboratorModel;
 
-const emit = defineEmits({
-	submit: (_model: CollaboratorModel) => true,
-});
+type Props = {
+	community: CommunityModel;
+	model?: FormModel;
+};
+const { community, model } = defineProps<Props>();
 
-const { community, model } = toRefs(props);
+const emit = defineEmits<{
+	submit: [model: CollaboratorModel];
+}>();
 
-const form: FormController<CollaboratorModel> = createForm({
-	model,
+const modelRef = toRef(() => model);
+
+const form: FormController<FormModel> = createForm<FormModel>({
+	model: modelRef,
 	modelClass: CollaboratorModel,
 	modelSaveHandler: $inviteCollaborator,
 	resetOnSubmit: true,
 	onInit() {
 		form.formModel.resource = 'Community';
-		form.formModel.resource_id = community.value.id;
+		form.formModel.resource_id = community.id;
 
-		if (model?.value) {
+		if (model) {
 			form.formModel.username = form.formModel.user!.username;
 		}
 	},

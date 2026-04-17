@@ -1,5 +1,5 @@
-import { createLogger } from '../../utils/logging';
-import { Environment } from '../environment/environment.service';
+import { Environment } from '~common/environment/environment.service';
+import { createLogger } from '~utils/logging';
 
 export type DestructorFunc = (href?: string) => void;
 

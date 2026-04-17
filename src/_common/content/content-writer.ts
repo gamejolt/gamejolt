@@ -1,6 +1,6 @@
-import { ContentDocument } from './content-document';
-import { ContentObject } from './content-object';
-import { MarkObject } from './mark-object';
+import { ContentDocument } from '~common/content/content-document';
+import { ContentObject } from '~common/content/content-object';
+import { MarkObject } from '~common/content/mark-object';
 
 export class ContentWriter {
 	private _doc: ContentDocument;

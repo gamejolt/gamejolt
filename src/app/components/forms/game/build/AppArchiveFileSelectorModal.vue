@@ -1,41 +1,23 @@
 <script lang="ts" setup>
-import { computed, ref, toRefs } from 'vue';
-import { Api } from '../../../../../_common/api/api.service';
-import AppButton from '../../../../../_common/button/AppButton.vue';
-import AppLoading from '../../../../../_common/loading/AppLoading.vue';
-import AppModal from '../../../../../_common/modal/AppModal.vue';
-import { useModal } from '../../../../../_common/modal/modal.service';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import { run } from '../../../../../utils/utils';
+import { computed, ref } from 'vue';
 
-const props = defineProps({
-	gameId: {
-		type: Number,
-		required: true,
-	},
-	packageId: {
-		type: Number,
-		required: true,
-	},
-	releaseId: {
-		type: Number,
-		required: true,
-	},
-	buildId: {
-		type: Number,
-		required: true,
-	},
-	primaryFileId: {
-		type: Number,
-		required: true,
-	},
-	platform: {
-		type: String,
-		required: true,
-	},
-});
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import AppLoading from '~common/loading/AppLoading.vue';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import { $gettext } from '~common/translate/translate.service';
+import { run } from '~utils/utils';
 
-const { gameId, packageId, releaseId, buildId, primaryFileId, platform } = toRefs(props);
+type Props = {
+	gameId: number;
+	packageId: number;
+	releaseId: number;
+	buildId: number;
+	primaryFileId: number;
+	platform: string;
+};
+const { gameId, packageId, releaseId, buildId, primaryFileId, platform } = defineProps<Props>();
 
 const modal = useModal()!;
 
@@ -53,14 +35,7 @@ const filteredFiles = computed(() => {
 
 run(async () => {
 	try {
-		const params = [
-			gameId.value,
-			packageId.value,
-			releaseId.value,
-			buildId.value,
-			primaryFileId.value,
-			platform.value,
-		];
+		const params = [gameId, packageId, releaseId, buildId, primaryFileId, platform];
 
 		const response = await Api.sendRequest(
 			'/web/dash/developer/games/builds/files/archive-file-list/' + params.join('/')

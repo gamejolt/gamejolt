@@ -1,10 +1,16 @@
 <script lang="ts">
-import { computed, ComputedRef, onMounted, PropType, Ref, ref, toRefs, watch } from 'vue';
-import { useForm } from './AppForm.vue';
-import { useFormGroup } from './AppFormGroup.vue';
-import { vAppFocusWhen } from './focus-when.directive';
-import { useFormControlHooks } from './form-control-hooks';
-import { FormValidator, validateDecimal, validateEmail, validateRequired } from './validators';
+import { computed, ComputedRef, onMounted, PropType, Ref, ref, watch } from 'vue';
+
+import { useForm } from '~common/form-vue/AppForm.vue';
+import { useFormGroup } from '~common/form-vue/AppFormGroup.vue';
+import { vAppFocusWhen } from '~common/form-vue/focus-when.directive';
+import { useFormControlHooks } from '~common/form-vue/form-control-hooks';
+import {
+	FormValidator,
+	validateDecimal,
+	validateEmail,
+	validateRequired,
+} from '~common/form-vue/validators';
 
 interface ValidationOptions {
 	validateDelay?: number;
@@ -42,11 +48,9 @@ export function defineFormControlValidateProps() {
 /**
  * Used to mix in common emits used in most form controls.
  */
-export function defineFormControlEmits<T = any>() {
-	return {
-		changed: (_value: T) => true,
-	};
-}
+export type FormControlEmits<T = any> = {
+	changed: [value: T];
+};
 
 export function createFormControl<T>({
 	initialValue,
@@ -181,39 +185,44 @@ export interface FormControlController<T = any> {
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	...defineFormControlProps(),
-	...defineFormControlValidateProps(),
-	type: {
-		type: String,
-		default: 'text',
-	},
-	focus: {
-		type: Boolean,
-	},
-	htmlListId: {
-		type: String,
-		default: undefined,
-	},
-});
+import { InputHTMLAttributes, useTemplateRef } from 'vue';
 
-const emit = defineEmits({
-	...defineFormControlEmits(),
-});
+type Props = {
+	disabled?: boolean;
+	validators?: FormValidator[];
+	validateOnBlur?: boolean;
+	validateDelay?: number;
+	type?: string;
+	focus?: boolean;
+	htmlListId?: string;
+} & /* @vue-ignore */ Pick<
+	InputHTMLAttributes,
+	'step' | 'max' | 'min' | 'maxlength' | 'autocomplete' | 'required'
+>;
 
-const { validators, type } = toRefs(props);
+const {
+	disabled,
+	validators = [],
+	validateOnBlur = false,
+	validateDelay = 0,
+	type = 'text',
+	focus,
+	htmlListId = undefined,
+} = defineProps<Props>();
+
+const emit = defineEmits<FormControlEmits>();
 
 // We add some extra validators in depending on the form control type.
 const ourValidators = computed(() => {
 	const ourValidators: FormValidator[] = [];
 
-	if (type.value === 'currency') {
+	if (type === 'currency') {
 		ourValidators.push(validateDecimal(2));
-	} else if (type.value === 'email') {
+	} else if (type === 'email') {
 		ourValidators.push(validateEmail());
 	}
 
-	return [...ourValidators, ...validators.value];
+	return [...ourValidators, ...validators];
 });
 
 const hooks = useFormControlHooks();
@@ -222,13 +231,12 @@ const { name } = useFormGroup()!;
 const c = createFormControl({
 	initialValue: '',
 	validators: ourValidators,
-	// eslint-disable-next-line vue/require-explicit-emits
 	onChange: val => emit('changed', val),
 });
 
 const { id, applyValue, applyBlur, controlVal } = c;
-const controlType = computed(() => (type.value === 'currency' ? 'number' : type.value));
-const root = ref<HTMLInputElement>();
+const controlType = computed(() => (type === 'currency' ? 'number' : type));
+const root = useTemplateRef('root');
 
 onMounted(() => {
 	if (hooks?.afterMount) {
@@ -238,15 +246,15 @@ onMounted(() => {
 
 function onChange() {
 	applyValue(root.value?.value ?? '', {
-		validateDelay: props.validateDelay,
-		validateOnBlur: props.validateOnBlur,
+		validateDelay: validateDelay,
+		validateOnBlur: validateOnBlur,
 	});
 }
 
 function onBlur() {
-	if (props.validateOnBlur) {
+	if (validateOnBlur) {
 		applyBlur({
-			validateDelay: props.validateDelay,
+			validateDelay: validateDelay,
 		});
 	}
 }

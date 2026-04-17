@@ -1,32 +1,32 @@
 <script lang="ts">
-import { ref, toRefs } from 'vue';
-import AppImgResponsive from '../../../img/AppImgResponsive.vue';
-import AppJolticon from '../../../jolticon/AppJolticon.vue';
-import AppMediaItemBackdrop from '../../../media-item/backdrop/AppMediaItemBackdrop.vue';
+import { ref } from 'vue';
+
+import AppImgResponsive from '~common/img/AppImgResponsive.vue';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppMediaItemBackdrop from '~common/media-item/backdrop/AppMediaItemBackdrop.vue';
 
 export const MediaBarItemMaxHeight = 150;
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	item: {
-		type: Object,
-		required: true,
-	},
-});
+import { HTMLAttributes } from 'vue';
 
-const { item } = toRefs(props);
+type Props = {
+	item: Record<string, any>;
+} & /* @vue-ignore */ Pick<HTMLAttributes, 'onClick'>;
+
+const { item } = defineProps<Props>();
 
 const width = ref('auto');
 const height = ref('auto');
 
 // We set the dimensions on the thumbnails manually.
 // This way we can size it correct before it loads.
-if (item.value.media_type === 'image') {
-	const dimensions = item.value.media_item.getDimensions(400, MediaBarItemMaxHeight);
+if (item.media_type === 'image') {
+	const dimensions = item.media_item.getDimensions(400, MediaBarItemMaxHeight);
 	width.value = dimensions.width + 'px';
 	height.value = dimensions.height + 'px';
-} else if (item.value.media_type === 'sketchfab') {
+} else if (item.media_type === 'sketchfab') {
 	// Sketchfab thumbnails are hardcoded to this width.
 	height.value = `${MediaBarItemMaxHeight}px`;
 	width.value = MediaBarItemMaxHeight / 0.5625 + 'px';
@@ -62,4 +62,4 @@ if (item.value.media_type === 'image') {
 	</div>
 </template>
 
-<style lang="stylus" src="./item.styl" scoped></style>
+<style lang="stylus" src="~common/game/media-bar/item/item.styl" scoped></style>

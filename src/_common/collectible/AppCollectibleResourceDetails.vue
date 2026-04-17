@@ -1,58 +1,49 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType, computed, onMounted, ref, toRef, toRefs, watch } from 'vue';
+import { computed, CSSProperties, onMounted, ref, toRef, watch } from 'vue';
+
+import { showPurchaseShopProductModal } from '~app/components/vending-machine/modal/_purchase-modal/modal.service';
+import AppAlertBox from '~common/alert/AppAlertBox.vue';
+import { trackResourceInfoView } from '~common/analytics/analytics.service';
+import { Api } from '~common/api/api.service';
+import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
+import { AvatarFrameModel } from '~common/avatar/frame.model';
+import { BackgroundModel } from '~common/background/background.model';
+import AppButton from '~common/button/AppButton.vue';
+import { AcquisitionMethod, filterAcquisitionMethods } from '~common/collectible/acquisition.model';
+import AppCollectibleUnlockedRibbon from '~common/collectible/AppCollectibleUnlockedRibbon.vue';
+import { CollectibleModel } from '~common/collectible/collectible.model';
+import { CollectibleResourceItem } from '~common/collectible/resource-details-modal/modal.service';
+import { EmojiModel } from '~common/emoji/emoji.model';
+import AppImgResponsive from '~common/img/AppImgResponsive.vue';
+import { PurchasableProductType } from '~common/inventory/shop/product-owner-helpers';
+import AppLoading from '~common/loading/AppLoading.vue';
+import { getMediaItemImageSrc } from '~common/media-item/media-item-model';
+import { storeModel, storeModelList } from '~common/model/model-store.service';
+import AppCircularProgress from '~common/progress/AppCircularProgress.vue';
+import { Screen } from '~common/screen/screen-service';
+import AppStickerMastery from '~common/sticker/AppStickerMastery.vue';
+import AppStickerPack, { StickerPackRatio } from '~common/sticker/pack/AppStickerPack.vue';
+import { StickerPackModel } from '~common/sticker/pack/pack.model';
+import { StickerModel } from '~common/sticker/sticker.model';
+import { kThemeFg10, kThemeFgMuted } from '~common/theme/variables';
+import { $gettext } from '~common/translate/translate.service';
 import {
 	styleBorderRadiusBase,
 	styleChangeBg,
 	styleFlexCenter,
 	styleMaxWidthForOptions,
 	styleWhen,
-} from '../../_styles/mixins';
-import { kBorderRadiusLg, kFontSizeLarge, kFontSizeSmall } from '../../_styles/variables';
-import { showPurchaseShopProductModal } from '../../app/components/vending-machine/modal/_purchase-modal/modal.service';
-import { arrayAssignAll } from '../../utils/array';
-import { isInstance } from '../../utils/utils';
-import AppAlertBox from '../alert/AppAlertBox.vue';
-import { trackResourceInfoView } from '../analytics/analytics.service';
-import { Api } from '../api/api.service';
-import AppAspectRatio from '../aspect-ratio/AppAspectRatio.vue';
-import { AvatarFrameModel } from '../avatar/frame.model';
-import { BackgroundModel } from '../background/background.model';
-import AppButton from '../button/AppButton.vue';
-import { EmojiModel } from '../emoji/emoji.model';
-import AppImgResponsive from '../img/AppImgResponsive.vue';
-import { PurchasableProductType } from '../inventory/shop/product-owner-helpers';
-import AppLoading from '../loading/AppLoading.vue';
-import { getMediaItemImageSrc } from '../media-item/media-item-model';
-import { storeModel, storeModelList } from '../model/model-store.service';
-import AppCircularProgress from '../progress/AppCircularProgress.vue';
-import { Screen } from '../screen/screen-service';
-import AppStickerMastery from '../sticker/AppStickerMastery.vue';
-import AppStickerPack, { StickerPackRatio } from '../sticker/pack/AppStickerPack.vue';
-import { StickerPackModel } from '../sticker/pack/pack.model';
-import { StickerModel } from '../sticker/sticker.model';
-import { kThemeFg10, kThemeFgMuted } from '../theme/variables';
-import { $gettext } from '../translate/translate.service';
-import AppCollectibleUnlockedRibbon from './AppCollectibleUnlockedRibbon.vue';
-import { AcquisitionMethod, filterAcquisitionMethods } from './acquisition.model';
-import { CollectibleModel } from './collectible.model';
-import { CollectibleResourceItem } from './resource-details-modal/modal.service';
+} from '~styles/mixins';
+import { kBorderRadiusLg, kFontSizeLarge, kFontSizeSmall } from '~styles/variables';
+import { arrayAssignAll } from '~utils/array';
+import { isInstance } from '~utils/utils';
 
-const props = defineProps({
-	item: {
-		type: Object as PropType<CollectibleResourceItem>,
-		required: true,
-	},
-	packs: {
-		type: Array as PropType<StickerPackModel[]>,
-		required: true,
-	},
-});
+type Props = {
+	item: CollectibleResourceItem;
+};
+const { item } = defineProps<Props>();
 
-const { item } = toRefs(props);
-
-const emit = defineEmits({
-	'update:packs': (_packs: StickerPackModel[]) => true,
-});
+const packs = defineModel<StickerPackModel[]>('packs', { required: true });
 
 const isLoading = ref(true);
 const collectible = ref<CollectibleModel>();
@@ -69,10 +60,10 @@ function ifInstance<T>(item: any, constructor: new (...data: any) => T): T | und
 	return item && isInstance(item, constructor) ? item : undefined;
 }
 
-const sticker = computed(() => ifInstance(item.value, StickerModel));
-const emoji = computed(() => ifInstance(item.value, EmojiModel));
-const avatarFrame = computed(() => ifInstance(item.value, AvatarFrameModel));
-const background = computed(() => ifInstance(item.value, BackgroundModel));
+const sticker = computed(() => ifInstance(item, StickerModel));
+const emoji = computed(() => ifInstance(item, EmojiModel));
+const avatarFrame = computed(() => ifInstance(item, AvatarFrameModel));
+const background = computed(() => ifInstance(item, BackgroundModel));
 
 const collectibleLoadData = toRef<
 	() => null | {
@@ -120,22 +111,18 @@ const description = toRef(() => {
 	if (collectible.value?.description) {
 		return collectible.value.description;
 	}
-	if ('description' in item.value && item.value.description) {
-		return item.value.description;
+	if ('description' in item && item.description) {
+		return item.description;
 	}
 	return null;
 });
 
 const imageUrl = computed(() => {
 	// Grab data from the media item if possible.
-	if ('media_item' in item.value && item.value.media_item) {
-		return getMediaItemImageSrc(item.value.media_item).src;
+	if ('media_item' in item && item.media_item) {
+		return getMediaItemImageSrc(item.media_item).src;
 	}
-	return 'img_url' in item.value
-		? item.value.img_url
-		: 'image_url' in item.value
-		? item.value.image_url
-		: '';
+	return 'img_url' in item ? item.img_url : 'image_url' in item ? item.image_url : '';
 });
 
 const collectibleResourceAcquisition = computed(() => {
@@ -159,7 +146,7 @@ const collectibleResourceAcquisition = computed(() => {
 
 	return {
 		resource,
-		resourceId: item.value.id,
+		resourceId: item.id,
 	};
 });
 
@@ -177,7 +164,7 @@ onMounted(async () => {
 	if (resource) {
 		trackResourceInfoView({
 			resource,
-			resourceId: item.value.id,
+			resourceId: item.id,
 		});
 	}
 
@@ -206,9 +193,9 @@ onMounted(async () => {
 			AcquisitionMethod.PackOpen
 		).map(i => i.sticker_pack_id);
 
-		const packs: StickerPackModel[] = [];
+		const newPacks: StickerPackModel[] = [];
 
-		if (packIds.length && !props.packs.length) {
+		if (packIds.length && !packs.value.length) {
 			const packsResponse = await Api.sendFieldsRequest(
 				'/mobile/sticker',
 				{
@@ -218,14 +205,14 @@ onMounted(async () => {
 				},
 				{ detach: true }
 			);
-			arrayAssignAll(packs, storeModelList(StickerPackModel, packsResponse.packs));
-			emit('update:packs', packs);
+			arrayAssignAll(newPacks, storeModelList(StickerPackModel, packsResponse.packs));
+			packs.value = newPacks;
 		}
 
 		collectible.value = newCollectible;
 	} catch {
 		collectible.value = undefined;
-		emit('update:packs', []);
+		packs.value = [];
 	}
 	isLoading.value = false;
 });

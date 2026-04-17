@@ -1,50 +1,42 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import AppExpand from '../../../../_common/expand/AppExpand.vue';
-import { formatFilesize } from '../../../../_common/filters/filesize';
-import {
-	canInstallGameBuild,
-	GameBuildType,
-	type GameBuildModel,
-} from '../../../../_common/game/build/build.model';
-import { GameModel } from '../../../../_common/game/game.model';
-import AppGamePackageCardMoreOptions from '../../../../_common/game/package/card/AppGamePackageCardMoreOptions.vue';
-import { GamePackageCardModel } from '../../../../_common/game/package/card/card.model';
-import { GamePackageModel } from '../../../../_common/game/package/package.model';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import AppPopper from '../../../../_common/popper/AppPopper.vue';
-import { Popper } from '../../../../_common/popper/popper.service';
-import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { useClientLibraryStore } from '../../../store/client-library/index';
-import AppClientInstallProgress from '../AppClientInstallProgress.vue';
+import { computed } from 'vue';
+
+import AppClientInstallProgress from '~app/components/client/AppClientInstallProgress.vue';
 import {
 	LocalDbPackagePatchState,
 	LocalDbPackageRemoveState,
-} from '../local-db/package/package.model';
+} from '~app/components/client/local-db/package/package.model';
+import { useClientLibraryStore } from '~app/store/client-library/index';
+import AppButton from '~common/button/AppButton.vue';
+import AppExpand from '~common/expand/AppExpand.vue';
+import { formatFilesize } from '~common/filters/filesize';
+import {
+	canInstallGameBuild,
+	type GameBuildModel,
+	GameBuildType,
+} from '~common/game/build/build.model';
+import { GameModel } from '~common/game/game.model';
+import AppGamePackageCardMoreOptions from '~common/game/package/card/AppGamePackageCardMoreOptions.vue';
+import { GamePackageCardModel } from '~common/game/package/card/card.model';
+import { GamePackageModel } from '~common/game/package/package.model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppPopper from '~common/popper/AppPopper.vue';
+import { Popper } from '~common/popper/popper.service';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { TranslateDirective as vTranslate } from '~common/translate/translate-directive';
 
-const props = defineProps({
-	game: {
-		type: Object as PropType<GameModel>,
-		required: true,
-	},
-	package: {
-		type: Object as PropType<GamePackageModel>,
-		required: true,
-	},
-	card: {
-		type: Object as PropType<GamePackageCardModel>,
-		required: true,
-	},
-});
+type Props = {
+	game: GameModel;
+	package: GamePackageModel;
+	card: GamePackageCardModel;
+};
+const { game, package: pkg, card } = defineProps<Props>();
 
-const { game, package: pkg, card } = toRefs(props);
-
-const emit = defineEmits({
-	click: (_data: { build: GameBuildModel; fromExtraSection?: boolean }) => true,
-	'show-build-payment': (_build: GameBuildModel) => true,
-});
+const emit = defineEmits<{
+	click: [data: { build: GameBuildModel; fromExtraSection?: boolean }];
+	'show-build-payment': [build: GameBuildModel];
+}>();
 
 const {
 	packagesById,
@@ -56,7 +48,7 @@ const {
 	launcherLaunch,
 } = useClientLibraryStore();
 
-const localPackage = computed(() => packagesById.value[pkg.value.id]);
+const localPackage = computed(() => packagesById.value[pkg.id]);
 
 function buildClick(build: GameBuildModel, fromExtraSection?: boolean) {
 	emit('click', { build, fromExtraSection });
@@ -77,7 +69,7 @@ function startInstall(build: GameBuildModel) {
 		throw new Error(`Attempted to install a non installable build ${build.id}`);
 	}
 
-	packageInstall(game.value, build._package!, build._release!, build, build._launch_options!);
+	packageInstall(game, build._package!, build._release!, build, build._launch_options!);
 }
 
 function pauseInstall() {
@@ -165,22 +157,23 @@ function retryUninstall() {
 //
 // TODO(game-build-installers) this is extremely silly. put this logic in card model.
 if (
-	card.value.browserBuild &&
-	card.value.browserBuild.type !== GameBuildType.Html &&
-	card.value.browserBuild.type !== GameBuildType.Rom
+	card.browserBuild &&
+	card.browserBuild.type !== GameBuildType.Html &&
+	card.browserBuild.type !== GameBuildType.Rom
 ) {
-	const _build = card.value.browserBuild;
+	const _build = card.browserBuild;
 
-	card.value.extraBuilds.unshift({
+	card.extraBuilds.unshift({
 		type: _build.type,
-		icon: card.value.platformSupportInfo[_build.type].icon,
+		icon: card.platformSupportInfo[_build.type].icon,
 		build: _build,
 		platform: _build.type,
 		arch: null,
 	});
 
 	// Clear out the browser build since it's not quick playable.
-	card.value.browserBuild = null;
+
+	card.browserBuild = null;
 }
 
 // This sets up proper messaging for what you can or cannot do with the build.
@@ -193,13 +186,13 @@ enum BuildCapability {
 }
 
 const buildCapability = computed(() => {
-	if (card.value.primaryAction === 'install') {
+	if (card.primaryAction === 'install') {
 		return BuildCapability.Installable;
-	} else if (card.value.browserBuild) {
+	} else if (card.browserBuild) {
 		return BuildCapability.QuickPlayable;
-	} else if (card.value.primaryIsCompatible) {
+	} else if (card.primaryIsCompatible) {
 		return BuildCapability.Runnable;
-	} else if (card.value.primaryBuild) {
+	} else if (card.primaryBuild) {
 		return BuildCapability.Unsupported;
 	} else {
 		return BuildCapability.NonExistant;
@@ -371,7 +364,7 @@ const buildCapability = computed(() => {
 			@click="buildClick(card.browserBuild!)"
 		>
 			<AppTranslate>Quick Play</AppTranslate>
-			<AppJolticon :icon="card.showcasedBrowserIcon" />
+			<AppJolticon :icon="(card.showcasedBrowserIcon as any)" />
 		</AppButton>
 
 		<AppPopper

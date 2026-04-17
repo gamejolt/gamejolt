@@ -1,37 +1,22 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
-import AppJolticon, { Jolticon } from '../jolticon/AppJolticon.vue';
-import AppProgressBar from '../progress/AppProgressBar.vue';
-import AppSpacer from '../spacer/AppSpacer.vue';
+import { computed } from 'vue';
 
-const props = defineProps({
-	progress: {
-		type: Number,
-		required: true,
-	},
-	maxProgressTicks: {
-		type: Number,
-		required: true,
-	},
-	showEndDisplay: {
-		type: Boolean,
-	},
-	icon: {
-		type: String as PropType<Jolticon>,
-		default: undefined,
-	},
-	isPercent: {
-		type: Boolean,
-	},
-	isSegmented: {
-		type: Boolean,
-	},
-});
+import AppJolticon, { Jolticon } from '~common/jolticon/AppJolticon.vue';
+import AppProgressBar from '~common/progress/AppProgressBar.vue';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
 
-const { progress, maxProgressTicks, showEndDisplay, icon, isPercent, isSegmented } = toRefs(props);
+type Props = {
+	progress: number;
+	maxProgressTicks: number;
+	showEndDisplay?: boolean;
+	icon?: Jolticon;
+	isPercent?: boolean;
+	isSegmented?: boolean;
+};
+const { progress, maxProgressTicks, isSegmented } = defineProps<Props>();
 
-const percent = computed(() => Math.round((progress.value / maxProgressTicks.value) * 100));
-const barCount = computed(() => (isSegmented.value ? maxProgressTicks.value : 1));
+const percent = computed(() => Math.round((progress / maxProgressTicks) * 100));
+const barCount = computed(() => (isSegmented ? maxProgressTicks : 1));
 </script>
 
 <template>

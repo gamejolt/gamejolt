@@ -1,31 +1,23 @@
 <script lang="ts" setup>
-import { PropType, onMounted, onUnmounted, ref, toRefs } from 'vue';
-import AppButton from '../../button/AppButton.vue';
-import { addMinbarItem, removeMinbarItem } from '../../minbar/minbar.service';
-import AppModal from '../../modal/AppModal.vue';
-import { useModal } from '../../modal/modal.service';
-import { GameModel } from '../game.model';
-import { showGameRatingGrowl } from '../rating-growl/rating-growl.service';
+import { onMounted, onUnmounted, ref, useTemplateRef } from 'vue';
 
-const props = defineProps({
-	game: {
-		type: Object as PropType<GameModel>,
-		required: true,
-	},
-	url: {
-		type: String,
-		required: true,
-	},
-	canMinimize: {
-		type: Boolean,
-	},
-});
+import AppButton from '~common/button/AppButton.vue';
+import { GameModel } from '~common/game/game.model';
+import { showGameRatingGrowl } from '~common/game/rating-growl/rating-growl.service';
+import { addMinbarItem, removeMinbarItem } from '~common/minbar/minbar.service';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
 
-const { game, url, canMinimize } = toRefs(props);
+type Props = {
+	game: GameModel;
+	url: string;
+	canMinimize?: boolean;
+};
+const { game, url, canMinimize } = defineProps<Props>();
 const modal = useModal()!;
 
 const isMinimized = ref(false);
-const frameElem = ref<HTMLElement>();
+const frameElem = useTemplateRef('frame');
 
 onMounted(() => {
 	document.body.classList.add('game-play-modal-open');
@@ -48,8 +40,8 @@ function minimize() {
 
 	// When this minbar item is clicked, it basically shows this modal again.
 	const minbarItem = addMinbarItem({
-		title: game.value.title,
-		thumb: game.value.img_thumbnail,
+		title: game.title,
+		thumb: game.img_thumbnail,
 		isActive: true, // Only one game open at a time, so make it active.
 		onClick: () => {
 			// We remove the item from the minbar.
@@ -74,7 +66,7 @@ function close() {
 	// Show a rating growl when they close the game play modal. This will
 	// urge them to rate the game after playing it, but only if they haven't
 	// rated it yet.
-	showGameRatingGrowl(game.value);
+	showGameRatingGrowl(game);
 }
 </script>
 

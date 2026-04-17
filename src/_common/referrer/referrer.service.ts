@@ -1,5 +1,6 @@
 import { Router } from 'vue-router';
-import { onRouteChangeAfter } from '../route/route-component';
+
+import { onRouteChangeAfter } from '~common/route/route-component';
 
 /**
  * Since we're in a single page app, the referrer doesn't get reset on every

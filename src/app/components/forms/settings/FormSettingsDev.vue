@@ -1,18 +1,19 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
+
 import {
 	ConfigOption,
 	ConfigOptionBoolean,
 	ConfigOptionString,
 	configSaveOverrides,
 	ConfigService,
-} from '../../../../_common/config/config.service';
-import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
-import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
-import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormControlSelect from '../../../../_common/form-vue/controls/AppFormControlSelect.vue';
-import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+} from '~common/config/config.service';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlSelect from '~common/form-vue/controls/AppFormControlSelect.vue';
+import AppFormControlToggle from '~common/form-vue/controls/AppFormControlToggle.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 type FormModel = Record<string, boolean | string>;
 

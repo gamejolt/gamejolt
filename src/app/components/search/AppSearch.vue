@@ -8,19 +8,21 @@ import {
 	provide,
 	Ref,
 	ref,
-	toRefs,
 	watch,
 } from 'vue';
 import { useRouter } from 'vue-router';
-import { trackSearch } from '../../../_common/analytics/analytics.service';
-import AppPopper from '../../../_common/popper/AppPopper.vue';
-import AppTranslate from '../../../_common/translate/AppTranslate.vue';
-import { arrayRemove } from '../../../utils/array';
-import { createFocusToken } from '../../../utils/focus-token';
-import AppSearchInput from './AppSearchInput.vue';
-import { Search } from './search-service';
 
-const AppSearchAutocomplete = defineAsyncComponent(() => import('./AppSearchAutocomplete.vue'));
+import AppSearchInput from '~app/components/search/AppSearchInput.vue';
+import { Search } from '~app/components/search/search-service';
+import { trackSearch } from '~common/analytics/analytics.service';
+import AppPopper from '~common/popper/AppPopper.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { arrayRemove } from '~utils/array';
+import { createFocusToken } from '~utils/focus-token';
+
+const AppSearchAutocomplete = defineAsyncComponent(
+	() => import('~app/components/search/AppSearchAutocomplete.vue')
+);
 
 const KEYCODE_UP = 38;
 const KEYCODE_DOWN = 40;
@@ -97,14 +99,13 @@ function createSearchController({
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	autocompleteDisabled: {
-		type: Boolean,
-	},
-	autofocus: {
-		type: Boolean,
-	},
-});
+import { toRef } from 'vue';
+
+type Props = {
+	autocompleteDisabled?: boolean;
+	autofocus?: boolean;
+};
+const { autocompleteDisabled, autofocus } = defineProps<Props>();
 
 const {
 	id: inputId,
@@ -114,7 +115,10 @@ const {
 	shouldShowAutocomplete,
 	isShowingAutocomplete,
 	query,
-} = createSearchController(toRefs(props));
+} = createSearchController({
+	autocompleteDisabled: toRef(() => autocompleteDisabled),
+	autofocus: toRef(() => autofocus),
+});
 
 const router = useRouter();
 
@@ -170,13 +174,7 @@ function onBlur() {
 		<!--
 			Put the action/method stuff so that crawlers can see how to submit the form.
 		-->
-		<form
-			class="navbar-form"
-			action="/search"
-			method="GET"
-			role="search"
-			onsubmit="return false"
-		>
+		<form class="navbar-form" action="/search" method="GET" role="search" @submit.prevent>
 			<div class="-input">
 				<label :for="`search-input-${inputId}`" class="sr-only">
 					<AppTranslate>Search</AppTranslate>

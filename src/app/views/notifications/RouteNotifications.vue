@@ -1,21 +1,22 @@
 <script lang="ts">
-import { computed, ref, Ref, watch } from 'vue';
+import { computed, Ref, ref, watch } from 'vue';
 import { RouteLocationNormalized, useRoute } from 'vue-router';
-import { Api } from '../../../_common/api/api.service';
-import AppButton from '../../../_common/button/AppButton.vue';
-import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
-import { NotificationFeedTypes } from '../../../_common/notification/notification-model';
-import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
-import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
-import { $gettext } from '../../../_common/translate/translate.service';
-import AppActivityFeedPlaceholder from '../../components/activity/feed/AppActivityFeedPlaceholder.vue';
-import { ActivityFeedService } from '../../components/activity/feed/feed-service';
-import { ActivityFeedView } from '../../components/activity/feed/view';
-import { useGridStore } from '../../components/grid/grid-store';
-import { AppActivityFeedLazy } from '../../components/lazy';
-import { useAppStore } from '../../store';
-import { showNotificationsFilterModal } from './filter/modal.service';
-import { routeNotifications } from './notifications.route';
+
+import AppActivityFeedPlaceholder from '~app/components/activity/feed/AppActivityFeedPlaceholder.vue';
+import { ActivityFeedService } from '~app/components/activity/feed/feed-service';
+import { ActivityFeedView } from '~app/components/activity/feed/view';
+import { useGridStore } from '~app/components/grid/grid-store';
+import { AppActivityFeedLazy } from '~app/components/lazy';
+import { useAppStore } from '~app/store';
+import { showNotificationsFilterModal } from '~app/views/notifications/filter/modal.service';
+import { routeNotifications } from '~app/views/notifications/notifications.route';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { NotificationFeedTypes, NotificationType } from '~common/notification/notification-model';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import { $gettext } from '~common/translate/translate.service';
 
 export const SUPPORTED_NOTIFICATION_FEED_TYPES = NotificationFeedTypes;
 export const NOTIFICATION_FILTER_QUERY = 'f';
@@ -48,7 +49,7 @@ function getNotificationTypesFromQuery(route: RouteLocationNormalized, queryKey:
 	if (queryData && typeof queryData === 'string') {
 		const initialFilters = queryData
 			.split(',')
-			.filter(i => SUPPORTED_NOTIFICATION_FEED_TYPES.includes(i));
+			.filter(i => SUPPORTED_NOTIFICATION_FEED_TYPES.includes(i as NotificationType));
 
 		if (initialFilters.length) {
 			notificationTypes = initialFilters;

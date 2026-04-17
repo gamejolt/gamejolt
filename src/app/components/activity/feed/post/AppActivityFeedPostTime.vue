@@ -1,25 +1,19 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
+import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
-import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
-import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import AppTimeAgo from '../../../../../_common/time/AppTimeAgo.vue';
-import { $gettext } from '../../../../../_common/translate/translate.service';
 
-const props = defineProps({
-	post: {
-		type: Object as PropType<FiresidePostModel>,
-		required: true,
-	},
-	link: {
-		type: String,
-		required: true,
-	},
-});
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppTimeAgo from '~common/time/AppTimeAgo.vue';
+import { $gettext } from '~common/translate/translate.service';
 
-const { post, link } = toRefs(props);
+type Props = {
+	post: FiresidePostModel;
+	link: string;
+};
+const { post, link } = defineProps<Props>();
 
-const date = computed(() => (post.value.isActive ? post.value.published_on : post.value.added_on));
+const date = computed(() => (post.isActive ? post.published_on : post.added_on));
 </script>
 
 <template>

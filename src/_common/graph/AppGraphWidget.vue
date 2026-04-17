@@ -1,28 +1,25 @@
 <script lang="ts" setup>
-import { ref, Ref, toRefs, watch } from 'vue';
-import { Api } from '../api/api.service';
-import AppLoading from '../loading/AppLoading.vue';
-import AppGraph from './AppGraph.vue';
-import { Graph } from './graph.service';
+import { Ref, ref, watch } from 'vue';
 
-const props = defineProps({
-	url: {
-		type: String,
-		required: true,
-	},
-});
+import { Api } from '~common/api/api.service';
+import AppGraph from '~common/graph/AppGraph.vue';
+import { Graph } from '~common/graph/graph.service';
+import AppLoading from '~common/loading/AppLoading.vue';
 
-const { url } = toRefs(props);
+type Props = {
+	url: string;
+};
+const { url } = defineProps<Props>();
 
 const isLoading = ref(true);
 const graphData = ref() as Ref<any>;
 
 watch(
-	url,
+	() => url,
 	async () => {
 		isLoading.value = true;
 
-		const response = await Api.sendRequest(url.value, null, { detach: true });
+		const response = await Api.sendRequest(url, null, { detach: true });
 
 		if (response.data && Array.isArray(response.data)) {
 			graphData.value = Graph.createGraphData(response.data);

@@ -1,27 +1,22 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
-import { Environment } from '../../environment/environment.service';
-import { UserCommonFields } from '../user.model';
-import AppUserAvatarImg from './AppUserAvatarImg.vue';
+import { computed } from 'vue';
 
-const props = defineProps({
-	user: {
-		type: Object as PropType<UserCommonFields | null | undefined>,
-		default: undefined,
-	},
-	disableLink: {
-		type: Boolean,
-	},
-});
+import { Environment } from '~common/environment/environment.service';
+import { UserCommonFields } from '~common/user/user.model';
+import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
 
-const { disableLink, user } = toRefs(props);
+type Props = {
+	user?: UserCommonFields | null;
+	disableLink?: boolean;
+};
+const { user, disableLink = false } = defineProps<Props>();
 
 const href = computed(() => {
-	if (disableLink.value || !user?.value) {
+	if (disableLink || !user) {
 		return undefined;
 	}
 
-	return Environment.wttfBaseUrl + '/@' + user.value.username;
+	return Environment.wttfBaseUrl + '/@' + user.username;
 });
 </script>
 

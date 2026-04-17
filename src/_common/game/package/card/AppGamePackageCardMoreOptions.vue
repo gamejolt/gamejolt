@@ -1,21 +1,18 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-import { formatFilesize } from '../../../filters/filesize';
-import AppJolticon from '../../../jolticon/AppJolticon.vue';
-import AppTranslate from '../../../translate/AppTranslate.vue';
-import { GameBuildEmulatorInfo, GameBuildModel } from '../../build/build.model';
-import { GamePackageCardModel } from './card.model';
+import { formatFilesize } from '~common/filters/filesize';
+import { GameBuildEmulatorInfo, GameBuildModel } from '~common/game/build/build.model';
+import { GamePackageCardModel } from '~common/game/package/card/card.model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
-defineProps({
-	card: {
-		type: Object as PropType<GamePackageCardModel>,
-		required: true,
-	},
-});
+type Props = {
+	card: GamePackageCardModel;
+};
+defineProps<Props>();
 
-const emit = defineEmits({
-	click: (_build: GameBuildModel) => true,
-});
+const emit = defineEmits<{
+	click: [build: GameBuildModel];
+}>();
 
 function click(build: GameBuildModel) {
 	emit('click', build);

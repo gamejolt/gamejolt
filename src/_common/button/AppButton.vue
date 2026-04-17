@@ -1,107 +1,85 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
+import { computed, HTMLAttributes, toRef } from 'vue';
 import { RouteLocationRaw, RouterLink } from 'vue-router';
-import { styleFlexCenter, styleWhen } from '../../_styles/mixins';
-import { kJolticonSize } from '../../_styles/variables';
-import { defineDynamicSlotProps, useDynamicSlots } from '../component-helpers';
-import AppJolticon, { Jolticon } from '../jolticon/AppJolticon.vue';
-import AppCircularProgress from '../progress/AppCircularProgress.vue';
 
-const props = defineProps({
-	tag: {
-		type: String,
-		default: 'button',
-	},
-	primary: {
-		type: Boolean,
-	},
-	trans: {
-		type: Boolean,
-	},
-	solid: {
-		type: Boolean,
-	},
-	overlay: {
-		type: Boolean,
-	},
-	sparse: {
-		type: Boolean,
-	},
-	circle: {
-		type: Boolean,
-	},
-	disabled: {
-		type: Boolean,
-	},
-	lg: {
-		type: Boolean,
-	},
-	sm: {
-		type: Boolean,
-	},
-	block: {
-		type: Boolean,
-	},
-	blockXs: {
-		type: Boolean,
-	},
-	icon: {
-		type: String as PropType<Jolticon>,
-		default: undefined,
-	},
-	iconColor: {
-		type: String as PropType<'primary' | 'notice'>,
-		default: undefined,
-	},
-	fillColor: {
-		type: String as PropType<'overlay-notice'>,
-		default: undefined,
-	},
-	badge: {
-		type: String,
-		default: undefined,
-	},
-	to: {
-		type: null as unknown as PropType<RouteLocationRaw>,
-		default: undefined,
-	},
-	href: {
-		type: String,
-		default: undefined,
-	},
-	target: {
-		type: String,
-		default: undefined,
-	},
-	forceHover: {
-		type: Boolean,
-	},
+import { useDynamicSlots } from '~common/component-helpers';
+import AppJolticon, { Jolticon } from '~common/jolticon/AppJolticon.vue';
+import AppCircularProgress from '~common/progress/AppCircularProgress.vue';
+import { styleFlexCenter, styleWhen } from '~styles/mixins';
+import { kJolticonSize } from '~styles/variables';
+
+type Props = {
+	tag?: string;
+	primary?: boolean;
+	trans?: boolean;
+	solid?: boolean;
+	overlay?: boolean;
+	sparse?: boolean;
+	circle?: boolean;
+	disabled?: boolean;
+	lg?: boolean;
+	sm?: boolean;
+	block?: boolean;
+	blockXs?: boolean;
+	icon?: Jolticon;
+	iconColor?: 'primary' | 'notice';
+	fillColor?: 'overlay-notice';
+	badge?: string;
+	to?: RouteLocationRaw;
+	href?: string;
+	target?: string;
+	forceHover?: boolean;
 	/**
 	 * Shows an indeterminate {@link AppCircularProgress} in place of all
 	 * content.
 	 */
-	loading: {
-		type: Boolean,
-	},
+	loading?: boolean;
 	/**
 	 * Allows a custom icon to be built into the button. Does nothing if
 	 * {@link icon} is set.
 	 */
-	...defineDynamicSlotProps(['icon'], false),
-});
+	dynamicSlots?: 'icon'[] | Record<'icon', boolean> | boolean;
+} & /* @vue-ignore */ Pick<HTMLAttributes, 'onMouseenter' | 'onMouseleave'>;
 
-const { dynamicSlots } = toRefs(props);
+const {
+	tag = 'button',
+	primary,
+	trans,
+	solid,
+	overlay,
+	sparse,
+	circle,
+	disabled,
+	lg,
+	sm,
+	block,
+	blockXs,
+	icon,
+	iconColor,
+	fillColor,
+	badge,
+	to,
+	href,
+	target,
+	forceHover,
+	loading,
+	dynamicSlots = false,
+} = defineProps<Props>();
+
+const emit = defineEmits<{
+	click: [event: MouseEvent];
+}>();
 
 const ourTag = computed(() => {
-	if (props.href) {
+	if (href) {
 		return 'a';
-	} else if (props.to) {
+	} else if (to) {
 		return RouterLink;
 	}
-	return props.tag;
+	return tag;
 });
 
-const { hasSlot } = useDynamicSlots(dynamicSlots);
+const { hasSlot } = useDynamicSlots(toRef(() => dynamicSlots));
 </script>
 
 <template>
@@ -134,6 +112,7 @@ const { hasSlot } = useDynamicSlots(dynamicSlots);
 		:href="href"
 		:target="target"
 		:disabled="disabled === true ? 'disabled' : null"
+		@click="emit('click', $event)"
 	>
 		<div v-if="loading" :style="styleFlexCenter()">
 			<AppCircularProgress
@@ -163,4 +142,4 @@ const { hasSlot } = useDynamicSlots(dynamicSlots);
 	</component>
 </template>
 
-<style lang="stylus" src="./button.styl" scoped></style>
+<style lang="stylus" src="~common/button/button.styl" scoped></style>

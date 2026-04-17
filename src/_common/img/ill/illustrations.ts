@@ -1,7 +1,7 @@
-import { IllustrationAsset } from '../../illustration/AppIllustration.vue';
-import illBackpackClosedPath from './backpack-closed.svg';
-import illBackpackOpenPath from './backpack-open.svg';
-import illJoltbuxPath from './joltbux.png';
+import { IllustrationAsset } from '~common/illustration/AppIllustration.vue';
+import illBackpackClosedPath from '~common/img/ill/backpack-closed.svg';
+import illBackpackOpenPath from '~common/img/ill/backpack-open.svg';
+import illJoltbuxPath from '~common/img/ill/joltbux.png';
 
 export const illBackpackClosed: IllustrationAsset = {
 	path: illBackpackClosedPath,

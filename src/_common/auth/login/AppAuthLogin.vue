@@ -1,23 +1,17 @@
 <script lang="ts" setup>
-import { toRefs } from 'vue';
 import { useRouter } from 'vue-router';
-import { Navigate } from '../../navigate/navigate.service';
-import { authOnLogin, getRedirectUrl, redirectToDashboard } from '../auth.service';
-import AppAuthLoginForm from './login-form.vue';
 
-const props = defineProps({
-	overlay: {
-		type: Boolean,
-	},
-	redirectTo: {
-		type: String,
-		required: true,
-	},
-});
+import { authOnLogin, getRedirectUrl, redirectToDashboard } from '~common/auth/auth.service';
+import AppAuthLoginForm from '~common/auth/login/AppAuthLoginForm.vue';
+import { Navigate } from '~common/navigate/navigate.service';
+
+type Props = {
+	overlay?: boolean;
+	redirectTo: string;
+};
+const { overlay, redirectTo } = defineProps<Props>();
 
 const router = useRouter();
-
-const { redirectTo } = toRefs(props);
 
 function onLoggedIn(_formModel: any, response: any) {
 	// When we get a token, we are expected to solve a captcha and pass it back.
@@ -28,7 +22,7 @@ function onLoggedIn(_formModel: any, response: any) {
 	// Otherwise, log them in!
 	authOnLogin('email');
 
-	const location = getRedirectUrl(redirectTo.value);
+	const location = getRedirectUrl(redirectTo);
 	if (location) {
 		if (!GJ_IS_DESKTOP_APP) {
 			Navigate.goto(location);
@@ -47,7 +41,7 @@ function onNeedsApprovedLogin(loginPollingToken: string) {
 	sessionStorage.setItem('login-polling-token', loginPollingToken);
 	router.push({
 		name: 'auth.approve-login',
-		query: { redirect: redirectTo?.value || undefined },
+		query: { redirect: redirectTo || undefined },
 	});
 }
 </script>

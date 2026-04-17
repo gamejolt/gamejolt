@@ -1,18 +1,17 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
-import AppProgressBar from '../../../../_common/progress/AppProgressBar.vue';
-import { useClientLibraryStore } from '../../../store/client-library/index';
 
-const props = defineProps({
-	packageId: {
-		type: Number,
-		required: true,
-	},
-});
+import { useClientLibraryStore } from '~app/store/client-library/index';
+import AppProgressBar from '~common/progress/AppProgressBar.vue';
+
+type Props = {
+	packageId: number;
+};
+const { packageId } = defineProps<Props>();
 
 const { packagesById, numPatching } = useClientLibraryStore();
 
-const pkg = computed(() => packagesById.value[props.packageId]);
+const pkg = computed(() => packagesById.value[packageId]);
 const width = computed(() => (1 / numPatching.value) * 100.0 + '%');
 </script>
 

@@ -1,7 +1,8 @@
 <script lang="ts" setup>
-import { PropType, onBeforeUnmount, onMounted, ref, toRefs } from 'vue';
-import { CommunityCompetitionModel } from '../../../../../_common/community/competition/competition.model';
-import { $gettext } from '../../../../../_common/translate/translate.service';
+import { onBeforeUnmount, onMounted, ref } from 'vue';
+
+import { CommunityCompetitionModel } from '~common/community/competition/competition.model';
+import { $gettext } from '~common/translate/translate.service';
 
 type BlockData = {
 	digits: string[];
@@ -9,14 +10,10 @@ type BlockData = {
 	hasSeparator: boolean;
 };
 
-const props = defineProps({
-	competition: {
-		type: Object as PropType<CommunityCompetitionModel>,
-		required: true,
-	},
-});
-
-const { competition } = toRefs(props);
+type Props = {
+	competition: CommunityCompetitionModel;
+};
+const { competition } = defineProps<Props>();
 
 let updateTimer: NodeJS.Timer | null = null;
 const blocksData = ref<BlockData[]>([]);
@@ -36,19 +33,19 @@ onBeforeUnmount(() => {
 
 function updateDisplayData() {
 	let timestamp = 0;
-	const period = competition.value.period;
+	const period = competition.period;
 	switch (period) {
 		case 'pre-comp':
 			titleText.value = $gettext(`Starts in`);
-			timestamp = competition.value.starts_on;
+			timestamp = competition.starts_on;
 			break;
 		case 'running':
 			titleText.value = $gettext(`Ends in`);
-			timestamp = competition.value.ends_on;
+			timestamp = competition.ends_on;
 			break;
 		case 'voting':
 			titleText.value = $gettext(`Voting ends in`);
-			timestamp = competition.value.voting_ends_on;
+			timestamp = competition.voting_ends_on;
 			break;
 		// No countdown is shown.
 		case 'post-comp':

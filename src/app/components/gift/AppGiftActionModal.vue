@@ -1,45 +1,39 @@
 <script lang="ts" setup>
-import { PropType, onMounted, toRefs } from 'vue';
-import { trackGiftAction } from '../../../_common/analytics/analytics.service';
-import AppButton from '../../../_common/button/AppButton.vue';
-import AppShopProductDisplay from '../../../_common/inventory/shop/AppShopProductDisplay.vue';
-import { InventoryShopGiftModel } from '../../../_common/inventory/shop/inventory-shop-gift.model';
+import { onMounted } from 'vue';
+
+import { GiftAction } from '~app/components/gift/modal.service';
+import { trackGiftAction } from '~common/analytics/analytics.service';
+import AppButton from '~common/button/AppButton.vue';
+import AppShopProductDisplay from '~common/inventory/shop/AppShopProductDisplay.vue';
+import { InventoryShopGiftModel } from '~common/inventory/shop/inventory-shop-gift.model';
 import {
-	InventoryShopProduct,
 	getShopProductDisplayData,
-} from '../../../_common/inventory/shop/product-owner-helpers';
-import AppModal from '../../../_common/modal/AppModal.vue';
-import { useModal } from '../../../_common/modal/modal.service';
-import AppSectionTitle from '../../../_common/section/AppSectionTitle.vue';
-import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
-import { showStickerPackContentsModal } from '../../../_common/sticker/pack/contents-modal/modal.service';
-import { StickerPackModel } from '../../../_common/sticker/pack/pack.model';
-import { $gettext } from '../../../_common/translate/translate.service';
-import AppUserAvatarBubble from '../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
-import { isInstance } from '../../../utils/utils';
-import { GiftAction } from './modal.service';
+	InventoryShopProduct,
+} from '~common/inventory/shop/product-owner-helpers';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import AppSectionTitle from '~common/section/AppSectionTitle.vue';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import { showStickerPackContentsModal } from '~common/sticker/pack/contents-modal/modal.service';
+import { StickerPackModel } from '~common/sticker/pack/pack.model';
+import { $gettext } from '~common/translate/translate.service';
+import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
+import { isInstance } from '~utils/utils';
 
-const props = defineProps({
-	gift: {
-		type: Object as PropType<InventoryShopGiftModel>,
-		required: true,
-	},
-	product: {
-		type: Object as PropType<InventoryShopProduct>,
-		required: true,
-	},
-});
-
-const { gift, product } = toRefs(props);
+type Props = {
+	gift: InventoryShopGiftModel;
+	product: InventoryShopProduct;
+};
+const { gift, product } = defineProps<Props>();
 
 const modal = useModal<GiftAction>()!;
 
 onMounted(() => {
-	trackGiftAction({ action: 'view', giftId: gift.value.id });
+	trackGiftAction({ action: 'view', giftId: gift.id });
 });
 
 function doAction(action: 'accept' | 'reject' | 'ignore') {
-	trackGiftAction({ action, giftId: gift.value.id });
+	trackGiftAction({ action, giftId: gift.id });
 	modal.resolve(action);
 }
 </script>

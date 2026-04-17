@@ -1,14 +1,11 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-import { CommunityModel } from '../../../../../_common/community/community.model';
-import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
+import { CommunityModel } from '~common/community/community.model';
+import AppCommunityThumbnailImg from '~common/community/thumbnail/AppCommunityThumbnailImg.vue';
 
-defineProps({
-	community: {
-		type: Object as PropType<CommunityModel>,
-		required: true,
-	},
-});
+type Props = {
+	community: CommunityModel;
+};
+defineProps<Props>();
 </script>
 
 <template>

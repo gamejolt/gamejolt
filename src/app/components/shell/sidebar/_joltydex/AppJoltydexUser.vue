@@ -1,29 +1,24 @@
 <script lang="ts">
-import { PropType, ref, toRefs } from 'vue';
-import AppOnHover from '../../../../../_common/on/AppOnHover.vue';
-import { Screen } from '../../../../../_common/screen/screen-service';
-import AppScrollInview, {
-	ScrollInviewConfig,
-} from '../../../../../_common/scroll/inview/AppScrollInview.vue';
-import { kThemeFg10 } from '../../../../../_common/theme/variables';
-import AppUserAvatarBubble from '../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
-import { UserModel } from '../../../../../_common/user/user.model';
-import { styleTextOverflow, styleWhen } from '../../../../../_styles/mixins';
-import { kBorderRadiusBase } from '../../../../../_styles/variables';
-import { useJoltydexStore } from '../../../../store/joltydex';
+import { ref } from 'vue';
+
+import { useJoltydexStore } from '~app/store/joltydex';
+import AppOnHover from '~common/on/AppOnHover.vue';
+import { Screen } from '~common/screen/screen-service';
+import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
+import { kThemeFg10 } from '~common/theme/variables';
+import { UserModel } from '~common/user/user.model';
+import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
+import { styleTextOverflow, styleWhen } from '~styles/mixins';
+import { kBorderRadiusBase } from '~styles/variables';
 
 const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height / 2}px` });
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	user: {
-		type: Object as PropType<UserModel>,
-		required: true,
-	},
-});
-
-const { user } = toRefs(props);
+type Props = {
+	user: UserModel;
+};
+const { user } = defineProps<Props>();
 const { selectedJoltydexUser } = useJoltydexStore();
 
 const isInview = ref(false);

@@ -1,16 +1,17 @@
 <script lang="ts">
 import { computed, toRef } from 'vue';
-import AppAuthJoin from '../../../../_common/auth/join/AppAuthJoin.vue';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import AppLinkExternal from '../../../../_common/link/AppLinkExternal.vue';
-import { Meta } from '../../../../_common/meta/meta-service';
-import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
-import { Screen } from '../../../../_common/screen/screen-service';
-import { AppSocialFacebookLike } from '../../../../_common/social/facebook/like/like';
-import { AppSocialTwitterShare } from '../../../../_common/social/twitter/share/share';
-import { useCommonStore } from '../../../../_common/store/common-store';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import socialImage from './social.png';
+
+import socialImage from '~app/views/landing/redlight/social.png';
+import AppAuthJoin from '~common/auth/join/AppAuthJoin.vue';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLinkExternal from '~common/link/AppLinkExternal.vue';
+import { Meta } from '~common/meta/meta-service';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { Screen } from '~common/screen/screen-service';
+import AppSocialFacebookLike from '~common/social/facebook/like/AppSocialFacebookLike.vue';
+import AppSocialTwitterShare from '~common/social/twitter/share/AppSocialTwitterShare.vue';
+import { useCommonStore } from '~common/store/common-store';
+import { $gettext } from '~common/translate/translate.service';
 
 const slogans = [
 	`Drive indie traffic to your AAA games`,
@@ -123,7 +124,7 @@ createAppRoute({
 
 					<span class="dot-separator hidden-xs" />
 
-					<AppSocialFacebookLike />
+					<AppSocialFacebookLike url="https://gamejolt.com/landing/redlight" />
 				</div>
 			</div>
 		</section>
@@ -298,7 +299,9 @@ createAppRoute({
 
 								<span class="dot-separator hidden-xs" />
 
-								<AppSocialFacebookLike />
+								<AppSocialFacebookLike
+									url="https://gamejolt.com/landing/redlight"
+								/>
 							</div>
 						</div>
 					</div>

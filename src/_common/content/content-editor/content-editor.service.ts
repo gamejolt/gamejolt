@@ -1,7 +1,8 @@
 import { EditorView } from 'prosemirror-view';
 import { shallowReactive } from 'vue';
-import { MediaUploadTask } from './media-upload-task';
-import { ContentEditorSchema } from './schemas/content-editor-schema';
+
+import { MediaUploadTask } from '~common/content/content-editor/media-upload-task';
+import { ContentEditorSchema } from '~common/content/content-editor/schemas/content-editor-schema';
 
 class ContentEditorServiceImpl {
 	public UploadTaskCache = shallowReactive({}) as Record<string, MediaUploadTask>;

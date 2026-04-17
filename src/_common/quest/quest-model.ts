@@ -1,8 +1,8 @@
-import { getCurrentServerTime } from '../../utils/server-time';
-import { MediaItemModel } from '../media-item/media-item-model';
-import { ModelStoreModel } from '../model/model-store.service';
-import { QuestObjectiveModel } from './quest-objective-model';
-import { QuestRewardModel } from './quest-reward-model';
+import { MediaItemModel } from '~common/media-item/media-item-model';
+import { ModelStoreModel } from '~common/model/model-store.service';
+import { QuestObjectiveModel } from '~common/quest/quest-objective-model';
+import { QuestRewardModel } from '~common/quest/quest-reward-model';
+import { getCurrentServerTime } from '~utils/server-time';
 
 export const QuestStatus = {
 	inactive: 0,

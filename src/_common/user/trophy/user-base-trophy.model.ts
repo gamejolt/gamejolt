@@ -1,6 +1,6 @@
-import { Model } from '../../model/model.service';
-import { BaseTrophyModel } from '../../trophy/base-trophy.model';
-import { UserModel } from '../user.model';
+import { Model } from '~common/model/model.service';
+import { BaseTrophyModel } from '~common/trophy/base-trophy.model';
+import { UserModel } from '~common/user/user.model';
 
 export abstract class UserBaseTrophyModel extends Model {
 	declare user_id: number;

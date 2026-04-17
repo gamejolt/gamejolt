@@ -1,55 +1,47 @@
 <script lang="ts" setup>
-import { SettingVideoPlayerMuted } from '../../settings/settings.service';
-import AppSlider, { ScrubberCallback } from '../../slider/AppSlider.vue';
+import { computed } from 'vue';
+
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { SettingVideoPlayerMuted } from '~common/settings/settings.service';
+import AppSlider, { ScrubberCallback } from '~common/slider/AppSlider.vue';
 import {
-	VideoPlayerController,
 	scrubVideoVolume,
 	setVideoMuted,
 	trackVideoPlayerEvent,
-} from './controller';
+	VideoPlayerController,
+} from '~common/video/player/controller';
 
-import { PropType, computed, toRefs } from 'vue';
-import AppJolticon from '../../jolticon/AppJolticon.vue';
-
-const props = defineProps({
-	player: {
-		type: Object as PropType<VideoPlayerController>,
-		required: true,
-	},
-	hasSlider: {
-		type: Boolean,
-	},
-	transitionSlider: {
-		type: Boolean,
-	},
-});
-
-const { player, hasSlider, transitionSlider } = toRefs(props);
+type Props = {
+	player: VideoPlayerController;
+	hasSlider?: boolean;
+	transitionSlider?: boolean;
+};
+const { player, hasSlider = false, transitionSlider = false } = defineProps<Props>();
 
 const isMuted = computed(() => {
-	if (player.value.altControlsBehavior) {
-		return player.value.muted;
+	if (player.altControlsBehavior) {
+		return player.muted;
 	} else {
-		return player.value.volume === 0;
+		return player.volume === 0;
 	}
 });
 
 function onClickMute() {
 	let currentState = true;
-	if (player.value.context === 'feed' || player.value.context == 'page') {
+	if (player.context === 'feed' || player.context == 'page') {
 		currentState = SettingVideoPlayerMuted.get();
 	}
 
-	setVideoMuted(player.value, !currentState);
+	setVideoMuted(player, !currentState);
 	trackVideoPlayerEvent(
-		player.value,
-		!player.value.volume || player.value.muted ? 'mute' : 'unmute',
+		player,
+		!player.volume || player.muted ? 'mute' : 'unmute',
 		'click-control'
 	);
 }
 
 function onVolumeScrub({ percent, stage }: ScrubberCallback) {
-	scrubVideoVolume(player.value, percent, stage);
+	scrubVideoVolume(player, percent, stage);
 }
 </script>
 

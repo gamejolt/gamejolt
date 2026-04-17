@@ -1,37 +1,33 @@
 <script lang="ts" setup>
-import { Ref, computed, ref, toRefs, watch } from 'vue';
-import AppAlertBox from '../../../../../../_common/alert/AppAlertBox.vue';
-import AppButton from '../../../../../../_common/button/AppButton.vue';
-import { defineFormProps } from '../../../../../../_common/form-vue/AppForm.vue';
-import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
-import AppLinkHelp from '../../../../../../_common/link/AppLinkHelp.vue';
-import { showModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
-import { storeModelList } from '../../../../../../_common/model/model-store.service';
-import AppOnHover from '../../../../../../_common/on/AppOnHover.vue';
-import { ShopProductResource } from '../../../../../../_common/shop/product/product-model';
-import AppSpacer from '../../../../../../_common/spacer/AppSpacer.vue';
-import AppStickerImg from '../../../../../../_common/sticker/AppStickerImg.vue';
-import { StickerPackModel } from '../../../../../../_common/sticker/pack/pack.model';
-import { StickerModel } from '../../../../../../_common/sticker/sticker.model';
-import { kThemeBg, kThemeBgOffset, kThemeFg } from '../../../../../../_common/theme/variables';
-import { $gettext } from '../../../../../../_common/translate/translate.service';
-import {
-	styleBorderRadiusLg,
-	styleFlexCenter,
-	styleTyped,
-	styleWhen,
-} from '../../../../../../_styles/mixins';
-import { kStrongEaseOut } from '../../../../../../_styles/variables';
-import { ShopDashProductType, useShopDashStore } from '../../shop.store';
-import AppDashShopProductHeader from '../AppDashShopProductHeader.vue';
-import FormShopProductBase, { createShopProductBaseForm } from './FormShopProductBase.vue';
-import { showFormStickerSelectorModal } from './_sticker-selector/modal.service';
+import { computed, Ref, ref, watch } from 'vue';
 
-const props = defineProps({
-	...defineFormProps<StickerPackModel>(),
-});
+import { showFormStickerSelectorModal } from '~app/views/dashboard/shop/product/_forms/_sticker-selector/modal.service';
+import FormShopProductBase, {
+	createShopProductBaseForm,
+} from '~app/views/dashboard/shop/product/_forms/FormShopProductBase.vue';
+import AppDashShopProductHeader from '~app/views/dashboard/shop/product/AppDashShopProductHeader.vue';
+import { ShopDashProductType, useShopDashStore } from '~app/views/dashboard/shop/shop.store';
+import AppAlertBox from '~common/alert/AppAlertBox.vue';
+import AppButton from '~common/button/AppButton.vue';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLinkHelp from '~common/link/AppLinkHelp.vue';
+import { showModalConfirm } from '~common/modal/confirm/confirm-service';
+import { storeModelList } from '~common/model/model-store.service';
+import AppOnHover from '~common/on/AppOnHover.vue';
+import { ShopProductResource } from '~common/shop/product/product-model';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import AppStickerImg from '~common/sticker/AppStickerImg.vue';
+import { StickerPackModel } from '~common/sticker/pack/pack.model';
+import { StickerModel } from '~common/sticker/sticker.model';
+import { kThemeBg, kThemeBgOffset, kThemeFg } from '~common/theme/variables';
+import { $gettext } from '~common/translate/translate.service';
+import { styleBorderRadiusLg, styleFlexCenter, styleTyped, styleWhen } from '~styles/mixins';
+import { kStrongEaseOut } from '~styles/variables';
 
-const { model } = toRefs(props);
+type Props = {
+	model?: StickerPackModel;
+};
+const { model } = defineProps<Props>();
 
 const minStickers = ref(3);
 const maxStickers = ref(5);
@@ -42,7 +38,7 @@ const shopStore = useShopDashStore()!;
 const data = createShopProductBaseForm({
 	shopStore,
 	resource: ShopProductResource.StickerPack,
-	baseModel: model?.value,
+	baseModel: model,
 	fields: {
 		stickers: [] as number[],
 	},
@@ -115,7 +111,7 @@ function _setStickers(isInitial: boolean, newStickers: StickerModel[] | undefine
 
 	if (!isInitial) {
 		form.triggerChanged();
-	} else if (!model?.value?.was_approved) {
+	} else if (!model?.was_approved) {
 		initialFormModel.value.stickers = stickerIds;
 	}
 }
@@ -123,7 +119,7 @@ function _setStickers(isInitial: boolean, newStickers: StickerModel[] | undefine
 async function addStickers() {
 	// Will return all the stickers (the current in pack as well as new).
 	const newStickers = await showFormStickerSelectorModal({
-		stickerPackId: model?.value?.id,
+		stickerPackId: model?.id,
 		premium: productType.value === ShopDashProductType.Premium,
 		currentStickers: stickers.value,
 		availableSlots: maxStickers.value,

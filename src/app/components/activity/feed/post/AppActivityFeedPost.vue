@@ -1,59 +1,60 @@
 <script lang="ts" setup>
-import { computed, ref, toRef } from 'vue';
+import { computed, HTMLAttributes, ref, toRef, useTemplateRef } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { trackPostOpen } from '../../../../../_common/analytics/analytics.service';
-import AppBackground from '../../../../../_common/background/AppBackground.vue';
-import { CommunityChannelModel } from '../../../../../_common/community/channel/channel.model';
-import { CommunityModel } from '../../../../../_common/community/community.model';
-import { isDynamicGoogleBot } from '../../../../../_common/device/device.service';
-import { Environment } from '../../../../../_common/environment/environment.service';
-import { EventItemModel } from '../../../../../_common/event-item/event-item.model';
-import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
-import { Navigate } from '../../../../../_common/navigate/navigate.service';
-import { vAppObserveDimensions } from '../../../../../_common/observe-dimensions/observe-dimensions.directive';
-import { Screen } from '../../../../../_common/screen/screen-service';
-import { Scroll } from '../../../../../_common/scroll/scroll.service';
-import AppStickerControlsOverlay from '../../../../../_common/sticker/AppStickerControlsOverlay.vue';
-import AppStickerPlacementList from '../../../../../_common/sticker/AppStickerPlacementList.vue';
-import AppStickerLayer from '../../../../../_common/sticker/layer/AppStickerLayer.vue';
-import {
-	createStickerTargetController,
-	provideStickerTargetController,
-} from '../../../../../_common/sticker/target/target-controller';
-import { kThemeGjOverlayNotice } from '../../../../../_common/theme/variables';
-import { styleTyped } from '../../../../../_styles/mixins';
-import { RouteLocationDefinition } from '../../../../../utils/router';
-import AppContentTargets from '../../../content/AppContentTargets.vue';
-import AppFiresidePostEmbed from '../../../fireside/post/embed/AppFiresidePostEmbed.vue';
-import AppPollVoting from '../../../poll/AppPollVoting.vue';
-import AppPostContent from '../../../post/AppPostContent.vue';
-import AppPostHeader from '../../../post/AppPostHeader.vue';
-import AppPostControls from '../../../post/controls/AppPostControls.vue';
+
+import { useActivityFeedInterface } from '~app/components/activity/feed/AppActivityFeed.vue';
+import { feedShouldBlockPost } from '~app/components/activity/feed/feed-service';
+import { ActivityFeedItem } from '~app/components/activity/feed/item-service';
+import AppActivityFeedPostArticle from '~app/components/activity/feed/post/AppActivityFeedPostArticle.vue';
+import AppActivityFeedPostBlocked from '~app/components/activity/feed/post/AppActivityFeedPostBlocked.vue';
+import AppActivityFeedPostMedia from '~app/components/activity/feed/post/AppActivityFeedPostMedia.vue';
+import AppActivityFeedPostVideo from '~app/components/activity/feed/post/AppActivityFeedPostVideo.vue';
+import AppActivityFeedPostWrapper from '~app/components/activity/feed/post/AppActivityFeedPostWrapper.vue';
+import { useActivityFeed } from '~app/components/activity/feed/view';
+import AppContentTargets from '~app/components/content/AppContentTargets.vue';
+import AppFiresidePostEmbed from '~app/components/fireside/post/embed/AppFiresidePostEmbed.vue';
+import AppPollVoting from '~app/components/poll/AppPollVoting.vue';
+import AppPostContent from '~app/components/post/AppPostContent.vue';
+import AppPostHeader from '~app/components/post/AppPostHeader.vue';
+import AppPostControls from '~app/components/post/controls/AppPostControls.vue';
 import {
 	kPostItemPaddingVertical,
 	kPostItemPaddingXsVertical,
 	PostFeedItemContainerStyles,
-} from '../../../post/post-styles';
-import { useActivityFeedInterface } from '../AppActivityFeed.vue';
-import { feedShouldBlockPost } from '../feed-service';
-import { ActivityFeedItem } from '../item-service';
-import { useActivityFeed } from '../view';
-import AppActivityFeedPostArticle from './AppActivityFeedPostArticle.vue';
-import AppActivityFeedPostBlocked from './AppActivityFeedPostBlocked.vue';
-import AppActivityFeedPostMedia from './AppActivityFeedPostMedia.vue';
-import AppActivityFeedPostVideo from './AppActivityFeedPostVideo.vue';
-import AppActivityFeedPostWrapper from './AppActivityFeedPostWrapper.vue';
+} from '~app/components/post/post-styles';
+import { trackPostOpen } from '~common/analytics/analytics.service';
+import AppBackground from '~common/background/AppBackground.vue';
+import { CommunityChannelModel } from '~common/community/channel/channel.model';
+import { CommunityModel } from '~common/community/community.model';
+import { isDynamicGoogleBot } from '~common/device/device.service';
+import { Environment } from '~common/environment/environment.service';
+import { EventItemModel } from '~common/event-item/event-item.model';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import { Navigate } from '~common/navigate/navigate.service';
+import { vAppObserveDimensions } from '~common/observe-dimensions/observe-dimensions.directive';
+import { Screen } from '~common/screen/screen-service';
+import { Scroll } from '~common/scroll/scroll.service';
+import AppStickerControlsOverlay from '~common/sticker/AppStickerControlsOverlay.vue';
+import AppStickerPlacementList from '~common/sticker/AppStickerPlacementList.vue';
+import AppStickerLayer from '~common/sticker/layer/AppStickerLayer.vue';
+import {
+	createStickerTargetController,
+	provideStickerTargetController,
+} from '~common/sticker/target/target-controller';
+import { kThemeGjOverlayNotice } from '~common/theme/variables';
+import { styleTyped } from '~styles/mixins';
+import { RouteLocationDefinition } from '~utils/router';
 
 type Props = {
 	item: ActivityFeedItem;
-};
+} & /* @vue-ignore */ Pick<HTMLAttributes, 'onClick'>;
 
 const { item } = defineProps<Props>();
 
-const emit = defineEmits({
-	resize: (_height: number) => true,
-	clicked: () => true,
-});
+const emit = defineEmits<{
+	resize: [height: number];
+	clicked: [];
+}>();
 
 const feed = useActivityFeed()!;
 const feedInterface = useActivityFeedInterface()!;
@@ -73,8 +74,8 @@ const hasBypassedBlock = ref(false);
 
 const queryParams = ref<Record<string, string>>();
 
-const root = ref<HTMLDivElement>();
-const stickerScroll = ref<HTMLDivElement>();
+const root = useTemplateRef('root');
+const stickerScroll = useTemplateRef('stickerScroll');
 
 const user = toRef(() => post.value.displayUser);
 

@@ -1,9 +1,10 @@
 import { inject, InjectionKey, provide, toRaw } from 'vue';
-import { storeModel } from '../../../_common/model/model-store.service';
-import { arrayRemove, stringSortRaw } from '../../../utils/array';
-import { ChatClient, isUserOnline } from './client';
-import { ChatRoomModel } from './room';
-import { ChatUser } from './user';
+
+import { ChatClient, isUserOnline } from '~app/components/chat/client';
+import { ChatRoomModel } from '~app/components/chat/room';
+import { ChatUser } from '~app/components/chat/user';
+import { storeModel } from '~common/model/model-store.service';
+import { arrayRemove, stringSortRaw } from '~utils/array';
 
 type RoomType = 'friend' | 'room';
 

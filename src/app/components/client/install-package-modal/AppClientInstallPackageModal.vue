@@ -1,27 +1,24 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRefs } from 'vue';
-import { Api } from '../../../../_common/api/api.service';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import { getDeviceArch, getDeviceOS } from '../../../../_common/device/device.service';
-import { GameBuildModel } from '../../../../_common/game/build/build.model';
-import { GameModel, pluckInstallableGameBuilds } from '../../../../_common/game/game.model';
-import AppGamePackageCard from '../../../../_common/game/package/card/AppGamePackageCard.vue';
-import { GamePackagePayloadModel } from '../../../../_common/game/package/package-payload.model';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import AppLoading from '../../../../_common/loading/AppLoading.vue';
-import AppModal from '../../../../_common/modal/AppModal.vue';
-import { useModal } from '../../../../_common/modal/modal.service';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { arrayIndexBy } from '../../../../utils/array';
+import { computed, ref } from 'vue';
 
-const props = defineProps({
-	game: {
-		type: Object as PropType<GameModel>,
-		required: true,
-	},
-});
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import { getDeviceArch, getDeviceOS } from '~common/device/device.service';
+import { GameBuildModel } from '~common/game/build/build.model';
+import { GameModel, pluckInstallableGameBuilds } from '~common/game/game.model';
+import AppGamePackageCard from '~common/game/package/card/AppGamePackageCard.vue';
+import { GamePackagePayloadModel } from '~common/game/package/package-payload.model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLoading from '~common/loading/AppLoading.vue';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { arrayIndexBy } from '~utils/array';
 
-const { game } = toRefs(props);
+type Props = {
+	game: GameModel;
+};
+const { game } = defineProps<Props>();
 const modal = useModal()!;
 
 const isLoading = ref(true);
@@ -48,7 +45,7 @@ const installablePackages = computed(() => {
 });
 
 async function init() {
-	const payload = await Api.sendRequest(`/web/discover/games/packages/${game.value.id}`);
+	const payload = await Api.sendRequest(`/web/discover/games/packages/${game.id}`);
 	packageData.value = new GamePackagePayloadModel(payload);
 
 	const os = getDeviceOS();
@@ -94,7 +91,7 @@ init();
 					v-for="pkg of installablePackages"
 					:key="pkg.id"
 					:game="game"
-					:sellable="pkg._sellable"
+					:sellable="pkg._sellable!"
 					:package="pkg"
 					:releases="pkg._releases"
 					:builds="pkg._builds"

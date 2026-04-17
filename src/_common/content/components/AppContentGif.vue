@@ -1,52 +1,31 @@
 <script lang="ts">
-import { computed, ref, toRefs, unref } from 'vue';
-import { useContentFocusService } from '../../content-focus/content-focus.service';
-import AppResponsiveDimensions from '../../responsive-dimensions/AppResponsiveDimensions.vue';
-import { Screen } from '../../screen/screen-service';
-import AppScrollInview, { ScrollInviewConfig } from '../../scroll/inview/AppScrollInview.vue';
-import AppVideo from '../../video/AppVideo.vue';
-import { getVideoPlayerFromSources } from '../../video/player/controller';
-import { defineEditableNodeViewProps } from '../content-editor/node-views/base';
-import { useContentOwnerController } from '../content-owner';
-import AppBaseContentComponent from './AppBaseContentComponent.vue';
+import { computed, ref, unref } from 'vue';
+
+import AppBaseContentComponent from '~common/content/components/AppBaseContentComponent.vue';
+import { useContentOwnerController } from '~common/content/content-owner';
+import { useContentFocusService } from '~common/content-focus/content-focus.service';
+import AppResponsiveDimensions from '~common/responsive-dimensions/AppResponsiveDimensions.vue';
+import { Screen } from '~common/screen/screen-service';
+import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
+import AppVideo from '~common/video/AppVideo.vue';
+import { getVideoPlayerFromSources } from '~common/video/player/controller';
 
 const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height * 0.25}px` });
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	gifId: {
-		type: String,
-		required: true,
-	},
-	width: {
-		type: Number,
-		required: true,
-	},
-	height: {
-		type: Number,
-		required: true,
-	},
-	service: {
-		type: String,
-		required: true,
-	},
-	media: {
-		type: Object,
-		required: true,
-	},
-	isEditing: {
-		type: Boolean,
-		required: true,
-	},
-	isDisabled: {
-		type: Boolean,
-		required: true,
-	},
-	...defineEditableNodeViewProps(),
-});
-
-const { width, height, media, isEditing, isDisabled } = toRefs(props);
+type Props = {
+	gifId: string;
+	width: number;
+	height: number;
+	service: string;
+	media: Record<string, any>;
+	isEditing: boolean;
+	isDisabled: boolean;
+	onRemoved?: () => void;
+	onUpdateAttrs?: (attrs: Record<string, unknown>) => void;
+};
+const { width, height, media, isEditing, isDisabled, onRemoved } = defineProps<Props>();
 
 const owner = useContentOwnerController()!;
 const { isWindowFocused } = useContentFocusService();
@@ -55,16 +34,16 @@ const isInview = ref(false);
 const shouldPlay = computed(() => isWindowFocused.value);
 
 const videoController = computed(() => {
-	if (!media.value || !media.value.mp4.url || !media.value.webm.url) {
+	if (!media || !media.mp4.url || !media.webm.url) {
 		return undefined;
 	}
 
 	const sourcesPayload = {
-		mp4: media.value.mp4.url,
-		webm: media.value.webm.url,
+		mp4: media.mp4.url,
+		webm: media.webm.url,
 	};
 
-	return getVideoPlayerFromSources(sourcesPayload, 'gif', media.value.preview);
+	return getVideoPlayerFromSources(sourcesPayload, 'gif', media.preview);
 });
 
 const parentWidth = computed(() => unref(owner.parentBounds?.width));
@@ -72,23 +51,23 @@ const parentWidth = computed(() => unref(owner.parentBounds?.width));
 const maxWidth = computed(() => {
 	const maxOwnerWidth = owner.contentRules.maxMediaWidth;
 	if (maxOwnerWidth !== null) {
-		const sizes = [maxOwnerWidth, width.value];
+		const sizes = [maxOwnerWidth, width];
 		if (parentWidth.value) {
 			sizes.push(parentWidth.value);
 		}
 		return Math.min(...sizes);
 	}
 
-	return width.value;
+	return width;
 });
 
 const maxHeight = computed(() => {
 	const maxOwnerHeight = owner.contentRules.maxMediaHeight;
 	if (maxOwnerHeight !== null) {
-		return Math.min(maxOwnerHeight, height.value);
+		return Math.min(maxOwnerHeight, height);
 	}
 
-	return height.value;
+	return height;
 });
 
 function onInviewChange(inview: boolean) {

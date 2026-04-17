@@ -1,45 +1,44 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRef, toRefs, watch } from 'vue';
-import { Api } from '../../../_common/api/api.service';
-import { BackgroundModel } from '../../../_common/background/background.model';
-import AppForm, { createForm, FormController } from '../../../_common/form-vue/AppForm.vue';
-import AppFormButton from '../../../_common/form-vue/AppFormButton.vue';
-import AppFormControl from '../../../_common/form-vue/AppFormControl.vue';
-import AppFormControlErrors from '../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../../../_common/form-vue/AppFormGroup.vue';
-import AppFormStickySubmit from '../../../_common/form-vue/AppFormStickySubmit.vue';
-import AppFormControlBackground from '../../../_common/form-vue/controls/AppFormControlBackground.vue';
-import AppFormControlToggleButton from '../../../_common/form-vue/controls/toggle-button/AppFormControlToggleButton.vue';
-import AppFormControlToggleButtonGroup from '../../../_common/form-vue/controls/toggle-button/AppFormControlToggleButtonGroup.vue';
-import { validateMaxLength, validateMinLength } from '../../../_common/form-vue/validators';
-import AppLoading from '../../../_common/loading/AppLoading.vue';
-import { showModalConfirm } from '../../../_common/modal/confirm/confirm-service';
-import { storeModelList } from '../../../_common/model/model-store.service';
-import { Screen } from '../../../_common/screen/screen-service';
-import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
-import AppTranslate from '../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../_common/translate/translate.service';
-import { useGridStore } from '../grid/grid-store';
-import { editChatRoomBackground, editChatRoomTitle, leaveGroupRoom } from './client';
-import FormChatRoomSettingsMemberPreview from './FormChatRoomSettingsMemberPreview.vue';
-import { ChatRoomModel } from './room';
+import { computed, ref, toRef, watch } from 'vue';
 
-const props = defineProps({
-	room: {
-		type: Object as PropType<ChatRoomModel>,
-		required: true,
-	},
-	showMembersPreview: {
-		type: Boolean,
-	},
-});
+import {
+	editChatRoomBackground,
+	editChatRoomTitle,
+	leaveGroupRoom,
+} from '~app/components/chat/client';
+import FormChatRoomSettingsMemberPreview from '~app/components/chat/FormChatRoomSettingsMemberPreview.vue';
+import { ChatRoomModel } from '~app/components/chat/room';
+import { useGridStore } from '~app/components/grid/grid-store';
+import { Api } from '~common/api/api.service';
+import { BackgroundModel } from '~common/background/background.model';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormStickySubmit from '~common/form-vue/AppFormStickySubmit.vue';
+import AppFormControlBackground from '~common/form-vue/controls/AppFormControlBackground.vue';
+import AppFormControlToggleButton from '~common/form-vue/controls/toggle-button/AppFormControlToggleButton.vue';
+import AppFormControlToggleButtonGroup from '~common/form-vue/controls/toggle-button/AppFormControlToggleButtonGroup.vue';
+import { validateMaxLength, validateMinLength } from '~common/form-vue/validators';
+import AppLoading from '~common/loading/AppLoading.vue';
+import { showModalConfirm } from '~common/modal/confirm/confirm-service';
+import { storeModelList } from '~common/model/model-store.service';
+import { Screen } from '~common/screen/screen-service';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
 
-const emit = defineEmits({
-	submit: (_model: ChatRoomModel) => true,
-	viewMembers: () => true,
-});
+type Props = {
+	room: ChatRoomModel;
+	showMembersPreview?: boolean;
+};
+const { room } = defineProps<Props>();
 
-const { room, showMembersPreview } = toRefs(props);
+const emit = defineEmits<{
+	submit: [model: ChatRoomModel];
+	viewMembers: [];
+}>();
 const { chatUnsafe: chat } = useGridStore();
 
 const titleMinLength = ref<number>();
@@ -50,7 +49,7 @@ const isSettingBackground = ref(false);
 
 const notificationLevel = ref('');
 const backgrounds = ref<BackgroundModel[]>([]);
-const roomBackgroundId = ref(room.value.background?.id || null);
+const roomBackgroundId = ref(room.background?.id || null);
 
 // When a user selects a background in this form, it sends a grid message to
 // everyone notifying them the room changed and updating the model. This also
@@ -60,7 +59,7 @@ const roomBackgroundId = ref(room.value.background?.id || null);
 // background list is never displaying old content, like backgrounds we don't
 // own and can't set.
 watch(
-	() => room.value.background,
+	() => room.background,
 	() => {
 		// If we don't have any backgrounds available to us (none unlocked or no
 		// permissions to set a background), don't bother fetching new
@@ -77,48 +76,46 @@ watch(
 	}
 );
 
-const form: FormController<ChatRoomModel> = createForm({
-	model: room,
+type RoomTitleFormModel = ChatRoomModel;
+
+const form: FormController<RoomTitleFormModel> = createForm<RoomTitleFormModel>({
+	model: toRef(() => room),
 	loadUrl: `/web/chat/rooms/room-edit`,
 	onLoad(payload) {
 		titleMinLength.value = payload.titleMinLength;
 		titleMaxLength.value = payload.titleMaxLength;
 	},
-	onSubmit: () => editChatRoomTitle(chat.value, room.value, form.formModel.title),
+	onSubmit: () => editChatRoomTitle(chat.value, room, form.formModel.title),
 });
 
-type FormBackground = {
+type BackgroundFormModel = {
 	background_id: number | null;
 };
 
-const backgroundForm: FormController<FormBackground> = createForm({
-	loadUrl: `/web/chat/rooms/backgrounds/${room.value.id}`,
+const backgroundForm: FormController<BackgroundFormModel> = createForm({
+	loadUrl: `/web/chat/rooms/backgrounds/${room.id}`,
 	onLoad(payload) {
 		backgrounds.value = storeModelList(BackgroundModel, payload.backgrounds);
 		roomBackgroundId.value = payload.roomBackgroundId || null;
 		backgroundForm.formModel.background_id = roomBackgroundId.value;
 	},
 	onSubmit: () =>
-		editChatRoomBackground(
-			chat.value,
-			room.value,
-			backgroundForm.formModel.background_id || null
-		),
+		editChatRoomBackground(chat.value, room, backgroundForm.formModel.background_id || null),
 });
 
-type FormNotificationLevel = {
+type NotificationLevelFormModel = {
 	level: string;
 };
 
-const notificationLevelForm: FormController<FormNotificationLevel> = createForm({
-	loadUrl: `/web/chat/rooms/get-notification-settings/${room.value.id}`,
+const notificationLevelForm: FormController<NotificationLevelFormModel> = createForm({
+	loadUrl: `/web/chat/rooms/get-notification-settings/${room.id}`,
 	onLoad(payload) {
 		notificationLevel.value = payload.level;
 		notificationLevelForm.formModel.level = payload.level;
 	},
 	async onSubmit() {
 		const payload = await Api.sendRequest(
-			`/web/chat/rooms/set-notification-settings/${room.value.id}`,
+			`/web/chat/rooms/set-notification-settings/${room.id}`,
 			{ level: notificationLevelForm.formModel.level },
 			{ detach: true }
 		);
@@ -127,13 +124,12 @@ const notificationLevelForm: FormController<FormNotificationLevel> = createForm(
 });
 
 const isOwner = toRef(
-	() =>
-		room.value && !!chat.value.currentUser && room.value.owner_id === chat.value.currentUser.id
+	() => room && !!chat.value.currentUser && room.owner_id === chat.value.currentUser.id
 );
 
-const canEditTitle = toRef(() => !room.value.isPmRoom && isOwner.value);
+const canEditTitle = toRef(() => !room.isPmRoom && isOwner.value);
 const canEditBackground = toRef(() => backgrounds.value.length > 0);
-const shouldShowLeave = toRef(() => !room.value.isPmRoom);
+const shouldShowLeave = toRef(() => !room.isPmRoom);
 const hasLoadedBackgrounds = toRef(() => backgroundForm.isLoadedBootstrapped);
 
 const notificationSettings = computed(() => {
@@ -143,7 +139,7 @@ const notificationSettings = computed(() => {
 		label: $gettext(`All Messages`),
 		value: 'all',
 	});
-	if (!room.value.isPmRoom) {
+	if (!room.isPmRoom) {
 		settings.push({
 			label: $gettext(`Only @mentions`),
 			value: 'mentions',
@@ -162,7 +158,7 @@ async function reloadBackgroundForm(retryOnDesync: boolean) {
 		isLoadingBackgrounds.value = true;
 		await backgroundForm.reload();
 	} finally {
-		const currentBgId = room.value.background?.id || null;
+		const currentBgId = room.background?.id || null;
 		const expectedBgId = roomBackgroundId.value;
 
 		if (currentBgId === expectedBgId) {
@@ -178,7 +174,8 @@ async function reloadBackgroundForm(retryOnDesync: boolean) {
 			// expected background in our list of backgrounds and manually
 			// assign that to our room.
 			const background = backgrounds.value.find(i => i.id === expectedBgId);
-			room.value.background = background;
+
+			room.background = background;
 			isLoadingBackgrounds.value = false;
 		}
 	}
@@ -193,7 +190,7 @@ async function leaveRoom() {
 		return;
 	}
 
-	leaveGroupRoom(chat.value, room.value);
+	leaveGroupRoom(chat.value, room);
 }
 </script>
 

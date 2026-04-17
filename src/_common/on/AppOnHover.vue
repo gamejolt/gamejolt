@@ -1,23 +1,22 @@
 <script lang="ts" setup>
-import { toRefs } from 'vue';
-import { useOnHover } from './useOnHover';
+import { toRef } from 'vue';
 
-const props = defineProps({
+import { useOnHover } from '~common/on/useOnHover';
+
+type Props = {
 	/**
 	 * Resets our hover state when it changes. This can help fix some issues
 	 * with the item rebuilding before it's able to reset the hover state.
 	 */
-	stateKey: {
-		type: Number,
-		default: undefined,
-	},
-	disable: {
-		type: Boolean,
-	},
-});
+	stateKey?: number;
+	disable?: boolean;
+};
+const { stateKey, disable } = defineProps<Props>();
 
-const { stateKey, disable } = toRefs(props);
-const { hoverBinding, hovered } = useOnHover({ stateKey, disable });
+const { hoverBinding, hovered } = useOnHover({
+	stateKey: toRef(() => stateKey),
+	disable: toRef(() => disable),
+});
 </script>
 
 <template>

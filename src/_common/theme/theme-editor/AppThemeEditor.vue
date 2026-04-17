@@ -1,13 +1,14 @@
 <script lang="ts" setup>
-import { PropType, nextTick, ref, toRaw, toRefs, watch } from 'vue';
-import { run } from '../../../utils/utils';
-import { Api } from '../../api/api.service';
-import AppColorpicker from '../../colorpicker/AppColorpicker.vue';
-import AppLoading from '../../loading/AppLoading.vue';
-import { SiteTemplateModel } from '../../site/template/template-model';
-import { $gettext } from '../../translate/translate.service';
-import AppThemeEditorFontSelector from './AppThemeEditorFontSelector.vue';
-import AppThemeEditorImage from './AppThemeEditorImage.vue';
+import { nextTick, ref, toRaw, watch } from 'vue';
+
+import { Api } from '~common/api/api.service';
+import AppColorpicker from '~common/colorpicker/AppColorpicker.vue';
+import AppLoading from '~common/loading/AppLoading.vue';
+import { SiteTemplateModel } from '~common/site/template/template-model';
+import AppThemeEditorFontSelector from '~common/theme/theme-editor/AppThemeEditorFontSelector.vue';
+import AppThemeEditorImage from '~common/theme/theme-editor/AppThemeEditorImage.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { run } from '~utils/utils';
 
 interface StyleGroup {
 	name: string;
@@ -17,30 +18,17 @@ interface StyleGroup {
 	}[];
 }
 
-const props = defineProps({
-	windowId: {
-		type: String,
-		required: true,
-	},
-	template: {
-		type: Number,
-		required: true,
-	},
-	theme: {
-		type: Object as PropType<any>,
-		required: true,
-	},
-	resourceId: {
-		type: Number,
-		required: true,
-	},
-});
+type Props = {
+	windowId: string;
+	template: number;
+	theme: any;
+	resourceId: number;
+};
+const { windowId, template, theme } = defineProps<Props>();
 
-const emit = defineEmits({
-	change: (_theme: any) => true,
-});
-
-const { windowId, template, theme, resourceId } = toRefs(props);
+const emit = defineEmits<{
+	change: [theme: any];
+}>();
 
 const isLoaded = ref(false);
 const selectedGroup = ref<StyleGroup>(null as any);
@@ -48,7 +36,7 @@ const templateObj = ref<SiteTemplateModel>({} as any);
 const definition = ref<any>({});
 
 run(async () => {
-	const response = await Api.sendRequest('/sites-io/get-template/' + template.value, undefined, {
+	const response = await Api.sendRequest('/sites-io/get-template/' + template, undefined, {
 		detach: true,
 	});
 
@@ -63,7 +51,7 @@ run(async () => {
 });
 
 watch(
-	() => theme.value,
+	() => theme,
 	() => {
 		if (!isLoaded.value) {
 			return;
@@ -78,25 +66,25 @@ async function refresh(initial = false) {
 	// Gotta wait for the value to be saved.
 	await nextTick();
 
-	const iframe = document.getElementById(windowId.value) as HTMLIFrameElement | undefined;
+	const iframe = document.getElementById(windowId) as HTMLIFrameElement | undefined;
 	if (iframe && iframe.contentWindow) {
 		const msg = {
 			type: 'theme-update',
 			template: toRaw(templateObj.value),
 			definition: toRaw(definition.value),
-			theme: toRaw(theme.value),
+			theme: toRaw(theme),
 		};
 
 		iframe.contentWindow.postMessage(msg, '*');
 	}
 
 	if (!initial) {
-		emit('change', theme.value);
+		emit('change', theme);
 	}
 }
 
-function updateField(field: string, content?: string) {
-	theme.value[field] = content;
+function updateField(field: string, content?: unknown) {
+	theme[field] = content;
 	refresh();
 }
 </script>
@@ -152,15 +140,19 @@ function updateField(field: string, content?: string) {
 								>
 									{{ $gettext(`clear`) }}
 								</a>
-								<AppColorpicker v-model="theme[definitionField]" />
+								<AppColorpicker
+									:model-value="theme[definitionField]"
+									@update:model-value="updateField(definitionField, $event)"
+								/>
 							</div>
 
 							<!-- Image -->
 							<AppThemeEditorImage
 								v-else-if="definition.definitions[definitionField].type === 'image'"
-								v-model="theme[definitionField]"
+								:model-value="theme[definitionField]"
 								type="sites-theme-image"
 								:parent-id="resourceId"
+								@update:model-value="updateField(definitionField, $event)"
 							/>
 
 							<!-- Font Family -->
@@ -168,8 +160,9 @@ function updateField(field: string, content?: string) {
 								v-else-if="
 									definition.definitions[definitionField].type === 'fontFamily'
 								"
-								v-model="theme[definitionField]"
+								:model-value="theme[definitionField]"
 								class="theme-editor-font-family"
+								@update:model-value="updateField(definitionField, $event)"
 							/>
 
 							<!-- Dropdown -->
@@ -179,7 +172,16 @@ function updateField(field: string, content?: string) {
 								"
 								class="theme-editor-dropdown"
 							>
-								<select v-model="theme[definitionField]" class="form-control">
+								<select
+									:value="theme[definitionField]"
+									class="form-control"
+									@change="
+										updateField(
+											definitionField,
+											($event.target as HTMLSelectElement).value
+										)
+									"
+								>
 									<option
 										v-for="option of definition.definitions[definitionField]
 											.options"
@@ -199,7 +201,16 @@ function updateField(field: string, content?: string) {
 								"
 								class="theme-editor-dropdown"
 							>
-								<select v-model="theme[definitionField]" class="form-control">
+								<select
+									:value="theme[definitionField]"
+									class="form-control"
+									@change="
+										updateField(
+											definitionField,
+											($event.target as HTMLSelectElement).value
+										)
+									"
+								>
 									<option :value="undefined">
 										{{ $gettext(`Repeat`) }}
 									</option>
@@ -223,7 +234,16 @@ function updateField(field: string, content?: string) {
 								"
 								class="theme-editor-dropdown"
 							>
-								<select v-model="theme[definitionField]" class="form-control">
+								<select
+									:value="theme[definitionField]"
+									class="form-control"
+									@change="
+										updateField(
+											definitionField,
+											($event.target as HTMLSelectElement).value
+										)
+									"
+								>
 									<option :value="undefined">
 										{{ $gettext(`Auto (Default)`) }}
 									</option>
@@ -244,7 +264,16 @@ function updateField(field: string, content?: string) {
 								"
 								class="theme-editor-dropdown"
 							>
-								<select v-model="theme[definitionField]" class="form-control">
+								<select
+									:value="theme[definitionField]"
+									class="form-control"
+									@change="
+										updateField(
+											definitionField,
+											($event.target as HTMLSelectElement).value
+										)
+									"
+								>
 									<option :value="undefined">
 										{{ $gettext(`Top`) }}
 									</option>
@@ -281,9 +310,15 @@ function updateField(field: string, content?: string) {
 								class="theme-editor-code"
 							>
 								<textarea
-									v-model="theme[definitionField]"
+									:value="theme[definitionField]"
 									class="form-control"
 									rows="15"
+									@input="
+										updateField(
+											definitionField,
+											($event.target as HTMLTextAreaElement).value
+										)
+									"
 								/>
 							</div>
 						</div>
@@ -294,4 +329,4 @@ function updateField(field: string, content?: string) {
 	</div>
 </template>
 
-<style lang="stylus" src="./theme-editor.styl" scoped></style>
+<style lang="stylus" src="~common/theme/theme-editor/theme-editor.styl" scoped></style>

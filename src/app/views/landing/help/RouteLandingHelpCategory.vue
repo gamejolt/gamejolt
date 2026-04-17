@@ -1,20 +1,22 @@
 <script lang="ts">
 import { computed, Ref, ref } from 'vue';
 import { RouterLink, RouterView, useRoute } from 'vue-router';
-import { Api } from '../../../../_common/api/api.service';
-import { Meta } from '../../../../_common/meta/meta-service';
-import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
-import { Screen } from '../../../../_common/screen/screen-service';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { kFontSizeLarge } from '../../../../_styles/variables';
-import AppHelpGroup from '../../../components/help/AppHelpGroup.vue';
-import { HelpCategoryModel } from '../../../components/help/category/category.model';
-import { HelpPageModel } from '../../../components/help/page/page.model';
+
+import AppHelpGroup from '~app/components/help/AppHelpGroup.vue';
+import { HelpCategoryModel } from '~app/components/help/category/category.model';
+import { HelpPageModel } from '~app/components/help/page/page.model';
 import {
 	routeLandingHelpCategory,
 	routeLandingHelpIndex,
 	routeLandingHelpPage,
-} from './help.route';
+} from '~app/views/landing/help/help.route';
+import { Api } from '~common/api/api.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { Meta } from '~common/meta/meta-service';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { Screen } from '~common/screen/screen-service';
+import { $gettext } from '~common/translate/translate.service';
+import { kFontSizeLarge } from '~styles/variables';
 
 export default {
 	...defineAppRouteOptions({

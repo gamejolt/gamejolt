@@ -1,40 +1,37 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRefs } from 'vue';
+import { computed, ref } from 'vue';
 import { RouterLink } from 'vue-router';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import { formatDate } from '../../../../_common/filters/date';
-import AppLinkExternal from '../../../../_common/link/AppLinkExternal.vue';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
+
+import AppFinancialsCheckmark from '~app/components/forms/financials/AppFinancialsCheckmark.vue';
+import AppFinancialsTosScroller from '~app/components/forms/financials/AppFinancialsTosScroller.vue';
+import AppButton from '~common/button/AppButton.vue';
+import { formatDate } from '~common/filters/date';
+import AppLinkExternal from '~common/link/AppLinkExternal.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 import {
 	ManagedAccountTermsDistributionVersion,
 	UserStripeManagedAccountModel,
-} from '../../../../_common/user/stripe-managed-account/stripe-managed-account';
-import { html as termsTemplate } from '../../../../lib/terms/distribution-agreement/global.md';
-import AppFinancialsCheckmark from './AppFinancialsCheckmark.vue';
-import AppFinancialsTosScroller from './AppFinancialsTosScroller.vue';
+} from '~common/user/stripe-managed-account/stripe-managed-account';
+import { html as termsTemplate } from '~lib/terms/distribution-agreement/global.md';
 
-const props = defineProps({
-	account: {
-		type: Object as PropType<UserStripeManagedAccountModel>,
-		default: undefined,
-	},
-});
+type Props = {
+	account?: UserStripeManagedAccountModel;
+};
+const { account } = defineProps<Props>();
 
-const emit = defineEmits({
-	accepted: () => true,
-});
-
-const { account } = toRefs(props);
+const emit = defineEmits<{
+	accepted: [];
+}>();
 
 const checked = ref(false);
 
-const hasSigned = computed(() => account?.value && account.value.tos_signed_developer > 0);
+const hasSigned = computed(() => account && account.tos_signed_developer > 0);
 
 const hasSignedOldAgreement = computed(
 	() =>
-		account?.value &&
-		account.value.tos_signed_developer > 0 &&
-		account.value.tos_signed_developer !== ManagedAccountTermsDistributionVersion
+		account &&
+		account.tos_signed_developer > 0 &&
+		account.tos_signed_developer !== ManagedAccountTermsDistributionVersion
 );
 
 const agreementLink = computed(() =>

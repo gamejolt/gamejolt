@@ -1,13 +1,14 @@
 import { parse } from 'qs';
 import { computed, inject, InjectionKey, ref } from 'vue';
-import { Api } from '../../_common/api/api.service';
-import { GameModel } from '../../_common/game/game.model';
-import { GamePackageCardModel } from '../../_common/game/package/card/card.model';
-import { GamePackagePayloadModel } from '../../_common/game/package/package-payload.model';
-import { GamePackageModel } from '../../_common/game/package/package.model';
-import { SellablePricingModel } from '../../_common/sellable/pricing/pricing.model';
-import { SellableModel } from '../../_common/sellable/sellable.model';
-import { UserModel } from '../../_common/user/user.model';
+
+import { Api } from '~common/api/api.service';
+import { GameModel } from '~common/game/game.model';
+import { GamePackageCardModel } from '~common/game/package/card/card.model';
+import { GamePackageModel } from '~common/game/package/package.model';
+import { GamePackagePayloadModel } from '~common/game/package/package-payload.model';
+import { SellablePricingModel } from '~common/sellable/pricing/pricing.model';
+import { SellableModel } from '~common/sellable/sellable.model';
+import { UserModel } from '~common/user/user.model';
 
 export class PaymentData {
 	method: 'cc-stripe' | 'paypal' = 'cc-stripe';

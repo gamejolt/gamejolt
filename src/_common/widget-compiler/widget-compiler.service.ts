@@ -1,8 +1,9 @@
 import { h, VNode } from 'vue';
-import { WidgetCompilerWidget } from './widget';
-import { WidgetCompilerWidgetSoundcloud } from './widget-soundcloud/widget-soundcloud.service';
-import { WidgetCompilerWidgetVimeo } from './widget-vimeo/widget-vimeo.service';
-import { WidgetCompilerWidgetYoutube } from './widget-youtube/widget-youtube.service';
+
+import { WidgetCompilerWidget } from '~common/widget-compiler/widget';
+import { WidgetCompilerWidgetSoundcloud } from '~common/widget-compiler/widget-soundcloud/widget-soundcloud.service';
+import { WidgetCompilerWidgetVimeo } from '~common/widget-compiler/widget-vimeo/widget-vimeo.service';
+import { WidgetCompilerWidgetYoutube } from '~common/widget-compiler/widget-youtube/widget-youtube.service';
 
 const REGEX = {
 	// Match widget definitions: {% activity-feed %}

@@ -1,5 +1,5 @@
-import { initRouter } from '../../utils/router';
-import { routeCheckout } from './checkout/checkout.route';
+import { routeCheckout } from '~checkout/views/checkout/checkout.route';
+import { initRouter } from '~utils/router';
 
 const routes = [routeCheckout];
 export const router = initRouter(routes);

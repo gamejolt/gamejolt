@@ -1,54 +1,50 @@
 <script lang="ts" setup>
-import { PropType, computed, ref, toRefs } from 'vue';
-import AppBlockForm from '../../block/form/AppBlockForm.vue';
-import AppButton from '../../button/AppButton.vue';
-import { CommentModel } from '../../comment/comment-model';
-import { CommunityModel } from '../../community/community.model';
-import { FiresidePostModel } from '../../fireside/post/post-model';
-import { ForumPostModel } from '../../forum/post/post.model';
-import { ForumTopicModel } from '../../forum/topic/topic.model';
-import { GameModel } from '../../game/game.model';
-import { showInfoGrowl } from '../../growls/growls.service';
-import AppModal from '../../modal/AppModal.vue';
-import { useModal } from '../../modal/modal.service';
-import { $gettext } from '../../translate/translate.service';
-import { UserModel } from '../../user/user.model';
-import AppReportForm from '../form/AppReportForm.vue';
+import { computed, ref } from 'vue';
 
-const props = defineProps({
-	resource: {
-		type: Object as PropType<
-			| CommentModel
-			| UserModel
-			| GameModel
-			| FiresidePostModel
-			| ForumTopicModel
-			| ForumPostModel
-			| CommunityModel
-		>,
-		required: true,
-	},
-});
+import AppBlockForm from '~common/block/form/AppBlockForm.vue';
+import AppButton from '~common/button/AppButton.vue';
+import { CommentModel } from '~common/comment/comment-model';
+import { CommunityModel } from '~common/community/community.model';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import { ForumPostModel } from '~common/forum/post/post.model';
+import { ForumTopicModel } from '~common/forum/topic/topic.model';
+import { GameModel } from '~common/game/game.model';
+import { showInfoGrowl } from '~common/growls/growls.service';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import AppReportForm from '~common/report/form/AppReportForm.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { UserModel } from '~common/user/user.model';
 
-const { resource } = toRefs(props);
+type Props = {
+	resource:
+		| CommentModel
+		| UserModel
+		| GameModel
+		| FiresidePostModel
+		| ForumTopicModel
+		| ForumPostModel
+		| CommunityModel;
+};
+const { resource } = defineProps<Props>();
 const modal = useModal()!;
 
 const page = ref<'report' | 'block'>('report');
 
 const type = computed(() => {
-	if (resource.value instanceof CommentModel) {
+	if (resource instanceof CommentModel) {
 		return 'Comment';
-	} else if (resource.value instanceof UserModel) {
+	} else if (resource instanceof UserModel) {
 		return 'User';
-	} else if (resource.value instanceof GameModel) {
+	} else if (resource instanceof GameModel) {
 		return 'Game';
-	} else if (resource.value instanceof FiresidePostModel) {
+	} else if (resource instanceof FiresidePostModel) {
 		return 'Fireside_Post';
-	} else if (resource.value instanceof ForumTopicModel) {
+	} else if (resource instanceof ForumTopicModel) {
 		return 'Forum_Topic';
-	} else if (resource.value instanceof ForumPostModel) {
+	} else if (resource instanceof ForumPostModel) {
 		return 'Forum_Post';
-	} else if (resource.value instanceof CommunityModel) {
+	} else if (resource instanceof CommunityModel) {
 		return 'Community';
 	}
 	return '';
@@ -70,10 +66,10 @@ function onSubmittedReport() {
 }
 
 function onSubmittedBlock() {
-	if (resource.value instanceof UserModel) {
+	if (resource instanceof UserModel) {
 		showInfoGrowl(
 			$gettext(`You blocked %{ user }!`, {
-				user: resource.value.username,
+				user: resource.username,
 			}),
 			$gettext('Blocked')
 		);

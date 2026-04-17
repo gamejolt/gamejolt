@@ -1,21 +1,22 @@
 <script lang="ts" setup>
 import { computed, onMounted, onUnmounted, ref } from 'vue';
-import AppAlertBox from '../../../../_common/alert/AppAlertBox.vue';
-import { Api } from '../../../../_common/api/api.service';
-import AppForm, { FormController, createForm } from '../../../../_common/form-vue/AppForm.vue';
-import { showErrorGrowl } from '../../../../_common/growls/growls.service';
-import { useCommonStore } from '../../../../_common/store/common-store';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { UserStripeManagedAccountModel } from '../../../../_common/user/stripe-managed-account/stripe-managed-account';
-import { UserTipaltiManagedAccountModel } from '../../../../_common/user/tipalti-managed-account/tipalti-managed-account';
-import { userCanAccessCreatorForm } from '../../../../_common/user/user.model';
-import { bangRef } from '../../../../utils/vue';
-import AppCreatorTerms from './AppCreatorTerms.vue';
-import AppFinancialsCheckmark from './AppFinancialsCheckmark.vue';
 
-interface FormModel {
+import AppCreatorTerms from '~app/components/forms/financials/AppCreatorTerms.vue';
+import AppFinancialsCheckmark from '~app/components/forms/financials/AppFinancialsCheckmark.vue';
+import AppAlertBox from '~common/alert/AppAlertBox.vue';
+import { Api } from '~common/api/api.service';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import { useCommonStore } from '~common/store/common-store';
+import { $gettext } from '~common/translate/translate.service';
+import { UserStripeManagedAccountModel } from '~common/user/stripe-managed-account/stripe-managed-account';
+import { UserTipaltiManagedAccountModel } from '~common/user/tipalti-managed-account/tipalti-managed-account';
+import { userCanAccessCreatorForm } from '~common/user/user.model';
+import { bangRef } from '~utils/vue';
+
+type FormModel = {
 	tos_type?: 'creator';
-}
+};
 
 const { user: maybeUser } = useCommonStore();
 const user = bangRef(maybeUser);
@@ -51,7 +52,7 @@ onUnmounted(() => {
 	window.removeEventListener('message', tipaltiHandler);
 });
 
-const form: FormController<FormModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	reloadOnSubmit: true,
 	loadUrl: `/web/dash/financials/save`,
 	onLoad(payload) {

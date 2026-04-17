@@ -1,47 +1,38 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-import { Api } from '../../../_common/api/api.service';
-import AppForm, { createForm, FormController } from '../../../_common/form-vue/AppForm.vue';
-import AppFormButton from '../../../_common/form-vue/AppFormButton.vue';
-import AppFormControl from '../../../_common/form-vue/AppFormControl.vue';
-import AppFormControlError from '../../../_common/form-vue/AppFormControlError.vue';
-import AppFormControlErrors from '../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../../../_common/form-vue/AppFormGroup.vue';
-import { GameBundleModel } from '../../../_common/game-bundle/game-bundle.model';
-import { GameModel } from '../../../_common/game/game.model';
-import AppTranslate from '../../../_common/translate/AppTranslate.vue';
+import { Api } from '~common/api/api.service';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormControlError from '~common/form-vue/AppFormControlError.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import { GameModel } from '~common/game/game.model';
+import { GameBundleModel } from '~common/game-bundle/game-bundle.model';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
-const props = defineProps({
-	keyId: {
-		type: String,
-		required: true,
-	},
-	bundle: {
-		type: Object as PropType<GameBundleModel>,
-		default: undefined,
-	},
-	game: {
-		type: Object as PropType<GameModel>,
-		default: undefined,
-	},
-});
+type Props = {
+	keyId: string;
+	bundle?: GameBundleModel;
+	game?: GameModel;
+};
+const { keyId, bundle, game } = defineProps<Props>();
 
-const emit = defineEmits({
-	submit: () => true,
-});
+const emit = defineEmits<{
+	submit: [];
+}>();
 
-interface FormModel {
+type FormModel = {
 	email: string;
-}
+};
 
-const form: FormController<FormModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	warnOnDiscard: false,
 	onSubmit: () => {
 		let url = '/claim/retrieve';
-		if (props.bundle) {
-			url += '/bundle/' + props.keyId;
-		} else if (props.game) {
-			url += '/game/' + props.keyId;
+		if (bundle) {
+			url += '/bundle/' + keyId;
+		} else if (game) {
+			url += '/game/' + keyId;
 		}
 
 		return Api.sendRequest(url, form.formModel);

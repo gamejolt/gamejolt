@@ -1,31 +1,28 @@
 <script lang="ts" setup>
-import { ref, toRef } from 'vue';
-import {
-	createFormControl,
-	defineFormControlEmits,
-	defineFormControlProps,
-} from '../AppFormControl.vue';
-import { useFormGroup } from '../AppFormGroup.vue';
+import { toRef, useTemplateRef } from 'vue';
 
-const props = defineProps({
-	...defineFormControlProps(),
-});
+import { createFormControl, FormControlEmits } from '~common/form-vue/AppFormControl.vue';
+import { useFormGroup } from '~common/form-vue/AppFormGroup.vue';
+import { FormValidator } from '~common/form-vue/validators';
 
-const emit = defineEmits({
-	...defineFormControlEmits(),
-});
+type Props = {
+	disabled?: boolean;
+	validators?: FormValidator[];
+};
+const { disabled, validators = [] } = defineProps<Props>();
+
+const emit = defineEmits<FormControlEmits>();
 
 const { name } = useFormGroup()!;
 
 const { id, controlVal, applyValue } = createFormControl({
 	initialValue: '',
-	validators: toRef(props, 'validators'),
-	// eslint-disable-next-line vue/require-explicit-emits
+	validators: toRef(() => validators),
 	onChange: val => emit('changed', val),
 	alwaysOptional: true,
 });
 
-const root = ref<HTMLSelectElement>();
+const root = useTemplateRef('root');
 
 function onChange() {
 	applyValue(root.value?.value || '');

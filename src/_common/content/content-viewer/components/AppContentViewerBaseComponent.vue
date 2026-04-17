@@ -1,24 +1,25 @@
 <script lang="ts">
-import { computed, h, PropType, toRefs } from 'vue';
-import { ContentObject } from '../../content-object';
-import { ContentRules } from '../../content-rules';
-import AppContentViewerBlockquote from './AppContentViewerBlockquote.vue';
-import AppContentViewerChatInvite from './AppContentViewerChatInvite.vue';
-import AppContentViewerCodeBlock from './AppContentViewerCodeBlock.vue';
-import AppContentViewerCustomButton from './AppContentViewerCustomButton.vue';
-import AppContentViewerEmbed from './AppContentViewerEmbed.vue';
-import AppContentViewerGif from './AppContentViewerGif.vue';
-import AppContentViewerGJEmoji from './AppContentViewerGJEmoji.vue';
-import AppContentViewerHardBreak from './AppContentViewerHardBreak.vue';
-import AppContentViewerHeading from './AppContentViewerHeading.vue';
-import AppContentViewerHorizontalRule from './AppContentViewerHorizontalRule.vue';
-import AppContentViewerList from './AppContentViewerList.vue';
-import AppContentViewerListItem from './AppContentViewerListItem.vue';
-import AppContentViewerMediaItem from './AppContentViewerMediaItem.vue';
-import AppContentViewerParagraph from './AppContentViewerParagraph.vue';
-import AppContentViewerSpoiler from './AppContentViewerSpoiler.vue';
-import AppContentViewerSticker from './AppContentViewerSticker.vue';
-import AppContentViewerText from './AppContentViewerText.vue';
+import { computed, h } from 'vue';
+
+import { ContentObject } from '~common/content/content-object';
+import { ContentRules } from '~common/content/content-rules';
+import AppContentViewerBlockquote from '~common/content/content-viewer/components/AppContentViewerBlockquote.vue';
+import AppContentViewerChatInvite from '~common/content/content-viewer/components/AppContentViewerChatInvite.vue';
+import AppContentViewerCodeBlock from '~common/content/content-viewer/components/AppContentViewerCodeBlock.vue';
+import AppContentViewerCustomButton from '~common/content/content-viewer/components/AppContentViewerCustomButton.vue';
+import AppContentViewerEmbed from '~common/content/content-viewer/components/AppContentViewerEmbed.vue';
+import AppContentViewerGif from '~common/content/content-viewer/components/AppContentViewerGif.vue';
+import AppContentViewerGJEmoji from '~common/content/content-viewer/components/AppContentViewerGJEmoji.vue';
+import AppContentViewerHardBreak from '~common/content/content-viewer/components/AppContentViewerHardBreak.vue';
+import AppContentViewerHeading from '~common/content/content-viewer/components/AppContentViewerHeading.vue';
+import AppContentViewerHorizontalRule from '~common/content/content-viewer/components/AppContentViewerHorizontalRule.vue';
+import AppContentViewerList from '~common/content/content-viewer/components/AppContentViewerList.vue';
+import AppContentViewerListItem from '~common/content/content-viewer/components/AppContentViewerListItem.vue';
+import AppContentViewerMediaItem from '~common/content/content-viewer/components/AppContentViewerMediaItem.vue';
+import AppContentViewerParagraph from '~common/content/content-viewer/components/AppContentViewerParagraph.vue';
+import AppContentViewerSpoiler from '~common/content/content-viewer/components/AppContentViewerSpoiler.vue';
+import AppContentViewerSticker from '~common/content/content-viewer/components/AppContentViewerSticker.vue';
+import AppContentViewerText from '~common/content/content-viewer/components/AppContentViewerText.vue';
 
 function getComponentType(data: ContentObject): any {
 	switch (data.type) {
@@ -88,20 +89,13 @@ export function renderContentChildren(
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	content: {
-		type: Array as PropType<ContentObject[]>,
-		required: true,
-	},
-	contentRules: {
-		type: Object as PropType<ContentRules>,
-		required: true,
-	},
-});
+type Props = {
+	content: ContentObject[];
+	contentRules: ContentRules;
+};
+const { content, contentRules } = defineProps<Props>();
 
-const { content, contentRules } = toRefs(props);
-
-const children = computed(() => renderContentChildren(content.value, contentRules.value));
+const children = computed(() => renderContentChildren(content, contentRules));
 </script>
 
 <template>

@@ -1,72 +1,54 @@
 <script lang="ts">
-import { CSSProperties, PropType, computed, toRef, toRefs, watch } from 'vue';
-import { ComponentProps } from '../../../_common/component-helpers';
-import { Screen } from '../../../_common/screen/screen-service';
-import AppScrollAffix from '../../../_common/scroll/AppScrollAffix.vue';
-import AppScrollScroller, { createScroller } from '../../../_common/scroll/AppScrollScroller.vue';
-import { styleWhen } from '../../../_styles/mixins';
-import { kGridGutterWidth } from '../../../_styles/variables';
-import { kShellTopNavHeight } from '../../styles/variables';
+import { computed, CSSProperties, toRef, watch } from 'vue';
 
-const validOrder = ['main', 'left', 'right'];
-
-function validateOrder(val: unknown) {
-	return typeof val === 'string' && val.split(',').every(i => validOrder.includes(i));
-}
+import { kShellTopNavHeight } from '~app/styles/variables';
+import { ComponentProps } from '~common/component-helpers';
+import { Screen } from '~common/screen/screen-service';
+import AppScrollAffix from '~common/scroll/AppScrollAffix.vue';
+import AppScrollScroller, { createScroller } from '~common/scroll/AppScrollScroller.vue';
+import { styleWhen } from '~styles/mixins';
+import { kGridGutterWidth } from '~styles/variables';
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	xl: {
-		type: Boolean,
-	},
-	noLeft: {
-		type: Boolean,
-	},
-	noRight: {
-		type: Boolean,
-	},
-	order: {
-		type: String,
-		default: 'main,left,right',
-		validator: validateOrder,
-	},
+type Props = {
+	xl?: boolean;
+	noLeft?: boolean;
+	noRight?: boolean;
+	order?: string;
 	/**
 	 * Sticks the left and/or right columns to the top of the page when
 	 * scrolling.
 	 */
-	stickySides: {
-		type: [Boolean, Object] as PropType<boolean | { left?: boolean; right?: boolean }>,
-		default: false,
-	},
+	stickySides?: boolean | { left?: boolean; right?: boolean };
 	/**
 	 * Distance between the top of the page contents and the top of a column.
 	 * Used to offset some things so the sticky sides don't shift around.
 	 */
-	stickySideTopMargin: {
-		type: Number,
-		default: undefined,
-	},
+	stickySideTopMargin?: number;
 	/**
 	 * Prevents the sticky sides from sticking and the scroller from scrolling.
 	 *
 	 * Workaround for sticky side children rebuilding when {@link stickySides}
 	 * changes.
 	 */
-	disableStickySides: {
-		type: [Boolean, Object] as PropType<boolean | { left?: boolean; right?: boolean }>,
-		default: false,
-	},
-});
-
-const { xl, noLeft, noRight, order, stickySides, stickySideTopMargin, disableStickySides } =
-	toRefs(props);
+	disableStickySides?: boolean | { left?: boolean; right?: boolean };
+};
+const {
+	xl,
+	noLeft,
+	noRight,
+	order = 'main,left,right',
+	stickySides = false,
+	stickySideTopMargin,
+	disableStickySides = false,
+} = defineProps<Props>();
 
 const scrollerLeft = createScroller();
 const scrollerRight = createScroller();
 
 watch(
-	disableStickySides,
+	() => disableStickySides,
 	async disableStickySides => {
 		let disableLeft = false;
 		let disableRight = false;
@@ -90,16 +72,16 @@ watch(
 	{ immediate: true }
 );
 
-const hasLeftColumn = toRef(() => !noLeft.value && Screen.isLg);
-const hasRightColumn = toRef(() => !noRight.value);
-const shouldCombineColumns = toRef(() => !noLeft.value && !Screen.isLg);
-const stickyTopMargin = toRef(() => stickySideTopMargin?.value ?? 0);
+const hasLeftColumn = toRef(() => !noLeft && Screen.isLg);
+const hasRightColumn = toRef(() => !noRight);
+const shouldCombineColumns = toRef(() => !noLeft && !Screen.isLg);
+const stickyTopMargin = toRef(() => stickySideTopMargin ?? 0);
 
 const stickySideData = toRef(() => {
 	if (
 		!Screen.isDesktop ||
 		(!hasLeftColumn.value && !hasRightColumn.value) ||
-		stickySides.value === false
+		stickySides === false
 	) {
 		return {
 			left: false,
@@ -107,21 +89,21 @@ const stickySideData = toRef(() => {
 		};
 	}
 	return {
-		left: stickySides.value === true || stickySides.value.left,
-		right: stickySides.value === true || stickySides.value.right,
+		left: stickySides === true || stickySides.left,
+		right: stickySides === true || stickySides.right,
 	};
 });
 
 const disabledProps = toRef(() => {
-	if (disableStickySides.value === false) {
+	if (disableStickySides === false) {
 		return {
 			left: false,
 			right: false,
 		};
 	}
 	return {
-		left: disableStickySides.value === true || disableStickySides.value.left,
-		right: disableStickySides.value === true || disableStickySides.value.right,
+		left: disableStickySides === true || disableStickySides.left,
+		right: disableStickySides === true || disableStickySides.right,
 	};
 });
 
@@ -136,7 +118,7 @@ const keySuffix = computed(() =>
 		hasLeftColumn.value ? 'l' : '-',
 		hasRightColumn.value ? 'r' : '-',
 		shouldCombineColumns.value ? 'c' : '-',
-		':' + order.value,
+		':' + order,
 	].join('')
 );
 

@@ -1,14 +1,11 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-import AppContentGif from '../../components/AppContentGif.vue';
-import { ContentObject } from '../../content-object';
+import AppContentGif from '~common/content/components/AppContentGif.vue';
+import { ContentObject } from '~common/content/content-object';
 
-defineProps({
-	contentData: {
-		type: Object as PropType<ContentObject>,
-		required: true,
-	},
-});
+type Props = {
+	contentData: ContentObject;
+};
+const { contentData } = defineProps<Props>();
 </script>
 
 <template>

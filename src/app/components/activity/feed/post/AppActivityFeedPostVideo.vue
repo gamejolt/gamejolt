@@ -1,39 +1,32 @@
 <script lang="ts" setup>
-import { computed, CSSProperties, PropType, ref, toRefs } from 'vue';
-import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
-import { $viewPostVideo } from '../../../../../_common/fireside/post/video/video-model';
-import { Screen } from '../../../../../_common/screen/screen-service';
-import AppVideoProcessingProgress from '../../../../../_common/video/processing-progress/AppVideoProcessingProgress.vue';
+import { computed, CSSProperties, ref } from 'vue';
+
+import AppActivityFeedVideoPlayer from '~app/components/activity/feed/_video-player/AppActivityFeedVideoPlayer.vue';
+import { ActivityFeedItem } from '~app/components/activity/feed/item-service';
 import {
-	kBorderWidthBase,
-	kGridGutterWidth,
-	kGridGutterWidthXs,
-} from '../../../../../_styles/variables';
-import { kPostItemPaddingVertical, kPostItemPaddingXsVertical } from '../../../post/post-styles';
-import AppActivityFeedVideoPlayer from '../_video-player/AppActivityFeedVideoPlayer.vue';
-import { ActivityFeedItem } from '../item-service';
+	kPostItemPaddingVertical,
+	kPostItemPaddingXsVertical,
+} from '~app/components/post/post-styles';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import { $viewPostVideo } from '~common/fireside/post/video/video-model';
+import { Screen } from '~common/screen/screen-service';
+import AppVideoProcessingProgress from '~common/video/processing-progress/AppVideoProcessingProgress.vue';
+import { kBorderWidthBase, kGridGutterWidth, kGridGutterWidthXs } from '~styles/variables';
 
-const props = defineProps({
-	item: {
-		type: Object as PropType<ActivityFeedItem>,
-		required: true,
-	},
-	post: {
-		type: Object as PropType<FiresidePostModel>,
-		required: true,
-	},
-});
+type Props = {
+	item: ActivityFeedItem;
+	post: FiresidePostModel;
+};
+const { post } = defineProps<Props>();
 
-const { post } = toRefs(props);
-
-const emit = defineEmits({
-	'query-param': (_params: Record<string, string>) => true,
-});
+const emit = defineEmits<{
+	'query-param': [params: Record<string, string>];
+}>();
 
 const hasVideoProcessingError = ref(false);
 const videoProcessingErrorMsg = ref('');
 
-const video = computed(() => post.value.videos[0]);
+const video = computed(() => post.videos[0]);
 
 function onTimeChange(time: number) {
 	emit('query-param', { t: `${time}` });

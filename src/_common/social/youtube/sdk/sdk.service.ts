@@ -1,4 +1,4 @@
-import { isDynamicGoogleBot } from '../../../device/device.service';
+import { isDynamicGoogleBot } from '~common/device/device.service';
 
 export class YoutubeSdk {
 	private static isBootstrapped = false;
@@ -9,9 +9,9 @@ export class YoutubeSdk {
 		}
 
 		if (!this.isBootstrapped) {
-			let bootstrapLib = (d: any, s: any, id: any) => {
-				let js: any,
-					fjs = d.getElementsByTagName(s)[0];
+			const bootstrapLib = (d: any, s: any, id: any) => {
+				let js: any;
+				const fjs = d.getElementsByTagName(s)[0];
 				if (!d.getElementById(id)) {
 					js = d.createElement(s);
 					js.id = id;

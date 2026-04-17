@@ -1,14 +1,15 @@
 <script lang="ts">
-import { computed, onMounted, onUnmounted, PropType, ref } from 'vue';
+import { computed, onMounted, onUnmounted, ref, useTemplateRef } from 'vue';
 import { isNavigationFailure, useRouter } from 'vue-router';
-import { Backdrop, BackdropController } from '../backdrop/backdrop.service';
-import { EscapeStack, EscapeStackCallback } from '../escape-stack/escape-stack.service';
-import { Screen } from '../screen/screen-service';
-import AppScrollAffix from '../scroll/AppScrollAffix.vue';
-import AppScrollScroller, { createScroller } from '../scroll/AppScrollScroller.vue';
-import AppTheme from '../theme/AppTheme.vue';
-import { ThemeModel } from '../theme/theme.model';
-import { ModalDismissReason, Modals, useModal } from './modal.service';
+
+import { Backdrop, BackdropController } from '~common/backdrop/backdrop.service';
+import { EscapeStack, EscapeStackCallback } from '~common/escape-stack/escape-stack.service';
+import { ModalDismissReason, Modals, useModal } from '~common/modal/modal.service';
+import { Screen } from '~common/screen/screen-service';
+import AppScrollAffix from '~common/scroll/AppScrollAffix.vue';
+import AppScrollScroller, { createScroller } from '~common/scroll/AppScrollScroller.vue';
+import AppTheme from '~common/theme/AppTheme.vue';
+import { ThemeModel } from '~common/theme/theme.model';
 
 export interface AppModalInterface {
 	scrollTo: (offsetY: number) => void;
@@ -28,20 +29,15 @@ const _modalBackdropChecks: (() => boolean)[] = [];
 </script>
 
 <script lang="ts" setup>
-defineProps({
-	theme: {
-		type: Object as PropType<ThemeModel>,
-		default: undefined,
-	},
-	forceTheme: {
-		type: String as PropType<'dark' | 'light'>,
-		default: undefined,
-	},
-});
+type Props = {
+	theme?: ThemeModel;
+	forceTheme?: 'dark' | 'light';
+};
+const { theme, forceTheme } = defineProps<Props>();
 
-const emit = defineEmits({
-	close: () => true,
-});
+const emit = defineEmits<{
+	close: [];
+}>();
 
 defineExpose<AppModalInterface>({
 	scrollTo,
@@ -51,7 +47,7 @@ const router = useRouter();
 const modal = useModal()!;
 const scroller = createScroller();
 
-const root = ref<HTMLElement>();
+const root = useTemplateRef('root');
 const isHoveringContent = ref(false);
 
 let _backdrop: BackdropController | undefined;

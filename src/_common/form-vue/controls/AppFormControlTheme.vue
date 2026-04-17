@@ -1,51 +1,58 @@
 <script lang="ts" setup>
-import { Sketch as VuePicker } from '@ckpack/vue-color';
+import 'vue-color/style.css';
+
 import { computed, ref, toRef } from 'vue';
-import { Api } from '../../api/api.service';
-import AppButton from '../../button/AppButton.vue';
-import AppLoading from '../../loading/AppLoading.vue';
-import AppPopper from '../../popper/AppPopper.vue';
-import AppThemeBubble from '../../theme/bubble/AppThemeBubble.vue';
-import { ThemePresetModel } from '../../theme/preset/preset.model';
+import { ChromePicker } from 'vue-color';
+
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import { createFormControl, FormControlEmits } from '~common/form-vue/AppFormControl.vue';
+import { FormValidator } from '~common/form-vue/validators';
+import AppLoading from '~common/loading/AppLoading.vue';
+import AppPopper from '~common/popper/AppPopper.vue';
+import AppThemeBubble from '~common/theme/bubble/AppThemeBubble.vue';
+import { ThemePresetModel } from '~common/theme/preset/preset.model';
 import {
 	DefaultTheme,
-	ThemeModel,
 	makeThemeFromColor,
 	makeThemeFromPreset,
-} from '../../theme/theme.model';
-import { vAppTooltip } from '../../tooltip/tooltip-directive';
-import { $gettext } from '../../translate/translate.service';
-import {
-	createFormControl,
-	defineFormControlEmits,
-	defineFormControlProps,
-} from '../AppFormControl.vue';
+	ThemeModel,
+} from '~common/theme/theme.model';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { $gettext } from '~common/translate/translate.service';
 
-const props = defineProps({
-	...defineFormControlProps(),
-});
+type Props = {
+	disabled?: boolean;
+	validators?: FormValidator[];
+};
+const { validators = [] } = defineProps<Props>();
 
-const emit = defineEmits({
-	...defineFormControlEmits(),
-});
-
-interface VueColor {
-	hex: string | null;
-}
+const emit = defineEmits<FormControlEmits>();
 
 const { controlVal, applyValue } = createFormControl({
 	initialValue: null as ThemeModel | null,
-	validators: toRef(props, 'validators'),
-	// eslint-disable-next-line vue/require-explicit-emits
+	validators: toRef(() => validators),
 	onChange: val => emit('changed', val),
 	alwaysOptional: true,
 });
 
 const presets = ref([] as ThemePresetModel[]);
 const activeTab = ref('preset' as 'preset' | 'custom');
-const customSelection = ref({ hex: null } as VueColor);
 
 const currentTheme = computed(() => controlVal.value || DefaultTheme);
+
+// vue-color@3.3.3 has a bug where passing `{ hex: ... }` as the model value
+// causes update events to emit `null` (Ee() returns null for hex-format
+// object inputs in vue-color.js:710). Use a bare hex string instead.
+const customSelection = computed<string>({
+	get: () => (currentTheme.value.custom ? `#${currentTheme.value.custom}` : '#000000'),
+	set: val => {
+		if (!val) {
+			return;
+		}
+		applyValue(makeThemeFromColor(val.replace(/^#/, '')));
+	},
+});
 const highlight = computed(() => {
 	if (!controlVal.value) {
 		return undefined;
@@ -63,7 +70,6 @@ const backlight = computed(() => {
 
 async function onPopover() {
 	activeTab.value = currentTheme.value.custom ? 'custom' : 'preset';
-	customSelection.value.hex = currentTheme.value.custom || null;
 
 	if (presets.value.length) {
 		return;
@@ -85,10 +91,6 @@ function isPresetActive(preset: ThemePresetModel) {
 	return currentTheme.value.theme_preset_id === preset.id;
 }
 
-function onCustomChange(colors: VueColor) {
-	applyValue(makeThemeFromColor((colors.hex || '').substr(1)));
-}
-
 function clear() {
 	applyValue(null);
 }
@@ -98,7 +100,7 @@ function clear() {
 	<div class="form-control-theme">
 		<AppPopper @show="onPopover()">
 			<a class="-current">
-				<AppThemeBubble :highlight="highlight" :backlight="backlight" active />
+				<AppThemeBubble :highlight :backlight active />
 			</a>
 
 			<template #popover>
@@ -144,12 +146,7 @@ function clear() {
 							</template>
 						</div>
 						<div v-else-if="activeTab === 'custom'">
-							<VuePicker
-								disable-alpha
-								:preset-colors="[]"
-								:model-value="customSelection"
-								@update:modelValue="onCustomChange"
-							/>
+							<ChromePicker v-model="customSelection" disable-alpha />
 							<br />
 						</div>
 
@@ -190,15 +187,12 @@ strong
 	margin-bottom: $line-height-computed
 
 .-popover
-	::v-deep(.vc-sketch)
+	::v-deep(.vc-chrome-picker)
 		box-shadow: none
 		width: 100%
 		box-sizing: border-box
 
-	::v-deep(.vc-sketch-presets)
-		display: none
-
-	::v-deep(.vc-input__input)
+	::v-deep(.vc-input-input)
 		theme-prop('color', 'fg')
 		change-bg('bg')
 		theme-prop('border-color', 'bg-subtle')

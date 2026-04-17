@@ -1,29 +1,22 @@
 <script lang="ts" setup>
-import { computed, PropType } from 'vue';
-import { GameModel } from '../../../../_common/game/game.model';
-import { GamePackageCardModel } from '../../../../_common/game/package/card/card.model';
-import { GamePackageModel } from '../../../../_common/game/package/package.model';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { useClientLibraryStore } from '../../../store/client-library';
+import { computed } from 'vue';
 
-const props = defineProps({
-	game: {
-		type: Object as PropType<GameModel>,
-		required: true,
-	},
-	package: {
-		type: Object as PropType<GamePackageModel>,
-		required: true,
-	},
-	card: {
-		type: Object as PropType<GamePackageCardModel>,
-		required: true,
-	},
-});
+import { useClientLibraryStore } from '~app/store/client-library';
+import { GameModel } from '~common/game/game.model';
+import { GamePackageCardModel } from '~common/game/package/card/card.model';
+import { GamePackageModel } from '~common/game/package/package.model';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+
+type Props = {
+	game: GameModel;
+	package: GamePackageModel;
+	card: GamePackageCardModel;
+};
+const { package: pkg } = defineProps<Props>();
 
 const { packagesById } = useClientLibraryStore();
 
-const localPackage = computed(() => packagesById.value[props.package.id]);
+const localPackage = computed(() => packagesById.value[pkg.id]);
 </script>
 
 <template>

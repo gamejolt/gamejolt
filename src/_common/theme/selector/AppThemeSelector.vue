@@ -1,35 +1,29 @@
 <script lang="ts" setup>
-import { PropType, ref, toRefs, watch } from 'vue';
-import AppJolticon from '../../jolticon/AppJolticon.vue';
-import AppPopper from '../../popper/AppPopper.vue';
-import { Popper } from '../../popper/popper.service';
-import { SiteTemplateModel } from '../../site/template/template-model';
+import { ref, watch } from 'vue';
 
-const props = defineProps({
-	templates: {
-		type: Array as PropType<SiteTemplateModel[]>,
-		required: true,
-	},
-	currentTemplate: {
-		type: Number,
-		required: true,
-	},
-});
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppPopper from '~common/popper/AppPopper.vue';
+import { Popper } from '~common/popper/popper.service';
+import { SiteTemplateModel } from '~common/site/template/template-model';
 
-const emit = defineEmits({
-	change: (_id: number) => true,
-});
+type Props = {
+	templates: SiteTemplateModel[];
+	currentTemplate: number;
+};
+const { templates, currentTemplate } = defineProps<Props>();
 
-const { templates, currentTemplate } = toRefs(props);
+const emit = defineEmits<{
+	change: [id: number];
+}>();
 
 const current = ref<SiteTemplateModel | null>(null);
 
-if (currentTemplate.value) {
+if (currentTemplate) {
 	onTemplateChange();
 }
 
 watch(
-	currentTemplate,
+	() => currentTemplate,
 	() => {
 		onTemplateChange();
 	},
@@ -37,7 +31,7 @@ watch(
 );
 
 function onTemplateChange() {
-	current.value = templates.value.find(t => t.id === currentTemplate.value) || null;
+	current.value = templates.find(t => t.id === currentTemplate) || null;
 }
 
 function select(id: number) {

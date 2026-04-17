@@ -1,22 +1,23 @@
 <script lang="ts">
-import { PropType, computed, onMounted, toRefs } from 'vue';
-import { trackExperimentEngagement } from '../../analytics/analytics.service';
-import { vAppAuthRequired } from '../../auth/auth-required-directive';
-import AppButton from '../../button/AppButton.vue';
-import { configGuestNoAuthRequired } from '../../config/config.service';
-import { formatFuzzynumber } from '../../filters/fuzzynumber';
-import { showErrorGrowl } from '../../growls/growls.service';
-import { showLikersModal } from '../../likers/modal.service';
-import { EventTopic } from '../../system/event/event-topic';
-import { vAppTooltip } from '../../tooltip/tooltip-directive';
-import { $gettext } from '../../translate/translate.service';
-import { GameModel } from '../game.model';
+import { computed, onMounted } from 'vue';
+
+import { trackExperimentEngagement } from '~common/analytics/analytics.service';
+import { vAppAuthRequired } from '~common/auth/auth-required-directive';
+import AppButton from '~common/button/AppButton.vue';
+import { configGuestNoAuthRequired } from '~common/config/config.service';
+import { formatFuzzynumber } from '~common/filters/fuzzynumber';
+import { GameModel } from '~common/game/game.model';
 import {
 	$removeGameRating,
 	$saveGameRating,
 	GameRatingModel,
 	GameRatingValue,
-} from './rating.model';
+} from '~common/game/rating/rating.model';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import { showLikersModal } from '~common/likers/modal.service';
+import { EventTopic } from '~common/system/event/event-topic';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { $gettext } from '~common/translate/translate.service';
 
 export const RatingWidgetOnChange = 'GameRating.changed';
 export interface RatingWidgetOnChangePayload {
@@ -28,31 +29,22 @@ export const onRatingWidgetChange = new EventTopic<RatingWidgetOnChangePayload>(
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	game: {
-		type: Object as PropType<GameModel>,
-		required: true,
-	},
-	userRating: {
-		type: Object as PropType<GameRatingModel>,
-		default: undefined,
-	},
-	hideCount: {
-		type: Boolean,
-	},
-});
+type Props = {
+	game: GameModel;
+	userRating?: GameRatingModel;
+	hideCount?: boolean;
+};
+const { game, userRating, hideCount } = defineProps<Props>();
 
-const { game, userRating, hideCount } = toRefs(props);
-
-const hasLiked = computed(() => userRating?.value?.rating === GameRatingValue.Like);
-const hasDisliked = computed(() => userRating?.value?.rating === GameRatingValue.Dislike);
+const hasLiked = computed(() => userRating?.rating === GameRatingValue.Like);
+const hasDisliked = computed(() => userRating?.rating === GameRatingValue.Dislike);
 
 onMounted(() => {
 	trackExperimentEngagement(configGuestNoAuthRequired);
 });
 
 function showLikers() {
-	showLikersModal({ count: game.value.like_count, resource: game.value });
+	showLikersModal({ count: game.like_count, resource: game });
 }
 
 function like() {
@@ -65,7 +57,7 @@ function dislike() {
 
 async function updateVote(rating: number) {
 	// when a rating with the same value already exists, remove it instead
-	const oldUserRating = userRating?.value;
+	const oldUserRating = userRating;
 	let operation = 0;
 
 	try {
@@ -74,17 +66,17 @@ async function updateVote(rating: number) {
 				operation = -1;
 			}
 
-			game.value.like_count += operation;
+			game.like_count += operation;
 
 			onRatingWidgetChange.next({
-				gameId: game.value.id,
+				gameId: game.id,
 				userRating: undefined,
 			});
 
 			await $removeGameRating(oldUserRating);
 		} else {
 			const newUserRating = new GameRatingModel({
-				game_id: game.value.id,
+				game_id: game.id,
 				rating: rating,
 			});
 
@@ -100,10 +92,10 @@ async function updateVote(rating: number) {
 				operation = -1;
 			}
 
-			game.value.like_count += operation;
+			game.like_count += operation;
 
 			onRatingWidgetChange.next({
-				gameId: game.value.id,
+				gameId: game.id,
 				userRating: newUserRating,
 			});
 
@@ -111,9 +103,9 @@ async function updateVote(rating: number) {
 		}
 	} catch (e) {
 		console.error(e);
-		game.value.like_count -= operation;
+		game.like_count -= operation;
 		onRatingWidgetChange.next({
-			gameId: game.value.id,
+			gameId: game.id,
 			userRating: oldUserRating,
 		});
 		showErrorGrowl($gettext(`Can't do that right now. Try again later?`));

@@ -1,64 +1,45 @@
 <script lang="ts" setup>
-import { computed, toRefs } from 'vue';
-import AppCard from '../card/AppCard.vue';
-import { formatNumber } from '../filters/number';
-import AppJolticon from '../jolticon/AppJolticon.vue';
-import AppProgressBar from '../progress/AppProgressBar.vue';
+import { computed } from 'vue';
 
-const props = defineProps({
-	total: {
-		type: Number,
-		required: true,
-	},
-	achieved: {
-		type: Number,
-		required: true,
-	},
-	experience: {
-		type: Number,
-		required: true,
-	},
-	isLoggedInUser: {
-		type: Boolean,
-		default: true,
-	},
-});
+import AppCard from '~common/card/AppCard.vue';
+import { formatNumber } from '~common/filters/number';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppProgressBar from '~common/progress/AppProgressBar.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
-const { achieved, total } = toRefs(props);
+type Props = {
+	total: number;
+	achieved: number;
+	experience: number;
+	isLoggedInUser?: boolean;
+};
+const { achieved, total, isLoggedInUser = true } = defineProps<Props>();
 
-const completionRate = computed(() => Math.ceil((achieved.value / total.value) * 100));
+const completionRate = computed(() => Math.ceil((achieved / total) * 100));
 </script>
 
 <template>
 	<AppCard class="trophy-completion">
 		<template v-if="achieved > 0">
 			<p>
-				<span
+				<AppTranslate
 					v-if="isLoggedInUser"
-					v-translate="{
+					:translate-params="{
 						achieved: formatNumber(achieved),
 						total: formatNumber(total),
 					}"
 				>
-					You've achieved
-					<b>%{ achieved }</b>
-					trophies out of a possible
-					<b>%{ total }</b>
-					.
-				</span>
-				<span
+					You've achieved %{ achieved } trophies out of a possible %{ total }.
+				</AppTranslate>
+				<AppTranslate
 					v-else
-					v-translate="{
+					:translate-params="{
 						achieved: formatNumber(achieved),
 						total: formatNumber(total),
 					}"
 				>
-					They've achieved
-					<b>%{ achieved }</b>
-					trophies out of a possible
-					<b>%{ total }</b>
-					.
-				</span>
+					They've achieved %{ achieved } trophies out of a possible %{ total }.
+				</AppTranslate>
 			</p>
 			<br />
 

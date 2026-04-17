@@ -1,40 +1,32 @@
 <script lang="ts" setup>
-import { computed, onMounted, ref, toRefs, watch } from 'vue';
-import { formatFuzzynumber } from '../../filters/fuzzynumber';
+import { computed, onMounted, ref, watch } from 'vue';
 
-const props = defineProps({
-	count: {
-		type: Number,
-		required: true,
-	},
-	imgUrl: {
-		type: String,
-		required: true,
-	},
-	animate: {
-		type: Boolean,
-	},
-});
+import { formatFuzzynumber } from '~common/filters/fuzzynumber';
 
-const { count, imgUrl, animate } = toRefs(props);
+type Props = {
+	count: number;
+	imgUrl: string;
+	animate?: boolean;
+};
+const { count, animate } = defineProps<Props>();
 
 let timer: NodeJS.Timer | null = null;
 
 let hasQueuedTimer = false;
 const shouldAnimate = ref(false);
 
-const displayCount = computed(() => formatFuzzynumber(count.value));
+const displayCount = computed(() => formatFuzzynumber(count));
 
-watch(count, onCountChanged);
+watch(() => count, onCountChanged);
 
 onMounted(() => {
-	if (animate.value) {
+	if (animate) {
 		_animateItem();
 	}
 });
 
 function _animateItem() {
-	if (!animate.value) {
+	if (!animate) {
 		_clearTimer();
 		return;
 	}
@@ -65,7 +57,7 @@ function _clearTimer() {
 }
 
 function onCountChanged() {
-	if (animate.value) {
+	if (animate) {
 		_animateItem();
 	}
 }

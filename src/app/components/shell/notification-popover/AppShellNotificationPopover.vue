@@ -1,31 +1,29 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { Api } from '../../../../_common/api/api.service';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import { Connection } from '../../../../_common/connection/connection-service';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import AppLoading from '../../../../_common/loading/AppLoading.vue';
-import {
-	NotificationFeedTypes,
-	NotificationModel,
-} from '../../../../_common/notification/notification-model';
-import AppPopper from '../../../../_common/popper/AppPopper.vue';
-import { Screen } from '../../../../_common/screen/screen-service';
-import { kThemeDarkest } from '../../../../_common/theme/variables';
-import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import { styleChangeBg } from '../../../../_styles/mixins';
-import { kBorderWidthLg } from '../../../../_styles/variables';
-import { useAppStore } from '../../../store';
+
+import { ActivityFeedView } from '~app/components/activity/feed/view';
+import { useGridStore } from '~app/components/grid/grid-store';
+import { AppActivityFeedLazy } from '~app/components/lazy';
+import { useAppStore } from '~app/store';
+import { showNotificationsFilterModal } from '~app/views/notifications/filter/modal.service';
+import { routeNotifications } from '~app/views/notifications/notifications.route';
 import {
 	NOTIFICATION_FILTER_FIELD,
 	SUPPORTED_NOTIFICATION_FEED_TYPES,
-} from '../../../views/notifications/RouteNotifications.vue';
-import { showNotificationsFilterModal } from '../../../views/notifications/filter/modal.service';
-import { routeNotifications } from '../../../views/notifications/notifications.route';
-import { ActivityFeedView } from '../../activity/feed/view';
-import { useGridStore } from '../../grid/grid-store';
-import { AppActivityFeedLazy } from '../../lazy';
+} from '~app/views/notifications/RouteNotifications.vue';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import { Connection } from '~common/connection/connection-service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLoading from '~common/loading/AppLoading.vue';
+import { NotificationFeedTypes, NotificationModel } from '~common/notification/notification-model';
+import AppPopper from '~common/popper/AppPopper.vue';
+import { Screen } from '~common/screen/screen-service';
+import { kThemeDarkest } from '~common/theme/variables';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { styleChangeBg } from '~styles/mixins';
+import { kBorderWidthLg } from '~styles/variables';
 
 const route = useRoute();
 const router = useRouter();

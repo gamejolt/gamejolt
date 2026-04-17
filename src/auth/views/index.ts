@@ -1,6 +1,6 @@
-import { initRouter } from '../../utils/router';
-import { authStore } from '../store/index';
-import { routeAuth } from './auth/auth.route';
+import { authStore } from '~auth/store/index';
+import { routeAuth } from '~auth/views/auth/auth.route';
+import { initRouter } from '~utils/router';
 
 const routes = [routeAuth];
 export const router = initRouter(routes);

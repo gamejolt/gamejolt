@@ -1,17 +1,10 @@
 <script lang="ts" setup>
-defineProps({
-	highlight: {
-		type: String,
-		default: undefined,
-	},
-	backlight: {
-		type: String,
-		default: undefined,
-	},
-	active: {
-		type: Boolean,
-	},
-});
+type Props = {
+	highlight?: string;
+	backlight?: string;
+	active?: boolean;
+};
+defineProps<Props>();
 </script>
 
 <template>

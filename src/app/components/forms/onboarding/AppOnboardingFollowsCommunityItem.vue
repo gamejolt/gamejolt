@@ -1,25 +1,23 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
-import { CommunityModel } from '../../../../_common/community/community.model';
-import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import Onboarding from '../../../../_common/onboarding/onboarding.service';
-import { useAppStore } from '../../../store';
-import { useGridStore } from '../../grid/grid-store';
+import { computed } from 'vue';
 
-const props = defineProps({
-	community: {
-		type: Object as PropType<CommunityModel>,
-		required: true,
-	},
-});
+import { useGridStore } from '~app/components/grid/grid-store';
+import { useAppStore } from '~app/store';
+import { CommunityModel } from '~common/community/community.model';
+import AppCommunityThumbnailImg from '~common/community/thumbnail/AppCommunityThumbnailImg.vue';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import Onboarding from '~common/onboarding/onboarding.service';
 
-const { community } = toRefs(props);
+type Props = {
+	community: CommunityModel;
+};
+const { community } = defineProps<Props>();
+
 const { joinCommunity, leaveCommunity } = useAppStore();
 const { grid } = useGridStore();
 
 const highlight = computed(() => {
-	const highlight = community.value.theme && community.value.theme.highlight_;
+	const highlight = community.theme && community.theme.highlight_;
 	if (highlight) {
 		return '#' + highlight;
 	}
@@ -27,7 +25,7 @@ const highlight = computed(() => {
 });
 
 const highlightFg = computed(() => {
-	const highlightFg = community.value.theme && community.value.theme.highlightFg_;
+	const highlightFg = community.theme && community.theme.highlightFg_;
 	if (highlightFg) {
 		return '#' + highlightFg;
 	}
@@ -36,14 +34,14 @@ const highlightFg = computed(() => {
 
 async function toggleJoin() {
 	Onboarding.trackEvent(
-		community.value.is_member ? 'community-leave' : 'community-join',
-		`${community.value.id}-${community.value.path}`
+		community.is_member ? 'community-leave' : 'community-join',
+		`${community.id}-${community.path}`
 	);
 
-	if (!community.value.is_member) {
-		joinCommunity(community.value, { grid: grid.value, location: 'onboarding' });
+	if (!community.is_member) {
+		joinCommunity(community, { grid: grid.value, location: 'onboarding' });
 	} else {
-		leaveCommunity(community.value, {
+		leaveCommunity(community, {
 			grid: grid.value,
 			location: 'onboarding',
 			shouldConfirm: false,

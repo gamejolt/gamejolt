@@ -1,28 +1,26 @@
 <script lang="ts">
 import { toRef } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import AppAlertDismissable from '../../../../../../_common/alert/dismissable/AppAlertDismissable.vue';
-import AppButton from '../../../../../../_common/button/AppButton.vue';
-import { $removeCollaboratorInvite } from '../../../../../../_common/collaborator/collaborator.model';
-import { $removeCommunity } from '../../../../../../_common/community/community.model';
-import { showInfoGrowl, showSuccessGrowl } from '../../../../../../_common/growls/growls.service';
-import { showModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '../../../../../../_common/route/route-component';
-import { Screen } from '../../../../../../_common/screen/screen-service';
-import { useThemeStore } from '../../../../../../_common/theme/theme.store';
-import { $gettext } from '../../../../../../_common/translate/translate.service';
-import { enforceLocation } from '../../../../../../utils/router';
-import AppCommunityPerms from '../../../../../components/community/perms/AppCommunityPerms.vue';
-import FormCommunity from '../../../../../components/forms/community/FormCommunity.vue';
-import FormCommunityDescription from '../../../../../components/forms/community/description/FormCommunityDescription.vue';
-import { useGridStore } from '../../../../../components/grid/grid-store';
-import { useAppStore } from '../../../../../store';
-import { CommunityThemeKey } from '../../RouteCommunitiesView.vue';
-import AppCommunitiesViewPageContainer from '../../_page-container/page-container.vue';
-import { useCommunityRouteStore } from '../../view.store';
+
+import AppCommunityPerms from '~app/components/community/perms/AppCommunityPerms.vue';
+import FormCommunityDescription from '~app/components/forms/community/description/FormCommunityDescription.vue';
+import FormCommunity from '~app/components/forms/community/FormCommunity.vue';
+import { useGridStore } from '~app/components/grid/grid-store';
+import { useAppStore } from '~app/store';
+import AppCommunityPageContainer from '~app/views/communities/view/_page-container/AppCommunityPageContainer.vue';
+import { CommunityThemeKey } from '~app/views/communities/view/RouteCommunitiesView.vue';
+import { useCommunityRouteStore } from '~app/views/communities/view/view.store';
+import AppAlertDismissable from '~common/alert/dismissable/AppAlertDismissable.vue';
+import AppButton from '~common/button/AppButton.vue';
+import { $removeCollaboratorInvite } from '~common/collaborator/collaborator.model';
+import { $removeCommunity } from '~common/community/community.model';
+import { showInfoGrowl, showSuccessGrowl } from '~common/growls/growls.service';
+import { showModalConfirm } from '~common/modal/confirm/confirm-service';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { Screen } from '~common/screen/screen-service';
+import { useThemeStore } from '~common/theme/theme.store';
+import { $gettext } from '~common/translate/translate.service';
+import { enforceLocation } from '~utils/router';
 
 export default {
 	...defineAppRouteOptions({
@@ -113,7 +111,7 @@ createAppRoute({});
 
 <template>
 	<div>
-		<AppCommunitiesViewPageContainer>
+		<AppCommunityPageContainer>
 			<template #default>
 				<AppAlertDismissable
 					v-if="isOwner"
@@ -246,7 +244,7 @@ createAppRoute({});
 
 				<FormCommunityDescription :model="community" />
 			</template>
-		</AppCommunitiesViewPageContainer>
+		</AppCommunityPageContainer>
 	</div>
 </template>
 

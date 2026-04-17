@@ -1,42 +1,40 @@
 <script lang="ts">
-import { computed, ref, toRef } from 'vue';
-import { Api } from '../../../../../../../../../_common/api/api.service';
-import AppButton from '../../../../../../../../../_common/button/AppButton.vue';
-import AppCardList from '../../../../../../../../../_common/card/list/AppCardList.vue';
-import AppCardListAdd from '../../../../../../../../../_common/card/list/AppCardListAdd.vue';
-import AppCardListDraggable from '../../../../../../../../../_common/card/list/AppCardListDraggable.vue';
-import AppCardListItem from '../../../../../../../../../_common/card/list/AppCardListItem.vue';
+import { computed, ref, toRef, useTemplateRef } from 'vue';
+
+import AppCommunityCompetitionDate from '~app/components/community/competition/date/AppCommunityCompetitionDate.vue';
+import FormCommunityCompetitionAward from '~app/components/forms/community/competition/award/FormCommunityCompetitionAward.vue';
+import FormCommunityCompetitionVotingCategory from '~app/components/forms/community/competition/voting/category/FormCommunityCompetitionVotingCategory.vue';
+import FormCommunityCompetitionVotingEdit from '~app/components/forms/community/competition/voting/edit/FormCommunityCompetitionVotingEdit.vue';
+import FormCommunityCompetitionVotingToggle from '~app/components/forms/community/competition/voting/toggle/FormCommunityCompetitionVotingToggle.vue';
+import { useCommunityRouteStore } from '~app/views/communities/view/view.store';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import AppCardList from '~common/card/list/AppCardList.vue';
+import AppCardListAdd from '~common/card/list/AppCardListAdd.vue';
+import AppCardListDraggable from '~common/card/list/AppCardListDraggable.vue';
+import AppCardListItem from '~common/card/list/AppCardListItem.vue';
 import {
 	$removeCommunityCompetitionAward,
 	$saveCommunityCompetitionAwardSort,
 	CommunityCompetitionAwardModel,
-} from '../../../../../../../../../_common/community/competition/award/award.model';
+} from '~common/community/competition/award/award.model';
 import {
 	CompetitionPeriodPostComp,
 	CompetitionPeriodVoting,
-} from '../../../../../../../../../_common/community/competition/competition.model';
+} from '~common/community/competition/competition.model';
 import {
 	$removeCommunityCompetitionVotingCategory,
 	CommunityCompetitionVotingCategoryModel,
-} from '../../../../../../../../../_common/community/competition/voting-category/voting-category.model';
-import { showErrorGrowl } from '../../../../../../../../../_common/growls/growls.service';
-import AppJolticon from '../../../../../../../../../_common/jolticon/AppJolticon.vue';
-import { showModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '../../../../../../../../../_common/route/route-component';
-import { Scroll } from '../../../../../../../../../_common/scroll/scroll.service';
-import AppTimeAgo from '../../../../../../../../../_common/time/AppTimeAgo.vue';
-import { vAppTooltip } from '../../../../../../../../../_common/tooltip/tooltip-directive';
-import { $gettext } from '../../../../../../../../../_common/translate/translate.service';
-import { arrayRemove } from '../../../../../../../../../utils/array';
-import AppCommunityCompetitionDate from '../../../../../../../../components/community/competition/date/AppCommunityCompetitionDate.vue';
-import FormCommunityCompetitionAward from '../../../../../../../../components/forms/community/competition/award/FormCommunityCompetitionAward.vue';
-import FormCommunityCompetitionVotingCategory from '../../../../../../../../components/forms/community/competition/voting/category/category.vue';
-import FormCommunityCompetitionVotingEdit from '../../../../../../../../components/forms/community/competition/voting/edit/edit.vue';
-import FormCommunityCompetitionVotingToggle from '../../../../../../../../components/forms/community/competition/voting/toggle/toggle.vue';
-import { useCommunityRouteStore } from '../../../../../view.store';
+} from '~common/community/competition/voting-category/voting-category.model';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { showModalConfirm } from '~common/modal/confirm/confirm-service';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { Scroll } from '~common/scroll/scroll.service';
+import AppTimeAgo from '~common/time/AppTimeAgo.vue';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { $gettext } from '~common/translate/translate.service';
+import { arrayRemove } from '~utils/array';
 
 export default {
 	...defineAppRouteOptions({
@@ -61,7 +59,7 @@ const activeVotingCategory = ref<CommunityCompetitionVotingCategoryModel | undef
 const isShowingAwardAdd = ref(false);
 const isShowingVotingCategoryAdd = ref(false);
 const isEditing = ref(false);
-const toggleForm = ref<FormCommunityCompetitionVotingToggle>();
+const toggleForm = useTemplateRef('toggleForm');
 
 const hasVotingCategories = toRef(() => votingCategories.value.length > 0);
 const hasAwards = toRef(() => awards.value.length > 0);

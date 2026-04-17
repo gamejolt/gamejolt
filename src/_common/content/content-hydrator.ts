@@ -1,6 +1,6 @@
-import { arrayRemove } from '../../utils/array';
-import { isPromise } from '../../utils/utils';
-import { Api } from '../api/api.service';
+import { Api } from '~common/api/api.service';
+import { arrayRemove } from '~utils/array';
+import { isPromise } from '~utils/utils';
 
 /**
  * The type of source passed into the hydrator, not what the resulting hydration data will be.
@@ -79,7 +79,7 @@ export class ContentHydrator {
 				// response and will eventually call [setData] which will
 				// resolve the request. Do a dynamic import so that it doesn't
 				// need to get pulled in except for the mobile app editor.
-				import('./content-editor/app-adapter').then(
+				import('~common/content/content-editor/app-adapter').then(
 					({ ContentEditorAppAdapterMessage, editorGetAppAdapter }) => {
 						const msg = ContentEditorAppAdapterMessage.requestHydration(type, source);
 						editorGetAppAdapter().send(msg);

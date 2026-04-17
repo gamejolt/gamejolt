@@ -7,13 +7,14 @@
 
 import { defineAsyncComponent } from 'vue';
 import { Router } from 'vue-router';
-import AppNoop from '../../../_common/AppNoop.vue';
-import type { routeLibraryInstalled as routeLibraryInstalledType } from '../../views/library/installed/installed.route';
-import type AppClientShellType from './AppClientShell.vue';
-import type AppClientPackageCardButtonsType from './hooks/AppClientPackageCardButtons.vue';
-import type { LocalDbGame as LocalDbGameType } from './local-db/game/game.model';
-import type AppClientStatusBarType from './status-bar/AppClientStatusBar.vue';
-import type { ClientSystemReportModal as ClientSystemReportModalType } from './system-report-modal/system-report-modal.service';
+
+import type AppClientShellType from '~app/components/client/AppClientShell.vue';
+import type AppClientPackageCardButtonsType from '~app/components/client/hooks/AppClientPackageCardButtons.vue';
+import type { LocalDbGame as LocalDbGameType } from '~app/components/client/local-db/game/game.model';
+import type AppClientStatusBarType from '~app/components/client/status-bar/AppClientStatusBar.vue';
+import type { ClientSystemReportModal as ClientSystemReportModalType } from '~app/components/client/system-report-modal/system-report-modal.service';
+import type { routeLibraryInstalled as routeLibraryInstalledType } from '~app/views/library/installed/installed.route';
+import AppNoop from '~common/AppNoop.vue';
 
 // Vue components
 export let AppClientShell: typeof AppClientShellType = AppNoop as any;
@@ -34,23 +35,26 @@ export async function initSafeExportsForClient(router: Router) {
 
 	// Vue components
 	AppClientShell = defineAsyncComponent(
-		async () => (await import('./AppClientShell.vue')).default
+		async () => (await import('~app/components/client/AppClientShell.vue')).default
 	);
 	AppClientStatusBar = defineAsyncComponent(
-		async () => (await import('./status-bar/AppClientStatusBar.vue')).default
+		async () =>
+			(await import('~app/components/client/status-bar/AppClientStatusBar.vue')).default
 	);
 	AppClientPackageCardButtons = defineAsyncComponent(
-		async () => (await import('./hooks/AppClientPackageCardButtons.vue')).default
+		async () =>
+			(await import('~app/components/client/hooks/AppClientPackageCardButtons.vue')).default
 	);
 
 	// Vue routes
-	routeLibraryInstalled = (await import('../../views/library/installed/installed.route'))
+	routeLibraryInstalled = (await import('~app/views/library/installed/installed.route'))
 		.routeLibraryInstalled;
 
 	router.addRoute('library', routeLibraryInstalled);
 
 	// Misc
-	ClientSystemReportModal = (await import('./system-report-modal/system-report-modal.service'))
-		.ClientSystemReportModal;
-	LocalDbGame = (await import('./local-db/game/game.model')).LocalDbGame;
+	ClientSystemReportModal = (
+		await import('~app/components/client/system-report-modal/system-report-modal.service')
+	).ClientSystemReportModal;
+	LocalDbGame = (await import('~app/components/client/local-db/game/game.model')).LocalDbGame;
 }

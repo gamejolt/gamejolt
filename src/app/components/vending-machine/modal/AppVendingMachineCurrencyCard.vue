@@ -1,30 +1,32 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType, toRefs } from 'vue';
-import { trackShopView } from '../../../../_common/analytics/analytics.service';
-import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
-import { vAppAuthRequired } from '../../../../_common/auth/auth-required-directive';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import AppCurrencyImg from '../../../../_common/currency/AppCurrencyImg.vue';
-import { Currency, CurrencyType } from '../../../../_common/currency/currency-type';
-import { formatNumber } from '../../../../_common/filters/number';
-import { showPurchaseMicrotransactionModal } from '../../../../_common/microtransaction/purchase-modal/modal.service';
-import { useModal } from '../../../../_common/modal/modal.service';
-import { useOnHover } from '../../../../_common/on/useOnHover';
-import { useCommonStore } from '../../../../_common/store/common-store';
+import { CSSProperties } from 'vue';
+
+import { showGetCoinsRedirectModal } from '~app/components/vending-machine/modal/_get-coins-redirect-modal/modal.service';
+import { trackShopView } from '~common/analytics/analytics.service';
+import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
+import { vAppAuthRequired } from '~common/auth/auth-required-directive';
+import AppButton from '~common/button/AppButton.vue';
+import AppCurrencyImg from '~common/currency/AppCurrencyImg.vue';
+import { Currency, CurrencyType } from '~common/currency/currency-type';
+import { formatNumber } from '~common/filters/number';
+import { showPurchaseMicrotransactionModal } from '~common/microtransaction/purchase-modal/modal.service';
+import { useModal } from '~common/modal/modal.service';
+import { useOnHover } from '~common/on/useOnHover';
+import { useCommonStore } from '~common/store/common-store';
 import {
 	kThemeBgBackdrop,
 	kThemeBgOffset,
 	kThemeFg,
 	kThemeFg10,
 	kThemePrimary,
-} from '../../../../_common/theme/variables';
+} from '~common/theme/variables';
 import {
 	kElevateTransition,
 	styleBorderRadiusLg,
 	styleElevate,
 	styleFlexCenter,
 	styleWhen,
-} from '../../../../_styles/mixins';
+} from '~styles/mixins';
 import {
 	kBorderWidthBase,
 	kFontFamilyDisplay,
@@ -32,21 +34,13 @@ import {
 	kFontSizeH2,
 	kLineHeightBase,
 	kStrongEaseOut,
-} from '../../../../_styles/variables';
-import { showGetCoinsRedirectModal } from './_get-coins-redirect-modal/modal.service';
+} from '~styles/variables';
 
-const props = defineProps({
-	currency: {
-		type: Object as PropType<Currency>,
-		required: true,
-	},
-	amount: {
-		type: Number,
-		required: true,
-	},
-});
-
-const { currency, amount } = toRefs(props);
+type Props = {
+	currency: Currency;
+	amount: number;
+};
+const { currency, amount } = defineProps<Props>();
 
 const modal = useModal();
 const { user: authUser } = useCommonStore();

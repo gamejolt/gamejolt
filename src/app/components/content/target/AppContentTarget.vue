@@ -1,54 +1,35 @@
 <script lang="ts">
-import { computed, PropType, toRef, toRefs } from 'vue';
+import { computed, toRef } from 'vue';
 import { RouteLocationRaw } from 'vue-router';
-import { ComponentProps } from '../../../../_common/component-helpers';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import AppPill from '../../../../_common/pill/AppPill.vue';
-import AppPillBi from '../../../../_common/pill/AppPillBi.vue';
+
+import { ComponentProps } from '~common/component-helpers';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppPill from '~common/pill/AppPill.vue';
+import AppPillBi from '~common/pill/AppPillBi.vue';
 
 export const CONTENT_TARGET_HEIGHT = 30;
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	noImg: {
-		type: Boolean,
-	},
-	to: {
-		type: Object as PropType<RouteLocationRaw>,
-		default: undefined,
-	},
-	leftTo: {
-		type: Object as PropType<RouteLocationRaw>,
-		default: undefined,
-	},
-	rightTo: {
-		type: Object as PropType<RouteLocationRaw>,
-		default: undefined,
-	},
-	hasRemove: {
-		type: Boolean,
-	},
-	hasRight: {
-		type: Boolean,
-	},
-	bleedImg: {
-		type: Boolean,
-	},
-	noHover: {
-		type: Boolean,
-	},
-});
+type Props = {
+	noImg?: boolean;
+	to?: RouteLocationRaw;
+	leftTo?: RouteLocationRaw;
+	rightTo?: RouteLocationRaw;
+	hasRemove?: boolean;
+	hasRight?: boolean;
+	bleedImg?: boolean;
+	noHover?: boolean;
+};
+const { to, leftTo, rightTo, hasRemove, hasRight, bleedImg, noHover } = defineProps<Props>();
 
-const { to, leftTo, rightTo, hasRemove, hasRight, bleedImg, noHover } = toRefs(props);
-
-const emit = defineEmits({
-	remove: () => true,
-	click: (_e: MouseEvent) => true,
-});
+const emit = defineEmits<{
+	remove: [];
+	click: [e: MouseEvent];
+}>();
 
 const component = toRef(() => {
-	if (hasRight.value) {
+	if (hasRight) {
 		return AppPillBi;
 	}
 
@@ -57,21 +38,21 @@ const component = toRef(() => {
 
 const componentProps = computed(() => {
 	return {
-		bleedImg: bleedImg?.value,
-		...(hasRight.value
+		bleedImg: bleedImg,
+		...(hasRight
 			? ({
-					leftTo: leftTo?.value,
-					rightTo: rightTo?.value,
-					noHover: noHover.value,
+					leftTo: leftTo,
+					rightTo: rightTo,
+					noHover: noHover,
 			  } satisfies ComponentProps<typeof AppPillBi>)
 			: ({
-					to: to?.value,
+					to: to,
 			  } satisfies ComponentProps<typeof AppPill>)),
 	};
 });
 
 const contentSlot = computed(() => {
-	if (hasRight.value) {
+	if (hasRight) {
 		return 'left';
 	}
 

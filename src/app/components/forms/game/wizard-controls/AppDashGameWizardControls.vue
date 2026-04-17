@@ -1,24 +1,23 @@
 <script lang="ts" setup>
-import { ref, toRef, toRefs } from 'vue';
-import AppButton from '../../../../../_common/button/AppButton.vue';
-import { useForm } from '../../../../../_common/form-vue/AppForm.vue';
-import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import { useGameDashRouteController } from '../../../../views/dashboard/games/manage/manage.store';
+import { ref, toRef } from 'vue';
 
-const props = defineProps({
-	disabled: {
-		type: Boolean,
-	},
-});
+import { useGameDashRouteController } from '~app/views/dashboard/games/manage/manage.store';
+import AppButton from '~common/button/AppButton.vue';
+import { useForm } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import { $gettext } from '~common/translate/translate.service';
 
-const { disabled } = toRefs(props);
+type Props = {
+	disabled?: boolean;
+};
+const { disabled } = defineProps<Props>();
+
 const gameDashStore = useGameDashRouteController();
 const form = ref(useForm());
 
 const isWizard = toRef(() => !gameDashStore || gameDashStore.isWizard.value);
 const inForm = toRef(() => !!form.value);
-const canProceed = toRef(() => !form.value || form.value.valid || disabled.value);
+const canProceed = toRef(() => !form.value || form.value.valid || disabled);
 
 async function next(_e: Event, formResult?: boolean) {
 	if (!canProceed.value || formResult === false) {

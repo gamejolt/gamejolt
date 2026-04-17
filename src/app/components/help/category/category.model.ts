@@ -1,4 +1,4 @@
-import { Model } from '../../../../_common/model/model.service';
+import { Model } from '~common/model/model.service';
 
 export class HelpCategoryModel extends Model {
 	declare name: string;

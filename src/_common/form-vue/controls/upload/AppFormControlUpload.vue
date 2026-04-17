@@ -1,21 +1,16 @@
 <script lang="ts" setup>
-import { computed, ref } from 'vue';
-import { formatNumber } from '../../../filters/number';
-import AppJolticon from '../../../jolticon/AppJolticon.vue';
-import { Model } from '../../../model/model.service';
-import AppProgressBar from '../../../progress/AppProgressBar.vue';
-import AppTranslate from '../../../translate/AppTranslate.vue';
-import { useForm } from '../../AppForm.vue';
-import {
-	createFormControl,
-	defineFormControlEmits,
-	defineFormControlProps,
-} from '../../AppFormControl.vue';
-import { useFormGroup } from '../../AppFormGroup.vue';
-import { FormValidator, validateFileAccept } from '../../validators';
-import AppFormControlUploadFile, {
-	AppFormControlUploadFileInterface,
-} from './AppFormControlUploadFile.vue';
+import { computed, ref, useTemplateRef } from 'vue';
+
+import { formatNumber } from '~common/filters/number';
+import { useForm } from '~common/form-vue/AppForm.vue';
+import { createFormControl, FormControlEmits } from '~common/form-vue/AppFormControl.vue';
+import { useFormGroup } from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlUploadFile from '~common/form-vue/controls/upload/AppFormControlUploadFile.vue';
+import { FormValidator, validateFileAccept } from '~common/form-vue/validators';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { Model } from '~common/model/model.service';
+import AppProgressBar from '~common/progress/AppProgressBar.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 export interface AppFormControlUploadInterface {
 	showFileSelect: () => void;
@@ -24,35 +19,27 @@ export interface AppFormControlUploadInterface {
 	drop: (e: DragEvent) => Promise<void>;
 }
 
-const props = defineProps({
-	...defineFormControlProps(),
-	multiple: {
-		type: Boolean,
-	},
-	uploadLinkLabel: {
-		type: String,
-		default: null,
-	},
-	accept: {
-		type: String,
-		default: null,
-	},
-});
+type Props = {
+	disabled?: boolean;
+	validators?: FormValidator[];
+	multiple?: boolean;
+	uploadLinkLabel?: string;
+	accept?: string;
+};
+const { validators = [], multiple, uploadLinkLabel, accept } = defineProps<Props>();
 
-const emit = defineEmits({
-	...defineFormControlEmits<File | File[] | null>(),
-});
+const emit = defineEmits<FormControlEmits<File | File[] | null>>();
 
-const validators = computed(() => {
+const computedValidators = computed(() => {
 	let _validators: FormValidator[] = [];
 
 	// Push the accept first so it matches before any img geometry checks.
-	if (props.accept) {
-		_validators.push(validateFileAccept(props.accept));
+	if (accept) {
+		_validators.push(validateFileAccept(accept));
 	}
 
 	// Then push the rest.
-	_validators.push(...props.validators);
+	_validators.push(...validators);
 	return _validators;
 });
 
@@ -61,12 +48,11 @@ const { name } = useFormGroup()!;
 
 const { id, controlVal, applyValue } = createFormControl({
 	initialValue: null as File | File[] | null,
-	validators,
-	// eslint-disable-next-line vue/require-explicit-emits
+	validators: computedValidators,
 	onChange: val => emit('changed', val),
 });
 
-const input = ref<AppFormControlUploadFileInterface>();
+const input = useTemplateRef('input');
 const isDropActive = ref(false);
 const clearKey = ref(0);
 
@@ -168,7 +154,7 @@ function clearAllFiles() {
 function setFiles(files: File[] | File | null | undefined) {
 	if (!files) {
 		applyValue(null);
-	} else if (props.multiple) {
+	} else if (multiple) {
 		applyValue(files);
 	} else if (Array.isArray(files)) {
 		applyValue(files[0]);
@@ -178,7 +164,12 @@ function setFiles(files: File[] | File | null | undefined) {
 }
 
 function isAscii(str: string) {
-	return /^[\000-\177]*$/.test(str);
+	for (let i = 0; i < str.length; ++i) {
+		if (str.charCodeAt(i) > 0x7f) {
+			return false;
+		}
+	}
+	return true;
 }
 
 /**
@@ -231,7 +222,7 @@ async function getFiles(e: DragEvent) {
 	let files: File[] = [];
 
 	const items = e.dataTransfer ? e.dataTransfer.items : null;
-	if (items && items.length > 0 && items[0].webkitGetAsEntry) {
+	if (items && items.length > 0 && typeof items[0].webkitGetAsEntry === 'function') {
 		const num = items.length;
 		for (let i = 0; i < num; ++i) {
 			const item = items[i];

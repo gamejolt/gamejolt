@@ -1,29 +1,23 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-import AppButton from '../../../button/AppButton.vue';
-import { formatFilesize } from '../../../filters/filesize';
-import AppJolticon from '../../../jolticon/AppJolticon.vue';
-import AppPopper from '../../../popper/AppPopper.vue';
-import AppTranslate from '../../../translate/AppTranslate.vue';
-import { GameBuildModel } from '../../build/build.model';
-import { GamePackageModel } from '../package.model';
-import AppGamePackageCardMoreOptions from './AppGamePackageCardMoreOptions.vue';
-import { GamePackageCardModel } from './card.model';
+import AppButton from '~common/button/AppButton.vue';
+import { formatFilesize } from '~common/filters/filesize';
+import { GameBuildModel } from '~common/game/build/build.model';
+import AppGamePackageCardMoreOptions from '~common/game/package/card/AppGamePackageCardMoreOptions.vue';
+import { GamePackageCardModel } from '~common/game/package/card/card.model';
+import { GamePackageModel } from '~common/game/package/package.model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppPopper from '~common/popper/AppPopper.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
-defineProps({
-	package: {
-		type: Object as PropType<GamePackageModel>,
-		required: true,
-	},
-	card: {
-		type: Object as PropType<GamePackageCardModel>,
-		required: true,
-	},
-});
+type Props = {
+	package: GamePackageModel;
+	card: GamePackageCardModel;
+};
+defineProps<Props>();
 
-const emit = defineEmits({
-	click: (_data: { build: GameBuildModel; fromExtraSection: boolean }) => true,
-});
+const emit = defineEmits<{
+	click: [data: { build: GameBuildModel; fromExtraSection: boolean }];
+}>();
 
 function click(build: GameBuildModel, fromExtraSection = false) {
 	emit('click', { build, fromExtraSection });
@@ -34,7 +28,7 @@ function click(build: GameBuildModel, fromExtraSection = false) {
 	<div class="game-package-card-app-buttons">
 		<AppButton v-if="card.browserBuild" primary @click="click(card.browserBuild!)">
 			<AppTranslate>Play</AppTranslate>
-			<AppJolticon class="jolticon-addon" :icon="card.showcasedBrowserIcon" />
+			<AppJolticon class="jolticon-addon" :icon="(card.showcasedBrowserIcon as any)" />
 		</AppButton>
 
 		{{ ' ' }}
@@ -52,7 +46,7 @@ function click(build: GameBuildModel, fromExtraSection = false) {
 			<small class="hidden-xs">
 				({{ formatFilesize(card.primaryBuild.primary_file.filesize) }})
 			</small>
-			<AppJolticon class="jolticon-addon" :icon="card.showcasedOsIcon" />
+			<AppJolticon class="jolticon-addon" :icon="(card.showcasedOsIcon as any)" />
 		</AppButton>
 
 		{{ ' ' }}

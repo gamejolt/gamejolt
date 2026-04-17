@@ -1,19 +1,20 @@
 <script lang="ts">
 import { inject, ref } from 'vue';
 import { RouterLink } from 'vue-router';
-import { trackExperimentEngagement } from '../../../_common/analytics/analytics.service';
-import { Api } from '../../../_common/api/api.service';
-import AppButton from '../../../_common/button/AppButton.vue';
-import { configFYPExperiment } from '../../../_common/config/config.service';
-import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
-import { illNoComments } from '../../../_common/illustration/illustrations';
-import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
-import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
-import AppActivityFeedPlaceholder from '../../components/activity/feed/AppActivityFeedPlaceholder.vue';
-import { ActivityFeedService } from '../../components/activity/feed/feed-service';
-import { AppActivityFeedLazy } from '../../components/lazy';
-import { routeDiscoverHome } from '../discover/home/home.route';
-import { RouteActivityFeedController } from './RouteHomeFeed.vue';
+
+import AppActivityFeedPlaceholder from '~app/components/activity/feed/AppActivityFeedPlaceholder.vue';
+import { ActivityFeedService } from '~app/components/activity/feed/feed-service';
+import { AppActivityFeedLazy } from '~app/components/lazy';
+import { routeDiscoverHome } from '~app/views/discover/home/home.route';
+import { RouteActivityFeedController } from '~app/views/home/RouteHomeFeed.vue';
+import { trackExperimentEngagement } from '~common/analytics/analytics.service';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import { configFYPExperiment } from '~common/config/config.service';
+import AppIllustration from '~common/illustration/AppIllustration.vue';
+import { illNoComments } from '~common/illustration/illustrations';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
 
 function _feedUrl() {
 	return `/web/posts/for-you?exp-fyp=${configFYPExperiment.value}`;

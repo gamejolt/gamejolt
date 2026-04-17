@@ -1,16 +1,12 @@
 <script lang="ts">
-import { CSSProperties, PropType, ref, toRefs } from 'vue';
-import {
-	styleBorderRadiusLg,
-	styleChangeBgRgba,
-	styleElevate,
-	styleWhen,
-} from '../../../_styles/mixins';
-import { kFontSizeSmall } from '../../../_styles/variables';
-import AppAspectRatio from '../../aspect-ratio/AppAspectRatio.vue';
-import AppImgResponsive from '../../img/AppImgResponsive.vue';
-import AppMediaItemBackdrop from '../../media-item/backdrop/AppMediaItemBackdrop.vue';
-import { StickerPackModel } from './pack.model';
+import { CSSProperties, ref } from 'vue';
+
+import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
+import AppImgResponsive from '~common/img/AppImgResponsive.vue';
+import AppMediaItemBackdrop from '~common/media-item/backdrop/AppMediaItemBackdrop.vue';
+import { StickerPackModel } from '~common/sticker/pack/pack.model';
+import { styleBorderRadiusLg, styleChangeBgRgba, styleElevate, styleWhen } from '~styles/mixins';
+import { kFontSizeSmall } from '~styles/variables';
 
 export const StickerPackRatio = 2 / 3;
 
@@ -28,32 +24,22 @@ export const StickerPackExpiryStyles: CSSProperties = {
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	pack: {
-		type: Object as PropType<StickerPackModel>,
-		required: true,
-	},
-	showName: {
-		type: Boolean,
-	},
-	canClickPack: {
-		type: Boolean,
-	},
-	forceElevate: {
-		type: Boolean,
-	},
-});
+type Props = {
+	pack: StickerPackModel;
+	showName?: boolean;
+	canClickPack?: boolean;
+	forceElevate?: boolean;
+};
+const { canClickPack } = defineProps<Props>();
 
-const emit = defineEmits({
-	clickPack: () => true,
-});
-
-const { pack, canClickPack, forceElevate } = toRefs(props);
+const emit = defineEmits<{
+	clickPack: [];
+}>();
 
 const loadedImage = ref(false);
 
 function onClickPack() {
-	if (canClickPack.value) {
+	if (canClickPack) {
 		emit('clickPack');
 	}
 }
@@ -95,7 +81,7 @@ function onClickPack() {
 							}"
 							alt=""
 							draggable="false"
-							ondragstart="return false"
+							@dragstart.prevent
 							@imgloadchange="loadedImage = $event"
 						/>
 					</AppMediaItemBackdrop>

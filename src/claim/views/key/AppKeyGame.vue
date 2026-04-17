@@ -1,42 +1,33 @@
 <script lang="ts" setup>
-import { PropType, onUnmounted, ref, toRefs } from 'vue';
+import { onUnmounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
-import AppFadeCollapse from '../../../_common/AppFadeCollapse.vue';
-import AppButton from '../../../_common/button/AppButton.vue';
-import AppContentViewer from '../../../_common/content/content-viewer/AppContentViewer.vue';
-import { Environment } from '../../../_common/environment/environment.service';
-import { GameBundleModel } from '../../../_common/game-bundle/game-bundle.model';
-import { CustomGameMessage, GameModel } from '../../../_common/game/game.model';
-import AppGamePackageCard from '../../../_common/game/package/card/AppGamePackageCard.vue';
-import { GamePackagePayloadModel } from '../../../_common/game/package/package-payload.model';
-import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
-import { KeyGroupModel, KeyGroupType } from '../../../_common/key-group/key-group.model';
-import AppMediaItemCover from '../../../_common/media-item/cover/AppMediaItemCover.vue';
-import { useCommonStore } from '../../../_common/store/common-store';
-import { useThemeStore } from '../../../_common/theme/theme.store';
+
+import AppFadeCollapse from '~common/AppFadeCollapse.vue';
+import AppButton from '~common/button/AppButton.vue';
+import AppContentViewer from '~common/content/content-viewer/AppContentViewer.vue';
+import { Environment } from '~common/environment/environment.service';
+import { CustomGameMessage, GameModel } from '~common/game/game.model';
+import AppGamePackageCard from '~common/game/package/card/AppGamePackageCard.vue';
+import { GamePackagePayloadModel } from '~common/game/package/package-payload.model';
+import { GameBundleModel } from '~common/game-bundle/game-bundle.model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { KeyGroupModel, KeyGroupType } from '~common/key-group/key-group.model';
+import AppMediaItemCover from '~common/media-item/cover/AppMediaItemCover.vue';
+import { useCommonStore } from '~common/store/common-store';
+import { useThemeStore } from '~common/theme/theme.store';
 
 const ClaimGameThemeKey = 'claim-game';
 
-const props = defineProps({
-	payload: {
-		type: Object as PropType<any>,
-		required: true,
-	},
-	loginUrl: {
-		type: String,
-		required: true,
-	},
-	accessKey: {
-		type: String,
-		default: undefined,
-	},
-});
+type Props = {
+	payload: any;
+	loginUrl: string;
+	accessKey?: string;
+};
+const { payload, loginUrl, accessKey } = defineProps<Props>();
 
-const emit = defineEmits({
-	claim: (_game: GameModel) => true,
-});
-
-const { payload, loginUrl, accessKey } = toRefs(props);
+const emit = defineEmits<{
+	claim: [game: GameModel];
+}>();
 
 const { user } = useCommonStore();
 const { setPageTheme, clearPageTheme } = useThemeStore();
@@ -47,10 +38,10 @@ const isClaimOnly = ref(false);
 const canToggleDescription = ref(false);
 const showingFullDescription = ref(false);
 
-const game = ref(new GameModel(payload.value.game));
-const bundle = ref(payload.value.bundle ? new GameBundleModel(payload.value.bundle) : null);
-const keyGroup = ref(payload.value.keyGroup ? new KeyGroupModel(payload.value.keyGroup) : null);
-const gameIsLocked = ref(payload.value.gameIsLocked ?? false);
+const game = ref(new GameModel(payload.game));
+const bundle = ref(payload.bundle ? new GameBundleModel(payload.bundle) : null);
+const keyGroup = ref(payload.keyGroup ? new KeyGroupModel(payload.keyGroup) : null);
+const gameIsLocked = ref(payload.gameIsLocked ?? false);
 const customGameMessages = ref<CustomGameMessage[]>([]);
 const packagePayload = ref<GamePackagePayloadModel | null>(null);
 
@@ -61,12 +52,10 @@ if (
 ) {
 	isClaimOnly.value = true;
 } else {
-	customGameMessages.value = payload.value.customMessages;
+	customGameMessages.value = payload.customMessages;
 
 	packagePayload.value =
-		payload.value.packages && payload.value.packages.length
-			? new GamePackagePayloadModel(payload.value)
-			: null;
+		payload.packages && payload.packages.length ? new GamePackagePayloadModel(payload) : null;
 }
 
 setPageTheme({
@@ -171,6 +160,7 @@ function claim() {
 				}"
 			>
 				<AppJolticon icon="notice" />
+				<!-- eslint-disable-next-line vue/no-v-html -->
 				<span v-html="msg.message" />
 			</div>
 
@@ -183,7 +173,7 @@ function claim() {
 					v-for="pkg of packagePayload.packages"
 					:key="pkg.id"
 					:game="game"
-					:sellable="pkg._sellable"
+					:sellable="pkg._sellable!"
 					:package="pkg"
 					:releases="pkg._releases"
 					:builds="pkg._builds"

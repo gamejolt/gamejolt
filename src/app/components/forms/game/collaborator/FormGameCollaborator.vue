@@ -1,0 +1,114 @@
+<script lang="ts" setup>
+import { toRef } from 'vue';
+
+import {
+	$inviteCollaborator,
+	CollaboratorModel,
+	CollaboratorRole,
+} from '~common/collaborator/collaborator.model';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormControlError from '~common/form-vue/AppFormControlError.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormControlPrefix from '~common/form-vue/AppFormControlPrefix.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlRadio from '~common/form-vue/controls/AppFormControlRadio.vue';
+import { validateAvailability, validateMaxLength } from '~common/form-vue/validators';
+import { GameModel } from '~common/game/game.model';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+
+type FormModel = CollaboratorModel;
+
+type Props = {
+	game: GameModel;
+	model?: CollaboratorModel;
+};
+
+const props = defineProps<Props>();
+const { game } = props;
+
+const emit = defineEmits<{
+	submit: [collaborator: CollaboratorModel];
+}>();
+
+const CollaboratorRoleEqualCollaborator = CollaboratorRole.EqualCollaborator;
+const CollaboratorRoleCommunityManager = CollaboratorRole.CommunityManager;
+
+const form: FormController<FormModel> = createForm<FormModel>({
+	model: toRef(props, 'model'),
+	modelClass: CollaboratorModel,
+	modelSaveHandler: $inviteCollaborator,
+	resetOnSubmit: true,
+	onInit() {
+		form.formModel.resource = 'Game' as any;
+		form.formModel.resource_id = game.id;
+
+		if (props.model && props.model.user) {
+			form.formModel.username = props.model.user.username;
+		}
+	},
+	onSubmitSuccess() {
+		emit('submit', form.formModel);
+	},
+});
+</script>
+
+<template>
+	<AppForm :controller="form">
+		<AppFormGroup v-if="form.method === 'add'" name="username" :label="$gettext(`Username`)">
+			<AppFormControlPrefix prefix="@">
+				<AppFormControl
+					:validators="[
+						validateMaxLength(100),
+						validateAvailability({
+							url: `/web/dash/developer/games/collaborators/check-field-availability`,
+							initVal: undefined,
+						}),
+					]"
+					validate-on-blur
+					focus
+				/>
+			</AppFormControlPrefix>
+
+			<AppFormControlErrors :label="$gettext('username')">
+				<AppFormControlError
+					when="availability"
+					:message="$gettext(`This user does not exist.`)"
+				/>
+			</AppFormControlErrors>
+		</AppFormGroup>
+
+		<AppFormGroup name="role" :label="$gettext('Role')">
+			<div class="radio">
+				<label>
+					<AppFormControlRadio :value="CollaboratorRoleEqualCollaborator" />
+					<AppTranslate>Full Collaborator</AppTranslate>
+					&mdash;
+					<AppTranslate class="help-inline">
+						They will be able to access and modify everything for the game. They won't
+						be able to add other collaborators.
+					</AppTranslate>
+				</label>
+			</div>
+			<div class="radio">
+				<label>
+					<AppFormControlRadio :value="CollaboratorRoleCommunityManager" />
+					<AppTranslate>Community Manager</AppTranslate>
+					&mdash;
+					<AppTranslate class="help-inline">
+						They will be able to modify the game description, details, maturity, and
+						media, as well as post devlogs. They won't be able to modify packages, game
+						API, key groups, sales, or access analytics.
+					</AppTranslate>
+				</label>
+			</div>
+			<AppFormControlErrors />
+		</AppFormGroup>
+
+		<AppFormButton v-if="!!form.formModel.role">
+			<AppTranslate v-if="form.method === 'add'">Invite</AppTranslate>
+			<AppTranslate v-else>Save</AppTranslate>
+		</AppFormButton>
+	</AppForm>
+</template>

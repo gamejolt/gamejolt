@@ -1,5 +1,5 @@
-import { Model } from '../../model/model.service';
-import { CommunityModel } from '../community.model';
+import { CommunityModel } from '~common/community/community.model';
+import { Model } from '~common/model/model.service';
 
 export const enum CommunityUserNotificationType {
 	POSTS_MOVE = 'posts/move',

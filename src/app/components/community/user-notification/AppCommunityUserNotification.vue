@@ -1,34 +1,32 @@
 <script lang="ts" setup>
-import { PropType, computed, toRef, toRefs } from 'vue';
-import AppAlertDismissable from '../../../../_common/alert/dismissable/AppAlertDismissable.vue';
-import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
+import { computed, toRef } from 'vue';
+
+import AppAlertDismissable from '~common/alert/dismissable/AppAlertDismissable.vue';
+import AppCommunityThumbnailImg from '~common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import {
 	$removeCommunityUserNotification,
 	CommunityUserNotificationModel,
 	CommunityUserNotificationType,
-} from '../../../../_common/community/user-notification/user-notification.model';
-import AppTimeAgo from '../../../../_common/time/AppTimeAgo.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
+} from '~common/community/user-notification/user-notification.model';
+import AppTimeAgo from '~common/time/AppTimeAgo.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
 import {
 	getCommunityEjectPostReasons,
 	getCommunityMovePostReasons,
-} from '../../../../_common/user/action-reasons';
+} from '~common/user/action-reasons';
 
-const props = defineProps({
-	notification: {
-		type: Object as PropType<CommunityUserNotificationModel>,
-		required: true,
-	},
-});
+type Props = {
+	notification: CommunityUserNotificationModel;
+};
+const { notification } = defineProps<Props>();
 
-const emit = defineEmits({
-	dismiss: () => true,
-});
-
-const { notification } = toRefs(props);
+const emit = defineEmits<{
+	dismiss: [];
+}>();
 
 const notificationReasons = computed(() => {
-	switch (notification.value.type) {
+	switch (notification.type) {
 		case CommunityUserNotificationType.POSTS_MOVE:
 			return getCommunityMovePostReasons();
 		case CommunityUserNotificationType.POSTS_EJECT:
@@ -38,10 +36,10 @@ const notificationReasons = computed(() => {
 	throw new Error('No reasons defined.');
 });
 
-const hasReason = toRef(() => notification.value.reason !== null);
+const hasReason = toRef(() => notification.reason !== null);
 
 const reasonText = computed(() => {
-	const reason = notification.value.reason;
+	const reason = notification.reason;
 	if (reason === null) {
 		return null;
 	}
@@ -55,7 +53,7 @@ const reasonText = computed(() => {
 
 function onDismiss() {
 	// Hope it succeeds, but don't wait on it.
-	$removeCommunityUserNotification(notification.value);
+	$removeCommunityUserNotification(notification);
 	emit('dismiss');
 }
 </script>
@@ -80,20 +78,20 @@ function onDismiss() {
 		<div class="-message">
 			<div>
 				<template v-if="notification.type === CommunityUserNotificationType.POSTS_MOVE">
-					<span
-						v-translate="{
+					<AppTranslate
+						:translate-params="{
 							fromChannel: notification.extra_data['from-channel'],
 							toChannel: notification.extra_data['to-channel'],
 						}"
 					>
-						Your post has been <b>moved</b> from the <i>%{ fromChannel }</i> channel to
-						the <i>%{ toChannel }</i> channel.
-					</span>
+						Your post has been moved from the %{ fromChannel } channel to the %{
+						toChannel } channel.
+					</AppTranslate>
 				</template>
 				<template
 					v-else-if="notification.type === CommunityUserNotificationType.POSTS_EJECT"
 				>
-					<span v-translate>Your post has been <b>ejected</b> from the community.</span>
+					<AppTranslate>Your post has been ejected from the community.</AppTranslate>
 				</template>
 			</div>
 

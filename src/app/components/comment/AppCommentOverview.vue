@@ -1,60 +1,47 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs, watch } from 'vue';
+import { computed, watch } from 'vue';
 import { useRouter } from 'vue-router';
-import AppFadeCollapse from '../../../_common/AppFadeCollapse.vue';
+
+import { DisplayMode } from '~app/components/comment/modal/modal.service';
+import { showCommentThreadModal } from '~app/components/comment/thread/modal.service';
+import AppFadeCollapse from '~common/AppFadeCollapse.vue';
 import {
 	CommentModel,
 	getCommentBlockReason,
 	getCommentModelResourceName,
-} from '../../../_common/comment/comment-model';
+} from '~common/comment/comment-model';
 import {
 	CommentStoreModel,
 	getCommentStore,
 	useCommentStoreManager,
-} from '../../../_common/comment/comment-store';
-import AppContentViewer from '../../../_common/content/content-viewer/AppContentViewer.vue';
-import AppIllustration from '../../../_common/illustration/AppIllustration.vue';
-import { illNoCommentsSmall } from '../../../_common/illustration/illustrations';
-import { Model } from '../../../_common/model/model.service';
-import AppUserCardHover from '../../../_common/user/card/AppUserCardHover.vue';
-import AppUserAvatarBubble from '../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
-import { DisplayMode } from './modal/modal.service';
-import { showCommentThreadModal } from './thread/modal.service';
+} from '~common/comment/comment-store';
+import AppContentViewer from '~common/content/content-viewer/AppContentViewer.vue';
+import AppIllustration from '~common/illustration/AppIllustration.vue';
+import { illNoCommentsSmall } from '~common/illustration/illustrations';
+import { Model } from '~common/model/model.service';
+import AppUserCardHover from '~common/user/card/AppUserCardHover.vue';
+import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
 
-const props = defineProps({
-	comments: {
-		type: Array as PropType<CommentModel[]>,
-		required: true,
-	},
-	model: {
-		type: Object as PropType<Model>,
-		required: true,
-	},
-	displayMode: {
-		type: String as PropType<DisplayMode>,
-		required: true,
-	},
-});
+type Props = {
+	comments: CommentModel[];
+	model: Model;
+	displayMode: DisplayMode;
+};
+const { comments, model, displayMode } = defineProps<Props>();
 
-const { comments, model, displayMode } = toRefs(props);
-
-const emit = defineEmits({
-	'reload-comments': () => true,
-});
+const emit = defineEmits<{
+	'reload-comments': [];
+}>();
 
 const commentManager = useCommentStoreManager()!;
 const router = useRouter();
 
 const displayComments = computed(() => {
-	return comments.value.filter(c => getCommentBlockReason(c) === false);
+	return comments.filter(c => getCommentBlockReason(c) === false);
 });
 
 const hasComments = computed(() => {
-	const store = getCommentStore(
-		commentManager,
-		getCommentModelResourceName(model.value),
-		model.value.id
-	);
+	const store = getCommentStore(commentManager, getCommentModelResourceName(model), model.id);
 	if (store instanceof CommentStoreModel) {
 		return store.totalCount > 0;
 	}
@@ -63,11 +50,7 @@ const hasComments = computed(() => {
 });
 
 const commentStoreDirtyState = computed(() => {
-	const store = getCommentStore(
-		commentManager,
-		getCommentModelResourceName(model.value),
-		model.value.id
-	);
+	const store = getCommentStore(commentManager, getCommentModelResourceName(model), model.id);
 	if (store instanceof CommentStoreModel) {
 		return store.overviewNeedsRefresh;
 	}
@@ -76,11 +59,7 @@ const commentStoreDirtyState = computed(() => {
 
 watch(commentStoreDirtyState, dirtyState => {
 	if (dirtyState) {
-		const store = getCommentStore(
-			commentManager,
-			getCommentModelResourceName(model.value),
-			model.value.id
-		);
+		const store = getCommentStore(commentManager, getCommentModelResourceName(model), model.id);
 		if (store instanceof CommentStoreModel) {
 			store.overviewNeedsRefresh = false;
 		}
@@ -92,9 +71,9 @@ watch(commentStoreDirtyState, dirtyState => {
 function open(comment: CommentModel) {
 	showCommentThreadModal({
 		router,
-		model: model.value,
+		model,
 		commentId: comment.id,
-		displayMode: displayMode.value,
+		displayMode,
 	});
 }
 </script>

@@ -1,24 +1,25 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
-import { Analytics } from '../../_common/analytics/analytics.service';
-import AppButton from '../../_common/button/AppButton.vue';
-import { Environment } from '../../_common/environment/environment.service';
-import { formatCurrency } from '../../_common/filters/currency';
-import { formatFilesize } from '../../_common/filters/filesize';
+
+import { Analytics } from '~common/analytics/analytics.service';
+import AppButton from '~common/button/AppButton.vue';
+import { Environment } from '~common/environment/environment.service';
+import { formatCurrency } from '~common/filters/currency';
+import { formatFilesize } from '~common/filters/filesize';
 import {
 	GameBuildEmulatorInfo,
 	GameBuildModel,
 	GameBuildType,
-} from '../../_common/game/build/build.model';
-import { HistoryTick } from '../../_common/history-tick/history-tick-service';
-import AppJolticon, { Jolticon } from '../../_common/jolticon/AppJolticon.vue';
-import { SellableType } from '../../_common/sellable/sellable.model';
-import { useCommonStore } from '../../_common/store/common-store';
-import { vAppTooltip } from '../../_common/tooltip/tooltip-directive';
-import AppFadeCollapse from '../components/AppFadeCollapse.vue';
-import AppWidgetModal from '../components/AppWidgetModal.vue';
-import { useWidgetPackageStore } from '../store/index';
-import FormPayment from './forms/FormPayment.vue';
+} from '~common/game/build/build.model';
+import { HistoryTick } from '~common/history-tick/history-tick-service';
+import AppJolticon, { Jolticon } from '~common/jolticon/AppJolticon.vue';
+import { SellableType } from '~common/sellable/sellable.model';
+import { useCommonStore } from '~common/store/common-store';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import AppFadeCollapse from '~widget-package/components/AppFadeCollapse.vue';
+import AppWidgetModal from '~widget-package/components/AppWidgetModal.vue';
+import FormPayment from '~widget-package/components/forms/FormPayment.vue';
+import { useWidgetPackageStore } from '~widget-package/store/index';
 
 const store = useWidgetPackageStore();
 const { user } = useCommonStore();

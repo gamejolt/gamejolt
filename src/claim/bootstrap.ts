@@ -1,10 +1,11 @@
-import { bootstrapCommon } from '../_common/bootstrap';
-import './main.styl';
-import { router } from './views/index';
+import '~claim/main.styl';
+
+import { router } from '~claim/views/index';
+import { bootstrapCommon } from '~common/bootstrap';
 
 export async function createApp() {
 	const { app } = await bootstrapCommon({
-		appComponentLoader: async () => (await import('./AppMain.vue')).default,
+		appComponentLoader: async () => (await import('~claim/AppMain.vue')).default,
 		router,
 	});
 

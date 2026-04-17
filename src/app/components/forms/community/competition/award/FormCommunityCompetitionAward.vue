@@ -1,43 +1,36 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
+import { computed, toRef } from 'vue';
+
 import {
 	$saveCommunityCompetitionAward,
 	CommunityCompetitionAwardModel,
-} from '../../../../../../_common/community/competition/award/award.model';
-import { CommunityCompetitionModel } from '../../../../../../_common/community/competition/competition.model';
-import AppForm, {
-	createForm,
-	defineFormProps,
-	FormController,
-} from '../../../../../../_common/form-vue/AppForm.vue';
-import AppFormButton from '../../../../../../_common/form-vue/AppFormButton.vue';
-import AppFormControl from '../../../../../../_common/form-vue/AppFormControl.vue';
-import AppFormControlErrors from '../../../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../../../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormControlTextarea from '../../../../../../_common/form-vue/controls/AppFormControlTextarea.vue';
-import {
-	validateAvailability,
-	validateMaxLength,
-} from '../../../../../../_common/form-vue/validators';
+} from '~common/community/competition/award/award.model';
+import { CommunityCompetitionModel } from '~common/community/competition/competition.model';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlTextarea from '~common/form-vue/controls/AppFormControlTextarea.vue';
+import { validateAvailability, validateMaxLength } from '~common/form-vue/validators';
 
-const props = defineProps({
-	competition: {
-		type: Object as PropType<CommunityCompetitionModel>,
-		required: true,
-	},
-	...defineFormProps<CommunityCompetitionAwardModel>(),
-});
+type FormModel = CommunityCompetitionAwardModel;
 
-const emit = defineEmits({
-	submit: (_model: CommunityCompetitionAwardModel) => true,
-});
+type Props = {
+	competition: CommunityCompetitionModel;
+	model?: FormModel;
+};
+const { competition, model } = defineProps<Props>();
 
-const { competition, model } = toRefs(props);
+const emit = defineEmits<{
+	submit: [model: CommunityCompetitionAwardModel];
+}>();
+
+const modelRef = toRef(() => model);
 
 const nameAvailabilityUrl = computed(() => {
 	let endpoint =
-		'/web/dash/communities/competitions/awards/check-field-availability/' +
-		competition.value.id;
+		'/web/dash/communities/competitions/awards/check-field-availability/' + competition.id;
 
 	if (form.formModel?.id) {
 		endpoint += '/' + form.formModel.id;
@@ -46,14 +39,14 @@ const nameAvailabilityUrl = computed(() => {
 	return endpoint;
 });
 
-const form: FormController<CommunityCompetitionAwardModel> = createForm({
-	model,
+const form: FormController<FormModel> = createForm<FormModel>({
+	model: modelRef,
 	modelClass: CommunityCompetitionAwardModel,
 	modelSaveHandler: $saveCommunityCompetitionAward,
 	onBeforeSubmit() {
 		// When creating a new award, this field isn't set yet.
 		if (!form.formModel.community_competition_id) {
-			form.formModel.community_competition_id = competition.value.id;
+			form.formModel.community_competition_id = competition.id;
 		}
 	},
 	onSubmitSuccess() {

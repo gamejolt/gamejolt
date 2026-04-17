@@ -1,22 +1,23 @@
 <script lang="ts" setup>
-import { computed, ref, Ref } from 'vue';
-import AppAvatarFrame from '../../../../_common/avatar/AppAvatarFrame.vue';
-import { AvatarFrameModel, DefaultAvatarFrameScale } from '../../../../_common/avatar/frame.model';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
-import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
-import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormControlSelect from '../../../../_common/form-vue/controls/AppFormControlSelect.vue';
-import AppFormControlTheme from '../../../../_common/form-vue/controls/AppFormControlTheme.vue';
-import AppFormControlToggle from '../../../../_common/form-vue/controls/AppFormControlToggle.vue';
-import { useCommonStore } from '../../../../_common/store/common-store';
-import AppTheme from '../../../../_common/theme/AppTheme.vue';
-import { ThemeModel } from '../../../../_common/theme/theme.model';
-import { useThemeStore } from '../../../../_common/theme/theme.store';
-import { kThemeFg } from '../../../../_common/theme/variables';
-import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
-import { styleBorderRadiusLg, styleChangeBg, styleFlexCenter } from '../../../../_styles/mixins';
-import { kBorderWidthBase } from '../../../../_styles/variables';
+import { computed, Ref, ref } from 'vue';
+
+import AppAvatarFrame from '~common/avatar/AppAvatarFrame.vue';
+import { AvatarFrameModel, DefaultAvatarFrameScale } from '~common/avatar/frame.model';
+import AppButton from '~common/button/AppButton.vue';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlSelect from '~common/form-vue/controls/AppFormControlSelect.vue';
+import AppFormControlTheme from '~common/form-vue/controls/AppFormControlTheme.vue';
+import AppFormControlToggle from '~common/form-vue/controls/AppFormControlToggle.vue';
+import { useCommonStore } from '~common/store/common-store';
+import AppTheme from '~common/theme/AppTheme.vue';
+import { ThemeModel } from '~common/theme/theme.model';
+import { useThemeStore } from '~common/theme/theme.store';
+import { kThemeFg } from '~common/theme/variables';
+import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
+import { styleBorderRadiusLg, styleChangeBg, styleFlexCenter } from '~styles/mixins';
+import { kBorderWidthBase } from '~styles/variables';
 
 interface FormModel {
 	imageUrl?: string;

@@ -1,37 +1,36 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType, computed } from 'vue';
-import { Screen } from '../../../../_common/screen/screen-service';
-import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
-import { kThemeFg10 } from '../../../../_common/theme/variables';
-import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import AppUserAvatarBubble from '../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
-import { styleFlexCenter, styleLineClamp, styleWhen } from '../../../../_styles/mixins';
-import { kFontSizeSmall, kFontSizeTiny, kStrongEaseOut } from '../../../../_styles/variables';
-import { showCommentModal } from '../../../components/comment/modal/modal.service';
-import { useProfileRouteStore } from '../RouteProfile.vue';
-import { showProfileCommunitiesModal } from '../communities/modal.service';
-import AppProfileDogtags from '../dogtags/AppProfileDogtags.vue';
-import { showProfileFollowersModal } from '../followers/modal.service';
-import { showProfileFollowingModal } from '../following/modal.service';
-import AppProfileActionButtons from './AppProfileActionButtons.vue';
-import AppProfileBio from './AppProfileBio.vue';
-import AppProfileShortcuts, { ProfileQuickLink } from './shortcut/AppProfileShortcuts.vue';
-import AppProfileStat from './stats/AppProfileStat.vue';
-import AppProfileStats, { ProfileStat } from './stats/AppProfileStats.vue';
+import { computed, CSSProperties } from 'vue';
 
-defineProps({
-	showAvatar: {
-		type: Boolean,
-	},
-	fadeAvatar: {
-		type: Boolean,
-	},
-	cardStyles: {
-		type: Object as PropType<CSSProperties>,
-		default: () => ({}),
-	},
-});
+import { showCommentModal } from '~app/components/comment/modal/modal.service';
+import { showProfileCommunitiesModal } from '~app/views/profile/communities/modal.service';
+import AppProfileDogtags from '~app/views/profile/dogtags/AppProfileDogtags.vue';
+import { showProfileFollowersModal } from '~app/views/profile/followers/modal.service';
+import { showProfileFollowingModal } from '~app/views/profile/following/modal.service';
+import AppProfileActionButtons from '~app/views/profile/overview/AppProfileActionButtons.vue';
+import AppProfileBio from '~app/views/profile/overview/AppProfileBio.vue';
+import AppProfileShortcuts, {
+	ProfileQuickLink,
+} from '~app/views/profile/overview/shortcut/AppProfileShortcuts.vue';
+import AppProfileStat from '~app/views/profile/overview/stats/AppProfileStat.vue';
+import AppProfileStats, {
+	ProfileStat,
+} from '~app/views/profile/overview/stats/AppProfileStats.vue';
+import { useProfileRouteStore } from '~app/views/profile/RouteProfile.vue';
+import { Screen } from '~common/screen/screen-service';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import { kThemeFg10 } from '~common/theme/variables';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { $gettext } from '~common/translate/translate.service';
+import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
+import { styleFlexCenter, styleLineClamp, styleWhen } from '~styles/mixins';
+import { kFontSizeSmall, kFontSizeTiny, kStrongEaseOut } from '~styles/variables';
+
+type Props = {
+	showAvatar?: boolean;
+	fadeAvatar?: boolean;
+	cardStyles?: CSSProperties;
+};
+const { showAvatar, fadeAvatar, cardStyles = {} } = defineProps<Props>();
 
 const {
 	user: routeUser,

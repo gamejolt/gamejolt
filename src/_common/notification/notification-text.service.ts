@@ -1,26 +1,26 @@
-import { CommunityModel } from '../community/community.model';
+import { CommunityModel } from '~common/community/community.model';
 import {
 	CommunityUserNotificationModel,
 	CommunityUserNotificationType,
-} from '../community/user-notification/user-notification.model';
-import { CreatorExperienceLevelModel } from '../creator/experience/level.model';
-import { formatCurrency } from '../filters/currency';
-import { FiresidePostCommunityModel } from '../fireside/post/community/community.model';
-import { FiresidePostModel } from '../fireside/post/post-model';
-import { ForumTopicModel } from '../forum/topic/topic.model';
-import { GameModel } from '../game/game.model';
-import { GameTrophyModel } from '../game/trophy/trophy.model';
-import { MentionModel } from '../mention/mention.model';
-import type { OrderItemModel } from '../order/item/item.model';
-import { QuestNotificationModel } from '../quest/quest-notification-model';
-import { SellableModel } from '../sellable/sellable.model';
-import { SiteTrophyModel } from '../site/trophy/trophy.model';
-import { SupporterActionModel } from '../supporters/action.model';
-import { $gettext } from '../translate/translate.service';
-import { UserGameTrophyModel } from '../user/trophy/game-trophy.model';
-import { UserSiteTrophyModel } from '../user/trophy/site-trophy.model';
-import { UserModel } from '../user/user.model';
-import { NotificationModel, NotificationType } from './notification-model';
+} from '~common/community/user-notification/user-notification.model';
+import { CreatorExperienceLevelModel } from '~common/creator/experience/level.model';
+import { formatCurrency } from '~common/filters/currency';
+import { FiresidePostCommunityModel } from '~common/fireside/post/community/community.model';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import { ForumTopicModel } from '~common/forum/topic/topic.model';
+import { GameModel } from '~common/game/game.model';
+import { GameTrophyModel } from '~common/game/trophy/trophy.model';
+import { MentionModel } from '~common/mention/mention.model';
+import { NotificationModel, NotificationType } from '~common/notification/notification-model';
+import type { OrderItemModel } from '~common/order/item/item.model';
+import { QuestNotificationModel } from '~common/quest/quest-notification-model';
+import { SellableModel } from '~common/sellable/sellable.model';
+import { SiteTrophyModel } from '~common/site/trophy/trophy.model';
+import { SupporterActionModel } from '~common/supporters/action.model';
+import { $gettext } from '~common/translate/translate.service';
+import { UserGameTrophyModel } from '~common/user/trophy/game-trophy.model';
+import { UserSiteTrophyModel } from '~common/user/trophy/site-trophy.model';
+import { UserModel } from '~common/user/user.model';
 
 export class NotificationText {
 	private static getSubjectTranslationValue(notification: NotificationModel) {

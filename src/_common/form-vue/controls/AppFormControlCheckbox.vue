@@ -1,56 +1,49 @@
 <script lang="ts" setup>
-import { computed, ref, toRef } from 'vue';
-import { useForm } from '../AppForm.vue';
-import {
-	createFormControl,
-	defineFormControlEmits,
-	defineFormControlProps,
-} from '../AppFormControl.vue';
-import { useFormGroup } from '../AppFormGroup.vue';
+import { computed, toRef, useTemplateRef } from 'vue';
 
-// TODO: better typing
-const props = defineProps({
-	...defineFormControlProps(),
+import { useForm } from '~common/form-vue/AppForm.vue';
+import { createFormControl, FormControlEmits } from '~common/form-vue/AppFormControl.vue';
+import { useFormGroup } from '~common/form-vue/AppFormGroup.vue';
+import { FormValidator } from '~common/form-vue/validators';
+
+type Props = {
+	disabled?: boolean;
+	validators?: FormValidator[];
 	/**
 	 * Should be set to define what value the checkbox will set on the form
 	 * group. If this is undefined, we will use boolean value when it's on/off.
 	 */
-	value: {
-		type: null,
-		default: undefined,
-	},
-});
+	value?: any;
+};
+const { disabled, validators = [], value } = defineProps<Props>();
 
-const emit = defineEmits({
-	...defineFormControlEmits(),
-});
+const emit = defineEmits<FormControlEmits>();
 
 const form = useForm()!;
 const { name } = useFormGroup()!;
 
 const { controlVal, applyValue } = createFormControl<any>({
 	initialValue: null,
-	validators: toRef(props, 'validators'),
-	// eslint-disable-next-line vue/require-explicit-emits
+	validators: toRef(() => validators),
 	onChange: val => emit('changed', val),
 	multi: true,
 	alwaysOptional: true,
 });
 
-const root = ref<HTMLInputElement>();
+const root = useTemplateRef('root');
 
 const currentOptions = computed(() => form.formModel[name.value] || []);
 
 const checked = computed(() => {
 	// This is when there's only one checkbox without a value field. That means
 	// we want to check for just a boolean check.
-	if (!props.value) {
+	if (!value) {
 		return !!form.formModel[name.value];
 	}
 
 	// Multiple checkboxes, so we want to check to see if it's within the form
 	// model array of checked options.
-	return currentOptions.value.indexOf(props.value) !== -1;
+	return currentOptions.value.indexOf(value) !== -1;
 });
 
 function onChange() {
@@ -59,16 +52,16 @@ function onChange() {
 	}
 
 	// Boolean based single checkbox.
-	if (!props.value) {
+	if (!value) {
 		applyValue(root.value.checked);
 	} else {
 		// Multiple checkboxes with values.
 		const options: any[] = [...currentOptions.value];
 
 		if (root.value.checked) {
-			options.push(props.value);
+			options.push(value);
 		} else {
-			const index = options.findIndex(i => i === props.value);
+			const index = options.findIndex(i => i === value);
 			if (index !== -1) {
 				options.splice(index, 1);
 			}

@@ -1,36 +1,30 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
-import { showInviteModal } from '../invite/modal/modal.service';
-import AppJolticon, { Jolticon } from '../jolticon/AppJolticon.vue';
-import AppSpacer from '../spacer/AppSpacer.vue';
-import { useCommonStore } from '../store/common-store';
-import { $gettext } from '../translate/translate.service';
-import AppQuestProgress from './AppQuestProgress.vue';
-import { QuestModel, QuestStatus } from './quest-model';
+import { computed } from 'vue';
+
+import { showInviteModal } from '~common/invite/modal/modal.service';
+import AppJolticon, { Jolticon } from '~common/jolticon/AppJolticon.vue';
+import AppQuestProgress from '~common/quest/AppQuestProgress.vue';
+import { QuestModel, QuestStatus } from '~common/quest/quest-model';
 import {
 	QuestObjectiveModel,
 	QuestObjectiveStatus,
 	QuestObjectiveType,
-} from './quest-objective-model';
+} from '~common/quest/quest-objective-model';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import { useCommonStore } from '~common/store/common-store';
+import { $gettext } from '~common/translate/translate.service';
 
-const props = defineProps({
-	quest: {
-		type: Object as PropType<QuestModel>,
-		required: true,
-	},
-	objective: {
-		type: Object as PropType<QuestObjectiveModel>,
-		required: true,
-	},
-});
-
-const { quest, objective } = toRefs(props);
+type Props = {
+	quest: QuestModel;
+	objective: QuestObjectiveModel;
+};
+const { quest, objective } = defineProps<Props>();
 const { user } = useCommonStore();
 
 const iconData = computed<{ icon: Jolticon; classes: string[] }>(() => {
-	const i = objective.value;
+	const i = objective;
 	const isQuestStart = i.type === QuestObjectiveType.questStart;
-	const canAccept = quest.value.status == QuestStatus.available;
+	const canAccept = quest.status == QuestStatus.available;
 
 	if (i.has_unclaimed_rewards || (isQuestStart && canAccept)) {
 		return { icon: 'exclamation', classes: ['-link', '-link-shadow'] };
@@ -41,7 +35,7 @@ const iconData = computed<{ icon: Jolticon; classes: string[] }>(() => {
 	}
 });
 
-const isFriendInvite = computed(() => objective.value.type === QuestObjectiveType.inviteFriend);
+const isFriendInvite = computed(() => objective.type === QuestObjectiveType.inviteFriend);
 const subtitleData = computed<{ text: string; icon: Jolticon } | undefined>(() => {
 	if (!isFriendInvite.value) {
 		return undefined;

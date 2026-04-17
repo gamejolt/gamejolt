@@ -1,5 +1,5 @@
-import { Api } from '../../api/api.service';
-import { ContentContext } from '../content-context';
+import { Api } from '~common/api/api.service';
+import { ContentContext } from '~common/content/content-context';
 
 class ContentTempResourceService {
 	public async getTempModelId(context: ContentContext, postData: any) {

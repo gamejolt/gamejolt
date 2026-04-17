@@ -1,33 +1,25 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
+import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { stringSort } from '../../../../utils/array';
-import { GameCollectionModel } from '../../game/collection/collection.model';
 
-const props = defineProps({
-	collections: {
-		type: Array as PropType<GameCollectionModel[]>,
-		required: true,
-	},
-	filter: {
-		type: String,
-		required: true,
-	},
-	shouldSort: {
-		type: Boolean,
-	},
-});
+import { GameCollectionModel } from '~app/components/game/collection/collection.model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { stringSort } from '~utils/array';
 
-const { collections, filter, shouldSort } = toRefs(props);
+type Props = {
+	collections: GameCollectionModel[];
+	filter: string;
+	shouldSort?: boolean;
+};
+const { collections, filter, shouldSort } = defineProps<Props>();
 
 const filtered = computed(() => {
-	if (!shouldSort.value) {
-		return collections.value;
+	if (!shouldSort) {
+		return collections;
 	}
 
-	return [...collections.value].sort((a, b) => {
+	return [...collections].sort((a, b) => {
 		const aVal = a.type === 'developer' && a.owner ? a.owner.username : a.name;
 		const bVal = b.type === 'developer' && b.owner ? b.owner.username : b.name;
 		return stringSort(aVal, bVal);
@@ -40,7 +32,7 @@ const filtered = computed(() => {
  */
 function filterComparator(item: GameCollectionModel) {
 	let actual: string;
-	const expected = filter.value.toLowerCase();
+	const expected = filter.toLowerCase();
 
 	actual = item.name.toLowerCase();
 	if (actual.indexOf(expected) !== -1) {

@@ -1,28 +1,23 @@
 <script lang="ts" setup>
-import { computed, reactive, toRefs } from 'vue';
-import { arrayChunk } from '../../utils/array';
-import { formatDate } from '../filters/date';
+import { computed, reactive } from 'vue';
+
 import {
 	DatepickerDate,
 	DatepickerFormatDayHeader,
 	DatepickerFormatDayName,
 	DatepickerFormatDayTitle,
 	useDatepicker,
-} from './AppDatepicker.vue';
+} from '~common/datepicker/AppDatepicker.vue';
+import { formatDate } from '~common/filters/date';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { arrayChunk } from '~utils/array';
 
-const props = defineProps({
-	modelValue: {
-		type: Date,
-		required: true,
-	},
-});
+const modelValue = defineModel<Date>({ required: true });
 
-const emit = defineEmits({
-	'update:modelValue': (_modelValue: Date) => true,
-	selected: (_date: Date) => true,
-});
+const emit = defineEmits<{
+	selected: [date: Date];
+}>();
 
-const { modelValue } = toRefs(props);
 const { createDate, toggleMode } = useDatepicker();
 
 const title = computed(() => formatDate(modelValue.value, DatepickerFormatDayTitle));
@@ -76,7 +71,7 @@ function _getDates(startDate: Date, n: number) {
 function move(direction: number) {
 	const newValue = new Date(modelValue.value);
 	newValue.setMonth(newValue.getMonth() + direction);
-	emit('update:modelValue', newValue);
+	modelValue.value = newValue;
 }
 
 function select(date: Date) {
@@ -137,7 +132,7 @@ function select(date: Date) {
 							'datepicker-btn-info': dt.isSelected,
 							active: dt.isToday,
 						}"
-						:disabled="dt.isDisabled ? 'true' : undefined"
+						:aria-disabled="dt.isDisabled ? 'true' : undefined"
 						@click="select(dt.date)"
 					>
 						<span

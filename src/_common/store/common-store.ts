@@ -1,12 +1,14 @@
-import { computed, inject, InjectionKey, ref, Ref } from 'vue';
-import { loadScript } from '../../utils/utils';
-import { isDynamicGoogleBot } from '../device/device.service';
-import { EmojiGroupModel } from '../emoji/emoji-group.model';
-import { Environment } from '../environment/environment.service';
-import '../model/model.service';
-import { Navigate } from '../navigate/navigate.service';
-import { UserTimeoutModel } from '../user/timeout/timeout.model';
-import { UserModel } from '../user/user.model';
+import '~common/model/model.service';
+
+import { computed, inject, InjectionKey, Ref, ref } from 'vue';
+
+import { isDynamicGoogleBot } from '~common/device/device.service';
+import { EmojiGroupModel } from '~common/emoji/emoji-group.model';
+import { Environment } from '~common/environment/environment.service';
+import { Navigate } from '~common/navigate/navigate.service';
+import { UserTimeoutModel } from '~common/user/timeout/timeout.model';
+import { UserModel } from '~common/user/user.model';
+import { loadScript } from '~utils/utils';
 
 interface UserConsents {
 	ads?: boolean;
@@ -183,8 +185,8 @@ export function createCommonStore() {
 			return Promise.resolve(null);
 		}
 
-		let deferredResolve = (value: unknown) => {};
-		let deferredReject = (reason?: any) => {};
+		let deferredResolve = (_value: unknown) => {};
+		let deferredReject = (_reason?: any) => {};
 		const deferred = new Promise((resolve, reject) => {
 			deferredResolve = resolve;
 			deferredReject = reject;

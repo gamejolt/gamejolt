@@ -1,9 +1,10 @@
 import type { Component } from 'vue';
-import { loadScript } from '../../../utils/utils';
-import { isDynamicGoogleBot } from '../../device/device.service';
-import { AdSlot } from '../ad-slot-info';
-import { AdAdapter, AdAdapterHelper } from '../adapter-base';
-import AppAdMonetizeMore from './AppAdMonetizeMore.vue';
+
+import { AdSlot } from '~common/ad/ad-slot-info';
+import { AdAdapter, AdAdapterHelper } from '~common/ad/adapter-base';
+import AppAdMonetizeMore from '~common/ad/monetizemore/AppAdMonetizeMore.vue';
+import { isDynamicGoogleBot } from '~common/device/device.service';
+import { loadScript } from '~utils/utils';
 
 export class AdMonetizeMoreAdapter implements AdAdapter {
 	private helper = new AdAdapterHelper();

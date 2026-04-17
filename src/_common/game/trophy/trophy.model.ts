@@ -1,6 +1,6 @@
-import { Api } from '../../api/api.service';
-import { BaseTrophyDifficulty, BaseTrophyModel } from '../../trophy/base-trophy.model';
-import { UserGameTrophyModel } from '../../user/trophy/game-trophy.model';
+import { Api } from '~common/api/api.service';
+import { BaseTrophyDifficulty, BaseTrophyModel } from '~common/trophy/base-trophy.model';
+import { UserGameTrophyModel } from '~common/user/trophy/game-trophy.model';
 
 export class GameTrophyModel extends BaseTrophyModel {
 	declare game_id: number;

@@ -1,14 +1,15 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { styleFlexCenter } from '../../../_styles/mixins';
-import { kBorderRadiusLg, kBorderWidthBase } from '../../../_styles/variables';
-import { sleep } from '../../../utils/utils';
-import AppJolticon from '../../jolticon/AppJolticon.vue';
-import { kThemeBgOffset, kThemeFg, kThemeFg10 } from '../../theme/variables';
-import AppShellNoticeBase from './_base/AppShellNoticeBase.vue';
-import AppShellNoticeCreatorExperience from './creator-experience/AppShellNoticeCreatorExperience.vue';
-import { getShellNotice } from './notice.service';
-import AppShellNoticeStickerMastery from './sticker-mastery/AppShellNoticeStickerMastery.vue';
+
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppShellNoticeBase from '~common/shell/notice/_base/AppShellNoticeBase.vue';
+import AppShellNoticeCreatorExperience from '~common/shell/notice/creator-experience/AppShellNoticeCreatorExperience.vue';
+import { getShellNotice } from '~common/shell/notice/notice.service';
+import AppShellNoticeStickerMastery from '~common/shell/notice/sticker-mastery/AppShellNoticeStickerMastery.vue';
+import { kThemeBgOffset, kThemeFg, kThemeFg10 } from '~common/theme/variables';
+import { styleFlexCenter } from '~styles/mixins';
+import { kBorderRadiusLg, kBorderWidthBase } from '~styles/variables';
+import { sleep } from '~utils/utils';
 
 const { notices, remove: removeNotice } = getShellNotice();
 

@@ -1,6 +1,7 @@
 <script lang="ts">
-import type { Component, PropType } from 'vue';
-import { ContentObject } from '../../content-object';
+import type { Component } from 'vue';
+
+import { ContentObject } from '~common/content/content-object';
 
 // App bootstrap will assign the component we should render.
 let chatInviteComponent: any = 'span';
@@ -15,12 +16,10 @@ export function setChatInviteComponent(newComponent: Component) {
 </script>
 
 <script lang="ts" setup>
-defineProps({
-	contentData: {
-		type: Object as PropType<ContentObject>,
-		required: true,
-	},
-});
+type Props = {
+	contentData: ContentObject;
+};
+const { contentData } = defineProps<Props>();
 </script>
 
 <template>

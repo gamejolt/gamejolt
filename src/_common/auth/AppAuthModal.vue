@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import AppButton from '../button/AppButton.vue';
-import AppModal from '../modal/AppModal.vue';
-import { useModal } from '../modal/modal.service';
-import AppAuthJoin from './join/AppAuthJoin.vue';
+import AppAuthJoin from '~common/auth/join/AppAuthJoin.vue';
+import AppButton from '~common/button/AppButton.vue';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
 
 const modal = useModal()!;
 </script>

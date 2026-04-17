@@ -1,33 +1,27 @@
 <script lang="ts" setup>
-import { PropType, computed, ref, toRefs } from 'vue';
-import { Api } from '../api/api.service';
-import AppButton from '../button/AppButton.vue';
-import { CommentModel } from '../comment/comment-model';
-import { formatNumber } from '../filters/number';
-import { FiresidePostModel } from '../fireside/post/post-model';
-import { GameModel } from '../game/game.model';
-import AppLoading from '../loading/AppLoading.vue';
-import AppModal from '../modal/AppModal.vue';
-import { useModal } from '../modal/modal.service';
-import AppTranslate from '../translate/AppTranslate.vue';
-import AppUserList from '../user/list/AppUserList.vue';
-import { UserModel } from '../user/user.model';
-import { LikersResource } from './modal.service';
+import { computed, ref } from 'vue';
+
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import { CommentModel } from '~common/comment/comment-model';
+import { formatNumber } from '~common/filters/number';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import { GameModel } from '~common/game/game.model';
+import { LikersResource } from '~common/likers/modal.service';
+import AppLoading from '~common/loading/AppLoading.vue';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import AppUserList from '~common/user/list/AppUserList.vue';
+import { UserModel } from '~common/user/user.model';
 
 const UsersPerPage = 20;
 
-const props = defineProps({
-	count: {
-		type: Number,
-		required: true,
-	},
-	resource: {
-		type: Object as PropType<LikersResource>,
-		default: undefined,
-	},
-});
-
-const { count, resource } = toRefs(props);
+type Props = {
+	count: number;
+	resource?: LikersResource;
+};
+const { count, resource } = defineProps<Props>();
 const modal = useModal()!;
 
 const reachedEnd = ref(false);
@@ -38,20 +32,20 @@ const users = ref<UserModel[]>([]);
 // Just for display purposes, if we have more users than the count passed in, display that instead.
 // This can happen when the count was fetched before new users were added to the list.
 const realCount = computed(() => {
-	return Math.max(count.value, users.value.length);
+	return Math.max(count, users.value.length);
 });
 
 const requestUrl = computed(() => {
-	if (!resource?.value) {
+	if (!resource) {
 		return;
 	}
 
-	if (resource.value instanceof CommentModel) {
-		return '/comments/likers/' + resource.value.id;
-	} else if (resource.value instanceof FiresidePostModel) {
-		return '/web/posts/likers/' + resource.value.id;
-	} else if (resource.value instanceof GameModel) {
-		return '/web/discover/games/likers/' + resource.value.id;
+	if (resource instanceof CommentModel) {
+		return '/comments/likers/' + resource.id;
+	} else if (resource instanceof FiresidePostModel) {
+		return '/web/posts/likers/' + resource.id;
+	} else if (resource instanceof GameModel) {
+		return '/web/discover/games/likers/' + resource.id;
 	}
 });
 
@@ -73,7 +67,7 @@ async function loadMore() {
 	const newUsers = UserModel.populate(payload.users);
 	users.value = users.value.concat(newUsers);
 
-	if (newUsers.length < UsersPerPage || users.value.length === count.value) {
+	if (newUsers.length < UsersPerPage || users.value.length === count) {
 		reachedEnd.value = true;
 	}
 

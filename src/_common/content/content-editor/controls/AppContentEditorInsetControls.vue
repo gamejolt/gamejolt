@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
-import { useContentEditorController } from '../content-editor-controller';
+
+import { useContentEditorController } from '~common/content/content-editor/content-editor-controller';
 
 const controller = useContentEditorController()!;
-const container = ref<HTMLDivElement>();
 const top = ref(0);
 
 const shouldShow = computed(() => !!view.value && !isOverflowing.value);
@@ -33,7 +33,7 @@ watch(
 </script>
 
 <template>
-	<div ref="container" class="inset-controls-container" :style="{ top: top + 'px' }">
+	<div class="inset-controls-container" :style="{ top: top + 'px' }">
 		<slot v-if="shouldShow" />
 	</div>
 </template>

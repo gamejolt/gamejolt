@@ -1,0 +1,53 @@
+<script lang="ts" setup>
+import { ForumChannelModel } from '~common/forum/channel/channel.model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+
+type Props = {
+	channel?: ForumChannelModel;
+	sort?: string;
+	page?: string;
+};
+
+const { channel, sort, page } = defineProps<Props>();
+</script>
+
+<template>
+	<nav class="breadcrumb dark-variant">
+		<ul>
+			<li>
+				<router-link :to="{ name: 'forums.landing.overview' }">
+					<span class="breadcrumb-tag"> &nbsp; </span>
+					<AppTranslate>Forums</AppTranslate>
+				</router-link>
+				<AppJolticon v-if="channel" icon="chevron-right" class="breadcrumb-separator" />
+			</li>
+
+			<li v-if="channel">
+				<router-link
+					:class="{ active: !page }"
+					:to="{
+						name: 'forums.channels.view',
+						params: { name: channel.name, sort: sort },
+					}"
+				>
+					<AppTranslate class="breadcrumb-tag">Channel</AppTranslate>
+					#{{ channel.name }}
+				</router-link>
+				<AppJolticon v-if="page" icon="chevron-right" class="breadcrumb-separator" />
+			</li>
+
+			<li v-if="page">
+				<span class="active">
+					<span class="breadcrumb-tag"> &nbsp; </span>
+					<template v-if="page === 'add-topic'">
+						<AppTranslate>New Topic</AppTranslate>
+					</template>
+					<template v-else-if="page === 'view-topic'">
+						<AppTranslate>View Topic</AppTranslate>
+					</template>
+				</span>
+			</li>
+		</ul>
+	</nav>
+</template>

@@ -1,23 +1,21 @@
-import { InjectionKey, inject } from 'vue';
+import { inject, InjectionKey } from 'vue';
 import { RouteLocationNormalized } from 'vue-router';
-import { Api } from '../../../../_common/api/api.service';
+
+import { CommunitySidebarData } from '~app/components/community/sidebar/sidebar-data';
+import { routeCommunitiesViewOverview } from '~app/views/communities/view/overview/overview.route';
+import { Api } from '~common/api/api.service';
 import {
 	$acceptCollaboratorInvite,
 	$removeCollaboratorInvite,
 	CollaboratorModel,
-} from '../../../../_common/collaborator/collaborator.model';
-import { CommunityChannelModel } from '../../../../_common/community/channel/channel.model';
-import {
-	CommunityModel,
-	CommunityPresetChannelType,
-} from '../../../../_common/community/community.model';
-import { Meta } from '../../../../_common/meta/meta-service';
-import { Screen } from '../../../../_common/screen/screen-service';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { UserModel } from '../../../../_common/user/user.model';
-import { numberSort } from '../../../../utils/array';
-import { CommunitySidebarData } from '../../../components/community/sidebar/sidebar-data';
-import { routeCommunitiesViewOverview } from './overview/overview.route';
+} from '~common/collaborator/collaborator.model';
+import { CommunityChannelModel } from '~common/community/channel/channel.model';
+import { CommunityModel, CommunityPresetChannelType } from '~common/community/community.model';
+import { Meta } from '~common/meta/meta-service';
+import { Screen } from '~common/screen/screen-service';
+import { $gettext } from '~common/translate/translate.service';
+import { UserModel } from '~common/user/user.model';
+import { numberSort } from '~utils/array';
 
 export const CommunityRouteStoreKey: InjectionKey<CommunityRouteStore> = Symbol('community-route');
 

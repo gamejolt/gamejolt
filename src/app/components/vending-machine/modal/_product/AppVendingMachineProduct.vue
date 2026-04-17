@@ -1,59 +1,54 @@
 <script lang="ts" setup>
-import { PropType, computed, toRef, toRefs } from 'vue';
-import { ShopViewType, trackShopView } from '../../../../../_common/analytics/analytics.service';
-import AppAspectRatio from '../../../../../_common/aspect-ratio/AppAspectRatio.vue';
-import AppBackground from '../../../../../_common/background/AppBackground.vue';
-import AppCollectibleUnlockedRibbon from '../../../../../_common/collectible/AppCollectibleUnlockedRibbon.vue';
-import AppCurrencyPillList from '../../../../../_common/currency/AppCurrencyPillList.vue';
-import { shorthandReadableTime } from '../../../../../_common/filters/duration';
-import { InventoryShopProductSaleModel } from '../../../../../_common/inventory/shop/inventory-shop-product-sale.model';
-import { useOnHover } from '../../../../../_common/on/useOnHover';
-import { Screen } from '../../../../../_common/screen/screen-service';
+import { computed, toRef } from 'vue';
+
+import { ShopViewType, trackShopView } from '~common/analytics/analytics.service';
+import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
+import AppBackground from '~common/background/AppBackground.vue';
+import AppCollectibleUnlockedRibbon from '~common/collectible/AppCollectibleUnlockedRibbon.vue';
+import AppCurrencyPillList from '~common/currency/AppCurrencyPillList.vue';
+import { shorthandReadableTime } from '~common/filters/duration';
+import { InventoryShopProductSaleModel } from '~common/inventory/shop/inventory-shop-product-sale.model';
+import { useOnHover } from '~common/on/useOnHover';
+import { Screen } from '~common/screen/screen-service';
 import AppStickerPack, {
 	StickerPackExpiryStyles,
 	StickerPackRatio,
-} from '../../../../../_common/sticker/pack/AppStickerPack.vue';
-import { useCommonStore } from '../../../../../_common/store/common-store';
-import { kThemeFg, kThemeFgMuted, kThemeGray } from '../../../../../_common/theme/variables';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import AppUserAvatarBubble from '../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
-import { styleElevate, styleTyped, styleWhen } from '../../../../../_styles/mixins';
-import { kBorderRadiusLg, kFontSizeSmall, kStrongEaseOut } from '../../../../../_styles/variables';
+} from '~common/sticker/pack/AppStickerPack.vue';
+import { useCommonStore } from '~common/store/common-store';
+import { kThemeFg, kThemeFgMuted, kThemeGray } from '~common/theme/variables';
+import { $gettext } from '~common/translate/translate.service';
+import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
+import { styleElevate, styleTyped, styleWhen } from '~styles/mixins';
+import { kBorderRadiusLg, kFontSizeSmall, kStrongEaseOut } from '~styles/variables';
 
-const props = defineProps({
-	shopProduct: {
-		type: Object as PropType<InventoryShopProductSaleModel>,
-		required: true,
-	},
+type Props = {
+	shopProduct: InventoryShopProductSaleModel;
 	/**
 	 * Used to prevent further purchases while we're processing one.
 	 */
-	disablePurchases: {
-		type: Boolean,
-	},
-});
+	disablePurchases?: boolean;
+};
+const { shopProduct, disablePurchases } = defineProps<Props>();
 
-const { shopProduct, disablePurchases } = toRefs(props);
-
-const emit = defineEmits({
-	purchase: (_shopProduct: InventoryShopProductSaleModel) => true,
-});
+const emit = defineEmits<{
+	purchase: [shopProduct: InventoryShopProductSaleModel];
+}>();
 
 const { user: myUser } = useCommonStore();
 
-const name = computed(() => shopProduct.value.product?.name || '');
+const name = computed(() => shopProduct.product?.name || '');
 
 const { hoverBinding, hovered } = useOnHover({
 	disable: toRef(() => !Screen.isPointerMouse),
 });
 
 function onClickProduct() {
-	if (disablePurchases.value) {
+	if (disablePurchases) {
 		return;
 	}
 
 	let type: ShopViewType = 'unhandled-product';
-	const i = shopProduct.value;
+	const i = shopProduct;
 	if (i.avatarFrame) {
 		type = 'avatar-frame';
 	} else if (i.background) {
@@ -63,13 +58,13 @@ function onClickProduct() {
 	}
 
 	trackShopView({ type });
-	emit('purchase', shopProduct.value);
+	emit('purchase', shopProduct);
 }
 
 const overlayTagZIndex = 2;
 
 const productType = computed(() => {
-	const product = shopProduct.value;
+	const product = shopProduct;
 	if (product.avatarFrame) {
 		return $gettext(`Avatar frame`);
 	} else if (product.background) {
@@ -81,7 +76,7 @@ const productType = computed(() => {
 });
 
 const readableEndsOn = computed(() => {
-	const endsOn = shopProduct.value.ends_on;
+	const endsOn = shopProduct.ends_on;
 	if (!endsOn) {
 		return;
 	}
@@ -96,7 +91,7 @@ const readableEndsOn = computed(() => {
 	});
 });
 
-const parentRatio = 1 ?? (1 + StickerPackRatio) / 2;
+const parentRatio = 1;
 const nameFontSize = kFontSizeSmall;
 </script>
 

@@ -1,9 +1,9 @@
-import { CommentModel } from '../comment/comment-model';
-import { FiresidePostModel } from '../fireside/post/post-model';
-import { ForumPostModel } from '../forum/post/post.model';
-import { storeModel } from '../model/model-store.service';
-import { Model } from '../model/model.service';
-import { UserModel } from '../user/user.model';
+import { CommentModel } from '~common/comment/comment-model';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import { ForumPostModel } from '~common/forum/post/post.model';
+import { Model } from '~common/model/model.service';
+import { storeModel } from '~common/model/model-store.service';
+import { UserModel } from '~common/user/user.model';
 
 export class MentionModel extends Model {
 	declare user: UserModel;

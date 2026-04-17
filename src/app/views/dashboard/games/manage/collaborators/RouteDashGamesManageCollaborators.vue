@@ -1,26 +1,24 @@
 <script lang="ts">
 import { computed, ref } from 'vue';
-import { Api } from '../../../../../../_common/api/api.service';
-import AppCardList from '../../../../../../_common/card/list/AppCardList.vue';
-import AppCardListAdd from '../../../../../../_common/card/list/AppCardListAdd.vue';
-import AppCardListItem from '../../../../../../_common/card/list/AppCardListItem.vue';
+
+import FormGameCollaborator from '~app/components/forms/game/collaborator/FormGameCollaborator.vue';
+import { useGameDashRouteController } from '~app/views/dashboard/games/manage/manage.store';
+import { Api } from '~common/api/api.service';
+import AppCardList from '~common/card/list/AppCardList.vue';
+import AppCardListAdd from '~common/card/list/AppCardListAdd.vue';
+import AppCardListItem from '~common/card/list/AppCardListItem.vue';
 import {
 	$removeCollaboratorInvite,
 	CollaboratorModel,
 	CollaboratorRole,
 	CollaboratorStatus,
-} from '../../../../../../_common/collaborator/collaborator.model';
-import { showErrorGrowl, showSuccessGrowl } from '../../../../../../_common/growls/growls.service';
-import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
-import { showModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '../../../../../../_common/route/route-component';
-import { $gettext } from '../../../../../../_common/translate/translate.service';
-import { arrayRemove } from '../../../../../../utils/array';
-import FormGameCollaborator from '../../../../../components/forms/game/collaborator/collaborator.vue';
-import { useGameDashRouteController } from '../manage.store';
+} from '~common/collaborator/collaborator.model';
+import { showErrorGrowl, showSuccessGrowl } from '~common/growls/growls.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { showModalConfirm } from '~common/modal/confirm/confirm-service';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { $gettext } from '~common/translate/translate.service';
+import { arrayRemove } from '~utils/array';
 
 export default {
 	...defineAppRouteOptions({
@@ -167,7 +165,7 @@ createAppRoute({
 							<template #body>
 								<FormGameCollaborator
 									:model="collaborator"
-									:game="game"
+									:game="game!"
 									@submit="onSaved"
 								/>
 							</template>
@@ -177,7 +175,7 @@ createAppRoute({
 							:label="$gettext(`Add Collaborator`)"
 							@toggle="isAdding = !isAdding"
 						>
-							<FormGameCollaborator :game="game" @submit="onAdded" />
+							<FormGameCollaborator :game="game!" @submit="onAdded" />
 						</AppCardListAdd>
 					</AppCardList>
 				</div>

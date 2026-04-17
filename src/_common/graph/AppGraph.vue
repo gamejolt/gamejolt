@@ -12,9 +12,10 @@ import {
 	PointElement,
 	Tooltip,
 } from 'chart.js';
-import { computed, markRaw, onMounted, PropType, ref, Ref, toRaw, toRefs, watch } from 'vue';
-import { formatDate } from '../filters/date';
-import { useThemeStore } from '../theme/theme.store';
+import { computed, markRaw, onMounted, Ref, ref, toRaw, useTemplateRef, watch } from 'vue';
+
+import { formatDate } from '~common/filters/date';
+import { useThemeStore } from '~common/theme/theme.store';
 
 // Try to match site styling.
 const fontFamily = `Nunito, 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif`;
@@ -113,21 +114,12 @@ Chart.register(
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	dataset: {
-		type: Array as PropType<any[]>,
-		required: true,
-	},
-	type: {
-		type: String as PropType<'line' | 'doughnut'>,
-		default: 'line',
-	},
-	backgroundVariant: {
-		type: Boolean,
-	},
-});
-
-const { dataset, type, backgroundVariant } = toRefs(props);
+type Props = {
+	dataset: any[];
+	type?: 'line' | 'doughnut';
+	backgroundVariant?: boolean;
+};
+const { dataset, type = 'line', backgroundVariant } = defineProps<Props>();
 const { theme } = useThemeStore();
 
 // Frustrating, but having this as a Ref<Chart> was causing volar to slow down
@@ -136,7 +128,7 @@ const chart = ref() as any;
 const graphData = ref({}) as Ref<any>;
 const chartOptions = ref({}) as Ref<any>;
 const ourColors = ref({}) as Ref<any>;
-const canvasElem = ref<HTMLCanvasElement>();
+const canvasElem = useTemplateRef('canvasElem');
 
 const globalColors = computed(() => {
 	let colors = ['#ffffff', '#ccff00', '#31d6ff', '#ff3fac', '#2f7f6f'];
@@ -176,14 +168,14 @@ const globalColors = computed(() => {
 Object.assign(chartOptions.value, JSON.parse(JSON.stringify(chartOptionsTemplate)));
 Object.assign(ourColors.value, JSON.parse(JSON.stringify(globalColors.value)));
 
-if (type.value === 'line') {
-	_mergeOptions(lineChartOptionsTemplate);
-} else if (type.value === 'doughnut') {
-	_mergeOptions(doughnutChartOptionsTemplate);
+if (type === 'line') {
+	_mergeOptions(lineChartOptionsTemplate as any);
+} else if (type === 'doughnut') {
+	_mergeOptions(doughnutChartOptionsTemplate as any);
 }
 
-if (backgroundVariant.value) {
-	_mergeOptions(backgroundVariantChartOptionsTemplate);
+if (backgroundVariant) {
+	_mergeOptions(backgroundVariantChartOptionsTemplate as any);
 
 	ourColors.value[0] = {
 		borderWidth: 1,
@@ -200,14 +192,14 @@ if (backgroundVariant.value) {
 }
 
 // Will only get called when dataset changes reference.
-watch(dataset, _checkData);
+watch(() => dataset, _checkData);
 
 onMounted(() => {
 	_checkData();
 
 	chart.value = markRaw(
 		new Chart(canvasElem.value!, {
-			type: type.value,
+			type: type,
 			data: toRaw(graphData.value),
 			options: toRaw(chartOptions.value),
 		})
@@ -231,20 +223,20 @@ function _mergeOptions(from: ChartOptions) {
 }
 
 function _checkData() {
-	if (!dataset.value) {
+	if (!dataset) {
 		return;
 	}
 
 	// Work on a raw version of the dataset so that we don't trigger a ton
 	// of proxying.
-	const rawDataset = toRaw(dataset.value);
+	const rawDataset = toRaw(dataset);
 
 	const newGraphData = {
 		labels: [] as any[],
 		datasets: [] as any[],
 	};
 
-	if (type.value === 'line') {
+	if (type === 'line') {
 		rawDataset.forEach((series: any, i: number) => {
 			const dataset: any = {
 				label: series.label,
@@ -263,7 +255,7 @@ function _checkData() {
 
 			newGraphData.datasets.push(dataset);
 		});
-	} else if (type.value === 'doughnut') {
+	} else if (type === 'doughnut') {
 		newGraphData.datasets.push({
 			data: [],
 		});

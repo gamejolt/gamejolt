@@ -1,34 +1,29 @@
 <script lang="ts" setup>
-import { nextTick, onMounted, ref, toRefs, watch } from 'vue';
-import { getMediaserverUrlForBounds } from '../../utils/image';
-import { sleep } from '../../utils/utils';
-import { Ruler } from '../ruler/ruler-service';
-import { onScreenResize } from '../screen/screen-service';
-import { useEventSubscription } from '../system/event/event-topic';
-import { ImgHelper } from './helper/helper-service';
+import { ImgHTMLAttributes, nextTick, onMounted, ref, useTemplateRef, watch } from 'vue';
 
-const props = defineProps({
-	src: {
-		type: String,
-		required: true,
-	},
-	alt: {
-		type: String,
-		default: '',
-	},
-});
+import { ImgHelper } from '~common/img/helper/helper-service';
+import { Ruler } from '~common/ruler/ruler-service';
+import { onScreenResize } from '~common/screen/screen-service';
+import { useEventSubscription } from '~common/system/event/event-topic';
+import { getMediaserverUrlForBounds } from '~utils/image';
+import { sleep } from '~utils/utils';
 
-const emit = defineEmits({
-	imgloadchange: (_isLoaded: boolean) => true,
-});
+type Props = {
+	src: string;
+	alt?: string;
+} & /* @vue-ignore */ Pick<ImgHTMLAttributes, 'onLoad' | 'onClick' | 'width' | 'height'>;
 
-const { src } = toRefs(props);
+const { src, alt = '' } = defineProps<Props>();
 
-const root = ref<HTMLElement>();
+const emit = defineEmits<{
+	imgloadchange: [isLoaded: boolean];
+}>();
+
+const root = useTemplateRef('root');
 const initialized = ref(false);
-const processedSrc = ref(import.meta.env.SSR ? src.value : '');
+const processedSrc = ref(import.meta.env.SSR ? src : '');
 
-watch(src, _updateSrc);
+watch(() => src, _updateSrc);
 
 useEventSubscription(onScreenResize, () => _updateSrc());
 
@@ -58,7 +53,7 @@ async function _updateSrc() {
 	}
 
 	const newSrc = getMediaserverUrlForBounds({
-		src: src.value,
+		src: src,
 		maxWidth: containerWidth,
 		maxHeight: containerHeight,
 	});

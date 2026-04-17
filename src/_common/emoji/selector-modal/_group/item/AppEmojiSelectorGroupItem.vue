@@ -1,45 +1,39 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRefs } from 'vue';
-import { ComponentProps } from '../../../../component-helpers';
-import AppScrollInview, { ScrollInviewConfig } from '../../../../scroll/inview/AppScrollInview.vue';
-import { EmojiModel } from '../../../emoji.model';
+import { computed, ref } from 'vue';
 
-const props = defineProps({
-	emoji: {
-		type: Object as PropType<EmojiModel>,
-		required: true,
-	},
+import { ComponentProps } from '~common/component-helpers';
+import { EmojiModel } from '~common/emoji/emoji.model';
+import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
+
+type Props = {
+	emoji: EmojiModel;
 	/**
 	 * If provided, the emoji will only be rendered when it is inview.
 	 */
-	inviewConfig: {
-		type: Object as PropType<ScrollInviewConfig>,
-		default: undefined,
-	},
-});
+	inviewConfig?: ScrollInviewConfig;
+};
+const { emoji, inviewConfig } = defineProps<Props>();
 
-const { emoji, inviewConfig } = toRefs(props);
-
-const emit = defineEmits({
-	select: (_emoji: EmojiModel) => true,
-});
+const emit = defineEmits<{
+	select: [emoji: EmojiModel];
+}>();
 
 const isHydrated = ref(import.meta.env.SSR);
 
 const rootComponentProps = computed(() => {
-	if (!inviewConfig?.value) {
+	if (!inviewConfig) {
 		return {};
 	}
 
 	return {
-		config: inviewConfig.value,
+		config: inviewConfig,
 		onInview,
 		onOutview,
 	} as ComponentProps<typeof AppScrollInview>;
 });
 
 function onClickEmoji() {
-	emit('select', emoji.value);
+	emit('select', emoji);
 }
 
 function onInview() {

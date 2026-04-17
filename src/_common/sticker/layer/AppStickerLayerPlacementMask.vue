@@ -1,27 +1,31 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRef, toRefs } from 'vue';
-import { Analytics } from '../../analytics/analytics.service';
-import { vAppObserveDimensions } from '../../observe-dimensions/observe-dimensions.directive';
-import { useScroller } from '../../scroll/AppScrollScroller.vue';
-import { Scroll } from '../../scroll/scroll.service';
-import AppStickerChargeCard from '../charge/AppStickerChargeCard.vue';
-import { closeStickerDrawer, isStickerTargetMine, useStickerStore } from '../sticker-store';
-import AppStickerLayerDrawer from './AppStickerLayerDrawer.vue';
-import AppStickerLayerGhost from './AppStickerLayerGhost.vue';
-import AppStickerLayerPlacementMaskItem from './AppStickerLayerPlacementMaskItem.vue';
-import AppStickerLayerPlacementMaskTarget from './AppStickerLayerPlacementMaskTarget.vue';
-import { calculateStickerTargetRects, StickerLayerController } from './layer-controller';
+import { computed, ref, toRef } from 'vue';
 
-const props = defineProps({
-	layer: {
-		type: Object as PropType<StickerLayerController>,
-		required: true,
-	},
-});
+import { Analytics } from '~common/analytics/analytics.service';
+import { vAppObserveDimensions } from '~common/observe-dimensions/observe-dimensions.directive';
+import { useScroller } from '~common/scroll/AppScrollScroller.vue';
+import { Scroll } from '~common/scroll/scroll.service';
+import AppStickerChargeCard from '~common/sticker/charge/AppStickerChargeCard.vue';
+import AppStickerLayerDrawer from '~common/sticker/layer/AppStickerLayerDrawer.vue';
+import AppStickerLayerGhost from '~common/sticker/layer/AppStickerLayerGhost.vue';
+import AppStickerLayerPlacementMaskItem from '~common/sticker/layer/AppStickerLayerPlacementMaskItem.vue';
+import AppStickerLayerPlacementMaskTarget from '~common/sticker/layer/AppStickerLayerPlacementMaskTarget.vue';
+import {
+	calculateStickerTargetRects,
+	StickerLayerController,
+} from '~common/sticker/layer/layer-controller';
+import {
+	closeStickerDrawer,
+	isStickerTargetMine,
+	useStickerStore,
+} from '~common/sticker/sticker-store';
 
-const { layer } = toRefs(props);
+type Props = {
+	layer: StickerLayerController;
+};
+const { layer } = defineProps<Props>();
 
-const { canChargeAllTargets } = layer.value;
+const { canChargeAllTargets } = layer;
 
 const parentScroller = useScroller();
 const stickerStore = useStickerStore();
@@ -54,7 +58,7 @@ function onDimensionsChange([
 	const scrollLeft = Scroll.getScrollLeft(scrollElement);
 	const scrollTop = Scroll.getScrollTop(scrollElement);
 
-	calculateStickerTargetRects(layer.value, scrollLeft, scrollTop);
+	calculateStickerTargetRects(layer, scrollLeft, scrollTop);
 }
 
 function onClickMask() {

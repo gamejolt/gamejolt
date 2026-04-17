@@ -1,5 +1,6 @@
 import { defineAsyncComponent } from 'vue';
-import { showModal } from '../../../../_common/modal/modal.service';
+
+import { showModal } from '~common/modal/modal.service';
 
 interface NotificationsFilterModalOptions {
 	filters: string[];
@@ -11,7 +12,9 @@ export async function showNotificationsFilterModal(options: NotificationsFilterM
 
 	return await showModal<void>({
 		modalId: 'NotificationsFilter',
-		component: defineAsyncComponent(() => import('./NotificationsFilter.vue')),
+		component: defineAsyncComponent(
+			() => import('~app/views/notifications/filter/NotificationsFilter.vue')
+		),
 		props: {
 			filters,
 			replaceRoute,

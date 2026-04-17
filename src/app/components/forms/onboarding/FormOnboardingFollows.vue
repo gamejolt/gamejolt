@@ -1,30 +1,26 @@
 <script lang="ts" setup>
-import { computed, PropType, ref } from 'vue';
-import { CommunityModel } from '../../../../_common/community/community.model';
-import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
-import Onboarding from '../../../../_common/onboarding/onboarding.service';
-import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
-import { UserModel } from '../../../../_common/user/user.model';
-import AppOnboardingFollowsCommunityItem from './AppOnboardingFollowsCommunityItem.vue';
+import { computed, ref } from 'vue';
+
+import AppOnboardingFollowsCommunityItem from '~app/components/forms/onboarding/AppOnboardingFollowsCommunityItem.vue';
+import { CommunityModel } from '~common/community/community.model';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import Onboarding from '~common/onboarding/onboarding.service';
+import AppScrollScroller from '~common/scroll/AppScrollScroller.vue';
+import { UserModel } from '~common/user/user.model';
 
 type FormModel = {
 	// nothing
 };
 
-defineProps({
-	user: {
-		type: Object as PropType<UserModel>,
-		required: true,
-	},
-	isSocialRegistration: {
-		type: Boolean,
-		required: true,
-	},
-});
+type Props = {
+	user: UserModel;
+	isSocialRegistration: boolean;
+};
+defineProps<Props>();
 
-const emit = defineEmits({
-	next: () => true,
-});
+const emit = defineEmits<{
+	next: [];
+}>();
 
 const communities = ref<CommunityModel[]>([]);
 

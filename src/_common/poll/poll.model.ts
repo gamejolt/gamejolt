@@ -1,5 +1,5 @@
-import { Model } from '../model/model.service';
-import { PollItemModel, buildPollItemForPoll } from './item/item.model';
+import { Model } from '~common/model/model.service';
+import { buildPollItemForPoll, PollItemModel } from '~common/poll/item/item.model';
 
 export const enum PollStatus {
 	Active = 'active',

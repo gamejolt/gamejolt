@@ -1,19 +1,18 @@
 <script lang="ts" setup>
-import { DeepReadonly, PropType } from 'vue';
+import { DeepReadonly } from 'vue';
 import { RouterLink } from 'vue-router';
-import { formatNumber } from '../../../../../_common/filters/number';
-import AppGraph from '../../../../../_common/graph/AppGraph.vue';
-import { Screen } from '../../../../../_common/screen/screen-service';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import { ReportComponent } from '../../../../components/site-analytics/site-analytics-service';
-import AppAnalyticsReportUserModel from './AppAnalyticsReportUserModel.vue';
 
-defineProps({
-	reportData: {
-		type: Object as PropType<DeepReadonly<ReportComponent>>,
-		required: true,
-	},
-});
+import { ReportComponent } from '~app/components/site-analytics/site-analytics-service';
+import AppAnalyticsReportUserModel from '~app/views/dashboard/analytics/_report/AppAnalyticsReportUserModel.vue';
+import { formatNumber } from '~common/filters/number';
+import AppGraph from '~common/graph/AppGraph.vue';
+import { Screen } from '~common/screen/screen-service';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+
+type Props = {
+	reportData: DeepReadonly<ReportComponent>;
+};
+const { reportData } = defineProps<Props>();
 
 function isScalarLabel(val: any) {
 	return typeof val.label !== 'object';
@@ -44,7 +43,7 @@ function isScalarLabel(val: any) {
 				</thead>
 				<tbody>
 					<tr v-for="(val, i) of reportData.data" :key="i">
-						<td>{{ formatNumber(i + 1) }}.</td>
+						<td>{{ formatNumber(Number(i) + 1) }}.</td>
 						<th>
 							<template v-if="isScalarLabel(val)">
 								{{ val.label }}
@@ -95,13 +94,14 @@ function isScalarLabel(val: any) {
 				</tbody>
 			</table>
 		</div>
-		<div
-			v-if="!Screen.isXs && reportData.hasData && reportData.graph !== null"
-			class="col-sm-4"
-		>
+		<div v-if="!Screen.isXs && reportData.hasData && reportData.graph" class="col-sm-4">
 			<AppGraph type="doughnut" :dataset="reportData.graph" />
 		</div>
 	</div>
 </template>
 
-<style lang="stylus" src="./report-percentage.styl" scoped></style>
+<style
+	lang="stylus"
+	src="~app/views/dashboard/analytics/_report/report-percentage.styl"
+	scoped
+></style>

@@ -1,22 +1,19 @@
 <script lang="ts" setup>
-import { computed, CSSProperties, PropType, ref, toRefs } from 'vue';
-import { styleBorderRadiusLg, styleChangeBg } from '../../../_styles/mixins';
-import { FiresidePostModel } from '../../fireside/post/post-model';
-import AppImgResponsive from '../../img/AppImgResponsive.vue';
-import AppJolticon from '../../jolticon/AppJolticon.vue';
-import AppProgressBar from '../../progress/AppProgressBar.vue';
-import AppProgressPoller from '../../progress/poller/AppProgressPoller.vue';
-import AppResponsiveDimensions from '../../responsive-dimensions/AppResponsiveDimensions.vue';
-import { $gettext } from '../../translate/translate.service';
+import { computed, CSSProperties, ref } from 'vue';
 
-const props = defineProps({
-	post: {
-		type: Object as PropType<FiresidePostModel>,
-		required: true,
-	},
-});
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import AppImgResponsive from '~common/img/AppImgResponsive.vue';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppProgressBar from '~common/progress/AppProgressBar.vue';
+import AppProgressPoller from '~common/progress/poller/AppProgressPoller.vue';
+import AppResponsiveDimensions from '~common/responsive-dimensions/AppResponsiveDimensions.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { styleBorderRadiusLg, styleChangeBg } from '~styles/mixins';
 
-const { post } = toRefs(props);
+type Props = {
+	post: FiresidePostModel;
+};
+defineProps<Props>();
 
 const hasData = ref(false);
 const progress = ref(0);
@@ -40,10 +37,10 @@ const cssFilter = computed(() => {
 	);
 });
 
-const emit = defineEmits({
-	complete: (_payload: any) => true,
-	error: (_err: string | Error) => true,
-});
+const emit = defineEmits<{
+	complete: [payload: any];
+	error: [err: string | Error];
+}>();
 
 function onProgress(
 	{ videoPosterImgUrl: newVideoPosterImgUrl }: any,

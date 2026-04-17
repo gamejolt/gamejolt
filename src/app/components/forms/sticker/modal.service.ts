@@ -1,7 +1,8 @@
 import { defineAsyncComponent } from 'vue';
-import { showModal } from '../../../../_common/modal/modal.service';
-import { StickerPackModel } from '../../../../_common/sticker/pack/pack.model';
-import { StickerModel } from '../../../../_common/sticker/sticker.model';
+
+import { showModal } from '~common/modal/modal.service';
+import { StickerPackModel } from '~common/sticker/pack/pack.model';
+import { StickerModel } from '~common/sticker/sticker.model';
 
 export async function showStickerEditModal({
 	sticker,
@@ -43,7 +44,9 @@ export async function showStickerEditModal({
 }) {
 	return await showModal<void>({
 		modalId: 'StickerEdit',
-		component: defineAsyncComponent(() => import('./StickerEditModal.vue')),
+		component: defineAsyncComponent(
+			() => import('~app/components/forms/sticker/StickerEditModal.vue')
+		),
 		props: {
 			sticker,
 			stickers,

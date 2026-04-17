@@ -1,19 +1,17 @@
 <script lang="ts" setup>
-import { onMounted, ref, toRefs } from 'vue';
-import AppButton from '../../../../button/AppButton.vue';
-import AppModal from '../../../../modal/AppModal.vue';
-import { useModal } from '../../../../modal/modal.service';
-import AppFormContentEditorLink from './AppFormContentEditorLink.vue';
-import { LinkData } from './link-modal.service';
+import { onMounted, ref } from 'vue';
 
-const props = defineProps({
-	selectedText: {
-		type: String,
-		required: true,
-	},
-});
+import AppButton from '~common/button/AppButton.vue';
+import AppFormContentEditorLink from '~common/content/content-editor/modals/link/AppFormContentEditorLink.vue';
+import { LinkData } from '~common/content/content-editor/modals/link/link-modal.service';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
 
-const { selectedText } = toRefs(props);
+type Props = {
+	selectedText: string;
+	hasLink?: boolean;
+};
+const { selectedText, hasLink = false } = defineProps<Props>();
 const modal = useModal()!;
 
 const linkData = ref<LinkData>({
@@ -23,8 +21,8 @@ const linkData = ref<LinkData>({
 
 onMounted(() => {
 	// Preset the href when the input looks like a url
-	if (isValidUrl(selectedText.value)) {
-		linkData.value.href = selectedText.value;
+	if (isValidUrl(selectedText)) {
+		linkData.value.href = selectedText;
 	}
 });
 
@@ -52,6 +50,10 @@ function onSubmit(data: LinkData) {
 
 	modal.resolve(data);
 }
+
+function onUnlink() {
+	modal.resolve({ href: '', title: '' });
+}
 </script>
 
 <template>
@@ -63,7 +65,13 @@ function onSubmit(data: LinkData) {
 		</div>
 
 		<div class="modal-body">
-			<AppFormContentEditorLink :link-data="linkData" @submit="onSubmit" />
+			<AppFormContentEditorLink :model="linkData" @submit="onSubmit">
+				<template #buttons>
+					<AppButton v-if="hasLink" trans @click="onUnlink">
+						{{ $gettext(`Remove link`) }}
+					</AppButton>
+				</template>
+			</AppFormContentEditorLink>
 		</div>
 	</AppModal>
 </template>

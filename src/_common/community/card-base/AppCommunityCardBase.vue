@@ -1,53 +1,43 @@
 <script lang="ts" setup>
-import { computed, PropType, toRef, toRefs } from 'vue';
+import { computed, toRef } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
-import { trackGotoCommunity } from '../../analytics/analytics.service';
-import AppButton from '../../button/AppButton.vue';
-import { Environment } from '../../environment/environment.service';
-import { formatNumber } from '../../filters/number';
-import { useCommonStore } from '../../store/common-store';
-import AppTheme from '../../theme/AppTheme.vue';
-import { $gettext } from '../../translate/translate.service';
-import { CommunityModel, isEditingCommunity } from '../community.model';
-import AppCommunityJoinWidget from '../join-widget/AppCommunityJoinWidget.vue';
-import AppCommunityVerifiedTick from '../verified-tick/AppCommunityVerifiedTick.vue';
 
-const props = defineProps({
-	community: {
-		type: Object as PropType<CommunityModel>,
-		required: true,
-	},
-	overflow: {
-		type: Boolean,
-	},
-	elevate: {
-		type: Boolean,
-	},
-	allowEdit: {
-		type: Boolean,
-		default: true,
-	},
-	trackGoto: {
-		type: Boolean,
-	},
-});
+import { trackGotoCommunity } from '~common/analytics/analytics.service';
+import AppButton from '~common/button/AppButton.vue';
+import { CommunityModel, isEditingCommunity } from '~common/community/community.model';
+import AppCommunityJoinWidget from '~common/community/join-widget/AppCommunityJoinWidget.vue';
+import AppCommunityVerifiedTick from '~common/community/verified-tick/AppCommunityVerifiedTick.vue';
+import { Environment } from '~common/environment/environment.service';
+import { formatNumber } from '~common/filters/number';
+import { useCommonStore } from '~common/store/common-store';
+import AppTheme from '~common/theme/AppTheme.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
 
-const { community, trackGoto } = toRefs(props);
+type Props = {
+	community: CommunityModel;
+	overflow?: boolean;
+	elevate?: boolean;
+	allowEdit?: boolean;
+	trackGoto?: boolean;
+};
+const { community, trackGoto, allowEdit = true } = defineProps<Props>();
+
 const { user } = useCommonStore();
 const route = useRoute();
 
-const memberCount = toRef(() => community.value.member_count || 0);
+const memberCount = toRef(() => community.member_count || 0);
 
 const isEditing = computed(() => isEditingCommunity(route));
 
 const shouldShowModTools = toRef(() => user.value && user.value.isMod);
 
 function doTrackGotoCommunity() {
-	if (trackGoto.value) {
+	if (trackGoto) {
 		trackGotoCommunity({
 			source: 'card',
-			id: community.value.id,
-			path: community.value.path,
+			id: community.id,
+			path: community.path,
 		});
 	}
 }
@@ -87,16 +77,18 @@ function doTrackGotoCommunity() {
 
 				<div class="-member-counts small">
 					<RouterLink
-						v-translate="{ count: formatNumber(memberCount) }"
-						:translate-n="memberCount"
-						translate-plural="<b>%{count}</b> members"
 						:to="{
 							name: 'communities.view.members',
 							params: { path: community.path },
 						}"
 					>
-						<b>1</b>
-						member
+						<AppTranslate
+							:translate-n="memberCount"
+							translate-plural="%{count} members"
+							:translate-params="{ count: formatNumber(memberCount) }"
+						>
+							%{count} member
+						</AppTranslate>
 					</RouterLink>
 				</div>
 
@@ -142,4 +134,4 @@ function doTrackGotoCommunity() {
 	</AppTheme>
 </template>
 
-<style lang="stylus" src="./card-base.styl" scoped></style>
+<style lang="stylus" src="~common/community/card-base/card-base.styl" scoped></style>

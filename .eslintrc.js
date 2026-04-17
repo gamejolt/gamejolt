@@ -4,12 +4,13 @@ module.exports = {
 		parser: '@typescript-eslint/parser',
 		sourceType: 'module',
 	},
-	plugins: ['@typescript-eslint'],
+	plugins: ['@typescript-eslint', 'simple-import-sort'],
 	extends: [
 		'eslint:recommended',
 		'plugin:@typescript-eslint/recommended',
 		'plugin:vue/vue3-recommended',
 	],
+	reportUnusedDisableDirectives: true,
 	rules: {
 		'no-empty': ['error', { allowEmptyCatch: true }],
 		'no-undef': 'off',
@@ -26,6 +27,8 @@ module.exports = {
 		'@typescript-eslint/no-unsafe-return': 'off',
 		'@typescript-eslint/no-unused-vars': 'off',
 		'@typescript-eslint/no-var-requires': 'off',
+		'vue/no-mutating-props': ['error', { shallowOnly: true }],
+		'vue/no-v-html': 'off',
 		'vue/component-tags-order': [
 			'warn',
 			{
@@ -33,6 +36,7 @@ module.exports = {
 			},
 		],
 		'vue/html-indent': 'off',
+		'vue/html-closing-bracket-newline': 'off',
 		'vue/html-self-closing': [
 			'warn',
 			{
@@ -48,5 +52,19 @@ module.exports = {
 		'vue/max-attributes-per-line': 'off',
 		'vue/singleline-html-element-content-newline': 'off',
 		'vue/return-in-computed-property': 'off',
+		'simple-import-sort/imports': 'warn',
+		'simple-import-sort/exports': 'warn',
+		'no-restricted-imports': [
+			'error',
+			{
+				patterns: [
+					{
+						group: ['../*'],
+						message:
+							'Use ~section aliases (~app, ~common, ~styles, etc.) instead of ../ relative imports.',
+					},
+				],
+			},
+		],
 	},
 };

@@ -1,7 +1,8 @@
 import { determine } from 'jstimezonedetect';
 import { nextTick } from 'vue';
-import { Timezone, TimezoneData } from '../timezone/timezone.service';
-import { FormController } from './AppForm.vue';
+
+import { FormController } from '~common/form-vue/AppForm.vue';
+import { Timezone, TimezoneData } from '~common/timezone/timezone.service';
 
 type Model = {
 	timezone?: string | null;

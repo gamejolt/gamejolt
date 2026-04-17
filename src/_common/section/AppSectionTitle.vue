@@ -1,17 +1,19 @@
 <script lang="ts">
-import { PropType, computed, toRefs } from 'vue';
-import { styleMaxWidthForOptions, styleTextOverflow, styleWhen } from '../../_styles/mixins';
-import { kFontSizeLarge } from '../../_styles/variables';
-import { isInstance } from '../../utils/utils';
-import { defineDynamicSlotProps, useDynamicSlots } from '../component-helpers';
-import AppSpacer from '../spacer/AppSpacer.vue';
-import AppUserAvatarBubble from '../user/user-avatar/AppUserAvatarBubble.vue';
-import { UserModel } from '../user/user.model';
+import { computed, PropType, toRefs } from 'vue';
+
+import { defineDynamicSlotProps, useDynamicSlots } from '~common/component-helpers';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import { UserModel } from '~common/user/user.model';
+import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
+import { styleMaxWidthForOptions, styleTextOverflow, styleWhen } from '~styles/mixins';
+import { kFontSizeLarge } from '~styles/variables';
+import { isInstance } from '~utils/utils';
 
 const Slots = ['avatar', 'supertitle', 'title'] as const;
 </script>
 
 <script lang="ts" setup>
+// TODO defineProps-migration: uses spread of defineDynamicSlotProps (runtime helper)
 const props = defineProps({
 	avatarHeight: {
 		type: Number,

@@ -1,35 +1,37 @@
 <script lang="ts">
-import { Ref, computed, ref, toRef, watchEffect } from 'vue';
+import { computed, Ref, ref, toRef, watchEffect } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
-import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
-import { illNoComments } from '../../../../../_common/illustration/illustrations';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '../../../../../_common/route/route-component';
-import { Screen } from '../../../../../_common/screen/screen-service';
-import { useCommonStore } from '../../../../../_common/store/common-store';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
-import { ActivityFeedView } from '../../../../components/activity/feed/view';
-import { useGridStore } from '../../../../components/grid/grid-store';
-import { useAppStore } from '../../../../store';
-import AppCommunitiesViewFeed from '../_feed/AppCommunitiesViewFeed.vue';
+
+import { ActivityFeedService } from '~app/components/activity/feed/feed-service';
+import { ActivityFeedView } from '~app/components/activity/feed/view';
+import { useGridStore } from '~app/components/grid/grid-store';
+import { useAppStore } from '~app/store';
+import AppCommunitiesViewFeed from '~app/views/communities/view/_feed/AppCommunitiesViewFeed.vue';
 import {
 	doFeedChannelPayload,
 	getFeedChannelSort,
 	resolveFeedChannelPayload,
-} from '../_feed/feed-helpers';
-import AppCommunitiesViewPageContainer from '../_page-container/page-container.vue';
-import { isVirtualChannel, setCommunityMeta, useCommunityRouteStore } from '../view.store';
-import { CommunitiesViewChannelDeps } from './RouteCommunitiesViewChannel.vue';
+} from '~app/views/communities/view/_feed/feed-helpers';
+import AppCommunityPageContainer from '~app/views/communities/view/_page-container/AppCommunityPageContainer.vue';
+import { CommunitiesViewChannelDeps } from '~app/views/communities/view/channel/RouteCommunitiesViewChannel.vue';
+import {
+	isVirtualChannel,
+	setCommunityMeta,
+	useCommunityRouteStore,
+} from '~app/views/communities/view/view.store';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import AppIllustration from '~common/illustration/AppIllustration.vue';
+import { illNoComments } from '~common/illustration/illustrations';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { Screen } from '~common/screen/screen-service';
+import { useCommonStore } from '~common/store/common-store';
+import { $gettext } from '~common/translate/translate.service';
 
 export default {
 	...defineAppRouteOptions({
 		cache: true,
 		lazy: true,
-		reloadOn: CommunitiesViewChannelDeps,
+		reloadOn: CommunitiesViewChannelDeps as any,
 		resolver: ({ route }) => doFeedChannelPayload(route),
 	}),
 };
@@ -179,7 +181,7 @@ const appRoute = createAppRoute({
 </script>
 
 <template>
-	<AppCommunitiesViewPageContainer>
+	<AppCommunityPageContainer>
 		<template #default>
 			<h1 class="section-header" :class="{ 'h2 -text-overflow': Screen.isMobile }">
 				<template v-if="channel === routeStore.allChannel">
@@ -205,7 +207,7 @@ const appRoute = createAppRoute({
 				@load-new="loadedNew"
 			/>
 		</template>
-	</AppCommunitiesViewPageContainer>
+	</AppCommunityPageContainer>
 </template>
 
 <style lang="stylus" scoped>

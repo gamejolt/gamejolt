@@ -1,8 +1,6 @@
 <script lang="ts" setup>
-import { computed, nextTick, onMounted, ref, watch } from 'vue';
-import AppJolticon from '../../../jolticon/AppJolticon.vue';
-import { Screen } from '../../../screen/screen-service';
-import { vAppTooltip } from '../../../tooltip/tooltip-directive';
+import { computed, nextTick, onMounted, ref, useTemplateRef, watch } from 'vue';
+
 import {
 	editorGetSelectedText,
 	editorLink,
@@ -10,12 +8,15 @@ import {
 	editorToggleMark,
 	editorUnlink,
 	useContentEditorController,
-} from '../content-editor-controller';
-import { showContentEditorLinkModal } from '../modals/link/link-modal.service';
+} from '~common/content/content-editor/content-editor-controller';
+import { showContentEditorLinkModal } from '~common/content/content-editor/modals/link/link-modal.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { Screen } from '~common/screen/screen-service';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 
 const controller = useContentEditorController()!;
 
-const container = ref<HTMLElement>();
+const container = useTemplateRef('container');
 const containerWidth = ref(100);
 const left = ref('0px');
 const bottom = ref('0px');

@@ -1,37 +1,32 @@
 <script lang="ts" setup>
-import { PropType, computed, ref, toRef, toRefs } from 'vue';
-import { Api } from '../../../../../_common/api/api.service';
-import { CommunityModel } from '../../../../../_common/community/community.model';
-import AppForm, { FormController, createForm } from '../../../../../_common/form-vue/AppForm.vue';
-import AppFormButton from '../../../../../_common/form-vue/AppFormButton.vue';
-import AppFormControl from '../../../../../_common/form-vue/AppFormControl.vue';
-import AppFormControlError from '../../../../../_common/form-vue/AppFormControlError.vue';
-import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormControlPrefix from '../../../../../_common/form-vue/AppFormControlPrefix.vue';
-import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormControlRadio from '../../../../../_common/form-vue/controls/AppFormControlRadio.vue';
-import AppFormControlToggle from '../../../../../_common/form-vue/controls/AppFormControlToggle.vue';
-import {
-	validateAvailability,
-	validateMaxLength,
-} from '../../../../../_common/form-vue/validators';
-import { showErrorGrowl, showSuccessGrowl } from '../../../../../_common/growls/growls.service';
-import { getDatalistOptions } from '../../../../../_common/settings/datalist-options.service';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import {
-	REASON_OTHER,
-	REASON_SPAM,
-	getCommunityBlockReasons,
-} from '../../../../../_common/user/action-reasons';
-import { UserModel } from '../../../../../_common/user/user.model';
+import { computed, ref, toRef } from 'vue';
 
-interface FormModel {
+import { Api } from '~common/api/api.service';
+import { CommunityModel } from '~common/community/community.model';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormControlError from '~common/form-vue/AppFormControlError.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormControlPrefix from '~common/form-vue/AppFormControlPrefix.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlRadio from '~common/form-vue/controls/AppFormControlRadio.vue';
+import AppFormControlToggle from '~common/form-vue/controls/AppFormControlToggle.vue';
+import { validateAvailability, validateMaxLength } from '~common/form-vue/validators';
+import { showErrorGrowl, showSuccessGrowl } from '~common/growls/growls.service';
+import { getDatalistOptions } from '~common/settings/datalist-options.service';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { getCommunityBlockReasons, REASON_OTHER, REASON_SPAM } from '~common/user/action-reasons';
+import { UserModel } from '~common/user/user.model';
+
+type FormModel = {
 	username: string;
 	reasonType: string;
 	reason: string;
 	expiry: string;
 	ejectPosts: boolean;
-}
+};
 
 const expiryOptions = {
 	hour: $gettext('1 Hour'),
@@ -42,22 +37,15 @@ const expiryOptions = {
 	never: $gettext('Never'),
 } as const;
 
-const props = defineProps({
-	community: {
-		type: Object as PropType<CommunityModel>,
-		required: true,
-	},
-	user: {
-		type: Object as PropType<UserModel>,
-		default: undefined,
-	},
-});
+type Props = {
+	community: CommunityModel;
+	user?: UserModel;
+};
+const { community, user } = defineProps<Props>();
 
-const emit = defineEmits({
-	submit: () => true,
-});
-
-const { community, user } = toRefs(props);
+const emit = defineEmits<{
+	submit: [];
+}>();
 
 const usernameLocked = ref(false);
 const otherOptions = ref<string[]>([]);
@@ -66,24 +54,24 @@ const defaultReasons = computed(() => getCommunityBlockReasons());
 
 const showReasonOther = toRef(() => form.formModel.reasonType === REASON_OTHER);
 
-const form: FormController<FormModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	resetOnSubmit: true,
 	onInit() {
 		form.formModel.reasonType = REASON_SPAM;
 		form.formModel.expiry = 'week';
 		form.formModel.ejectPosts = true;
 
-		if (user?.value) {
-			form.formModel.username = user.value.username;
+		if (user) {
+			form.formModel.username = user.username;
 			usernameLocked.value = true;
 		}
 
-		const options = getDatalistOptions('community-user-block', community.value.id.toString());
+		const options = getDatalistOptions('community-user-block', community.id.toString());
 		otherOptions.value = options.getList();
 	},
 	async onSubmit() {
 		const response = await Api.sendRequest(
-			`/web/dash/communities/blocks/add/${community.value.id}`,
+			`/web/dash/communities/blocks/add/${community.id}`,
 			form.formModel
 		);
 
@@ -100,10 +88,7 @@ const form: FormController<FormModel> = createForm({
 		} else {
 			// Add custom options entry to list of options.
 			if (form.formModel.reasonType === REASON_OTHER && form.formModel.reason) {
-				const options = getDatalistOptions(
-					'community-user-block',
-					community.value.id.toString()
-				);
+				const options = getDatalistOptions('community-user-block', community.id.toString());
 				options.unshiftItem(form.formModel.reason);
 			}
 
@@ -176,10 +161,9 @@ const form: FormController<FormModel> = createForm({
 
 		<AppFormGroup v-if="showReasonOther" name="reason" hide-label>
 			<div class="help-inline">
-				<span v-translate>
-					Enter other block reason.
-					<b>This is shown to the blocked user.</b>
-				</span>
+				<AppTranslate>
+					Enter other block reason. This is shown to the blocked user.
+				</AppTranslate>
 			</div>
 			<AppFormControl
 				html-list-id="block-user-reasons-list"

@@ -1,7 +1,10 @@
 <script lang="ts" setup>
-import { computed } from 'vue';
-import { useOnHover } from '../../../../../_common/on/useOnHover';
-import { stylePostFeedItem } from '../../../post/post-styles';
+import { computed, HTMLAttributes } from 'vue';
+
+import { useOnHover } from '~common/on/useOnHover';
+
+defineProps</* @vue-ignore */ Pick<HTMLAttributes, 'onClick'>>();
+import { stylePostFeedItem } from '~app/components/post/post-styles';
 
 /**
  * This is mostly for performance so that it only has to re-render this single

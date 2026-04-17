@@ -1,9 +1,10 @@
 import { renderToString } from 'vue/server-renderer';
-import { setDeviceUserAgent } from '../_common/device/device.service';
-import { Environment } from '../_common/environment/environment.service';
-import { ssrRenderMeta } from '../_common/meta/meta-service';
-import { translationsReady } from '../_common/translate/translate.service';
-import { createApp } from './bootstrap';
+
+import { createApp } from '~app/bootstrap';
+import { setDeviceUserAgent } from '~common/device/device.service';
+import { Environment } from '~common/environment/environment.service';
+import { ssrRenderMeta } from '~common/meta/meta-service';
+import { translationsReady } from '~common/translate/translate.service';
 
 export default async (context: any) => {
 	Environment.ssrContext = context;

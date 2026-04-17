@@ -1,78 +1,65 @@
 <script lang="ts" setup>
-import { computed, nextTick, PropType, ref, toRefs } from 'vue';
-import { kFontSizeSmall } from '../../_styles/variables';
-import AppAlertBox from '../alert/AppAlertBox.vue';
-import { trackCommentAdd } from '../analytics/analytics.service';
-import AppButton from '../button/AppButton.vue';
-import { ContentContext, ContextCapabilities } from '../content/content-context';
-import { ContentRules } from '../content/content-rules';
-import { FiresidePostAllowComments, FiresidePostModel } from '../fireside/post/post-model';
-import AppForm, { createForm, FormController } from '../form-vue/AppForm.vue';
-import AppFormButton from '../form-vue/AppFormButton.vue';
-import AppFormControlErrors from '../form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../form-vue/AppFormGroup.vue';
-import AppFormControlContent from '../form-vue/controls/AppFormControlContent.vue';
-import {
-	validateContentMaxLength,
-	validateContentNoActiveUploads,
-	validateContentRequired,
-} from '../form-vue/validators';
-import { showErrorGrowl } from '../growls/growls.service';
-import AppLinkHelp from '../link/AppLinkHelp.vue';
-import { Model } from '../model/model.service';
-import { Screen } from '../screen/screen-service';
-import AppSpacer from '../spacer/AppSpacer.vue';
-import AppTranslate from '../translate/AppTranslate.vue';
-import { $gettext } from '../translate/translate.service';
+import '~common/comment/comment.styl';
+
+import { computed, nextTick, ref } from 'vue';
+
+import AppAlertBox from '~common/alert/AppAlertBox.vue';
+import { trackCommentAdd } from '~common/analytics/analytics.service';
+import AppButton from '~common/button/AppButton.vue';
 import {
 	canCommentOnModel,
 	CommentableModel,
 	CommentModel,
 	getCommentModelResourceName,
 	saveComment,
-} from './comment-model';
-import './comment.styl';
+} from '~common/comment/comment-model';
+import { ContentContext, ContextCapabilities } from '~common/content/content-context';
+import { ContentRules } from '~common/content/content-rules';
+import { FiresidePostAllowComments, FiresidePostModel } from '~common/fireside/post/post-model';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlContent from '~common/form-vue/controls/AppFormControlContent.vue';
+import {
+	validateContentMaxLength,
+	validateContentNoActiveUploads,
+	validateContentRequired,
+} from '~common/form-vue/validators';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import AppLinkHelp from '~common/link/AppLinkHelp.vue';
+import { Model } from '~common/model/model.service';
+import { Screen } from '~common/screen/screen-service';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { kFontSizeSmall } from '~styles/variables';
 
-const props = defineProps({
-	comment: {
-		type: Object as PropType<CommentModel>,
-		default: undefined,
-	},
+type Props = {
+	comment?: CommentModel;
 	/** The model that the comment is attached to */
-	model: {
-		type: Object as PropType<CommentableModel & Model>,
-		required: true,
-	},
-	parentId: {
-		type: Number,
-		default: undefined,
-	},
-	autofocus: {
-		type: Boolean,
-	},
-	placeholder: {
-		type: String,
-		default: undefined,
-	},
-});
+	model: CommentableModel & Model;
+	parentId?: number;
+	autofocus?: boolean;
+	placeholder?: string;
+};
+const { comment, model, parentId } = defineProps<Props>();
 
-const { comment, model, parentId, autofocus, placeholder } = toRefs(props);
-
-const emit = defineEmits({
-	submit: (_model: CommentModel) => true,
-	'editor-focus': () => true,
-	'editor-blur': () => true,
-	cancel: () => true,
-});
+const emit = defineEmits<{
+	submit: [model: CommentModel];
+	'editor-focus': [];
+	'editor-blur': [];
+	cancel: [];
+}>();
 
 const lengthLimit = ref(5_000);
 const contentCapabilities = ref(ContextCapabilities.getPlaceholder());
 
 const loadUrl = computed(() => {
-	if (comment?.value?.id) {
-		return `/comments/save/${comment.value.id}`;
+	if (comment?.id) {
+		return `/comments/save/${comment.id}`;
 	} else {
-		return `/comments/save?resource=${getCommentModelResourceName(model.value)}`;
+		return `/comments/save?resource=${getCommentModelResourceName(model)}`;
 	}
 });
 
@@ -88,15 +75,15 @@ const form: FormController<FormModel> = createForm({
 	resetOnSubmit: true,
 	loadUrl,
 	async onInit() {
-		const _comment = comment?.value;
+		const _comment = comment;
 
 		form.method = _comment ? 'edit' : 'add';
 		form.formModel.id = _comment?.id;
 
 		form.formModel.comment_content = _comment?.comment_content ?? '';
-		form.formModel.resource = _comment?.resource ?? getCommentModelResourceName(model.value);
-		form.formModel.resource_id = _comment?.resource_id ?? model.value.id;
-		form.formModel.parent_id = _comment?.parent_id ?? parentId?.value;
+		form.formModel.resource = _comment?.resource ?? getCommentModelResourceName(model);
+		form.formModel.resource_id = _comment?.resource_id ?? model.id;
+		form.formModel.parent_id = _comment?.parent_id ?? parentId ?? 0;
 
 		// Wait for errors, then clear them.
 		await nextTick();
@@ -137,7 +124,7 @@ const maxHeight = computed(() => {
 });
 
 const contentContext = computed((): ContentContext => {
-	switch (getCommentModelResourceName(model.value)) {
+	switch (getCommentModelResourceName(model)) {
 		case 'Fireside_Post':
 			return 'fireside-post-comment';
 		case 'Game':
@@ -151,13 +138,11 @@ const shouldShowGuidelines = computed(
 	() => !form.formModel.comment_content && !form.changed && form.method !== 'edit'
 );
 
-const contentModelId = computed(() => comment?.value?.id);
-const canComment = computed(() => canCommentOnModel(model.value));
+const contentModelId = computed(() => comment?.id);
+const canComment = computed(() => canCommentOnModel(model));
 
 /** If the model we're commenting on is a post, this will return it. */
-const postModel = computed(() =>
-	model.value instanceof FiresidePostModel ? model.value : undefined
-);
+const postModel = computed(() => (model instanceof FiresidePostModel ? model : undefined));
 
 /** Whether or not only friends can comment */
 const onlyFriends = computed(
@@ -170,7 +155,7 @@ const onlyFriends = computed(
 		<AppAlertBox icon="notice">
 			<AppTranslate
 				v-if="onlyFriends"
-				:translate-params="{ user: postModel?.displayUser?.username }"
+				:translate-params="{ user: postModel?.displayUser?.username ?? '' }"
 			>
 				Only friends of @%{ user } can comment.
 			</AppTranslate>

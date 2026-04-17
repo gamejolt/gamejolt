@@ -1,24 +1,25 @@
 <script lang="ts">
 import { computed, inject, InjectionKey, provide, ref } from 'vue';
 import { RouterLink, RouterView, useRoute } from 'vue-router';
-import AppAdStickyRail from '../../../_common/ad/AppAdStickyRail.vue';
-import AppAdTakeoverBackground from '../../../_common/ad/AppAdTakeoverBackground.vue';
-import AppExpand from '../../../_common/expand/AppExpand.vue';
-import { formatNumber } from '../../../_common/filters/number';
-import AppJolticon from '../../../_common/jolticon/AppJolticon.vue';
-import { Meta } from '../../../_common/meta/meta-service';
-import AppPagination from '../../../_common/pagination/AppPagination.vue';
-import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
-import { Screen } from '../../../_common/screen/screen-service';
-import { Scroll } from '../../../_common/scroll/scroll.service';
-import AppTranslate from '../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../_common/translate/translate.service';
-import { getQuery } from '../../../utils/router';
-import AppPageHeader from '../../components/page-header/AppPageHeader.vue';
-import AppSearch from '../../components/search/AppSearch.vue';
-import { Search, SearchPayload } from '../../components/search/search-service';
-import AppShellPageBackdrop from '../../components/shell/AppShellPageBackdrop.vue';
-import { routeSearchRealms } from './realms/realms.route';
+
+import AppPageHeader from '~app/components/page-header/AppPageHeader.vue';
+import AppSearch from '~app/components/search/AppSearch.vue';
+import { Search, SearchPayload } from '~app/components/search/search-service';
+import AppShellPageBackdrop from '~app/components/shell/AppShellPageBackdrop.vue';
+import { routeSearchRealms } from '~app/views/search/realms/realms.route';
+import AppAdStickyRail from '~common/ad/AppAdStickyRail.vue';
+import AppAdTakeoverBackground from '~common/ad/AppAdTakeoverBackground.vue';
+import AppExpand from '~common/expand/AppExpand.vue';
+import { formatNumber } from '~common/filters/number';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { Meta } from '~common/meta/meta-service';
+import AppPagination from '~common/pagination/AppPagination.vue';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { Screen } from '~common/screen/screen-service';
+import { Scroll } from '~common/scroll/scroll.service';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { getQuery } from '~utils/router';
 
 const Key: InjectionKey<Controller> = Symbol('search-route');
 

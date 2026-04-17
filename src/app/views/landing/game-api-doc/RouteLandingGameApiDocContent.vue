@@ -1,9 +1,10 @@
 <script lang="ts">
 import { computed, ref } from 'vue';
-import { ViteMarkdownExport } from '../../../../../typings/markdown';
-import { buildPayloadErrorForStatusCode } from '../../../../_common/payload/payload-service';
-import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
-import { $gettext } from '../../../../_common/translate/translate.service';
+
+import { buildPayloadErrorForStatusCode } from '~common/payload/payload-service';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { $gettext } from '~common/translate/translate.service';
+import { ViteMarkdownExport } from '~typings/markdown';
 
 const paths = import.meta.glob<ViteMarkdownExport>('../../../../lib/doc-game-api/v1.x/**/*.md');
 
@@ -54,5 +55,6 @@ createAppRoute({
 </script>
 
 <template>
+	<!-- eslint-disable-next-line vue/no-v-html -->
 	<div v-html="content" />
 </template>

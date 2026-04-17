@@ -1,5 +1,5 @@
-import { Model } from '../../model/model.service';
-import { SiteTemplateModel } from '../template/template-model';
+import { Model } from '~common/model/model.service';
+import { SiteTemplateModel } from '~common/site/template/template-model';
 
 export class SiteThemeModel extends Model {
 	declare template: SiteTemplateModel;

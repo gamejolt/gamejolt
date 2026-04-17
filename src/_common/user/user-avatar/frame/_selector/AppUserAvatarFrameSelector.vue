@@ -1,30 +1,23 @@
 <script lang="ts" setup>
-import { onUnmounted, PropType, ref, toRefs } from 'vue';
-import { useForm } from '../../../../form-vue/AppForm.vue';
-import {
-	createFormControl,
-	defineFormControlEmits,
-	defineFormControlProps,
-} from '../../../../form-vue/AppFormControl.vue';
-import { useCommonStore } from '../../../../store/common-store';
-import { kThemeDark } from '../../../../theme/variables';
-import AppUserAvatarImg from '../../AppUserAvatarImg.vue';
-import { UserAvatarFrameModel } from '../frame.model';
-import AppUserAvatarFrameTile from './AppUserAvatarFrameTile.vue';
+import { onUnmounted, ref, toRef } from 'vue';
 
-const props = defineProps({
-	frames: {
-		type: Array as PropType<UserAvatarFrameModel[]>,
-		required: true,
-	},
-	...defineFormControlProps(),
-});
+import { useForm } from '~common/form-vue/AppForm.vue';
+import { createFormControl, FormControlEmits } from '~common/form-vue/AppFormControl.vue';
+import { FormValidator } from '~common/form-vue/validators';
+import { useCommonStore } from '~common/store/common-store';
+import { kThemeDark } from '~common/theme/variables';
+import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
+import AppUserAvatarFrameTile from '~common/user/user-avatar/frame/_selector/AppUserAvatarFrameTile.vue';
+import { UserAvatarFrameModel } from '~common/user/user-avatar/frame/frame.model';
 
-const emit = defineEmits({
-	...defineFormControlEmits(),
-});
+type Props = {
+	frames: UserAvatarFrameModel[];
+	disabled?: boolean;
+	validators?: FormValidator[];
+};
+const { validators = [] } = defineProps<Props>();
 
-const { frames, validators } = toRefs(props);
+const emit = defineEmits<FormControlEmits>();
 
 const { user } = useCommonStore();
 
@@ -34,7 +27,7 @@ const { applyValue } = createFormControl<number>({
 	initialValue: user.value?.avatar_frame?.id || 0,
 	alwaysOptional: true,
 	onChange: val => emit('changed', val),
-	validators,
+	validators: toRef(() => validators),
 });
 
 const expiryInfoKey = ref(-1);

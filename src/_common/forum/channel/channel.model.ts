@@ -1,5 +1,5 @@
-import { Model } from '../../model/model.service';
-import { ForumCategoryModel } from '../category/category.model';
+import { ForumCategoryModel } from '~common/forum/category/category.model';
+import { Model } from '~common/model/model.service';
 
 export class ForumChannelModel extends Model {
 	declare category_id: number;

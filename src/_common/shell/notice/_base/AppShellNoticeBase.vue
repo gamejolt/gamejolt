@@ -1,5 +1,18 @@
 <script lang="ts" setup>
-import { onMounted, toRefs, watch } from 'vue';
+import { onMounted, watch } from 'vue';
+
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { useOnHover } from '~common/on/useOnHover';
+import { Screen } from '~common/screen/screen-service';
+import { getShellNotice } from '~common/shell/notice/notice.service';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import {
+	kThemeBgOffset,
+	kThemeFg10,
+	kThemeFgMuted,
+	kThemeGjOverlayNotice,
+} from '~common/theme/variables';
+import { $gettext } from '~common/translate/translate.service';
 import {
 	styleAbsoluteFill,
 	styleBorderRadiusBase,
@@ -8,57 +21,31 @@ import {
 	styleFlexCenter,
 	styleTyped,
 	styleWhen,
-} from '../../../../_styles/mixins';
-import { kBorderWidthBase, kFontSizeLarge, kFontSizeSmall } from '../../../../_styles/variables';
-import { sleep } from '../../../../utils/utils';
-import AppJolticon from '../../../jolticon/AppJolticon.vue';
-import { useOnHover } from '../../../on/useOnHover';
-import { Screen } from '../../../screen/screen-service';
-import AppSpacer from '../../../spacer/AppSpacer.vue';
-import {
-	kThemeBgOffset,
-	kThemeFg10,
-	kThemeFgMuted,
-	kThemeGjOverlayNotice,
-} from '../../../theme/variables';
-import { $gettext } from '../../../translate/translate.service';
-import { getShellNotice } from '../notice.service';
+} from '~styles/mixins';
+import { kBorderWidthBase, kFontSizeLarge, kFontSizeSmall } from '~styles/variables';
+import { sleep } from '~utils/utils';
 
 const { remove: removeShellNoticeItem } = getShellNotice();
 
-const props = defineProps({
-	noticeId: {
-		type: Number,
-		required: true,
-	},
-	message: {
-		type: String,
-		required: true,
-	},
+type Props = {
+	noticeId: number;
+	message: string;
 	/**
 	 * Duration to wait before automatically closing.
 	 */
-	autoCloseMs: {
-		type: Number,
-		default: undefined,
-		validator: val => val === undefined || (typeof val === 'number' && val > 0),
-	},
+	autoCloseMs?: number;
 	/**
 	 * Duration override for `anim-fade-*` classes.
 	 */
-	animDurationMs: {
-		type: Number,
-		default: 500,
-	},
-});
-
-const { noticeId, message, autoCloseMs, animDurationMs } = toRefs(props);
+	animDurationMs?: number;
+};
+const { noticeId, autoCloseMs, animDurationMs = 500 } = defineProps<Props>();
 
 const { hovered, hoverBinding } = useOnHover();
 
-const emit = defineEmits({
-	'show-transition-end': () => true,
-});
+const emit = defineEmits<{
+	'show-transition-end': [];
+}>();
 
 const leadingSize = 48;
 let autoCloseTimeout: NodeJS.Timer | undefined;
@@ -66,11 +53,11 @@ let autoCloseTimeout: NodeJS.Timer | undefined;
 // Variables to keep track of auto-close timeout. Used so we can pause the
 // animation and timeout when hovered.
 const start = Date.now();
-let end = start + (autoCloseMs?.value ?? 0);
+let end = start + (autoCloseMs ?? 0);
 let timeLeft = end - start;
 
 watch(
-	[hovered, () => autoCloseMs?.value],
+	[hovered, () => autoCloseMs],
 	([hovered, autoCloseMs]) => {
 		if (autoCloseMs === undefined || autoCloseMs <= 0) {
 			clearAutoCloseTimeout();
@@ -83,7 +70,7 @@ watch(
 		} else {
 			end = Date.now() + timeLeft;
 			autoCloseTimeout ??= setTimeout(() => {
-				removeShellNoticeItem(noticeId.value);
+				removeShellNoticeItem(noticeId);
 			}, timeLeft);
 		}
 	},
@@ -91,7 +78,7 @@ watch(
 );
 
 onMounted(async () => {
-	await sleep(animDurationMs.value);
+	await sleep(animDurationMs);
 	emit('show-transition-end');
 });
 
@@ -104,7 +91,7 @@ function clearAutoCloseTimeout() {
 
 function removeNotice() {
 	clearAutoCloseTimeout();
-	removeShellNoticeItem(noticeId.value);
+	removeShellNoticeItem(noticeId);
 }
 </script>
 

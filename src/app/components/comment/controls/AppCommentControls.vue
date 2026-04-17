@@ -1,66 +1,53 @@
 <script lang="ts" setup>
-import { computed, PropType, toRef, toRefs } from 'vue';
+import { computed, toRef } from 'vue';
 import { useRouter } from 'vue-router';
-import { vAppAuthRequired } from '../../../../_common/auth/auth-required-directive';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import {
-	$unvoteOnComment,
-	$voteOnComment,
-	CommentModel,
-} from '../../../../_common/comment/comment-model';
-import { CommentVoteType } from '../../../../_common/comment/vote/vote-model';
-import { formatFuzzynumber } from '../../../../_common/filters/fuzzynumber';
-import AppJolticon, { Jolticon } from '../../../../_common/jolticon/AppJolticon.vue';
-import { showLikersModal } from '../../../../_common/likers/modal.service';
-import { storeModel } from '../../../../_common/model/model-store.service';
-import { Model } from '../../../../_common/model/model.service';
-import { selectReactionForResource } from '../../../../_common/reaction/reaction-count';
-import { Screen } from '../../../../_common/screen/screen-service';
-import { useCommonStore } from '../../../../_common/store/common-store';
-import { kThemeBg, kThemeBgOffset } from '../../../../_common/theme/variables';
-import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { $gettext, $ngettext } from '../../../../_common/translate/translate.service';
-import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
-import { showCommentThreadModal } from '../thread/modal.service';
-import { useCommentWidget } from '../widget/AppCommentWidget.vue';
 
-const props = defineProps({
-	model: {
-		type: Object as PropType<Model>,
-		required: true,
-	},
-	comment: {
-		type: Object as PropType<CommentModel>,
-		required: true,
-	},
-	children: {
-		type: Array as PropType<CommentModel[]>,
-		default: () => [],
-	},
-	showReply: {
-		type: Boolean,
-	},
-	canReply: {
-		type: Boolean,
-	},
-	canVote: {
-		type: Boolean,
-	},
-	canReact: {
-		type: Boolean,
-	},
-});
+import { showCommentThreadModal } from '~app/components/comment/thread/modal.service';
+import { useCommentWidget } from '~app/components/comment/widget/AppCommentWidget.vue';
+import { vAppAuthRequired } from '~common/auth/auth-required-directive';
+import AppButton from '~common/button/AppButton.vue';
+import { $unvoteOnComment, $voteOnComment, CommentModel } from '~common/comment/comment-model';
+import { CommentVoteType } from '~common/comment/vote/vote-model';
+import { formatFuzzynumber } from '~common/filters/fuzzynumber';
+import AppJolticon, { Jolticon } from '~common/jolticon/AppJolticon.vue';
+import { showLikersModal } from '~common/likers/modal.service';
+import { Model } from '~common/model/model.service';
+import { storeModel } from '~common/model/model-store.service';
+import { selectReactionForResource } from '~common/reaction/reaction-count';
+import { Screen } from '~common/screen/screen-service';
+import { useCommonStore } from '~common/store/common-store';
+import { kThemeBg, kThemeBgOffset } from '~common/theme/variables';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext, $ngettext } from '~common/translate/translate.service';
+import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
 
-const { model, comment, children, showReply, canReply, canReact } = toRefs(props);
+type Props = {
+	model: Model;
+	comment: CommentModel;
+	children?: CommentModel[];
+	showReply?: boolean;
+	canReply?: boolean;
+	canVote?: boolean;
+	canReact?: boolean;
+};
+const {
+	model,
+	comment,
+	children = [],
+	showReply,
+	canReply,
+	canVote,
+	canReact,
+} = defineProps<Props>();
 
 const router = useRouter();
 const { resourceOwner } = useCommentWidget()!;
 const { user } = useCommonStore();
 
 const votingTooltip = computed(() => {
-	const userHasVoted = !!comment.value.user_vote;
-	const count = comment.value.votes;
+	const userHasVoted = !!comment.user_vote;
+	const count = comment.votes;
 
 	if (count <= 0) {
 		return $gettext('Give this comment some love!');
@@ -86,16 +73,14 @@ const votingTooltip = computed(() => {
 });
 
 const hasUpvote = toRef(
-	() => comment.value.user_vote && comment.value.user_vote.vote === CommentVoteType.Upvote
+	() => comment.user_vote && comment.user_vote.vote === CommentVoteType.Upvote
 );
 
 const hasDownvote = toRef(
-	() => comment.value.user_vote && comment.value.user_vote.vote === CommentVoteType.Downvote
+	() => comment.user_vote && comment.user_vote.vote === CommentVoteType.Downvote
 );
 
-const showOwnerInteraction = toRef(
-	() => comment.value.has_owner_like || comment.value.has_owner_reply
-);
+const showOwnerInteraction = toRef(() => comment.has_owner_like || comment.has_owner_reply);
 
 const ownerIndicatorTooltipText = computed(() => {
 	const isOwner = !!user.value?.id && user.value?.id === resourceOwner.value?.id;
@@ -103,19 +88,19 @@ const ownerIndicatorTooltipText = computed(() => {
 		? '@' + resourceOwner.value.username
 		: 'The owner';
 
-	if (comment.value.has_owner_like && comment.value.has_owner_reply) {
+	if (comment.has_owner_like && comment.has_owner_reply) {
 		return isOwner
 			? $gettext(`You liked this and replied`)
 			: $gettext(`%{ username } liked this and replied`, {
 					username: resourceOwnerUsername,
 			  });
-	} else if (comment.value.has_owner_like) {
+	} else if (comment.has_owner_like) {
 		return isOwner
 			? $gettext(`You liked this`)
 			: $gettext(`%{ username } liked this`, {
 					username: resourceOwnerUsername,
 			  });
-	} else if (comment.value.has_owner_reply) {
+	} else if (comment.has_owner_reply) {
 		return isOwner
 			? $gettext(`You replied to this`)
 			: $gettext(`%{ username } replied`, {
@@ -127,11 +112,11 @@ const ownerIndicatorTooltipText = computed(() => {
 const ownerIndicatorIcons = computed(() => {
 	const icons: Jolticon[] = [];
 
-	if (comment.value.has_owner_like) {
+	if (comment.has_owner_like) {
 		icons.push('heart-filled');
 	}
 
-	if (comment.value.has_owner_reply) {
+	if (comment.has_owner_reply) {
 		icons.push('comment-filled');
 	}
 
@@ -148,10 +133,10 @@ function onDownvoteClick() {
 
 async function $voteComment(vote: number) {
 	let result: any | null = null;
-	if (!comment.value.user_vote || comment.value.user_vote.vote !== vote) {
-		result = await $voteOnComment(comment.value, vote);
+	if (!comment.user_vote || comment.user_vote.vote !== vote) {
+		result = await $voteOnComment(comment, vote);
 	} else {
-		result = await $unvoteOnComment(comment.value);
+		result = await $unvoteOnComment(comment);
 	}
 
 	if (result && result.comment) {
@@ -164,15 +149,15 @@ async function $voteComment(vote: number) {
 function onReplyClick(autofocus: boolean) {
 	showCommentThreadModal({
 		router: router,
-		model: model.value,
-		commentId: comment.value.id,
+		model,
+		commentId: comment.id,
 		displayMode: 'comments',
 		autofocus,
 	});
 }
 
 function showLikers() {
-	showLikersModal({ count: comment.value.votes, resource: comment.value });
+	showLikersModal({ count: comment.votes, resource: comment });
 }
 </script>
 

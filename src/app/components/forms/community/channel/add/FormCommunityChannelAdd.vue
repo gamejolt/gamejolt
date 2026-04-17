@@ -1,35 +1,33 @@
 <script lang="ts" setup>
 import { determine } from 'jstimezonedetect';
-import { PropType, computed, nextTick, ref, toRef, toRefs } from 'vue';
+import { computed, nextTick, ref, toRef } from 'vue';
+
+import AppFormCommunityChannelPermissions from '~app/components/forms/community/channel/_permissions/FormCommunityChannelPermissions.vue';
 import {
 	$saveCommunityChannel,
 	CommunityChannelModel,
-} from '../../../../../../_common/community/channel/channel.model';
-import { CommunityModel } from '../../../../../../_common/community/community.model';
-import AppForm, {
-	FormController,
-	createForm,
-} from '../../../../../../_common/form-vue/AppForm.vue';
-import AppFormButton from '../../../../../../_common/form-vue/AppFormButton.vue';
-import AppFormControl from '../../../../../../_common/form-vue/AppFormControl.vue';
-import AppFormControlError from '../../../../../../_common/form-vue/AppFormControlError.vue';
-import AppFormControlErrors from '../../../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../../../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormControlRadio from '../../../../../../_common/form-vue/controls/AppFormControlRadio.vue';
+} from '~common/community/channel/channel.model';
+import { CommunityModel } from '~common/community/community.model';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormControlError from '~common/form-vue/AppFormControlError.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlRadio from '~common/form-vue/controls/AppFormControlRadio.vue';
 import {
 	validateAvailability,
 	validateMaxLength,
 	validateMinLength,
 	validatePattern,
-} from '../../../../../../_common/form-vue/validators';
-import { useCommonStore } from '../../../../../../_common/store/common-store';
-import { $gettext } from '../../../../../../_common/translate/translate.service';
-import AppFormCommunityChannelPermissions from '../_permissions/permissions.vue';
+} from '~common/form-vue/validators';
+import { useCommonStore } from '~common/store/common-store';
+import { $gettext } from '~common/translate/translate.service';
 
-interface FormModel extends CommunityChannelModel {
+type FormModel = CommunityChannelModel & {
 	permission_posting?: string;
 	timezone?: string;
-}
+};
 
 const types = [
 	{
@@ -46,26 +44,16 @@ const types = [
 	},
 ];
 
-const props = defineProps({
-	community: {
-		type: Object as PropType<CommunityModel>,
-		required: true,
-	},
-	channels: {
-		type: Array as PropType<CommunityChannelModel[]>,
-		required: true,
-	},
-	archivedChannels: {
-		type: Array as PropType<CommunityChannelModel[]>,
-		required: true,
-	},
-});
+type Props = {
+	community: CommunityModel;
+	channels: CommunityChannelModel[];
+	archivedChannels: CommunityChannelModel[];
+};
+const { community, channels, archivedChannels } = defineProps<Props>();
 
-const emit = defineEmits({
-	submit: (_model: CommunityChannelModel) => true,
-});
-
-const { community, channels, archivedChannels } = toRefs(props);
+const emit = defineEmits<{
+	submit: [model: CommunityChannelModel];
+}>();
 
 const { user } = useCommonStore();
 
@@ -87,12 +75,12 @@ const isValid = computed(() => {
 	);
 });
 
-const form: FormController<FormModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	modelClass: CommunityChannelModel,
 	modelSaveHandler: $saveCommunityChannel,
 	resetOnSubmit: true,
 	onInit() {
-		form.formModel.community_id = community.value.id;
+		form.formModel.community_id = community.id;
 		form.formModel.type = 'post-feed';
 		form.formModel.permission_posting = 'all';
 		// Used to submit a default timezone for a competition when creating a competition channel.
@@ -104,7 +92,7 @@ const form: FormController<FormModel> = createForm({
 });
 
 function isTitleTaken(title: string) {
-	return [...channels.value, ...archivedChannels.value]
+	return [...channels, ...archivedChannels]
 		.map(i => i.title.toLowerCase().trim())
 		.includes(title.toLowerCase().trim());
 }

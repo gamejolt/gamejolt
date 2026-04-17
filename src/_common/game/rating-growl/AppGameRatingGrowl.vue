@@ -1,27 +1,24 @@
 <script lang="ts" setup>
-import { PropType, toRefs } from 'vue';
-import { useEventSubscription } from '../../system/event/event-topic';
-import { GameModel } from '../game.model';
-import AppGameRatingWidget, { onRatingWidgetChange } from '../rating/AppGameRatingWidget.vue';
+import { GameModel } from '~common/game/game.model';
+import AppGameRatingWidget, {
+	onRatingWidgetChange,
+} from '~common/game/rating/AppGameRatingWidget.vue';
+import { useEventSubscription } from '~common/system/event/event-topic';
 
-const props = defineProps({
-	game: {
-		type: Object as PropType<GameModel>,
-		required: true,
-	},
-});
+type Props = {
+	game: GameModel;
+};
+const { game } = defineProps<Props>();
 
-const emit = defineEmits({
-	close: () => true,
-});
-
-const { game } = toRefs(props);
+const emit = defineEmits<{
+	close: [];
+}>();
 
 // Close the modal as soon as they rate the game. We set up on $on event
 // so that we get notified even if they rate the game from the game page
 // and not the modal.
 useEventSubscription(onRatingWidgetChange, payload => {
-	if (payload.gameId === game.value.id) {
+	if (payload.gameId === game.id) {
 		emit('close');
 	}
 });

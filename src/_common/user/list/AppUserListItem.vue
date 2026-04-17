@@ -1,30 +1,23 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
 import { RouterLink } from 'vue-router';
-import { useCommonStore } from '../../store/common-store';
-import AppUserCardHover from '../card/AppUserCardHover.vue';
-import AppUserFollowButton from '../follow/AppUserFollowButton.vue';
-import AppUserAvatarBubble from '../user-avatar/AppUserAvatarBubble.vue';
-import { UserModel } from '../user.model';
 
-defineProps({
-	user: {
-		type: Object as PropType<UserModel>,
-		required: true,
-	},
-	eventLabel: {
-		type: String,
-		default: 'global',
-	},
-	userHoverCard: {
-		type: Boolean,
-	},
-});
+import { useCommonStore } from '~common/store/common-store';
+import AppUserCardHover from '~common/user/card/AppUserCardHover.vue';
+import AppUserFollowButton from '~common/user/follow/AppUserFollowButton.vue';
+import { UserModel } from '~common/user/user.model';
+import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
 
-const emit = defineEmits({
-	follow: () => true,
-	unfollow: () => true,
-});
+type Props = {
+	user: UserModel;
+	eventLabel?: string;
+	userHoverCard?: boolean;
+};
+defineProps<Props>();
+
+const emit = defineEmits<{
+	follow: [];
+	unfollow: [];
+}>();
 
 const { user: sessionUser } = useCommonStore();
 </script>

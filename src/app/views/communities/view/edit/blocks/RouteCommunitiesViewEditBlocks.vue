@@ -1,25 +1,23 @@
 <script lang="ts">
 import { computed, ref, toRef } from 'vue';
-import { Api } from '../../../../../../_common/api/api.service';
-import AppCardList from '../../../../../../_common/card/list/AppCardList.vue';
-import AppCardListAdd from '../../../../../../_common/card/list/AppCardListAdd.vue';
-import { showErrorGrowl } from '../../../../../../_common/growls/growls.service';
-import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
-import { showModalConfirm } from '../../../../../../_common/modal/confirm/confirm-service';
-import AppPagination from '../../../../../../_common/pagination/AppPagination.vue';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '../../../../../../_common/route/route-component';
-import AppTimeAgo from '../../../../../../_common/time/AppTimeAgo.vue';
-import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
-import { $gettext } from '../../../../../../_common/translate/translate.service';
-import { UserBlockModel } from '../../../../../../_common/user/block/block.model';
-import AppUserCardHover from '../../../../../../_common/user/card/AppUserCardHover.vue';
-import AppUserAvatarImg from '../../../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
-import FormCommunityBlock from '../../../../../components/forms/community/ban/FormCommunityBlock.vue';
-import AppCommunitiesViewPageContainer from '../../_page-container/page-container.vue';
-import { useCommunityRouteStore } from '../../view.store';
+
+import FormCommunityBlock from '~app/components/forms/community/ban/FormCommunityBlock.vue';
+import AppCommunityPageContainer from '~app/views/communities/view/_page-container/AppCommunityPageContainer.vue';
+import { useCommunityRouteStore } from '~app/views/communities/view/view.store';
+import { Api } from '~common/api/api.service';
+import AppCardList from '~common/card/list/AppCardList.vue';
+import AppCardListAdd from '~common/card/list/AppCardListAdd.vue';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { showModalConfirm } from '~common/modal/confirm/confirm-service';
+import AppPagination from '~common/pagination/AppPagination.vue';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import AppTimeAgo from '~common/time/AppTimeAgo.vue';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { $gettext } from '~common/translate/translate.service';
+import { UserBlockModel } from '~common/user/block/block.model';
+import AppUserCardHover from '~common/user/card/AppUserCardHover.vue';
+import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
 
 export default {
 	...defineAppRouteOptions({
@@ -140,7 +138,7 @@ createAppRoute({
 </script>
 
 <template>
-	<AppCommunitiesViewPageContainer full>
+	<AppCommunityPageContainer full>
 		<h2 class="section-header">
 			{{ $gettext(`Blocked Users`) }}
 		</h2>
@@ -268,7 +266,7 @@ createAppRoute({
 			prevent-url-change
 			@pagechange="onPageChanged"
 		/>
-	</AppCommunitiesViewPageContainer>
+	</AppCommunityPageContainer>
 </template>
 
 <style lang="stylus" scoped>

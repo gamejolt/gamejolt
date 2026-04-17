@@ -1,59 +1,50 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType, computed, toRefs } from 'vue';
+import { computed, CSSProperties } from 'vue';
+
+import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
+import { DefaultAvatarFrameScale } from '~common/avatar/frame.model';
+import AppBackgroundFade from '~common/background/AppBackgroundFade.vue';
+import AppImgResponsive from '~common/img/AppImgResponsive.vue';
+import {
+	getReadablePurchasableProductType,
+	NormalizedProductData,
+	PurchasableProductType,
+} from '~common/inventory/shop/product-owner-helpers';
+import { Screen } from '~common/screen/screen-service';
+import { useCommonStore } from '~common/store/common-store';
+import { kThemeFgMuted } from '~common/theme/variables';
+import { UserModel } from '~common/user/user.model';
+import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
 import {
 	styleBorderRadiusLg,
 	styleFlexCenter,
 	styleMaxWidthForOptions,
 	styleWhen,
-} from '../../../_styles/mixins';
-import { kFontSizeSmall } from '../../../_styles/variables';
-import AppAspectRatio from '../../aspect-ratio/AppAspectRatio.vue';
-import { DefaultAvatarFrameScale } from '../../avatar/frame.model';
-import AppBackgroundFade from '../../background/AppBackgroundFade.vue';
-import AppImgResponsive from '../../img/AppImgResponsive.vue';
-import { Screen } from '../../screen/screen-service';
-import { useCommonStore } from '../../store/common-store';
-import { kThemeFgMuted } from '../../theme/variables';
-import AppUserAvatarBubble from '../../user/user-avatar/AppUserAvatarBubble.vue';
-import { UserModel } from '../../user/user.model';
-import {
-	NormalizedProductData,
-	PurchasableProductType,
-	getReadablePurchasableProductType,
-} from './product-owner-helpers';
+} from '~styles/mixins';
+import { kFontSizeSmall } from '~styles/variables';
 
-const props = defineProps({
-	productData: {
-		type: Object as PropType<NormalizedProductData>,
-		required: true,
-	},
-	avatarFrameUser: {
-		type: Object as PropType<UserModel>,
-		default: undefined,
-	},
-});
-
-const { productData } = toRefs(props);
+type Props = {
+	productData: NormalizedProductData;
+	avatarFrameUser?: UserModel;
+};
+const { productData, avatarFrameUser } = defineProps<Props>();
 
 const { user: authUser } = useCommonStore();
 
 const frameOverride = computed(() => {
-	if (
-		!productData.value.imgUrl ||
-		productData.value.resource !== PurchasableProductType.AvatarFrame
-	) {
+	if (!productData.imgUrl || productData.resource !== PurchasableProductType.AvatarFrame) {
 		return undefined;
 	}
 	return {
-		image_url: productData.value.imgUrl,
-		scale: productData.value.scale ?? DefaultAvatarFrameScale,
+		image_url: productData.imgUrl,
+		scale: productData.scale ?? DefaultAvatarFrameScale,
 	};
 });
 
 const itemWidthStyles = computed(() => {
 	return {
 		...styleMaxWidthForOptions({
-			ratio: productData.value.aspectRatio,
+			ratio: productData.aspectRatio,
 			maxWidth: 320,
 			maxHeight: Screen.height / 3,
 		}),

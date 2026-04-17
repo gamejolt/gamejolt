@@ -1,24 +1,21 @@
 <script lang="ts" setup>
-import { ref, toRefs } from 'vue';
-import AppButton from '../../../../button/AppButton.vue';
-import AppModal from '../../../../modal/AppModal.vue';
-import { useModal } from '../../../../modal/modal.service';
-import AppFormContentEditorCustomButton from './AppFormContentEditorCustomButton.vue';
-import { CustomButtonData } from './custom-button-modal.service';
+import { ref } from 'vue';
 
-const props = defineProps({
-	customButtonId: {
-		type: String,
-		required: true,
-	},
-});
+import AppButton from '~common/button/AppButton.vue';
+import AppFormContentEditorCustomButton from '~common/content/content-editor/modals/custom-button/AppFormContentEditorCustomButton.vue';
+import { CustomButtonData } from '~common/content/content-editor/modals/custom-button/custom-button-modal.service';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
 
-const { customButtonId } = toRefs(props);
+type Props = {
+	customButtonId: string;
+};
+const { customButtonId } = defineProps<Props>();
 
 const modal = useModal()!;
 
 const customButtonData = ref<CustomButtonData>({
-	customButtonId: customButtonId.value,
+	customButtonId: customButtonId,
 });
 
 function onSubmit(data: CustomButtonData) {

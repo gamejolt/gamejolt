@@ -1,12 +1,12 @@
-import { FiresidePostModel } from '../../fireside/post/post-model';
-import { GameModel } from '../../game/game.model';
-import { Jolticon } from '../../jolticon/AppJolticon.vue';
-import { Model } from '../../model/model.service';
-import { UserBlockModel } from '../../user/block/block.model';
-import { UserModel } from '../../user/user.model';
-import { CommunityChannelModel } from '../channel/channel.model';
-import { CommunityCompetitionModel } from '../competition/competition.model';
-import { CommunityCompetitionEntryModel } from '../competition/entry/entry.model';
+import { CommunityChannelModel } from '~common/community/channel/channel.model';
+import { CommunityCompetitionModel } from '~common/community/competition/competition.model';
+import { CommunityCompetitionEntryModel } from '~common/community/competition/entry/entry.model';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import { GameModel } from '~common/game/game.model';
+import { Jolticon } from '~common/jolticon/AppJolticon.vue';
+import { Model } from '~common/model/model.service';
+import { UserBlockModel } from '~common/user/block/block.model';
+import { UserModel } from '~common/user/user.model';
 
 type TypeIcon = {
 	icon: Jolticon;

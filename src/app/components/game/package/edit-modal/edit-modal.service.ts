@@ -1,8 +1,9 @@
 import { defineAsyncComponent } from 'vue';
-import { GamePackageModel } from '../../../../../_common/game/package/package.model';
-import { showModal } from '../../../../../_common/modal/modal.service';
-import { SellableModel } from '../../../../../_common/sellable/sellable.model';
-import { GameDashRouteController } from '../../../../views/dashboard/games/manage/manage.store';
+
+import { GameDashRouteController } from '~app/views/dashboard/games/manage/manage.store';
+import { GamePackageModel } from '~common/game/package/package.model';
+import { showModal } from '~common/modal/modal.service';
+import { SellableModel } from '~common/sellable/sellable.model';
 
 export async function showGamePackageEditModal(
 	routeController: GameDashRouteController,
@@ -11,7 +12,9 @@ export async function showGamePackageEditModal(
 ) {
 	return await showModal<GamePackageModel>({
 		modalId: 'GamePackageEdit',
-		component: defineAsyncComponent(() => import('./AppGamePackageEditModal.vue')),
+		component: defineAsyncComponent(
+			() => import('~app/components/game/package/edit-modal/AppGamePackageEditModal.vue')
+		),
 		noBackdropClose: true,
 		noEscClose: true,
 		size: 'sm',

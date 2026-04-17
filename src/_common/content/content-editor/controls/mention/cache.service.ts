@@ -1,4 +1,4 @@
-import { UserModel } from '../../../../user/user.model';
+import { UserModel } from '~common/user/user.model';
 
 export default class ContentEditorMentionCache {
 	private static _results: { [query: string]: UserModel[] } = {};

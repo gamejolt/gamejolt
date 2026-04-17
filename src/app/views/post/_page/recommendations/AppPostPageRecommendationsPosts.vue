@@ -1,28 +1,25 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRefs } from 'vue';
+import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
-import { Api } from '../../../../../_common/api/api.service';
-import AppPostCard from '../../../../../_common/fireside/post/card/AppPostCard.vue';
-import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
-import { HistoryCache } from '../../../../../_common/history/cache/cache.service';
-import { Screen } from '../../../../../_common/screen/screen-service';
-import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
 
-const props = defineProps({
-	post: {
-		type: Object as PropType<FiresidePostModel>,
-		required: true,
-	},
-});
+import { Api } from '~common/api/api.service';
+import AppPostCard from '~common/fireside/post/card/AppPostCard.vue';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import { HistoryCache } from '~common/history/cache/cache.service';
+import { Screen } from '~common/screen/screen-service';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
 
-const { post } = toRefs(props);
+type Props = {
+	post: FiresidePostModel;
+};
+const { post } = defineProps<Props>();
 const route = useRoute();
 
-const cacheKey = `post-recommendations-${post.value.id}`;
+const cacheKey = `post-recommendations-${post.id}`;
 
 const payload =
 	HistoryCache.get(route, cacheKey) ??
-	(await Api.sendRequest(`/web/posts/recommendations/${post.value.id}`, undefined, {
+	(await Api.sendRequest(`/web/posts/recommendations/${post.id}`, undefined, {
 		detach: true,
 	}));
 

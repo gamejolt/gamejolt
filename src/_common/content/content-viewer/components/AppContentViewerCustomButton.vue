@@ -1,16 +1,13 @@
 <script lang="ts">
-import type { PropType } from 'vue';
-import AppContentCustomButton from '../../components/AppContentCustomButton.vue';
-import { ContentObject } from '../../content-object';
+import AppContentCustomButton from '~common/content/components/AppContentCustomButton.vue';
+import { ContentObject } from '~common/content/content-object';
 </script>
 
 <script lang="ts" setup>
-defineProps({
-	contentData: {
-		type: Object as PropType<ContentObject>,
-		required: true,
-	},
-});
+type Props = {
+	contentData: ContentObject;
+};
+const { contentData } = defineProps<Props>();
 </script>
 
 <template>

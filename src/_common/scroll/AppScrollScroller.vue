@@ -3,21 +3,20 @@ import type { UseOverlayScrollbarsInstance } from 'overlayscrollbars-vue';
 import { useOverlayScrollbars } from 'overlayscrollbars-vue';
 import { darken, lighten } from 'polished';
 import {
-	InjectionKey,
-	PropType,
 	computed,
 	inject,
+	InjectionKey,
 	onMounted,
 	provide,
 	ref,
 	shallowReadonly,
-	toRefs,
 	watchPostEffect,
 } from 'vue';
-import { Screen } from '../screen/screen-service';
-import { DefaultTheme, GrayLight, GraySubtle } from '../theme/theme.model';
-import { useThemeStore } from '../theme/theme.store';
-import AppScrollInviewParent from './inview/AppScrollInviewParent.vue';
+
+import { Screen } from '~common/screen/screen-service';
+import AppScrollInviewParent from '~common/scroll/inview/AppScrollInviewParent.vue';
+import { DefaultTheme, GrayLight, GraySubtle } from '~common/theme/theme.model';
+import { useThemeStore } from '~common/theme/theme.store';
 
 export type ScrollController = ReturnType<typeof createScroller>;
 
@@ -51,36 +50,31 @@ export function createScroller() {
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	controller: {
-		type: Object as PropType<ScrollController>,
-		default: () => createScroller(),
-	},
-	disabled: {
-		type: Boolean,
-	},
-	thin: {
-		type: Boolean,
-	},
-	horizontal: {
-		type: Boolean,
-	},
-	hideScrollbar: {
-		type: Boolean,
-	},
-	modalScroller: {
-		type: Boolean,
-	},
-	overlay: {
-		type: Boolean,
-	},
-});
+import { HTMLAttributes } from 'vue';
 
-const { controller, disabled, horizontal, overlay } = toRefs(props);
+type Props = {
+	controller?: ScrollController;
+	disabled?: boolean;
+	thin?: boolean;
+	horizontal?: boolean;
+	hideScrollbar?: boolean;
+	modalScroller?: boolean;
+	overlay?: boolean;
+} & /* @vue-ignore */ Pick<HTMLAttributes, 'onScroll'>;
 
-provide(Key, controller.value);
+const {
+	controller = createScroller(),
+	disabled,
+	thin,
+	horizontal,
+	hideScrollbar,
+	modalScroller,
+	overlay,
+} = defineProps<Props>();
 
-const { element } = controller.value;
+provide(Key, controller);
+
+const { element } = controller;
 const { theme } = useThemeStore();
 const isMounted = ref(import.meta.env.SSR);
 const shouldDisable = ref(false);
@@ -88,7 +82,7 @@ const shouldDisable = ref(false);
 // There can be some jank when this changes during a scroll event if this
 // isn't set to `post`, causing the page to jump unexpectedly.
 watchPostEffect(() => {
-	shouldDisable.value = disabled.value;
+	shouldDisable.value = disabled ?? false;
 });
 
 const [initOverlayScrollbar, getOverlayScrollbarInstance] = useOverlayScrollbars(
@@ -100,8 +94,8 @@ const [initOverlayScrollbar, getOverlayScrollbarInstance] = useOverlayScrollbars
 					// complete a smooth scroll (or any scroll) once it's
 					// disabled. Any smooth scroll will just stop at some point
 					// during the transition.
-					x: shouldDisable.value ? 'hidden' : horizontal.value ? 'scroll' : 'hidden',
-					y: shouldDisable.value ? 'hidden' : horizontal.value ? 'hidden' : 'scroll',
+					x: shouldDisable.value ? 'hidden' : horizontal ? 'scroll' : 'hidden',
+					y: shouldDisable.value ? 'hidden' : horizontal ? 'hidden' : 'scroll',
 				},
 				scrollbars: {
 					autoHide: 'move',
@@ -119,16 +113,16 @@ const [initOverlayScrollbar, getOverlayScrollbarInstance] = useOverlayScrollbars
 
 function setupOverlayScroller(target: HTMLElement) {
 	initOverlayScrollbar({ target });
-	controller.value.getOverlayInstance.value = getOverlayScrollbarInstance;
+	controller.getOverlayInstance.value = getOverlayScrollbarInstance;
 }
 
 function cleanupOverlayScroller() {
 	getOverlayScrollbarInstance()?.destroy();
-	controller.value.getOverlayInstance.value = undefined;
+	controller.getOverlayInstance.value = undefined;
 }
 
 watchPostEffect(onCleanup => {
-	if (element.value && overlay.value) {
+	if (element.value && overlay) {
 		setupOverlayScroller(element.value);
 	} else {
 		cleanupOverlayScroller();

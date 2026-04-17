@@ -1,8 +1,9 @@
 import vue, { Options as VueOptions } from '@vitejs/plugin-vue';
 // import { visualizer } from 'rollup-plugin-visualizer';
 import { copyFileSync, readFileSync } from 'fs-extra';
-import { UserConfig as ViteUserConfig, defineConfig } from 'vite';
+import { ConfigEnv, defineConfig, UserConfig as ViteUserConfig } from 'vite';
 import md, { Mode as MarkdownMode } from 'vite-plugin-markdown';
+
 import { acquirePrebuiltFFmpeg } from './scripts/build/desktop-app/ffmpeg-prebuilt';
 import {
 	activateJsonProperty,
@@ -17,7 +18,7 @@ const path = require('path') as typeof import('path');
 type RollupOptions = Required<Required<ViteUserConfig>['build']>['rollupOptions'];
 
 // https://vitejs.dev/config/
-export default defineConfig(async () => {
+export default defineConfig(async (_configEnv: ConfigEnv): Promise<ViteUserConfig> => {
 	const gjOpts = readFromViteEnv(process.env);
 
 	// package.json has to have specific main/node-remote values depending on if
@@ -128,7 +129,7 @@ export default defineConfig(async () => {
 				enforce: 'pre',
 				transformIndexHtml: {
 					enforce: 'pre',
-					transform: html => {
+					transform: (html: string) => {
 						// Patch our entrypoint depending on our section.
 						html = html.replace(
 							'<!-- gj:section-entrypoint -->',
@@ -526,6 +527,24 @@ export default defineConfig(async () => {
 				// e.g. we can use import(`~img/favicon.png`) to get the favicon
 				// asset no matter where we call it from.
 				'~img': path.resolve(__dirname, 'src/app/img'),
+
+				// Section aliases — one per top-level folder under src/.
+				// `_common` and `_styles` drop the underscore in the alias.
+				'~app': path.resolve(__dirname, 'src/app'),
+				'~auth': path.resolve(__dirname, 'src/auth'),
+				'~checkout': path.resolve(__dirname, 'src/checkout'),
+				'~claim': path.resolve(__dirname, 'src/claim'),
+				'~client': path.resolve(__dirname, 'src/client'),
+				'~common': path.resolve(__dirname, 'src/_common'),
+				'~editor': path.resolve(__dirname, 'src/editor'),
+				'~gameserver': path.resolve(__dirname, 'src/gameserver'),
+				'~lib': path.resolve(__dirname, 'src/lib'),
+				'~site-editor': path.resolve(__dirname, 'src/site-editor'),
+				'~styles': path.resolve(__dirname, 'src/_styles'),
+				'~utils': path.resolve(__dirname, 'src/utils'),
+				'~widget-package': path.resolve(__dirname, 'src/widget-package'),
+				'~z': path.resolve(__dirname, 'src/z'),
+				'~typings': path.resolve(__dirname, 'typings'),
 			},
 		},
 		css: {
@@ -564,11 +583,8 @@ export default defineConfig(async () => {
 				'globalThis.process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
 			}),
 
-			// TODO: These will no longer be needed once we upgrade vite and
-			// vite-plugin-vue.
-			//
 			// https://vuejs.org/api/compile-time-flags.html#configuration-guides
-			__VUE_OPTIONS_API__: 'true',
+			__VUE_OPTIONS_API__: 'false',
 			__VUE_PROD_DEVTOOLS__: 'false',
 			__VUE_PROD_HYDRATION_MISMATCH_DETAILS__: 'false',
 		},

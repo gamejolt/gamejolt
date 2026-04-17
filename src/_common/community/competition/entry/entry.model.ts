@@ -1,9 +1,9 @@
-import { Environment } from '../../../environment/environment.service';
-import { GameModel } from '../../../game/game.model';
-import { Model } from '../../../model/model.service';
-import { UserModel } from '../../../user/user.model';
-import { CommunityCompetitionEntryAwardModel } from './award/award.model';
-import { CommunityCompetitionEntryVoteResultModel } from './vote/vote-result.model';
+import { CommunityCompetitionEntryAwardModel } from '~common/community/competition/entry/award/award.model';
+import { CommunityCompetitionEntryVoteResultModel } from '~common/community/competition/entry/vote/vote-result.model';
+import { Environment } from '~common/environment/environment.service';
+import { GameModel } from '~common/game/game.model';
+import { Model } from '~common/model/model.service';
+import { UserModel } from '~common/user/user.model';
 
 type EntryType = 'Game';
 

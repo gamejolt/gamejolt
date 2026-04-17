@@ -1,20 +1,18 @@
 import { RouteLocationNormalized, RouteLocationNormalizedLoaded, Router } from 'vue-router';
-import { EventItemModel } from '../../../../_common/event-item/event-item.model';
-import { FiresidePostGotoGrowl } from '../../../../_common/fireside/post/goto-growl/goto-growl.service';
-import {
-	FiresidePostModel,
-	FiresidePostStatus,
-} from '../../../../_common/fireside/post/post-model';
-import { GameModel } from '../../../../_common/game/game.model';
-import { HistoryCache } from '../../../../_common/history/cache/cache.service';
-import { NotificationModel } from '../../../../_common/notification/notification-model';
-import { AppRoute } from '../../../../_common/route/route-component';
-import { UserModel } from '../../../../_common/user/user.model';
-import { arrayRemove } from '../../../../utils/array';
-import { RouteLocationDefinition } from '../../../../utils/router';
-import { ActivityFeedInput } from './item-service';
-import { ActivityFeedState, ActivityFeedStateOptions } from './state';
-import { ActivityFeedView, ActivityFeedViewOptions } from './view';
+
+import { ActivityFeedInput } from '~app/components/activity/feed/item-service';
+import { ActivityFeedState, ActivityFeedStateOptions } from '~app/components/activity/feed/state';
+import { ActivityFeedView, ActivityFeedViewOptions } from '~app/components/activity/feed/view';
+import { EventItemModel } from '~common/event-item/event-item.model';
+import { FiresidePostGotoGrowl } from '~common/fireside/post/goto-growl/goto-growl.service';
+import { FiresidePostModel, FiresidePostStatus } from '~common/fireside/post/post-model';
+import { GameModel } from '~common/game/game.model';
+import { HistoryCache } from '~common/history/cache/cache.service';
+import { NotificationModel } from '~common/notification/notification-model';
+import { AppRoute } from '~common/route/route-component';
+import { UserModel } from '~common/user/user.model';
+import { arrayRemove } from '~utils/array';
+import { RouteLocationDefinition } from '~utils/router';
 
 /**
  * Number of states we will keep cached. We will purge others out of the cache.

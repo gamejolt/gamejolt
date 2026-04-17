@@ -1,0 +1,111 @@
+<script lang="ts" setup>
+import { Api } from '~common/api/api.service';
+import AppExpand from '~common/expand/AppExpand.vue';
+import { formatNumber } from '~common/filters/number';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlTextarea from '~common/form-vue/controls/AppFormControlTextarea.vue';
+import { validateMaxLength, validateMaxValue, validateMinValue } from '~common/form-vue/validators';
+import { KeyGroupModel, KeyGroupType } from '~common/key-group/key-group.model';
+import { $gettext } from '~common/translate/translate.service';
+
+type Props = {
+	keyGroup: KeyGroupModel;
+};
+
+const { keyGroup } = defineProps<Props>();
+
+const emit = defineEmits<{
+	submit: [];
+}>();
+
+const KeyGroupTypeAnonymous = KeyGroupType.Anonymous;
+const KeyGroupTypeAnonymousClaim = KeyGroupType.AnonymousClaim;
+const KeyGroupTypeEmail = KeyGroupType.Email;
+const KeyGroupTypeUser = KeyGroupType.User;
+
+type FormModel = {
+	amount?: number;
+	emails?: string;
+	users?: string;
+};
+
+const form: FormController<FormModel> = createForm<FormModel>({
+	warnOnDiscard: false,
+	onSubmit() {
+		return Api.sendRequest(
+			`/web/dash/developer/games/key-groups/add-keys/` + `${keyGroup.game_id}/${keyGroup.id}`,
+			form.formModel
+		);
+	},
+	onSubmitSuccess() {
+		emit('submit');
+	},
+});
+</script>
+
+<template>
+	<AppForm :controller="form">
+		<AppFormGroup
+			v-if="
+				keyGroup.type === KeyGroupTypeAnonymous ||
+				keyGroup.type === KeyGroupTypeAnonymousClaim
+			"
+			name="amount"
+			:label="$gettext(`# of Keys to Generate`)"
+		>
+			<AppFormControl
+				type="number"
+				step="1"
+				min="1"
+				:max="20000 - (keyGroup.key_count ?? 0)"
+				:validators="[
+					validateMinValue(1),
+					validateMaxValue(20000 - (keyGroup.key_count ?? 0)),
+				]"
+			/>
+			<AppFormControlErrors />
+		</AppFormGroup>
+
+		<AppFormGroup
+			v-if="keyGroup.type === KeyGroupTypeEmail"
+			name="emails"
+			:label="$gettext(`Email Addresses`)"
+		>
+			<p class="help-block">
+				{{ $gettext(`Paste one email address per line, or separate them by commas.`) }}
+			</p>
+			<AppFormControlTextarea rows="10" :validators="[validateMaxLength(25000)]" />
+			<AppFormControlErrors />
+		</AppFormGroup>
+
+		<AppFormGroup
+			v-if="keyGroup.type === KeyGroupTypeUser"
+			name="users"
+			:label="$gettext(`Usernames`)"
+		>
+			<p class="help-block">
+				{{ $gettext(`Paste one username per line, or separate them by commas.`) }}
+			</p>
+			<AppFormControlTextarea rows="10" :validators="[validateMaxLength(25000)]" />
+			<AppFormControlErrors />
+		</AppFormGroup>
+
+		<AppExpand :when="form.serverErrors['num-keys']">
+			<div class="alert alert-notice">
+				{{
+					$gettext(`You can only have a max of %{ max } keys in a single key group.`, {
+						max: formatNumber(20000),
+					})
+				}}
+			</div>
+		</AppExpand>
+
+		<AppFormButton>
+			{{ $gettext(`Add`) }}
+		</AppFormButton>
+	</AppForm>
+</template>

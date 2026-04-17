@@ -1,24 +1,33 @@
 <script lang="ts" setup>
-import { CSSProperties, computed, nextTick, onMounted, onUnmounted, ref, toRefs, watch } from 'vue';
-import { Api } from '../../../../api/api.service';
-import AppJolticon from '../../../../jolticon/AppJolticon.vue';
-import AppLoading from '../../../../loading/AppLoading.vue';
-import { Screen } from '../../../../screen/screen-service';
-import { $gettext } from '../../../../translate/translate.service';
-import AppUserVerifiedTick from '../../../../user/AppUserVerifiedTick.vue';
-import AppUserAvatarImg from '../../../../user/user-avatar/AppUserAvatarImg.vue';
-import { UserModel } from '../../../../user/user.model';
-import { editorInsertMention, useContentEditorController } from '../../content-editor-controller';
-import ContentEditorMentionCache from './cache.service';
+import {
+	computed,
+	CSSProperties,
+	nextTick,
+	onMounted,
+	onUnmounted,
+	ref,
+	useTemplateRef,
+	watch,
+} from 'vue';
 
-const props = defineProps({
-	canShow: {
-		type: Boolean,
-		required: true,
-	},
-});
+import { Api } from '~common/api/api.service';
+import {
+	editorInsertMention,
+	useContentEditorController,
+} from '~common/content/content-editor/content-editor-controller';
+import ContentEditorMentionCache from '~common/content/content-editor/controls/mention/cache.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLoading from '~common/loading/AppLoading.vue';
+import { Screen } from '~common/screen/screen-service';
+import { $gettext } from '~common/translate/translate.service';
+import AppUserVerifiedTick from '~common/user/AppUserVerifiedTick.vue';
+import { UserModel } from '~common/user/user.model';
+import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
 
-const { canShow } = toRefs(props);
+type Props = {
+	canShow: boolean;
+};
+const { canShow } = defineProps<Props>();
 const controller = useContentEditorController()!;
 
 const query = ref(''); // Currently active suggestion query
@@ -27,13 +36,12 @@ const isListening = ref(false); // If we are listening to the document keydown e
 const remoteSuggestionDebounceTimeout = ref<NodeJS.Timer | null>(null); // Timeout between requests to search backend
 const isLoading = ref(false); // Loading more users from backend
 const users = ref<UserModel[]>([]);
-const container = ref<HTMLElement>();
-const list = ref<HTMLDivElement>();
+const list = useTemplateRef('list');
 
-const emit = defineEmits({
-	insert: () => true,
-	'user-change': (_count: number) => true,
-});
+const emit = defineEmits<{
+	insert: [];
+	'user-change': [count: number];
+}>();
 
 const displayUsers = computed(() =>
 	isInverted.value ? users.value.slice().reverse() : users.value
@@ -41,7 +49,7 @@ const displayUsers = computed(() =>
 
 const showControl = computed(() => visible.value && (isLoading.value || users.value.length > 0));
 
-const visible = computed(() => controller.capabilities.hasMentionControls && canShow.value);
+const visible = computed(() => controller.capabilities.hasMentionControls && canShow);
 
 // If the text control is more than 50% down the page, open the control
 // above ("inverted")
@@ -192,7 +200,7 @@ function insertUser(user: UserModel) {
 </script>
 
 <template>
-	<div ref="container" :style="styles" class="-container">
+	<div :style="styles" class="-container">
 		<transition name="fade">
 			<div v-if="visible" ref="list" class="-autocomplete">
 				<AppLoading

@@ -1,5 +1,5 @@
-import { GameModel } from '../../game/game.model';
-import { Model } from '../../model/model.service';
+import { GameModel } from '~common/game/game.model';
+import { Model } from '~common/model/model.service';
 
 export class UserGameSessionModel extends Model {
 	declare user_id: number;

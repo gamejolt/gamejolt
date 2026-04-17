@@ -1,45 +1,44 @@
 <script lang="ts">
 import {
-	CSSProperties,
-	InjectionKey,
-	Ref,
 	computed,
+	CSSProperties,
 	inject,
+	InjectionKey,
 	provide,
+	Ref,
 	ref,
 	shallowReadonly,
+	useTemplateRef,
 } from 'vue';
 import { RouterLink, RouterView, useRoute } from 'vue-router';
-import AppAdTakeoverBackground from '../../../_common/ad/AppAdTakeoverBackground.vue';
-import { Api } from '../../../_common/api/api.service';
-import { Environment } from '../../../_common/environment/environment.service';
-import { LinkedAccountModel } from '../../../_common/linked-account/linked-account.model';
-import { Registry } from '../../../_common/registry/registry.service';
-import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
-import { Screen } from '../../../_common/screen/screen-service';
-import { usePageScrollSubscription } from '../../../_common/scroll/scroll.service';
-import { useCommonStore } from '../../../_common/store/common-store';
-import { useThemeStore } from '../../../_common/theme/theme.store';
-import AppTimeAgo from '../../../_common/time/AppTimeAgo.vue';
-import { $gettext } from '../../../_common/translate/translate.service';
-import {
-	UserFriendshipModel,
-	UserFriendshipState,
-} from '../../../_common/user/friendship/friendship.model';
-import { populateTrophies } from '../../../_common/user/trophy/trophy-utils';
-import { UserBaseTrophyModel } from '../../../_common/user/trophy/user-base-trophy.model';
-import { UserModel } from '../../../_common/user/user.model';
-import { styleWhen } from '../../../_styles/mixins';
-import { buildCSSPixelValue, kFontFamilyBase } from '../../../_styles/variables';
-import { useResizeObserver } from '../../../utils/resize-observer';
-import { ChatClient, isUserOnline } from '../../components/chat/client';
-import { useGridStore } from '../../components/grid/grid-store';
-import { IntentService } from '../../components/intent/intent.service';
-import AppPageHeader from '../../components/page-header/AppPageHeader.vue';
-import AppPageHeaderAvatar from '../../components/page-header/AppPageHeaderAvatar.vue';
-import AppUserBlockOverlay from '../../components/user/block-overlay/block-overlay.vue';
-import { UserFriendshipHelper } from '../../components/user/friendships-helper/friendship-helper.service';
-import AppProfileDogtags from './dogtags/AppProfileDogtags.vue';
+
+import { ChatClient, isUserOnline } from '~app/components/chat/client';
+import { useGridStore } from '~app/components/grid/grid-store';
+import { IntentService } from '~app/components/intent/intent.service';
+import AppPageHeader from '~app/components/page-header/AppPageHeader.vue';
+import AppPageHeaderAvatar from '~app/components/page-header/AppPageHeaderAvatar.vue';
+import AppUserBlockOverlay from '~app/components/user/block-overlay/AppUserBlockOverlay.vue';
+import { UserFriendshipHelper } from '~app/components/user/friendships-helper/friendship-helper.service';
+import AppProfileDogtags from '~app/views/profile/dogtags/AppProfileDogtags.vue';
+import AppAdTakeoverBackground from '~common/ad/AppAdTakeoverBackground.vue';
+import { Api } from '~common/api/api.service';
+import { Environment } from '~common/environment/environment.service';
+import { LinkedAccountModel } from '~common/linked-account/linked-account.model';
+import { Registry } from '~common/registry/registry.service';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { Screen } from '~common/screen/screen-service';
+import { usePageScrollSubscription } from '~common/scroll/scroll.service';
+import { useCommonStore } from '~common/store/common-store';
+import { useThemeStore } from '~common/theme/theme.store';
+import AppTimeAgo from '~common/time/AppTimeAgo.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { UserFriendshipModel, UserFriendshipState } from '~common/user/friendship/friendship.model';
+import { populateTrophies } from '~common/user/trophy/trophy-utils';
+import { UserBaseTrophyModel } from '~common/user/trophy/user-base-trophy.model';
+import { UserModel } from '~common/user/user.model';
+import { styleWhen } from '~styles/mixins';
+import { buildCSSPixelValue, kFontFamilyBase } from '~styles/variables';
+import { useResizeObserver } from '~utils/resize-observer';
 
 const ProfileRouteStoreKey: InjectionKey<ProfileRouteStore> = Symbol('profile-route');
 
@@ -58,7 +57,7 @@ function createProfileRouteStore({
 	chat,
 	myUser,
 }: {
-	header: Ref<HTMLElement | undefined>;
+	header: Readonly<Ref<HTMLElement | null>>;
 	chat: Ref<ChatClient | undefined>;
 	myUser: Ref<UserModel | null | undefined>;
 }) {
@@ -297,7 +296,7 @@ defineOptions(
 	})
 );
 
-const header = ref<HTMLElement>();
+const header = useTemplateRef('header');
 const { chat } = useGridStore();
 const { user: myUser } = useCommonStore();
 const { setPageTheme: setThemeStorePageTheme, clearPageTheme } = useThemeStore();

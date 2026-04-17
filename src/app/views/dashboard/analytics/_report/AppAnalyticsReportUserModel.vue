@@ -1,16 +1,14 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
 import { RouterLink } from 'vue-router';
-import AppUserVerifiedTick from '../../../../../_common/user/AppUserVerifiedTick.vue';
-import AppUserAvatarImg from '../../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
-import { UserModel } from '../../../../../_common/user/user.model';
 
-defineProps({
-	user: {
-		type: Object as PropType<UserModel>,
-		required: true,
-	},
-});
+import AppUserVerifiedTick from '~common/user/AppUserVerifiedTick.vue';
+import { UserModel } from '~common/user/user.model';
+import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
+
+type Props = {
+	user: UserModel;
+};
+defineProps<Props>();
 </script>
 
 <template>

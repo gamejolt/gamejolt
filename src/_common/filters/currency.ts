@@ -1,4 +1,4 @@
-import { formatNumber } from './number';
+import { formatNumber } from '~common/filters/number';
 
 export function formatCurrency(amount: number, currencyCode = 'USD', fractionDigits = 2): string {
 	// No fraction if it's evenly divisible by 100.

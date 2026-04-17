@@ -1,46 +1,38 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRefs } from 'vue';
-import { CommunityChannelModel } from '../../../../../_common/community/channel/channel.model';
-import { CommunityModel } from '../../../../../_common/community/community.model';
-import AppCommunityThumbnailImg from '../../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
-import AppCommunityVerifiedTick from '../../../../../_common/community/verified-tick/AppCommunityVerifiedTick.vue';
-import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import { Popper } from '../../../../../_common/popper/popper.service';
-import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-import AppFormsPillSelectorItem from '../_item/AppFormsPillSelectorItem.vue';
-import AppFormsPillSelector from '../AppFormsPillSelector.vue';
-import AppScrollHelper from '../AppScrollHelper.vue';
+import { computed, ref } from 'vue';
 
-const props = defineProps({
-	communities: {
-		type: Array as PropType<CommunityModel[]>,
-		required: true,
-	},
-	initialCommunity: {
-		type: Object as PropType<CommunityModel | null>,
-		default: null,
-	},
-	noChannel: {
-		type: Boolean,
-		default: false,
-	},
-});
+import AppFormsPillSelectorItem from '~app/components/forms/pill-selector/_item/AppFormsPillSelectorItem.vue';
+import AppFormsPillSelector from '~app/components/forms/pill-selector/AppFormsPillSelector.vue';
+import AppScrollHelper from '~app/components/forms/pill-selector/AppScrollHelper.vue';
+import { CommunityChannelModel } from '~common/community/channel/channel.model';
+import { CommunityModel } from '~common/community/community.model';
+import AppCommunityThumbnailImg from '~common/community/thumbnail/AppCommunityThumbnailImg.vue';
+import AppCommunityVerifiedTick from '~common/community/verified-tick/AppCommunityVerifiedTick.vue';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { Popper } from '~common/popper/popper.service';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 
-const { communities, initialCommunity, noChannel } = toRefs(props);
+type Props = {
+	communities: CommunityModel[];
+	initialCommunity?: CommunityModel | null;
+	noChannel?: boolean;
+};
+const { communities, initialCommunity = null, noChannel = false } = defineProps<Props>();
 
-const emit = defineEmits({
-	selectCommunity: (_community: CommunityModel) => true,
-	selectChannel: (_channel: CommunityChannelModel) => true,
-	select: (_community: CommunityModel, _channel: CommunityChannelModel) => true,
-});
+const emit = defineEmits<{
+	selectCommunity: [community: CommunityModel];
+	selectChannel: [channel: CommunityChannelModel];
+	select: [community: CommunityModel, channel: CommunityChannelModel];
+	show: [];
+}>();
 
 const selectedCommunity = ref<CommunityModel | null>(null);
 
 const channels = computed(() => selectedCommunity.value?.postableChannels);
 
-const isInitial = computed(() => selectedCommunity.value === initialCommunity.value);
+const isInitial = computed(() => selectedCommunity.value === initialCommunity);
 
-const shouldShowCommunitySelector = computed(() => !selectedCommunity.value || noChannel.value);
+const shouldShowCommunitySelector = computed(() => !selectedCommunity.value || noChannel);
 
 resetSelections();
 
@@ -56,7 +48,7 @@ function selectCommunity(community: CommunityModel) {
 	selectedCommunity.value = community;
 	emit('selectCommunity', community);
 
-	if (noChannel.value) {
+	if (noChannel) {
 		_closeAndReset();
 	}
 }
@@ -68,17 +60,17 @@ function selectChannel(channel: CommunityChannelModel) {
 }
 
 function resetSelections() {
-	selectedCommunity.value = initialCommunity.value;
+	selectedCommunity.value = initialCommunity;
 }
 
 function _closeAndReset() {
 	Popper.hideAll();
-	selectedCommunity.value = initialCommunity.value;
+	selectedCommunity.value = initialCommunity;
 }
 </script>
 
 <template>
-	<AppFormsPillSelector>
+	<AppFormsPillSelector @show="emit('show')">
 		<slot />
 
 		<template #header>

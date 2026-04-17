@@ -1,6 +1,7 @@
 import { ref } from 'vue';
-import { getCurrentServerTime } from '../../utils/server-time';
-import { Api } from '../api/api.service';
+
+import { Api } from '~common/api/api.service';
+import { getCurrentServerTime } from '~utils/server-time';
 
 class FeatureToggle {
 	_lastFetchTime: number;

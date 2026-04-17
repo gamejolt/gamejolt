@@ -1,51 +1,38 @@
 <script lang="ts" setup>
-import { toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
-import AppAlertBox from '../../../../_common/alert/AppAlertBox.vue';
-import { Api } from '../../../../_common/api/api.service';
-import { formatCurrency } from '../../../../_common/filters/currency';
-import AppForm, { createForm, FormController } from '../../../../_common/form-vue/AppForm.vue';
-import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
-import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
-import AppFormControlErrors from '../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
-import { validateMaxValue, validateMinValue } from '../../../../_common/form-vue/validators';
-import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
 
-interface FormModel {
+import AppAlertBox from '~common/alert/AppAlertBox.vue';
+import { Api } from '~common/api/api.service';
+import { formatCurrency } from '~common/filters/currency';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import { validateMaxValue, validateMinValue } from '~common/form-vue/validators';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+
+type FormModel = {
 	amount: number;
-}
+};
 
-const props = defineProps({
-	minAmount: {
-		type: Number,
-		required: true,
-	},
-	withdrawableAmount: {
-		type: Number,
-		required: true,
-	},
-	paypalId: {
-		type: String,
-		default: undefined,
-	},
-	paypalEmail: {
-		type: String,
-		default: undefined,
-	},
-});
+type Props = {
+	minAmount: number;
+	withdrawableAmount: number;
+	paypalId?: string;
+	paypalEmail?: string;
+};
+const { minAmount, withdrawableAmount, paypalId, paypalEmail } = defineProps<Props>();
 
-const emit = defineEmits({
-	submit: (_model: FormModel) => true,
-});
-
-const { minAmount, withdrawableAmount, paypalId, paypalEmail } = toRefs(props);
+const emit = defineEmits<{
+	submit: [model: FormModel];
+}>();
 
 const form: FormController<FormModel> = createForm({
 	warnOnDiscard: false,
 	onInit() {
-		form.formModel.amount = withdrawableAmount.value;
+		form.formModel.amount = withdrawableAmount;
 	},
 	onSubmit() {
 		return Api.sendRequest('/web/dash/funds/withdraw', form.formModel);

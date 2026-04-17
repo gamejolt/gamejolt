@@ -1,7 +1,7 @@
-import { CommunityChannelModel } from '../../../community/channel/channel.model';
-import { CommunityModel } from '../../../community/community.model';
-import { Model } from '../../../model/model.service';
-import { FiresidePostModel } from '../post-model';
+import { CommunityChannelModel } from '~common/community/channel/channel.model';
+import { CommunityModel } from '~common/community/community.model';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import { Model } from '~common/model/model.service';
 
 export class FiresidePostCommunityModel extends Model {
 	declare fireside_post_id: number;

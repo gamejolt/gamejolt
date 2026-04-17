@@ -1,29 +1,26 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
+import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
-import AppButton from '../../button/AppButton.vue';
-import AppContentViewer from '../../content/content-viewer/AppContentViewer.vue';
-import AppMediaItemBackdrop from '../../media-item/backdrop/AppMediaItemBackdrop.vue';
-import AppModal from '../../modal/AppModal.vue';
-import { useModal } from '../../modal/modal.service';
-import AppSpacer from '../../spacer/AppSpacer.vue';
-import { $gettext } from '../../translate/translate.service';
-import AppUserAvatarImg from '../../user/user-avatar/AppUserAvatarImg.vue';
-import { SupporterActionModel } from '../action.model';
 
-const props = defineProps({
-	action: {
-		type: Object as PropType<SupporterActionModel>,
-		required: true,
-	},
-});
+import AppButton from '~common/button/AppButton.vue';
+import AppContentViewer from '~common/content/content-viewer/AppContentViewer.vue';
+import AppMediaItemBackdrop from '~common/media-item/backdrop/AppMediaItemBackdrop.vue';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import { SupporterActionModel } from '~common/supporters/action.model';
+import { $gettext } from '~common/translate/translate.service';
+import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
 
-const { action } = toRefs(props);
+type Props = {
+	action: SupporterActionModel;
+};
+const { action } = defineProps<Props>();
 
 const modal = useModal()!;
 
-const creator = computed(() => action.value.message?.from_user);
-const content = computed(() => action.value.message?.content);
+const creator = computed(() => action.message?.from_user);
+const content = computed(() => action.message?.content);
 </script>
 
 <template>

@@ -1,26 +1,27 @@
 <script lang="ts">
 import { computed, Ref, ref } from 'vue';
-import { Api } from '../../../../_common/api/api.service';
-import AppPostCard from '../../../../_common/fireside/post/card/AppPostCard.vue';
-import { FiresidePostModel } from '../../../../_common/fireside/post/post-model';
-import AppLinkExternal from '../../../../_common/link/AppLinkExternal.vue';
-import { Meta } from '../../../../_common/meta/meta-service';
-import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
-import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import AppHelpGroup from '../../../components/help/AppHelpGroup.vue';
-import { HelpCategoryModel } from '../../../components/help/category/category.model';
-import { HelpPageModel } from '../../../components/help/page/page.model';
-import { routeDiscoverGamesListSection } from '../../discover/games/list/list.route';
-import { routeLegalAds } from '../../legal/ads/ads.route';
-import { routeLegalCookies } from '../../legal/cookies/cookies.route';
-import { routeLegalPrivacy } from '../../legal/privacy/privacy.route';
-import { routeLegalTerms } from '../../legal/terms/terms.route';
-import { routeProfileOverviewFeed } from '../../profile/overview/feed/feed.route';
-import { routeLandingAbout } from '../about/about.route';
-import { routeLandingCreators } from '../creators/creators.route';
-import { routeLandingGameApi } from '../game-api/game-api.route';
-import { routeLandingMarketplace } from '../marketplace/marketplace.route';
+
+import AppHelpGroup from '~app/components/help/AppHelpGroup.vue';
+import { HelpCategoryModel } from '~app/components/help/category/category.model';
+import { HelpPageModel } from '~app/components/help/page/page.model';
+import { routeDiscoverGamesListSection } from '~app/views/discover/games/list/list.route';
+import { routeLandingAbout } from '~app/views/landing/about/about.route';
+import { routeLandingCreators } from '~app/views/landing/creators/creators.route';
+import { routeLandingGameApi } from '~app/views/landing/game-api/game-api.route';
+import { routeLandingMarketplace } from '~app/views/landing/marketplace/marketplace.route';
+import { routeLegalAds } from '~app/views/legal/ads/ads.route';
+import { routeLegalCookies } from '~app/views/legal/cookies/cookies.route';
+import { routeLegalPrivacy } from '~app/views/legal/privacy/privacy.route';
+import { routeLegalTerms } from '~app/views/legal/terms/terms.route';
+import { routeProfileOverviewFeed } from '~app/views/profile/overview/feed/feed.route';
+import { Api } from '~common/api/api.service';
+import AppPostCard from '~common/fireside/post/card/AppPostCard.vue';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import AppLinkExternal from '~common/link/AppLinkExternal.vue';
+import { Meta } from '~common/meta/meta-service';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import AppScrollScroller from '~common/scroll/AppScrollScroller.vue';
+import { $gettext } from '~common/translate/translate.service';
 
 export default {
 	...defineAppRouteOptions({

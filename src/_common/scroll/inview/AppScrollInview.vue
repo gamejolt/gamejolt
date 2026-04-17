@@ -1,6 +1,7 @@
 <script lang="ts">
-import { onMounted, onUnmounted, PropType, reactive, ref, watch } from 'vue';
-import { useScrollInviewParent } from './AppScrollInviewParent.vue';
+import { onMounted, onUnmounted, reactive, useTemplateRef, watch } from 'vue';
+
+import { useScrollInviewParent } from '~common/scroll/inview/AppScrollInviewParent.vue';
 
 export type ScrollInviewEmitsOn = 'full-overlap' | 'partial-overlap';
 
@@ -77,26 +78,18 @@ export class ScrollInviewConfig {
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	config: {
-		type: Object as PropType<ScrollInviewConfig>,
-		required: true,
-	},
-	tag: {
-		type: String,
-		default: 'div',
-	},
-	controller: {
-		type: Object as PropType<ScrollInviewController>,
-		default: () => createScrollInview(),
-	},
-});
+type Props = {
+	config: ScrollInviewConfig;
+	tag?: string;
+	controller?: ScrollInviewController;
+};
+const { config, tag = 'div', controller = createScrollInview() } = defineProps<Props>();
 
 // These will get called by [ScrollInviewContainer].
-const emit = defineEmits({
-	inview: () => true,
-	outview: () => true,
-});
+const emit = defineEmits<{
+	inview: [];
+	outview: [];
+}>();
 
 const parent = useScrollInviewParent()!;
 
@@ -110,21 +103,21 @@ const onChange: ChangeHandler = visible => {
 
 onMounted(async () => {
 	// Set up the controller with the props from the component.
-	props.controller._changeHandlers.add(onChange);
+	controller._changeHandlers.add(onChange);
 });
 
 onUnmounted(() => {
-	parent.getContainer(props.config).unobserveItem(props.controller);
-	props.controller._changeHandlers.delete(onChange);
+	parent.getContainer(config).unobserveItem(controller);
+	controller._changeHandlers.delete(onChange);
 });
 
-const root = ref<HTMLElement | undefined>();
+const root = useTemplateRef<HTMLElement>('root');
 
 // The ref will be assigned to this once it's fully rendered.
 watch(root, newElement => {
 	if (newElement) {
-		props.controller._setElement(newElement);
-		parent.getContainer(props.config).observeItem(props.controller);
+		controller._setElement(newElement);
+		parent.getContainer(config).observeItem(controller);
 	}
 });
 </script>

@@ -1,50 +1,41 @@
 <script lang="ts" setup>
-import { PropType, computed, onMounted, onUnmounted, toRef, toRefs } from 'vue';
+import { computed, onMounted, onUnmounted, toRef } from 'vue';
 import { RouteLocationRaw, RouterLink, useRoute, useRouter } from 'vue-router';
-import AppButton from '../../../button/AppButton.vue';
-import { GameModel } from '../../../game/game.model';
-import AppJolticon from '../../../jolticon/AppJolticon.vue';
-import AppTimeAgo from '../../../time/AppTimeAgo.vue';
-import { $gettext } from '../../../translate/translate.service';
-import { FiresidePostModel, FiresidePostStatus } from '../post-model';
+
+import AppButton from '~common/button/AppButton.vue';
+import { FiresidePostModel, FiresidePostStatus } from '~common/fireside/post/post-model';
+import { GameModel } from '~common/game/game.model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppTimeAgo from '~common/time/AppTimeAgo.vue';
+import { $gettext } from '~common/translate/translate.service';
 
 export type Action = 'add' | 'publish' | 'scheduled-publish';
 
-const props = defineProps({
-	post: {
-		type: Object as PropType<FiresidePostModel>,
-		required: true,
-	},
-	action: {
-		type: String as PropType<Action>,
-		required: true,
-	},
-});
+type Props = {
+	post: FiresidePostModel;
+	action: Action;
+};
+const { post, action } = defineProps<Props>();
 
-const emit = defineEmits({
-	close: () => true,
-});
+const emit = defineEmits<{
+	close: [];
+}>();
 
-const { post } = toRefs(props);
 const route = useRoute();
 const router = useRouter();
 
-const isActive = toRef(() => post.value.status === FiresidePostStatus.Active);
-const isScheduled = toRef(
-	() => post.value.isScheduled && post.value.status === FiresidePostStatus.Draft
-);
-const isDraft = toRef(
-	() => !post.value.isScheduled && post.value.status === FiresidePostStatus.Draft
-);
+const isActive = toRef(() => post.status === FiresidePostStatus.Active);
+const isScheduled = toRef(() => post.isScheduled && post.status === FiresidePostStatus.Draft);
+const isDraft = toRef(() => !post.isScheduled && post.status === FiresidePostStatus.Draft);
 
 const draftsLocation = computed<RouteLocationRaw>(() => getFeedLocation('draft'));
 const scheduledLocation = computed<RouteLocationRaw>(() => getFeedLocation('scheduled'));
 
-const hasOneCommunity = toRef(() => post.value.communities.length === 1);
+const hasOneCommunity = toRef(() => post.communities.length === 1);
 
 const communityLocation = computed(() => {
-	const communityLink = post.value.communities[0];
-	const community = post.value.communities[0].community;
+	const communityLink = post.communities[0];
+	const community = post.communities[0].community;
 	return {
 		name: 'communities.view.overview',
 		params: {
@@ -81,11 +72,11 @@ onUnmounted(() => {
 });
 
 function getFeedLocation(tab: string): RouteLocationRaw {
-	if (post.value.game instanceof GameModel) {
+	if (post.game instanceof GameModel) {
 		return {
 			name: 'dash.games.manage.devlog',
 			params: {
-				id: post.value.game.id.toString(),
+				id: post.game.id.toString(),
 			},
 			query: {
 				tab,
@@ -95,7 +86,7 @@ function getFeedLocation(tab: string): RouteLocationRaw {
 		return {
 			name: 'profile.overview',
 			params: {
-				username: post.value.user.username,
+				username: post.user.username,
 			},
 			query: {
 				tab,

@@ -1,24 +1,18 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType, computed, ref, toRefs } from 'vue';
-import { kFontSizeTiny } from '../../../../_styles/variables';
-import { sleep } from '../../../../utils/utils';
-import AppCircularProgress from '../../../progress/AppCircularProgress.vue';
-import { $gettext } from '../../../translate/translate.service';
-import AppShellNoticeBase from '../_base/AppShellNoticeBase.vue';
-import { CreatorExperienceNotice } from '../notice.service';
+import { computed, CSSProperties, ref } from 'vue';
 
-const props = defineProps({
-	noticeId: {
-		type: Number,
-		required: true,
-	},
-	data: {
-		type: Object as PropType<CreatorExperienceNotice>,
-		required: true,
-	},
-});
+import AppCircularProgress from '~common/progress/AppCircularProgress.vue';
+import AppShellNoticeBase from '~common/shell/notice/_base/AppShellNoticeBase.vue';
+import { CreatorExperienceNotice } from '~common/shell/notice/notice.service';
+import { $gettext } from '~common/translate/translate.service';
+import { kFontSizeTiny } from '~styles/variables';
+import { sleep } from '~utils/utils';
 
-const { noticeId, data } = toRefs(props);
+type Props = {
+	noticeId: number;
+	data: CreatorExperienceNotice;
+};
+const { noticeId, data } = defineProps<Props>();
 
 interface PercentContent {
 	percent: number;
@@ -30,22 +24,22 @@ const percentTransitionMs = ref<number>(500);
 const percentData = ref<PercentContent>({ percent: 0, text: 0 });
 
 const creatorLevelUpData = computed(() => {
-	const currentExperience = data.value.experience.current_level_xp;
-	const previousExperience = Math.max(0, currentExperience - data.value.xpGained);
+	const currentExperience = data.experience.current_level_xp;
+	const previousExperience = Math.max(0, currentExperience - data.xpGained);
 
-	const currentLevel = data.value.experience.current_level;
+	const currentLevel = data.experience.current_level;
 	let previousLevel = currentLevel;
-	if (data.value.leveledUp) {
+	if (data.leveledUp) {
 		previousLevel -= 1;
 	}
 
-	const previousPercent = data.value.leveledUp
+	const previousPercent = data.leveledUp
 		? 0
-		: previousExperience / data.value.experience.current_level_xp_required;
+		: previousExperience / data.experience.current_level_xp_required;
 
-	const currentPercent = data.value.experience.is_max_level
+	const currentPercent = data.experience.is_max_level
 		? 1
-		: currentExperience / data.value.experience.current_level_xp_required;
+		: currentExperience / data.experience.current_level_xp_required;
 
 	return {
 		currentExperience,
@@ -67,7 +61,7 @@ const message = computed(() => {
 		leveledUp,
 		experience: { current_level },
 		xpGained,
-	} = data.value;
+	} = data;
 
 	if (leveledUp) {
 		return $gettext(`Level up! You are now level %{ level }.`, {
@@ -82,15 +76,13 @@ const message = computed(() => {
 const subtext = computed(() => {
 	const messages: string[] = [];
 
-	if (data.value.experience.is_max_level) {
+	if (data.experience.is_max_level) {
 		messages.push(
 			$gettext(`You've reached the max level... for now.`),
 			$gettext(`Check your dashboard later for more rewards!`)
 		);
-	} else if (data.value.experience.ability_on_level_up_display) {
-		messages.push(
-			$gettext(`Next reward`) + `: ${data.value.experience.ability_on_level_up_display}`
-		);
+	} else if (data.experience.ability_on_level_up_display) {
+		messages.push($gettext(`Next reward`) + `: ${data.experience.ability_on_level_up_display}`);
 	}
 
 	return messages;
@@ -98,7 +90,7 @@ const subtext = computed(() => {
 
 async function afterIntroTransition() {
 	const { currentLevel, currentPercent } = creatorLevelUpData.value;
-	const { experience, leveledUp, xpGained } = data.value;
+	const { experience, leveledUp, xpGained } = data;
 	const percent = leveledUp ? 1 : currentPercent;
 
 	if (leveledUp) {

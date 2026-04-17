@@ -1,27 +1,27 @@
 <script lang="ts">
 import { computed, ref, toRef } from 'vue';
+import { VueDraggable } from 'vue-draggable-plus';
 import { RouteLocationNormalized, useRoute } from 'vue-router';
-import draggable from 'vuedraggable';
-import { Api } from '../../../../../../../../../../_common/api/api.service';
-import AppButton from '../../../../../../../../../../_common/button/AppButton.vue';
-import { CommunityCompetitionAwardModel } from '../../../../../../../../../../_common/community/competition/award/award.model';
+
+import { showEntryFromCommunityCompetitionEntryModal } from '~app/components/community/competition/entry/modal/modal.service';
+import { useAssignAwardsRoute } from '~app/views/communities/view/edit/channels/edit/competition/assign-awards/assign-awards.store';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import { CommunityCompetitionAwardModel } from '~common/community/competition/award/award.model';
 import {
 	$assignCommunityCompetitionEntryAward,
 	$saveSortCommunityCompetitionEntryAward,
 	$unassignCommunityCompetitionEntryAward,
-} from '../../../../../../../../../../_common/community/competition/entry/award/award.model';
-import { CommunityCompetitionEntryModel } from '../../../../../../../../../../_common/community/competition/entry/entry.model';
-import { showErrorGrowl } from '../../../../../../../../../../_common/growls/growls.service';
-import AppJolticon from '../../../../../../../../../../_common/jolticon/AppJolticon.vue';
-import AppLoadingFade from '../../../../../../../../../../_common/loading/AppLoadingFade.vue';
-import AppPagination from '../../../../../../../../../../_common/pagination/AppPagination.vue';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '../../../../../../../../../../_common/route/route-component';
-import { vAppTooltip } from '../../../../../../../../../../_common/tooltip/tooltip-directive';
-import { $gettext } from '../../../../../../../../../../_common/translate/translate.service';
-import { showEntryFromCommunityCompetitionEntryModal } from '../../../../../../../../../components/community/competition/entry/modal/modal.service';
+} from '~common/community/competition/entry/award/award.model';
+import { CommunityCompetitionEntryModel } from '~common/community/competition/entry/entry.model';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
+import AppPagination from '~common/pagination/AppPagination.vue';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { $gettext } from '~common/translate/translate.service';
+import { TranslateDirective as vTranslate } from '~common/translate/translate-directive';
 
 export default {
 	...defineAppRouteOptions({
@@ -57,10 +57,7 @@ function makeRequest(route: RouteLocationNormalized, page = 1, filterValue = '')
 </script>
 
 <script lang="ts" setup>
-const emit = defineEmits({
-	assign: (_awardId: number) => true,
-	unassign: (_awardId: number) => true,
-});
+const { onAssignAward, onUnassignAward } = useAssignAwardsRoute();
 
 const route = useRoute();
 
@@ -125,7 +122,7 @@ async function executeFilter() {
 async function onClickAssign(entry: CommunityCompetitionEntryModel) {
 	await $assignCommunityCompetitionEntryAward(entry.id, award.value!.id);
 
-	emit('assign', award.value!.id);
+	onAssignAward(award.value!.id);
 
 	isLoading.value = true;
 	const payload = await makeRequest(route, page.value, filterValue.value);
@@ -135,7 +132,7 @@ async function onClickAssign(entry: CommunityCompetitionEntryModel) {
 async function onClickUnassign(entry: CommunityCompetitionEntryModel) {
 	await $unassignCommunityCompetitionEntryAward(entry.id, award.value!.id);
 
-	emit('unassign', award.value!.id);
+	onUnassignAward(award.value!.id);
 
 	isLoading.value = true;
 	const payload = await makeRequest(route, page.value, filterValue.value);
@@ -225,59 +222,51 @@ createAppRoute({
 							</tr>
 						</thead>
 
-						<draggable
+						<VueDraggable
 							v-model="draggableItems"
-							v-bind="{
-								handle: '.-drag-handle',
-								delay: 100,
-								delayOnTouchOnly: true,
-							}"
+							handle=".-drag-handle"
+							:delay="100"
+							:delay-on-touch-only="true"
 							tag="tbody"
-							item-key="id"
 						>
-							<template #item="{ element }">
-								<tr>
-									<td>
-										<div class="-drag-container">
-											<div
-												v-if="draggableItems.length > 1"
-												class="-drag-handle"
-											>
-												<AppJolticon icon="arrows-v" />
-											</div>
-											<AppButton
-												v-app-tooltip="
-													$gettext(`Remove assigned award from entry`)
-												"
-												icon="remove"
-												sparse
-												primary
-												@click="onClickUnassign(element)"
-											/>
+							<tr v-for="element in draggableItems" :key="element.id">
+								<td>
+									<div class="-drag-container">
+										<div v-if="draggableItems.length > 1" class="-drag-handle">
+											<AppJolticon icon="arrows-v" />
 										</div>
-									</td>
-									<th>
-										<a @click="onClickShowEntry(element)">
-											{{ element.resource.title }}
-										</a>
-										<AppJolticon
-											v-if="element.is_removed"
-											v-app-tooltip.touchable="
-												$gettext(`This entry was hidden from the jam`)
+										<AppButton
+											v-app-tooltip="
+												$gettext(`Remove assigned award from entry`)
 											"
-											class="text-muted"
-											icon="inactive"
+											icon="remove"
+											sparse
+											primary
+											@click="onClickUnassign(element)"
 										/>
-									</th>
-									<td>
-										{{ element.resource.developer.display_name }}
-										<small class="text-muted">
-											(@{{ element.resource.developer.username }})
-										</small>
-									</td>
-								</tr>
-							</template>
-						</draggable>
+									</div>
+								</td>
+								<th>
+									<a @click="onClickShowEntry(element)">
+										{{ element.resource.title }}
+									</a>
+									<AppJolticon
+										v-if="element.is_removed"
+										v-app-tooltip.touchable="
+											$gettext(`This entry was hidden from the jam`)
+										"
+										class="text-muted"
+										icon="inactive"
+									/>
+								</th>
+								<td>
+									{{ element.resource.developer.display_name }}
+									<small class="text-muted">
+										(@{{ element.resource.developer.username }})
+									</small>
+								</td>
+							</tr>
+						</VueDraggable>
 					</table>
 				</div>
 			</template>
@@ -288,7 +277,7 @@ createAppRoute({
 			</p>
 
 			<input
-				:key="route.params.awardId"
+				:key="String(route.params.awardId)"
 				type="text"
 				class="form-control -filter-input"
 				:placeholder="$gettext(`Filter entries...`)"

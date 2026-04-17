@@ -1,50 +1,32 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
-import { CommunityChannelModel } from '../../../../_common/community/channel/channel.model';
-import { CommunityModel } from '../../../../_common/community/community.model';
-import AppCommunityThumbnailImg from '../../../../_common/community/thumbnail/AppCommunityThumbnailImg.vue';
-import AppCommunityVerifiedTick from '../../../../_common/community/verified-tick/AppCommunityVerifiedTick.vue';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import AppContentTarget from './AppContentTarget.vue';
+import { computed } from 'vue';
 
-const props = defineProps({
-	community: {
-		type: Object as PropType<CommunityModel>,
-		required: true,
-	},
-	channel: {
-		type: Object as PropType<CommunityChannelModel | null>,
-		default: undefined,
-	},
-	isFeatured: {
-		type: Boolean,
-	},
-	canRemove: {
-		type: Boolean,
-	},
-	hasLinks: {
-		type: Boolean,
-	},
-	noRight: {
-		type: Boolean,
-	},
-});
+import AppContentTarget from '~app/components/content/target/AppContentTarget.vue';
+import { CommunityChannelModel } from '~common/community/channel/channel.model';
+import { CommunityModel } from '~common/community/community.model';
+import AppCommunityThumbnailImg from '~common/community/thumbnail/AppCommunityThumbnailImg.vue';
+import AppCommunityVerifiedTick from '~common/community/verified-tick/AppCommunityVerifiedTick.vue';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
 
-const { community, channel, canRemove, hasLinks, noRight } = toRefs(props);
+type Props = {
+	community: CommunityModel;
+	channel?: CommunityChannelModel | null;
+	isFeatured?: boolean;
+	canRemove?: boolean;
+	hasLinks?: boolean;
+	noRight?: boolean;
+};
+const { community, channel, isFeatured, canRemove, hasLinks, noRight } = defineProps<Props>();
 
-const emit = defineEmits({
-	remove: (_community: CommunityModel) => true,
-});
+const emit = defineEmits<{
+	remove: [community: CommunityModel];
+}>();
 
-const leftTo = computed(() => (hasLinks.value ? community.value.routeLocation : undefined));
+const leftTo = computed(() => (hasLinks ? community.routeLocation : undefined));
 const rightTo = computed(() =>
-	hasLinks.value && channel?.value
-		? community.value.channelRouteLocation(channel.value)
-		: undefined
+	hasLinks && channel ? community.channelRouteLocation(channel) : undefined
 );
-const to = computed(() =>
-	hasLinks.value && !channel?.value ? community.value.routeLocation : undefined
-);
+const to = computed(() => (hasLinks && !channel ? community.routeLocation : undefined));
 </script>
 
 <template>

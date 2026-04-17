@@ -1,50 +1,48 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, Ref, toRefs, watch } from 'vue';
-import { arrayIndexBy } from '../../../utils/array';
-import { Api } from '../../api/api.service';
-import AppButton from '../../button/AppButton.vue';
-import { getDeviceArch, getDeviceOS } from '../../device/device.service';
-import { Environment } from '../../environment/environment.service';
-import AppExpand from '../../expand/AppExpand.vue';
-import { formatCurrency } from '../../filters/currency';
-import AppForm, { createForm, FormController } from '../../form-vue/AppForm.vue';
-import AppFormButton from '../../form-vue/AppFormButton.vue';
-import AppFormControl from '../../form-vue/AppFormControl.vue';
-import AppFormControlErrors from '../../form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../../form-vue/AppFormGroup.vue';
-import AppFormControlSelect from '../../form-vue/controls/AppFormControlSelect.vue';
-import { Geo, GeoRegion } from '../../geo/geo.service';
-import { showErrorGrowl } from '../../growls/growls.service';
-import AppJolticon from '../../jolticon/AppJolticon.vue';
-import AppLoading from '../../loading/AppLoading.vue';
-import AppLoadingFade from '../../loading/AppLoadingFade.vue';
-import { Navigate } from '../../navigate/navigate.service';
-import { OrderPaymentMethod } from '../../order/payment/payment.model';
-import AppPopper from '../../popper/AppPopper.vue';
-import { Screen } from '../../screen/screen-service';
-import { SellableModel } from '../../sellable/sellable.model';
-import { useCommonStore } from '../../store/common-store';
-import { vAppTooltip } from '../../tooltip/tooltip-directive';
-import { $gettext } from '../../translate/translate.service';
+import { computed, Ref, ref, watch } from 'vue';
+
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import { getDeviceArch, getDeviceOS } from '~common/device/device.service';
+import { Environment } from '~common/environment/environment.service';
+import AppExpand from '~common/expand/AppExpand.vue';
+import { formatCurrency } from '~common/filters/currency';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlSelect from '~common/form-vue/controls/AppFormControlSelect.vue';
+import { Geo, GeoRegion } from '~common/geo/geo.service';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLoading from '~common/loading/AppLoading.vue';
+import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
+import { Navigate } from '~common/navigate/navigate.service';
+import { OrderPaymentMethod } from '~common/order/payment/payment.model';
+import AppPopper from '~common/popper/AppPopper.vue';
+import { Screen } from '~common/screen/screen-service';
+import { SellableModel } from '~common/sellable/sellable.model';
+import { useCommonStore } from '~common/store/common-store';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { $gettext } from '~common/translate/translate.service';
+import { arrayIndexBy } from '~utils/array';
 
 type CheckoutType = 'cc-stripe' | 'paypal' | 'wallet';
 type CheckoutStep = 'primary' | 'address';
 
-interface FormModel {
+type FormModel = {
 	country: string;
 	region: string;
 	street1: string;
 	postcode: string;
-}
+	email_address?: string;
+};
 
-const props = defineProps({
-	sellable: {
-		type: Object as PropType<SellableModel>,
-		required: true,
-	},
-});
-
-const { sellable } = toRefs(props);
+type Props = {
+	sellable: SellableModel;
+};
+const { sellable } = defineProps<Props>();
 
 const { user } = useCommonStore();
 
@@ -65,12 +63,12 @@ const walletBalance = ref(0);
 const walletTax = ref(0);
 const minOrderAmount = ref(50);
 
-const emit = defineEmits({
-	bought: () => true,
-	'processing-changed': (_isProcessing: boolean) => true,
-});
+const emit = defineEmits<{
+	bought: [];
+	'processing-changed': [isProcessing: boolean];
+}>();
 
-const pricing = computed(() => sellable.value.pricings[0]);
+const pricing = computed(() => sellable.pricings[0]);
 const formattedAmount = computed(() => formatCurrency(pricing.value.amount));
 
 const hasSufficientWalletFunds = computed(() => {
@@ -91,7 +89,7 @@ const hasSufficientWalletFunds = computed(() => {
 	return true;
 });
 
-const form: FormController<FormModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	warnOnDiscard: false,
 	model: ref({
 		country: '',
@@ -127,7 +125,7 @@ const form: FormController<FormModel> = createForm({
 
 		const data: any = {
 			payment_method: checkoutType.value,
-			sellable_id: sellable.value.id,
+			sellable_id: sellable.id,
 			pricing_id: pricing.value.id,
 			amount: pricing.value.amount,
 
@@ -246,7 +244,7 @@ function startOver() {
 function checkoutSavedCard(card: any) {
 	const data: any = {
 		payment_method: 'cc-stripe',
-		sellable_id: sellable.value.id,
+		sellable_id: sellable.id,
 		pricing_id: pricing.value.id,
 		amount: pricing.value.amount,
 	};
@@ -257,7 +255,7 @@ function checkoutSavedCard(card: any) {
 function checkoutWallet() {
 	const data: any = {
 		payment_method: 'wallet',
-		sellable_id: sellable.value.id,
+		sellable_id: sellable.id,
 		pricing_id: pricing.value.id,
 		amount: pricing.value.amount,
 	};

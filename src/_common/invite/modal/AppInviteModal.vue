@@ -1,25 +1,23 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs, triggerRef } from 'vue';
-import AppButton from '../../button/AppButton.vue';
-import { Clipboard } from '../../clipboard/clipboard-service';
-import AppModal from '../../modal/AppModal.vue';
-import { useModal } from '../../modal/modal.service';
-import { showShareModal } from '../../share/card/_modal/modal.service';
-import AppTranslate from '../../translate/AppTranslate.vue';
-import { UserModel } from '../../user/user.model';
+import { computed, triggerRef } from 'vue';
 
-const props = defineProps({
+import AppButton from '~common/button/AppButton.vue';
+import { Clipboard } from '~common/clipboard/clipboard-service';
+import highFiveImage from '~common/invite/modal/high-five.png';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import { showShareModal } from '~common/share/card/_modal/modal.service';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { UserModel } from '~common/user/user.model';
+
+type Props = {
 	/** Should only be your own user. */
-	user: {
-		type: Object as PropType<UserModel>,
-		required: true,
-	},
-});
-
-const { user } = toRefs(props);
+	user: UserModel;
+};
+const { user } = defineProps<Props>();
 const modal = useModal()!;
 
-const url = computed(() => `https://gamejolt.com/invite/${user.value.username}`);
+const url = computed(() => `https://gamejolt.com/invite/${user.username}`);
 
 function onCopy() {
 	Clipboard.copy(url.value);
@@ -62,7 +60,7 @@ function onInput() {
 			</p>
 
 			<div class="-img">
-				<img src="./high-five.png" />
+				<img :src="highFiveImage" />
 			</div>
 
 			<input class="-url form-control" :value="url" @input="onInput" />

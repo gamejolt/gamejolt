@@ -1,6 +1,4 @@
 <script lang="ts">
-import { PropType } from 'vue';
-
 export type Jolticon = (typeof Jolticons)[number];
 
 export const Jolticons = [
@@ -220,24 +218,17 @@ export const Jolticons = [
 </script>
 
 <script lang="ts" setup>
-defineProps({
-	icon: {
-		type: String as PropType<Jolticon>,
-		required: true,
-	},
-	big: {
-		type: Boolean,
-	},
-	highlight: {
-		type: Boolean,
-	},
-	notice: {
-		type: Boolean,
-	},
-	middle: {
-		type: Boolean,
-	},
-});
+import { HTMLAttributes } from 'vue';
+
+type Props = {
+	icon: Jolticon;
+	big?: boolean;
+	highlight?: boolean;
+	notice?: boolean;
+	middle?: boolean;
+} & /* @vue-ignore */ Pick<HTMLAttributes, 'onClick'>;
+
+defineProps<Props>();
 </script>
 
 <template>
@@ -253,4 +244,4 @@ defineProps({
 	/>
 </template>
 
-<style lang="stylus" src="../jolticons/jolticons.styl"></style>
+<style lang="stylus" src="~common/jolticons/jolticons.styl"></style>

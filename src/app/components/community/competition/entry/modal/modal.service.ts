@@ -1,14 +1,20 @@
 import { defineAsyncComponent } from 'vue';
 import { Router } from 'vue-router';
-import { CommunityCompetitionEntryModel } from '../../../../../../_common/community/competition/entry/entry.model';
-import { showModal } from '../../../../../../_common/modal/modal.service';
+
+import { CommunityCompetitionEntryModel } from '~common/community/competition/entry/entry.model';
+import { showModal } from '~common/modal/modal.service';
 
 export type CommunityCompetitionEntryModalHashDeregister = () => void;
 
 async function _show(props: any) {
 	return await showModal<void>({
 		modalId: 'CommunityCompetitionEntry',
-		component: defineAsyncComponent(() => import('./AppCommunityCompetitionEntryModal.vue')),
+		component: defineAsyncComponent(
+			() =>
+				import(
+					'~app/components/community/competition/entry/modal/AppCommunityCompetitionEntryModal.vue'
+				)
+		),
 		props,
 		size: 'sm',
 	});

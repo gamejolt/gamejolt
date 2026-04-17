@@ -1,24 +1,22 @@
 <script lang="ts" setup>
-import { PropType, computed, toRef, toRefs } from 'vue';
-import AppButton from '../../../_common/button/AppButton.vue';
-import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
-import AppChatMemberListItem from './member-list/AppChatMemberListItem.vue';
-import { ChatRoomModel } from './room';
-import { useChatRoomMembers } from './room-channel';
+import { computed, toRef } from 'vue';
 
-const props = defineProps({
-	room: {
-		type: Object as PropType<ChatRoomModel>,
-		required: true,
-	},
-});
+import AppChatMemberListItem from '~app/components/chat/member-list/AppChatMemberListItem.vue';
+import { ChatRoomModel } from '~app/components/chat/room';
+import { useChatRoomMembers } from '~app/components/chat/room-channel';
+import AppButton from '~common/button/AppButton.vue';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
 
-const emit = defineEmits({
-	viewMembers: () => true,
-});
+type Props = {
+	room: ChatRoomModel;
+};
+const { room } = defineProps<Props>();
 
-const { room } = toRefs(props);
-const { memberCollection } = useChatRoomMembers(room);
+const emit = defineEmits<{
+	viewMembers: [];
+}>();
+
+const { memberCollection } = useChatRoomMembers(toRef(() => room));
 
 const members = toRef(() => memberCollection.value?.users || []);
 const membersPreview = computed(() => members.value.slice(0, 5));

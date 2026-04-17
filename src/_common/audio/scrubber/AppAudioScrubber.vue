@@ -1,24 +1,18 @@
 <script lang="ts" setup>
-import { computed, ref, toRefs, watch } from 'vue';
-import { Ruler } from '../../ruler/ruler-service';
-import AppTouch, { AppTouchInput } from '../../touch/AppTouch.vue';
+import { computed, ref, useTemplateRef, watch } from 'vue';
 
-const props = defineProps({
-	currentTime: {
-		type: Number,
-		required: true,
-	},
-	duration: {
-		type: Number,
-		required: true,
-	},
-});
+import { Ruler } from '~common/ruler/ruler-service';
+import AppTouch, { AppTouchInput } from '~common/touch/AppTouch.vue';
 
-const emit = defineEmits({
-	seek: (_pos: number) => true,
-});
+type Props = {
+	currentTime: number;
+	duration: number;
+};
+const { currentTime, duration } = defineProps<Props>();
 
-const { currentTime, duration } = toRefs(props);
+const emit = defineEmits<{
+	seek: [pos: number];
+}>();
 
 const isDragging = ref(false);
 
@@ -27,18 +21,18 @@ const timebarLeft = ref(0);
 const timebarWidth = ref(0);
 const scrubPos = ref(-1);
 
-const timebar = ref<HTMLElement>();
+const timebar = useTemplateRef('timebar');
 
 const unfilledRight = computed(() => {
 	if (scrubPos.value !== -1) {
 		return 100 - scrubPos.value * 100 + '%';
 	}
 
-	if (!duration.value) {
+	if (!duration) {
 		return 'auto';
 	}
 
-	return 100 - (currentTime.value / duration.value) * 100 + '%';
+	return 100 - (currentTime / duration) * 100 + '%';
 });
 
 /**
@@ -47,11 +41,14 @@ const unfilledRight = computed(() => {
  * that the scrub pos override will go back to normal as soon as a new time
  * change comes in.
  */
-watch(currentTime, () => {
-	if (!isDragging.value) {
-		scrubPos.value = -1;
+watch(
+	() => currentTime,
+	() => {
+		if (!isDragging.value) {
+			scrubPos.value = -1;
+		}
 	}
-});
+);
 
 function tap(event: AppTouchInput) {
 	panStart(event);
@@ -117,4 +114,4 @@ function calcScrubPos(event: AppTouchInput) {
 	</AppTouch>
 </template>
 
-<style lang="stylus" src="./scrubber.styl" scoped></style>
+<style lang="stylus" src="~common/audio/scrubber/scrubber.styl" scoped></style>

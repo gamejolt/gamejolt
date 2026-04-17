@@ -1,10 +1,11 @@
 <script lang="ts">
-import { computed, PropType, ref, toRefs } from 'vue';
-import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
-import { UserModel } from '../../../../_common/user/user.model';
-import { fuzzysearch } from '../../../../utils/string';
-import { ChatRoomModel } from '../room';
-import { ChatUser } from '../user';
+import { computed, ref } from 'vue';
+
+import { ChatRoomModel } from '~app/components/chat/room';
+import { ChatUser } from '~app/components/chat/user';
+import AppScrollScroller from '~common/scroll/AppScrollScroller.vue';
+import { UserModel } from '~common/user/user.model';
+import { fuzzysearch } from '~utils/string';
 
 type ChatListEntry = ChatUser | UserModel | ChatRoomModel;
 
@@ -40,29 +41,21 @@ function getKeyForEntry(entry: ChatListEntry) {
 </script>
 
 <script lang="ts" setup generic="T extends ChatListEntry">
-const props = defineProps({
-	entries: {
-		type: Array as PropType<T[]>,
-		required: true,
-	},
-	hideFilter: {
-		type: Boolean,
-	},
-	bleedFilter: {
-		type: Boolean,
-	},
-});
-
-const { entries } = toRefs(props);
+type Props = {
+	entries: T[];
+	hideFilter?: boolean;
+	bleedFilter?: boolean;
+};
+const { entries, hideFilter = false, bleedFilter = false } = defineProps<Props>();
 
 const filterQuery = ref('');
 
 const filteredEntries = computed(() => {
 	if (!filterQuery.value) {
-		return entries.value;
+		return entries;
 	}
 	const query = filterQuery.value.toLowerCase().trim();
-	return searchEntries(entries.value, query);
+	return searchEntries(entries, query);
 });
 
 const mappedEntries = computed(() =>
@@ -81,7 +74,7 @@ const mappedEntries = computed(() =>
 		</div>
 
 		<AppScrollScroller v-if="mappedEntries.length" class="-list-scroller" thin>
-			<template v-for="{ key, item } of mappedEntries" :key="key">
+			<template v-for="{ key: _key, item } of mappedEntries" :key="_key">
 				<slot v-bind="{ item }" />
 			</template>
 

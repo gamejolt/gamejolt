@@ -1,36 +1,25 @@
 <script lang="ts" setup>
-import { PropType, computed, ref, toRefs } from 'vue';
-import { styleWhen } from '../../_styles/mixins';
-import { useResizeObserver } from '../../utils/resize-observer';
-import AppAspectRatio from '../aspect-ratio/AppAspectRatio.vue';
-import { Ruler } from '../ruler/ruler-service';
-import AppAnimSlideshowImg from './AppAnimSlideshowImg.vue';
-import { ImgSlideshow, getImgSlideshowData } from './slideshow/sheets';
+import { computed, ref, useTemplateRef } from 'vue';
 
-const props = defineProps({
-	sheet: {
-		type: Object as PropType<ImgSlideshow>,
-		required: true,
-	},
-	overlay: {
-		type: Boolean,
-	},
-	pause: {
-		type: Boolean,
-	},
-	startOffset: {
-		type: Number,
-		default: 0,
-		validator: val => typeof val === 'number' && 0 <= val && val <= 1,
-	},
-});
+import AppAnimSlideshowImg from '~common/animation/AppAnimSlideshowImg.vue';
+import { getImgSlideshowData, ImgSlideshow } from '~common/animation/slideshow/sheets';
+import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
+import { Ruler } from '~common/ruler/ruler-service';
+import { styleWhen } from '~styles/mixins';
+import { useResizeObserver } from '~utils/resize-observer';
 
-const { sheet, overlay, pause, startOffset } = toRefs(props);
+type Props = {
+	sheet: ImgSlideshow;
+	overlay?: boolean;
+	pause?: boolean;
+	startOffset?: number;
+};
+const { sheet, overlay, pause, startOffset = 0 } = defineProps<Props>();
 
-const root = ref<HTMLDivElement>();
+const root = useTemplateRef('root');
 const size = ref({ width: 200, height: 200 });
 
-const sheetData = computed(() => getImgSlideshowData(sheet.value));
+const sheetData = computed(() => getImgSlideshowData(sheet));
 
 useResizeObserver({
 	target: root,

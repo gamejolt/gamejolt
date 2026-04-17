@@ -1,34 +1,28 @@
 <script lang="ts" setup>
-import { PropType, toRefs } from 'vue';
 import { RouterLink } from 'vue-router';
-import AppButton from '../../../../../../_common/button/AppButton.vue';
-import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
-import { showSupportersModal } from '../../../../../../_common/supporters/modal.service';
-import { vAppTooltip } from '../../../../../../_common/tooltip/tooltip-directive';
-import AppTranslate from '../../../../../../_common/translate/AppTranslate.vue';
-import AppUserCardHover from '../../../../../../_common/user/card/AppUserCardHover.vue';
-import AppUserAvatarImg from '../../../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
-import { UserModel } from '../../../../../../_common/user/user.model';
-import { useGameRouteController } from '../RouteDiscoverGamesView.vue';
 
-const props = defineProps({
-	supporters: {
-		type: Array as PropType<UserModel[]>,
-		required: true,
-	},
-	supporterCount: {
-		type: Number,
-		required: true,
-	},
-});
+import { useGameRouteController } from '~app/views/discover/games/view/RouteDiscoverGamesView.vue';
+import AppButton from '~common/button/AppButton.vue';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { showSupportersModal } from '~common/supporters/modal.service';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import AppUserCardHover from '~common/user/card/AppUserCardHover.vue';
+import { UserModel } from '~common/user/user.model';
+import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
 
-const { supporterCount } = toRefs(props);
+type Props = {
+	supporters: UserModel[];
+	supporterCount: number;
+};
+const { supporters, supporterCount } = defineProps<Props>();
+
 const { game } = useGameRouteController()!;
 
 function viewAll() {
 	showSupportersModal({
 		model: game.value!,
-		count: supporterCount.value,
+		count: supporterCount,
 	});
 }
 </script>

@@ -1,43 +1,38 @@
 <script lang="ts" setup>
-import { PropType, computed, ref, toRef, toRefs } from 'vue';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import AppCommunityChannelSelect from '../../../../_common/community/channel/AppCommunityChannelSelect.vue';
+import { computed, ref, toRef } from 'vue';
+
+import AppButton from '~common/button/AppButton.vue';
+import AppCommunityChannelSelect from '~common/community/channel/AppCommunityChannelSelect.vue';
 import {
 	$removeCommunityChannel,
 	CommunityChannelModel,
-} from '../../../../_common/community/channel/channel.model';
-import { CommunityModel } from '../../../../_common/community/community.model';
-import AppExpand from '../../../../_common/expand/AppExpand.vue';
-import { showErrorGrowl } from '../../../../_common/growls/growls.service';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
+} from '~common/community/channel/channel.model';
+import { CommunityModel } from '~common/community/community.model';
+import AppExpand from '~common/expand/AppExpand.vue';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { TranslateDirective as vTranslate } from '~common/translate/translate-directive';
 
-const props = defineProps({
-	community: {
-		type: Object as PropType<CommunityModel>,
-		required: true,
-	},
-	channel: {
-		type: Object as PropType<CommunityChannelModel>,
-		required: true,
-	},
-});
+type Props = {
+	community: CommunityModel;
+	channel: CommunityChannelModel;
+};
+const { community, channel } = defineProps<Props>();
 
-const emit = defineEmits({
-	removed: (_postsMovedTo?: CommunityChannelModel) => true,
-});
-
-const { community, channel } = toRefs(props);
+const emit = defineEmits<{
+	removed: [postsMovedTo?: CommunityChannelModel];
+}>();
 
 const selectedChannel = ref<CommunityChannelModel>();
 const moving = ref(false);
 
 const channels = computed(() => {
-	if (!community.value.channels) {
+	if (!community.channels) {
 		return [];
 	}
 
-	return community.value.channels.filter(i => i.id !== channel.value.id);
+	return community.channels.filter(i => i.id !== channel.id);
 });
 
 const hasSelectedChannel = toRef(() => selectedChannel.value instanceof CommunityChannelModel);
@@ -57,7 +52,7 @@ function onEject() {
 async function removeChannel(moveToChannel?: CommunityChannelModel) {
 	let success = false;
 	try {
-		await $removeCommunityChannel(channel.value, moveToChannel);
+		await $removeCommunityChannel(channel, moveToChannel);
 		success = true;
 	} catch (e) {
 		showErrorGrowl($gettext('Could not remove channel for some reason. Try again later!'));

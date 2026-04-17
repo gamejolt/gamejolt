@@ -1,30 +1,27 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, toRefs } from 'vue';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import { formatDate } from '../../../../_common/filters/date';
-import AppLinkExternal from '../../../../_common/link/AppLinkExternal.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { UserStripeManagedAccountModel } from '../../../../_common/user/stripe-managed-account/stripe-managed-account';
-import { html as termsTemplate } from '../../../../lib/terms/creator/global.md';
-import AppFinancialsCheckmark from './AppFinancialsCheckmark.vue';
-import AppFinancialsTosScroller from './AppFinancialsTosScroller.vue';
+import { computed, ref } from 'vue';
 
-const props = defineProps({
-	account: {
-		type: Object as PropType<UserStripeManagedAccountModel>,
-		default: undefined,
-	},
-});
+import AppFinancialsCheckmark from '~app/components/forms/financials/AppFinancialsCheckmark.vue';
+import AppFinancialsTosScroller from '~app/components/forms/financials/AppFinancialsTosScroller.vue';
+import AppButton from '~common/button/AppButton.vue';
+import { formatDate } from '~common/filters/date';
+import AppLinkExternal from '~common/link/AppLinkExternal.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { UserStripeManagedAccountModel } from '~common/user/stripe-managed-account/stripe-managed-account';
+import { html as termsTemplate } from '~lib/terms/creator/global.md';
 
-const emit = defineEmits({
-	accepted: () => true,
-});
+type Props = {
+	account?: UserStripeManagedAccountModel;
+};
+const { account } = defineProps<Props>();
 
-const { account } = toRefs(props);
+const emit = defineEmits<{
+	accepted: [];
+}>();
 
 const checked = ref(false);
 
-const hasSigned = computed(() => account?.value && account.value.tos_signed_creator > 0);
+const hasSigned = computed(() => account && account.tos_signed_creator > 0);
 
 const agreementLink = computed(
 	() =>

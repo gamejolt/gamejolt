@@ -1,5 +1,5 @@
-import { Model } from '../../model/model.service';
-import { UserModel } from '../user.model';
+import { Model } from '~common/model/model.service';
+import { UserModel } from '~common/user/user.model';
 
 export class UserBlockModel extends Model {
 	declare blocked_on: number;

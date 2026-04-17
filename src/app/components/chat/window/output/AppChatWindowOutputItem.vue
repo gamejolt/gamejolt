@@ -1,37 +1,39 @@
 <script lang="ts">
-import { computed, CSSProperties, PropType, reactive, ref, toRefs } from 'vue';
+import { computed, CSSProperties, reactive, ref, useTemplateRef } from 'vue';
 import { RouterLink } from 'vue-router';
-import { ContentOwnerParentBounds } from '../../../../../_common/content/content-owner';
-import { ContentRules } from '../../../../../_common/content/content-rules';
-import AppContentViewer from '../../../../../_common/content/content-viewer/AppContentViewer.vue';
-import { formatDate } from '../../../../../_common/filters/date';
-import AppJolticon, { Jolticon } from '../../../../../_common/jolticon/AppJolticon.vue';
-import { showModalConfirm } from '../../../../../_common/modal/confirm/confirm-service';
-import AppPopper, { PopperPlacementType } from '../../../../../_common/popper/AppPopper.vue';
-import { Popper } from '../../../../../_common/popper/popper.service';
-import AppReactionList from '../../../../../_common/reaction/list/AppReactionList.vue';
-import { selectReactionForResource } from '../../../../../_common/reaction/reaction-count';
-import AppScrollInview, {
-	ScrollInviewConfig,
-} from '../../../../../_common/scroll/inview/AppScrollInview.vue';
-import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import AppUserAvatarBubble from '../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
-import { styleElevate } from '../../../../../_styles/mixins';
-import { kChatRoomWindowPaddingH } from '../../../../styles/variables';
-import { useGridStore } from '../../../grid/grid-store';
+
 import {
 	removeMessage as chatRemoveMessage,
 	retryFailedQueuedMessage,
 	userCanModerateOtherUser,
-} from '../../client';
-import { ChatMessageModel } from '../../message';
-import { ChatRoomModel } from '../../room';
-import { getChatUserRoleData } from '../../user';
-import AppChatUserPopover from '../../user-popover/AppChatUserPopover.vue';
-import { ChatWindowAvatarSize, ChatWindowLeftGutterSize } from '../variables';
-import AppChatWindowOutputItemTime from './AppChatWindowOutputItemTime.vue';
+} from '~app/components/chat/client';
+import { ChatMessageModel } from '~app/components/chat/message';
+import { ChatRoomModel } from '~app/components/chat/room';
+import { getChatUserRoleData } from '~app/components/chat/user';
+import AppChatUserPopover from '~app/components/chat/user-popover/AppChatUserPopover.vue';
+import AppChatWindowOutputItemTime from '~app/components/chat/window/output/AppChatWindowOutputItemTime.vue';
+import {
+	ChatWindowAvatarSize,
+	ChatWindowLeftGutterSize,
+} from '~app/components/chat/window/variables';
+import { useGridStore } from '~app/components/grid/grid-store';
+import { kChatRoomWindowPaddingH } from '~app/styles/variables';
+import { ContentOwnerParentBounds } from '~common/content/content-owner';
+import { ContentRules } from '~common/content/content-rules';
+import AppContentViewer from '~common/content/content-viewer/AppContentViewer.vue';
+import { formatDate } from '~common/filters/date';
+import AppJolticon, { Jolticon } from '~common/jolticon/AppJolticon.vue';
+import { showModalConfirm } from '~common/modal/confirm/confirm-service';
+import AppPopper, { PopperPlacementType } from '~common/popper/AppPopper.vue';
+import { Popper } from '~common/popper/popper.service';
+import AppReactionList from '~common/reaction/list/AppReactionList.vue';
+import { selectReactionForResource } from '~common/reaction/reaction-count';
+import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
+import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
+import { styleElevate } from '~styles/mixins';
 
 export interface ChatMessageEditEvent {
 	message: ChatMessageModel;
@@ -42,39 +44,27 @@ const DisplayRules = new ContentRules({ maxMediaWidth: 400, maxMediaHeight: 300 
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	message: {
-		type: Object as PropType<ChatMessageModel>,
-		required: true,
-	},
-	room: {
-		type: Object as PropType<ChatRoomModel>,
-		required: true,
-	},
-	messagePadding: {
-		type: Number,
-		default: 12,
-	},
-	maxContentWidth: {
-		type: Number,
-		default: 100,
-	},
-	avatarPopperPlacement: {
-		type: String as PropType<PopperPlacementType>,
-		default: 'right',
-	},
-	avatarPopperPlacementFallbacks: {
-		type: Array as PropType<PopperPlacementType[]>,
-		default: undefined,
-	},
-});
+type Props = {
+	message: ChatMessageModel;
+	room: ChatRoomModel;
+	messagePadding?: number;
+	maxContentWidth?: number;
+	avatarPopperPlacement?: PopperPlacementType;
+	avatarPopperPlacementFallbacks?: PopperPlacementType[];
+};
+const {
+	message,
+	room,
+	messagePadding = 12,
+	maxContentWidth = 100,
+	avatarPopperPlacement = 'right',
+	avatarPopperPlacementFallbacks,
+} = defineProps<Props>();
 
-const emit = defineEmits({
-	showPopper: () => true,
-	hidePopper: () => true,
-});
-
-const { message, room, maxContentWidth } = toRefs(props);
+const emit = defineEmits<{
+	showPopper: [];
+	hidePopper: [];
+}>();
 const { chatUnsafe: chat } = useGridStore();
 
 const avatarSizeStyles: CSSProperties = {
@@ -85,18 +75,19 @@ const avatarSizeStyles: CSSProperties = {
 let canClearFocus = false;
 let isFocused = false;
 
-const root = ref<HTMLElement>();
-const itemWrapper = ref<HTMLElement>();
+const itemWrapper = useTemplateRef('itemWrapper');
 const isShowingAvatarPopper = ref(false);
 const popperHideTrigger = ref(0);
 
 const contentViewerBounds: ContentOwnerParentBounds = reactive({
-	width: maxContentWidth,
+	get width() {
+		return maxContentWidth;
+	},
 });
 
-const showAsQueued = computed(() => message.value._showAsQueued);
-const hasError = computed(() => !!message.value._error);
-const isEditing = computed(() => room.value.messageEditing === message.value);
+const showAsQueued = computed(() => message._showAsQueued);
+const hasError = computed(() => !!message._error);
+const isEditing = computed(() => room.messageEditing === message);
 
 const messageState = computed<{ icon?: Jolticon; display: string; tooltip?: string } | null>(() => {
 	const wrap = (text: string) => `(${text})`;
@@ -121,10 +112,10 @@ const messageState = computed<{ icon?: Jolticon; display: string; tooltip?: stri
 		};
 	}
 
-	if (message.value.edited_on) {
+	if (message.edited_on) {
 		return {
 			display: wrap($gettext('edited')),
-			tooltip: formatDate(message.value.edited_on!, 'medium'),
+			tooltip: formatDate(message.edited_on!, 'medium'),
 		};
 	}
 
@@ -169,21 +160,21 @@ const canRemoveMessage = computed(() => {
 	}
 
 	// The owner of the message can remove it.
-	if (chat.value.currentUser.id === message.value.user.id) {
+	if (chat.value.currentUser.id === message.user.id) {
 		return true;
 	}
 
 	// Mods/Room owners can also remove the message.
-	return userCanModerateOtherUser(room.value, chat.value.currentUser, message.value.user);
+	return userCanModerateOtherUser(room, chat.value.currentUser, message.user);
 });
 
 const canReactToMessage = computed(() => {
-	if (message.value.is_automated) {
+	if (message.is_automated) {
 		return false;
 	}
 
 	// Only content messages can be edited.
-	if (message.value.type !== 'content') {
+	if (message.type !== 'content') {
 		return false;
 	}
 
@@ -200,18 +191,16 @@ const canEditMessage = computed(() => {
 	}
 
 	// Only the owner of the message can edit.
-	return !!chat.value.currentUser && chat.value.currentUser.id === message.value.user.id;
+	return !!chat.value.currentUser && chat.value.currentUser.id === message.user.id;
 });
 
 const roleData = computed(() =>
-	getChatUserRoleData(room.value, message.value.user, {
-		mesage: message.value,
+	getChatUserRoleData(room, message.user, {
+		mesage: message,
 	})
 );
 
-const shouldShowAvatar = computed(
-	() => message.value.showAvatar === true || isShowingAvatarPopper.value
-);
+const shouldShowAvatar = computed(() => message.showAvatar === true || isShowingAvatarPopper.value);
 
 function onAvatarPopperVisible(isShowing: boolean) {
 	isShowingAvatarPopper.value = isShowing;
@@ -224,12 +213,12 @@ function onAvatarPopperVisible(isShowing: boolean) {
 }
 
 function startEdit() {
-	room.value.messageEditing = message.value;
+	room.messageEditing = message;
 	Popper.hideAll();
 }
 
 function stopEdit() {
-	room.value.messageEditing = null;
+	room.messageEditing = null;
 	Popper.hideAll();
 }
 
@@ -244,8 +233,8 @@ async function removeMessage() {
 		return;
 	}
 
-	room.value.messageEditing = null;
-	chatRemoveMessage(chat.value, room.value, message.value.id);
+	room.messageEditing = null;
+	chatRemoveMessage(chat.value, room, message.id);
 }
 
 async function onFocusItem() {
@@ -267,14 +256,13 @@ function onRowClick() {
 
 async function onMessageClick() {
 	if (hasError.value) {
-		retryFailedQueuedMessage(room.value, message.value);
+		retryFailedQueuedMessage(room, message);
 	}
 }
 </script>
 
 <template>
 	<div
-		ref="root"
 		class="chat-window-output-item"
 		:class="{
 			'-message-queued': showAsQueued,

@@ -1,36 +1,27 @@
 <script lang="ts" setup>
-import { PropType, computed, nextTick, onMounted, ref, toRef, toRefs, watch } from 'vue';
-import { isInstance } from '../../../utils/utils';
-import { GameScreenshotModel } from '../../game/screenshot/screenshot.model';
-import { GameSketchfabModel } from '../../game/sketchfab/sketchfab.model';
-import { GameVideoModel } from '../../game/video/video.model';
-import AppImgResponsive from '../../img/AppImgResponsive.vue';
-import AppMediaItemBackdrop from '../../media-item/backdrop/AppMediaItemBackdrop.vue';
-import { MediaItemModel } from '../../media-item/media-item-model';
-import { Screen, onScreenResize } from '../../screen/screen-service';
-import AppSketchfabEmbed from '../../sketchfab/embed/AppSketchfabEmbed.vue';
-import { useEventSubscription } from '../../system/event/event-topic';
-import AppVideo from '../../video/AppVideo.vue';
-import AppVideoEmbed from '../../video/embed/AppVideoEmbed.vue';
-import { getVideoPlayerFromSources } from '../../video/player/controller';
-import { LightboxConfig, LightboxMediaModel } from '../lightbox-helpers';
+import { computed, nextTick, onMounted, ref, toRef, useTemplateRef, watch } from 'vue';
 
-const props = defineProps({
-	item: {
-		type: Object as PropType<LightboxMediaModel>,
-		required: true,
-	},
-	itemIndex: {
-		type: Number,
-		required: true,
-	},
-	activeIndex: {
-		type: Number,
-		required: true,
-	},
-});
+import { GameScreenshotModel } from '~common/game/screenshot/screenshot.model';
+import { GameSketchfabModel } from '~common/game/sketchfab/sketchfab.model';
+import { GameVideoModel } from '~common/game/video/video.model';
+import AppImgResponsive from '~common/img/AppImgResponsive.vue';
+import { LightboxConfig, LightboxMediaModel } from '~common/lightbox/lightbox-helpers';
+import AppMediaItemBackdrop from '~common/media-item/backdrop/AppMediaItemBackdrop.vue';
+import { MediaItemModel } from '~common/media-item/media-item-model';
+import { onScreenResize, Screen } from '~common/screen/screen-service';
+import AppSketchfabEmbed from '~common/sketchfab/embed/AppSketchfabEmbed.vue';
+import { useEventSubscription } from '~common/system/event/event-topic';
+import AppVideo from '~common/video/AppVideo.vue';
+import AppVideoEmbed from '~common/video/embed/AppVideoEmbed.vue';
+import { getVideoPlayerFromSources } from '~common/video/player/controller';
+import { isInstance } from '~utils/utils';
 
-const { item, itemIndex, activeIndex } = toRefs(props);
+type Props = {
+	item: LightboxMediaModel;
+	itemIndex: number;
+	activeIndex: number;
+};
+const { item, itemIndex, activeIndex } = defineProps<Props>();
 
 const isActive = ref(false);
 const isNext = ref(false);
@@ -38,8 +29,8 @@ const isPrev = ref(false);
 const initialized = ref(false);
 const maxWidth = ref(0);
 const maxHeight = ref(0);
-const caption = ref<HTMLDivElement>();
-const rootElem = ref<HTMLDivElement>();
+const caption = useTemplateRef('caption');
+const rootElem = useTemplateRef('rootElem');
 
 const shouldVideoPlay = toRef(() => isActive.value);
 
@@ -50,7 +41,7 @@ const isGifWithoutVideo = toRef(
 		!mediaItem.value.mediaserver_url_webm
 );
 
-const mediaItem = toRef(() => item.value.getMediaItem()!);
+const mediaItem = toRef(() => item.getMediaItem()!);
 
 const videoController = computed(() => {
 	const sources = {
@@ -62,7 +53,10 @@ const videoController = computed(() => {
 
 useEventSubscription(onScreenResize, () => calcDimensions());
 
-watch(activeIndex, () => calcActive());
+watch(
+	() => activeIndex,
+	() => calcActive()
+);
 
 onMounted(async () => {
 	await calcActive();
@@ -86,10 +80,8 @@ async function calcDimensions() {
 		maxHeight.value -= caption.value.offsetHeight;
 	}
 
-	if (item.value.getMediaType() === 'image') {
-		const dimensions = item.value
-			.getMediaItem()!
-			.getDimensions(maxWidth.value, maxHeight.value);
+	if (item.getMediaType() === 'image') {
+		const dimensions = item.getMediaItem()!.getDimensions(maxWidth.value, maxHeight.value);
 		maxWidth.value = dimensions.width;
 		maxHeight.value = dimensions.height;
 	}
@@ -100,9 +92,9 @@ async function calcActive() {
 		return;
 	}
 
-	isActive.value = activeIndex.value === itemIndex.value;
-	isNext.value = activeIndex.value + 1 === itemIndex.value;
-	isPrev.value = activeIndex.value - 1 === itemIndex.value;
+	isActive.value = activeIndex === itemIndex;
+	isNext.value = activeIndex + 1 === itemIndex;
+	isPrev.value = activeIndex - 1 === itemIndex;
 
 	rootElem.value.classList.remove('active', 'next', 'prev');
 
@@ -203,4 +195,4 @@ async function calcActive() {
 	</div>
 </template>
 
-<style lang="stylus" src="./item.styl" scoped></style>
+<style lang="stylus" src="~common/lightbox/item/item.styl" scoped></style>

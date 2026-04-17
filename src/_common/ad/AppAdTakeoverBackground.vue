@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useAdStore } from './ad-store';
+import { useAdStore } from '~common/ad/ad-store';
 
 const { hasTakeover } = useAdStore();
 

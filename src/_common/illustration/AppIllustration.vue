@@ -1,6 +1,7 @@
 <script lang="ts">
-import { CSSProperties, PropType, computed, toRefs, useSlots } from 'vue';
-import AppThemeSvg from '../theme/svg/AppThemeSvg.vue';
+import { computed, CSSProperties, useSlots } from 'vue';
+
+import AppThemeSvg from '~common/theme/svg/AppThemeSvg.vue';
 
 /**
  * Run all the assets through https://squoosh.app/
@@ -21,38 +22,15 @@ export interface IllustrationAsset {
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	asset: {
-		type: Object as PropType<IllustrationAsset>,
-		required: true,
-	},
-	sm: {
-		type: Boolean,
-	},
-	maxWidth: {
-		type: [Number, String],
-		default: undefined,
-		validator: value =>
-			(typeof value === 'number' && value >= 0) ||
-			(typeof value === 'string' && value.length > 0),
-	},
-	maxTextWidth: {
-		type: [Number, String],
-		default: 500,
-		validator: value =>
-			(typeof value === 'number' && value >= 0) ||
-			(typeof value === 'string' && value.length > 0),
-	},
-	noMargin: {
-		type: Boolean,
-	},
-	illStyles: {
-		type: Object as PropType<CSSProperties>,
-		default: undefined,
-	},
-});
-
-const { asset, sm, maxWidth, maxTextWidth, noMargin, illStyles } = toRefs(props);
+type Props = {
+	asset: IllustrationAsset;
+	sm?: boolean;
+	maxWidth?: number | string;
+	maxTextWidth?: number | string;
+	noMargin?: boolean;
+	illStyles?: CSSProperties;
+};
+const { asset, sm, maxWidth, maxTextWidth = 500, noMargin, illStyles } = defineProps<Props>();
 
 const slots = useSlots();
 
@@ -61,16 +39,15 @@ const hasContent = computed(() => !!slots.default);
 const imgStyles = computed(() => {
 	const result: CSSProperties = {};
 
-	if (noMargin.value) {
+	if (noMargin) {
 		result.margin = 0;
 	}
-	if (maxWidth?.value) {
-		result.maxWidth =
-			typeof maxWidth.value === 'number' ? `${maxWidth.value}px` : maxWidth.value;
+	if (maxWidth) {
+		result.maxWidth = typeof maxWidth === 'number' ? `${maxWidth}px` : maxWidth;
 		result.height = 'auto';
 	}
-	if (illStyles?.value) {
-		Object.assign(result, illStyles.value);
+	if (illStyles) {
+		Object.assign(result, illStyles);
 	}
 
 	return result;

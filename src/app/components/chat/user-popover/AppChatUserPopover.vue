@@ -1,21 +1,7 @@
 <script lang="ts" setup>
-import { computed, CSSProperties, PropType, toRefs } from 'vue';
+import { computed, CSSProperties } from 'vue';
 import { RouterLink } from 'vue-router';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
-import AppOnHover from '../../../../_common/on/AppOnHover.vue';
-import { kThemeDarkest } from '../../../../_common/theme/variables';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import AppUserVerifiedTick from '../../../../_common/user/AppUserVerifiedTick.vue';
-import AppUserAvatarBubble from '../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
-import { styleWhen } from '../../../../_styles/mixins';
-import {
-	kBorderWidthLg,
-	kFontFamilyTiny,
-	kFontSizeSmall,
-	kFontSizeTiny,
-} from '../../../../_styles/variables';
-import { useGridStore } from '../../grid/grid-store';
+
 import {
 	isUserOnline,
 	kickGroupMember,
@@ -23,23 +9,27 @@ import {
 	RoboJoltUserId,
 	tryGetRoomRole,
 	userCanModerateOtherUser,
-} from '../client';
-import { ChatRoomModel } from '../room';
-import { ChatUser } from '../user';
-import AppChatUserOnlineStatus from '../user-online-status/AppChatUserOnlineStatus.vue';
+} from '~app/components/chat/client';
+import { ChatRoomModel } from '~app/components/chat/room';
+import { ChatUser } from '~app/components/chat/user';
+import AppChatUserOnlineStatus from '~app/components/chat/user-online-status/AppChatUserOnlineStatus.vue';
+import { useGridStore } from '~app/components/grid/grid-store';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { showModalConfirm } from '~common/modal/confirm/confirm-service';
+import AppOnHover from '~common/on/AppOnHover.vue';
+import { kThemeDarkest } from '~common/theme/variables';
+import { $gettext } from '~common/translate/translate.service';
+import AppUserVerifiedTick from '~common/user/AppUserVerifiedTick.vue';
+import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
+import { styleWhen } from '~styles/mixins';
+import { kBorderWidthLg, kFontFamilyTiny, kFontSizeSmall, kFontSizeTiny } from '~styles/variables';
 
-const props = defineProps({
-	user: {
-		type: Object as PropType<ChatUser>,
-		required: true,
-	},
-	room: {
-		type: Object as PropType<ChatRoomModel>,
-		required: true,
-	},
-});
+type Props = {
+	user: ChatUser;
+	room: ChatRoomModel;
+};
+const { user, room } = defineProps<Props>();
 
-const { user, room } = toRefs(props);
 const { chatUnsafe: chat } = useGridStore();
 
 const isOnline = computed(() => {
@@ -47,25 +37,25 @@ const isOnline = computed(() => {
 		return null;
 	}
 
-	return isUserOnline(chat.value, user.value.id);
+	return isUserOnline(chat.value, user.id);
 });
 
-const isOwner = computed(() => room.value.owner_id === user.value.id);
-const isRobojolt = computed(() => user.value.id === RoboJoltUserId);
+const isOwner = computed(() => room.owner_id === user.id);
+const isRobojolt = computed(() => user.id === RoboJoltUserId);
 
 const isModerator = computed(() => {
-	const role = tryGetRoomRole(room.value, user.value);
+	const role = tryGetRoomRole(room, user);
 	return role === 'moderator';
 });
 
 const canMessage = computed(() => {
 	// Don't show "Send message" link when already in PM room with the user.
-	if (room.value.isPmRoom) {
+	if (room.isPmRoom) {
 		return false;
 	}
 
 	// Show when users are friends.
-	return chat.value.friendsList.get(user.value) !== undefined;
+	return chat.value.friendsList.get(user) !== undefined;
 });
 
 const canModerate = computed(() => {
@@ -73,7 +63,7 @@ const canModerate = computed(() => {
 		return false;
 	}
 
-	return userCanModerateOtherUser(room.value, chat.value.currentUser, user.value);
+	return userCanModerateOtherUser(room, chat.value.currentUser, user);
 });
 
 const canKick = computed(() => {
@@ -83,7 +73,7 @@ const canKick = computed(() => {
 	}
 
 	// In public rooms, staff members can never get kicked.
-	if (!room.value.isPrivateRoom && user.value.isStaff) {
+	if (!room.isPrivateRoom && user.isStaff) {
 		return false;
 	}
 
@@ -91,7 +81,7 @@ const canKick = computed(() => {
 });
 
 function onClickSendMessage() {
-	const friend = chat.value.friendsList.get(user.value);
+	const friend = chat.value.friendsList.get(user);
 	if (friend) {
 		openChatRoom(chat.value, friend.room_id);
 	}
@@ -100,19 +90,19 @@ function onClickSendMessage() {
 async function onClickKick() {
 	const message = canMessage.value
 		? $gettext(`Are you sure you want to kick %{ user } from the room?`, {
-				user: user.value.display_name,
+				user: user.display_name,
 		  })
 		: $gettext(
 				`Are you sure you want to kick @%{ username } from this room? You're not friends with this user, so you won't be able to invite them back into this room.`,
-				{ username: user.value.username }
+				{ username: user.username }
 		  );
 	const confirm = await showModalConfirm(
 		message,
-		$gettext(`Kick @%{ username }`, { username: user.value.username })
+		$gettext(`Kick @%{ username }`, { username: user.username })
 	);
 
 	if (confirm) {
-		kickGroupMember(chat.value, room.value, user.value.id);
+		kickGroupMember(chat.value, room, user.id);
 	}
 }
 

@@ -1,6 +1,6 @@
-import { ContextCapabilities } from '../../content-context';
-import { ContentHydrator } from '../../content-hydrator';
-import { EmbedType, PreviewEmbed } from '../content-embed.service';
+import { ContextCapabilities } from '~common/content/content-context';
+import { EmbedType, PreviewEmbed } from '~common/content/content-editor/content-embed.service';
+import { ContentHydrator } from '~common/content/content-hydrator';
 
 export abstract class EmbedSource {
 	abstract getEmbedType(): EmbedType;

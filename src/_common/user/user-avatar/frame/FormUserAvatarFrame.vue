@@ -1,30 +1,31 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
-import AppAlertBox from '../../../alert/AppAlertBox.vue';
-import { Api } from '../../../api/api.service';
-import AppForm, { createForm, FormController } from '../../../form-vue/AppForm.vue';
-import AppFormButton from '../../../form-vue/AppFormButton.vue';
-import AppFormGroup from '../../../form-vue/AppFormGroup.vue';
-import AppFormStickySubmit from '../../../form-vue/AppFormStickySubmit.vue';
-import { showErrorGrowl } from '../../../growls/growls.service';
-import AppIllustration from '../../../illustration/AppIllustration.vue';
-import { illNoCommentsSmall } from '../../../illustration/illustrations';
-import { storeModelList } from '../../../model/model-store.service';
-import AppSpacer from '../../../spacer/AppSpacer.vue';
-import { useCommonStore } from '../../../store/common-store';
-import { $gettext } from '../../../translate/translate.service';
-import AppUserAvatarFrameSelector from './_selector/AppUserAvatarFrameSelector.vue';
-import { UserAvatarFrameModel } from './frame.model';
 
-interface FormModel {
+import AppAlertBox from '~common/alert/AppAlertBox.vue';
+import { Api } from '~common/api/api.service';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormStickySubmit from '~common/form-vue/AppFormStickySubmit.vue';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import AppIllustration from '~common/illustration/AppIllustration.vue';
+import { illNoCommentsSmall } from '~common/illustration/illustrations';
+import { storeModelList } from '~common/model/model-store.service';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import { useCommonStore } from '~common/store/common-store';
+import { $gettext } from '~common/translate/translate.service';
+import AppUserAvatarFrameSelector from '~common/user/user-avatar/frame/_selector/AppUserAvatarFrameSelector.vue';
+import { UserAvatarFrameModel } from '~common/user/user-avatar/frame/frame.model';
+
+type FormModel = {
 	avatar_frame: number | undefined;
-}
+};
 
 const { user } = useCommonStore();
 
 const availableFrames = ref<UserAvatarFrameModel[]>([]);
 
-const form: FormController<FormModel> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	loadUrl: '/web/dash/profile/save',
 	onLoad(payload) {
 		availableFrames.value = storeModelList(UserAvatarFrameModel, payload.userAvatarFrames);

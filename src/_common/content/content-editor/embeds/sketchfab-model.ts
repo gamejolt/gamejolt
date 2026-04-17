@@ -1,7 +1,7 @@
-import { ContextCapabilities } from '../../content-context';
-import { ContentHydrator } from '../../content-hydrator';
-import { EmbedType } from '../content-embed.service';
-import { EmbedSource } from './embed-source';
+import { ContextCapabilities } from '~common/content/content-context';
+import { EmbedType } from '~common/content/content-editor/content-embed.service';
+import { EmbedSource } from '~common/content/content-editor/embeds/embed-source';
+import { ContentHydrator } from '~common/content/content-hydrator';
 
 export class SketchfabModelEmbed extends EmbedSource {
 	getEmbedType(): EmbedType {

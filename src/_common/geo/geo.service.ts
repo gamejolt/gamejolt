@@ -1,4 +1,4 @@
-import { $gettext } from '../translate/translate.service';
+import { $gettext } from '~common/translate/translate.service';
 
 export interface GeoCountry {
 	code: string;

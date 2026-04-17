@@ -1,33 +1,37 @@
 <script lang="ts" setup>
 import { toRef } from 'vue';
-import {
-	createFormControl,
-	defineFormControlEmits,
-	defineFormControlProps,
-} from '../AppFormControl.vue';
 
-const props = defineProps({
-	...defineFormControlProps(),
-});
+import { createFormControl, FormControlEmits } from '~common/form-vue/AppFormControl.vue';
+import { FormValidator } from '~common/form-vue/validators';
+import { MaybePromise } from '~utils/utils';
 
-const emit = defineEmits({
-	...defineFormControlEmits(),
-});
+type Props = {
+	disabled?: boolean;
+	validators?: FormValidator[];
+	beforeChange?: (next: boolean) => MaybePromise<boolean>;
+};
+const { validators = [], disabled, beforeChange } = defineProps<Props>();
+
+const emit = defineEmits<FormControlEmits>();
 
 const { id, controlVal, applyValue } = createFormControl({
 	initialValue: false,
-	validators: toRef(props, 'validators'),
-	// eslint-disable-next-line vue/require-explicit-emits
+	validators: toRef(() => validators),
 	onChange: val => emit('changed', val),
 	alwaysOptional: true,
 });
 
-function toggle() {
-	if (props.disabled) {
+async function toggle() {
+	if (disabled) {
 		return;
 	}
 
-	applyValue(!controlVal.value);
+	const next = !controlVal.value;
+	if (beforeChange && !(await beforeChange(next))) {
+		return;
+	}
+
+	applyValue(next);
 }
 </script>
 

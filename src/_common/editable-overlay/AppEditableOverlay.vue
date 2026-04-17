@@ -1,14 +1,13 @@
 <script lang="ts" setup>
-import AppJolticon from '../jolticon/AppJolticon.vue';
-defineProps({
-	disabled: {
-		type: Boolean,
-	},
-});
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+type Props = {
+	disabled?: boolean;
+};
+defineProps<Props>();
 
-const emit = defineEmits({
-	toggle: () => true,
-});
+const emit = defineEmits<{
+	toggle: [];
+}>();
 </script>
 
 <template>

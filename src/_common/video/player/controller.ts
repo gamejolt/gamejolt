@@ -1,13 +1,14 @@
-import { computed, reactive, ref, Ref } from 'vue';
-import { assertNever } from '../../../utils/utils';
-import { Analytics } from '../../analytics/analytics.service';
+import { computed, reactive, Ref, ref } from 'vue';
+
+import { Analytics } from '~common/analytics/analytics.service';
 import {
 	SettingVideoPlayerFeedAutoplay,
 	SettingVideoPlayerMuted,
 	SettingVideoPlayerVolume,
-} from '../../settings/settings.service';
-import { ScrubberStage } from '../../slider/AppSlider.vue';
-import { VideoSourceArray } from '../AppVideo.vue';
+} from '~common/settings/settings.service';
+import { ScrubberStage } from '~common/slider/AppSlider.vue';
+import { VideoSourceArray } from '~common/video/AppVideo.vue';
+import { assertNever } from '~utils/utils';
 
 export type VideoPlayerControllerContext = 'feed' | 'page' | 'gif' | null;
 export type VideoPlayerState = 'paused' | 'playing';

@@ -1,10 +1,11 @@
 import { inject, InjectionKey, provide, Ref } from 'vue';
-import { FormControlController } from './AppFormControl.vue';
+
+import { FormControlController } from '~common/form-vue/AppFormControl.vue';
 
 const Key: InjectionKey<FormControlHooks> = Symbol('form-control-hooks');
 
 interface FormControlHooks {
-	afterMount?: (c: FormControlController, el: Ref<HTMLInputElement | undefined>) => void;
+	afterMount?: (c: FormControlController, el: Readonly<Ref<HTMLInputElement | null>>) => void;
 	beforeApplyValue?: <T>(c: FormControlController, value: T) => T;
 }
 

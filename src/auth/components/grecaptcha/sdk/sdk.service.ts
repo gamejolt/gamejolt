@@ -1,4 +1,4 @@
-import { isDynamicGoogleBot } from '../../../../_common/device/device.service';
+import { isDynamicGoogleBot } from '~common/device/device.service';
 
 export class GrecaptchaSdk {
 	private static bootstrapPromise: Promise<void> | null = null;
@@ -10,18 +10,19 @@ export class GrecaptchaSdk {
 
 		if (!this.bootstrapPromise) {
 			this.bootstrapPromise = new Promise((resolve, reject) => {
-				let bootstrapLib = (d: Document, id: string) => {
+				const bootstrapLib = (d: Document, id: string) => {
 					(window as any).grecaptchaOnLoaded = () => resolve();
 
-					let js: HTMLScriptElement,
-						fjs = d.getElementsByTagName('script')[0];
+					let js: HTMLScriptElement;
+					const fjs = d.getElementsByTagName('script')[0];
 					if (!d.getElementById(id)) {
 						js = d.createElement('script');
 						js.id = id;
 						js.type = 'text/javascript';
 						js.src =
 							'https://www.google.com/recaptcha/api.js?onload=grecaptchaOnLoaded&render=explicit';
-						js.onerror = err => reject('Failed to load recaptcha api: ' + err.message);
+						js.onerror = err =>
+							reject('Failed to load recaptcha api: ' + (err as any).message);
 						fjs.parentNode!.insertBefore(js, fjs);
 					}
 				};

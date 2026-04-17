@@ -3,8 +3,8 @@ import {
 	SOCIAL_ACTION_FOLLOW,
 	SOCIAL_ACTION_TWEET,
 	SOCIAL_NETWORK_TWITTER,
-} from '../../../analytics/analytics.service';
-import { isDynamicGoogleBot } from '../../../device/device.service';
+} from '~common/analytics/analytics.service';
+import { isDynamicGoogleBot } from '~common/device/device.service';
 
 function setupEvents() {
 	(window as any).twttr.events.bind('tweet', () => {

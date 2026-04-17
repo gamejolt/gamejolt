@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-import AppButton from '../../../../../_common/button/AppButton.vue';
-import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
-import AppModal from '../../../../../_common/modal/AppModal.vue';
-import { useModal } from '../../../../../_common/modal/modal.service';
-import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import { illMobileKikkerstein } from '../../../../../_common/illustration/illustrations';
-import { useAppStore } from '../../../../store/index';
+import { useAppStore } from '~app/store/index';
+import AppButton from '~common/button/AppButton.vue';
+import AppIllustration from '~common/illustration/AppIllustration.vue';
+import { illMobileKikkerstein } from '~common/illustration/illustrations';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import { $gettext } from '~common/translate/translate.service';
 
 const modal = useModal()!;
 const { clearPanes, visibleLeftPane, toggleLeftPane } = useAppStore();

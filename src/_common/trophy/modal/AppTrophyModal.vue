@@ -1,49 +1,46 @@
 <script lang="ts" setup>
-import { PropType, computed, onMounted, ref, toRefs } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { RouterLink } from 'vue-router';
-import { Api } from '../../api/api.service';
-import AppButton from '../../button/AppButton.vue';
-import AppJolticon from '../../jolticon/AppJolticon.vue';
-import AppModal from '../../modal/AppModal.vue';
-import { useModal } from '../../modal/modal.service';
-import { Screen } from '../../screen/screen-service';
-import { SiteTrophyModel } from '../../site/trophy/trophy.model';
-import { useCommonStore } from '../../store/common-store';
-import AppTimeAgo from '../../time/AppTimeAgo.vue';
-import { vAppTooltip } from '../../tooltip/tooltip-directive';
-import { $gettext } from '../../translate/translate.service';
-import AppUserCardHover from '../../user/card/AppUserCardHover.vue';
-import { UserGameTrophyModel } from '../../user/trophy/game-trophy.model';
+
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import { Screen } from '~common/screen/screen-service';
+import { SiteTrophyModel } from '~common/site/trophy/trophy.model';
+import { useCommonStore } from '~common/store/common-store';
+import AppTimeAgo from '~common/time/AppTimeAgo.vue';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { TranslateDirective as vTranslate } from '~common/translate/translate-directive';
+import AppTrophyThumbnail from '~common/trophy/thumbnail/AppTrophyThumbnail.vue';
+import AppUserCardHover from '~common/user/card/AppUserCardHover.vue';
+import { UserGameTrophyModel } from '~common/user/trophy/game-trophy.model';
 import {
 	$viewUserBaseTrophyModel,
 	UserBaseTrophyModel,
-} from '../../user/trophy/user-base-trophy.model';
-import AppUserAvatarImg from '../../user/user-avatar/AppUserAvatarImg.vue';
-import AppUserAvatarList from '../../user/user-avatar/AppUserAvatarList.vue';
-import { UserModel } from '../../user/user.model';
-import AppTrophyThumbnail from '../thumbnail/AppTrophyThumbnail.vue';
+} from '~common/user/trophy/user-base-trophy.model';
+import { UserModel } from '~common/user/user.model';
+import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
+import AppUserAvatarList from '~common/user/user-avatar/AppUserAvatarList.vue';
 
-const props = defineProps({
-	userTrophy: {
-		type: Object as PropType<UserBaseTrophyModel>,
-		required: true,
-	},
-});
-
-const { userTrophy } = toRefs(props);
+type Props = {
+	userTrophy: UserBaseTrophyModel;
+};
+const { userTrophy } = defineProps<Props>();
 const { user } = useCommonStore();
 const modal = useModal()!;
 
 const completionPercentage = ref<number | null>(null);
 const friends = ref<UserModel[]>([]);
 
-const trophy = computed(() => userTrophy.value.trophy!);
+const trophy = computed(() => userTrophy.trophy!);
 
 const bgClass = computed(() => '-trophy-difficulty-' + trophy.value.difficulty);
 
-const canReceiveExp = computed(() =>
-	!userTrophy.value.trophy ? false : !userTrophy.value.trophy.is_owner
-);
+const canReceiveExp = computed(() => (!userTrophy.trophy ? false : !userTrophy.trophy.is_owner));
 
 const completionPercentageForDisplay = computed(() => {
 	if (completionPercentage.value) {
@@ -60,15 +57,13 @@ const completionPercentageForDisplay = computed(() => {
 const shouldShowFriends = computed(() => Boolean(friends.value && friends.value.length > 0));
 
 const game = computed(() =>
-	userTrophy.value instanceof UserGameTrophyModel && userTrophy.value.game
-		? userTrophy.value.game
-		: undefined
+	userTrophy instanceof UserGameTrophyModel && userTrophy.game ? userTrophy.game : undefined
 );
 
 const isGame = computed(() => !!game.value);
 
 const loggedInUserUnlocked = computed(() =>
-	Boolean(user.value && userTrophy.value.user_id === user.value.id)
+	Boolean(user.value && userTrophy.user_id === user.value.id)
 );
 
 const artist = computed(() =>
@@ -84,8 +79,8 @@ onMounted(() => {
 	if (user.value) {
 		populateFriends();
 
-		if (userTrophy.value.user_id === user.value.id && !userTrophy.value.viewed_on) {
-			$viewUserBaseTrophyModel(userTrophy.value);
+		if (userTrophy.user_id === user.value.id && !userTrophy.viewed_on) {
+			$viewUserBaseTrophyModel(userTrophy);
 		}
 	}
 });
@@ -138,10 +133,9 @@ async function populateFriends() {
 								class="-subtitle-link link-unstyled"
 							>
 								<AppJolticon icon="gamepad" />
-								<span v-translate="{ title: game.title }">
-									Game Trophy of
-									<b>%{ title }</b>
-								</span>
+								<AppTranslate :translate-params="{ title: game.title }">
+									Game Trophy of %{ title }
+								</AppTranslate>
 							</RouterLink>
 						</template>
 						<template v-else>
@@ -154,10 +148,9 @@ async function populateFriends() {
 							>
 								<span class="dot-separator" />
 								<AppUserCardHover :user="artist">
-									<span v-translate="{ username: artist.username }">
-										Art by
-										<b>@%{ username }</b>
-									</span>
+									<AppTranslate :translate-params="{ username: artist.username }">
+										Art by @%{ username }
+									</AppTranslate>
 									<span class="-subtitle-avatar">
 										<AppUserAvatarImg :user="artist" />
 									</span>

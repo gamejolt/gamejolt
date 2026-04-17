@@ -5,5 +5,5 @@ export const routeProfileOverviewFeed: RouteRecordRaw = {
 	// lazily.
 	name: 'profile.overview',
 	path: '/@:username/:feedSection(likes)?',
-	component: () => import('./RouteProfileOverviewFeed.vue'),
+	component: () => import('~app/views/profile/overview/feed/RouteProfileOverviewFeed.vue'),
 };

@@ -1,6 +1,6 @@
-import { storeModelList } from '../model/model-store.service';
-import { Model } from '../model/model.service';
-import { StickerModel } from '../sticker/sticker.model';
+import { Model } from '~common/model/model.service';
+import { storeModelList } from '~common/model/model-store.service';
+import { StickerModel } from '~common/sticker/sticker.model';
 
 export const QuestObjectiveStatus = {
 	locked: 0,

@@ -1,27 +1,21 @@
 <script lang="ts">
 import { computed, ref } from 'vue';
-import { Api } from '../../../../../../../_common/api/api.service';
-import AppCardList from '../../../../../../../_common/card/list/AppCardList.vue';
-import AppCardListAdd from '../../../../../../../_common/card/list/AppCardListAdd.vue';
-import AppCardListDraggable from '../../../../../../../_common/card/list/AppCardListDraggable.vue';
-import AppCardListItem from '../../../../../../../_common/card/list/AppCardListItem.vue';
-import {
-	$removeGameSong,
-	$saveGameSongSort,
-	GameSongModel,
-} from '../../../../../../../_common/game/song/song.model';
-import AppJolticon from '../../../../../../../_common/jolticon/AppJolticon.vue';
-import AppLoadingFade from '../../../../../../../_common/loading/AppLoadingFade.vue';
-import { showModalConfirm } from '../../../../../../../_common/modal/confirm/confirm-service';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '../../../../../../../_common/route/route-component';
-import { $gettext } from '../../../../../../../_common/translate/translate.service';
-import { arrayRemove } from '../../../../../../../utils/array';
-import FormGameSong from '../../../../../../components/forms/game/song/song.vue';
-import AppDashGameWizardControls from '../../../../../../components/forms/game/wizard-controls/AppDashGameWizardControls.vue';
-import { useGameDashRouteController } from '../../manage.store';
+
+import FormGameSong from '~app/components/forms/game/song/FormGameSong.vue';
+import AppDashGameWizardControls from '~app/components/forms/game/wizard-controls/AppDashGameWizardControls.vue';
+import { useGameDashRouteController } from '~app/views/dashboard/games/manage/manage.store';
+import { Api } from '~common/api/api.service';
+import AppCardList from '~common/card/list/AppCardList.vue';
+import AppCardListAdd from '~common/card/list/AppCardListAdd.vue';
+import AppCardListDraggable from '~common/card/list/AppCardListDraggable.vue';
+import AppCardListItem from '~common/card/list/AppCardListItem.vue';
+import { $removeGameSong, $saveGameSongSort, GameSongModel } from '~common/game/song/song.model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
+import { showModalConfirm } from '~common/modal/confirm/confirm-service';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { $gettext } from '~common/translate/translate.service';
+import { arrayRemove } from '~utils/array';
 
 export default {
 	...defineAppRouteOptions({
@@ -131,7 +125,7 @@ const { isBootstrapped } = createAppRoute({
 
 								<template #body>
 									<FormGameSong
-										:game="game"
+										:game="game!"
 										:model="song"
 										@submit="onSongEdited"
 									/>
@@ -141,7 +135,7 @@ const { isBootstrapped } = createAppRoute({
 					</AppCardListDraggable>
 
 					<AppCardListAdd :label="$gettext('Add Song')" @toggle="isAdding = !isAdding">
-						<FormGameSong :game="game" @submit="onSongAdded" />
+						<FormGameSong :game="game!" @submit="onSongAdded" />
 					</AppCardListAdd>
 				</AppCardList>
 			</AppLoadingFade>

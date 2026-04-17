@@ -1,7 +1,8 @@
 import { Ref, ref, shallowReadonly } from 'vue';
-import { arrayRemove } from '../../../utils/array';
-import { CreatorExperienceModel } from '../../creator/experience/experience.model';
-import { StickerModel } from '../../sticker/sticker.model';
+
+import { CreatorExperienceModel } from '~common/creator/experience/experience.model';
+import { StickerModel } from '~common/sticker/sticker.model';
+import { arrayRemove } from '~utils/array';
 
 interface ShellNoticeItem {
 	id: number;

@@ -1,7 +1,8 @@
 import { defineAsyncComponent } from 'vue';
-import { FiresidePostModel } from '../fireside/post/post-model';
-import { GameModel } from '../game/game.model';
-import { showModal } from '../modal/modal.service';
+
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import { GameModel } from '~common/game/game.model';
+import { showModal } from '~common/modal/modal.service';
 
 export type SupportersModel = FiresidePostModel | GameModel;
 
@@ -15,7 +16,7 @@ export async function showSupportersModal(options: SupportersModalOptions) {
 
 	return await showModal<void>({
 		modalId: 'Supporters',
-		component: defineAsyncComponent(() => import('./AppSupportersModal.vue')),
+		component: defineAsyncComponent(() => import('~common/supporters/AppSupportersModal.vue')),
 		props: {
 			count,
 			model,

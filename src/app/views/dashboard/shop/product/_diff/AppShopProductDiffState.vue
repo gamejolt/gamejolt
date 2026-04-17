@@ -1,34 +1,28 @@
 <script lang="ts" setup>
-import { PropType, computed, toRefs } from 'vue';
-import AppJolticon, { Jolticon } from '../../../../../../_common/jolticon/AppJolticon.vue';
-import { ShopProductResource } from '../../../../../../_common/shop/product/product-model';
+import { computed } from 'vue';
+
+import { ShopDashProductStates } from '~app/views/dashboard/shop/shop.store';
+import AppJolticon, { Jolticon } from '~common/jolticon/AppJolticon.vue';
+import { ShopProductResource } from '~common/shop/product/product-model';
 import {
 	kThemeBiBg,
 	kThemeBiFg,
 	kThemeFg,
 	kThemeFg10,
 	kThemeGjOverlayNotice,
-} from '../../../../../../_common/theme/variables';
-import { $gettext } from '../../../../../../_common/translate/translate.service';
-import { styleBorderRadiusLg, styleFlexCenter, styleWhen } from '../../../../../../_styles/mixins';
-import { kFontSizeBase } from '../../../../../../_styles/variables';
-import { ShopDashProductStates } from '../../shop.store';
+} from '~common/theme/variables';
+import { $gettext } from '~common/translate/translate.service';
+import { styleBorderRadiusLg, styleFlexCenter, styleWhen } from '~styles/mixins';
+import { kFontSizeBase } from '~styles/variables';
 
-const props = defineProps({
-	resource: {
-		type: String as PropType<ShopProductResource>,
-		required: true,
-	},
-	itemStates: {
-		type: Object as PropType<ShopDashProductStates>,
-		required: true,
-	},
-});
-
-const { resource, itemStates } = toRefs(props);
+type Props = {
+	resource: ShopProductResource;
+	itemStates: ShopDashProductStates;
+};
+const { resource, itemStates } = defineProps<Props>();
 
 const data = computed(() => {
-	const { inReview, rejected, published } = itemStates.value;
+	const { inReview, rejected, published } = itemStates;
 
 	if (inReview) {
 		return {
@@ -42,7 +36,7 @@ const data = computed(() => {
 		};
 	} else if (published) {
 		let label = $gettext(`Published`);
-		if (resource.value === ShopProductResource.Sticker) {
+		if (resource === ShopProductResource.Sticker) {
 			label = $gettext(`In published sticker pack`);
 		}
 

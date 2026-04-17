@@ -1,34 +1,22 @@
 <script lang="ts" setup>
-import { computed, toRefs } from 'vue';
-import { styleChangeBg } from '../../_styles/mixins';
+import { computed } from 'vue';
 
-const props = defineProps({
-	count: {
-		type: Number,
-		required: true,
-	},
-	displayCount: {
-		type: Number,
-		required: true,
-	},
-	current: {
-		type: Number,
-		required: true,
-	},
-	index: {
-		type: Number,
-		required: true,
-	},
-});
+import { styleChangeBg } from '~styles/mixins';
 
-const { count, displayCount, current, index } = toRefs(props);
+type Props = {
+	count: number;
+	displayCount: number;
+	current: number;
+	index: number;
+};
+const { count, displayCount, current, index } = defineProps<Props>();
 
 const size = computed(() => {
-	if (index.value === current.value || count.value <= displayCount.value) {
+	if (index === current || count <= displayCount) {
 		return `100%`;
 	}
 
-	const distance = Math.abs(index.value - current.value);
+	const distance = Math.abs(index - current);
 	if (distance === 1) {
 		return `75%`;
 	} else if (distance === 2) {

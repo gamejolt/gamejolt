@@ -1,12 +1,13 @@
 import { Router } from 'vue-router';
-import { Environment } from '../../environment/environment.service';
-import { showErrorGrowl } from '../../growls/growls.service';
-import { HistoryTick } from '../../history-tick/history-tick-service';
-import { Navigate } from '../../navigate/navigate.service';
-import { Popper } from '../../popper/popper.service';
-import { $gettext } from '../../translate/translate.service';
-import { GameBuildModel } from '../build/build.model';
-import { GameModel } from '../game.model';
+
+import { Environment } from '~common/environment/environment.service';
+import { GameBuildModel } from '~common/game/build/build.model';
+import { GameModel } from '~common/game/game.model';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import { HistoryTick } from '~common/history-tick/history-tick-service';
+import { Navigate } from '~common/navigate/navigate.service';
+import { Popper } from '~common/popper/popper.service';
+import { $gettext } from '~common/translate/translate.service';
 
 export interface GameDownloaderOptions {
 	key?: string;

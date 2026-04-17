@@ -1,47 +1,36 @@
 <script lang="ts">
-import { PropType, ref } from 'vue';
-import AppAspectRatio from '../../../../_common/aspect-ratio/AppAspectRatio.vue';
-import AppPopper, {
-	PopperPlacementType,
-	PopperTriggerType,
-} from '../../../../_common/popper/AppPopper.vue';
-import { Screen } from '../../../../_common/screen/screen-service';
-import AppScrollInview, {
-	ScrollInviewConfig,
-} from '../../../../_common/scroll/inview/AppScrollInview.vue';
+import { ref } from 'vue';
+
+import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
+import AppPopper, { PopperPlacementType, PopperTriggerType } from '~common/popper/AppPopper.vue';
+import { Screen } from '~common/screen/screen-service';
+import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
 
 const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height / 2}px` });
 </script>
 
 <script lang="ts" setup>
-defineProps({
-	horizontalPadding: {
-		type: Number,
-		default: 16,
-	},
-	verticalPadding: {
-		type: Number,
-		default: 8,
-	},
-	forceHover: {
-		type: Boolean,
-	},
-	avatarSize: {
-		type: Number,
-		default: 30,
-	},
-	popperHideOnStateChange: {
-		type: Boolean,
-	},
-	popperTrigger: {
-		type: String as PropType<PopperTriggerType>,
-		default: 'click',
-	},
-	popperPlacement: {
-		type: String as PropType<PopperPlacementType>,
-		default: 'bottom',
-	},
-});
+import { HTMLAttributes } from 'vue';
+
+type Props = {
+	horizontalPadding?: number;
+	verticalPadding?: number;
+	forceHover?: boolean;
+	avatarSize?: number;
+	popperHideOnStateChange?: boolean;
+	popperTrigger?: PopperTriggerType;
+	popperPlacement?: PopperPlacementType;
+} & /* @vue-ignore */ Pick<HTMLAttributes, 'onClick'>;
+
+const {
+	horizontalPadding = 16,
+	verticalPadding = 8,
+	forceHover,
+	avatarSize = 30,
+	popperHideOnStateChange,
+	popperTrigger = 'click',
+	popperPlacement = 'bottom',
+} = defineProps<Props>();
 
 const isInview = ref(false);
 </script>

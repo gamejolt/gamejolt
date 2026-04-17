@@ -1,11 +1,12 @@
 import type { IParsedWrapper } from 'client-voodoo';
-import { Api } from '../../../../../_common/api/api.service';
-import { getDeviceArch, getDeviceOS } from '../../../../../_common/device/device.service';
-import { GameBuildModel } from '../../../../../_common/game/build/build.model';
-import type { GameBuildLaunchOptionModel } from '../../../../../_common/game/build/launch-option/launch-option.model';
-import type { GamePackageModel } from '../../../../../_common/game/package/package.model';
-import type { GameReleaseModel } from '../../../../../_common/game/release/release.model';
-import { LocalDbModel } from '../model.service';
+
+import { LocalDbModel } from '~app/components/client/local-db/model.service';
+import { Api } from '~common/api/api.service';
+import { getDeviceArch, getDeviceOS } from '~common/device/device.service';
+import { GameBuildModel } from '~common/game/build/build.model';
+import type { GameBuildLaunchOptionModel } from '~common/game/build/launch-option/launch-option.model';
+import type { GamePackageModel } from '~common/game/package/package.model';
+import type { GameReleaseModel } from '~common/game/release/release.model';
 
 export type LocalDbPackagePid = string | IParsedWrapper;
 

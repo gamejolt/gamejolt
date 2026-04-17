@@ -1,30 +1,32 @@
 <script lang="ts" setup>
-import { computed, nextTick, onUnmounted, PropType, ref, toRefs, watch } from 'vue';
-import AppButton from '../../../../../_common/button/AppButton.vue';
-import { ContextCapabilities } from '../../../../../_common/content/content-context';
-import { ContentDocument } from '../../../../../_common/content/content-document';
-import { ContentRules } from '../../../../../_common/content/content-rules';
+import { computed, nextTick, onUnmounted, ref, watch } from 'vue';
+
 import {
-	EscapeStack,
-	EscapeStackCallback,
-} from '../../../../../_common/escape-stack/escape-stack.service';
-import AppForm, { createForm, FormController } from '../../../../../_common/form-vue/AppForm.vue';
-import AppFormControlErrors from '../../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormControlContent from '../../../../../_common/form-vue/controls/AppFormControlContent.vue';
-import { validateContentMaxLength } from '../../../../../_common/form-vue/validators';
-import { FormValidatorContentNoMediaUpload } from '../../../../../_common/form-vue/validators/content_no_media_upload';
-import { Screen } from '../../../../../_common/screen/screen-service';
-import AppShortkey from '../../../../../_common/shortkey/AppShortkey.vue';
-import { useThemeStore } from '../../../../../_common/theme/theme.store';
-import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import { createFocusToken } from '../../../../../utils/focus-token';
-import { useGridStore } from '../../../grid/grid-store';
-import { editMessage as chatEditMessage, queueChatMessage, tryGetRoomRole } from '../../client';
-import { ChatMessageModel } from '../../message';
-import { ChatRoomModel } from '../../room';
-import { ChatWindowLeftGutterSize } from '../variables';
+	editMessage as chatEditMessage,
+	queueChatMessage,
+	tryGetRoomRole,
+} from '~app/components/chat/client';
+import { ChatMessageModel } from '~app/components/chat/message';
+import { ChatRoomModel } from '~app/components/chat/room';
+import { ChatWindowLeftGutterSize } from '~app/components/chat/window/variables';
+import { useGridStore } from '~app/components/grid/grid-store';
+import AppButton from '~common/button/AppButton.vue';
+import { ContextCapabilities } from '~common/content/content-context';
+import { ContentDocument } from '~common/content/content-document';
+import { ContentRules } from '~common/content/content-rules';
+import { EscapeStack, EscapeStackCallback } from '~common/escape-stack/escape-stack.service';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlContent from '~common/form-vue/controls/AppFormControlContent.vue';
+import { validateContentMaxLength } from '~common/form-vue/validators';
+import { FormValidatorContentNoMediaUpload } from '~common/form-vue/validators/content_no_media_upload';
+import { Screen } from '~common/screen/screen-service';
+import AppShortkey from '~common/shortkey/AppShortkey.vue';
+import { useThemeStore } from '~common/theme/theme.store';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { $gettext } from '~common/translate/translate.service';
+import { createFocusToken } from '~utils/focus-token';
 
 const TYPING_TIMEOUT_INTERVAL = 3000;
 
@@ -32,31 +34,18 @@ const TYPING_TIMEOUT_INTERVAL = 3000;
 // into the editor without scrolling.
 const displayRules = new ContentRules({ maxMediaWidth: 125, maxMediaHeight: 100 });
 
-const props = defineProps({
-	room: {
-		type: Object as PropType<ChatRoomModel>,
-		required: true,
-	},
-	capabilities: {
-		type: Object as PropType<ContextCapabilities>,
-		required: true,
-	},
+type Props = {
+	room: ChatRoomModel;
+	capabilities: ContextCapabilities;
 	/** Duration in milliseconds */
-	slowmodeDuration: {
-		type: Number,
-		default: 0,
-	},
-	maxContentLength: {
-		type: Number,
-		required: true,
-	},
-});
+	slowmodeDuration?: number;
+	maxContentLength: number;
+};
+const { room, slowmodeDuration = 0, maxContentLength } = defineProps<Props>();
 
-const emit = defineEmits({
-	'focus-change': (_focused: boolean) => true,
-});
-
-const { room, slowmodeDuration, maxContentLength, capabilities } = toRefs(props);
+const emit = defineEmits<{
+	'focus-change': [focused: boolean];
+}>();
 
 const { isDark } = useThemeStore();
 const { chatUnsafe: chat } = useGridStore();
@@ -71,7 +60,7 @@ let lastMessageTimestamp: number | null = null;
 
 let typingTimeout: NodeJS.Timer | null = null;
 
-const roomChannel = computed(() => chat.value.roomChannels.get(room.value.id));
+const roomChannel = computed(() => chat.value.roomChannels.get(room.id));
 
 // Doing it like this instead of a computed so that we can only set the state
 // after the first change.
@@ -84,8 +73,8 @@ watch(
 );
 
 const contentEditorTempResourceContextData = computed(() => {
-	if (chat.value && room.value) {
-		return { roomId: room.value.id };
+	if (chat.value && room) {
+		return { roomId: room.id };
 	}
 	return undefined;
 });
@@ -118,14 +107,14 @@ const isSendButtonDisabled = computed(() => {
 	return !FormValidatorContentNoMediaUpload(form.formModel.content ?? '');
 });
 
-const isEditing = computed(() => !!room.value.messageEditing);
+const isEditing = computed(() => !!room.messageEditing);
 const editorModelId = computed(() => form.formModel.id);
 
 const typingText = computed(() => {
 	const { currentUser } = chat.value;
 
 	const typingNames: string[] = [];
-	for (const [userId, typingData] of room.value.usersTyping) {
+	for (const [userId, typingData] of room.usersTyping) {
 		if (userId === currentUser?.id) {
 			continue;
 		}
@@ -197,7 +186,7 @@ onUnmounted(() => {
 });
 
 watch(
-	() => room.value.messageEditing,
+	() => room.messageEditing,
 	async (message: ChatMessageModel | null) => {
 		if (message) {
 			form.formModel.content = message.content;
@@ -217,7 +206,7 @@ watch(
 );
 
 function editMessage({ content, id }: FormModel) {
-	room.value.messageEditing = null;
+	room.messageEditing = null;
 	// This shouldn't happen, but typescript complains without this.
 	if (!id) {
 		return;
@@ -229,14 +218,14 @@ function editMessage({ content, id }: FormModel) {
 		content = contentJson;
 	}
 
-	chatEditMessage(chat.value, room.value, { content, id });
+	chatEditMessage(chat.value, room, { content, id });
 }
 
 function sendMessage({ content }: FormModel) {
 	const doc = ContentDocument.fromJson(content);
 	if (doc instanceof ContentDocument) {
 		const contentJson = doc.toJson();
-		queueChatMessage(room.value, 'content', contentJson);
+		queueChatMessage(room, 'content', contentJson);
 	}
 }
 
@@ -256,7 +245,7 @@ async function submitMessage() {
 			data.id = form.formModel.id;
 		}
 
-		if (room.value.messageEditing) {
+		if (room.messageEditing) {
 			editMessage(data);
 		} else {
 			sendMessage(data);
@@ -281,10 +270,13 @@ async function onSubmit() {
 	applyNextMessageTimeout({ ignoreLastMessageTimestamp: true });
 }
 
-watch(slowmodeDuration, () => applyNextMessageTimeout({ ignoreLastMessageTimestamp: false }));
+watch(
+	() => slowmodeDuration,
+	() => applyNextMessageTimeout({ ignoreLastMessageTimestamp: false })
+);
 
 function applyNextMessageTimeout(options: { ignoreLastMessageTimestamp: boolean }) {
-	if (!slowmodeDuration.value) {
+	if (!slowmodeDuration) {
 		if (nextMessageTimeout.value) {
 			clearTimeout(nextMessageTimeout.value);
 			nextMessageTimeout.value = null;
@@ -295,16 +287,16 @@ function applyNextMessageTimeout(options: { ignoreLastMessageTimestamp: boolean 
 	const { currentUser } = chat.value;
 	if (currentUser) {
 		// Chat owner and moderators are ignored for slowmode timeouts.
-		if (currentUser.id === room.value.owner_id) {
+		if (currentUser.id === room.owner_id) {
 			return;
 		}
-		const userRole = tryGetRoomRole(room.value, currentUser);
+		const userRole = tryGetRoomRole(room, currentUser);
 		if (userRole === 'owner' || userRole === 'moderator') {
 			return;
 		}
 	}
 
-	let duration = slowmodeDuration.value;
+	let duration = slowmodeDuration;
 
 	if (!options.ignoreLastMessageTimestamp && lastMessageTimestamp) {
 		const timeSinceLastMessage = Date.now() - lastMessageTimestamp;
@@ -367,7 +359,7 @@ function onUpKeyPressed(event: KeyboardEvent) {
 		return;
 	}
 	const { currentUser } = chat.value;
-	const { messages } = room.value;
+	const { messages } = room;
 
 	// Find the last message sent by the current user.
 	const userMessages = messages.filter(i => i.user.id === currentUser?.id);
@@ -379,12 +371,12 @@ function onUpKeyPressed(event: KeyboardEvent) {
 		// of the content. This prevents it jump to the beginning of the line.
 		event.preventDefault();
 
-		room.value.messageEditing = lastMessage;
+		room.messageEditing = lastMessage;
 	}
 }
 
 async function cancelEditing() {
-	room.value.messageEditing = null;
+	room.messageEditing = null;
 	clearMsg();
 
 	// Wait in case the editor loses focus

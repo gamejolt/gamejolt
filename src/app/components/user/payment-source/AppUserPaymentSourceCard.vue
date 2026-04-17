@@ -1,33 +1,30 @@
 <script lang="ts" setup>
-import { computed, PropType } from 'vue';
-import AppCard from '../../../../_common/card/AppCard.vue';
-import { showSuccessGrowl } from '../../../../_common/growls/growls.service';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
+import { computed } from 'vue';
+
+import AppUserAddressDetails from '~app/components/user/address/AppUserAddressDetails.vue';
+import AppCard from '~common/card/AppCard.vue';
+import { showSuccessGrowl } from '~common/growls/growls.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { showModalConfirm } from '~common/modal/confirm/confirm-service';
 import {
 	$removePaymentSource,
 	PaymentSourceModel,
-} from '../../../../_common/payment-source/payment-source.model';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import AppUserAddressDetails from '../address/AppUserAddressDetails.vue';
+} from '~common/payment-source/payment-source.model';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
 
-const props = defineProps({
-	paymentSource: {
-		type: Object as PropType<PaymentSourceModel>,
-		required: true,
-	},
-	showRemove: {
-		type: Boolean,
-	},
-});
+type Props = {
+	paymentSource: PaymentSourceModel;
+	showRemove?: boolean;
+};
+const { paymentSource, showRemove } = defineProps<Props>();
 
-const emit = defineEmits({
-	remove: () => true,
-});
+const emit = defineEmits<{
+	remove: [];
+}>();
 
 const expires = computed(() => {
-	return props.paymentSource.exp_month + '/' + props.paymentSource.exp_year;
+	return paymentSource.exp_month + '/' + paymentSource.exp_year;
 });
 
 async function remove() {
@@ -36,7 +33,7 @@ async function remove() {
 		return;
 	}
 
-	await $removePaymentSource(props.paymentSource);
+	await $removePaymentSource(paymentSource);
 
 	showSuccessGrowl(
 		$gettext(`Your card has successfully been removed.`),

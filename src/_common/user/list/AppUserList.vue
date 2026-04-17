@@ -1,26 +1,18 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-import { UserModel } from '../user.model';
-import AppUserListItem from './AppUserListItem.vue';
+import AppUserListItem from '~common/user/list/AppUserListItem.vue';
+import { UserModel } from '~common/user/user.model';
 
-defineProps({
-	users: {
-		type: Array as PropType<UserModel[]>,
-		required: true,
-	},
-	eventLabel: {
-		type: String,
-		default: undefined,
-	},
-	userHoverCard: {
-		type: Boolean,
-	},
-});
+type Props = {
+	users: UserModel[];
+	eventLabel?: string;
+	userHoverCard?: boolean;
+};
+defineProps<Props>();
 
-const emit = defineEmits({
-	follow: (_user: UserModel) => true,
-	unfollow: (_user: UserModel) => true,
-});
+const emit = defineEmits<{
+	follow: [user: UserModel];
+	unfollow: [user: UserModel];
+}>();
 </script>
 
 <template>

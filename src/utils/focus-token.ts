@@ -1,5 +1,6 @@
 import { onBeforeUnmount, onMounted } from 'vue';
-import { arrayRemove } from './array';
+
+import { arrayRemove } from '~utils/array';
 
 type FocusCallback = () => void;
 

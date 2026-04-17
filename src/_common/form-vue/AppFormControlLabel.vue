@@ -1,40 +1,28 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
-import AppJolticon, { Jolticon } from '../jolticon/AppJolticon.vue';
-import AppTranslate from '../translate/AppTranslate.vue';
-import { useForm } from './AppForm.vue';
-import { useFormGroup } from './AppFormGroup.vue';
+import { computed } from 'vue';
 
-const props = defineProps({
-	hideLabel: {
-		type: Boolean,
-	},
-	labelClass: {
-		type: String,
-		default: undefined,
-	},
-	icon: {
-		type: String as PropType<Jolticon>,
-		default: undefined,
-	},
-	small: {
-		type: Boolean,
-	},
-	tinyLabelMargin: {
-		type: Boolean,
-	},
-});
+import { useForm } from '~common/form-vue/AppForm.vue';
+import { useFormGroup } from '~common/form-vue/AppFormGroup.vue';
+import AppJolticon, { Jolticon } from '~common/jolticon/AppJolticon.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
-const { labelClass, hideLabel, small, tinyLabelMargin } = toRefs(props);
+type Props = {
+	hideLabel?: boolean;
+	labelClass?: string;
+	icon?: Jolticon;
+	small?: boolean;
+	tinyLabelMargin?: boolean;
+};
+const { hideLabel, labelClass, icon, small, tinyLabelMargin } = defineProps<Props>();
 
 const form = useForm()!;
-const { name, label, optional } = useFormGroup()!;
+const { name, optional } = useFormGroup()!;
 
 const labelClasses = computed(() => [
-	labelClass?.value,
-	{ 'sr-only': hideLabel.value },
-	small.value ? '-small-label' : undefined,
-	tinyLabelMargin.value ? '-tiny-margin' : undefined,
+	labelClass,
+	{ 'sr-only': hideLabel },
+	small ? '-small-label' : undefined,
+	tinyLabelMargin ? '-tiny-margin' : undefined,
 ]);
 </script>
 

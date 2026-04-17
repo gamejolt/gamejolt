@@ -1,25 +1,17 @@
 <script lang="ts" setup>
-import { computed, toRefs } from 'vue';
+import { computed } from 'vue';
 
-const props = defineProps({
-	trackId: {
-		type: String,
-		default: '',
-	},
-	color: {
-		type: String,
-		default: '',
-	},
-});
-
-const { trackId, color } = toRefs(props);
+type Props = {
+	trackId?: string;
+	color?: string;
+};
+const { trackId = '', color = '' } = defineProps<Props>();
 
 const embedSrc = computed(() => {
-	let src =
-		'https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/' + trackId.value;
+	let src = 'https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/' + trackId;
 
-	if (color.value) {
-		src += '&amp;color=' + color.value;
+	if (color) {
+		src += '&amp;color=' + color;
 	}
 
 	return src;

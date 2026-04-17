@@ -1,31 +1,26 @@
 <script lang="ts" setup>
-import AppButton from '../../button/AppButton.vue';
+import AppButton from '~common/button/AppButton.vue';
 
-const props = defineProps({
-	isEditing: {
-		type: Boolean,
-	},
-	showEdit: {
-		type: Boolean,
-	},
-	isDisabled: {
-		type: Boolean,
-	},
-});
+type Props = {
+	isEditing?: boolean;
+	showEdit?: boolean;
+	isDisabled?: boolean;
+};
+const { isDisabled } = defineProps<Props>();
 
-const emit = defineEmits({
-	removed: () => true,
-	edit: () => true,
-});
+const emit = defineEmits<{
+	removed: [];
+	edit: [];
+}>();
 
 function onRemovedClicked() {
-	if (!props.isDisabled) {
+	if (!isDisabled) {
 		emit('removed');
 	}
 }
 
 function onEditClicked() {
-	if (!props.isDisabled) {
+	if (!isDisabled) {
 		emit('edit');
 	}
 }

@@ -1,9 +1,9 @@
-import { EventItemModel } from '../../../../_common/event-item/event-item.model';
-import { FiresidePostModel } from '../../../../_common/fireside/post/post-model';
-import { GameModel } from '../../../../_common/game/game.model';
-import { UserModel } from '../../../../_common/user/user.model';
-import { arrayRemove } from '../../../../utils/array';
-import { ActivityFeedItem } from './item-service';
+import { ActivityFeedItem } from '~app/components/activity/feed/item-service';
+import { EventItemModel } from '~common/event-item/event-item.model';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import { GameModel } from '~common/game/game.model';
+import { UserModel } from '~common/user/user.model';
+import { arrayRemove } from '~utils/array';
 
 export interface ActivityFeedStateOptions {
 	/**

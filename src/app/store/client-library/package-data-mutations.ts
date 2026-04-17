@@ -3,11 +3,11 @@ import type {
 	LocalDbPackagePid,
 	LocalDbPackageProgress,
 	LocalDbPackageRemoveState,
-} from '../../components/client/local-db/package/package.model';
+} from '~app/components/client/local-db/package/package.model';
 import {
 	LocalDbPackagePatchState,
 	LocalDbPackageRunState,
-} from '../../components/client/local-db/package/package.model';
+} from '~app/components/client/local-db/package/package.model';
 
 export default class ClientLibraryPackageDataMutations {
 	constructor(

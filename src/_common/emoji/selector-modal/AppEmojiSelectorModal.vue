@@ -1,45 +1,29 @@
 <script lang="ts" setup>
-import {
-	computed,
-	CSSProperties,
-	nextTick,
-	onMounted,
-	onUnmounted,
-	PropType,
-	ref,
-	Ref,
-	toRefs,
-} from 'vue';
-import { styleChangeBg } from '../../../_styles/mixins';
-import { arrayRemove } from '../../../utils/array';
-import { debounceWithMaxTimeout } from '../../../utils/utils';
-import { Api } from '../../api/api.service';
-import AppAspectRatio from '../../aspect-ratio/AppAspectRatio.vue';
-import AppButton from '../../button/AppButton.vue';
-import { ContentEditorModelData } from '../../content/content-owner';
-import { showErrorGrowl } from '../../growls/growls.service';
-import AppModal from '../../modal/AppModal.vue';
-import { useModal } from '../../modal/modal.service';
-import { storeModelList } from '../../model/model-store.service';
-import { ModelData } from '../../model/model.service';
-import { EmojiGroupData, useCommonStore } from '../../store/common-store';
-import { $gettext } from '../../translate/translate.service';
-import { EmojiGroupModel, EmojiGroupType } from '../emoji-group.model';
-import { EmojiModel } from '../emoji.model';
-import AppEmojiSelectorGroup from './_group/AppEmojiSelectorGroup.vue';
+import { computed, CSSProperties, nextTick, onMounted, onUnmounted, Ref, ref } from 'vue';
 
-const props = defineProps({
-	type: {
-		type: String as PropType<'emojis' | 'reactions'>,
-		required: true,
-	},
-	modelData: {
-		type: Object as PropType<ContentEditorModelData>,
-		required: true,
-	},
-});
+import { Api } from '~common/api/api.service';
+import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
+import AppButton from '~common/button/AppButton.vue';
+import { ContentEditorModelData } from '~common/content/content-owner';
+import { EmojiModel } from '~common/emoji/emoji.model';
+import { EmojiGroupModel, EmojiGroupType } from '~common/emoji/emoji-group.model';
+import AppEmojiSelectorGroup from '~common/emoji/selector-modal/_group/AppEmojiSelectorGroup.vue';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import { ModelData } from '~common/model/model.service';
+import { storeModelList } from '~common/model/model-store.service';
+import { EmojiGroupData, useCommonStore } from '~common/store/common-store';
+import { $gettext } from '~common/translate/translate.service';
+import { styleChangeBg } from '~styles/mixins';
+import { arrayRemove } from '~utils/array';
+import { debounceWithMaxTimeout } from '~utils/utils';
 
-const { modelData } = toRefs(props);
+type Props = {
+	type: 'emojis' | 'reactions';
+	modelData: ContentEditorModelData;
+};
+const { type, modelData } = defineProps<Props>();
 
 const modal = useModal<EmojiModel>()!;
 const { reactionsData, reactionsCursor } = useCommonStore();
@@ -68,15 +52,15 @@ const requestBodyData = computed(() => {
 		result.cursor = reactionsCursor.value;
 	}
 
-	if (modelData.value.type === 'newChatMessage') {
-		result.chatRoomId = modelData.value.chatRoomId;
-	} else if (modelData.value.type === 'commentingOnResource') {
-		result.commentingOnResource = modelData.value.resource;
-		result.commentingOnResourceId = modelData.value.resourceId;
-	} else if (modelData.value.type === 'resource') {
-		result.resource = modelData.value.resource;
-		result.resourceId = modelData.value.resourceId;
-	} else if (modelData.value.type === 'supporterMessage') {
+	if (modelData.type === 'newChatMessage') {
+		result.chatRoomId = modelData.chatRoomId;
+	} else if (modelData.type === 'commentingOnResource') {
+		result.commentingOnResource = modelData.resource;
+		result.commentingOnResourceId = modelData.resourceId;
+	} else if (modelData.type === 'resource') {
+		result.resource = modelData.resource;
+		result.resourceId = modelData.resourceId;
+	} else if (modelData.type === 'supporterMessage') {
 		result.forSupporterMessage = true;
 	}
 

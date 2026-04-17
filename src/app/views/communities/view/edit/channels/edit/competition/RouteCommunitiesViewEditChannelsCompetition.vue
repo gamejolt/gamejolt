@@ -1,13 +1,11 @@
 <script lang="ts">
 import { RouterView } from 'vue-router';
-import AppNavTabList from '../../../../../../../../_common/nav/tab-list/AppNavTabList.vue';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '../../../../../../../../_common/route/route-component';
-import { Timezone } from '../../../../../../../../_common/timezone/timezone.service';
-import AppCommunitiesViewPageContainer from '../../../../_page-container/page-container.vue';
-import AppCommunitiesEditCompetitionNav from './_nav/nav.vue';
+
+import AppCommunityPageContainer from '~app/views/communities/view/_page-container/AppCommunityPageContainer.vue';
+import AppCompetitionNav from '~app/views/communities/view/edit/channels/edit/competition/_nav/AppCompetitionNav.vue';
+import AppNavTabList from '~common/nav/tab-list/AppNavTabList.vue';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { Timezone } from '~common/timezone/timezone.service';
 
 export default {
 	...defineAppRouteOptions({
@@ -24,9 +22,9 @@ createAppRoute({});
 </script>
 
 <template>
-	<AppCommunitiesViewPageContainer full>
+	<AppCommunityPageContainer full>
 		<AppNavTabList>
-			<AppCommunitiesEditCompetitionNav />
+			<AppCompetitionNav />
 		</AppNavTabList>
 
 		<div class="row">
@@ -34,5 +32,5 @@ createAppRoute({});
 				<RouterView />
 			</div>
 		</div>
-	</AppCommunitiesViewPageContainer>
+	</AppCommunityPageContainer>
 </template>

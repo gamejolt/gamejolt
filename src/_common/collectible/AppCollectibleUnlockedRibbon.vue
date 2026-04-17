@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { styleElevate, styleFlexCenter } from '../../_styles/mixins';
-import AppJolticon from '../jolticon/AppJolticon.vue';
-import { kThemeGjOverlayNotice } from '../theme/variables';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { kThemeGjOverlayNotice } from '~common/theme/variables';
+import { styleElevate, styleFlexCenter } from '~styles/mixins';
 </script>
 
 <template>

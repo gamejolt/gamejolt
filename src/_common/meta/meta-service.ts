@@ -1,11 +1,12 @@
 import { reactive } from 'vue';
 import { Router } from 'vue-router';
-import { Environment } from '../environment/environment.service';
-import { FbMetaContainer } from './fb-meta-container';
-import { MetaContainer, ssrRenderMetaContainer } from './meta-container';
-import { MicrodataContainer, ssrRenderMicrodata } from './microdata-container';
-import { SeoMetaContainer, ssrRenderSeoMetaContainer } from './seo-meta-container';
-import { TwitterMetaContainer } from './twitter-meta-container';
+
+import { Environment } from '~common/environment/environment.service';
+import { FbMetaContainer } from '~common/meta/fb-meta-container';
+import { MetaContainer, ssrRenderMetaContainer } from '~common/meta/meta-container';
+import { MicrodataContainer, ssrRenderMicrodata } from '~common/meta/microdata-container';
+import { SeoMetaContainer, ssrRenderSeoMetaContainer } from '~common/meta/seo-meta-container';
+import { TwitterMetaContainer } from '~common/meta/twitter-meta-container';
 
 export function escapeString(str: string) {
 	return String(str)

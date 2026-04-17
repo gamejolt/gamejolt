@@ -1,15 +1,12 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-import AppImgResponsive from '../../../_common/img/AppImgResponsive.vue';
-import { styleBorderRadiusBase } from '../../../_styles/mixins';
-import { FeaturedItemModel } from '../../components/featured-item/featured-item.model';
+import { FeaturedItemModel } from '~app/components/featured-item/featured-item.model';
+import AppImgResponsive from '~common/img/AppImgResponsive.vue';
+import { styleBorderRadiusBase } from '~styles/mixins';
 
-defineProps({
-	featuredItem: {
-		type: Object as PropType<FeaturedItemModel>,
-		required: true,
-	},
-});
+type Props = {
+	featuredItem: FeaturedItemModel;
+};
+const { featuredItem } = defineProps<Props>();
 </script>
 
 <template>

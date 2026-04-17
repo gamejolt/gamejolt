@@ -1,6 +1,6 @@
-import AppContentMediaItem from '../../components/AppContentMediaItem.vue';
-import { ContentEditorService } from '../content-editor.service';
-import { BaseNodeView } from './base';
+import AppContentMediaItem from '~common/content/components/AppContentMediaItem.vue';
+import { ContentEditorService } from '~common/content/content-editor/content-editor.service';
+import { BaseNodeView } from '~common/content/content-editor/node-views/base';
 
 export class MediaItemNodeView extends BaseNodeView {
 	mounted() {

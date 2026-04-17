@@ -1,47 +1,47 @@
 <script lang="ts" setup>
-import { onUnmounted, toRefs } from 'vue';
+import { onUnmounted, toRef } from 'vue';
 import { useRouter } from 'vue-router';
-import { $saveCommunity, CommunityModel } from '../../../../_common/community/community.model';
-import AppForm, {
-	FormController,
-	createForm,
-	defineFormProps,
-} from '../../../../_common/form-vue/AppForm.vue';
-import AppFormButton from '../../../../_common/form-vue/AppFormButton.vue';
-import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
-import AppFormControlErrors from '../../../../_common/form-vue/AppFormControlErrors.vue';
-import AppFormControlPrefix from '../../../../_common/form-vue/AppFormControlPrefix.vue';
-import AppFormGroup from '../../../../_common/form-vue/AppFormGroup.vue';
-import AppFormControlTheme from '../../../../_common/form-vue/controls/AppFormControlTheme.vue';
+
+import { useGridStore } from '~app/components/grid/grid-store';
+import AppPostAddButtonFormControl from '~app/components/post/add-button/AppPostAddButtonFormControl.vue';
+import { useAppStore } from '~app/store';
+import { $saveCommunity, CommunityModel } from '~common/community/community.model';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormControlPrefix from '~common/form-vue/AppFormControlPrefix.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlTheme from '~common/form-vue/controls/AppFormControlTheme.vue';
 import {
 	validateAvailability,
 	validateMaxLength,
 	validateUrlPath,
-} from '../../../../_common/form-vue/validators';
-import { DefaultTheme } from '../../../../_common/theme/theme.model';
-import { useThemeStore } from '../../../../_common/theme/theme.store';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { useAppStore } from '../../../store';
-import { useGridStore } from '../../grid/grid-store';
-import AppPostAddButtonFormControl from '../../post/add-button/AppPostAddButtonFormControl.vue';
+} from '~common/form-vue/validators';
+import { DefaultTheme } from '~common/theme/theme.model';
+import { useThemeStore } from '~common/theme/theme.store';
+import { $gettext } from '~common/translate/translate.service';
 
-const props = defineProps({
-	...defineFormProps<CommunityModel>(),
-});
+type FormModel = CommunityModel;
 
-const emit = defineEmits({
-	submit: (_model: CommunityModel) => true,
-});
+type Props = {
+	model?: FormModel;
+};
+const { model } = defineProps<Props>();
 
-const { model } = toRefs(props);
+const emit = defineEmits<{
+	submit: [model: CommunityModel];
+}>();
+
+const modelRef = toRef(() => model);
 
 const { joinCommunity } = useAppStore();
 const { grid } = useGridStore();
 const { userTheme, setFormTheme } = useThemeStore();
 const router = useRouter();
 
-const form: FormController<CommunityModel> = createForm({
-	model,
+const form: FormController<FormModel> = createForm<FormModel>({
+	model: modelRef,
 	modelClass: CommunityModel,
 	modelSaveHandler: $saveCommunity,
 	onInit() {
@@ -49,7 +49,7 @@ const form: FormController<CommunityModel> = createForm({
 	},
 	onSubmitSuccess(response: any) {
 		if (form.method !== 'add') {
-			emit('submit', model!.value!);
+			emit('submit', model!);
 			return;
 		}
 

@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import { formatNumber } from '../../_common/filters/number';
-import AppGameThumbnailImg from '../../_common/game/thumbnail/AppGameThumbnailImg.vue';
-import AppTranslate from '../../_common/translate/AppTranslate.vue';
-import { useAuthStore } from '../store/index';
+import { useAuthStore } from '~auth/store/index';
+import { formatNumber } from '~common/filters/number';
+import AppGameThumbnailImg from '~common/game/thumbnail/AppGameThumbnailImg.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 const { coverGame } = useAuthStore();
 </script>

@@ -1,15 +1,13 @@
 <script lang="ts">
 import { ref } from 'vue';
-import { Api } from '../../../../../_common/api/api.service';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '../../../../../_common/route/route-component';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import { UserAddressModel } from '../../../../../_common/user/address/address.model';
-import { arrayRemove } from '../../../../../utils/array';
-import AppUserAddressCard from '../../../../components/user/address/AppUserAddressCard.vue';
-import { useAccountRouteController } from '../RouteDashAccount.vue';
+
+import AppUserAddressCard from '~app/components/user/address/AppUserAddressCard.vue';
+import { useAccountRouteController } from '~app/views/dashboard/account/RouteDashAccount.vue';
+import { Api } from '~common/api/api.service';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { $gettext } from '~common/translate/translate.service';
+import { UserAddressModel } from '~common/user/address/address.model';
+import { arrayRemove } from '~utils/array';
 
 export default {
 	...defineAppRouteOptions({

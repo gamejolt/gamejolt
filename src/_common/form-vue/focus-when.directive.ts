@@ -1,5 +1,6 @@
 import { Directive } from 'vue';
-import { Screen } from '../screen/screen-service';
+
+import { Screen } from '~common/screen/screen-service';
 
 export const vAppFocusWhen: Directive<unknown, boolean | void> = {
 	mounted(el: HTMLElement, binding) {

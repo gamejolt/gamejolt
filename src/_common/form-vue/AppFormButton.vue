@@ -1,46 +1,36 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
-import AppButton from '../button/AppButton.vue';
-import AppJolticon from '../jolticon/AppJolticon.vue';
-import { useForm } from './AppForm.vue';
 
-const props = defineProps({
-	showWhenValid: {
-		type: Boolean,
-	},
-	primary: {
-		type: Boolean,
-		default: true,
-	},
-	trans: {
-		type: Boolean,
-	},
-	overlay: {
-		type: Boolean,
-	},
-	solid: {
-		type: Boolean,
-		default: true,
-	},
-	block: {
-		type: Boolean,
-	},
-	lg: {
-		type: Boolean,
-	},
-	icon: {
-		type: String,
-		default: undefined,
-	},
-	disabled: {
-		type: Boolean,
-	},
-});
+import AppButton from '~common/button/AppButton.vue';
+import { useForm } from '~common/form-vue/AppForm.vue';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
 
-const emit = defineEmits({
-	'before-submit': (_e: Event) => true,
-	'after-submit': (_e: Event, _result: boolean) => true,
-});
+type Props = {
+	showWhenValid?: boolean;
+	primary?: boolean;
+	trans?: boolean;
+	overlay?: boolean;
+	solid?: boolean;
+	block?: boolean;
+	lg?: boolean;
+	icon?: string;
+	disabled?: boolean;
+};
+const {
+	showWhenValid,
+	primary = true,
+	trans,
+	overlay,
+	solid = true,
+	block,
+	icon,
+	disabled,
+} = defineProps<Props>();
+
+const emit = defineEmits<{
+	'before-submit': [e: Event];
+	'after-submit': [e: Event, result: boolean];
+}>();
 
 const form = useForm()!;
 
@@ -48,7 +38,7 @@ const isShowingSuccess = ref(false);
 
 // When the form is submitted, we want to show a success indicator.
 const shouldShow = computed(() => {
-	if (!props.showWhenValid) {
+	if (!showWhenValid) {
 		return true;
 	}
 
@@ -117,7 +107,7 @@ async function onClick(e: Event) {
 		:solid="solid"
 		:block="block"
 		:disabled="disabled || form.isProcessing"
-		:icon="icon"
+		:icon="(icon as any)"
 		@click="onClick"
 	>
 		<slot />

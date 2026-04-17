@@ -1,19 +1,20 @@
 <script lang="ts" setup>
 import { computed, onMounted, onUnmounted, ref } from 'vue';
-import AppButton from '../../../../../_common/button/AppButton.vue';
-import { formatNumber } from '../../../../../_common/filters/number';
-import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
-import { illNoCommentsSmall } from '../../../../../_common/illustration/illustrations';
-import { showInviteModal } from '../../../../../_common/invite/modal/modal.service';
-import { Screen } from '../../../../../_common/screen/screen-service';
-import { useCommonStore } from '../../../../../_common/store/common-store';
-import AppTabBar from '../../../../../_common/tab-bar/AppTabBar.vue';
-import AppTabBarItem from '../../../../../_common/tab-bar/AppTabBarItem.vue';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import { closeChatRoom, openChatRoom } from '../../../chat/client';
-import { sortByLastMessageOn } from '../../../chat/user-collection';
-import AppChatUserList from '../../../chat/user-list/AppChatUserList.vue';
-import { useGridStore } from '../../../grid/grid-store';
+
+import { closeChatRoom, openChatRoom } from '~app/components/chat/client';
+import { sortByLastMessageOn } from '~app/components/chat/user-collection';
+import AppChatUserList from '~app/components/chat/user-list/AppChatUserList.vue';
+import { useGridStore } from '~app/components/grid/grid-store';
+import AppButton from '~common/button/AppButton.vue';
+import { formatNumber } from '~common/filters/number';
+import AppIllustration from '~common/illustration/AppIllustration.vue';
+import { illNoCommentsSmall } from '~common/illustration/illustrations';
+import { showInviteModal } from '~common/invite/modal/modal.service';
+import { Screen } from '~common/screen/screen-service';
+import { useCommonStore } from '~common/store/common-store';
+import AppTabBar from '~common/tab-bar/AppTabBar.vue';
+import AppTabBarItem from '~common/tab-bar/AppTabBarItem.vue';
+import { $gettext } from '~common/translate/translate.service';
 
 const { user } = useCommonStore();
 const { chatUnsafe: chat } = useGridStore();

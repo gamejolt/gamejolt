@@ -1,31 +1,25 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-import AppButton from '../button/AppButton.vue';
-import AppTranslate from '../translate/AppTranslate.vue';
-import { CommentBlockReason, CommentModel } from './comment-model';
+import AppButton from '~common/button/AppButton.vue';
+import { CommentBlockReason, CommentModel } from '~common/comment/comment-model';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
-defineProps({
-	comment: {
-		type: Object as PropType<CommentModel>,
-		required: true,
-	},
-	reason: {
-		type: String as PropType<CommentBlockReason>,
-		required: true,
-	},
-});
+type Props = {
+	comment: CommentModel;
+	reason: CommentBlockReason;
+};
+defineProps<Props>();
 
-const emit = defineEmits({
-	show: () => true,
-});
+const emit = defineEmits<{
+	show: [];
+}>();
 </script>
 
 <template>
 	<div class="alert">
 		<template v-if="reason === 'commenter-blocked'">
-			<span v-translate="{ username: comment.user.username }">
-				Hidden comment by blocked user <b>@%{ username }</b>.
-			</span>
+			<AppTranslate :translate-params="{ username: comment.user.username }">
+				Hidden comment by blocked user @%{ username }.
+			</AppTranslate>
 		</template>
 		<template v-else-if="reason === 'mentioned-blocked-user'">
 			<span>

@@ -1,5 +1,6 @@
 import { reactive, ref } from 'vue';
-import { arrayRemove } from '../../utils/array';
+
+import { arrayRemove } from '~utils/array';
 
 interface BackdropOptions {
 	context?: HTMLElement | string;

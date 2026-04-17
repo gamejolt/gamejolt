@@ -1,25 +1,19 @@
 <script lang="ts" setup>
-import { computed, toRefs } from 'vue';
-import { Environment } from '../environment/environment.service';
-import { Navigate } from '../navigate/navigate.service';
+import { computed } from 'vue';
 
-const props = defineProps({
-	category: {
-		type: String,
-		required: true,
-	},
-	page: {
-		type: String,
-		default: undefined,
-	},
-});
+import { Environment } from '~common/environment/environment.service';
+import { Navigate } from '~common/navigate/navigate.service';
 
-const { category, page } = toRefs(props);
+type Props = {
+	category: string;
+	page?: string;
+};
+const { category, page } = defineProps<Props>();
 
 const url = computed(() => {
-	let result = Environment.helpDocsBaseUrl + '/' + category.value;
-	if (page?.value) {
-		result += '/' + page.value;
+	let result = Environment.helpDocsBaseUrl + '/' + category;
+	if (page) {
+		result += '/' + page;
 	}
 	return result;
 });

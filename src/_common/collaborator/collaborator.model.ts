@@ -1,9 +1,9 @@
-import { Api } from '../api/api.service';
-import { CommunityModel } from '../community/community.model';
-import { GameModel } from '../game/game.model';
-import { Model } from '../model/model.service';
-import { UserModel } from '../user/user.model';
-import { Perm } from './collaboratable';
+import { Api } from '~common/api/api.service';
+import { Perm } from '~common/collaborator/collaboratable';
+import { CommunityModel } from '~common/community/community.model';
+import { GameModel } from '~common/game/game.model';
+import { Model } from '~common/model/model.service';
+import { UserModel } from '~common/user/user.model';
 
 export type Roles =
 	| 'owner'

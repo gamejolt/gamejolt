@@ -1,64 +1,55 @@
 <script lang="ts" setup>
-import { computed, CSSProperties, ref, toRefs } from 'vue';
+import { computed, CSSProperties, ref, useTemplateRef } from 'vue';
 import { RouterLink } from 'vue-router';
-import { routeLandingCreators } from '../../../app/views/landing/creators/creators.route';
-import AppAnimChargeOrb from '../../animation/AppAnimChargeOrb.vue';
-import AppAnimElectricity from '../../animation/AppAnimElectricity.vue';
-import { illChargeOrbEmpty } from '../../animation/slideshow/sheets';
-import AppAspectRatio from '../../aspect-ratio/AppAspectRatio.vue';
-import AppJolticon from '../../jolticon/AppJolticon.vue';
-import AppLoadingFade from '../../loading/AppLoadingFade.vue';
-import { Screen } from '../../screen/screen-service';
-import AppSpacer from '../../spacer/AppSpacer.vue';
-import AppTranslate from '../../translate/AppTranslate.vue';
-import { useStickerStore } from '../sticker-store';
-import AppStickerChargeTooltip from './AppStickerChargeTooltip.vue';
-import AppStickerChargeTooltipCaret from './AppStickerChargeTooltipCaret.vue';
-import AppStickerChargeTooltipHandler from './AppStickerChargeTooltipHandler.vue';
+
+import { routeLandingCreators } from '~app/views/landing/creators/creators.route';
+import AppAnimChargeOrb from '~common/animation/AppAnimChargeOrb.vue';
+import AppAnimElectricity from '~common/animation/AppAnimElectricity.vue';
+import { illChargeOrbEmpty } from '~common/animation/slideshow/sheets';
+import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
+import { Screen } from '~common/screen/screen-service';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import AppStickerChargeTooltip from '~common/sticker/charge/AppStickerChargeTooltip.vue';
+import AppStickerChargeTooltipCaret from '~common/sticker/charge/AppStickerChargeTooltipCaret.vue';
+import AppStickerChargeTooltipHandler from '~common/sticker/charge/AppStickerChargeTooltipHandler.vue';
+import { useStickerStore } from '~common/sticker/sticker-store';
+import AppTranslate from '~common/translate/AppTranslate.vue';
 
 const OrbMaxSize = `28px`;
 
-const props = defineProps({
-	elevate: {
-		type: Boolean,
-	},
+type Props = {
+	elevate?: boolean;
 	/**
 	 * Move the "Charge" text and "help_circle" jolticon above the card of orbs.
 	 */
-	headerCharge: {
-		type: Boolean,
-	},
+	headerCharge?: boolean;
 	/**
 	 * Shows text below the charge card when we're able to charge a sticker.
 	 */
-	allowFullyChargedText: {
-		type: Boolean,
-	},
-	paddingH: {
-		type: Number,
-		default: 24,
-	},
-	paddingV: {
-		type: Number,
-		default: 16,
-	},
-	isLoading: {
-		type: Boolean,
-	},
+	allowFullyChargedText?: boolean;
+	paddingH?: number;
+	paddingV?: number;
+	isLoading?: boolean;
 	/**
 	 * Passed into the AppSpacer component between the header and the charge
 	 * card.
 	 */
-	headerSpacerHeight: {
-		type: String,
-		default: undefined,
-	},
-});
+	headerSpacerHeight?: string;
+};
+const {
+	elevate,
+	headerCharge,
+	allowFullyChargedText,
+	paddingH = 24,
+	paddingV = 16,
+	isLoading,
+	headerSpacerHeight,
+} = defineProps<Props>();
 
-const { elevate, headerCharge, allowFullyChargedText, paddingH, paddingV } = toRefs(props);
-
-const root = ref<HTMLElement>();
-const helpIcon = ref<HTMLElement>();
+const root = useTemplateRef('root');
+const helpIcon = useTemplateRef('helpIcon');
 
 const showTooltip = ref(false);
 
@@ -73,7 +64,7 @@ const gridStyling = computed<CSSProperties>(() => {
 	};
 });
 
-const showFullyChargedText = computed(() => allowFullyChargedText.value && canChargeSticker.value);
+const showFullyChargedText = computed(() => allowFullyChargedText && canChargeSticker.value);
 </script>
 
 <template>

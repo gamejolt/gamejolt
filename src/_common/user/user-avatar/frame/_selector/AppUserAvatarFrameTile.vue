@@ -1,50 +1,36 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType, computed, toRef, toRefs } from 'vue';
-import {
-	styleBorderRadiusBase,
-	styleBorderRadiusLg,
-	styleLineClamp,
-} from '../../../../../_styles/mixins';
-import { kBorderWidthLg, kFontSizeSmall, kStrongEaseOut } from '../../../../../_styles/variables';
-import AppAspectRatio from '../../../../aspect-ratio/AppAspectRatio.vue';
-import AppAvatarFrame from '../../../../avatar/AppAvatarFrame.vue';
-import { shorthandReadableTime } from '../../../../filters/duration';
+import { computed, CSSProperties, toRef } from 'vue';
+
+import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
+import AppAvatarFrame from '~common/avatar/AppAvatarFrame.vue';
+import { shorthandReadableTime } from '~common/filters/duration';
 import {
 	kThemeBgOffset,
 	kThemeBgSubtle,
 	kThemeFg10,
 	kThemeGjOverlayNotice,
-} from '../../../../theme/variables';
-import { vAppTooltip } from '../../../../tooltip/tooltip-directive';
-import { UserAvatarFrameModel } from '../frame.model';
+} from '~common/theme/variables';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { UserAvatarFrameModel } from '~common/user/user-avatar/frame/frame.model';
+import { styleBorderRadiusBase, styleBorderRadiusLg, styleLineClamp } from '~styles/mixins';
+import { kBorderWidthLg, kFontSizeSmall, kStrongEaseOut } from '~styles/variables';
 
-const props = defineProps({
-	frame: {
-		type: Object as PropType<UserAvatarFrameModel>,
-		default: undefined,
-	},
-	isPlaceholder: {
-		type: Boolean,
-	},
-	isSelected: {
-		type: Boolean,
-	},
+type Props = {
+	frame?: UserAvatarFrameModel;
+	isPlaceholder?: boolean;
+	isSelected?: boolean;
 	/**
 	 * Used as a key to rebuild the expiry info.
 	 */
-	expiryInfoKey: {
-		type: Number,
-		required: true,
-	},
-});
+	expiryInfoKey: number;
+};
+const { frame, isPlaceholder, isSelected } = defineProps<Props>();
 
-const emit = defineEmits({
-	'select-tile': (id: number) => id >= 0,
-});
+const emit = defineEmits<{
+	'select-tile': [id: number];
+}>();
 
-const { frame, isPlaceholder, isSelected } = toRefs(props);
-
-const name = toRef(() => frame?.value?.avatar_frame.name || '');
+const name = toRef(() => frame?.avatar_frame.name || '');
 
 const rootStyles = computed(() => {
 	return {
@@ -53,23 +39,23 @@ const rootStyles = computed(() => {
 		padding: `24px`,
 		transition: `background-color 300ms ${kStrongEaseOut}`,
 		border: `${kBorderWidthLg.px} solid ${kThemeFg10}`,
-		...(isPlaceholder.value
+		...(isPlaceholder
 			? {
 					backgroundColor: kThemeBgSubtle,
 			  }
 			: {
-					cursor: frame?.value?.isExpired ? 'normal' : 'pointer',
-					backgroundColor: isSelected.value ? kThemeBgOffset : `transparent`,
+					cursor: frame?.isExpired ? 'normal' : 'pointer',
+					backgroundColor: isSelected ? kThemeBgOffset : `transparent`,
 			  }),
 	} satisfies CSSProperties;
 });
 
 function onClickFrame() {
-	if (isPlaceholder.value || frame?.value?.isExpired) {
+	if (isPlaceholder || frame?.isExpired) {
 		return;
 	}
 
-	emit('select-tile', frame?.value?.avatar_frame.id || 0);
+	emit('select-tile', frame?.avatar_frame.id || 0);
 }
 </script>
 

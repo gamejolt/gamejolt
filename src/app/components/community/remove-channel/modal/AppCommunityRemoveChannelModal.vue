@@ -1,23 +1,18 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-import AppButton from '../../../../../_common/button/AppButton.vue';
-import { CommunityChannelModel } from '../../../../../_common/community/channel/channel.model';
-import { CommunityModel } from '../../../../../_common/community/community.model';
-import AppModal from '../../../../../_common/modal/AppModal.vue';
-import { useModal } from '../../../../../_common/modal/modal.service';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import AppCommunityRemoveChannel from '../AppCommunityRemoveChannel.vue';
+import AppCommunityRemoveChannel from '~app/components/community/remove-channel/AppCommunityRemoveChannel.vue';
+import AppButton from '~common/button/AppButton.vue';
+import { CommunityChannelModel } from '~common/community/channel/channel.model';
+import { CommunityModel } from '~common/community/community.model';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
 
-defineProps({
-	community: {
-		type: Object as PropType<CommunityModel>,
-		required: true,
-	},
-	channel: {
-		type: Object as PropType<CommunityChannelModel>,
-		required: true,
-	},
-});
+type Props = {
+	community: CommunityModel;
+	channel: CommunityChannelModel;
+};
+defineProps<Props>();
 
 const modal = useModal()!;
 
@@ -47,11 +42,11 @@ function onRemoved(postsMovedTo?: CommunityChannelModel) {
 						{{ $gettext(`Removing a Jam Channel`) }}
 					</h4>
 					<p>
-						<span v-translate>
-							This channel contains a <b>Jam</b>, which gets removed when this channel
-							gets removed. That includes all entries, votes, awards and results that
+						<AppTranslate>
+							This channel contains a Jam, which gets removed when this channel gets
+							removed. That includes all entries, votes, awards and results that
 							belong to the jam.
-						</span>
+						</AppTranslate>
 					</p>
 					<p>
 						<span class="-jam-warning">

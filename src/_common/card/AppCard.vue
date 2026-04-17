@@ -1,28 +1,26 @@
 <script lang="ts" setup>
-import AppJolticon from '../jolticon/AppJolticon.vue';
-import './card.styl';
+import '~common/card/card.styl';
 
-defineProps({
-	isDraggable: {
-		type: Boolean,
-	},
-	isExpandable: {
-		type: Boolean,
-	},
-	isExpanded: {
-		type: Boolean,
-	},
-	isInactive: {
-		type: Boolean,
-	},
-	isDisabled: {
-		type: Boolean,
-	},
+import { HTMLAttributes } from 'vue';
+
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+
+type Props = {
+	isDraggable?: boolean;
+	isExpandable?: boolean;
+	isExpanded?: boolean;
+	isDisabled?: boolean;
 	/** Takes up the padding that would show as if this card was expandable. */
-	forceExpandablePadding: {
-		type: Boolean,
-	},
-});
+	forceExpandablePadding?: boolean;
+} & /* @vue-ignore */ Pick<HTMLAttributes, 'onClick'>;
+
+const {
+	isDraggable = false,
+	isExpandable = false,
+	isExpanded = false,
+	isDisabled = false,
+	forceExpandablePadding = false,
+} = defineProps<Props>();
 </script>
 
 <template>

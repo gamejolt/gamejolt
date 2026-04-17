@@ -1,40 +1,32 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, Ref, toRefs } from 'vue';
-import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
-import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import { createLightbox } from '../../../../../_common/lightbox/lightbox-helpers';
-import AppMediaItemPost from '../../../../../_common/media-item/post/AppMediaItemPost.vue';
-import AppEventItemMediaIndicator from '../../../../../_common/pagination/AppPageIndicator.vue';
-import { Screen } from '../../../../../_common/screen/screen-service';
-import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
-import { kThemeBgActual } from '../../../../../_common/theme/variables';
-import AppTouch, { AppTouchInput } from '../../../../../_common/touch/AppTouch.vue';
-import { styleBorderRadiusLg, styleElevate, styleWhen } from '../../../../../_styles/mixins';
-import { kBorderRadiusLg, kStrongEaseOut } from '../../../../../_styles/variables';
+import { computed, Ref, ref } from 'vue';
+
+import { ActivityFeedItem } from '~app/components/activity/feed/item-service';
+import { useActivityFeed } from '~app/components/activity/feed/view';
 import {
 	kPostItemPaddingContainer,
 	kPostItemPaddingVertical,
 	kPostItemPaddingXs,
 	kPostItemPaddingXsVertical,
-} from '../../../post/post-styles';
-import { ActivityFeedItem } from '../item-service';
-import { useActivityFeed } from '../view';
+} from '~app/components/post/post-styles';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { createLightbox } from '~common/lightbox/lightbox-helpers';
+import AppMediaItemPost from '~common/media-item/post/AppMediaItemPost.vue';
+import AppEventItemMediaIndicator from '~common/pagination/AppPageIndicator.vue';
+import { Screen } from '~common/screen/screen-service';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import { kThemeBgActual } from '~common/theme/variables';
+import AppTouch, { AppTouchInput } from '~common/touch/AppTouch.vue';
+import { styleBorderRadiusLg, styleElevate, styleWhen } from '~styles/mixins';
+import { kBorderRadiusLg, kStrongEaseOut } from '~styles/variables';
 
-const props = defineProps({
-	item: {
-		type: Object as PropType<ActivityFeedItem>,
-		required: true,
-	},
-	post: {
-		type: Object as PropType<FiresidePostModel>,
-		required: true,
-	},
-	canPlaceSticker: {
-		type: Boolean,
-	},
-});
-
-const { item, post, canPlaceSticker } = toRefs(props);
+type Props = {
+	item: ActivityFeedItem;
+	post: FiresidePostModel;
+	canPlaceSticker?: boolean;
+};
+const { item, post, canPlaceSticker = false } = defineProps<Props>();
 
 const feed = useActivityFeed()!;
 
@@ -44,16 +36,16 @@ const slider = ref() as Ref<HTMLElement>;
 const page = ref(1);
 const isDragging = ref(false);
 
-const lightbox = createLightbox(computed(() => post.value.media));
-const isHydrated = computed(() => feed.isItemHydrated(item.value));
+const lightbox = createLightbox(computed(() => post.media));
+const isHydrated = computed(() => feed.isItemHydrated(item));
 
 function goNext() {
-	if (page.value >= post.value.media.length) {
+	if (page.value >= post.media.length) {
 		_updateSliderOffset();
 		return;
 	}
 
-	page.value = Math.min(page.value + 1, post.value.media.length);
+	page.value = Math.min(page.value + 1, post.media.length);
 	_updateSliderOffset();
 }
 

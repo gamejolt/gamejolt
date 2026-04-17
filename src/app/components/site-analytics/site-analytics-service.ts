@@ -1,9 +1,10 @@
 import { computed } from 'vue';
-import { Api } from '../../../_common/api/api.service';
-import { Graph } from '../../../_common/graph/graph.service';
-import { $gettext } from '../../../_common/translate/translate.service';
-import { arrayIndexBy } from '../../../utils/array';
-import { objectPick } from '../../../utils/object';
+
+import { Api } from '~common/api/api.service';
+import { Graph } from '~common/graph/graph.service';
+import { $gettext } from '~common/translate/translate.service';
+import { arrayIndexBy } from '~utils/array';
+import { objectPick } from '~utils/object';
 
 export type ResourceName =
 	| 'User'

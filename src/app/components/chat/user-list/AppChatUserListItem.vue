@@ -1,36 +1,31 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import { showModalConfirm } from '../../../../_common/modal/confirm/confirm-service';
-import AppNotificationBlip from '../../../../_common/notification/AppNotificationBlip.vue';
-import { kThemeBacklight, kThemeBacklightFg } from '../../../../_common/theme/variables';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import AppUserAvatarBubble from '../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
-import { useGridStore } from '../../grid/grid-store';
-import AppChatListItem from '../_list/AppChatListItem.vue';
-import { isUserOnline, leaveGroupRoom, openChatRoom } from '../client';
-import AppChatNotificationSettings from '../notification-settings/AppChatNotificationSettings.vue';
-import { ChatRoomModel, getChatRoomTitle } from '../room';
-import { ChatUser } from '../user';
-import AppChatUserOnlineStatus from '../user-online-status/AppChatUserOnlineStatus.vue';
+import { computed } from 'vue';
 
-const props = defineProps({
-	item: {
-		type: Object as PropType<ChatUser | ChatRoomModel>,
-		required: true,
-	},
-});
+import AppChatListItem from '~app/components/chat/_list/AppChatListItem.vue';
+import { isUserOnline, leaveGroupRoom, openChatRoom } from '~app/components/chat/client';
+import AppChatNotificationSettings from '~app/components/chat/notification-settings/AppChatNotificationSettings.vue';
+import { ChatRoomModel, getChatRoomTitle } from '~app/components/chat/room';
+import { ChatUser } from '~app/components/chat/user';
+import AppChatUserOnlineStatus from '~app/components/chat/user-online-status/AppChatUserOnlineStatus.vue';
+import { useGridStore } from '~app/components/grid/grid-store';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { showModalConfirm } from '~common/modal/confirm/confirm-service';
+import AppNotificationBlip from '~common/notification/AppNotificationBlip.vue';
+import { kThemeBacklight, kThemeBacklightFg } from '~common/theme/variables';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
+import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
 
-const { item } = toRefs(props);
+type Props = {
+	item: ChatUser | ChatRoomModel;
+};
+const { item } = defineProps<Props>();
 
 const { chatUnsafe: chat } = useGridStore();
 
-const roomId = computed(() =>
-	item.value instanceof ChatUser ? item.value.room_id : item.value.id
-);
+const roomId = computed(() => (item instanceof ChatUser ? item.room_id : item.id));
 
-const user = computed(() => (item.value instanceof ChatUser ? item.value : null));
+const user = computed(() => (item instanceof ChatUser ? item : null));
 const isActive = computed(() => chat.value.activeRoomId === roomId.value);
 const hasNotification = computed(() => !!chat.value.notifications.get(roomId.value));
 
@@ -39,14 +34,14 @@ const isOnline = computed(() => {
 		return null;
 	}
 
-	return isUserOnline(chat.value, item.value.id);
+	return isUserOnline(chat.value, item.id);
 });
 
 const title = computed(() =>
-	item.value instanceof ChatUser ? item.value.display_name : getChatRoomTitle(item.value)
+	item instanceof ChatUser ? item.display_name : getChatRoomTitle(item)
 );
 
-const meta = computed(() => (item.value instanceof ChatUser ? `@${item.value.username}` : null));
+const meta = computed(() => (item instanceof ChatUser ? `@${item.username}` : null));
 
 const hoverTitle = computed(() => {
 	const parts = [title.value];
@@ -66,7 +61,7 @@ function onClick(e: Event) {
  * Only for group chats.
  */
 async function leaveRoom() {
-	if (!(item.value instanceof ChatRoomModel)) {
+	if (!(item instanceof ChatRoomModel)) {
 		return;
 	}
 
@@ -78,7 +73,7 @@ async function leaveRoom() {
 		return;
 	}
 
-	leaveGroupRoom(chat.value, item.value);
+	leaveGroupRoom(chat.value, item);
 }
 </script>
 

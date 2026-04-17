@@ -1,12 +1,13 @@
 <script lang="ts" setup>
 import { toRef } from 'vue';
-import { $gettext } from '../../../../../../_common/translate/translate.service';
-import AppCommunityPerms from '../../../../../components/community/perms/AppCommunityPerms.vue';
-import { useCommunityRouteStore } from '../../view.store';
 
-const emit = defineEmits({
-	changeSection: (_path: string) => true,
-});
+import AppCommunityPerms from '~app/components/community/perms/AppCommunityPerms.vue';
+import { useCommunityRouteStore } from '~app/views/communities/view/view.store';
+import { $gettext } from '~common/translate/translate.service';
+
+const emit = defineEmits<{
+	changeSection: [path: string];
+}>();
 
 const routeStore = useCommunityRouteStore()!;
 

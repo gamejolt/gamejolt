@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { Screen } from '../../screen/screen-service';
+import { Screen } from '~common/screen/screen-service';
 
 type Props = {
 	center?: boolean;

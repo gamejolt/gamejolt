@@ -1,37 +1,26 @@
 <script lang="ts" setup>
-import { computed, PropType, provide, ref, toRefs, watch } from 'vue';
-import { ContextCapabilities } from '../content-context';
-import { ContentDocument } from '../content-document';
-import { ContentRules } from '../content-rules';
-import { ContentHydrator } from '../content-hydrator';
+import { computed, provide, ref, watch } from 'vue';
+
+import { ContextCapabilities } from '~common/content/content-context';
+import { ContentDocument } from '~common/content/content-document';
+import { ContentHydrator } from '~common/content/content-hydrator';
 import {
 	ContentOwnerControllerKey,
 	ContentOwnerParentBounds,
 	createContentOwnerController,
-} from '../content-owner';
-import AppContentViewerBaseComponent from './components/AppContentViewerBaseComponent.vue';
+} from '~common/content/content-owner';
+import { ContentRules } from '~common/content/content-rules';
+import AppContentViewerBaseComponent from '~common/content/content-viewer/components/AppContentViewerBaseComponent.vue';
 
-const props = defineProps({
-	source: {
-		type: String,
-		required: true,
-	},
-	disableLightbox: {
-		type: Boolean,
-	},
-	displayRules: {
-		type: Object as PropType<ContentRules>,
-		default: undefined,
-	},
-	parentBounds: {
-		type: Object as PropType<ContentOwnerParentBounds>,
-		default: undefined,
-	},
-});
+type Props = {
+	source: string;
+	disableLightbox?: boolean;
+	displayRules?: ContentRules;
+	parentBounds?: ContentOwnerParentBounds;
+};
+const { source, disableLightbox, displayRules, parentBounds } = defineProps<Props>();
 
-const { source, disableLightbox, displayRules, parentBounds } = toRefs(props);
-
-const doc = ref(source.value ? ContentDocument.fromJson(source.value) : null);
+const doc = ref(source ? ContentDocument.fromJson(source) : null);
 
 const viewerStyleClass = computed(() => {
 	if (!doc.value) {
@@ -40,29 +29,29 @@ const viewerStyleClass = computed(() => {
 	return controller.value.context + '-content';
 });
 
-const content = computed(() => doc.value?.content ?? []);
+const content = computed(() => (doc.value ? ([...doc.value.content] as any[]) : []));
 const context = computed(() => doc.value!.context);
 const capabilities = computed(() => ContextCapabilities.getPlaceholder());
-const contentRules = computed(() => displayRules?.value);
-const maybeParentBounds = computed(() => parentBounds?.value);
+const contentRules = computed(() => displayRules);
+const maybeParentBounds = computed(() => parentBounds);
 
 const controller = ref(
 	createContentOwnerController({
 		context: context.value,
 		capabilities: capabilities.value,
 		contentRules: contentRules.value,
-		disableLightbox: disableLightbox.value,
+		disableLightbox: disableLightbox,
 		parentBounds: maybeParentBounds.value,
 	})
 );
 
 provide(ContentOwnerControllerKey, controller.value);
 
-watch(source, updatedSource, { immediate: true });
+watch(() => source, updatedSource, { immediate: true });
 
 function updatedSource() {
-	if (source.value) {
-		const sourceDoc = ContentDocument.fromJson(source.value);
+	if (source) {
+		const sourceDoc = ContentDocument.fromJson(source);
 		setContent(sourceDoc);
 	} else {
 		doc.value = null;

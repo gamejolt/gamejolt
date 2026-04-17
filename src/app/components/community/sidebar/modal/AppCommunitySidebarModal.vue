@@ -1,23 +1,17 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-import AppButton from '../../../../../_common/button/AppButton.vue';
-import { CommunityModel } from '../../../../../_common/community/community.model';
-import AppModal from '../../../../../_common/modal/AppModal.vue';
-import { useModal } from '../../../../../_common/modal/modal.service';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import AppCommunitySidebar from '../AppCommunitySidebar.vue';
-import { CommunitySidebarData } from '../sidebar-data';
+import AppCommunitySidebar from '~app/components/community/sidebar/AppCommunitySidebar.vue';
+import { CommunitySidebarData } from '~app/components/community/sidebar/sidebar-data';
+import AppButton from '~common/button/AppButton.vue';
+import { CommunityModel } from '~common/community/community.model';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import { $gettext } from '~common/translate/translate.service';
 
-defineProps({
-	community: {
-		type: Object as PropType<CommunityModel>,
-		required: true,
-	},
-	sidebarData: {
-		type: Object as PropType<CommunitySidebarData>,
-		required: true,
-	},
-});
+type Props = {
+	community: CommunityModel;
+	sidebarData: CommunitySidebarData;
+};
+defineProps<Props>();
 
 const modal = useModal()!;
 </script>

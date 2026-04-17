@@ -1,6 +1,8 @@
-import { showSuccessGrowl } from '../../../growls/growls.service';
-import { FiresidePostModel } from '../post-model';
-import AppFiresidePostGotoGrowl, { Action } from './AppFiresidePostGotoGrowl.vue';
+import AppFiresidePostGotoGrowl, {
+	Action,
+} from '~common/fireside/post/goto-growl/AppFiresidePostGotoGrowl.vue';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import { showSuccessGrowl } from '~common/growls/growls.service';
 
 export class FiresidePostGotoGrowl {
 	static async show(post: FiresidePostModel, action: Action) {

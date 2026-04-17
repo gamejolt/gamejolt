@@ -1,12 +1,14 @@
 <script lang="ts" setup>
-import { computed, CSSProperties, PropType, toRefs, useSlots } from 'vue';
-import AppEditableOverlay from '../../../_common/editable-overlay/AppEditableOverlay.vue';
-import AppMediaItemCover from '../../../_common/media-item/cover/AppMediaItemCover.vue';
-import { MediaItemModel } from '../../../_common/media-item/media-item-model';
-import { Screen } from '../../../_common/screen/screen-service';
-import AppScrollAffix from '../../../_common/scroll/AppScrollAffix.vue';
-import { AppAutoscrollAnchor } from '../../../_common/scroll/auto-scroll/anchor';
-import './page-header-content.styl';
+import '~app/components/page-header/page-header-content.styl';
+
+import { computed, CSSProperties, useSlots } from 'vue';
+
+import AppEditableOverlay from '~common/editable-overlay/AppEditableOverlay.vue';
+import AppMediaItemCover from '~common/media-item/cover/AppMediaItemCover.vue';
+import { MediaItemModel } from '~common/media-item/media-item-model';
+import { Screen } from '~common/screen/screen-service';
+import AppScrollAffix from '~common/scroll/AppScrollAffix.vue';
+import AppAutoscrollAnchor from '~common/scroll/auto-scroll/AppAutoscrollAnchor.vue';
 
 interface PageHeaderSlots {
 	spotlight?: boolean;
@@ -14,58 +16,25 @@ interface PageHeaderSlots {
 	controls?: boolean;
 }
 
-const props = defineProps({
-	coverMediaItem: {
-		type: Object as PropType<MediaItemModel>,
-		default: undefined,
-	},
-	coverMaxHeight: {
-		type: Number,
-		default: undefined,
-	},
-	coverAutoHeight: {
-		type: Boolean,
-	},
-	coverEditable: {
-		type: Boolean,
-	},
-	hideNav: {
-		type: Boolean,
-	},
-	shouldAffixNav: {
-		type: Boolean,
-	},
-	blurHeader: {
-		type: Boolean,
-	},
-	colClasses: {
-		type: String,
-		default: 'col-xs-12',
-	},
-	autoscrollAnchorKey: {
-		type: [String, Number] as PropType<string | number>,
-		default: undefined,
-	},
-	disableAutoscrollAnchor: {
-		type: Boolean,
-	},
-	showCoverButtons: {
-		type: Boolean,
-	},
+type Props = {
+	coverMediaItem?: MediaItemModel;
+	coverMaxHeight?: number;
+	coverAutoHeight?: boolean;
+	coverEditable?: boolean;
+	hideNav?: boolean;
+	shouldAffixNav?: boolean;
+	blurHeader?: boolean;
+	colClasses?: string;
+	autoscrollAnchorKey?: string | number;
+	disableAutoscrollAnchor?: boolean;
+	showCoverButtons?: boolean;
 	/**
 	 * Used so we can override our `hasSlotName` computed properties, allowing
 	 * them to be reactive.
 	 */
-	overrideSlots: {
-		type: Object as PropType<PageHeaderSlots>,
-		default: undefined,
-	},
-	coverHeaderStyles: {
-		type: Object as PropType<CSSProperties>,
-		default: () => ({}),
-	},
-});
-
+	overrideSlots?: PageHeaderSlots;
+	coverHeaderStyles?: CSSProperties;
+};
 const {
 	coverMediaItem,
 	coverMaxHeight,
@@ -74,16 +43,17 @@ const {
 	hideNav,
 	shouldAffixNav,
 	blurHeader,
-	colClasses,
+	colClasses = 'col-xs-12',
 	autoscrollAnchorKey,
 	disableAutoscrollAnchor,
 	showCoverButtons,
 	overrideSlots,
-} = toRefs(props);
+	coverHeaderStyles = {},
+} = defineProps<Props>();
 
-const emit = defineEmits({
-	'edit-cover': () => true,
-});
+const emit = defineEmits<{
+	'edit-cover': [];
+}>();
 
 const slots = useSlots();
 
@@ -91,7 +61,7 @@ const hasSpotlight = computed(() => {
 	if (Screen.isXs) {
 		return false;
 	}
-	const override = overrideSlots?.value?.spotlight;
+	const override = overrideSlots?.spotlight;
 	if (override !== undefined) {
 		return override;
 	}
@@ -99,7 +69,7 @@ const hasSpotlight = computed(() => {
 });
 
 const hasNav = computed(() => {
-	const override = overrideSlots?.value?.nav;
+	const override = overrideSlots?.nav;
 	if (override !== undefined) {
 		return override;
 	}
@@ -107,7 +77,7 @@ const hasNav = computed(() => {
 });
 
 const hasControls = computed(() => {
-	const override = overrideSlots?.value?.controls;
+	const override = overrideSlots?.controls;
 	if (override !== undefined) {
 		return override;
 	}
@@ -252,4 +222,4 @@ const hasControls = computed(() => {
 	</header>
 </template>
 
-<style lang="stylus" src="./page-header.styl" scoped></style>
+<style lang="stylus" src="~app/components/page-header/page-header.styl" scoped></style>

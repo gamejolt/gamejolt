@@ -1,44 +1,36 @@
 <script lang="ts" setup>
-import { computed, onMounted, ref } from 'vue';
-import { arrayShuffle } from '../../../../utils/array';
-import { showErrorGrowl } from '../../../growls/growls.service';
-import AppJolticon from '../../../jolticon/AppJolticon.vue';
-import AppLoading from '../../../loading/AppLoading.vue';
-import AppTranslate from '../../../translate/AppTranslate.vue';
-import { $gettext } from '../../../translate/translate.service';
-import AppVideoEmbed from '../../../video/embed/AppVideoEmbed.vue';
-import { ContentEmbedService } from '../../content-editor/content-embed.service';
-import { defineEditableNodeViewProps } from '../../content-editor/node-views/base';
-import { useContentOwnerController } from '../../content-owner';
-import AppBaseContentComponent from '../AppBaseContentComponent.vue';
-import AppContentEmbedSketchfab from './AppContentEmbedSketchfab.vue';
-import AppContentEmbedSoundcloud from './AppContentEmbedSoundcloud.vue';
+import { computed, onMounted, ref, useTemplateRef } from 'vue';
 
-const props = defineProps({
-	type: {
-		type: String,
-		required: true,
-	},
-	source: {
-		type: String,
-		required: true,
-	},
-	isEditing: {
-		type: Boolean,
-	},
-	isDisabled: {
-		type: Boolean,
-	},
-	...defineEditableNodeViewProps(),
-});
+import AppBaseContentComponent from '~common/content/components/AppBaseContentComponent.vue';
+import AppContentEmbedSketchfab from '~common/content/components/embed/AppContentEmbedSketchfab.vue';
+import AppContentEmbedSoundcloud from '~common/content/components/embed/AppContentEmbedSoundcloud.vue';
+import { ContentEmbedService } from '~common/content/content-editor/content-embed.service';
+import { useContentOwnerController } from '~common/content/content-owner';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLoading from '~common/loading/AppLoading.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
+import AppVideoEmbed from '~common/video/embed/AppVideoEmbed.vue';
+import { arrayShuffle } from '~utils/array';
+
+type Props = {
+	type: string;
+	source: string;
+	isEditing?: boolean;
+	isDisabled?: boolean;
+	onRemoved?: () => void;
+	onUpdateAttrs?: (attrs: Record<string, unknown>) => void;
+};
+const { type, source, isEditing, isDisabled, onRemoved, onUpdateAttrs } = defineProps<Props>();
 
 const owner = useContentOwnerController()!;
 
 const loading = ref(false);
 const previewEmbeds = ref<any[]>([]);
 
-const inputElement = ref<HTMLInputElement>();
-const hasContent = computed(() => props.type && props.source);
+const inputElement = useTemplateRef('inputElement');
+const hasContent = computed(() => type && source);
 const hasMoreEmbedPreviews = computed(
 	() => previewEmbeds.value.length < ContentEmbedService.previewSources.length
 );
@@ -56,7 +48,7 @@ function setRandomEmbedPills() {
 
 function onInput(e: Event) {
 	if (e.target instanceof HTMLInputElement) {
-		props.onUpdateAttrs?.({ source: e.target.value });
+		onUpdateAttrs?.({ source: e.target.value });
 	}
 }
 
@@ -70,19 +62,19 @@ async function onKeydown(e: KeyboardEvent) {
 		case 'Backspace':
 			// remove this node if backspace was pressed at the start of the input element.
 			if (_elem.selectionStart === 0 && _elem.selectionEnd === 0) {
-				props.onRemoved?.();
+				onRemoved?.();
 				e.preventDefault();
 			}
 			break;
 
 		case 'Enter':
 			if (_elem.value.length === 0) {
-				props.onRemoved?.();
+				onRemoved?.();
 			} else {
 				loading.value = true;
 				const data = await ContentEmbedService.getEmbedData(owner, _elem.value);
 				if (data !== undefined) {
-					props.onUpdateAttrs?.(data);
+					onUpdateAttrs?.(data);
 				} else {
 					showErrorGrowl({
 						title: $gettext(`Uh oh`),
@@ -97,7 +89,7 @@ async function onKeydown(e: KeyboardEvent) {
 			break;
 
 		case 'Escape':
-			props.onRemoved?.();
+			onRemoved?.();
 			e.preventDefault();
 			break;
 	}
@@ -110,7 +102,7 @@ async function onKeydown(e: KeyboardEvent) {
 		class="embed-main"
 		:is-editing="isEditing"
 		:is-disabled="isDisabled"
-		@removed="props.onRemoved?.()"
+		@removed="onRemoved?.()"
 	>
 		<div class="embed-container">
 			<div v-if="isEditing" class="embed-overlay-img" />

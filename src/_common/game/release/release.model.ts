@@ -1,7 +1,7 @@
-import { Model } from '../../model/model.service';
-import { GameBuildModel } from '../build/build.model';
-import { GameModel } from '../game.model';
-import { GamePackageModel } from '../package/package.model';
+import { GameBuildModel } from '~common/game/build/build.model';
+import { GameModel } from '~common/game/game.model';
+import { GamePackageModel } from '~common/game/package/package.model';
+import { Model } from '~common/model/model.service';
 
 export const enum GameReleaseStatus {
 	Hidden = 'hidden',

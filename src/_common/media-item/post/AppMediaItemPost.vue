@@ -1,55 +1,48 @@
 <script lang="ts" setup>
-import { computed, CSSProperties, PropType, ref, toRefs, toValue } from 'vue';
-import AppButton from '../../button/AppButton.vue';
-import { useContentFocusService } from '../../content-focus/content-focus.service';
-import AppImgResponsive from '../../img/AppImgResponsive.vue';
+import { computed, CSSProperties, ref, toValue } from 'vue';
+
+import AppButton from '~common/button/AppButton.vue';
+import { useContentFocusService } from '~common/content-focus/content-focus.service';
+import AppImgResponsive from '~common/img/AppImgResponsive.vue';
+import AppMediaItemBackdrop from '~common/media-item/backdrop/AppMediaItemBackdrop.vue';
+import { MediaItemModel } from '~common/media-item/media-item-model';
 import AppResponsiveDimensions, {
 	AppResponsiveDimensionsChangeEvent,
-} from '../../responsive-dimensions/AppResponsiveDimensions.vue';
-import { Screen } from '../../screen/screen-service';
-import AppStickerTarget from '../../sticker/target/AppStickerTarget.vue';
+} from '~common/responsive-dimensions/AppResponsiveDimensions.vue';
+import { Screen } from '~common/screen/screen-service';
+import AppStickerTarget from '~common/sticker/target/AppStickerTarget.vue';
 import {
 	createStickerTargetController,
 	useStickerTargetController,
-} from '../../sticker/target/target-controller';
-import { vAppTooltip } from '../../tooltip/tooltip-directive';
-import AppVideo from '../../video/AppVideo.vue';
-import { getVideoPlayerFromSources } from '../../video/player/controller';
-import AppMediaItemBackdrop from '../backdrop/AppMediaItemBackdrop.vue';
-import { MediaItemModel } from '../media-item-model';
+} from '~common/sticker/target/target-controller';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import AppVideo from '~common/video/AppVideo.vue';
+import { getVideoPlayerFromSources } from '~common/video/player/controller';
 
-const props = defineProps({
-	mediaItem: {
-		type: Object as PropType<MediaItemModel>,
-		required: true,
-	},
-	isPostHydrated: {
-		type: Boolean,
-		default: true,
-	},
-	isActive: {
-		type: Boolean,
-	},
-	restrictDeviceMaxHeight: {
-		type: Boolean,
-	},
-	inline: {
-		type: Boolean,
-	},
-	canPlaceSticker: {
-		type: Boolean,
-	},
-});
+type Props = {
+	mediaItem: MediaItemModel;
+	isPostHydrated?: boolean;
+	isActive?: boolean;
+	restrictDeviceMaxHeight?: boolean;
+	inline?: boolean;
+	canPlaceSticker?: boolean;
+};
+const {
+	mediaItem,
+	isPostHydrated = true,
+	isActive,
+	restrictDeviceMaxHeight,
+	inline,
+	canPlaceSticker,
+} = defineProps<Props>();
 
-const emit = defineEmits({
-	bootstrap: () => true,
-	fullscreen: (_mediaItem: MediaItemModel) => true,
-});
-
-const { mediaItem, isActive, restrictDeviceMaxHeight, inline, canPlaceSticker } = toRefs(props);
+const emit = defineEmits<{
+	bootstrap: [];
+	fullscreen: [mediaItem: MediaItemModel];
+}>();
 
 const parentStickerTarget = useStickerTargetController();
-const stickerTargetController = createStickerTargetController(mediaItem.value, {
+const stickerTargetController = createStickerTargetController(mediaItem, {
 	parent: () => toValue(parentStickerTarget),
 	canReceiveCharge: () => stickerTargetController.parent.value?.canReceiveCharge.value === true,
 });
@@ -57,28 +50,23 @@ const stickerTargetController = createStickerTargetController(mediaItem.value, {
 const isFilled = ref(false);
 
 const shouldShowFullscreenOption = computed(
-	() =>
-		restrictDeviceMaxHeight.value &&
-		mediaItem.value.height >= 100 &&
-		mediaItem.value.width >= 100
+	() => restrictDeviceMaxHeight && mediaItem.height >= 100 && mediaItem.width >= 100
 );
 
-const stickersDisabled = computed(() => !isActive.value || !canPlaceSticker.value);
+const stickersDisabled = computed(() => !isActive || !canPlaceSticker);
 
-const shouldVideoPlay = computed(
-	() => isActive.value && useContentFocusService().hasContentFocus.value
-);
+const shouldVideoPlay = computed(() => isActive && useContentFocusService().hasContentFocus.value);
 
 const videoController = computed(() => {
 	const sources = {
-		mp4: mediaItem.value.mediaserver_url_mp4,
-		webm: mediaItem.value.mediaserver_url_webm,
+		mp4: mediaItem.mediaserver_url_mp4,
+		webm: mediaItem.mediaserver_url_webm,
 	};
-	return getVideoPlayerFromSources(sources, 'gif', mediaItem.value.mediaserver_url);
+	return getVideoPlayerFromSources(sources, 'gif', mediaItem.mediaserver_url);
 });
 
 const itemRadius = computed(() => {
-	if (inline.value) {
+	if (inline) {
 		return isFilled.value ? undefined : 'lg';
 	}
 
@@ -86,7 +74,7 @@ const itemRadius = computed(() => {
 });
 
 const deviceMaxHeight = computed(() => {
-	if (import.meta.env.SSR || !restrictDeviceMaxHeight.value) {
+	if (import.meta.env.SSR || !restrictDeviceMaxHeight) {
 		return undefined;
 	}
 
@@ -110,16 +98,16 @@ function onClickImage() {
 	// Inline means we are in a feed, and we use the fullscreen button to go fullscreen.
 	// Clicking on the image in feed does nothing.
 	// In the post view however, we don't show the button and instead a click anywhere on the image goes fullscreen.
-	if (!inline.value) {
-		emit('fullscreen', mediaItem.value);
+	if (!inline) {
+		emit('fullscreen', mediaItem);
 	}
 }
 
 const itemStyling = import.meta.env.SSR
 	? {}
 	: ({
-			maxWidth: mediaItem.value.width + 'px',
-			maxHeight: mediaItem.value.height + 'px',
+			maxWidth: mediaItem.width + 'px',
+			maxHeight: mediaItem.height + 'px',
 	  } as const satisfies CSSProperties);
 </script>
 
@@ -154,7 +142,7 @@ const itemStyling = import.meta.env.SSR
 						:style="itemStyling"
 						:src="mediaItem.mediaserver_url"
 						alt=""
-						ondragstart="return false"
+						@dragstart.prevent
 					/>
 					<AppVideo
 						v-else-if="isActive && videoController"

@@ -1,16 +1,14 @@
 <script lang="ts">
-import { Ref, computed, ref } from 'vue';
-import { Api } from '../../../../../../../_common/api/api.service';
-import { formatDuration } from '../../../../../../../_common/filters/duration';
-import { formatNumber } from '../../../../../../../_common/filters/number';
-import AppJolticon from '../../../../../../../_common/jolticon/AppJolticon.vue';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '../../../../../../../_common/route/route-component';
-import { vAppTooltip } from '../../../../../../../_common/tooltip/tooltip-directive';
-import { $gettext } from '../../../../../../../_common/translate/translate.service';
-import { useGameDashRouteController } from '../../manage.store';
+import { computed, Ref, ref } from 'vue';
+
+import { useGameDashRouteController } from '~app/views/dashboard/games/manage/manage.store';
+import { Api } from '~common/api/api.service';
+import { formatDuration } from '~common/filters/duration';
+import { formatNumber } from '~common/filters/number';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { $gettext } from '~common/translate/translate.service';
 
 export default {
 	...defineAppRouteOptions({

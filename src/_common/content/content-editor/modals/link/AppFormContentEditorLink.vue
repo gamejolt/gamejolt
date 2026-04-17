@@ -1,31 +1,31 @@
 <script lang="ts" setup>
 import { toRef } from 'vue';
-import AppForm, {
-	FormController,
-	createForm,
-	defineFormProps,
-} from '../../../../form-vue/AppForm.vue';
-import AppFormButton from '../../../../form-vue/AppFormButton.vue';
-import AppFormControl from '../../../../form-vue/AppFormControl.vue';
-import AppFormGroup from '../../../../form-vue/AppFormGroup.vue';
-import { validateBasicLink } from '../../../../form-vue/validators';
-import { LinkData } from './link-modal.service';
 
-const props = defineProps({
-	...defineFormProps<LinkData>(true),
-});
+import { LinkData } from '~common/content/content-editor/modals/link/link-modal.service';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import { validateBasicLink } from '~common/form-vue/validators';
 
-const emit = defineEmits({
-	submit: (_model: LinkData) => true,
-});
+type FormModel = LinkData;
 
-const form: FormController<LinkData> = createForm({
-	model: toRef(props, 'model'),
+type Props = {
+	model: FormModel;
+};
+const { model } = defineProps<Props>();
+
+const emit = defineEmits<{
+	submit: [model: FormModel];
+}>();
+
+const form: FormController<FormModel> = createForm<FormModel>({
+	model: toRef(() => model),
 	onInit() {
 		form.formModel.href ??= form.formModel.href || '';
 		form.formModel.title ??= form.formModel.title || '';
 	},
-	onSubmitSuccess() {
+	onSubmit() {
 		emit('submit', form.formModel);
 	},
 });
@@ -41,8 +41,12 @@ const form: FormController<LinkData> = createForm({
 			/>
 		</AppFormGroup>
 
-		<AppFormButton :disabled="!form.valid">
-			{{ $gettext(`Insert link`) }}
-		</AppFormButton>
+		<div :style="{ flex: 'row', justifyContent: 'end' }">
+			<AppFormButton :disabled="!form.valid">
+				{{ $gettext(`Insert link`) }}
+			</AppFormButton>
+
+			<slot name="buttons" />
+		</div>
 	</AppForm>
 </template>

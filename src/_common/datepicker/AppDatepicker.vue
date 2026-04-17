@@ -1,8 +1,9 @@
 <script lang="ts">
 import { computed, inject, InjectionKey, markRaw, provide, Ref, ref, toRef } from 'vue';
-import { formatDate } from '../filters/date';
-import AppDatepickerDay from './AppDatepickerDay.vue';
-import AppDatepickerMonth from './AppDatepickerMonth.vue';
+
+import AppDatepickerDay from '~common/datepicker/AppDatepickerDay.vue';
+import AppDatepickerMonth from '~common/datepicker/AppDatepickerMonth.vue';
+import { formatDate } from '~common/filters/date';
 
 type DateMode = 'day' | 'month';
 
@@ -112,36 +113,29 @@ function createDatepicker({
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	value: {
-		type: Date,
-		required: true,
-	},
-	minDate: {
-		type: Date,
-		default: null,
-	},
-	maxDate: {
-		type: Date,
-		default: null,
-	},
-});
+type Props = {
+	value: Date;
+	minDate?: Date | null;
+	maxDate?: Date | null;
+	required?: boolean;
+};
+const { value, minDate = null, maxDate = null } = defineProps<Props>();
 
-const emit = defineEmits({
-	change: (_date: Date) => true,
-});
+const emit = defineEmits<{
+	change: [date: Date];
+}>();
 
 const c = createDatepicker({
-	modelValue: toRef(props, 'value'),
-	minDate: toRef(props, 'minDate'),
-	maxDate: toRef(props, 'maxDate'),
+	modelValue: toRef(() => value),
+	minDate: toRef(() => minDate),
+	maxDate: toRef(() => maxDate),
 });
 provide(Key, c);
 
 const { pickerMode, viewDate } = c;
 
 function select(date: Date) {
-	const newValue = new Date(props.value);
+	const newValue = new Date(value);
 	newValue.setFullYear(date.getFullYear(), date.getMonth(), date.getDate());
 	emit('change', newValue);
 }

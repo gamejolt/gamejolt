@@ -1,8 +1,8 @@
-import { FiresideModel } from '../fireside/fireside.model';
-import { FiresidePostModel } from '../fireside/post/post-model';
-import { Model } from '../model/model.service';
-import { UserModel } from '../user/user.model';
-import { SupporterMessageModel } from './message.model';
+import { FiresideModel } from '~common/fireside/fireside.model';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import { Model } from '~common/model/model.service';
+import { SupporterMessageModel } from '~common/supporters/message.model';
+import { UserModel } from '~common/user/user.model';
 
 const RESOURCE_FIRESIDE_POST = 'Fireside_Post';
 const RESOURCE_FIRESIDE = 'Fireside';

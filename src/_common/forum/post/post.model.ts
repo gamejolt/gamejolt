@@ -1,9 +1,9 @@
-import { Api } from '../../api/api.service';
-import { Environment } from '../../environment/environment.service';
-import { Model } from '../../model/model.service';
-import { NotificationModel } from '../../notification/notification-model';
-import { UserModel } from '../../user/user.model';
-import { ForumTopicModel } from '../topic/topic.model';
+import { Api } from '~common/api/api.service';
+import { Environment } from '~common/environment/environment.service';
+import { ForumTopicModel } from '~common/forum/topic/topic.model';
+import { Model } from '~common/model/model.service';
+import { NotificationModel } from '~common/notification/notification-model';
+import { UserModel } from '~common/user/user.model';
 
 export const enum ForumPostStatus {
 	Active = 'active',

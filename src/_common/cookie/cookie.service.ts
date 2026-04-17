@@ -1,5 +1,5 @@
-import { isDynamicGoogleBot } from '../device/device.service';
-import { Environment } from '../environment/environment.service';
+import { isDynamicGoogleBot } from '~common/device/device.service';
+import { Environment } from '~common/environment/environment.service';
 
 export function getCookie(name: string): Promise<string | undefined> {
 	return new Promise(resolve => {

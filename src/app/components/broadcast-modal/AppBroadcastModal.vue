@@ -1,34 +1,31 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
-import AppButton from '../../../_common/button/AppButton.vue';
-import AppContentViewer from '../../../_common/content/content-viewer/AppContentViewer.vue';
-import { FiresidePostModel } from '../../../_common/fireside/post/post-model';
-import { $viewPostVideo } from '../../../_common/fireside/post/video/video-model';
-import AppImgResponsive from '../../../_common/img/AppImgResponsive.vue';
-import { MediaItemModel } from '../../../_common/media-item/media-item-model';
-import AppModal from '../../../_common/modal/AppModal.vue';
-import { useModal } from '../../../_common/modal/modal.service';
-import AppResponsiveDimensions from '../../../_common/responsive-dimensions/AppResponsiveDimensions.vue';
-import AppStickerTarget from '../../../_common/sticker/target/AppStickerTarget.vue';
-import { createStickerTargetController } from '../../../_common/sticker/target/target-controller';
-import AppTimeAgo from '../../../_common/time/AppTimeAgo.vue';
-import AppVideo from '../../../_common/video/AppVideo.vue';
-import AppVideoPlayer from '../../../_common/video/player/AppVideoPlayer.vue';
-import { getVideoPlayerFromSources } from '../../../_common/video/player/controller';
-import AppPollVoting from '../poll/AppPollVoting.vue';
-import AppPostControls from '../post/controls/AppPostControls.vue';
+import { computed } from 'vue';
 
-const props = defineProps({
-	posts: {
-		type: Array as PropType<FiresidePostModel[]>,
-		required: true,
-	},
-});
+import AppPollVoting from '~app/components/poll/AppPollVoting.vue';
+import AppPostControls from '~app/components/post/controls/AppPostControls.vue';
+import AppButton from '~common/button/AppButton.vue';
+import AppContentViewer from '~common/content/content-viewer/AppContentViewer.vue';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import { $viewPostVideo } from '~common/fireside/post/video/video-model';
+import AppImgResponsive from '~common/img/AppImgResponsive.vue';
+import { MediaItemModel } from '~common/media-item/media-item-model';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import AppResponsiveDimensions from '~common/responsive-dimensions/AppResponsiveDimensions.vue';
+import AppStickerTarget from '~common/sticker/target/AppStickerTarget.vue';
+import { createStickerTargetController } from '~common/sticker/target/target-controller';
+import AppTimeAgo from '~common/time/AppTimeAgo.vue';
+import AppVideo from '~common/video/AppVideo.vue';
+import AppVideoPlayer from '~common/video/player/AppVideoPlayer.vue';
+import { getVideoPlayerFromSources } from '~common/video/player/controller';
 
-const { posts } = toRefs(props);
+type Props = {
+	posts: FiresidePostModel[];
+};
+const { posts } = defineProps<Props>();
 const modal = useModal()!;
 
-const post = computed(() => posts.value[0]);
+const post = computed(() => posts[0]);
 const stickerTargetController = createStickerTargetController(post.value, {
 	canReceiveCharge: () => post.value.can_receive_charged_stickers,
 });

@@ -1,28 +1,19 @@
 <script lang="ts" setup>
-import { PropType, toRefs } from 'vue';
-import AppCard from '../../../../../_common/card/AppCard.vue';
-import {
-	$setGameDevStage,
-	GameDevelopmentStatus,
-	GameModel,
-} from '../../../../../_common/game/game.model';
-import { showSuccessGrowl } from '../../../../../_common/growls/growls.service';
-import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import { showGameDevStageSelectorConfirmModal } from './confirm-service';
+import { showGameDevStageSelectorConfirmModal } from '~app/components/forms/game/dev-stage-selector/confirm-service';
+import AppCard from '~common/card/AppCard.vue';
+import { $setGameDevStage, GameDevelopmentStatus, GameModel } from '~common/game/game.model';
+import { showSuccessGrowl } from '~common/growls/growls.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { $gettext } from '~common/translate/translate.service';
 
-const props = defineProps({
-	game: {
-		type: Object as PropType<GameModel>,
-		default: undefined,
-	},
-});
+type Props = {
+	game?: GameModel;
+};
+const { game } = defineProps<Props>();
 
-const emit = defineEmits({
-	select: (_stage: number) => true,
-});
-
-const { game } = toRefs(props);
+const emit = defineEmits<{
+	select: [stage: number];
+}>();
 
 const assetPaths = import.meta.glob('./*.png', { eager: true, as: 'url' });
 
@@ -35,17 +26,17 @@ const stages = [
 async function select(stage: number) {
 	emit('select', stage);
 
-	if (!game?.value) {
+	if (!game) {
 		return;
 	}
 
-	if (!isEnabled(stage) || stage === game.value.development_status) {
+	if (!isEnabled(stage) || stage === game.development_status) {
 		return;
 	}
 
-	const result = await showGameDevStageSelectorConfirmModal(game.value, stage);
+	const result = await showGameDevStageSelectorConfirmModal(game, stage);
 	if (result) {
-		await $setGameDevStage(game.value, stage);
+		await $setGameDevStage(game, stage);
 		showSuccessGrowl(
 			$gettext(`Your game's development stage has been changed!`),
 			$gettext(`Stage Changed`)
@@ -54,13 +45,13 @@ async function select(stage: number) {
 }
 
 function isEnabled(stage: number) {
-	if (!game?.value) {
+	if (!game) {
 		return true;
 	}
 
 	if (
 		(stage === GameDevelopmentStatus.Wip || stage === GameDevelopmentStatus.Finished) &&
-		!game.value.has_active_builds
+		!game.has_active_builds
 	) {
 		return false;
 	}

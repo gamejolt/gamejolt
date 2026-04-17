@@ -1,84 +1,72 @@
 <script lang="ts" setup>
-import { computed, PropType, ref, shallowRef, toRefs, watch } from 'vue';
+import { computed, ref, shallowRef, useTemplateRef, watch } from 'vue';
 import { RouteLocationRaw, useRoute, useRouter } from 'vue-router';
-import AppAdWidget from '../../../../_common/ad/widget/AppAdWidget.vue';
-import AppBackground from '../../../../_common/background/AppBackground.vue';
-import AppCommentDisabledCheck from '../../../../_common/comment/AppCommentDisabledCheck.vue';
-import { CommunityUserNotificationModel } from '../../../../_common/community/user-notification/user-notification.model';
-import AppContentViewer from '../../../../_common/content/content-viewer/AppContentViewer.vue';
-import { isDynamicGoogleBot } from '../../../../_common/device/device.service';
-import {
-	FiresidePostModel,
-	FiresidePostStatus,
-} from '../../../../_common/fireside/post/post-model';
-import {
-	$viewPostVideo,
-	FiresidePostVideoModel,
-} from '../../../../_common/fireside/post/video/video-model';
-import { showInfoGrowl, showSuccessGrowl } from '../../../../_common/growls/growls.service';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import AppResponsiveDimensions from '../../../../_common/responsive-dimensions/AppResponsiveDimensions.vue';
-import { Screen } from '../../../../_common/screen/screen-service';
-import { Scroll } from '../../../../_common/scroll/scroll.service';
-import AppShareCard from '../../../../_common/share/card/AppShareCard.vue';
-import AppSpacer from '../../../../_common/spacer/AppSpacer.vue';
-import AppStickerControlsOverlay from '../../../../_common/sticker/AppStickerControlsOverlay.vue';
-import AppStickerPlacementList from '../../../../_common/sticker/AppStickerPlacementList.vue';
-import AppStickerLayer from '../../../../_common/sticker/layer/AppStickerLayer.vue';
+
+import AppContentTargets from '~app/components/content/AppContentTargets.vue';
+import AppFiresidePostEmbed from '~app/components/fireside/post/embed/AppFiresidePostEmbed.vue';
+import { AppCommentWidgetLazy } from '~app/components/lazy';
+import AppPageContainer from '~app/components/page-container/AppPageContainer.vue';
+import AppPollVoting from '~app/components/poll/AppPollVoting.vue';
+import AppPostControls from '~app/components/post/controls/AppPostControls.vue';
+import AppPostPageContent from '~app/views/post/_page/AppPostPageContent.vue';
+import AppPostPageRecommendations from '~app/views/post/_page/recommendations/AppPostPageRecommendations.vue';
+import AppAdWidget from '~common/ad/widget/AppAdWidget.vue';
+import AppBackground from '~common/background/AppBackground.vue';
+import AppCommentDisabledCheck from '~common/comment/AppCommentDisabledCheck.vue';
+import { CommunityUserNotificationModel } from '~common/community/user-notification/user-notification.model';
+import AppContentViewer from '~common/content/content-viewer/AppContentViewer.vue';
+import { isDynamicGoogleBot } from '~common/device/device.service';
+import { FiresidePostModel, FiresidePostStatus } from '~common/fireside/post/post-model';
+import { $viewPostVideo, FiresidePostVideoModel } from '~common/fireside/post/video/video-model';
+import { showInfoGrowl, showSuccessGrowl } from '~common/growls/growls.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppResponsiveDimensions from '~common/responsive-dimensions/AppResponsiveDimensions.vue';
+import { Screen } from '~common/screen/screen-service';
+import { Scroll } from '~common/scroll/scroll.service';
+import AppShareCard from '~common/share/card/AppShareCard.vue';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import AppStickerControlsOverlay from '~common/sticker/AppStickerControlsOverlay.vue';
+import AppStickerPlacementList from '~common/sticker/AppStickerPlacementList.vue';
+import AppStickerLayer from '~common/sticker/layer/AppStickerLayer.vue';
 import {
 	createStickerTargetController,
 	provideStickerTargetController,
 	StickerTargetController,
-} from '../../../../_common/sticker/target/target-controller';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import AppVideoPlayer from '../../../../_common/video/player/AppVideoPlayer.vue';
-import AppVideoProcessingProgress from '../../../../_common/video/processing-progress/AppVideoProcessingProgress.vue';
-import AppContentTargets from '../../../components/content/AppContentTargets.vue';
-import AppFiresidePostEmbed from '../../../components/fireside/post/embed/AppFiresidePostEmbed.vue';
-import { AppCommentWidgetLazy } from '../../../components/lazy';
-import AppPageContainer from '../../../components/page-container/AppPageContainer.vue';
-import AppPollVoting from '../../../components/poll/AppPollVoting.vue';
-import AppPostControls from '../../../components/post/controls/AppPostControls.vue';
-import AppPostPageContent from './AppPostPageContent.vue';
-import AppPostPageRecommendations from './recommendations/AppPostPageRecommendations.vue';
+} from '~common/sticker/target/target-controller';
+import { $gettext } from '~common/translate/translate.service';
+import AppVideoPlayer from '~common/video/player/AppVideoPlayer.vue';
+import AppVideoProcessingProgress from '~common/video/processing-progress/AppVideoProcessingProgress.vue';
 
-const props = defineProps({
-	post: {
-		type: Object as PropType<FiresidePostModel>,
-		required: true,
-	},
-	communityNotifications: {
-		type: Array as PropType<CommunityUserNotificationModel[]>,
-		default: () => [],
-	},
-});
-
-const { post, communityNotifications } = toRefs(props);
+type Props = {
+	post: FiresidePostModel;
+	communityNotifications?: CommunityUserNotificationModel[];
+};
+const { post, communityNotifications = [] } = defineProps<Props>();
 
 const route = useRoute();
 const router = useRouter();
 
 const stickerTargetController = shallowRef<StickerTargetController>(
-	createStickerTargetController(post.value, {
-		canReceiveCharge: () => post.value.can_receive_charged_stickers,
+	createStickerTargetController(post, {
+		canReceiveCharge: () => post.can_receive_charged_stickers,
 	})
 );
 
 provideStickerTargetController(stickerTargetController);
 
-const stickerScroll = ref<HTMLDivElement>();
+const stickerScroll = useTemplateRef('stickerScroll');
 
 const videoStartTime = ref(0);
 const hasVideoProcessingError = ref(false);
 const videoProcessingErrorMsg = ref('');
 
-const communities = computed(() => post.value.communities || []);
-const realms = computed(() => post.value.realms.map(i => i.realm));
+const communities = computed(() => post.communities || []);
+const realms = computed(() => post.realms.map(i => i.realm));
 const shouldShowCommunityPublishError = computed(
-	() => post.value.status === FiresidePostStatus.Draft && !post.value.canPublishToCommunities()
+	() => post.status === FiresidePostStatus.Draft && !post.canPublishToCommunities()
 );
-const video = computed<FiresidePostVideoModel | null>(() => post.value.videos[0] || null);
-const background = computed(() => post.value.background);
+const video = computed<FiresidePostVideoModel | null>(() => post.videos[0] || null);
+const background = computed(() => post.background);
 
 if (typeof route.query.t === 'string') {
 	if (video.value) {
@@ -95,10 +83,10 @@ if (typeof route.query.t === 'string') {
 }
 
 watch(
-	() => post.value.id,
+	() => post.id,
 	() => {
-		stickerTargetController.value = createStickerTargetController(post.value, {
-			canReceiveCharge: () => post.value.can_receive_charged_stickers,
+		stickerTargetController.value = createStickerTargetController(post, {
+			canReceiveCharge: () => post.can_receive_charged_stickers,
 		});
 	}
 );

@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
-import AppLinkExternal from '../../_common/link/AppLinkExternal.vue';
-import AppTranslate from '../../_common/translate/AppTranslate.vue';
-import { useGameserverStore } from '../store/index';
+
+import AppLinkExternal from '~common/link/AppLinkExternal.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { useGameserverStore } from '~gameserver/store/index';
 
 const { url, username, token, embedWidth, embedHeight } = useGameserverStore();
 

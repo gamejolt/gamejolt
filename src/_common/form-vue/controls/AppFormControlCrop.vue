@@ -1,56 +1,40 @@
 <script lang="ts" setup>
 import { toRef } from 'vue';
-import AppImgCrop from '../../img/crop/AppImgCrop.vue';
-import {
-	createFormControl,
-	defineFormControlEmits,
-	defineFormControlProps,
-} from '../AppFormControl.vue';
 
-const props = defineProps({
-	...defineFormControlProps(),
-	src: {
-		type: String,
-		required: true,
-	},
-	aspectRatio: {
-		type: Number,
-		default: undefined,
-	},
-	minAspectRatio: {
-		type: Number,
-		default: undefined,
-	},
-	maxAspectRatio: {
-		type: Number,
-		default: undefined,
-	},
-	minWidth: {
-		type: Number,
-		default: undefined,
-	},
-	minHeight: {
-		type: Number,
-		default: undefined,
-	},
-	maxWidth: {
-		type: Number,
-		default: undefined,
-	},
-	maxHeight: {
-		type: Number,
-		default: undefined,
-	},
-});
+import { createFormControl, FormControlEmits } from '~common/form-vue/AppFormControl.vue';
+import { FormValidator } from '~common/form-vue/validators';
+import AppImgCrop from '~common/img/crop/AppImgCrop.vue';
 
-const emit = defineEmits({
-	...defineFormControlEmits(),
-});
+type Props = {
+	disabled?: boolean;
+	validators?: FormValidator[];
+	src: string;
+	aspectRatio?: number;
+	minAspectRatio?: number;
+	maxAspectRatio?: number;
+	minWidth?: number;
+	minHeight?: number;
+	maxWidth?: number;
+	maxHeight?: number;
+};
+const {
+	disabled,
+	validators = [],
+	src,
+	aspectRatio,
+	minAspectRatio,
+	maxAspectRatio,
+	minWidth,
+	minHeight,
+	maxWidth,
+	maxHeight,
+} = defineProps<Props>();
+
+const emit = defineEmits<FormControlEmits>();
 
 const { id, controlVal, applyValue } = createFormControl({
 	initialValue: null as any,
-	validators: toRef(props, 'validators'),
-	// eslint-disable-next-line vue/require-explicit-emits
+	validators: toRef(() => validators),
 	onChange: val => emit('changed', val),
 	alwaysOptional: true,
 });

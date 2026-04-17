@@ -1,18 +1,17 @@
 <script lang="ts" setup>
-import { computed, Ref, ref, watch } from 'vue';
-import { useResizeObserver } from '../../utils/resize-observer';
-import { Ruler } from '../ruler/ruler-service';
-import { provideFormControlHooks } from './form-control-hooks';
+import { computed, Ref, ref, useTemplateRef, watch } from 'vue';
 
-defineProps({
-	prefix: {
-		type: String,
-		required: true,
-	},
-});
+import { provideFormControlHooks } from '~common/form-vue/form-control-hooks';
+import { Ruler } from '~common/ruler/ruler-service';
+import { useResizeObserver } from '~utils/resize-observer';
 
-const prefixElement = ref<HTMLSpanElement>();
-let inputElem: Ref<HTMLInputElement | undefined>;
+type Props = {
+	prefix: string;
+};
+const { prefix } = defineProps<Props>();
+
+const prefixElement = useTemplateRef('prefixElement');
+let inputElem: Readonly<Ref<HTMLInputElement | null>>;
 
 const originalInputPaddingTop = ref(0);
 const originalInputPaddingLeft = ref(0);

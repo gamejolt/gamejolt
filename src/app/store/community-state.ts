@@ -1,5 +1,5 @@
-import { CommunityModel } from '../../_common/community/community.model';
-import { arrayRemove } from '../../utils/array';
+import { CommunityModel } from '~common/community/community.model';
+import { arrayRemove } from '~utils/array';
 
 export class CommunityState {
 	public communityId: number;

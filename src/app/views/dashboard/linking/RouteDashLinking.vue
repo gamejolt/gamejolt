@@ -1,12 +1,13 @@
 <script lang="ts">
 import { computed, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { Client } from '../../../../_common/client/safe-exports';
-import { showErrorGrowl } from '../../../../_common/growls/growls.service';
-import AppLoading from '../../../../_common/loading/AppLoading.vue';
-import AppProgressPoller from '../../../../_common/progress/poller/AppProgressPoller.vue';
-import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
-import { $gettext } from '../../../../_common/translate/translate.service';
+
+import { Client } from '~common/client/safe-exports';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import AppLoading from '~common/loading/AppLoading.vue';
+import AppProgressPoller from '~common/progress/poller/AppProgressPoller.vue';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { $gettext } from '~common/translate/translate.service';
 
 export default {
 	...defineAppRouteOptions({

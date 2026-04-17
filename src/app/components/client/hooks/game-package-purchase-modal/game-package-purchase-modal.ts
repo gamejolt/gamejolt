@@ -1,6 +1,6 @@
-import type { GameBuildModel } from '../../../../../_common/game/build/build.model';
-import type { GameModel } from '../../../../../_common/game/game.model';
-import type { ClientLibraryStore } from '../../../../store/client-library';
+import type { ClientLibraryStore } from '~app/store/client-library';
+import type { GameBuildModel } from '~common/game/build/build.model';
+import type { GameModel } from '~common/game/game.model';
 
 export function makeDownloadPackageHook(store: ClientLibraryStore) {
 	return (game: GameModel, build: GameBuildModel) => {

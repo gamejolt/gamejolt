@@ -1,29 +1,22 @@
 <script lang="ts" setup>
-import { PropType, computed, ref, toRefs, watch } from 'vue';
-import { Api } from '../../api/api.service';
-import AppButton from '../../button/AppButton.vue';
-import AppLoading from '../../loading/AppLoading.vue';
-import { Screen } from '../../screen/screen-service';
-import { $gettext } from '../../translate/translate.service';
-import { populateTrophies } from '../../user/trophy/trophy-utils';
-import { UserBaseTrophyModel } from '../../user/trophy/user-base-trophy.model';
-import AppTrophyCard from '../AppTrophyCard.vue';
+import { computed, ref, watch } from 'vue';
+
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import AppLoading from '~common/loading/AppLoading.vue';
+import { Screen } from '~common/screen/screen-service';
+import { $gettext } from '~common/translate/translate.service';
+import AppTrophyCard from '~common/trophy/AppTrophyCard.vue';
+import { populateTrophies } from '~common/user/trophy/trophy-utils';
+import { UserBaseTrophyModel } from '~common/user/trophy/user-base-trophy.model';
 
 const PAGE_SIZE = 12;
 
-const props = defineProps({
-	url: {
-		type: String,
-		required: true,
-	},
-	initialTrophies: {
-		type: Array as PropType<UserBaseTrophyModel[]>,
-		required: false,
-		default: () => [],
-	},
-});
-
-const { url, initialTrophies } = toRefs(props);
+type Props = {
+	url: string;
+	initialTrophies?: UserBaseTrophyModel[];
+};
+const { url, initialTrophies = [] } = defineProps<Props>();
 
 const trophies = ref<UserBaseTrophyModel[]>([]);
 const isLoading = ref(false);
@@ -42,7 +35,7 @@ const placeholderCount = computed(() => {
 const shouldShowLoadMore = computed(() => !reachedEnd.value);
 
 async function loadNext() {
-	let requestUrl = url.value;
+	let requestUrl = url;
 	if (trophies.value.length > 0) {
 		const lastTrophy = trophies.value[trophies.value.length - 1];
 		requestUrl += `?scroll=${lastTrophy.logged_on}`;
@@ -72,7 +65,7 @@ async function onClickLoadMore() {
 }
 
 watch(
-	initialTrophies,
+	() => initialTrophies,
 	newTrophies => {
 		// If the initial trophies changed, it means that the route was bootstrapped. Gotta clear
 		// everything out again.

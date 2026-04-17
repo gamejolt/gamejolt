@@ -1,28 +1,26 @@
 <script lang="ts">
-import { Ref, computed, ref } from 'vue';
+import { computed, Ref, ref } from 'vue';
 import { RouteLocationNormalized, RouterLink, useRoute, useRouter } from 'vue-router';
-import AppAdTakeoverFloat from '../../../../../_common/ad/AppAdTakeoverFloat.vue';
-import { Api } from '../../../../../_common/api/api.service';
-import { EventItemModel } from '../../../../../_common/event-item/event-item.model';
-import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
-import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
-import { illNoComments } from '../../../../../_common/illustration/illustrations';
-import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import AppNavTabList from '../../../../../_common/nav/tab-list/AppNavTabList.vue';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '../../../../../_common/route/route-component';
-import { useCommonStore } from '../../../../../_common/store/common-store';
-import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import AppActivityFeedPlaceholder from '../../../../components/activity/feed/AppActivityFeedPlaceholder.vue';
-import { ActivityFeedService } from '../../../../components/activity/feed/feed-service';
-import { ActivityFeedView } from '../../../../components/activity/feed/view';
-import { AppActivityFeedLazy } from '../../../../components/lazy';
-import AppPostAddButton from '../../../../components/post/add-button/AppPostAddButton.vue';
-import AppUserSpawnDay from '../../../../components/user/spawn-day/spawn-day.vue';
-import { useProfileRouteStore } from '../../RouteProfile.vue';
+
+import AppActivityFeedPlaceholder from '~app/components/activity/feed/AppActivityFeedPlaceholder.vue';
+import { ActivityFeedService } from '~app/components/activity/feed/feed-service';
+import { ActivityFeedView } from '~app/components/activity/feed/view';
+import { AppActivityFeedLazy } from '~app/components/lazy';
+import AppPostAddButton from '~app/components/post/add-button/AppPostAddButton.vue';
+import AppUserSpawnDay from '~app/components/user/spawn-day/AppUserSpawnDay.vue';
+import { useProfileRouteStore } from '~app/views/profile/RouteProfile.vue';
+import AppAdTakeoverFloat from '~common/ad/AppAdTakeoverFloat.vue';
+import { Api } from '~common/api/api.service';
+import { EventItemModel } from '~common/event-item/event-item.model';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import AppIllustration from '~common/illustration/AppIllustration.vue';
+import { illNoComments } from '~common/illustration/illustrations';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppNavTabList from '~common/nav/tab-list/AppNavTabList.vue';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { useCommonStore } from '~common/store/common-store';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { $gettext } from '~common/translate/translate.service';
 
 function checkIsLikeFeed(route: RouteLocationNormalized) {
 	return route.params.feedSection === 'likes';
@@ -139,7 +137,7 @@ function onPostPublished(eventItem: EventItemModel) {
 <template>
 	<AppAdTakeoverFloat>
 		<!-- Spawn day -->
-		<AppUserSpawnDay :user="user" @post-add="onPostAdded" />
+		<AppUserSpawnDay :user="user!" @post-add="onPostAdded" />
 
 		<AppPostAddButton v-if="isOwner" @add="onPostAdded" />
 

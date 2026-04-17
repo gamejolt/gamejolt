@@ -1,70 +1,54 @@
 <script lang="ts" setup>
-import { PropType, computed, ref, toRefs, watch } from 'vue';
-import { arrayIndexBy } from '../../../../utils/array';
-import { Api } from '../../../api/api.service';
-import AppButton from '../../../button/AppButton.vue';
-import { getDeviceArch, getDeviceOS } from '../../../device/device.service';
-import { Environment } from '../../../environment/environment.service';
-import AppExpand from '../../../expand/AppExpand.vue';
-import { formatCurrency } from '../../../filters/currency';
-import AppForm, { FormController, createForm } from '../../../form-vue/AppForm.vue';
-import AppFormButton from '../../../form-vue/AppFormButton.vue';
-import AppFormControl from '../../../form-vue/AppFormControl.vue';
-import AppFormControlError from '../../../form-vue/AppFormControlError.vue';
-import AppFormControlErrors from '../../../form-vue/AppFormControlErrors.vue';
-import AppFormGroup from '../../../form-vue/AppFormGroup.vue';
-import AppFormControlSelect from '../../../form-vue/controls/AppFormControlSelect.vue';
-import { validateMinValue } from '../../../form-vue/validators';
-import { Geo, GeoRegion } from '../../../geo/geo.service';
-import { showErrorGrowl } from '../../../growls/growls.service';
-import { HistoryTick } from '../../../history-tick/history-tick-service';
-import AppJolticon from '../../../jolticon/AppJolticon.vue';
-import AppLoading from '../../../loading/AppLoading.vue';
-import AppLoadingFade from '../../../loading/AppLoadingFade.vue';
-import { Navigate } from '../../../navigate/navigate.service';
-import { OrderPaymentMethod } from '../../../order/payment/payment.model';
-import AppPopper from '../../../popper/AppPopper.vue';
-import { Screen } from '../../../screen/screen-service';
-import { SellableModel, SellableType } from '../../../sellable/sellable.model';
-import { useCommonStore } from '../../../store/common-store';
-import { vAppTooltip } from '../../../tooltip/tooltip-directive';
-import { $gettext } from '../../../translate/translate.service';
-import { GameBuildModel } from '../../build/build.model';
-import { GameModel } from '../../game.model';
-import { GamePackageModel } from '../package.model';
+import { computed, ref, watch } from 'vue';
+
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import { getDeviceArch, getDeviceOS } from '~common/device/device.service';
+import { Environment } from '~common/environment/environment.service';
+import AppExpand from '~common/expand/AppExpand.vue';
+import { formatCurrency } from '~common/filters/currency';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormButton from '~common/form-vue/AppFormButton.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormControlError from '~common/form-vue/AppFormControlError.vue';
+import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import AppFormControlSelect from '~common/form-vue/controls/AppFormControlSelect.vue';
+import { validateMinValue } from '~common/form-vue/validators';
+import { GameBuildModel } from '~common/game/build/build.model';
+import { GameModel } from '~common/game/game.model';
+import { GamePackageModel } from '~common/game/package/package.model';
+import { Geo, GeoRegion } from '~common/geo/geo.service';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import { HistoryTick } from '~common/history-tick/history-tick-service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLoading from '~common/loading/AppLoading.vue';
+import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
+import { Navigate } from '~common/navigate/navigate.service';
+import { OrderPaymentMethod } from '~common/order/payment/payment.model';
+import AppPopper from '~common/popper/AppPopper.vue';
+import { Screen } from '~common/screen/screen-service';
+import { SellableModel, SellableType } from '~common/sellable/sellable.model';
+import { useCommonStore } from '~common/store/common-store';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { $gettext } from '~common/translate/translate.service';
+import { arrayIndexBy } from '~utils/array';
 
 type FormModel = any;
 
-const props = defineProps({
-	game: {
-		type: Object as PropType<GameModel>,
-		required: true,
-	},
-	gamePackage: {
-		type: Object as PropType<GamePackageModel>,
-		required: true,
-	},
-	build: {
-		type: Object as PropType<GameBuildModel | null>,
-		required: false,
-		default: null,
-	},
-	sellable: {
-		type: Object as PropType<SellableModel>,
-		required: true,
-	},
-	operation: {
-		type: String as PropType<'download' | 'play'>,
-		required: true,
-	},
-});
+type Props = {
+	game: GameModel;
+	gamePackage: GamePackageModel;
+	build?: GameBuildModel | null;
+	sellable: SellableModel;
+	operation: 'download' | 'play';
+};
+const { game, gamePackage, build = null, sellable, operation } = defineProps<Props>();
 
-const emit = defineEmits({
-	bought: () => true,
-	skip: () => true,
-});
-
-const { game, gamePackage, build, sellable, operation } = toRefs(props);
+const emit = defineEmits<{
+	bought: [];
+	skip: [];
+}>();
 const { user } = useCommonStore();
 
 const isBootstrapped = ref(false);
@@ -84,14 +68,14 @@ const walletBalance = ref(0);
 const walletTax = ref(0);
 const minOrderAmount = ref(50);
 
-const isNameYourPrice = computed(() => sellable.value.type === 'pwyw');
-const isPlaying = computed(() => operation.value === 'play');
-const isDownloading = computed(() => operation.value === 'download' && !GJ_IS_DESKTOP_APP);
-const isInstalling = computed(() => operation.value === 'download' && GJ_IS_DESKTOP_APP);
-const pricing = computed(() => sellable.value.pricings[0]);
+const isNameYourPrice = computed(() => sellable.type === 'pwyw');
+const isPlaying = computed(() => operation === 'play');
+const isDownloading = computed(() => operation === 'download' && !GJ_IS_DESKTOP_APP);
+const isInstalling = computed(() => operation === 'download' && GJ_IS_DESKTOP_APP);
+const pricing = computed(() => sellable.pricings[0]);
 
 const _minOrderAmount = computed(() =>
-	sellable.value.type === 'paid' ? pricing.value.amount / 100 : minOrderAmount.value / 100
+	sellable.type === 'paid' ? pricing.value.amount / 100 : minOrderAmount.value / 100
 );
 
 const formattedAmount = computed(() => formatCurrency(pricing.value.amount));
@@ -115,10 +99,7 @@ const hasSufficientWalletFunds = computed(() => {
 	const currentAmount = form.formModel.amount * 100; // The formModel amount is a decimal.
 
 	// Paid games have to be more than the amount of the game base price.
-	if (
-		sellable.value.type === SellableType.Paid &&
-		walletBalance.value < sellableAmount + taxAmount
-	) {
+	if (sellable.type === SellableType.Paid && walletBalance.value < sellableAmount + taxAmount) {
 		return false;
 	}
 
@@ -144,7 +125,7 @@ const form: FormController<FormModel> = createForm({
 
 		const data: any = {
 			payment_method: checkoutType.value,
-			sellable_id: sellable.value.id,
+			sellable_id: sellable.id,
 			pricing_id: pricing.value.id,
 			amount: form.formModel.amount * 100,
 			country: form.formModel.country,
@@ -161,7 +142,7 @@ const form: FormController<FormModel> = createForm({
 			data.address_id = addresses.value[0].id;
 		}
 
-		data['source'] = HistoryTick.getSource('Game', gamePackage.value.game_id) || null;
+		data['source'] = HistoryTick.getSource('Game', gamePackage.game_id) || null;
 		data['os'] = getDeviceOS();
 		data['arch'] = getDeviceArch();
 
@@ -311,7 +292,7 @@ function startOver() {
 function checkoutSavedCard(card: any) {
 	const data: any = {
 		payment_method: 'cc-stripe',
-		sellable_id: sellable.value.id,
+		sellable_id: sellable.id,
 		pricing_id: pricing.value.id,
 		amount: form.formModel.amount * 100,
 	};
@@ -322,7 +303,7 @@ function checkoutSavedCard(card: any) {
 function checkoutWallet() {
 	const data: any = {
 		payment_method: 'wallet',
-		sellable_id: sellable.value.id,
+		sellable_id: sellable.id,
 		pricing_id: pricing.value.id,
 		amount: form.formModel.amount * 100,
 	};
@@ -350,7 +331,7 @@ async function doCheckout(setupData: any, chargeData: any) {
 
 	isProcessing.value = true;
 
-	setupData['source'] = HistoryTick.getSource('Game', gamePackage.value.game_id) || null;
+	setupData['source'] = HistoryTick.getSource('Game', gamePackage.game_id) || null;
 	setupData['os'] = getDeviceOS();
 	setupData['arch'] = getDeviceArch();
 

@@ -1,40 +1,38 @@
 <script lang="ts">
 import { computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
-import AppFadeCollapse from '../../../../../_common/AppFadeCollapse.vue';
-import { Api } from '../../../../../_common/api/api.service';
-import AppButton from '../../../../../_common/button/AppButton.vue';
-import AppContentViewer from '../../../../../_common/content/content-viewer/AppContentViewer.vue';
-import { Environment } from '../../../../../_common/environment/environment.service';
-import { formatNumber } from '../../../../../_common/filters/number';
-import { ForumChannelModel } from '../../../../../_common/forum/channel/channel.model';
-import { ForumPostModel } from '../../../../../_common/forum/post/post.model';
-import { ForumTopicModel } from '../../../../../_common/forum/topic/topic.model';
-import { HistoryTick } from '../../../../../_common/history-tick/history-tick-service';
-import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import AppMessageThreadPagination from '../../../../../_common/message-thread/pagination/AppMessageThreadPagination.vue';
-import AppPopper from '../../../../../_common/popper/AppPopper.vue';
-import { Popper } from '../../../../../_common/popper/popper.service';
-import { showReportModal } from '../../../../../_common/report/modal/modal.service';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '../../../../../_common/route/route-component';
-import { Screen } from '../../../../../_common/screen/screen-service';
-import AppScrollAffix from '../../../../../_common/scroll/AppScrollAffix.vue';
-import { Scroll } from '../../../../../_common/scroll/scroll.service';
-import { useCommonStore } from '../../../../../_common/store/common-store';
-import AppTimeAgo from '../../../../../_common/time/AppTimeAgo.vue';
-import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-import AppUserVerifiedTick from '../../../../../_common/user/AppUserVerifiedTick.vue';
-import { enforceLocation } from '../../../../../utils/router';
-import FormForumTopic from '../../../../components/forms/forum/topic/topic.vue';
-import AppForumBreadcrumbs from '../../../../components/forum/breadcrumbs/breadcrumbs.vue';
-import AppForumPostList from '../../../../components/forum/post-list/post-list.vue';
-import AppForumRules from '../../../../components/forum/rules/rules.vue';
-import AppPageHeader from '../../../../components/page-header/AppPageHeader.vue';
-import AppPageHeaderAvatar from '../../../../components/page-header/AppPageHeaderAvatar.vue';
-import AppPageHeaderControls from '../../../../components/page-header/controls/controls.vue';
+
+import FormForumTopic from '~app/components/forms/forum/topic/FormForumTopic.vue';
+import AppForumBreadcrumbs from '~app/components/forum/breadcrumbs/AppForumBreadcrumbs.vue';
+import AppForumPostList from '~app/components/forum/post-list/AppForumPostList.vue';
+import AppForumRules from '~app/components/forum/rules/AppForumRules.vue';
+import AppPageHeader from '~app/components/page-header/AppPageHeader.vue';
+import AppPageHeaderAvatar from '~app/components/page-header/AppPageHeaderAvatar.vue';
+import AppPageHeaderControls from '~app/components/page-header/controls/AppPageHeaderControls.vue';
+import { Api } from '~common/api/api.service';
+import AppFadeCollapse from '~common/AppFadeCollapse.vue';
+import AppButton from '~common/button/AppButton.vue';
+import AppContentViewer from '~common/content/content-viewer/AppContentViewer.vue';
+import { Environment } from '~common/environment/environment.service';
+import { formatNumber } from '~common/filters/number';
+import { ForumChannelModel } from '~common/forum/channel/channel.model';
+import { ForumPostModel } from '~common/forum/post/post.model';
+import { ForumTopicModel } from '~common/forum/topic/topic.model';
+import { HistoryTick } from '~common/history-tick/history-tick-service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppMessageThreadPagination from '~common/message-thread/pagination/AppMessageThreadPagination.vue';
+import AppPopper from '~common/popper/AppPopper.vue';
+import { Popper } from '~common/popper/popper.service';
+import { showReportModal } from '~common/report/modal/modal.service';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { Screen } from '~common/screen/screen-service';
+import AppScrollAffix from '~common/scroll/AppScrollAffix.vue';
+import { Scroll } from '~common/scroll/scroll.service';
+import { useCommonStore } from '~common/store/common-store';
+import AppTimeAgo from '~common/time/AppTimeAgo.vue';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import AppUserVerifiedTick from '~common/user/AppUserVerifiedTick.vue';
+import { enforceLocation } from '~utils/router';
 
 function validateString(str: string | string[]): string {
 	return Array.isArray(str) ? str[0] : str;
@@ -79,7 +77,7 @@ const showFullDescription = ref(false);
 const currentPage = ref(1);
 const perPage = ref(0);
 
-const sort = computed(() => route.query.sort);
+const sort = computed(() => route.query.sort as string);
 
 function editTopic() {
 	isEditingTopic.value = true;

@@ -1,17 +1,14 @@
 <script lang="ts" setup>
-import { PropType, computed, toRefs } from 'vue';
-import AppJolticon, { Jolticon } from '../../jolticon/AppJolticon.vue';
-import { kThemeBgSubtle } from '../../theme/variables';
-import { GameModel } from '../game.model';
+import { computed } from 'vue';
 
-const props = defineProps({
-	game: {
-		type: Object as PropType<GameModel>,
-		required: true,
-	},
-});
+import { GameModel } from '~common/game/game.model';
+import AppJolticon, { Jolticon } from '~common/jolticon/AppJolticon.vue';
+import { kThemeBgSubtle } from '~common/theme/variables';
 
-const { game } = toRefs(props);
+type Props = {
+	game: GameModel;
+};
+const { game } = defineProps<Props>();
 
 const compatMapping: Record<string, Jolticon> = {
 	os_windows: 'windows',
@@ -33,12 +30,12 @@ const compatFields = Object.keys(compatMapping);
 const icons = computed(() => {
 	const icons: Jolticon[] = [];
 
-	if (!game.value.compatibility) {
+	if (!game.compatibility) {
 		return icons;
 	}
 
 	for (const field of compatFields) {
-		if (game.value.compatibility[field]) {
+		if (game.compatibility[field]) {
 			icons.push(compatMapping[field]);
 		}
 	}

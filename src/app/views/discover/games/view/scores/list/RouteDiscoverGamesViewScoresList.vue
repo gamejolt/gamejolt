@@ -1,25 +1,23 @@
 <script lang="ts">
 import { computed, ref, toRef } from 'vue';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
-import { Api } from '../../../../../../../_common/api/api.service';
-import { GameScoreTableModel } from '../../../../../../../_common/game/score-table/score-table.model';
-import AppLoadingFade from '../../../../../../../_common/loading/AppLoadingFade.vue';
-import AppNavTabList from '../../../../../../../_common/nav/tab-list/AppNavTabList.vue';
-import { Popper } from '../../../../../../../_common/popper/popper.service';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '../../../../../../../_common/route/route-component';
-import { Screen } from '../../../../../../../_common/screen/screen-service';
-import AppScrollAffix from '../../../../../../../_common/scroll/AppScrollAffix.vue';
-import { vAppNoAutoscroll } from '../../../../../../../_common/scroll/auto-scroll/no-autoscroll.directive';
-import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
-import { useCommonStore } from '../../../../../../../_common/store/common-store';
-import { $gettext } from '../../../../../../../_common/translate/translate.service';
-import { UserGameScoreModel } from '../../../../../../../_common/user/game-score/game-score.model';
-import AppScoreList from '../../../../../../components/score/list/list.vue';
-import AppScoreboardSelector from '../../../../../../components/score/scoreboard-selector/scoreboard-selector.vue';
-import { useGameRouteController } from '../../RouteDiscoverGamesView.vue';
+
+import AppScoreList from '~app/components/score/list/AppScoreList.vue';
+import AppScoreboardSelector from '~app/components/score/scoreboard-selector/AppScoreboardSelector.vue';
+import { useGameRouteController } from '~app/views/discover/games/view/RouteDiscoverGamesView.vue';
+import { Api } from '~common/api/api.service';
+import { GameScoreTableModel } from '~common/game/score-table/score-table.model';
+import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
+import AppNavTabList from '~common/nav/tab-list/AppNavTabList.vue';
+import { Popper } from '~common/popper/popper.service';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { Screen } from '~common/screen/screen-service';
+import AppScrollAffix from '~common/scroll/AppScrollAffix.vue';
+import { vAppNoAutoscroll } from '~common/scroll/auto-scroll/no-autoscroll.directive';
+import { Scroll } from '~common/scroll/scroll.service';
+import { useCommonStore } from '~common/store/common-store';
+import { $gettext } from '~common/translate/translate.service';
+import { UserGameScoreModel } from '~common/user/game-score/game-score.model';
 
 export default {
 	...defineAppRouteOptions({

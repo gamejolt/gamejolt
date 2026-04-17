@@ -1,7 +1,8 @@
 import { inject, InjectionKey, ref } from 'vue';
-import { GameModel } from '../../_common/game/game.model';
-import { MediaItemModel } from '../../_common/media-item/media-item-model';
-import { UserModel } from '../../_common/user/user.model';
+
+import { GameModel } from '~common/game/game.model';
+import { MediaItemModel } from '~common/media-item/media-item-model';
+import { UserModel } from '~common/user/user.model';
 
 export const AuthStoreKey: InjectionKey<AuthStore> = Symbol('auth-store');
 

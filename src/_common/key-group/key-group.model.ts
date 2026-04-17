@@ -1,5 +1,5 @@
-import { GamePackageModel } from '../game/package/package.model';
-import { Model } from '../model/model.service';
+import { GamePackageModel } from '~common/game/package/package.model';
+import { Model } from '~common/model/model.service';
 
 export const enum KeyGroupType {
 	Order = 'order',

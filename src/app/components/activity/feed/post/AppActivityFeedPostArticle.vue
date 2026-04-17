@@ -1,40 +1,32 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType, computed, ref, toRef, toRefs } from 'vue';
-import AppButton from '../../../../../_common/button/AppButton.vue';
-import AppContentViewer from '../../../../../_common/content/content-viewer/AppContentViewer.vue';
-import {
-	FiresidePostModel,
-	loadArticleIntoPost,
-} from '../../../../../_common/fireside/post/post-model';
-import AppLoading from '../../../../../_common/loading/AppLoading.vue';
-import { Screen } from '../../../../../_common/screen/screen-service';
-import { Scroll } from '../../../../../_common/scroll/scroll.service';
-import { styleWhen } from '../../../../../_styles/mixins';
-import { kPostItemPaddingContainer } from '../../../post/post-styles';
-import { ActivityFeedItem } from '../item-service';
-import { useActivityFeed } from '../view';
+import { computed, CSSProperties, ref, toRef, useTemplateRef } from 'vue';
 
-const props = defineProps({
-	item: {
-		type: Object as PropType<ActivityFeedItem>,
-		required: true,
-	},
-	post: {
-		type: Object as PropType<FiresidePostModel>,
-		required: true,
-	},
-});
+import { ActivityFeedItem } from '~app/components/activity/feed/item-service';
+import { useActivityFeed } from '~app/components/activity/feed/view';
+import { kPostItemPaddingContainer } from '~app/components/post/post-styles';
+import AppButton from '~common/button/AppButton.vue';
+import AppContentViewer from '~common/content/content-viewer/AppContentViewer.vue';
+import { FiresidePostModel, loadArticleIntoPost } from '~common/fireside/post/post-model';
+import AppLoading from '~common/loading/AppLoading.vue';
+import { Screen } from '~common/screen/screen-service';
+import { Scroll } from '~common/scroll/scroll.service';
+import { styleWhen } from '~styles/mixins';
 
-const { item, post } = toRefs(props);
+type Props = {
+	item: ActivityFeedItem;
+	post: FiresidePostModel;
+};
+const { item, post } = defineProps<Props>();
+
 const feed = useActivityFeed()!;
 
-const rootElem = ref<HTMLDivElement>();
+const rootElem = useTemplateRef('rootElem');
 const isToggling = ref(false);
-const isLoaded = ref(!!post.value.article_content);
+const isLoaded = ref(!!post.article_content);
 
-const isHydrated = computed(() => feed.isItemHydrated(item.value));
+const isHydrated = computed(() => feed.isItemHydrated(item));
 const isLoading = toRef(() => isToggling.value && !isLoaded.value);
-const isOpen = computed(() => feed.isItemOpen(item.value));
+const isOpen = computed(() => feed.isItemOpen(item));
 
 async function toggleFull() {
 	if (isToggling.value) {
@@ -54,11 +46,11 @@ async function toggleFull() {
 
 async function expand() {
 	if (!isLoaded.value) {
-		await loadArticleIntoPost(post.value);
+		await loadArticleIntoPost(post);
 		isLoaded.value = true;
 	}
 
-	feed.setItemOpen(item.value, true);
+	feed.setItemOpen(item, true);
 }
 
 async function collapse() {
@@ -76,7 +68,7 @@ async function collapse() {
 		Scroll.to(scrollTo, { animate: false });
 	}
 
-	feed.setItemOpen(item.value, false);
+	feed.setItemOpen(item, false);
 }
 
 const pageCutStyles = computed(() => {

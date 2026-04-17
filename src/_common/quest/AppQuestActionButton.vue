@@ -1,53 +1,49 @@
 <script lang="ts">
-import { computed, PropType, ref, toRefs, watch } from 'vue';
-import { getMediaserverUrlForBounds } from '../../utils/image';
-import { Api } from '../api/api.service';
-import AppButton from '../button/AppButton.vue';
-import { Jolticon } from '../jolticon/AppJolticon.vue';
-import AppLoading from '../loading/AppLoading.vue';
-import { storeModel } from '../model/model-store.service';
-import { useStickerStore } from '../sticker/sticker-store';
-import { useCommonStore } from '../store/common-store';
-import { QuestModel } from './quest-model';
-import { QuestObjectiveRewardModel } from './quest-objective-reward-model';
-import { QuestRewardData } from './reward/AppQuestRewardModal.vue';
-import { showQuestRewardModal } from './reward/modal.service';
+import { computed, ref, useTemplateRef, watch } from 'vue';
+
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import { Jolticon } from '~common/jolticon/AppJolticon.vue';
+import AppLoading from '~common/loading/AppLoading.vue';
+import { storeModel } from '~common/model/model-store.service';
+import { QuestModel } from '~common/quest/quest-model';
+import { QuestObjectiveRewardModel } from '~common/quest/quest-objective-reward-model';
+import { QuestRewardData } from '~common/quest/reward/AppQuestRewardModal.vue';
+import { showQuestRewardModal } from '~common/quest/reward/modal.service';
+import { useStickerStore } from '~common/sticker/sticker-store';
+import { useCommonStore } from '~common/store/common-store';
+import { getMediaserverUrlForBounds } from '~utils/image';
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	quest: {
-		type: Object as PropType<QuestModel>,
-		required: true,
-	},
-	show: {
-		type: Boolean,
-	},
-	isAccept: {
-		type: Boolean,
-	},
-});
+type Props = {
+	quest: QuestModel;
+	show?: boolean;
+	isAccept?: boolean;
+};
+const { quest, show, isAccept } = defineProps<Props>();
 
-const { quest, show, isAccept } = toRefs(props);
-
-const emit = defineEmits({
-	newQuest: (_quest: QuestModel) => true,
-	payloadError: () => true,
-});
+const emit = defineEmits<{
+	newQuest: [quest: QuestModel];
+	payloadError: [];
+}>();
 
 const { setChargeData, currentCharge, chargeLimit } = useStickerStore();
 const { coinBalance } = useCommonStore();
 
-const root = ref<HTMLElement>();
+const root = useTemplateRef('root');
 const isProcessingAction = ref(false);
 const hasError = ref(false);
 
-watch(quest, _ => {
-	// Reset our error state if the quest was updated from something.
-	hasError.value = false;
-});
+watch(
+	() => quest,
+	_ => {
+		// Reset our error state if the quest was updated from something.
+		hasError.value = false;
+	}
+);
 
-const shouldShow = computed(() => show.value && !hasError.value);
+const shouldShow = computed(() => show && !hasError.value);
 
 async function onActionPressed() {
 	if (isProcessingAction.value) {
@@ -57,10 +53,10 @@ async function onActionPressed() {
 	isProcessingAction.value = true;
 	let url: string;
 
-	if (isAccept.value) {
-		url = `/web/dash/quests/accept/${quest.value.id}`;
+	if (isAccept) {
+		url = `/web/dash/quests/accept/${quest.id}`;
 	} else {
-		url = `/web/dash/quests/claim_all_rewards/${quest.value.id}`;
+		url = `/web/dash/quests/claim_all_rewards/${quest.id}`;
 	}
 
 	try {
@@ -188,13 +184,13 @@ async function onActionPressed() {
 		}
 
 		const rewards = [...compactRewards.values()];
-		if (rewards.length === 0 && !isAccept.value) {
+		if (rewards.length === 0 && !isAccept) {
 			return;
 		}
-		const title = isAccept.value ? quest.value.title : undefined;
+		const title = isAccept ? quest.title : undefined;
 
 		showQuestRewardModal({
-			quest: quest.value,
+			quest,
 			rewards,
 			title,
 		});

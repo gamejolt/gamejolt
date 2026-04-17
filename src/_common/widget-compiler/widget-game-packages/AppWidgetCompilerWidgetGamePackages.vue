@@ -1,18 +1,12 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-import { Environment } from '../../environment/environment.service';
-import { SellableModel } from '../../sellable/sellable.model';
+import { Environment } from '~common/environment/environment.service';
+import { SellableModel } from '~common/sellable/sellable.model';
 
-defineProps({
-	sellables: {
-		type: Array as PropType<SellableModel[]>,
-		default: () => [],
-	},
-	theme: {
-		type: String,
-		default: 'dark',
-	},
-});
+type Props = {
+	sellables?: SellableModel[];
+	theme?: string;
+};
+const { sellables = [], theme = 'dark' } = defineProps<Props>();
 </script>
 
 <template>

@@ -1,39 +1,32 @@
 <script lang="ts" setup>
 import { darken, lighten, parseToHsl } from 'polished';
-import { PropType, computed, ref, toRefs, unref, watch } from 'vue';
-import { arrayUnique } from '../../../utils/array';
-import { Api } from '../../api/api.service';
-import { isDynamicGoogleBot } from '../../device/device.service';
-import { DefaultTheme, ThemeModel } from '../theme.model';
-import { useThemeStore } from '../theme.store';
+import { computed, ImgHTMLAttributes, ref, watch } from 'vue';
+
+import { Api } from '~common/api/api.service';
+import { isDynamicGoogleBot } from '~common/device/device.service';
+import { DefaultTheme, ThemeModel } from '~common/theme/theme.model';
+import { useThemeStore } from '~common/theme/theme.store';
+import { arrayUnique } from '~utils/array';
 
 const SvgGraysRegex = /#([a-f\d]{1,2})\1{2}\b/gi;
 
-const props = defineProps({
-	src: {
-		type: String,
-		default: '',
-	},
-	theme: {
-		type: Object as PropType<ThemeModel>,
-		default: null,
-	},
-	strictColors: {
-		type: Boolean,
-	},
-});
+type Props = {
+	src?: string;
+	theme?: ThemeModel | null;
+	strictColors?: boolean;
+} & /* @vue-ignore */ Pick<ImgHTMLAttributes, 'alt' | 'width' | 'height'>;
 
-const { theme, src, strictColors } = toRefs(props);
+const { src = '', theme = null, strictColors } = defineProps<Props>();
 
 const { theme: storeTheme, isDark } = useThemeStore();
 const rawSvg = ref('');
 let _request: Promise<any> | undefined;
 
-const actualTheme = computed(() => theme.value || storeTheme.value);
+const actualTheme = computed(() => theme || storeTheme.value);
 
 const processedSvg = computed(() => {
 	if (import.meta.env.SSR || isDynamicGoogleBot()) {
-		return src.value;
+		return src;
 	}
 
 	let svgData = rawSvg.value;
@@ -63,9 +56,9 @@ const processedSvg = computed(() => {
 		let grays = String(svgData).match(SvgGraysRegex);
 
 		if (grays) {
-			grays = arrayUnique(grays);
+			const uniqueGrays = arrayUnique(grays);
 
-			for (const gray of grays) {
+			for (const gray of uniqueGrays) {
 				svgData = svgData.replace(gray, '#' + actualTheme.value.tintColor(gray, 0.04));
 			}
 		}
@@ -75,10 +68,10 @@ const processedSvg = computed(() => {
 		svgData = String(svgData)
 			.replace(/#ccff00/gi, highlight)
 			.replace(/#cf0/gi, highlight)
-			.replace(/#2f7f6f/gi, !strictColors.value && isDark.value ? highlight : backlight)
+			.replace(/#2f7f6f/gi, !strictColors && isDark.value ? highlight : backlight)
 			.replace(/#ff3fac/gi, notice)
-			.replace(/#31d6ff/gi, !strictColors.value && isDark.value ? highlight : backlight);
-	} else if (!strictColors.value) {
+			.replace(/#31d6ff/gi, !strictColors && isDark.value ? highlight : backlight);
+	} else if (!strictColors) {
 		// If we have no theme from the prop or the ThemeStore, that means
 		// we're using the default theme colors and only need to replace our
 		// highlight/backlight colors.
@@ -94,7 +87,7 @@ const processedSvg = computed(() => {
 
 if (!import.meta.env.SSR && !isDynamicGoogleBot()) {
 	watch(
-		() => unref(src),
+		() => src,
 		src => {
 			const request = Api.sendRawRequest(src).then(response => {
 				// If we have multiple requests in process, only handle the latest one.

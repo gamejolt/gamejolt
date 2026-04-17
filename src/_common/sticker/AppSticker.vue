@@ -1,60 +1,53 @@
 <script lang="ts" setup>
-import { computed, PropType, toRefs } from 'vue';
-import { styleWhen } from '../../_styles/mixins';
-import AppAnimElectricity from '../animation/AppAnimElectricity.vue';
-import { ComponentProps } from '../component-helpers';
-import AppStickerImg from './AppStickerImg.vue';
-import { StickerPlacementModel } from './placement/placement.model';
-import { removeStickerFromTarget, StickerTargetController } from './target/target-controller';
+import { computed, HTMLAttributes } from 'vue';
 
-const props = defineProps({
-	sticker: {
-		type: Object as PropType<StickerPlacementModel>,
-		required: true,
-	},
-	controller: {
-		type: Object as PropType<StickerTargetController | null>,
-		default: null,
-	},
-	isClickable: {
-		type: Boolean,
-		default: true,
-	},
+import AppAnimElectricity from '~common/animation/AppAnimElectricity.vue';
+import { ComponentProps } from '~common/component-helpers';
+import AppStickerImg from '~common/sticker/AppStickerImg.vue';
+import { StickerPlacementModel } from '~common/sticker/placement/placement.model';
+import {
+	removeStickerFromTarget,
+	StickerTargetController,
+} from '~common/sticker/target/target-controller';
+import { styleWhen } from '~styles/mixins';
+
+type Props = {
+	sticker: StickerPlacementModel;
+	controller?: StickerTargetController | null;
+	isClickable?: boolean;
 	/**
 	 * Wraps the sticker image in {@link AppAnimElectricity}.
 	 */
-	showCharged: {
-		type: Boolean,
-	},
-});
+	showCharged?: boolean;
+} & /* @vue-ignore */ Pick<HTMLAttributes, 'onMousedown' | 'onTouchstart'>;
 
-const { sticker, controller, isClickable, showCharged } = toRefs(props);
+const { sticker, controller = null, isClickable = true, showCharged } = defineProps<Props>();
 
-const emit = defineEmits({
-	click: () => true,
-});
+const emit = defineEmits<{
+	click: [];
+}>();
 
 const size = 64;
 
 const electricityProps = computed(
 	() =>
-		(showCharged.value
+		(showCharged
 			? {
 					ignoreAssetPadding: true,
 			  }
 			: {}) satisfies ComponentProps<typeof AppAnimElectricity>
 );
 
-const isLive = computed(() => controller.value?.isLive === true);
+const isLive = computed(() => controller?.isLive === true);
 
 function onLiveAnimationEnd() {
-	if (controller.value) {
-		removeStickerFromTarget(controller.value, sticker.value);
+	if (controller) {
+		removeStickerFromTarget(controller, sticker);
 	}
 }
 
 function onClickRemove() {
-	if (isClickable.value) {
+	if (isClickable) {
 		emit('click');
 	}
 }

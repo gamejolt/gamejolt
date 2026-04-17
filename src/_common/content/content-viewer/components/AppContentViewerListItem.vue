@@ -1,16 +1,15 @@
 <script lang="ts" setup>
-import { PropType, computed } from 'vue';
-import { ContentObject } from '../../content-object';
-import { renderContentChildren } from './AppContentViewerBaseComponent.vue';
+import { computed } from 'vue';
 
-const props = defineProps({
-	contentData: {
-		type: Object as PropType<ContentObject>,
-		required: true,
-	},
-});
+import { ContentObject } from '~common/content/content-object';
+import { renderContentChildren } from '~common/content/content-viewer/components/AppContentViewerBaseComponent.vue';
 
-const children = computed(() => renderContentChildren(props.contentData.content));
+type Props = {
+	contentData: ContentObject;
+};
+const { contentData } = defineProps<Props>();
+
+const children = computed(() => renderContentChildren(contentData.content));
 </script>
 
 <template>

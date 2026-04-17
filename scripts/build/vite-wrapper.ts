@@ -6,7 +6,7 @@ const minimist = require('minimist');
 (async () => {
 	const args = minimist(process.argv.splice(2));
 
-	let command;
+	let command: 'build' | 'serve';
 	if (args._.length === 0) {
 		command = 'serve';
 	} else if (args._.length === 1) {

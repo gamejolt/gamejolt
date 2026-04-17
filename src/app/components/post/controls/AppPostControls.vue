@@ -1,95 +1,79 @@
 <script lang="ts" setup>
-import { computed, onUnmounted, PropType, ref, toRefs } from 'vue';
+import { computed, onUnmounted, ref } from 'vue';
+
+import { ActivityFeedItem } from '~app/components/activity/feed/item-service';
+import { ActivityFeedView } from '~app/components/activity/feed/view';
+import { showCommentModal } from '~app/components/comment/modal/modal.service';
+import AppPostControlsStats from '~app/components/post/controls/AppPostControlsStats.vue';
+import AppPostControlsMore from '~app/components/post/controls/more/AppPostControlsMore.vue';
+import AppPostControlsSaveProgress from '~app/components/post/controls/save-progress/AppPostControlsSaveProgress.vue';
+import AppPostControlsUserFollow from '~app/components/post/controls/user-follow/AppPostControlsUserFollow.vue';
+import { showPostEditModal } from '~app/components/post/edit-modal/edit-modal-service';
 import {
 	Analytics,
 	PostControlsLocation,
 	trackPostPublish,
-} from '../../../../_common/analytics/analytics.service';
-import AppAnimElectricity from '../../../../_common/animation/AppAnimElectricity.vue';
-import { vAppAuthRequired } from '../../../../_common/auth/auth-required-directive';
-import AppButton from '../../../../_common/button/AppButton.vue';
+} from '~common/analytics/analytics.service';
+import AppAnimElectricity from '~common/animation/AppAnimElectricity.vue';
+import { vAppAuthRequired } from '~common/auth/auth-required-directive';
+import AppButton from '~common/button/AppButton.vue';
 import {
 	commentStoreCount,
 	CommentStoreModel,
 	lockCommentStore,
 	releaseCommentStore,
 	useCommentStoreManager,
-} from '../../../../_common/comment/comment-store';
-import { CommunityChannelModel } from '../../../../_common/community/channel/channel.model';
-import { CommunityModel } from '../../../../_common/community/community.model';
-import { formatFuzzynumber } from '../../../../_common/filters/fuzzynumber';
-import AppFiresidePostLikeWidget from '../../../../_common/fireside/post/like/widget/AppFiresidePostLikeWidget.vue';
-import {
-	$publishFiresidePost,
-	FiresidePostModel,
-} from '../../../../_common/fireside/post/post-model';
-import { Screen } from '../../../../_common/screen/screen-service';
-import AppStickerControlsOverlay from '../../../../_common/sticker/AppStickerControlsOverlay.vue';
-import { useStickerLayer } from '../../../../_common/sticker/layer/layer-controller';
-import { openStickerDrawer, useStickerStore } from '../../../../_common/sticker/sticker-store';
-import { useCommonStore } from '../../../../_common/store/common-store';
-import AppTheme from '../../../../_common/theme/AppTheme.vue';
-import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import AppTranslate from '../../../../_common/translate/AppTranslate.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { UserFollowSuggestion } from '../../../../_common/user/follow/suggestion.service';
-import { UserModel } from '../../../../_common/user/user.model';
-import { ActivityFeedItem } from '../../activity/feed/item-service';
-import { ActivityFeedView } from '../../activity/feed/view';
-import { showCommentModal } from '../../comment/modal/modal.service';
-import { showPostEditModal } from '../edit-modal/edit-modal-service';
-import AppPostControlsStats from './AppPostControlsStats.vue';
-import AppPostControlsMore from './more/AppPostControlsMore.vue';
-import AppPostControlsSaveProgress from './save-progress/save-progress.vue';
-import AppPostControlsUserFollow from './user-follow/user-follow.vue';
+} from '~common/comment/comment-store';
+import { CommunityChannelModel } from '~common/community/channel/channel.model';
+import { CommunityModel } from '~common/community/community.model';
+import { formatFuzzynumber } from '~common/filters/fuzzynumber';
+import AppFiresidePostLikeWidget from '~common/fireside/post/like/widget/AppFiresidePostLikeWidget.vue';
+import { $publishFiresidePost, FiresidePostModel } from '~common/fireside/post/post-model';
+import { Screen } from '~common/screen/screen-service';
+import AppStickerControlsOverlay from '~common/sticker/AppStickerControlsOverlay.vue';
+import { useStickerLayer } from '~common/sticker/layer/layer-controller';
+import { openStickerDrawer, useStickerStore } from '~common/sticker/sticker-store';
+import { useCommonStore } from '~common/store/common-store';
+import AppTheme from '~common/theme/AppTheme.vue';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+import { $gettext } from '~common/translate/translate.service';
+import { UserFollowSuggestion } from '~common/user/follow/suggestion.service';
+import { UserModel } from '~common/user/user.model';
 
-const props = defineProps({
-	post: {
-		type: Object as PropType<FiresidePostModel>,
-		required: true,
-	},
-	feed: {
-		type: Object as PropType<ActivityFeedView>,
-		default: undefined,
-	},
-	item: {
-		type: Object as PropType<ActivityFeedItem>,
-		default: undefined,
-	},
-	location: {
-		type: String as PropType<PostControlsLocation>,
-		required: true,
-	},
-	shouldShowFollow: {
-		type: Boolean,
-	},
-	showComments: {
-		type: Boolean,
-	},
-	overlay: {
-		type: Boolean,
-	},
-	eventLabel: {
-		type: String,
-		default: '',
-	},
-});
+type Props = {
+	post: FiresidePostModel;
+	feed?: ActivityFeedView;
+	item?: ActivityFeedItem;
+	location: PostControlsLocation;
+	shouldShowFollow?: boolean;
+	showComments?: boolean;
+	overlay?: boolean;
+	eventLabel?: string;
+};
+const {
+	post,
+	feed,
+	item,
+	location,
+	shouldShowFollow,
+	showComments,
+	overlay,
+	eventLabel = '',
+} = defineProps<Props>();
 
-const { post, feed, item, location, shouldShowFollow, showComments, overlay, eventLabel } =
-	toRefs(props);
-
-const emit = defineEmits({
-	postEdit: () => true,
-	postPublish: () => true,
-	postRemove: () => true,
-	postFeature: (_community: CommunityModel) => true,
-	postUnfeature: (_community: CommunityModel) => true,
-	postMoveChannel: (_movedTo: CommunityChannelModel) => true,
-	postReject: (_community: CommunityModel) => true,
-	postPin: () => true,
-	postUnpin: () => true,
-	sticker: () => true,
-});
+const emit = defineEmits<{
+	postEdit: [];
+	postPublish: [];
+	postRemove: [];
+	postFeature: [community: CommunityModel];
+	postUnfeature: [community: CommunityModel];
+	postMoveChannel: [movedTo: CommunityChannelModel];
+	postReject: [community: CommunityModel];
+	postPin: [];
+	postUnpin: [];
+	sticker: [];
+}>();
 
 const commentManager = useCommentStoreManager()!;
 const stickerLayer = useStickerLayer();
@@ -103,21 +87,19 @@ const { canChargeSticker } = stickerStore;
 // activity feed. If that's the case, we need to make sure we synchronize with
 // the activity feed item state so that if they click away from the feed and
 // back to it, it can initialize with the previous state.
-const shouldShowFollowState = ref(
-	item?.value && feed?.value ? feed.value.isItemShowingFollow(item.value) : false
-);
+const shouldShowFollowState = ref(item && feed ? feed.isItemShowingFollow(item) : false);
 
 const commentStore = ref<CommentStoreModel | null>(
-	lockCommentStore(commentManager, 'Fireside_Post', post.value.id)
+	lockCommentStore(commentManager, 'Fireside_Post', post.id)
 );
-commentStoreCount(commentStore.value!, post.value.comment_count);
+commentStoreCount(commentStore.value!, post.comment_count);
 
 const isShowingFollow = computed(() => {
-	if (!shouldShowFollow.value || !shouldShowFollowState.value || !post.value) {
+	if (!shouldShowFollow || !shouldShowFollowState.value || !post) {
 		return false;
 	}
 
-	if ((user.value && user.value.id === post.value.user.id) || post.value.user.is_following) {
+	if ((user.value && user.value.id === post.user.id) || post.user.is_following) {
 		return false;
 	}
 
@@ -127,30 +109,26 @@ const isShowingFollow = computed(() => {
 const commentsCount = computed(() => (commentStore.value ? commentStore.value.totalCount : 0));
 
 const canPublish = computed(
-	() =>
-		post.value.isDraft &&
-		!post.value.isScheduled &&
-		post.value.hasLead &&
-		post.value.canPublishToCommunities()
+	() => post.isDraft && !post.isScheduled && post.hasLead && post.canPublishToCommunities()
 );
 
-const showUserControls = computed(() => post.value.isActive && !post.value.is_processing);
+const showUserControls = computed(() => post.isActive && !post.is_processing);
 
 const hasPerms = computed(() => {
 	if (!user.value) {
 		return false;
 	}
-	return post.value.isEditableByUser(user.value);
+	return post.isEditableByUser(user.value);
 });
 
 const shouldShowEdit = computed(() => hasPerms.value);
 const shouldShowExtra = computed(() => user.value instanceof UserModel);
-const shouldShowCommentsButton = computed(() => showComments.value);
-const shouldShowStickersButton = computed(() => post.value.canPlaceSticker && !!stickerLayer);
-const shouldShowLike = computed(() => post.value.canLike);
+const shouldShowCommentsButton = computed(() => showComments);
+const shouldShowStickersButton = computed(() => post.canPlaceSticker && !!stickerLayer);
+const shouldShowLike = computed(() => post.canLike);
 
 const commentsButtonTooltip = computed(() =>
-	post.value.canViewComments ? $gettext(`View comments`) : $gettext(`Comments are disabled`)
+	post.canViewComments ? $gettext(`View comments`) : $gettext(`Comments are disabled`)
 );
 
 onUnmounted(() => {
@@ -161,24 +139,24 @@ onUnmounted(() => {
 });
 
 function openComments() {
-	Analytics.trackEvent('post-controls', 'comments', eventLabel.value);
+	Analytics.trackEvent('post-controls', 'comments', eventLabel);
 
 	showCommentModal({
-		model: post.value,
+		model: post,
 		displayMode: 'comments',
 	});
 }
 
 async function openEdit() {
-	Analytics.trackEvent('post-controls', 'edit', eventLabel.value);
-	if (await showPostEditModal(post.value)) {
+	Analytics.trackEvent('post-controls', 'edit', eventLabel);
+	if (await showPostEditModal(post)) {
 		emit('postEdit');
 	}
 }
 
 async function publish() {
 	trackPostPublish();
-	await $publishFiresidePost(post.value);
+	await $publishFiresidePost(post);
 	emit('postPublish');
 }
 
@@ -187,16 +165,16 @@ async function placeSticker() {
 		return;
 	}
 
-	Analytics.trackEvent('post-controls', 'sticker-place', eventLabel.value);
+	Analytics.trackEvent('post-controls', 'sticker-place', eventLabel);
 	openStickerDrawer(stickerStore, stickerLayer);
 	emit('sticker');
 }
 
 function setUserFollow(showing: boolean) {
-	if (showing && post.value) {
+	if (showing && post) {
 		// Do nothing if a post is liked and we recently suggested
 		// to follow that user - so we don't spam them.
-		if (!UserFollowSuggestion.canSuggest(post.value.user.id)) {
+		if (!UserFollowSuggestion.canSuggest(post.user.id)) {
 			return;
 		}
 
@@ -204,14 +182,14 @@ function setUserFollow(showing: boolean) {
 		// and stop suggesting to follow the user for 'X' amount
 		// of time - specified in UserFollowSuggestion.
 		Analytics.trackEvent('user-follow', 'show', 'fireside-post-like-widget');
-		UserFollowSuggestion.doNotSuggest(post.value.user.id);
+		UserFollowSuggestion.doNotSuggest(post.user.id);
 	}
 
 	shouldShowFollowState.value = showing;
 
 	// If we're part of the activity feed, synchronize it with that state as well.
-	if (item?.value && feed?.value) {
-		feed.value.setItemShowingFollow(item.value, showing);
+	if (item && feed) {
+		feed.setItemShowingFollow(item, showing);
 	}
 }
 

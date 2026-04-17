@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import AppFinancialsManagedAccountAddress from './AppFinancialsManagedAccountAddress.vue';
-import AppFinancialsManagedAccountBusiness from './AppFinancialsManagedAccountBusiness.vue';
-import AppFinancialsManagedAccountContact from './AppFinancialsManagedAccountContact.vue';
+import AppFinancialsManagedAccountAddress from '~app/components/forms/financials/managed-account/AppFinancialsManagedAccountAddress.vue';
+import AppFinancialsManagedAccountBusiness from '~app/components/forms/financials/managed-account/AppFinancialsManagedAccountBusiness.vue';
+import AppFinancialsManagedAccountContact from '~app/components/forms/financials/managed-account/AppFinancialsManagedAccountContact.vue';
 </script>
 
 <template>

@@ -1,6 +1,6 @@
-import { GameModel } from '../../../../../_common/game/game.model';
-import { MediaItemModel } from '../../../../../_common/media-item/media-item-model';
-import { LocalDbModel } from '../model.service';
+import { LocalDbModel } from '~app/components/client/local-db/model.service';
+import { GameModel } from '~common/game/game.model';
+import { MediaItemModel } from '~common/media-item/media-item-model';
 
 export class LocalDbGame extends LocalDbModel<LocalDbGame> {
 	private static readonly CachedGames = new WeakMap<LocalDbGame, GameModel>();

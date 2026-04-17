@@ -1,4 +1,4 @@
-import { ModelStoreModel } from '../model/model-store.service';
+import { ModelStoreModel } from '~common/model/model-store.service';
 
 export class EmojiModel implements ModelStoreModel {
 	declare id: number;

@@ -1,22 +1,23 @@
-import { AsyncComponentLoader, createApp, createSSRApp, type Component } from 'vue';
+import { AsyncComponentLoader, type Component, createApp, createSSRApp } from 'vue';
 import { Router } from 'vue-router';
-import { hijackLinks } from '../utils/router';
-import { initAnalytics, initAnalyticsRouter } from './analytics/analytics.service';
-import AppButton from './button/AppButton.vue';
-import { initSafeExportsForClient as initCommonSafeExportsForClient } from './client/safe-exports';
-import { ensureConfig } from './config/config.service';
-import { initConnectionService } from './connection/connection-service';
-import { setTimezoneOffsetCookie } from './cookie/cookie.service';
-import AppJolticon from './jolticon/AppJolticon.vue';
-import AppLinkExternal from './link/AppLinkExternal.vue';
-import AppLinkHelp from './link/AppLinkHelp.vue';
-import { initMetaService } from './meta/meta-service';
-import { Payload } from './payload/payload-service';
-import { Referrer } from './referrer/referrer.service';
-import { initScreenService } from './screen/screen-service';
-import { CommonStoreKey, commonStore } from './store/common-store';
-import { ThemeStoreKey, createThemeStore } from './theme/theme.store';
-import { initTranslations } from './translate/translate.service';
+
+import { initAnalytics, initAnalyticsRouter } from '~common/analytics/analytics.service';
+import AppButton from '~common/button/AppButton.vue';
+import { initSafeExportsForClient as initCommonSafeExportsForClient } from '~common/client/safe-exports';
+import { ensureConfig } from '~common/config/config.service';
+import { initConnectionService } from '~common/connection/connection-service';
+import { setTimezoneOffsetCookie } from '~common/cookie/cookie.service';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLinkExternal from '~common/link/AppLinkExternal.vue';
+import AppLinkHelp from '~common/link/AppLinkHelp.vue';
+import { initMetaService } from '~common/meta/meta-service';
+import { Payload } from '~common/payload/payload-service';
+import { Referrer } from '~common/referrer/referrer.service';
+import { initScreenService } from '~common/screen/screen-service';
+import { commonStore, CommonStoreKey } from '~common/store/common-store';
+import { createThemeStore, ThemeStoreKey } from '~common/theme/theme.store';
+import { initTranslations } from '~common/translate/translate.service';
+import { hijackLinks } from '~utils/router';
 
 export type BootstrapOptions<T = Component> = {
 	appComponentLoader: AsyncComponentLoader<T>;

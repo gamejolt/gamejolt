@@ -1,13 +1,12 @@
 <script lang="ts" setup>
-import { PropType } from 'vue';
-import AppBackgroundFade from '../../../../../_common/background/AppBackgroundFade.vue';
-import AppButton from '../../../../../_common/button/AppButton.vue';
-import AppImgResponsive from '../../../../../_common/img/AppImgResponsive.vue';
-import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import { useOnHover } from '../../../../../_common/on/useOnHover';
-import AppTheme from '../../../../../_common/theme/AppTheme.vue';
-import { kThemeFg, kThemePrimary } from '../../../../../_common/theme/variables';
-import { UserModel } from '../../../../../_common/user/user.model';
+import AppBackgroundFade from '~common/background/AppBackgroundFade.vue';
+import AppButton from '~common/button/AppButton.vue';
+import AppImgResponsive from '~common/img/AppImgResponsive.vue';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { useOnHover } from '~common/on/useOnHover';
+import AppTheme from '~common/theme/AppTheme.vue';
+import { kThemeFg, kThemePrimary } from '~common/theme/variables';
+import { UserModel } from '~common/user/user.model';
 import {
 	styleAbsoluteFill,
 	styleBorderRadiusLg,
@@ -15,15 +14,13 @@ import {
 	styleOverlayTextShadow,
 	styleTyped,
 	styleWhen,
-} from '../../../../../_styles/mixins';
-import { kBorderWidthBase } from '../../../../../_styles/variables';
+} from '~styles/mixins';
+import { kBorderWidthBase } from '~styles/variables';
 
-defineProps({
-	user: {
-		type: Object as PropType<UserModel>,
-		required: true,
-	},
-});
+type Props = {
+	user: UserModel;
+};
+const { user } = defineProps<Props>();
 
 const { hoverBinding, hovered } = useOnHover();
 </script>

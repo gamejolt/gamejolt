@@ -1,26 +1,19 @@
 <script lang="ts" setup>
-import { computed, CSSProperties, PropType, toRefs } from 'vue';
-import AppAspectRatio from '../aspect-ratio/AppAspectRatio.vue';
-import { AvatarFrameModel, DefaultAvatarFrameScale } from './frame.model';
+import { computed, CSSProperties } from 'vue';
 
-const props = defineProps({
-	frame: {
-		type: [Object, null] as PropType<Pick<AvatarFrameModel, 'image_url' | 'scale'> | null>,
-		required: true,
-	},
-	hideFrame: {
-		type: Boolean,
-	},
+import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
+import { AvatarFrameModel, DefaultAvatarFrameScale } from '~common/avatar/frame.model';
+
+type Props = {
+	frame: Pick<AvatarFrameModel, 'image_url' | 'scale'> | null;
+	hideFrame?: boolean;
 	/**
 	 * Treats the frame as a border that insets our avatar instead of the having
 	 * the frame extend the container bounds.
 	 */
-	smoosh: {
-		type: Boolean,
-	},
-});
-
-const { frame, hideFrame, smoosh } = toRefs(props);
+	smoosh?: boolean;
+};
+const { frame, hideFrame, smoosh } = defineProps<Props>();
 
 const avatarStyling = computed(() => {
 	const result: CSSProperties = {
@@ -31,8 +24,8 @@ const avatarStyling = computed(() => {
 	let inset = `0%`;
 	let size = `100%`;
 
-	if (frame.value && smoosh.value) {
-		const smooshedSize = 100 / frame.value.scale;
+	if (frame && smoosh) {
+		const smooshedSize = 100 / frame.scale;
 		inset = `${(100 - smooshedSize) / 2}%`;
 		size = `${smooshedSize}%`;
 	}
@@ -55,12 +48,12 @@ const frameStyling = computed(() => {
 		zIndex: 1,
 	};
 
-	const scale = frame.value?.scale || DefaultAvatarFrameScale;
+	const scale = frame?.scale || DefaultAvatarFrameScale;
 	const expandedSize = 100 * scale;
 	let insetBase = `-${(expandedSize - 100) / 2}%`;
 	let sizeBase = `${expandedSize}%`;
 
-	if (frame.value && smoosh.value) {
+	if (frame && smoosh) {
 		insetBase = `0%`;
 		sizeBase = `100%`;
 	}

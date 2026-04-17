@@ -1,38 +1,26 @@
 <script lang="ts" setup>
-import { PropType, ref } from 'vue';
-import { styleTextOverflow } from '../../../../_styles/mixins';
+import { useTemplateRef } from 'vue';
+
+import { styleTextOverflow } from '~styles/mixins';
 
 export interface AppFormControlUploadFileInterface {
 	showFileSelect: () => void;
 }
 
-defineProps({
-	id: {
-		type: String,
-		required: true,
-	},
-	name: {
-		type: String,
-		required: true,
-	},
-	value: {
-		type: null as unknown as PropType<File | File[] | null>,
-		required: true,
-	},
-	multiple: {
-		type: Boolean,
-	},
-	accept: {
-		type: String,
-		default: null,
-	},
-});
+type Props = {
+	id: string;
+	name: string;
+	value: File | File[] | null;
+	multiple?: boolean;
+	accept?: string;
+};
+const { id, name, multiple, accept } = defineProps<Props>();
 
-const emit = defineEmits({
-	input: (_files: null | File[]) => true,
-});
+const emit = defineEmits<{
+	input: [files: null | File[]];
+}>();
 
-const root = ref<HTMLInputElement>();
+const root = useTemplateRef('root');
 
 function onChange() {
 	if (!root.value) {

@@ -1,24 +1,16 @@
 <script lang="ts" setup>
-import { computed, PropType } from 'vue';
-import AppPill from '../../pill/AppPill.vue';
-import { CommunityChannelModel } from './channel.model';
+import { computed } from 'vue';
 
-const props = defineProps({
-	channels: {
-		type: Array as PropType<CommunityChannelModel[]>,
-		required: true,
-	},
-	modelValue: {
-		type: Object as PropType<CommunityChannelModel>,
-		default: undefined,
-	},
-});
+import { CommunityChannelModel } from '~common/community/channel/channel.model';
+import AppPill from '~common/pill/AppPill.vue';
 
-const emit = defineEmits({
-	'update:modelValue': (_modelValue: CommunityChannelModel) => true,
-});
+type Props = {
+	channels: CommunityChannelModel[];
+};
+const { channels } = defineProps<Props>();
+const modelValue = defineModel<CommunityChannelModel>();
 
-const validChannels = computed(() => props.channels.filter(i => i.canPost));
+const validChannels = computed(() => channels.filter(i => i.canPost));
 </script>
 
 <template>
@@ -26,7 +18,7 @@ const validChannels = computed(() => props.channels.filter(i => i.canPost));
 		<span v-for="channel of validChannels" :key="channel.id">
 			<AppPill
 				:class="{ active: modelValue && modelValue.id === channel.id }"
-				@click="emit('update:modelValue', channel)"
+				@click="modelValue = channel"
 			>
 				{{ channel.displayTitle }}
 			</AppPill>

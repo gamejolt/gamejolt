@@ -1,25 +1,23 @@
 <script lang="ts" setup>
-import { PropType, onMounted, ref, toRefs } from 'vue';
-import { Api } from '../../../../_common/api/api.service';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import { CommunityModel } from '../../../../_common/community/community.model';
-import { GameModel } from '../../../../_common/game/game.model';
-import AppGameThumbnailImg from '../../../../_common/game/thumbnail/AppGameThumbnailImg.vue';
-import { showErrorGrowl } from '../../../../_common/growls/growls.service';
-import AppLoading from '../../../../_common/loading/AppLoading.vue';
-import AppModal from '../../../../_common/modal/AppModal.vue';
-import { useModal } from '../../../../_common/modal/modal.service';
-import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import { $gettext } from '../../../../_common/translate/translate.service';
+import { onMounted, ref } from 'vue';
 
-const props = defineProps({
-	community: {
-		type: Object as PropType<CommunityModel>,
-		required: true,
-	},
-});
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import { CommunityModel } from '~common/community/community.model';
+import { GameModel } from '~common/game/game.model';
+import AppGameThumbnailImg from '~common/game/thumbnail/AppGameThumbnailImg.vue';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import AppLoading from '~common/loading/AppLoading.vue';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { $gettext } from '~common/translate/translate.service';
 
-const { community } = toRefs(props);
+type Props = {
+	community: CommunityModel;
+};
+const { community } = defineProps<Props>();
+
 const modal = useModal()!;
 
 const page = ref(1);
@@ -36,7 +34,7 @@ async function loadPage() {
 
 	try {
 		const payload = await Api.sendRequest(
-			'/web/dash/communities/games/list/' + community.value.id + '?page=' + page.value,
+			'/web/dash/communities/games/list/' + community.id + '?page=' + page.value,
 			undefined,
 			{ noErrorRedirect: true }
 		);

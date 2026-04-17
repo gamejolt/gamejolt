@@ -1,18 +1,17 @@
 <script lang="ts" setup>
-import { computed, PropType } from 'vue';
-import AppPostCardPlaceholder from '../../../../../_common/fireside/post/card/AppPostCardPlaceholder.vue';
-import { FiresidePostModel } from '../../../../../_common/fireside/post/post-model';
-import { Screen } from '../../../../../_common/screen/screen-service';
-import AppScrollScroller from '../../../../../_common/scroll/AppScrollScroller.vue';
-import AppTranslate from '../../../../../_common/translate/AppTranslate.vue';
-import AppPostPageRecommendationsPosts from './AppPostPageRecommendationsPosts.vue';
+import { computed } from 'vue';
 
-defineProps({
-	post: {
-		type: Object as PropType<FiresidePostModel>,
-		required: true,
-	},
-});
+import AppPostPageRecommendationsPosts from '~app/views/post/_page/recommendations/AppPostPageRecommendationsPosts.vue';
+import AppPostCardPlaceholder from '~common/fireside/post/card/AppPostCardPlaceholder.vue';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import { Screen } from '~common/screen/screen-service';
+import AppScrollScroller from '~common/scroll/AppScrollScroller.vue';
+import AppTranslate from '~common/translate/AppTranslate.vue';
+
+type Props = {
+	post: FiresidePostModel;
+};
+const { post } = defineProps<Props>();
 
 const shouldScroll = computed(() => Screen.isXs);
 </script>
@@ -35,7 +34,7 @@ const shouldScroll = computed(() => Screen.isXs);
 					</template>
 
 					<template #fallback>
-						<template v-for="i of 4" :key="i">
+						<template v-for="_i of 4" :key="_i">
 							<div class="-post">
 								<AppPostCardPlaceholder />
 							</div>

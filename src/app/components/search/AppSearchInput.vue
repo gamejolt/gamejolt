@@ -1,21 +1,18 @@
 <script lang="ts" setup>
-import { nextTick, PropType, ref } from 'vue';
-import { FocusToken } from '../../../utils/focus-token';
+import { type HTMLAttributes, nextTick, useTemplateRef } from 'vue';
 
-const props = defineProps({
-	modelValue: {
-		type: String,
-		required: true,
-	},
-	focusToken: {
-		type: Object as PropType<FocusToken>,
-		required: true,
-	},
-});
+import { FocusToken } from '~utils/focus-token';
 
-const root = ref<HTMLInputElement>();
+type Props = {
+	focusToken: FocusToken;
+} & /* @vue-ignore */ Pick<HTMLAttributes, 'onFocus' | 'onBlur' | 'onKeydown'>;
 
-props.focusToken?.register({
+const { focusToken } = defineProps<Props>();
+const modelValue = defineModel<string>({ required: true });
+
+const root = useTemplateRef('root');
+
+focusToken?.register({
 	focus: async () => {
 		await nextTick();
 		root.value?.focus();
@@ -26,13 +23,9 @@ props.focusToken?.register({
 	},
 });
 
-const emit = defineEmits({
-	'update:modelValue': (_modelValue: string) => true,
-});
-
 function onChange(event: InputEvent) {
 	const target = event.target as HTMLInputElement | null;
-	emit('update:modelValue', target?.value ?? '');
+	modelValue.value = target?.value ?? '';
 }
 </script>
 

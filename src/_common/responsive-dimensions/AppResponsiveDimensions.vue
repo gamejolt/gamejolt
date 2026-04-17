@@ -1,10 +1,11 @@
 <script lang="ts">
-import { onMounted, ref, toRefs, watch } from 'vue';
-import { useResizeObserver } from '../../utils/resize-observer';
-import { debounce } from '../../utils/utils';
-import { Ruler } from '../ruler/ruler-service';
-import { onScreenResize } from '../screen/screen-service';
-import { useEventSubscription } from '../system/event/event-topic';
+import { onMounted, ref, useTemplateRef, watch } from 'vue';
+
+import { Ruler } from '~common/ruler/ruler-service';
+import { onScreenResize } from '~common/screen/screen-service';
+import { useEventSubscription } from '~common/system/event/event-topic';
+import { useResizeObserver } from '~utils/resize-observer';
+import { debounce } from '~utils/utils';
 
 export class AppResponsiveDimensionsChangeEvent {
 	constructor(public containerWidth: number, public height: number, public isFilled: boolean) {}
@@ -12,37 +13,24 @@ export class AppResponsiveDimensionsChangeEvent {
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	ratio: {
-		type: Number,
-		required: true,
-	},
-	maxWidth: {
-		type: Number,
-		default: 0,
-	},
-	maxHeight: {
-		type: Number,
-		default: 0,
-	},
-	parentWidth: {
-		type: Number,
-		default: undefined,
-	},
-});
+type Props = {
+	ratio: number;
+	maxWidth?: number;
+	maxHeight?: number;
+	parentWidth?: number;
+};
+const { ratio, maxWidth = 0, maxHeight = 0, parentWidth } = defineProps<Props>();
 
-const emit = defineEmits({
-	change: (_event: AppResponsiveDimensionsChangeEvent) => true,
-});
+const emit = defineEmits<{
+	change: [event: AppResponsiveDimensionsChangeEvent];
+}>();
 
-const { ratio, maxWidth, maxHeight, parentWidth } = toRefs(props);
-
-const root = ref<HTMLElement>();
+const root = useTemplateRef('root');
 const width = ref<string>();
 const height = ref('auto');
 
-watch([ratio, maxWidth, maxHeight], _updateDimensions);
-watch(() => parentWidth?.value, _updateDimensions);
+watch([() => ratio, () => maxWidth, () => maxHeight], _updateDimensions);
+watch(() => parentWidth, _updateDimensions);
 
 useEventSubscription(onScreenResize, () => _updateDimensions());
 
@@ -67,19 +55,19 @@ function _updateDimensions() {
 	}
 
 	let isFilled = true;
-	let newWidth = parentWidth?.value ?? Ruler.width(root.value.parentNode as HTMLElement);
+	let newWidth = parentWidth ?? Ruler.width(root.value.parentNode as HTMLElement);
 
-	if (maxWidth.value && newWidth > maxWidth.value) {
-		newWidth = maxWidth.value;
+	if (maxWidth && newWidth > maxWidth) {
+		newWidth = maxWidth;
 		isFilled = false;
 	}
 
-	let newHeight = newWidth / ratio.value;
+	let newHeight = newWidth / ratio;
 
-	if (maxHeight.value && newHeight > maxHeight.value) {
-		newHeight = maxHeight.value;
+	if (maxHeight && newHeight > maxHeight) {
+		newHeight = maxHeight;
 		isFilled = false;
-		newWidth = newHeight * ratio.value;
+		newWidth = newHeight * ratio;
 	}
 
 	width.value = `${newWidth}px`;

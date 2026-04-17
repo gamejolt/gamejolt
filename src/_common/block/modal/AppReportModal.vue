@@ -1,28 +1,23 @@
 <script lang="ts" setup>
-import { PropType, toRefs } from 'vue';
-import AppButton from '../../button/AppButton.vue';
-import { showInfoGrowl } from '../../growls/growls.service';
-import AppModal from '../../modal/AppModal.vue';
-import { useModal } from '../../modal/modal.service';
-import { $gettext } from '../../translate/translate.service';
-import { UserModel } from '../../user/user.model';
-import AppBlockForm from '../form/AppBlockForm.vue';
+import AppBlockForm from '~common/block/form/AppBlockForm.vue';
+import AppButton from '~common/button/AppButton.vue';
+import { showInfoGrowl } from '~common/growls/growls.service';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import { $gettext } from '~common/translate/translate.service';
+import { UserModel } from '~common/user/user.model';
 
-const props = defineProps({
-	user: {
-		type: Object as PropType<UserModel>,
-		required: true,
-	},
-});
+type Props = {
+	user: UserModel;
+};
+const { user } = defineProps<Props>();
 
 const modal = useModal()!;
-
-const { user } = toRefs(props);
 
 function onSubmittedBlock() {
 	showInfoGrowl(
 		$gettext(`You blocked %{ user }!`, {
-			user: user.value.username,
+			user: user.username,
 		}),
 		$gettext('Blocked')
 	);

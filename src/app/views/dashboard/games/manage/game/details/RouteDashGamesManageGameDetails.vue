@@ -1,16 +1,14 @@
 <script lang="ts">
 import { computed } from 'vue';
-import { showSuccessGrowl } from '../../../../../../../_common/growls/growls.service';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '../../../../../../../_common/route/route-component';
-import { Scroll } from '../../../../../../../_common/scroll/scroll.service';
-import { useCommonStore } from '../../../../../../../_common/store/common-store';
-import { $gettext } from '../../../../../../../_common/translate/translate.service';
-import AppGameDevStageSelector from '../../../../../../components/forms/game/dev-stage-selector/AppGameDevStageSelector.vue';
-import FormGame from '../../../../../../components/forms/game/game.vue';
-import { useGameDashRouteController } from '../../manage.store';
+
+import AppGameDevStageSelector from '~app/components/forms/game/dev-stage-selector/AppGameDevStageSelector.vue';
+import FormGame from '~app/components/forms/game/FormGame.vue';
+import { useGameDashRouteController } from '~app/views/dashboard/games/manage/manage.store';
+import { showSuccessGrowl } from '~common/growls/growls.service';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { Scroll } from '~common/scroll/scroll.service';
+import { useCommonStore } from '~common/store/common-store';
+import { $gettext } from '~common/translate/translate.service';
 
 export default {
 	...defineAppRouteOptions({

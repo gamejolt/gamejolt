@@ -1,12 +1,13 @@
 <script lang="ts">
 import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
-import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
-import { useCommonStore } from '../../../../_common/store/common-store';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { touchUser } from '../../../../_common/user/user.model';
-import AppPageHeader from '../../../components/page-header/AppPageHeader.vue';
-import { routeDashAccountReferrals } from './referrals/referrals.route';
+
+import AppPageHeader from '~app/components/page-header/AppPageHeader.vue';
+import { routeDashAccountReferrals } from '~app/views/dashboard/account/referrals/referrals.route';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { useCommonStore } from '~common/store/common-store';
+import { $gettext } from '~common/translate/translate.service';
+import { touchUser } from '~common/user/user.model';
 
 export default {
 	...defineAppRouteOptions({

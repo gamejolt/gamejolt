@@ -1,7 +1,9 @@
 <script lang="ts" setup>
 import { onUnmounted, unref, watch } from 'vue';
-import { Scroll } from '../../../_common/scroll/scroll.service';
-import { useBannerStore } from '../../store/banner';
+
+import { useBannerStore } from '~app/store/banner';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { Scroll } from '~common/scroll/scroll.service';
 
 const { hasBanner, currentBanner, clickBanner, closeBanner } = useBannerStore();
 
@@ -38,6 +40,7 @@ onUnmounted(() => {
 			<AppJolticon icon="remove" />
 		</a>
 
+		<!-- eslint-disable-next-line vue/no-v-html -->
 		<div class="-message" v-html="currentBanner.message" />
 	</div>
 </template>

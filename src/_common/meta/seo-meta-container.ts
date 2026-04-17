@@ -1,4 +1,4 @@
-import { MetaContainer, ssrRenderMetaContainer } from './meta-container';
+import { MetaContainer, ssrRenderMetaContainer } from '~common/meta/meta-container';
 
 export class SeoMetaContainer {
 	readonly meta = new MetaContainer();

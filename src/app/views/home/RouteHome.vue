@@ -1,31 +1,33 @@
 <script lang="ts">
 import { defineAsyncComponent } from 'vue';
 import { useRoute } from 'vue-router';
-import { router } from '..';
-import { Api } from '../../../_common/api/api.service';
-import { showSuccessGrowl } from '../../../_common/growls/growls.service';
+
+import { IntentService } from '~app/components/intent/intent.service';
+import { HomeFeedService } from '~app/views/home/home-feed.service';
+import { Api } from '~common/api/api.service';
+import { showSuccessGrowl } from '~common/growls/growls.service';
 import {
 	asyncRouteLoader,
 	createAppRoute,
 	defineAppRouteOptions,
-} from '../../../_common/route/route-component';
-import { useCommonStore } from '../../../_common/store/common-store';
-import { $gettext } from '../../../_common/translate/translate.service';
-import { objectOmit } from '../../../utils/object';
-import { IntentService } from '../../components/intent/intent.service';
-import { HomeFeedService } from './home-feed.service';
+} from '~common/route/route-component';
+import { useCommonStore } from '~common/store/common-store';
+import { $gettext } from '~common/translate/translate.service';
+import { objectOmit } from '~utils/object';
+
+import { router } from '..';
 
 const RouteHomeFeed = defineAsyncComponent(() =>
-	asyncRouteLoader(router, import('./RouteHomeFeed.vue'))
+	asyncRouteLoader(router, import('~app/views/home/RouteHomeFeed.vue'))
 );
 const RouteDiscoverHome = defineAsyncComponent(() =>
-	asyncRouteLoader(router, import('../discover/home/RouteDiscoverHome.vue'))
+	asyncRouteLoader(router, import('~app/views/discover/home/RouteDiscoverHome.vue'))
 );
 
 export default {
 	...defineAppRouteOptions({
 		lazy: true,
-		reloadOn: { query: IntentService.APPROVED_LOGIN_QUERY_PARAMS },
+		reloadOn: { query: IntentService.APPROVED_LOGIN_QUERY_PARAMS as [string, ...string[]] },
 		resolver: async ({ route }) => {
 			const intentRedirect = IntentService.checkApprovedLoginIntent(route);
 			if (intentRedirect) {

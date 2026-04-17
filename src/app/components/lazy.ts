@@ -1,15 +1,16 @@
 import { defineAsyncComponent } from 'vue';
-import { lazyImportNoSSR } from '../../_common/code-splitting';
-import AppActivityFeedPlaceholder from './activity/feed/AppActivityFeedPlaceholder.vue';
 
-export const GridClientLazy = lazyImportNoSSR(() => import('./grid/client.service'));
-export const ChatClientLazy = lazyImportNoSSR(() => import('./chat/client'));
+import AppActivityFeedPlaceholder from '~app/components/activity/feed/AppActivityFeedPlaceholder.vue';
+import { lazyImportNoSSR } from '~common/code-splitting';
+
+export const GridClientLazy = lazyImportNoSSR(() => import('~app/components/grid/client.service'));
+export const ChatClientLazy = lazyImportNoSSR(() => import('~app/components/chat/client'));
 
 export const AppActivityFeedLazy = defineAsyncComponent({
-	loader: () => import('./activity/feed/AppActivityFeed.vue'),
+	loader: () => import('~app/components/activity/feed/AppActivityFeed.vue'),
 	loadingComponent: AppActivityFeedPlaceholder,
 });
 
 export const AppCommentWidgetLazy = defineAsyncComponent(
-	() => import('./comment/widget/AppCommentWidget.vue')
+	() => import('~app/components/comment/widget/AppCommentWidget.vue')
 );

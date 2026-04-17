@@ -1,8 +1,9 @@
 <script lang="ts">
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, toRefs, watch } from 'vue';
-import { clampNumber } from '../../utils/number';
-import { Ruler } from '../ruler/ruler-service';
-import { vAppTooltip } from '../tooltip/tooltip-directive';
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue';
+
+import { Ruler } from '~common/ruler/ruler-service';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { clampNumber } from '~utils/number';
 
 export type ScrubberStage = 'start' | 'scrub' | 'end';
 
@@ -17,30 +18,24 @@ export type ScrubberCallback = {
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
+type Props = {
 	/** Expects to be scaled from 0 to 1. */
-	percent: {
-		type: Number,
-		required: true,
-	},
-	vertical: {
-		type: Boolean,
-	},
-	overlay: {
-		type: Boolean,
-	},
+	percent: number;
+	vertical?: boolean;
+	overlay?: boolean;
 	/** Provided value is 0 to 100. */
-	sliderValueTooltip: {
-		type: Function,
-		default: (value: number) => `${value}%`,
-	},
-});
+	sliderValueTooltip?: (value: number) => string;
+};
+const {
+	percent,
+	vertical,
+	overlay,
+	sliderValueTooltip = (value: number) => `${value}%`,
+} = defineProps<Props>();
 
-const emit = defineEmits({
-	scrub: (_: ScrubberCallback) => true,
-});
-
-const { percent, vertical, sliderValueTooltip } = toRefs(props);
+const emit = defineEmits<{
+	scrub: [_: ScrubberCallback];
+}>();
 
 const isDragging = ref(false);
 
@@ -50,11 +45,10 @@ const thumbOffset = ref(0);
 const _sliderOffset = ref(0);
 const _percentFull = ref(0);
 
-const slider = ref<HTMLElement>();
-const thumb = ref<HTMLDivElement>();
+const slider = useTemplateRef('slider');
 
 const sliderFilledStyling = computed(() => {
-	if (vertical.value) {
+	if (vertical) {
 		return {
 			top: sliderSize.value - thumbOffset.value + 'px',
 			right: 0,
@@ -73,8 +67,8 @@ const sliderFilledStyling = computed(() => {
 
 const thumbStyling = computed(() => {
 	return {
-		top: vertical.value ? thumbOffset.value + 'px' : '',
-		left: !vertical.value ? thumbOffset.value + 'px' : '',
+		top: vertical ? thumbOffset.value + 'px' : '',
+		left: !vertical ? thumbOffset.value + 'px' : '',
 		height: thumbSize.value + 'px',
 		width: thumbSize.value + 'px',
 	};
@@ -82,13 +76,13 @@ const thumbStyling = computed(() => {
 
 const sliderStyling = computed(() => {
 	return {
-		height: vertical.value ? sliderSize.value + 'px' : '4px',
-		width: !vertical.value ? sliderSize.value + 'px' : '4px',
+		height: vertical ? sliderSize.value + 'px' : '4px',
+		width: !vertical ? sliderSize.value + 'px' : '4px',
 	};
 });
 
 const readableSliderPercentage = computed(() => {
-	return sliderValueTooltip.value(_percentFull.value);
+	return sliderValueTooltip(_percentFull.value);
 });
 
 onMounted(() => {
@@ -103,8 +97,8 @@ function initVariables() {
 		return;
 	}
 	const offset = Ruler.offset(slider.value);
-	_sliderOffset.value = vertical.value ? offset.top : offset.left;
-	sliderSize.value = vertical.value ? offset.height : offset.width;
+	_sliderOffset.value = vertical ? offset.top : offset.left;
+	sliderSize.value = vertical ? offset.height : offset.width;
 }
 
 async function onMouseDown(event: MouseEvent | TouchEvent) {
@@ -178,9 +172,9 @@ function _setThumbOffset(stage: ScrubberStage, event?: Event) {
 	}
 
 	if (pageX && pageY) {
-		mouseOffset = vertical.value ? pageY : pageX;
+		mouseOffset = vertical ? pageY : pageX;
 	} else {
-		mouseOffset = percent.value * sliderSize.value + _sliderOffset.value;
+		mouseOffset = percent * sliderSize.value + _sliderOffset.value;
 	}
 
 	const sliderOffsetStart = -(thumbSize.value / 2);
@@ -197,7 +191,7 @@ function _setThumbOffset(stage: ScrubberStage, event?: Event) {
 	);
 
 	// invert the value for horizontal sliders
-	if (!vertical.value) {
+	if (!vertical) {
 		_percentFull.value = Math.abs(_percentFull.value - scale);
 	}
 
@@ -205,15 +199,18 @@ function _setThumbOffset(stage: ScrubberStage, event?: Event) {
 	emit('scrub', { percent: scaledPercent, stage: stage });
 }
 
-watch(percent, () => {
-	if (isDragging.value) {
-		return;
-	}
+watch(
+	() => percent,
+	() => {
+		if (isDragging.value) {
+			return;
+		}
 
-	// If the slider percent.value changed by external means, set the thumb offset
-	// to match the current slider level.
-	_setThumbOffset('end');
-});
+		// If the slider percent changed by external means, set the thumb offset
+		// to match the current slider level.
+		_setThumbOffset('end');
+	}
+);
 </script>
 
 <template>
@@ -234,7 +231,6 @@ watch(percent, () => {
 			<div class="-inner-filled" :style="sliderFilledStyling" />
 
 			<div
-				ref="thumb"
 				v-app-tooltip="readableSliderPercentage"
 				class="-inner-thumb"
 				:style="thumbStyling"

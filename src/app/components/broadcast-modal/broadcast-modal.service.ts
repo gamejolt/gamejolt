@@ -1,10 +1,11 @@
 import { defineAsyncComponent } from 'vue';
-import { Api } from '../../../_common/api/api.service';
-import { FiresidePostModel } from '../../../_common/fireside/post/post-model';
-import { showModal } from '../../../_common/modal/modal.service';
-import { Screen } from '../../../_common/screen/screen-service';
-import { SettingBroadcastModal } from '../../../_common/settings/settings.service';
-import { commonStore } from '../../../_common/store/common-store';
+
+import { Api } from '~common/api/api.service';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import { showModal } from '~common/modal/modal.service';
+import { Screen } from '~common/screen/screen-service';
+import { SettingBroadcastModal } from '~common/settings/settings.service';
+import { commonStore } from '~common/store/common-store';
 
 const STORAGE_KEY_PREFIX = 'broadcast-modal:date:';
 
@@ -15,7 +16,9 @@ function _key() {
 async function _show(posts: FiresidePostModel[]) {
 	await showModal({
 		modalId: 'Broadcast',
-		component: defineAsyncComponent(() => import('./AppBroadcastModal.vue')),
+		component: defineAsyncComponent(
+			() => import('~app/components/broadcast-modal/AppBroadcastModal.vue')
+		),
 		props: { posts },
 		noBackdropClose: true,
 		size: 'sm',

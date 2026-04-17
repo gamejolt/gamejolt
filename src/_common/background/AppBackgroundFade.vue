@@ -1,26 +1,17 @@
 <script lang="ts" setup>
-import { CSSProperties, computed, toRefs } from 'vue';
-import { styleAbsoluteFill, styleWhen } from '../../_styles/mixins';
-import { kStrongEaseOut } from '../../_styles/variables';
+import { computed, CSSProperties } from 'vue';
 
-const props = defineProps({
-	noEdges: {
-		type: Boolean,
-	},
-	fadeOpacity: {
-		type: Number,
-		default: 0.1,
-	},
-	zIndex: {
-		type: Number,
-		default: undefined,
-	},
-});
+import { styleAbsoluteFill, styleWhen } from '~styles/mixins';
+import { kStrongEaseOut } from '~styles/variables';
 
-const { zIndex: zIndexProp } = toRefs(props);
+type Props = {
+	noEdges?: boolean;
+	fadeOpacity?: number;
+	zIndex?: number;
+};
+const { noEdges, fadeOpacity = 0.1, zIndex } = defineProps<Props>();
 
 function createFadeStyles(edge: 'top' | 'bottom') {
-	const zIndex = zIndexProp?.value;
 	const imageDirection = edge === 'top' ? 'bottom' : 'top';
 	return {
 		position: `absolute`,

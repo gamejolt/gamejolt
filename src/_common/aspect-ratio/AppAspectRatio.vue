@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType, StyleValue, computed, toRefs } from 'vue';
-import { styleFlexCenter, styleWhen } from '../../_styles/mixins';
+import { computed, CSSProperties, StyleValue } from 'vue';
+
+import { styleFlexCenter, styleWhen } from '~styles/mixins';
 
 /**
  * Used to create a box that takes the full-width of its parent and sizes its
@@ -9,30 +10,18 @@ import { styleFlexCenter, styleWhen } from '../../_styles/mixins';
  * Since the aspect-ratio CSS property doesn't work on older browsers, we have
  * to do some stupid hacks to get this working.
  */
-const props = defineProps({
-	ratio: {
-		type: Number,
-		required: true,
-	},
-	childRatio: {
-		type: Number,
-		default: undefined,
-	},
-	showOverflow: {
-		type: Boolean,
-	},
-	innerStyles: {
-		type: [Object, Array, String] as PropType<StyleValue>,
-		default: () => [],
-	},
-});
-
-const { ratio, childRatio } = toRefs(props);
+type Props = {
+	ratio: number;
+	childRatio?: number;
+	showOverflow?: boolean;
+	innerStyles?: StyleValue;
+};
+const { ratio, childRatio, showOverflow, innerStyles = [] } = defineProps<Props>();
 
 const childSizing = computed<CSSProperties>(() => {
 	const fill = `100%`;
-	const inner = childRatio?.value;
-	const outer = ratio.value;
+	const inner = childRatio;
+	const outer = ratio;
 
 	if (inner === undefined || inner === outer) {
 		return {

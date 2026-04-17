@@ -1,16 +1,15 @@
 <script lang="ts" setup>
-import { CSSProperties, PropType } from 'vue';
-import { vAppTooltip } from '../../../../_common/tooltip/tooltip-directive';
-import AppUserDogtag from '../../../../_common/user/AppUserDogtag.vue';
-import { UserFriendshipState } from '../../../../_common/user/friendship/friendship.model';
-import { useProfileRouteStore } from '../RouteProfile.vue';
+import { CSSProperties } from 'vue';
 
-defineProps({
-	wrap: {
-		type: String as PropType<CSSProperties['flexWrap']>,
-		default: 'wrap-reverse',
-	},
-});
+import { useProfileRouteStore } from '~app/views/profile/RouteProfile.vue';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import AppUserDogtag from '~common/user/AppUserDogtag.vue';
+import { UserFriendshipState } from '~common/user/friendship/friendship.model';
+
+type Props = {
+	wrap?: CSSProperties['flexWrap'];
+};
+const { wrap = 'wrap-reverse' } = defineProps<Props>();
 
 const { user: routeUser, userFriendship, isOnline } = useProfileRouteStore()!;
 </script>

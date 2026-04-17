@@ -1,5 +1,5 @@
-import { ModelStoreModel } from '../model/model-store.service';
-import { ShopProductCommonFields } from '../shop/product/product-model';
+import { ModelStoreModel } from '~common/model/model-store.service';
+import { ShopProductCommonFields } from '~common/shop/product/product-model';
 
 export const DefaultAvatarFrameScale = 1.2;
 

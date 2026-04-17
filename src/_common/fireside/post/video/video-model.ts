@@ -1,7 +1,7 @@
-import { HistoryTick } from '../../../history-tick/history-tick-service';
-import { MediaItemModel, MediaItemType } from '../../../media-item/media-item-model';
-import { Model } from '../../../model/model.service';
-import { VideoSourceArray } from '../../../video/AppVideo.vue';
+import { HistoryTick } from '~common/history-tick/history-tick-service';
+import { MediaItemModel, MediaItemType } from '~common/media-item/media-item-model';
+import { Model } from '~common/model/model.service';
+import { VideoSourceArray } from '~common/video/AppVideo.vue';
 
 //** Our preference for which manifest type will try loading first. */
 const manifestPreferences = ['m3u8', 'mpd'];

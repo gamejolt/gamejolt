@@ -1,24 +1,19 @@
 <script lang="ts" setup>
-import { PropType, computed, toRefs } from 'vue';
-import AppImgResponsive from '../../../../../_common/img/AppImgResponsive.vue';
-import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import { GameCollectionModel } from '../collection.model';
+import { computed } from 'vue';
 
-const props = defineProps({
-	collection: {
-		type: Object as PropType<GameCollectionModel>,
-		required: true,
-	},
-	hideTag: {
-		type: Boolean,
-	},
-});
+import { GameCollectionModel } from '~app/components/game/collection/collection.model';
+import AppImgResponsive from '~common/img/AppImgResponsive.vue';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { $gettext } from '~common/translate/translate.service';
 
-const { collection } = toRefs(props);
+type Props = {
+	collection: GameCollectionModel;
+	hideTag?: boolean;
+};
+const { collection, hideTag } = defineProps<Props>();
 
 const tagText = computed(() => {
-	switch (collection.value.type) {
+	switch (collection.type) {
 		case 'developer':
 			return $gettext(`Developer's Games`);
 		case 'followed':
@@ -52,4 +47,4 @@ const tagText = computed(() => {
 	</div>
 </template>
 
-<style lang="stylus" src="./thumbnail.styl" scoped></style>
+<style lang="stylus" src="~app/components/game/collection/thumbnail/thumbnail.styl" scoped></style>

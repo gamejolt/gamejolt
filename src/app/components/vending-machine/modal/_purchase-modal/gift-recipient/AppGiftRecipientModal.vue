@@ -1,54 +1,44 @@
 <script lang="ts" setup>
-import { PropType, computed, ref, toRefs } from 'vue';
-import { Api } from '../../../../../../_common/api/api.service';
-import AppButton from '../../../../../../_common/button/AppButton.vue';
-import AppForm, {
-	FormController,
-	createForm,
-} from '../../../../../../_common/form-vue/AppForm.vue';
-import AppFormControl from '../../../../../../_common/form-vue/AppFormControl.vue';
-import AppFormGroup from '../../../../../../_common/form-vue/AppFormGroup.vue';
-import { showErrorGrowl } from '../../../../../../_common/growls/growls.service';
-import AppIllustration from '../../../../../../_common/illustration/AppIllustration.vue';
-import {
-	illExtremeSadness,
-	illNoComments,
-} from '../../../../../../_common/illustration/illustrations';
-import { InventoryShopProductSaleModel } from '../../../../../../_common/inventory/shop/inventory-shop-product-sale.model';
-import AppJolticon from '../../../../../../_common/jolticon/AppJolticon.vue';
-import AppLoading from '../../../../../../_common/loading/AppLoading.vue';
-import AppLoadingFade from '../../../../../../_common/loading/AppLoadingFade.vue';
-import AppModal from '../../../../../../_common/modal/AppModal.vue';
-import AppModalFloatingHeader from '../../../../../../_common/modal/AppModalFloatingHeader.vue';
-import { useModal } from '../../../../../../_common/modal/modal.service';
-import AppOnHover from '../../../../../../_common/on/AppOnHover.vue';
-import {
-	kThemeBg,
-	kThemeBgOffset,
-	kThemeFg,
-	kThemeFg10,
-} from '../../../../../../_common/theme/variables';
-import { $gettext } from '../../../../../../_common/translate/translate.service';
-import AppUserAvatarBubble from '../../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
-import { UserModel } from '../../../../../../_common/user/user.model';
+import { computed, ref } from 'vue';
+
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
+import { showErrorGrowl } from '~common/growls/growls.service';
+import AppIllustration from '~common/illustration/AppIllustration.vue';
+import { illExtremeSadness, illNoComments } from '~common/illustration/illustrations';
+import { InventoryShopProductSaleModel } from '~common/inventory/shop/inventory-shop-product-sale.model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLoading from '~common/loading/AppLoading.vue';
+import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
+import AppModal from '~common/modal/AppModal.vue';
+import AppModalFloatingHeader from '~common/modal/AppModalFloatingHeader.vue';
+import { useModal } from '~common/modal/modal.service';
+import AppOnHover from '~common/on/AppOnHover.vue';
+import { kThemeBg, kThemeBgOffset, kThemeFg, kThemeFg10 } from '~common/theme/variables';
+import { $gettext } from '~common/translate/translate.service';
+import { UserModel } from '~common/user/user.model';
+import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
 import {
 	styleChangeBg,
 	styleFlexCenter,
 	styleTextOverflow,
 	styleTyped,
 	styleWhen,
-} from '../../../../../../_styles/mixins';
-import { kFontSizeBase, kFontSizeLarge, kStrongEaseOut } from '../../../../../../_styles/variables';
-import { debounceWithCancel } from '../../../../../../utils/utils';
+} from '~styles/mixins';
+import { kFontSizeBase, kFontSizeLarge, kStrongEaseOut } from '~styles/variables';
+import { debounceWithCancel } from '~utils/utils';
 
-const props = defineProps({
-	sale: {
-		type: Object as PropType<InventoryShopProductSaleModel>,
-		required: true,
-	},
-});
+type FormModel = {
+	input: string;
+};
 
-const { sale } = toRefs(props);
+type Props = {
+	sale: InventoryShopProductSaleModel;
+};
+const { sale } = defineProps<Props>();
 
 const modal = useModal()!;
 
@@ -80,7 +70,7 @@ const showSearchHint = computed(() => {
 	return giftableUsers.value.length >= limit;
 });
 
-const loadUrl = computed(() => `/mobile/shop-sale/${sale.value.id}`);
+const loadUrl = computed(() => `/mobile/shop-sale/${sale.id}`);
 
 async function fetchUsers() {
 	debounceSearch.cancel();
@@ -155,7 +145,7 @@ function handlePayload(payload: any) {
 	giftableUsers.value = newUsers;
 }
 
-const form: FormController<{ input: string }> = createForm({
+const form: FormController<FormModel> = createForm<FormModel>({
 	loadUrl,
 	loadData: computed(() => {
 		return { _fields: getRequestBody(true) };

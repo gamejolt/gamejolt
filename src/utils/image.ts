@@ -1,5 +1,5 @@
-import { Environment } from '../_common/environment/environment.service';
-import { Screen } from '../_common/screen/screen-service';
+import { Environment } from '~common/environment/environment.service';
+import { Screen } from '~common/screen/screen-service';
 
 export const imageMimeTypes = [
 	'image/jpg',
@@ -34,11 +34,11 @@ export function getImgDimensions(file: File): Promise<[number, number]> {
  * A data url starts with `data:image/<mime>;`
  */
 export function makeFileFromDataUrl(dataUrl: string, fileName: string) {
-	let arr = dataUrl.split(','),
-		mime = arr[0].match(/:(.*?);/)![1],
-		bstr = atob(arr[1]),
-		n = bstr.length,
-		u8arr = new Uint8Array(n);
+	const arr = dataUrl.split(',');
+	const mime = arr[0].match(/:(.*?);/)![1];
+	const bstr = atob(arr[1]);
+	let n = bstr.length;
+	const u8arr = new Uint8Array(n);
 	while (n--) {
 		u8arr[n] = bstr.charCodeAt(n);
 	}

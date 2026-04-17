@@ -1,9 +1,10 @@
 import type { MsgProgress, SelfUpdaterInstance } from 'client-voodoo';
 import { markRaw, reactive } from 'vue';
-import { Environment } from '../environment/environment.service';
-import { Navigate } from '../navigate/navigate.service';
-import { Logger, PatcherState, SelfUpdater } from './client-voodoo-imports';
-import { Client } from './client.service';
+
+import { Client } from '~common/client/client.service';
+import { Logger, PatcherState, SelfUpdater } from '~common/client/client-voodoo-imports';
+import { Environment } from '~common/environment/environment.service';
+import { Navigate } from '~common/navigate/navigate.service';
 
 const path = require('path') as typeof import('path');
 
@@ -97,7 +98,7 @@ class ClientUpdaterService {
 				// the check if its already in progress. Something weird is going on.
 				//
 				// Either way, this is an error we should be able to tolerate and just try syncing with joltron's state again.
-				if (err && err.message === 'Already running an update') {
+				if (err && (err as any).message === 'Already running an update') {
 					await this.queryUpdaterState(updaterInstance);
 				} else {
 					throw err;

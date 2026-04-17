@@ -1,8 +1,9 @@
 <script lang="ts">
-import { nextTick, onMounted, ref, toRefs, watch } from 'vue';
-import { Ruler } from '../../ruler/ruler-service';
-import { onScreenResize } from '../../screen/screen-service';
-import { useEventSubscription } from '../../system/event/event-topic';
+import { nextTick, onMounted, ref, useTemplateRef, watch } from 'vue';
+
+import { Ruler } from '~common/ruler/ruler-service';
+import { onScreenResize } from '~common/screen/screen-service';
+import { useEventSubscription } from '~common/system/event/event-topic';
 
 const RATIO = 0.5625; // 16:9
 
@@ -40,30 +41,18 @@ export function getSketchfabIdFromInput(input: string) {
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	sketchfabId: {
-		type: String,
-		required: true,
-	},
-	maxWidth: {
-		type: Number,
-		default: 0,
-	},
-	maxHeight: {
-		type: Number,
-		default: 0,
-	},
-	autoplay: {
-		type: Boolean,
-	},
-});
-
-const { sketchfabId, maxWidth, maxHeight, autoplay } = toRefs(props);
+type Props = {
+	sketchfabId: string;
+	maxWidth?: number;
+	maxHeight?: number;
+	autoplay?: boolean;
+};
+const { sketchfabId, maxWidth = 0, maxHeight = 0, autoplay } = defineProps<Props>();
 
 const embedUrl = ref('');
 const width = ref(0);
 const height = ref(0);
-const innerElem = ref<HTMLElement>();
+const innerElem = useTemplateRef('innerElem');
 
 useEventSubscription(onScreenResize, () => recalculateDimensions());
 
@@ -72,15 +61,15 @@ onMounted(() => {
 });
 
 watch(
-	sketchfabId,
+	() => sketchfabId,
 	() => {
-		if (!sketchfabId.value) {
+		if (!sketchfabId) {
 			return;
 		}
 
-		let url = `https://sketchfab.com/models/${sketchfabId.value}/embed`;
+		let url = `https://sketchfab.com/models/${sketchfabId}/embed`;
 
-		if (autoplay.value) {
+		if (autoplay) {
 			url += '?autostart=1';
 		}
 
@@ -98,14 +87,14 @@ async function recalculateDimensions() {
 
 	width.value = Ruler.width(innerElem.value);
 
-	if (maxWidth.value) {
-		width.value = Math.min(maxWidth.value, width.value);
+	if (maxWidth) {
+		width.value = Math.min(maxWidth, width.value);
 	}
 
 	height.value = width.value * RATIO;
 
-	if (maxHeight.value && height.value > maxHeight.value) {
-		height.value = maxHeight.value;
+	if (maxHeight && height.value > maxHeight) {
+		height.value = maxHeight;
 		width.value = height.value / RATIO;
 	}
 }
@@ -118,10 +107,8 @@ async function recalculateDimensions() {
 				nwdisable
 				nwfaketop
 				frameborder="0"
-				allowvr
+				allow="vr; fullscreen"
 				allowfullscreen
-				mozallowfullscreen
-				webkitallowfullscreen
 				:width="width"
 				:height="height"
 				:src="embedUrl"

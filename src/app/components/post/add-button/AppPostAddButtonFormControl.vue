@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import AppFormControl from '../../../../_common/form-vue/AppFormControl.vue';
-import { validateMaxLength } from '../../../../_common/form-vue/validators';
-import { useCommonStore } from '../../../../_common/store/common-store';
-import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
+import AppFormControl from '~common/form-vue/AppFormControl.vue';
+import { validateMaxLength } from '~common/form-vue/validators';
+import { useCommonStore } from '~common/store/common-store';
+import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
 
 const { user } = useCommonStore();
 </script>

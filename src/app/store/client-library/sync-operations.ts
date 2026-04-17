@@ -1,15 +1,16 @@
 import { ComputedRef } from 'vue';
-import { Api } from '../../../_common/api/api.service';
-import { getDeviceArch, getDeviceOS } from '../../../_common/device/device.service';
-import type { GameBuildModel } from '../../../_common/game/build/build.model';
-import type { GameBuildLaunchOptionModel } from '../../../_common/game/build/launch-option/launch-option.model';
-import type { GamePackageModel } from '../../../_common/game/package/package.model';
-import type { GameReleaseModel } from '../../../_common/game/release/release.model';
-import type { LocalDbGame } from '../../components/client/local-db/game/game.model';
-import { LocalDbPackage } from '../../components/client/local-db/package/package.model';
-import type ClientLibraryGameDataMutations from './game-data-mutations';
-import type ClientLibraryPackageDataMutations from './package-data-mutations';
-import type ClientLibraryPackageInstallOperations from './package-install-operations';
+
+import type { LocalDbGame } from '~app/components/client/local-db/game/game.model';
+import { LocalDbPackage } from '~app/components/client/local-db/package/package.model';
+import type ClientLibraryGameDataMutations from '~app/store/client-library/game-data-mutations';
+import type ClientLibraryPackageDataMutations from '~app/store/client-library/package-data-mutations';
+import type ClientLibraryPackageInstallOperations from '~app/store/client-library/package-install-operations';
+import { Api } from '~common/api/api.service';
+import { getDeviceArch, getDeviceOS } from '~common/device/device.service';
+import type { GameBuildModel } from '~common/game/build/build.model';
+import type { GameBuildLaunchOptionModel } from '~common/game/build/launch-option/launch-option.model';
+import type { GamePackageModel } from '~common/game/package/package.model';
+import type { GameReleaseModel } from '~common/game/release/release.model';
 
 export default class ClientLibrarySyncOperations {
 	constructor(

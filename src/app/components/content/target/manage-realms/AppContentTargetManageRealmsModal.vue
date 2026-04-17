@@ -1,32 +1,27 @@
 <script lang="ts">
-import { computed, nextTick, onMounted, PropType, ref, shallowRef, toRefs } from 'vue';
-import { Api, RequestOptions } from '../../../../../_common/api/api.service';
-import AppAspectRatio from '../../../../../_common/aspect-ratio/AppAspectRatio.vue';
-import AppButton from '../../../../../_common/button/AppButton.vue';
-import AppExpand from '../../../../../_common/expand/AppExpand.vue';
-import { formatNumber } from '../../../../../_common/filters/number';
-import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
-import { illPointyThing } from '../../../../../_common/illustration/illustrations';
-import AppJolticon from '../../../../../_common/jolticon/AppJolticon.vue';
-import AppLoading from '../../../../../_common/loading/AppLoading.vue';
-import AppModal from '../../../../../_common/modal/AppModal.vue';
-import AppModalFloatingHeader from '../../../../../_common/modal/AppModalFloatingHeader.vue';
-import { useModal } from '../../../../../_common/modal/modal.service';
-import AppRealmFullCard, {
-	REALM_CARD_RATIO,
-} from '../../../../../_common/realm/AppRealmFullCard.vue';
-import { RealmModel } from '../../../../../_common/realm/realm-model';
-import { Screen } from '../../../../../_common/screen/screen-service';
-import AppScrollScroller, {
-	createScroller,
-} from '../../../../../_common/scroll/AppScrollScroller.vue';
-import AppScrollInview, {
-	ScrollInviewConfig,
-} from '../../../../../_common/scroll/inview/AppScrollInview.vue';
-import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
-import { arrayRemove } from '../../../../../utils/array';
-import { debounce } from '../../../../../utils/utils';
-import AppContentTargetRealm from '../AppContentTargetRealm.vue';
+import { computed, nextTick, onMounted, ref, shallowRef } from 'vue';
+
+import AppContentTargetRealm from '~app/components/content/target/AppContentTargetRealm.vue';
+import { Api, RequestOptions } from '~common/api/api.service';
+import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
+import AppButton from '~common/button/AppButton.vue';
+import AppExpand from '~common/expand/AppExpand.vue';
+import { formatNumber } from '~common/filters/number';
+import AppIllustration from '~common/illustration/AppIllustration.vue';
+import { illPointyThing } from '~common/illustration/illustrations';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLoading from '~common/loading/AppLoading.vue';
+import AppModal from '~common/modal/AppModal.vue';
+import AppModalFloatingHeader from '~common/modal/AppModalFloatingHeader.vue';
+import { useModal } from '~common/modal/modal.service';
+import AppRealmFullCard, { REALM_CARD_RATIO } from '~common/realm/AppRealmFullCard.vue';
+import { RealmModel } from '~common/realm/realm-model';
+import { Screen } from '~common/screen/screen-service';
+import AppScrollScroller, { createScroller } from '~common/scroll/AppScrollScroller.vue';
+import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import { arrayRemove } from '~utils/array';
+import { debounce } from '~utils/utils';
 
 type RealmSearchFeed = ReturnType<typeof createRealmSearchFeed>;
 
@@ -145,18 +140,11 @@ function createRealmSearchFeed(query: string) {
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	selectedRealms: {
-		type: Array as PropType<RealmModel[]>,
-		required: true,
-	},
-	maxRealms: {
-		type: Number,
-		required: true,
-	},
-});
-
-const { selectedRealms, maxRealms } = toRefs(props);
+type Props = {
+	selectedRealms: RealmModel[];
+	maxRealms: number;
+};
+const { selectedRealms, maxRealms } = defineProps<Props>();
 
 const modal = useModal()!;
 const scrollController = createScroller();
@@ -183,14 +171,14 @@ const isOverview = computed(() => renderedFeed.value.isOverview);
 const hasError = computed(() => renderedFeed.value.hasError.value);
 
 const canLoadMore = computed(() => renderedFeed.value.canLoadMore.value);
-const canAddRealms = computed(() => selectedRealms.value.length < maxRealms.value);
+const canAddRealms = computed(() => selectedRealms.length < maxRealms);
 
 onMounted(() => {
 	realmFeeds.value.get(currentQuery.value)?.init();
 });
 
 function isRealmSelected(realm: RealmModel) {
-	return selectedRealms.value.findIndex(i => i.id === realm.id) !== -1;
+	return selectedRealms.findIndex(i => i.id === realm.id) !== -1;
 }
 
 function toggleRealmSelection(realm: RealmModel) {
@@ -202,11 +190,11 @@ function toggleRealmSelection(realm: RealmModel) {
 }
 
 async function selectRealm(realm: RealmModel) {
-	if (selectedRealms.value.length >= maxRealms.value || isRealmSelected(realm)) {
+	if (selectedRealms.length >= maxRealms || isRealmSelected(realm)) {
 		return;
 	}
 
-	selectedRealms.value.push(realm);
+	selectedRealms.push(realm);
 	await nextTick();
 	const offset = scrollController.element.value?.scrollWidth;
 	if (offset) {
@@ -218,7 +206,7 @@ async function selectRealm(realm: RealmModel) {
 }
 
 function removeRealm(realm: RealmModel) {
-	arrayRemove(selectedRealms.value, i => i.id === realm.id);
+	arrayRemove(selectedRealms, i => i.id === realm.id);
 }
 
 const debounceSearchInput = debounce(() => {
@@ -321,7 +309,7 @@ const debounceSearchInput = debounce(() => {
 								overlay-content
 								no-sheet
 								no-follow
-								ondragstart="return false"
+								@dragstart.prevent
 								@click="toggleRealmSelection(realm)"
 							/>
 

@@ -1,17 +1,24 @@
 <script lang="ts" setup>
 import { defineAsyncComponent } from 'vue';
-import { Environment } from '../_common/environment/environment.service';
-import { GameBuildType } from '../_common/game/build/build.model';
-import AppCommonShell from '../_common/shell/AppCommonShell.vue';
-import { useGameserverStore } from './store/index';
 
-const AppEmbedHtml = defineAsyncComponent(() => import('./components/AppEmbedHtml.vue'));
-const AppEmbedFlash = defineAsyncComponent(() => import('./components/AppEmbedFlash.vue'));
-const AppEmbedUnity = defineAsyncComponent(() => import('./components/AppEmbedUnity.vue'));
-const AppEmbedApplet = defineAsyncComponent(() => import('./components/AppEmbedApplet.vue'));
-const AppEmbedRom = defineAsyncComponent(() => import('./components/AppEmbedRom.vue'));
+import { Environment } from '~common/environment/environment.service';
+import { GameBuildType } from '~common/game/build/build.model';
+import AppCommonShell from '~common/shell/AppCommonShell.vue';
+import { useGameserverStore } from '~gameserver/store/index';
+
+const AppEmbedHtml = defineAsyncComponent(() => import('~gameserver/components/AppEmbedHtml.vue'));
+const AppEmbedFlash = defineAsyncComponent(
+	() => import('~gameserver/components/AppEmbedFlash.vue')
+);
+const AppEmbedUnity = defineAsyncComponent(
+	() => import('~gameserver/components/AppEmbedUnity.vue')
+);
+const AppEmbedApplet = defineAsyncComponent(
+	() => import('~gameserver/components/AppEmbedApplet.vue')
+);
+const AppEmbedRom = defineAsyncComponent(() => import('~gameserver/components/AppEmbedRom.vue'));
 const AppEmbedSilverlight = defineAsyncComponent(
-	() => import('./components/AppEmbedSilverlight.vue')
+	() => import('~gameserver/components/AppEmbedSilverlight.vue')
 );
 
 const { build, bootstrap } = useGameserverStore();

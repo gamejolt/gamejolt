@@ -1,7 +1,8 @@
-import { markRaw, reactive, type Component } from 'vue';
-import { arrayRemove } from '../../utils/array';
-import { Client } from '../client/safe-exports';
-import { $gettext } from '../translate/translate.service';
+import { type Component, markRaw, reactive } from 'vue';
+
+import { Client } from '~common/client/safe-exports';
+import { $gettext } from '~common/translate/translate.service';
+import { arrayRemove } from '~utils/array';
 
 export type GrowlType = 'info' | 'success' | 'error';
 

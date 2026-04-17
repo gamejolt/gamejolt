@@ -1,17 +1,16 @@
 <script lang="ts" setup>
 import { onMounted } from 'vue';
-import AppJolticon from '../../_common/jolticon/AppJolticon.vue';
 
-defineProps({
-	type: {
-		type: String,
-		default: 'info',
-	},
-});
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
 
-const emit = defineEmits({
-	dismiss: () => true,
-});
+type Props = {
+	type?: string;
+};
+const { type = 'info' } = defineProps<Props>();
+
+const emit = defineEmits<{
+	dismiss: [];
+}>();
 
 let _timeout: number | undefined;
 

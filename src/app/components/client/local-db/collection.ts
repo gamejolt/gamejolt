@@ -1,6 +1,7 @@
 import { reactive } from 'vue';
-import { Primitives, Properties } from '../../../../utils/utils';
-import { LocalDbModel } from './model.service';
+
+import { LocalDbModel } from '~app/components/client/local-db/model.service';
+import { Primitives, Properties } from '~utils/utils';
 
 const writeFileAtomic = require('write-file-atomic') as typeof import('write-file-atomic');
 const fs = require('fs-extra') as typeof import('fs-extra');
@@ -156,7 +157,7 @@ export class Collection<T extends LocalDbModel<T>> {
 
 		const emptyGroups: DataGroups<T> = {};
 		for (const field in this.data.groups) {
-			emptyGroups[field] = {};
+			(emptyGroups as any)[field] = {};
 		}
 		this.data = { version: this.data.version, objects: {}, groups: emptyGroups };
 	}
@@ -204,7 +205,7 @@ export class Collection<T extends LocalDbModel<T>> {
 		}
 
 		instance.hydrate();
-		return instance;
+		return instance as unknown as T;
 	}
 
 	/**

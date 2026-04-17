@@ -1,4 +1,4 @@
-import { escapeString } from './meta-service';
+import { escapeString } from '~common/meta/meta-service';
 
 export class MetaField {
 	original: string | null = null;

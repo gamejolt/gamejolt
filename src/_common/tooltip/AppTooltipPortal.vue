@@ -4,7 +4,8 @@ import hide from '@popperjs/core/lib/modifiers/hide';
 import preventOverflow from '@popperjs/core/lib/modifiers/preventOverflow';
 import { createPopper, Instance, Options as PopperOptions } from '@popperjs/core/lib/popper-lite';
 import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue';
-import { getActiveTooltip } from './tooltip-controller';
+
+import { getActiveTooltip } from '~common/tooltip/tooltip-controller';
 
 /**
  * This component should be used in any app that wants to use tooltips. It is

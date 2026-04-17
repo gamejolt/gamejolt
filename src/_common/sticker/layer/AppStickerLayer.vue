@@ -1,12 +1,20 @@
 <script lang="ts" setup>
-import { computed, onBeforeUnmount, onMounted, toRaw, toRefs, watchEffect } from 'vue';
-import { registerContentFocusWatcher } from '../../content-focus/content-focus.service';
-import { useScroller } from '../../scroll/AppScrollScroller.vue';
-import { registerStickerLayer, unregisterStickerLayer, useStickerStore } from '../sticker-store';
-import AppStickerLayerPlacementMask from './AppStickerLayerPlacementMask.vue';
-import { createStickerLayerController, provideStickerLayer } from './layer-controller';
+import { computed, onBeforeUnmount, onMounted, toRaw, watchEffect } from 'vue';
 
-const props = defineProps({
+import { registerContentFocusWatcher } from '~common/content-focus/content-focus.service';
+import { useScroller } from '~common/scroll/AppScrollScroller.vue';
+import AppStickerLayerPlacementMask from '~common/sticker/layer/AppStickerLayerPlacementMask.vue';
+import {
+	createStickerLayerController,
+	provideStickerLayer,
+} from '~common/sticker/layer/layer-controller';
+import {
+	registerStickerLayer,
+	unregisterStickerLayer,
+	useStickerStore,
+} from '~common/sticker/sticker-store';
+
+type Props = {
 	/**
 	 * Indicates that this sticker layer doesn't show the placement overlay, and
 	 * only contains rect data for its sticker target children.
@@ -15,12 +23,9 @@ const props = defineProps({
 	 * - AppShell
 	 * - AppModal
 	 */
-	noMask: {
-		type: Boolean,
-	},
-});
-
-const { noMask } = toRefs(props);
+	noMask?: boolean;
+};
+const { noMask } = defineProps<Props>();
 
 const stickerStore = useStickerStore();
 const { activeLayer } = stickerStore;
@@ -30,7 +35,7 @@ const scroller = useScroller();
 const layer = createStickerLayerController(stickerStore);
 const { isShowingDrawer, isMask } = layer;
 
-watchEffect(() => (isMask.value = !noMask.value));
+watchEffect(() => (isMask.value = !noMask));
 
 provideStickerLayer(layer);
 registerStickerLayer(stickerStore, layer);

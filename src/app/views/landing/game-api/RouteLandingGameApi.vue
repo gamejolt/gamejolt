@@ -1,12 +1,13 @@
 <script lang="ts">
 import { computed, ref } from 'vue';
-import { Api } from '../../../../_common/api/api.service';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import { formatNumber } from '../../../../_common/filters/number';
-import { createAppRoute, defineAppRouteOptions } from '../../../../_common/route/route-component';
-import AppThemeSvg from '../../../../_common/theme/svg/AppThemeSvg.vue';
-import { $gettext } from '../../../../_common/translate/translate.service';
-import { imageJolt } from '../../../img/images';
+
+import { imageJolt } from '~app/img/images';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import { formatNumber } from '~common/filters/number';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import AppThemeSvg from '~common/theme/svg/AppThemeSvg.vue';
+import { $gettext } from '~common/translate/translate.service';
 
 export default {
 	...defineAppRouteOptions({

@@ -1,5 +1,5 @@
-import { EmbedMetadataModel } from '../../../embed/embed-metadata.model';
-import { Model } from '../../../model/model.service';
+import { EmbedMetadataModel } from '~common/embed/embed-metadata.model';
+import { Model } from '~common/model/model.service';
 
 export const TYPE_YOUTUBE = 'youtube';
 export const TYPE_SKETCHFAB = 'sketchfab';

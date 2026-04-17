@@ -1,12 +1,13 @@
-import { computed, inject, InjectionKey, ref, Ref, unref, watch } from 'vue';
+import { computed, inject, InjectionKey, Ref, ref, unref, watch } from 'vue';
 import { Router } from 'vue-router';
-import { Analytics } from '../../_common/analytics/analytics.service';
-import { Connection } from '../../_common/connection/connection-service';
-import { isDynamicGoogleBot } from '../../_common/device/device.service';
-import { Screen } from '../../_common/screen/screen-service';
-import { SettingFeedNotifications } from '../../_common/settings/settings.service';
-import { CommonStore } from '../../_common/store/common-store';
-import { $gettext } from '../../_common/translate/translate.service';
+
+import { Analytics } from '~common/analytics/analytics.service';
+import { Connection } from '~common/connection/connection-service';
+import { isDynamicGoogleBot } from '~common/device/device.service';
+import { Screen } from '~common/screen/screen-service';
+import { SettingFeedNotifications } from '~common/settings/settings.service';
+import { CommonStore } from '~common/store/common-store';
+import { $gettext } from '~common/translate/translate.service';
 
 export const BannerStoreKey: InjectionKey<BannerStore> = Symbol('banner-store');
 

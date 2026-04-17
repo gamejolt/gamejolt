@@ -1,13 +1,13 @@
 <script lang="ts" setup>
-import { Screen } from '../../../../../../_common/screen/screen-service';
-import { kThemeBgOffset } from '../../../../../../_common/theme/variables';
+import { Screen } from '~common/screen/screen-service';
+import { kThemeBgOffset } from '~common/theme/variables';
 import {
 	styleBorderRadiusLg,
 	styleElevate,
 	styleFlexCenter,
 	styleTextOverflow,
 	styleWhen,
-} from '../../../../../../_styles/mixins';
+} from '~styles/mixins';
 </script>
 
 <template>

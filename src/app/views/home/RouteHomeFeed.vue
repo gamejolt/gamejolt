@@ -1,46 +1,52 @@
 <script lang="ts">
 import { computed, defineAsyncComponent, provide, Ref, ref, toRef, watch } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
-import { router } from '..';
-import AppAdTakeoverBackground from '../../../_common/ad/AppAdTakeoverBackground.vue';
-import AppAdTakeoverFloat from '../../../_common/ad/AppAdTakeoverFloat.vue';
-import AppAdWidget from '../../../_common/ad/widget/AppAdWidget.vue';
-import { Api } from '../../../_common/api/api.service';
-import AppButton from '../../../_common/button/AppButton.vue';
-import { FiresidePostModel } from '../../../_common/fireside/post/post-model';
-import AppInviteCard from '../../../_common/invite/AppInviteCard.vue';
+
+import { ActivityFeedService } from '~app/components/activity/feed/feed-service';
+import { ActivityFeedView } from '~app/components/activity/feed/view';
+import { FeaturedItemModel } from '~app/components/featured-item/featured-item.model';
+import { useGridStore } from '~app/components/grid/grid-store';
+import AppPageContainer from '~app/components/page-container/AppPageContainer.vue';
+import AppPostAddButton from '~app/components/post/add-button/AppPostAddButton.vue';
+import AppDailyQuests from '~app/components/quest/AppDailyQuests.vue';
+import AppShellPageBackdrop from '~app/components/shell/AppShellPageBackdrop.vue';
+import { fetchDailyQuests, useQuestStore } from '~app/store/quest';
+import AppHomeFeaturedBanner from '~app/views/home/AppHomeFeaturedBanner.vue';
+import AppHomeFeedMenu from '~app/views/home/AppHomeFeedMenu.vue';
+import {
+	HOME_FEED_ACTIVITY,
+	HOME_FEED_FYP,
+	HomeFeedService,
+} from '~app/views/home/home-feed.service';
+import AppAdTakeoverBackground from '~common/ad/AppAdTakeoverBackground.vue';
+import AppAdTakeoverFloat from '~common/ad/AppAdTakeoverFloat.vue';
+import AppAdWidget from '~common/ad/widget/AppAdWidget.vue';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import AppInviteCard from '~common/invite/AppInviteCard.vue';
 import {
 	asyncRouteLoader,
 	createAppRoute,
 	defineAppRouteOptions,
-} from '../../../_common/route/route-component';
-import { Screen } from '../../../_common/screen/screen-service';
-import AppSpacer from '../../../_common/spacer/AppSpacer.vue';
-import AppStickerChargeCard from '../../../_common/sticker/charge/AppStickerChargeCard.vue';
-import { useCommonStore } from '../../../_common/store/common-store';
-import { vAppTooltip } from '../../../_common/tooltip/tooltip-directive';
-import { styleTextOverflow } from '../../../_styles/mixins';
-import { kGridGutterWidth, kGridGutterWidthXs } from '../../../_styles/variables';
-import { numberSort } from '../../../utils/array';
-import { fuzzysearch } from '../../../utils/string';
-import { ActivityFeedService } from '../../components/activity/feed/feed-service';
-import { ActivityFeedView } from '../../components/activity/feed/view';
-import { FeaturedItemModel } from '../../components/featured-item/featured-item.model';
-import { useGridStore } from '../../components/grid/grid-store';
-import AppPageContainer from '../../components/page-container/AppPageContainer.vue';
-import AppPostAddButton from '../../components/post/add-button/AppPostAddButton.vue';
-import AppDailyQuests from '../../components/quest/AppDailyQuests.vue';
-import AppShellPageBackdrop from '../../components/shell/AppShellPageBackdrop.vue';
-import { fetchDailyQuests, useQuestStore } from '../../store/quest';
-import AppHomeFeaturedBanner from './AppHomeFeaturedBanner.vue';
-import AppHomeFeedMenu from './AppHomeFeedMenu.vue';
-import { HOME_FEED_ACTIVITY, HOME_FEED_FYP, HomeFeedService } from './home-feed.service';
+} from '~common/route/route-component';
+import { Screen } from '~common/screen/screen-service';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import AppStickerChargeCard from '~common/sticker/charge/AppStickerChargeCard.vue';
+import { useCommonStore } from '~common/store/common-store';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { styleTextOverflow } from '~styles/mixins';
+import { kGridGutterWidth, kGridGutterWidthXs } from '~styles/variables';
+import { numberSort } from '~utils/array';
+import { fuzzysearch } from '~utils/string';
+
+import { router } from '..';
 
 const RouteHomeActivity = defineAsyncComponent(() =>
-	asyncRouteLoader(router, import('./RouteHomeActivity.vue'))
+	asyncRouteLoader(router, import('~app/views/home/RouteHomeActivity.vue'))
 );
 const RouteHomeFyp = defineAsyncComponent(() =>
-	asyncRouteLoader(router, import('./RouteHomeFYP.vue'))
+	asyncRouteLoader(router, import('~app/views/home/RouteHomeFYP.vue'))
 );
 
 class DashGame {

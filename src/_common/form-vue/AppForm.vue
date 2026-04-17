@@ -10,22 +10,23 @@ import {
 	PropType,
 	provide,
 	reactive,
-	ref,
 	Ref,
+	ref,
 	shallowRef,
-	toRefs,
 } from 'vue';
 import { useRouter } from 'vue-router';
-import { CancelToken } from '../../utils/cancel-token';
-import { uuidv4 } from '../../utils/uuid';
-import { Api } from '../api/api.service';
-import AppLoading from '../loading/AppLoading.vue';
-import AppLoadingFade from '../loading/AppLoadingFade.vue';
-import { ModelClassType } from '../model/model.service';
-import { PayloadFormErrors } from '../payload/payload-service';
-import { $gettext } from '../translate/translate.service';
-import { FormGroupController } from './AppFormGroup.vue';
-import { FormValidatorError } from './validators';
+
+import { Api } from '~common/api/api.service';
+import { FormGroupController } from '~common/form-vue/AppFormGroup.vue';
+import { FormValidatorError } from '~common/form-vue/validators';
+import AppLoading from '~common/loading/AppLoading.vue';
+import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
+import { ModelClassType } from '~common/model/model.service';
+import { PayloadFormErrors } from '~common/payload/payload-service';
+import { $gettext } from '~common/translate/translate.service';
+import { CancelToken } from '~utils/cancel-token';
+import { MaybePromise } from '~utils/utils';
+import { uuidv4 } from '~utils/uuid';
 
 const Key: InjectionKey<FormController> = Symbol('form');
 
@@ -91,7 +92,7 @@ interface CreateFormOptions<T, SubmitResponse = any> {
 	onInit?: () => void;
 	onLoad?: (response: any) => void;
 	onBeforeSubmit?: () => void;
-	onSubmit?: () => Promise<SubmitResponse>;
+	onSubmit?: () => MaybePromise<SubmitResponse>;
 	onSubmitSuccess?: (response: SubmitResponse) => void;
 	onSubmitError?: (response: any) => void;
 	onChange?: (formModel: Readonly<T>) => void;
@@ -466,41 +467,34 @@ export interface FormController<T = any> {
 </script>
 
 <script lang="ts" setup>
-const props = defineProps({
-	controller: {
-		type: Object as PropType<FormController>,
-		required: true,
-	},
+type Props = {
+	controller: FormController;
 	/** Used to override the normal form loading state. */
-	forcedIsLoading: {
-		type: Boolean,
-		default: undefined,
-	},
-});
+	forcedIsLoading?: boolean;
+};
+const { controller, forcedIsLoading } = defineProps<Props>();
 
-const emit = defineEmits({
+const emit = defineEmits<{
 	/** @deprecated This is only here for old forms, use the controller's onChange callback instead */
-	changed: (_formModel: any) => true,
-});
-
-const { controller, forcedIsLoading } = toRefs(props);
+	changed: [formModel: any];
+}>();
 
 // To support old forms.
-controller.value._override({
+controller._override({
 	onChange: formModel => emit('changed', formModel),
 });
 
-provide(Key, controller.value);
+provide(Key, controller);
 
 const isLoaded = computed(() => {
-	if (typeof forcedIsLoading?.value === 'boolean') {
-		return !forcedIsLoading.value;
+	if (typeof forcedIsLoading === 'boolean') {
+		return !forcedIsLoading;
 	}
 
 	// Check specifically false so that "null" is correctly shown as loaded.
-	return controller.value.isLoaded !== false;
+	return controller.isLoaded !== false;
 });
-const isLoadedBootstrapped = computed(() => controller.value.isLoadedBootstrapped !== false);
+const isLoadedBootstrapped = computed(() => controller.isLoadedBootstrapped !== false);
 </script>
 
 <template>

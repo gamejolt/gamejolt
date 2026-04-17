@@ -1,62 +1,55 @@
 <script lang="ts" setup>
-import { PropType, Ref, computed, onMounted, onUnmounted, ref, toRefs, watchEffect } from 'vue';
+import { computed, onMounted, onUnmounted, Ref, ref, watchEffect } from 'vue';
 import { useRouter } from 'vue-router';
-import { Api } from '../../../../../_common/api/api.service';
-import { vAppAuthRequired } from '../../../../../_common/auth/auth-required-directive';
-import { AvatarFrameModel } from '../../../../../_common/avatar/frame.model';
-import { BackgroundModel } from '../../../../../_common/background/background.model';
-import AppButton from '../../../../../_common/button/AppButton.vue';
-import {
-	AcquisitionMethod,
-	AcquisitionModel,
-} from '../../../../../_common/collectible/acquisition.model';
-import AppCurrencyImg from '../../../../../_common/currency/AppCurrencyImg.vue';
-import AppCurrencyPillList from '../../../../../_common/currency/AppCurrencyPillList.vue';
-import {
-	Currency,
-	CurrencyType,
-	canAffordCurrency,
-} from '../../../../../_common/currency/currency-type';
-import { shorthandReadableTime } from '../../../../../_common/filters/duration';
-import { formatNumber } from '../../../../../_common/filters/number';
-import { showInfoGrowl } from '../../../../../_common/growls/growls.service';
-import AppIllustration from '../../../../../_common/illustration/AppIllustration.vue';
-import { illExtremeSadness } from '../../../../../_common/illustration/illustrations';
-import AppShopProductDisplay from '../../../../../_common/inventory/shop/AppShopProductDisplay.vue';
+
+import { showPurchaseShopProductConfirmModal } from '~app/components/vending-machine/modal/_purchase-modal/confirm/modal.service';
+import { showGiftRecipientModal } from '~app/components/vending-machine/modal/_purchase-modal/gift-recipient/modal.service';
+import { routeLandingHelpRedirect } from '~app/views/landing/help/help.route';
+import AppProfileShopButton from '~app/views/profile/overview/shop/AppProfileShopButton.vue';
+import { Api } from '~common/api/api.service';
+import { vAppAuthRequired } from '~common/auth/auth-required-directive';
+import { AvatarFrameModel } from '~common/avatar/frame.model';
+import { BackgroundModel } from '~common/background/background.model';
+import AppButton from '~common/button/AppButton.vue';
+import { AcquisitionMethod, AcquisitionModel } from '~common/collectible/acquisition.model';
+import AppCurrencyImg from '~common/currency/AppCurrencyImg.vue';
+import AppCurrencyPillList from '~common/currency/AppCurrencyPillList.vue';
+import { canAffordCurrency, Currency, CurrencyType } from '~common/currency/currency-type';
+import { shorthandReadableTime } from '~common/filters/duration';
+import { formatNumber } from '~common/filters/number';
+import { showInfoGrowl } from '~common/growls/growls.service';
+import AppIllustration from '~common/illustration/AppIllustration.vue';
+import { illExtremeSadness } from '~common/illustration/illustrations';
+import AppShopProductDisplay from '~common/inventory/shop/AppShopProductDisplay.vue';
 import {
 	InventoryShopProductSaleModel,
 	purchaseShopProduct,
-} from '../../../../../_common/inventory/shop/inventory-shop-product-sale.model';
+} from '~common/inventory/shop/inventory-shop-product-sale.model';
 import {
-	PurchasableProductData,
 	getShopProductDisplayData,
-} from '../../../../../_common/inventory/shop/product-owner-helpers';
-import AppLoading from '../../../../../_common/loading/AppLoading.vue';
-import AppLoadingFade from '../../../../../_common/loading/AppLoadingFade.vue';
-import { showPurchaseMicrotransactionModal } from '../../../../../_common/microtransaction/purchase-modal/modal.service';
-import AppModal from '../../../../../_common/modal/AppModal.vue';
-import AppModalFloatingHeader from '../../../../../_common/modal/AppModalFloatingHeader.vue';
-import { useModal } from '../../../../../_common/modal/modal.service';
-import { storeModel, storeModelList } from '../../../../../_common/model/model-store.service';
-import AppOnHover from '../../../../../_common/on/AppOnHover.vue';
-import AppSectionTitle from '../../../../../_common/section/AppSectionTitle.vue';
-import AppSpacer from '../../../../../_common/spacer/AppSpacer.vue';
-import AppStickerGrid from '../../../../../_common/sticker/pack/AppStickerGrid.vue';
-import { StickerPackModel } from '../../../../../_common/sticker/pack/pack.model';
-import { useStickerStore } from '../../../../../_common/sticker/sticker-store';
-import { StickerModel } from '../../../../../_common/sticker/sticker.model';
-import { useCommonStore } from '../../../../../_common/store/common-store';
-import {
-	kThemeBgOffset,
-	kThemeFg,
-	kThemeFgMuted,
-	kThemePrimary,
-} from '../../../../../_common/theme/variables';
-import { vAppTooltip } from '../../../../../_common/tooltip/tooltip-directive';
-import { $gettext } from '../../../../../_common/translate/translate.service';
-import AppUserAvatarBubble from '../../../../../_common/user/user-avatar/AppUserAvatarBubble.vue';
-import { UserModel } from '../../../../../_common/user/user.model';
-import { styleBorderRadiusLg, styleFlexCenter, styleWhen } from '../../../../../_styles/mixins';
+	PurchasableProductData,
+} from '~common/inventory/shop/product-owner-helpers';
+import AppLoading from '~common/loading/AppLoading.vue';
+import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
+import { showPurchaseMicrotransactionModal } from '~common/microtransaction/purchase-modal/modal.service';
+import AppModal from '~common/modal/AppModal.vue';
+import AppModalFloatingHeader from '~common/modal/AppModalFloatingHeader.vue';
+import { useModal } from '~common/modal/modal.service';
+import { storeModel, storeModelList } from '~common/model/model-store.service';
+import AppOnHover from '~common/on/AppOnHover.vue';
+import AppSectionTitle from '~common/section/AppSectionTitle.vue';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import AppStickerGrid from '~common/sticker/pack/AppStickerGrid.vue';
+import { StickerPackModel } from '~common/sticker/pack/pack.model';
+import { StickerModel } from '~common/sticker/sticker.model';
+import { useStickerStore } from '~common/sticker/sticker-store';
+import { useCommonStore } from '~common/store/common-store';
+import { kThemeBgOffset, kThemeFg, kThemeFgMuted, kThemePrimary } from '~common/theme/variables';
+import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { $gettext } from '~common/translate/translate.service';
+import { UserModel } from '~common/user/user.model';
+import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
+import { styleBorderRadiusLg, styleFlexCenter, styleWhen } from '~styles/mixins';
 import {
 	kBorderWidthBase,
 	kFontFamilyDisplay,
@@ -64,25 +57,14 @@ import {
 	kFontSizeH2,
 	kFontSizeTiny,
 	kStrongEaseOut,
-} from '../../../../../_styles/variables';
-import { getCurrentServerTime } from '../../../../../utils/server-time';
-import { routeLandingHelpRedirect } from '../../../../views/landing/help/help.route';
-import AppProfileShopButton from '../../../../views/profile/overview/shop/AppProfileShopButton.vue';
-import { showPurchaseShopProductConfirmModal } from './confirm/modal.service';
-import { showGiftRecipientModal } from './gift-recipient/modal.service';
+} from '~styles/variables';
+import { getCurrentServerTime } from '~utils/server-time';
 
-const props = defineProps({
-	initialProductData: {
-		type: Object as PropType<PurchasableProductData>,
-		required: true,
-	},
-	onItemPurchased: {
-		type: Function as PropType<() => void>,
-		default: undefined,
-	},
-});
-
-const { initialProductData, onItemPurchased } = toRefs(props);
+type Props = {
+	initialProductData: PurchasableProductData;
+	onItemPurchased?: () => void;
+};
+const { initialProductData, onItemPurchased } = defineProps<Props>();
 
 const modal = useModal()!;
 const router = useRouter();
@@ -90,7 +72,7 @@ const { stickerPacks } = useStickerStore();
 const { user: authUser, coinBalance, joltbuxBalance } = useCommonStore();
 
 const sale = ref<InventoryShopProductSaleModel>();
-const partialProductData = ref(getShopProductDisplayData(initialProductData.value));
+const partialProductData = ref(getShopProductDisplayData(initialProductData));
 
 const productData = computed(() => {
 	const data = partialProductData.value;
@@ -378,7 +360,7 @@ async function purchaseProduct(currency: Currency) {
 		balanceRefs,
 		onSuccess() {
 			modal.dismiss();
-			onItemPurchased?.value?.();
+			onItemPurchased?.();
 
 			if (giftTo) {
 				showInfoGrowl($gettext(`Your gift was sent to @${giftTo.username}`));

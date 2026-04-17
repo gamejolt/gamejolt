@@ -1,22 +1,20 @@
 <script lang="ts">
 import { computed, ref } from 'vue';
 import { RouterLink } from 'vue-router';
-import { Api } from '../../../../../../../../../_common/api/api.service';
-import { formatDate } from '../../../../../../../../../_common/filters/date';
+
+import { useGameDashRouteController } from '~app/views/dashboard/games/manage/manage.store';
+import { Api } from '~common/api/api.service';
+import { formatDate } from '~common/filters/date';
 import {
 	$removeGameDataStoreItem,
 	GameDataStoreItemModel,
-} from '../../../../../../../../../_common/game/data-store/item/item.model';
-import AppJolticon from '../../../../../../../../../_common/jolticon/AppJolticon.vue';
-import AppLinkHelp from '../../../../../../../../../_common/link/AppLinkHelp.vue';
-import { showModalConfirm } from '../../../../../../../../../_common/modal/confirm/confirm-service';
-import AppPopper from '../../../../../../../../../_common/popper/AppPopper.vue';
-import {
-	createAppRoute,
-	defineAppRouteOptions,
-} from '../../../../../../../../../_common/route/route-component';
-import { $gettext } from '../../../../../../../../../_common/translate/translate.service';
-import { useGameDashRouteController } from '../../../../manage.store';
+} from '~common/game/data-store/item/item.model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLinkHelp from '~common/link/AppLinkHelp.vue';
+import { showModalConfirm } from '~common/modal/confirm/confirm-service';
+import AppPopper from '~common/popper/AppPopper.vue';
+import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { $gettext } from '~common/translate/translate.service';
 
 export default {
 	...defineAppRouteOptions({

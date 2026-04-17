@@ -1,13 +1,7 @@
 import { markRaw, reactive } from 'vue';
-import { objectPick } from '../../../utils/object';
-import { assertNever } from '../../../utils/utils';
-import { EmojiModel } from '../../emoji/emoji.model';
-import { MediaItemModel } from '../../media-item/media-item-model';
-import { storeModel } from '../../model/model-store.service';
-import { ThemeModel } from '../../theme/theme.model';
-import { ThemeStore } from '../../theme/theme.store';
-import { ContentContext, ContextCapabilities } from '../content-context';
-import { ContentHydrationType } from '../content-hydrator';
+
+import { ContentContext, ContextCapabilities } from '~common/content/content-context';
+import { ContentEditorService } from '~common/content/content-editor/content-editor.service';
 import {
 	ContentEditorController,
 	createContentEditor,
@@ -27,9 +21,16 @@ import {
 	editorToggleHeading,
 	editorToggleMark,
 	editorUnlink,
-} from './content-editor-controller';
-import { ContentEditorService } from './content-editor.service';
-import { createMediaUploadTask } from './media-upload-task';
+} from '~common/content/content-editor/content-editor-controller';
+import { createMediaUploadTask } from '~common/content/content-editor/media-upload-task';
+import { ContentHydrationType } from '~common/content/content-hydrator';
+import { EmojiModel } from '~common/emoji/emoji.model';
+import { MediaItemModel } from '~common/media-item/media-item-model';
+import { storeModel } from '~common/model/model-store.service';
+import { ThemeModel } from '~common/theme/theme.model';
+import { ThemeStore } from '~common/theme/theme.store';
+import { objectPick } from '~utils/object';
+import { assertNever } from '~utils/utils';
 
 const GJEditorAdapterKey = 'gjEditor' as const;
 const GJEditorHandler = 'GJEditorHandler' as const;

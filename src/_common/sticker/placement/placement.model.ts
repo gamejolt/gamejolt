@@ -1,6 +1,6 @@
-import { storeModel } from '../../model/model-store.service';
-import { Model } from '../../model/model.service';
-import { StickerModel } from '../sticker.model';
+import { Model } from '~common/model/model.service';
+import { storeModel } from '~common/model/model-store.service';
+import { StickerModel } from '~common/sticker/sticker.model';
 
 export class StickerPlacementModel extends Model {
 	declare position_x: number;

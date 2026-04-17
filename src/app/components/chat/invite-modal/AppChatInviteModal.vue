@@ -1,51 +1,42 @@
 <script lang="ts" setup>
-import { PropType, computed, ref, toRefs } from 'vue';
-import { Api } from '../../../../_common/api/api.service';
-import AppButton from '../../../../_common/button/AppButton.vue';
-import { vAppFocusWhen } from '../../../../_common/form-vue/focus-when.directive';
-import AppJolticon from '../../../../_common/jolticon/AppJolticon.vue';
-import AppLoading from '../../../../_common/loading/AppLoading.vue';
-import AppModal from '../../../../_common/modal/AppModal.vue';
-import { useModal } from '../../../../_common/modal/modal.service';
-import AppScrollScroller from '../../../../_common/scroll/AppScrollScroller.vue';
-import AppUserAvatarImg from '../../../../_common/user/user-avatar/AppUserAvatarImg.vue';
-import AppUserAvatarList from '../../../../_common/user/user-avatar/AppUserAvatarList.vue';
-import { fuzzysearch } from '../../../../utils/string';
-import { run } from '../../../../utils/utils';
-import { useGridStore } from '../../grid/grid-store';
-import { addGroupMembers, addGroupRoom } from '../client';
-import { ChatRoomModel } from '../room';
-import { ChatUser } from '../user';
+import { computed, ref } from 'vue';
 
-const props = defineProps({
-	room: {
-		type: Object as PropType<ChatRoomModel>,
-		required: true,
-	},
-	friends: {
-		type: Array as PropType<ChatUser[]>,
-		required: true,
-	},
-	initialUser: {
-		type: Object as PropType<ChatUser>,
-		default: null,
-	},
-});
+import { addGroupMembers, addGroupRoom } from '~app/components/chat/client';
+import { ChatRoomModel } from '~app/components/chat/room';
+import { ChatUser } from '~app/components/chat/user';
+import { useGridStore } from '~app/components/grid/grid-store';
+import { Api } from '~common/api/api.service';
+import AppButton from '~common/button/AppButton.vue';
+import { vAppFocusWhen } from '~common/form-vue/focus-when.directive';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppLoading from '~common/loading/AppLoading.vue';
+import AppModal from '~common/modal/AppModal.vue';
+import { useModal } from '~common/modal/modal.service';
+import AppScrollScroller from '~common/scroll/AppScrollScroller.vue';
+import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
+import AppUserAvatarList from '~common/user/user-avatar/AppUserAvatarList.vue';
+import { fuzzysearch } from '~utils/string';
+import { run } from '~utils/utils';
 
-const { room, friends, initialUser } = toRefs(props);
+type Props = {
+	room: ChatRoomModel;
+	friends: ChatUser[];
+	initialUser?: ChatUser | null;
+};
+const { room, friends, initialUser = null } = defineProps<Props>();
 const { chatUnsafe: chat } = useGridStore();
 const modal = useModal()!;
 
 const isLoading = ref(true);
 const filterQuery = ref('');
-const selectedUsers = ref(initialUser.value ? [initialUser.value] : []);
-const invitableFriends = ref(friends.value);
+const selectedUsers = ref(initialUser ? [initialUser] : []);
+const invitableFriends = ref(friends);
 
 run(async function () {
 	let filteredFriends = invitableFriends.value;
 
 	// Get which of the friends can be invited to this particular room.
-	const payload = await Api.sendRequest(`/web/chat/rooms/invitable-users/${room.value.id}`);
+	const payload = await Api.sendRequest(`/web/chat/rooms/invitable-users/${room.id}`);
 
 	if (payload.user_ids) {
 		// Filter the set of friends to only those that were allowed from backend.
@@ -56,10 +47,10 @@ run(async function () {
 	}
 
 	// We want to put the initial user at the top of the list.
-	if (initialUser.value) {
-		const initialUserId = initialUser.value.id;
+	if (initialUser) {
+		const initialUserId = initialUser.id;
 		filteredFriends = filteredFriends.filter(i => i.id !== initialUserId);
-		filteredFriends.unshift(initialUser.value);
+		filteredFriends.unshift(initialUser);
 	}
 
 	invitableFriends.value = filteredFriends;
@@ -82,10 +73,10 @@ const filteredUsers = computed(() => {
 function invite() {
 	const selectedUserIds = selectedUsers.value.map(chatUser => chatUser.id);
 
-	if (room.value.isPmRoom) {
+	if (room.isPmRoom) {
 		addGroupRoom(chat.value, selectedUserIds);
 	} else {
-		addGroupMembers(chat.value, room.value.id, selectedUserIds);
+		addGroupMembers(chat.value, room.id, selectedUserIds);
 	}
 	modal.resolve(true);
 }

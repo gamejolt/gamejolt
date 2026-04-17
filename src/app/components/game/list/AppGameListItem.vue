@@ -1,25 +1,19 @@
 <script lang="ts" setup>
-import { PropType, computed, toRefs } from 'vue';
-import { formatNumber } from '../../../../_common/filters/number';
-import { GameModel } from '../../../../_common/game/game.model';
-import AppGameThumbnailImg from '../../../../_common/game/thumbnail/AppGameThumbnailImg.vue';
-import AppUserVerifiedTick from '../../../../_common/user/AppUserVerifiedTick.vue';
-import AppUserCardHover from '../../../../_common/user/card/AppUserCardHover.vue';
+import { computed } from 'vue';
 
-const props = defineProps({
-	game: {
-		type: Object as PropType<GameModel>,
-		required: true,
-	},
-	eventLabel: {
-		type: String,
-		default: undefined,
-	},
-});
+import { formatNumber } from '~common/filters/number';
+import { GameModel } from '~common/game/game.model';
+import AppGameThumbnailImg from '~common/game/thumbnail/AppGameThumbnailImg.vue';
+import AppUserVerifiedTick from '~common/user/AppUserVerifiedTick.vue';
+import AppUserCardHover from '~common/user/card/AppUserCardHover.vue';
 
-const { game } = toRefs(props);
+type Props = {
+	game: GameModel;
+	eventLabel?: string;
+};
+const { game } = defineProps<Props>();
 
-const url = computed(() => game.value.getUrl());
+const url = computed(() => game.getUrl());
 </script>
 
 <template>
@@ -67,4 +61,4 @@ const url = computed(() => game.value.getUrl());
 	</div>
 </template>
 
-<style lang="stylus" src="./list-common.styl" scoped></style>
+<style lang="stylus" src="~app/components/game/list/list-common.styl" scoped></style>

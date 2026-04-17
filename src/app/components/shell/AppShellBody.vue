@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useAppStore } from '../../store';
+import { useAppStore } from '~app/store';
 
 const { hasContentSidebar } = useAppStore();
 </script>

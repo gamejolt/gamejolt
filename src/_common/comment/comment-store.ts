@@ -1,16 +1,17 @@
-import { InjectionKey, inject } from 'vue';
-import { arrayGroupBy, arrayRemove, numberSort } from '../../utils/array';
-import { Api } from '../api/api.service';
-import { showSuccessGrowl } from '../growls/growls.service';
-import { storeModel, storeModelList } from '../model/model-store.service';
-import { $gettext } from '../translate/translate.service';
+import { inject, InjectionKey } from 'vue';
+
+import { Api } from '~common/api/api.service';
 import {
 	$pinComment,
 	CommentModel,
 	CommentSort,
 	CommentStatus,
 	fetchComments,
-} from './comment-model';
+} from '~common/comment/comment-model';
+import { showSuccessGrowl } from '~common/growls/growls.service';
+import { storeModel, storeModelList } from '~common/model/model-store.service';
+import { $gettext } from '~common/translate/translate.service';
+import { arrayGroupBy, arrayRemove, numberSort } from '~utils/array';
 
 export const CommentStoreManagerKey: InjectionKey<CommentStoreManager> = Symbol('comment-store');
 
