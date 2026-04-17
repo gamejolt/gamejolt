@@ -35,4 +35,18 @@ jobs:
 
       - run: yarn install --frozen-lockfile
       - run: yarn lint:check
+
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "16.20.0"
+          cache: yarn
+
+      - run: yarn install --frozen-lockfile
       - run: yarn format:check
