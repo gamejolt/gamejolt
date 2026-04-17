@@ -49,6 +49,4 @@ const count = computed(() => {
 	</div>
 </template>
 
-<style lang="stylus" scoped>
-@import './'
-</style>
+<style lang="stylus" src="~app/components/game/grid/grid.styl"></style>

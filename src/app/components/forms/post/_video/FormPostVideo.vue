@@ -70,66 +70,6 @@ const videoProcessingErrorMsg = ref('');
 
 const uploadRef = useTemplateRef('upload');
 
-const videos = computed(() => post.videos || []);
-
-const uploadProgress = computed(() => {
-	const progressEvent = form.formModel._progress as ProgressEvent | null;
-	if (!progressEvent) {
-		return 0;
-	}
-	return progressEvent.loaded / progressEvent.total;
-});
-
-const uploadedVideo = computed(() => {
-	return videos.value.length ? videos.value[0] : null;
-});
-
-const videoManifestSources = computed(() => {
-	return uploadedVideo.value?.manifestSources ?? [];
-});
-
-const videoMediaItem = computed(() => {
-	return uploadedVideo.value?.posterMediaItem;
-});
-
-const shouldShowFormPlaceholder = computed(() => {
-	return !isLoaded.value && !wasPublished;
-});
-
-const allowedFiletypesString = computed(() => {
-	return allowedFiletypes.value.map(i => `.${i}`).join(',');
-});
-
-const videoStatus = computed(() => {
-	if (uploadedVideo.value) {
-		if (hasVideoProcessingError.value) {
-			return VideoStatus.ERROR;
-		}
-
-		if (uploadedVideo.value.is_processing) {
-			return VideoStatus.PROCESSING;
-		}
-
-		return VideoStatus.COMPLETE;
-	}
-
-	if (form.isProcessing) {
-		return VideoStatus.UPLOADING;
-	}
-
-	return VideoStatus.IDLE;
-});
-
-const canRemoveUploadingVideo = computed(() => {
-	return !wasPublished && videoStatus.value !== VideoStatus.UPLOADING;
-});
-
-const isLoaded = computed(() => form.isLoaded);
-
-watch(videoStatus, () => {
-	emit('video-status-change', videoStatus.value);
-});
-
 const form: FormController<FormModel> = createForm<FormModel>({
 	loadUrl: `/web/posts/manage/add-video/${post.id}`,
 	onLoad(payload: any) {
@@ -177,6 +117,66 @@ const form: FormController<FormModel> = createForm<FormModel>({
 
 		emit('video-change', new FiresidePostVideoModel(payload.video));
 	},
+});
+
+const videos = computed(() => post.videos || []);
+
+const uploadProgress = computed(() => {
+	const progressEvent = form.formModel._progress as ProgressEvent | null;
+	if (!progressEvent) {
+		return 0;
+	}
+	return progressEvent.loaded / progressEvent.total;
+});
+
+const uploadedVideo = computed(() => {
+	return videos.value.length ? videos.value[0] : null;
+});
+
+const videoManifestSources = computed(() => {
+	return uploadedVideo.value?.manifestSources ?? [];
+});
+
+const videoMediaItem = computed(() => {
+	return uploadedVideo.value?.posterMediaItem;
+});
+
+const isLoaded = computed(() => form.isLoaded);
+
+const shouldShowFormPlaceholder = computed(() => {
+	return !isLoaded.value && !wasPublished;
+});
+
+const allowedFiletypesString = computed(() => {
+	return allowedFiletypes.value.map(i => `.${i}`).join(',');
+});
+
+const videoStatus = computed(() => {
+	if (uploadedVideo.value) {
+		if (hasVideoProcessingError.value) {
+			return VideoStatus.ERROR;
+		}
+
+		if (uploadedVideo.value.is_processing) {
+			return VideoStatus.PROCESSING;
+		}
+
+		return VideoStatus.COMPLETE;
+	}
+
+	if (form.isProcessing) {
+		return VideoStatus.UPLOADING;
+	}
+
+	return VideoStatus.IDLE;
+});
+
+const canRemoveUploadingVideo = computed(() => {
+	return !wasPublished && videoStatus.value !== VideoStatus.UPLOADING;
+});
+
+watch(videoStatus, () => {
+	emit('video-status-change', videoStatus.value);
 });
 
 function videoSelected() {

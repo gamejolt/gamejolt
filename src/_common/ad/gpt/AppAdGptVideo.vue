@@ -2,6 +2,7 @@
 import { onMounted, onUnmounted, ref, toValue, useTemplateRef } from 'vue';
 
 import { loadVideoAdsTag, useAdStore } from '~common/ad/ad-store';
+import dummyVideo from '~common/ad/gpt/dummy.mp4';
 import { onScreenResize } from '~common/screen/screen-service';
 import { useEventSubscription } from '~common/system/event/event-topic';
 import { kBorderRadiusBase } from '~styles/variables';
@@ -244,7 +245,7 @@ useEventSubscription(onScreenResize, () => {
 				height: `100%`,
 			}"
 		>
-			<source src="~common/ad/gpt/dummy.mp4" type="video/mp4" />
+			<source :src="dummyVideo" type="video/mp4" />
 		</video>
 		<div
 			ref="ad-container"

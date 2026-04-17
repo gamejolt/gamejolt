@@ -3,6 +3,7 @@ import { computed, triggerRef } from 'vue';
 
 import AppButton from '~common/button/AppButton.vue';
 import { Clipboard } from '~common/clipboard/clipboard-service';
+import highFiveImage from '~common/invite/modal/high-five.png';
 import AppModal from '~common/modal/AppModal.vue';
 import { useModal } from '~common/modal/modal.service';
 import { showShareModal } from '~common/share/card/_modal/modal.service';
@@ -59,7 +60,7 @@ function onInput() {
 			</p>
 
 			<div class="-img">
-				<img src="~common/invite/modal/high-five.png" />
+				<img :src="highFiveImage" />
 			</div>
 
 			<input class="-url form-control" :value="url" @input="onInput" />
