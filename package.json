@@ -109,7 +109,7 @@
 		"ts-node": "10.9.1",
 		"tslib": "2.5.3",
 		"twitter-text": "3.0.0",
-		"typescript": "5.7.3",
+		"typescript": "6.0.3",
 		"ua-parser-js": "1.0.33",
 		"vite": "4.4.9",
 		"vite-plugin-markdown": "2.1.0",
