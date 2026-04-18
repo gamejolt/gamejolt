@@ -148,7 +148,6 @@ function onClick(e: MouseEvent) {
 	// in our ignored list.
 	let target = e.target as HTMLElement;
 	if (target instanceof HTMLElement) {
-		// eslint-disable-next-line no-constant-condition
 		while (true) {
 			const nodeName = target.nodeName.toLowerCase();
 

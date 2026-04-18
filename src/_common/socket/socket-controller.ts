@@ -375,7 +375,6 @@ async function _retryWithBackoff<T>(
 
 	info(`Attempting request.`);
 
-	// eslint-disable-next-line no-constant-condition
 	while (true) {
 		try {
 			const result = await fn();
