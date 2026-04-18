@@ -533,14 +533,14 @@ function focus() {
 	theme-prop('color', 'fg-muted')
 
 // Do not show dotted selection outline
-::v-deep(.ProseMirror)
+:deep(.ProseMirror)
 	outline: 0 solid transparent !important
 
 // Override prosemirror selection border around selected nodes
-::v-deep(.ProseMirror-selectednode)
+:deep(.ProseMirror-selectednode)
 	theme-prop('outline-color', 'bi-bg') !important
 
-::v-deep(.content-editor-spoiler)
+:deep(.content-editor-spoiler)
 	change-bg('bg-offset')
 	rounded-corners-lg()
 	font-size: $font-size-base
@@ -557,11 +557,11 @@ function focus() {
 		font-size: $font-size-tiny
 		text-transform: uppercase
 
-::v-deep(.content-editor-spoiler:after)
+:deep(.content-editor-spoiler:after)
 	content: none
 
 // Give each paragraph a 10px margin, except the first and last.
-::v-deep(p)
+:deep(p)
 	margin-top: 10px
 	margin-bottom: 10px
 
@@ -571,25 +571,25 @@ function focus() {
 	&:last-child
 		margin-bottom: 4px
 
-::v-deep(code)
+:deep(code)
 	white-space: pre-wrap
 
-::v-deep(td)
+:deep(td)
 	border-width: $border-width-small
 	border-style: solid
 	padding: 4px
 	min-width: 2em
 
-::v-deep(th)
+:deep(th)
 	padding: 4px
 
-::v-deep(blockquote::before)
+:deep(blockquote::before)
 	white-space: normal
 
-::v-deep(blockquote::after)
+:deep(blockquote::after)
 	white-space: normal
 
-::v-deep(table)
+:deep(table)
 	table-layout: fixed
 	width: 100%
 
@@ -624,22 +624,22 @@ function focus() {
 .fade-leave-to
 	opacity: 0
 
-::v-deep(a)
+:deep(a)
 	cursor: inherit
 
 	&:hover
 		theme-prop('color', 'link')
 
-::v-deep(.content-editor-mention)
+:deep(.content-editor-mention)
 	theme-prop('color', 'link')
 
-::v-deep(.content-editor-tag)
+:deep(.content-editor-tag)
 	theme-prop('color', 'link')
 
-::v-deep(.content-editor-link)
+:deep(.content-editor-link)
 	theme-prop('color', 'link')
 
 // Add a minimal margin to media items so they don't directly border the top of the editor
-::v-deep(.media-item)
+:deep(.media-item)
 	margin-top: ($line-height-computed / 3)
 </style>

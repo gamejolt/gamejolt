@@ -139,7 +139,7 @@ const isInview = ref(false);
 	min-width: 0
 
 	&
-	::v-deep(*)
+	:deep(*)
 		text-overflow()
 
 .-trailing

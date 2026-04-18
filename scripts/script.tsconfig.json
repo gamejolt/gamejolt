@@ -2,7 +2,9 @@
 	"compilerOptions": {
 		"baseUrl": "../",
 		"target": "es2018",
-		"moduleResolution": "node",
-		"strictNullChecks": true
+		"module": "commonjs",
+		"moduleResolution": "bundler",
+		"strictNullChecks": true,
+		"ignoreDeprecations": "6.0"
 	}
 }

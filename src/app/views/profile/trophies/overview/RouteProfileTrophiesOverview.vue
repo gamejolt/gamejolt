@@ -321,7 +321,7 @@ createAppRoute({
 	margin-bottom: 24px
 
 // Used to center the icon
-::v-deep(.timeline-list-item-bubble-inner)
+:deep(.timeline-list-item-bubble-inner)
 .timeline-list-item-bubble-inner > div
 	position: relative
 	height: 100%

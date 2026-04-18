@@ -121,7 +121,7 @@ function removeRestriction() {
 		@media $media-xs
 			margin-top: 0
 
-	::v-deep(.game-ogrs)
+	:deep(.game-ogrs)
 		margin: 0 auto
 		text-align: left
 		max-width: 350px

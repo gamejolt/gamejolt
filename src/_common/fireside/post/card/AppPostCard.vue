@@ -193,6 +193,6 @@ $-padding = 8px
 	z-index: 1
 
 	&
-	::v-deep(a)
+	:deep(a)
 		color: var(--theme-fg)
 </style>

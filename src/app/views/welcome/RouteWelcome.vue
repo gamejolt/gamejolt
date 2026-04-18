@@ -123,6 +123,6 @@ function onNextStep() {
 	margin-right: 8px
 	background-color: var(--theme-dark)
 
-	::v-deep(.gj-scroll-affixed) &
+	:deep(.gj-scroll-affixed) &
 		elevate-2()
 </style>

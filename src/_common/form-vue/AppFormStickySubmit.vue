@@ -42,7 +42,7 @@ const shouldShow = computed(() => form?.changed);
 	display: flex
 	align-items: center
 
-	::v-deep(.gj-scroll-affixed) &
+	:deep(.gj-scroll-affixed) &
 		rounded-corners()
 		background-color: var(--theme-bg-offset)
 		elevate-2()

@@ -24,7 +24,7 @@ import { kBorderWidthBase, kFontSizeSmall } from '~styles/variables';
 </template>
 
 <style lang="stylus" scoped>
-._tos-container ::v-deep(._tos-scroller-inner)
+._tos-container :deep(._tos-scroller-inner)
 	h1
 	h2
 	h3

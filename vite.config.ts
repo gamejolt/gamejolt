@@ -471,15 +471,21 @@ export default defineConfig(async (_configEnv: ConfigEnv): Promise<ViteUserConfi
 								// pull out the vendor library code into a
 								// chunk. We need to disable that first.
 								manualChunks: undefined,
-								// This option will tell vite to always just
-								// inline the dynamic imports we have in our
-								// codebase.
-								inlineDynamicImports: true,
+								// Inline all dynamic imports into a single
+								// chunk. Rollup 5 replaced
+								// `inlineDynamicImports: true` with
+								// `codeSplitting: false`.
+								codeSplitting: false,
 
 								// Our ssr/server.js loader requires the bundle
 								// as CJS. Vite 5 dropped `build.ssr.format` so
-								// we set it on rollup's output instead.
-								...(gjOpts.platform === 'ssr' ? { format: 'cjs' as const } : {}),
+								// we set it on rollup's output instead. Force
+								// the exports shape to 'named' so the entry's
+								// default + re-exported named members don't
+								// trip Rollup's MIXED_EXPORTS warning.
+								...(gjOpts.platform === 'ssr'
+									? { format: 'cjs' as const, exports: 'named' as const }
+									: {}),
 							},
 						};
 					}

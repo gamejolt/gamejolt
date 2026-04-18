@@ -192,8 +192,8 @@ $-track-modal = var(--theme-bg)
 
 			// Other browsers, overlay scrollers
 			&::-webkit-scrollbar
-			::v-deep(.os-scrollbar)
-			::v-deep(.os-scrollbar-handle)
+			:deep(.os-scrollbar)
+			:deep(.os-scrollbar-handle)
 				display: none
 
 	&._mouse
@@ -201,7 +201,7 @@ $-track-modal = var(--theme-bg)
 		scrollbar-color: $-thumb-default $-track-default
 
 		&::-webkit-scrollbar
-		::v-deep(.os-scrollbar)
+		:deep(.os-scrollbar)
 			background-color: $-track-default
 			width: $-size-default
 
@@ -209,7 +209,7 @@ $-track-modal = var(--theme-bg)
 			height: $-size-default
 
 		&::-webkit-scrollbar-thumb
-		::v-deep(.os-scrollbar-handle)
+		:deep(.os-scrollbar-handle)
 			background-color: $-thumb-default
 			border-radius: $-size-default
 
@@ -220,14 +220,14 @@ $-track-modal = var(--theme-bg)
 			scrollbar-width: thin
 
 			&::-webkit-scrollbar
-			::v-deep(.os-scrollbar)
+			:deep(.os-scrollbar)
 				width: $-size-thin
 
 			&::-webkit-scrollbar
 				height: $-size-thin
 
 			&::-webkit-scrollbar-thumb
-			::v-deep(.os-scrollbar-handle)
+			:deep(.os-scrollbar-handle)
 				border-radius: $-size-thin
 
 		// Override colors so transparency doesn't look weird
@@ -236,11 +236,11 @@ $-track-modal = var(--theme-bg)
 			scrollbar-color: $-thumb-modal $-track-modal
 
 			&::-webkit-scrollbar
-			::v-deep(.os-scrollbar)
+			:deep(.os-scrollbar)
 				background-color: $-track-modal
 
 			&::-webkit-scrollbar-thumb
-			::v-deep(.os-scrollbar-handle)
+			:deep(.os-scrollbar-handle)
 				background-color: $-thumb-modal
 
 				&:hover

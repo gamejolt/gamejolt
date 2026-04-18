@@ -25,6 +25,6 @@ defineProps<Props>();
 <style lang="stylus" scoped>
 // Unset any built-in margin values added from adjacent buttons.
 .button-group
-	::v-deep(.button + .button)
+	:deep(.button + .button)
 		margin: 0
 </style>

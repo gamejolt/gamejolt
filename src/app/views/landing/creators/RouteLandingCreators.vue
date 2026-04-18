@@ -635,7 +635,7 @@ function getRandomStickers(count = 3) {
 	color: var(--theme-fg)
 	change-bg(bg)
 
-	::v-deep(.button.-lg)
+	:deep(.button.-lg)
 		rounded-corners()
 
 .-shadow

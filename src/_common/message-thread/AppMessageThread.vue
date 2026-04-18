@@ -10,6 +10,6 @@ import AppTimelineList from '~common/timeline-list/AppTimelineList.vue';
 
 <style lang="stylus" scoped>
 // Don't show the message thread split for the last item in the list.
-::v-deep(.message-thread-item:last-of-type .timeline-list-item-split)
+:deep(.message-thread-item:last-of-type .timeline-list-item-split)
 	display: none
 </style>

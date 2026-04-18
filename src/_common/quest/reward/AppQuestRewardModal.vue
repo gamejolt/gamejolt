@@ -279,7 +279,7 @@ $-z-backpack = 1
 		animation-name: anim-fade-out
 		animation-timing-function: $weak-ease-out
 
-	::v-deep(.modal)
+	:deep(.modal)
 		background-color: transparent !important
 
 .-quest-container
@@ -315,7 +315,7 @@ $-z-backpack = 1
 	font-weight: bold
 
 	&
-	::v-deep(.jolticon)
+	:deep(.jolticon)
 		font-size: calc(min(32px, 3vh))
 
 	img

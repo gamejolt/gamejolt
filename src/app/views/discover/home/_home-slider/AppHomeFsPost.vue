@@ -120,7 +120,7 @@ function onImageLoad(isLoaded: boolean) {
 	width: 100%
 	height: 100%
 
-	::v-deep(> video)
+	:deep(> video)
 		height: 100% !important
 		width: 100% !important
 		object-fit: cover

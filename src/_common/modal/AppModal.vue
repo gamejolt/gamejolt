@@ -190,7 +190,7 @@ function scrollTo(offsetY: number) {
 	overflow: hidden
 	-webkit-overflow-scrolling: touch
 
-	::v-deep(.backdrop)
+	:deep(.backdrop)
 		z-index: 1
 
 // Container that the modal scrolls within
@@ -268,7 +268,7 @@ function scrollTo(offsetY: number) {
 		padding: $modal-padding
 		padding-bottom: 0
 
-::v-deep(.gj-scroll-affixed)
+:deep(.gj-scroll-affixed)
 	z-index: 1
 
 	.-footer

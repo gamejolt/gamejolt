@@ -124,6 +124,6 @@ function onEditorBlur() {
 // On mobile, we need to make space for the content editor controls. They
 // would overlap the Reply form field otherwise.
 @media $media-xs
-	::v-deep(.message-thread-add.-thread-editor-focus)
+	:deep(.message-thread-add.-thread-editor-focus)
 		padding-bottom: 42px
 </style>

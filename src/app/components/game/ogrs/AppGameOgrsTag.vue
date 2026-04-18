@@ -71,7 +71,7 @@ const imgTagUrl = computed(() => {
 	border: 4px solid $black
 	background: $black
 
-	::v-deep(img)
+	:deep(img)
 		display: block
 		margin-left: auto
 		margin-right: auto

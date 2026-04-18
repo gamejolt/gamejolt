@@ -62,7 +62,7 @@ defineProps<Props>();
 		transition: box-shadow 300ms $strong-ease-out
 		padding: 0 var(--float-padding)
 
-	::v-deep(.gj-scroll-affixed)
+	:deep(.gj-scroll-affixed)
 		z-index: 10
 
 		.modal-controls

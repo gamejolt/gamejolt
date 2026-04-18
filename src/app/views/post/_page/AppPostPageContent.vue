@@ -226,6 +226,6 @@ const overlayText: CSSProperties = {
 	margin-right: auto
 	cursor: zoom-in
 
-::v-deep(.mention-avatar-img)
+:deep(.mention-avatar-img)
 	border-radius: 50% !important
 </style>

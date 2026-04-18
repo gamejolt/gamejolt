@@ -101,13 +101,13 @@ createAppRoute({
 @import '../../../../_styles/common/tables'
 
 .-content
-	::v-deep(h1:first-child)
+	:deep(h1:first-child)
 		margin-top: 0
 
-	::v-deep(table)
+	:deep(table)
 		@extend .table
 
-	::v-deep(img)
+	:deep(img)
 		img-responsive()
 		rounded-corners-lg()
 </style>

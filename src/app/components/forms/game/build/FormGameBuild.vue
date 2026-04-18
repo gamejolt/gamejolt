@@ -896,22 +896,22 @@ function onBuildFieldChanged() {
 	.stat-big.stat-big-smaller
 		margin-bottom: 0
 
-	::v-deep(.help-block)
+	:deep(.help-block)
 	.alert
 		margin-bottom: ($line-height-computed / 2)
 
-	::v-deep(.form-group)
+	:deep(.form-group)
 		margin-bottom: $line-height-computed
 
 	// Need to do this because the rule above overrides it.
 	.-archive-error
-		::v-deep(.sans-margin-bottom)
+		:deep(.sans-margin-bottom)
 			margin-bottom: 0
 
 	&-submit-button
 		margin-top: ($line-height-computed / 2)
 
-	::v-deep(.downloadable-platforms)
+	:deep(.downloadable-platforms)
 		&.form-group
 		.form-group
 			margin-left: 0

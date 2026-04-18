@@ -62,7 +62,7 @@ onUnmounted(() => {
 		font-size: $font-size-base
 		font-weight: bold
 
-	::v-deep(em)
+	:deep(em)
 		font-style: normal
 		text-decoration: underline
 

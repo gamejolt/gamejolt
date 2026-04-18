@@ -491,7 +491,7 @@ fieldset
 		font-family: $font-family-heading
 		margin-top: 0
 
-::v-deep(.form-group)
+:deep(.form-group)
 	position: relative
 	margin-bottom: 6px
 
@@ -505,7 +505,7 @@ fieldset
 		top: 11px
 		z-index: 3
 
-::v-deep(.form-control)
+:deep(.form-control)
 	position: relative
 	height: 40px
 

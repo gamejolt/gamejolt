@@ -102,13 +102,13 @@ const bean = computed(() => beans[variant - 1]);
 	align-items: center
 
 	&.-clamp-child
-		::v-deep(> *)
+		:deep(> *)
 			max-width: 100%
 			max-height: 100%
 
 .-bg-stretch
 	&
-	::v-deep(> *)
+	:deep(> *)
 		width: 100%
 		height: 100%
 </style>

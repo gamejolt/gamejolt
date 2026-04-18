@@ -161,7 +161,7 @@ function submit(method: PaymentData['method']) {
 .payment-form
 	margin-bottom: $shell-padding
 
-	::v-deep(.user-avatar-img)
+	:deep(.user-avatar-img)
 		width: $input-height-base
 		float: left
 
@@ -170,10 +170,10 @@ function submit(method: PaymentData['method']) {
 		flex-direction: row
 		margin-bottom: 0
 
-	::v-deep(.form-control)
+	:deep(.form-control)
 		flex: auto
 
-	::v-deep(.control-label)
+	:deep(.control-label)
 		flex: none
 		text-align: right
 		line-height: $input-height-base
@@ -188,7 +188,7 @@ function submit(method: PaymentData['method']) {
 		line-height: $input-height-base
 
 	.-group-amount
-		::v-deep(.form-control-prefix)
+		:deep(.form-control-prefix)
 			flex: none
 			width: 80px
 			margin-right: 10px
@@ -196,7 +196,7 @@ function submit(method: PaymentData['method']) {
 			@media $media-sm-up
 				width: 120px
 
-	::v-deep(.form-group)
+	:deep(.form-group)
 		clear: left
 
 	.form-errors

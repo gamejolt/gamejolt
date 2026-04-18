@@ -46,7 +46,7 @@ watch(
 	// Offset for the '.form-control' padding
 	right: $padding-base-horizontal
 
-	& ::v-deep(.inset-container-controls)
+	& :deep(.inset-container-controls)
 		display: block
 		margin-left: 8px
 </style>

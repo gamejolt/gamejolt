@@ -229,6 +229,6 @@ const onlyFriends = computed(
 </template>
 
 <style lang="stylus" scoped>
-::v-deep(.form-group)
+:deep(.form-group)
 	margin-bottom: 8px
 </style>

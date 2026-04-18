@@ -133,12 +133,12 @@ const pageCutStyles = computed(() => {
 
 .post-text
 	// Hide images and widgets until we are hydrated.
-	::v-deep(img)
-	::v-deep(iframe)
+	:deep(img)
+	:deep(iframe)
 		visibility: hidden
 
 	&.-hydrated
-		::v-deep(img)
-		::v-deep(iframe)
+		:deep(img)
+		:deep(iframe)
 			visibility: visible
 </style>

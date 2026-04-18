@@ -207,7 +207,7 @@ const showFullyChargedText = computed(() => allowFullyChargedText && canChargeSt
 	display: inline-flex
 	align-items: center
 
-	::v-deep(.jolticon)
+	:deep(.jolticon)
 		font-size: 14px
 		margin: 0 0 0 4px
 		color: var(--theme-fg-muted)
@@ -235,7 +235,7 @@ const showFullyChargedText = computed(() => allowFullyChargedText && canChargeSt
 	display: inline-flex
 	margin-left: 4px
 
-	::v-deep(.jolticon)
+	:deep(.jolticon)
 		margin: 0
 
 hr
@@ -248,6 +248,6 @@ hr
 
 ._small
 	&
-	::v-deep(.jolticon)
+	:deep(.jolticon)
 		font-size: $font-size-small
 </style>

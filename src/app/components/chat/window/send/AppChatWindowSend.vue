@@ -514,11 +514,11 @@ $-button-height = 40px
 	gap: 8px
 	align-items: stretch
 
-	::v-deep(.content-editor-form-control)
+	:deep(.content-editor-form-control)
 		change-bg(bg-offset)
 		border: 0
 
-	::v-deep(.content-placeholder)
+	:deep(.content-placeholder)
 		text-overflow()
 		max-width: 100%
 
@@ -553,7 +553,7 @@ $-button-height = 40px
 		text-overflow()
 
 	&
-	&::v-deep(.jolticon)
+	&:deep(.jolticon)
 		font-size: $font-size-tiny
 
 	&.fade-leave-active

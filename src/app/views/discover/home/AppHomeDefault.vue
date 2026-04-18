@@ -80,6 +80,6 @@ const cardColumnsXs = 2;
 .-content-row-header
 	margin: 60px 0 20px
 
-.section > ::v-deep(.-content-row:first-of-type) .-content-row-header
+.section > :deep(.-content-row:first-of-type) .-content-row-header
 	margin-top: 0
 </style>

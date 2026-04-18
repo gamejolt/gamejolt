@@ -187,12 +187,12 @@ strong
 	margin-bottom: $line-height-computed
 
 .-popover
-	::v-deep(.vc-chrome-picker)
+	:deep(.vc-chrome-picker)
 		box-shadow: none
 		width: 100%
 		box-sizing: border-box
 
-	::v-deep(.vc-input-input)
+	:deep(.vc-input-input)
 		theme-prop('color', 'fg')
 		change-bg('bg')
 		theme-prop('border-color', 'bg-subtle')

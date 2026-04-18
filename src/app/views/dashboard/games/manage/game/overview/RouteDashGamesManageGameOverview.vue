@@ -262,6 +262,6 @@ createAppRoute({
 
 <style lang="stylus" scoped>
 .-graph
-	::v-deep(.graph)
+	:deep(.graph)
 		rounded-corners-lg()
 </style>
