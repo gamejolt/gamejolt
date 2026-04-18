@@ -32,6 +32,7 @@ module.exports = [
 			'no-undef': 'off',
 			'no-unused-vars': 'off',
 			'no-mixed-spaces-and-tabs': 'off',
+			'no-useless-assignment': 'off',
 			'getter-return': 'off',
 			'@typescript-eslint/explicit-module-boundary-types': 'off',
 			'@typescript-eslint/no-empty-function': 'off',
