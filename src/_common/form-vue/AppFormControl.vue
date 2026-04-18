@@ -185,7 +185,7 @@ export interface FormControlController<T = any> {
 </script>
 
 <script lang="ts" setup>
-import { InputHTMLAttributes, useTemplateRef } from 'vue';
+import { useTemplateRef } from 'vue';
 
 type Props = {
 	disabled?: boolean;
@@ -195,10 +195,13 @@ type Props = {
 	type?: string;
 	focus?: boolean;
 	htmlListId?: string;
-} & /* @vue-ignore */ Pick<
-	InputHTMLAttributes,
-	'step' | 'max' | 'min' | 'maxlength' | 'autocomplete' | 'required'
->;
+	step?: string | number;
+	max?: string | number;
+	min?: string | number;
+	maxlength?: string | number;
+	autocomplete?: string;
+	required?: boolean;
+};
 
 const {
 	disabled,
