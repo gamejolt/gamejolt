@@ -3233,10 +3233,10 @@ orderedmap@^1.1.0:
   resolved "https://registry.yarnpkg.com/orderedmap/-/orderedmap-1.1.1.tgz#c618e77611b3b21d0fe3edc92586265e0059c789"
   integrity sha512-3Ux8um0zXbVacKUkcytc0u3HgC0b0bBLT+I60r2J/En72cI0nZffqrA7Xtf2Hqs27j1g82llR5Mhbd0Z1XW4AQ==
 
-overlayscrollbars-vue@0.5.6:
-  version "0.5.6"
-  resolved "https://registry.yarnpkg.com/overlayscrollbars-vue/-/overlayscrollbars-vue-0.5.6.tgz#cae11d204ece52b170702c0cea15703869526731"
-  integrity sha512-gBraPkblG/pE6P74+q0vOnULzmD1sePth7S3D6Cb8hLLLrkJNE66cNWzxUgVPtUP3gp5PK6R3rZsxNNo3Xs3GQ==
+overlayscrollbars-vue@0.5.9:
+  version "0.5.9"
+  resolved "https://registry.yarnpkg.com/overlayscrollbars-vue/-/overlayscrollbars-vue-0.5.9.tgz#bc0f51844aa0caab8556fcc874e82ddae1e4bc55"
+  integrity sha512-zZEcsb6llnKaRwXTP44E4RrmwuH+eAi70mgCdiiPwcPBE2H99Vs2V0q7sWnEanqU3462ch38e4SmIMnuH906DQ==
 
 overlayscrollbars@2.4.3:
   version "2.4.3"

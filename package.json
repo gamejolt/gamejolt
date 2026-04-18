@@ -82,7 +82,7 @@
 		"minimist": "1.2.8",
 		"node-fetch": "2.6.7",
 		"overlayscrollbars": "2.4.3",
-		"overlayscrollbars-vue": "0.5.6",
+		"overlayscrollbars-vue": "0.5.9",
 		"phoenix": "1.5.1",
 		"polished": "4.1.4",
 		"prettier": "3.8.3",
