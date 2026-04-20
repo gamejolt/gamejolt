@@ -3,11 +3,11 @@ import { computed, CSSProperties, ref, toRef, useTemplateRef } from 'vue';
 
 import { ActivityFeedItem } from '~app/components/activity/feed/item-service';
 import { useActivityFeed } from '~app/components/activity/feed/view';
-import { kPostItemPaddingContainer } from '~app/components/post/post-styles';
 import AppButton from '~common/button/AppButton.vue';
 import AppContentViewer from '~common/content/content-viewer/AppContentViewer.vue';
 import { FiresidePostModel, loadArticleIntoPost } from '~common/fireside/post/post-model';
 import AppLoading from '~common/loading/AppLoading.vue';
+import { kPostItemPaddingContainer } from '~common/post/post-styles';
 import { Screen } from '~common/screen/screen-service';
 import { Scroll } from '~common/scroll/scroll.service';
 import { styleWhen } from '~styles/mixins';

@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import { PostOverlayTextStyles } from '~app/components/post/post-styles';
 import { formatNumber } from '~common/filters/number';
 import { FiresidePostModel } from '~common/fireside/post/post-model';
+import { PostOverlayTextStyles } from '~common/post/post-styles';
 import { useCommonStore } from '~common/store/common-store';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 import { styleWhen } from '~styles/mixins';
