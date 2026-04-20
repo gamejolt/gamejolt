@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { computed, CSSProperties } from 'vue';
 
-import { showPurchaseShopProductModal } from '~app/components/vending-machine/modal/_purchase-modal/modal.service';
 import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
 import AppButton from '~common/button/AppButton.vue';
 import { AcquisitionMethod } from '~common/collectible/acquisition.model';
@@ -11,6 +10,7 @@ import {
 	getCollectibleResourceId,
 } from '~common/collectible/collectible.model';
 import { PurchasableProductType } from '~common/inventory/shop/product-owner-helpers';
+import { showPurchaseShopProductModal } from '~common/inventory/shop/purchase-modal/modal.service';
 import { JoltydexFeed } from '~common/joltydex/joltydex-feed';
 import AppCircularProgress from '~common/progress/AppCircularProgress.vue';
 import AppStickerMastery from '~common/sticker/AppStickerMastery.vue';

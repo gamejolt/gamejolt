@@ -10,7 +10,7 @@ export async function showGiftRecipientModal({ sale }: { sale: InventoryShopProd
 		component: defineAsyncComponent(
 			() =>
 				import(
-					'~app/components/vending-machine/modal/_purchase-modal/gift-recipient/AppGiftRecipientModal.vue'
+					'~common/inventory/shop/purchase-modal/gift-recipient/AppGiftRecipientModal.vue'
 				)
 		),
 		size: 'sm',

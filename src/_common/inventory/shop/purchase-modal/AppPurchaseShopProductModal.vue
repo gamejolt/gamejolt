@@ -2,8 +2,6 @@
 import { computed, onMounted, onUnmounted, Ref, ref, watchEffect } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { showPurchaseShopProductConfirmModal } from '~app/components/vending-machine/modal/_purchase-modal/confirm/modal.service';
-import { showGiftRecipientModal } from '~app/components/vending-machine/modal/_purchase-modal/gift-recipient/modal.service';
 import { routeUrlLandingHelpRedirect } from '~app/views/landing/help/help.route';
 import { Api } from '~common/api/api.service';
 import { vAppAuthRequired } from '~common/auth/auth-required-directive';
@@ -28,6 +26,8 @@ import {
 	getShopProductDisplayData,
 	PurchasableProductData,
 } from '~common/inventory/shop/product-owner-helpers';
+import { showPurchaseShopProductConfirmModal } from '~common/inventory/shop/purchase-modal/confirm/modal.service';
+import { showGiftRecipientModal } from '~common/inventory/shop/purchase-modal/gift-recipient/modal.service';
 import AppLoading from '~common/loading/AppLoading.vue';
 import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
 import { showPurchaseMicrotransactionModal } from '~common/microtransaction/purchase-modal/modal.service';

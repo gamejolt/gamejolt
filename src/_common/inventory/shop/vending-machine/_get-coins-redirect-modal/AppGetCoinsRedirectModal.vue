@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useAppStore } from '~app/store/index';
+import { routeUrlQuests } from '~app/views/quests/quests.route';
 import AppButton from '~common/button/AppButton.vue';
 import AppIllustration from '~common/illustration/AppIllustration.vue';
 import { illMobileKikkerstein } from '~common/illustration/illustrations';
@@ -9,22 +9,6 @@ import AppSpacer from '~common/spacer/AppSpacer.vue';
 import { $gettext } from '~common/translate/translate.service';
 
 const modal = useModal()!;
-const { clearPanes, visibleLeftPane, toggleLeftPane } = useAppStore();
-
-// TODO(creator-shops): when this modal closes and it routes away, the panes end up closing
-function gotoQuests() {
-	// Close the modal, indicating that we're doing some form of redirect.
-	modal.resolve(true);
-
-	// Go to quests page if we're not already there.
-	if (visibleLeftPane.value !== 'quests') {
-		toggleLeftPane('quests');
-		return;
-	}
-
-	// Already on quests page, close any open shell sidebar.
-	clearPanes();
-}
 </script>
 
 <template>
@@ -50,9 +34,11 @@ function gotoQuests() {
 
 			<AppSpacer vertical :scale="4" />
 
-			<AppButton block solid primary @click="gotoQuests()">
-				{{ $gettext(`View current quests`) }}
-			</AppButton>
+			<a :href="routeUrlQuests()" @click="modal.resolve(true)">
+				<AppButton block solid primary>
+					{{ $gettext(`View current quests`) }}
+				</AppButton>
+			</a>
 		</div>
 	</AppModal>
 </template>

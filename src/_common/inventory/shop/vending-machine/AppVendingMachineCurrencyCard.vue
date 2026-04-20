@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { CSSProperties } from 'vue';
 
-import { showGetCoinsRedirectModal } from '~app/components/vending-machine/modal/_get-coins-redirect-modal/modal.service';
 import { trackShopView } from '~common/analytics/analytics.service';
 import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
 import { vAppAuthRequired } from '~common/auth/auth-required-directive';
@@ -9,6 +8,7 @@ import AppButton from '~common/button/AppButton.vue';
 import AppCurrencyImg from '~common/currency/AppCurrencyImg.vue';
 import { Currency, CurrencyType } from '~common/currency/currency-type';
 import { formatNumber } from '~common/filters/number';
+import { showGetCoinsRedirectModal } from '~common/inventory/shop/vending-machine/_get-coins-redirect-modal/modal.service';
 import { showPurchaseMicrotransactionModal } from '~common/microtransaction/purchase-modal/modal.service';
 import { useModal } from '~common/modal/modal.service';
 import { useOnHover } from '~common/on/useOnHover';

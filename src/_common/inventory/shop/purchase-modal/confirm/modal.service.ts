@@ -9,7 +9,7 @@ export async function showPurchaseShopProductConfirmModal({ giftUser }: { giftUs
 		component: defineAsyncComponent(
 			() =>
 				import(
-					'~app/components/vending-machine/modal/_purchase-modal/confirm/AppPurchaseShopProductConfirmModal.vue'
+					'~common/inventory/shop/purchase-modal/confirm/AppPurchaseShopProductConfirmModal.vue'
 				)
 		),
 		size: 'sm',

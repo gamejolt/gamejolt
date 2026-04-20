@@ -2,7 +2,6 @@
 import { computed, onMounted, ref, watch } from 'vue';
 
 import AppJoltydexUser from '~app/components/shell/sidebar/_joltydex/AppJoltydexUser.vue';
-import { showVendingMachineModal } from '~app/components/vending-machine/modal/modal.service';
 import { useAppStore } from '~app/store';
 import { useJoltydexStore } from '~app/store/joltydex';
 import { trackJoltydex } from '~common/analytics/analytics.service';
@@ -10,6 +9,7 @@ import { Api } from '~common/api/api.service';
 import { useEscapeStack } from '~common/escape-stack/escape-stack.service';
 import AppIllustration from '~common/illustration/AppIllustration.vue';
 import { illJoltydexBrowse } from '~common/illustration/illustrations';
+import { showVendingMachineModal } from '~common/inventory/shop/vending-machine/modal.service';
 import AppLoading from '~common/loading/AppLoading.vue';
 import { Screen } from '~common/screen/screen-service';
 import { useCommonStore } from '~common/store/common-store';
