@@ -13,7 +13,7 @@ export async function showContentTargetManageRealmsModal(
 ) {
 	const { selectedRealms, maxRealms } = options;
 
-	return await showModal<void>({
+	return await showModal<RealmModel[]>({
 		modalId: 'ContentTargetManageRealms',
 		component: defineAsyncComponent(
 			() =>
