@@ -2,7 +2,6 @@
 import { computed, onMounted, ref } from 'vue';
 
 import AppTimeoutCountdown from '~app/components/timeout/AppTimeoutCountdown.vue';
-import { imageGameJoltLogo } from '~app/img/images';
 import { Api } from '~common/api/api.service';
 import AppButton from '~common/button/AppButton.vue';
 import AppContactLink from '~common/contact-link/AppContactLink.vue';
@@ -17,6 +16,7 @@ import AppThemeSvg from '~common/theme/svg/AppThemeSvg.vue';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 import { $gettext } from '~common/translate/translate.service';
 import { UserTimeoutModel } from '~common/user/timeout/timeout.model';
+import { imageGameJoltLogo } from '~img/images';
 import { RouteLocationRedirect } from '~utils/router';
 
 export default {

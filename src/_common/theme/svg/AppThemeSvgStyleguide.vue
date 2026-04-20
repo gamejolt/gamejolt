@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
 
-import { imageGameJoltClientLogo, imageGameJoltLogo, imageJolt } from '~app/img/images';
 import AppForm, { createForm } from '~common/form-vue/AppForm.vue';
 import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
 import AppFormControlSelect from '~common/form-vue/controls/AppFormControlSelect.vue';
@@ -12,6 +11,7 @@ import AppTheme from '~common/theme/AppTheme.vue';
 import AppThemeSvg from '~common/theme/svg/AppThemeSvg.vue';
 import { ThemeModel } from '~common/theme/theme.model';
 import { useThemeStore } from '~common/theme/theme.store';
+import { imageGameJoltClientLogo, imageGameJoltLogo, imageJolt } from '~img/images';
 
 interface FormModel {
 	file?: string;

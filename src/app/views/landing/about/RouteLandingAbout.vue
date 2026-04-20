@@ -2,13 +2,13 @@
 import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
 
-import { imageJolt } from '~app/img/images';
 import { routeLandingCreators } from '~app/views/landing/creators/creators.route';
 import AppContactLink from '~common/contact-link/AppContactLink.vue';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import AppThemeSvg from '~common/theme/svg/AppThemeSvg.vue';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import { $gettext } from '~common/translate/translate.service';
+import { imageJolt } from '~img/images';
 import { arrayShuffle } from '~utils/array';
 
 const assetUrls = import.meta.glob('./*.(png|jpg)', { eager: true, as: 'url' });
