@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { RouterLink } from 'vue-router';
 
-import { routeLandingHelpRedirect } from '~app/views/landing/help/help.route';
+import { routeUrlLandingHelpRedirect } from '~app/views/landing/help/help.route';
 import { routeLegalCookies } from '~app/views/legal/cookies/cookies.route';
 import { routeLegalPrivacy } from '~app/views/legal/privacy/privacy.route';
 import { routeLegalSafety } from '~app/views/legal/safety/safety.route';
@@ -15,12 +15,7 @@ function showLangSelector() {
 
 <template>
 	<div class="-extra-links">
-		<RouterLink
-			:to="{
-				name: routeLandingHelpRedirect.name,
-				params: { path: 'support' },
-			}"
-		>
+		<RouterLink :to="routeUrlLandingHelpRedirect({ path: 'support' })">
 			{{ $gettext(`Support`) }}
 		</RouterLink>
 		<div class="-row-break" />

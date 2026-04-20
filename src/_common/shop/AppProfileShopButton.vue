@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { routeUrlProfileShop } from '~app/views/profile/overview/shop/shop.route';
 import AppBackgroundFade from '~common/background/AppBackgroundFade.vue';
 import AppButton from '~common/button/AppButton.vue';
 import AppImgResponsive from '~common/img/AppImgResponsive.vue';
@@ -41,10 +42,7 @@ const { hoverBinding, hovered } = useOnHover();
 					border: `${kBorderWidthBase.px} solid ${kThemePrimary}`,
 				})
 			"
-			:to="{
-				name: 'profile.shop',
-				params: { username: user.username },
-			}"
+			:to="routeUrlProfileShop(user)"
 		>
 			<!-- Backdrop -->
 			<div v-if="user.header_media_item" :style="styleAbsoluteFill({ zIndex: 1 })">

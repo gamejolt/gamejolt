@@ -30,8 +30,17 @@ function restrictedImportsRule(forbiddenAliases, label) {
 	];
 	if (forbiddenAliases.length > 0) {
 		patterns.push({
-			group: forbiddenAliases.flatMap(a => [a, `${a}/*`]),
-			message: `${label} cannot import from other sections. Use ~common, ~styles, ~utils, or ~lib for shared code.`,
+			// Forbid any import from another section's alias, except files
+			// ending in `.route` — those are the public route surface
+			// (route records + URL builders) and must stay stateless.
+			//
+			// ESLint's no-restricted-imports uses the `ignore` package
+			// (gitignore-style). Gitignore has a quirk where re-including a
+			// file doesn't work if a parent directory is excluded. The
+			// `!${a}/**/` rule re-includes the directory entries so the
+			// `.route` file re-inclusion can apply.
+			group: forbiddenAliases.flatMap(a => [`${a}/**`, `!${a}/**/`, `!${a}/**/*.route`]),
+			message: `${label} cannot import from other sections. Use ~common, ~styles, ~utils, or ~lib for shared code. (.route files are exempt.)`,
 		});
 	}
 	return ['error', { patterns }];

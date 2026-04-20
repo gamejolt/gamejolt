@@ -6,7 +6,7 @@ import AppShellAltMenuDevelopers from '~app/components/shell/AppShellAltMenuDeve
 import AppShellAltMenuExtra from '~app/components/shell/AppShellAltMenuExtra.vue';
 import {
 	routeLandingHelpIndex,
-	routeLandingHelpRedirect,
+	routeUrlLandingHelpRedirect,
 } from '~app/views/landing/help/help.route';
 import { trackAppPromotionClick } from '~common/analytics/analytics.service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
@@ -71,10 +71,7 @@ function showSystemReport() {
 
 					<RouterLink
 						class="list-group-item has-icon"
-						:to="{
-							name: routeLandingHelpRedirect.name,
-							params: { path: 'guidelines' },
-						}"
+						:to="routeUrlLandingHelpRedirect({ path: 'guidelines' })"
 					>
 						<AppJolticon icon="forums" />
 						{{ $gettext(`Site guidelines`) }}
