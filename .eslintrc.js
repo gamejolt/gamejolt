@@ -1,3 +1,42 @@
+// Top-level folders under src/ that represent an independently-built section.
+// Each has its own main.ts entrypoint and should not reach into another section.
+const SECTIONS = [
+	'app',
+	'auth',
+	'checkout',
+	'claim',
+	'client',
+	'editor',
+	'gameserver',
+	'site-editor',
+	'widget-package',
+	'z',
+];
+
+// Top-level folders under src/ that are shared by all sections. These must not
+// import from any section — doing so creates a cycle where shared code depends
+// on the section that's supposed to consume it.
+const GLOBAL_DIRS = ['_common', '_styles', '_img', 'utils', 'lib'];
+
+const sectionAliases = SECTIONS.map(s => `~${s}`);
+
+function restrictedImportsRule(forbiddenAliases, label) {
+	const patterns = [
+		{
+			group: ['../*'],
+			message:
+				'Use ~section aliases (~app, ~common, ~styles, etc.) instead of ../ relative imports.',
+		},
+	];
+	if (forbiddenAliases.length > 0) {
+		patterns.push({
+			group: forbiddenAliases.flatMap(a => [a, `${a}/*`]),
+			message: `${label} cannot import from other sections. Use ~common, ~styles, ~utils, or ~lib for shared code.`,
+		});
+	}
+	return ['error', { patterns }];
+}
+
 module.exports = {
 	parser: 'vue-eslint-parser',
 	parserOptions: {
@@ -59,19 +98,26 @@ module.exports = {
 		{
 			files: ['src/**/*'],
 			rules: {
-				'no-restricted-imports': [
-					'error',
-					{
-						patterns: [
-							{
-								group: ['../*'],
-								message:
-									'Use ~section aliases (~app, ~common, ~styles, etc.) instead of ../ relative imports.',
-							},
-						],
-					},
-				],
+				'no-restricted-imports': restrictedImportsRule([], ''),
 			},
 		},
+		// Each section may only reach into its own code plus the global dirs
+		// (~common, ~styles, ~utils, ~lib). Other section aliases are banned.
+		...SECTIONS.map(section => ({
+			files: [`src/${section}/**/*`],
+			rules: {
+				'no-restricted-imports': restrictedImportsRule(
+					sectionAliases.filter(a => a !== `~${section}`),
+					`Section '${section}'`
+				),
+			},
+		})),
+		// Global dirs must not depend on any section.
+		...GLOBAL_DIRS.map(dir => ({
+			files: [`src/${dir}/**/*`],
+			rules: {
+				'no-restricted-imports': restrictedImportsRule(sectionAliases, `Global '${dir}'`),
+			},
+		})),
 	],
 };
