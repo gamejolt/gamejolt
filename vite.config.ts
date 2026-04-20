@@ -249,7 +249,6 @@ export default defineConfig(async (_configEnv: ConfigEnv): Promise<ViteUserConfi
 									'app-tooltip',
 									'app-track-event',
 									'app-auth-required',
-									'app-form-autosize',
 									'app-focus-when',
 									'app-observe-dimensions',
 									'app-no-autoscroll',
