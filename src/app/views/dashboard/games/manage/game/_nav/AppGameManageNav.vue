@@ -8,10 +8,9 @@ import AppButton from '~common/button/AppButton.vue';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 
 const routeStore = useGameDashRouteController()!;
+const { isWizard, canPublish } = routeStore;
 
 const game = computed(() => routeStore.game.value!);
-const isWizard = computed(() => routeStore.isWizard);
-const canPublish = computed(() => routeStore.canPublish);
 </script>
 
 <template>
