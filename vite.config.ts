@@ -1,8 +1,10 @@
 import vue, { Options as VueOptions } from '@vitejs/plugin-vue';
 // import { visualizer } from 'rollup-plugin-visualizer';
-import { copyFileSync, readFileSync } from 'fs-extra';
+import fsExtra from 'fs-extra';
+import * as path from 'path';
+import { fileURLToPath } from 'url';
 import { ConfigEnv, defineConfig, UserConfig as ViteUserConfig } from 'vite';
-import md, { Mode as MarkdownMode } from 'vite-plugin-markdown';
+import { Mode as MarkdownMode, plugin as md } from 'vite-plugin-markdown';
 
 import { acquirePrebuiltFFmpeg } from './scripts/build/desktop-app/ffmpeg-prebuilt';
 import {
@@ -13,7 +15,8 @@ import {
 import viteHtmlResolve from './scripts/build/vite-html-resolve';
 import { readFromViteEnv } from './scripts/build/vite-runner';
 
-const path = require('path') as typeof import('path');
+const { copyFileSync, readFileSync } = fsExtra;
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 type RollupOptions = Required<Required<ViteUserConfig>['build']>['rollupOptions'];
 

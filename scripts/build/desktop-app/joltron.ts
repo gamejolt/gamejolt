@@ -1,6 +1,7 @@
-import { chmod, copy, mkdirp, readFile, rename, writeFile } from 'fs-extra';
+import fsExtra from 'fs-extra';
 import * as path from 'path';
-import * as readdirp from 'readdirp';
+import readdirp from 'readdirp';
+import { fileURLToPath } from 'url';
 
 import {
 	createTarGz,
@@ -13,6 +14,9 @@ import {
 } from '../utils';
 import { Options } from '../vite-options';
 import { buildInnoSetup } from './inno-setup';
+
+const { chmod, copy, mkdirp, readFile, rename, writeFile } = fsExtra;
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // The loader variant version looks like `${version}.loader`, but git's release version is simply `${version}` so we gotta transform it.
 export const joltronVersion = (packageJson.joltronVersion as string).replace(/\.loader$/, '');
@@ -218,9 +222,11 @@ export async function restructureProject(options: {
 	}
 
 	// Figure out the archive file list.
-	const archiveFiles = (await readdirp.promise(newPackageDir))
-		.map(i => './' + i.path.replace(/\\/g, '/'))
-		.sort();
+	const archiveFiles: string[] = [];
+	for await (const entry of readdirp(newPackageDir)) {
+		archiveFiles.push('./' + entry.path.replace(/\\/g, '/'));
+	}
+	archiveFiles.sort();
 
 	// Finally create joltron's manifest file
 	await writeFile(

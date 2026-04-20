@@ -1,10 +1,14 @@
 {
 	"compilerOptions": {
 		"baseUrl": "../",
-		"target": "es2018",
-		"module": "commonjs",
+		"target": "es2022",
+		"module": "esnext",
 		"moduleResolution": "bundler",
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true,
+		"skipLibCheck": true,
 		"strictNullChecks": true,
+		"resolveJsonModule": true,
 		"ignoreDeprecations": "6.0"
 	}
 }

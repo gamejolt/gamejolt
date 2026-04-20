@@ -1,8 +1,12 @@
 import * as cp from 'child_process';
-import { readFile, writeFile } from 'fs-extra';
+import fsExtra from 'fs-extra';
 import * as path from 'path';
+import { fileURLToPath } from 'url';
 
 import { shellEscape } from '../utils';
+
+const { readFile, writeFile } = fsExtra;
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 function execFile(cmd: string, args: string[]) {
 	return new Promise<void>(function (resolve, reject) {

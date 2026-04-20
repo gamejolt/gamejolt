@@ -1,7 +1,10 @@
-import * as fg from 'fast-glob';
-import { readFile, writeFile } from 'fs-extra';
+import fg from 'fast-glob';
+import fsExtra from 'fs-extra';
+import * as path from 'path';
+import { fileURLToPath } from 'url';
 
-const path = require('path') as typeof import('path');
+const { readFile, writeFile } = fsExtra;
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const buildDir = path.resolve(__dirname, '..', '..', '..', 'build', 'mobile');
 
