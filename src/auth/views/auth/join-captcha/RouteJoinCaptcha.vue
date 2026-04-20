@@ -2,9 +2,9 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-import AppGrecaptchaWidget from '~auth/components/grecaptcha/widget/AppGrecaptchaWidget.vue';
 import { Api } from '~common/api/api.service';
 import AppButton from '~common/button/AppButton.vue';
+import AppGrecaptchaWidget from '~common/grecaptcha/widget/AppGrecaptchaWidget.vue';
 import { showErrorGrowl } from '~common/growls/growls.service';
 import { defineAppRouteOptions } from '~common/route/route-component';
 import { createAppRoute } from '~common/route/route-component';
