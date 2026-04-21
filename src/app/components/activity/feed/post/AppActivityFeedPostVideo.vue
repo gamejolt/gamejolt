@@ -5,10 +5,7 @@ import AppActivityFeedVideoPlayer from '~app/components/activity/feed/_video-pla
 import { ActivityFeedItem } from '~app/components/activity/feed/item-service';
 import { FiresidePostModel } from '~common/fireside/post/post-model';
 import { $viewPostVideo } from '~common/fireside/post/video/video-model';
-import {
-	kPostItemPaddingVertical,
-	kPostItemPaddingXsVertical,
-} from '~common/post/post-styles';
+import { kPostItemPaddingVertical, kPostItemPaddingXsVertical } from '~common/post/post-styles';
 import { Screen } from '~common/screen/screen-service';
 import AppVideoProcessingProgress from '~common/video/processing-progress/AppVideoProcessingProgress.vue';
 import { kBorderWidthBase, kGridGutterWidth, kGridGutterWidthXs } from '~styles/variables';

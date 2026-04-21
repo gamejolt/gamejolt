@@ -6,10 +6,7 @@ import { ComponentProps } from '~common/component-helpers';
 import { ContentRules } from '~common/content/content-rules';
 import AppContentViewer from '~common/content/content-viewer/AppContentViewer.vue';
 import { FiresidePostModel } from '~common/fireside/post/post-model';
-import {
-	PostContentContainerStyles,
-	PostContentLeadStyles,
-} from '~common/post/post-styles';
+import { PostContentContainerStyles, PostContentLeadStyles } from '~common/post/post-styles';
 import AppStickerTarget from '~common/sticker/target/AppStickerTarget.vue';
 import { StickerTargetController } from '~common/sticker/target/target-controller';
 
