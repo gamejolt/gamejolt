@@ -4,7 +4,7 @@ import { RouterLink } from 'vue-router';
 
 import AppShellAltMenuDevelopers from '~app/components/shell/AppShellAltMenuDevelopers.vue';
 import AppShellAltMenuExtra from '~app/components/shell/AppShellAltMenuExtra.vue';
-import { routeLandingHelpRedirect } from '~app/views/landing/help/help.route';
+import { routeUrlLandingHelpRedirect } from '~app/views/landing/help/help.route';
 import { trackAppPromotionClick } from '~common/analytics/analytics.service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppLinkExternal from '~common/link/AppLinkExternal.vue';
@@ -83,12 +83,7 @@ defineProps</* @vue-ignore */ Pick<HTMLAttributes, 'onClick'>>();
 				</RouterLink>
 			</li>
 			<li>
-				<RouterLink
-					:to="{
-						name: routeLandingHelpRedirect.name,
-						params: { path: 'guidelines' },
-					}"
-				>
+				<RouterLink :to="routeUrlLandingHelpRedirect({ path: 'guidelines' })">
 					<span class="shell-nav-icon">
 						<AppJolticon icon="forums" />
 					</span>

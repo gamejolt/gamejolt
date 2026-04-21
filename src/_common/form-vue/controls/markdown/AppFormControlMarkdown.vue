@@ -5,7 +5,6 @@ import { Environment } from '~common/environment/environment.service';
 import { useForm } from '~common/form-vue/AppForm.vue';
 import { createFormControl, FormControlEmits } from '~common/form-vue/AppFormControl.vue';
 import { useFormGroup } from '~common/form-vue/AppFormGroup.vue';
-import { vAppFormAutosize } from '~common/form-vue/autosize.directive';
 import AppFormControlMarkdownMediaItems from '~common/form-vue/controls/markdown/AppFormControlMarkdownMediaItems.vue';
 import { vAppFocusWhen } from '~common/form-vue/focus-when.directive';
 import { FormValidator } from '~common/form-vue/validators';
@@ -72,7 +71,6 @@ function onChange(event: Event) {
 
 		<textarea
 			:id="id"
-			v-app-form-autosize
 			v-app-focus-when="focus"
 			class="form-control"
 			rows="1"
@@ -100,6 +98,8 @@ function onChange(event: Event) {
 	textarea
 		width: 100%
 		padding: ($grid-gutter-width / 2)
+		// This sizes the field by its content (autosize)
+		field-sizing: content
 
 		@media $media-xs
 			padding: ($grid-gutter-width-xs / 2)

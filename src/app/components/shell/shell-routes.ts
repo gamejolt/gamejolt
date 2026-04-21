@@ -1,10 +1,10 @@
 import { nextTick, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { showVendingMachineModal } from '~app/components/vending-machine/modal/modal.service';
 import { TogglableLeftPane } from '~app/store';
 import { useAppStore } from '~app/store/index';
 import { useQuestStore } from '~app/store/quest';
+import { showVendingMachineModal } from '~common/inventory/shop/vending-machine/modal.service';
 import { useSidebarStore } from '~common/sidebar/sidebar.store';
 import { closeStickerDrawer, useStickerStore } from '~common/sticker/sticker-store';
 

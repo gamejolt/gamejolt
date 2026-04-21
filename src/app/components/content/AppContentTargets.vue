@@ -157,12 +157,16 @@ async function _scrollToEnd() {
 
 async function onClickAddRealm() {
 	const curRealms = realms;
-	const newRealms = [...curRealms];
 
-	await showContentTargetManageRealmsModal({
-		selectedRealms: newRealms,
+	const newRealms = await showContentTargetManageRealmsModal({
+		selectedRealms: curRealms,
 		maxRealms: maxRealms || 0,
 	});
+
+	// Dismissed without confirming — don't apply any changes.
+	if (!newRealms) {
+		return;
+	}
 
 	const curRealmsMap = arrayIndexBy(curRealms, 'id');
 	const newRealmsMap = arrayIndexBy(newRealms, 'id');

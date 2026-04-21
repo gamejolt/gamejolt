@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { computed, CSSProperties, onMounted, ref, toRef, watch } from 'vue';
 
-import { showPurchaseShopProductModal } from '~app/components/vending-machine/modal/_purchase-modal/modal.service';
 import AppAlertBox from '~common/alert/AppAlertBox.vue';
 import { trackResourceInfoView } from '~common/analytics/analytics.service';
 import { Api } from '~common/api/api.service';
@@ -16,6 +15,7 @@ import { CollectibleResourceItem } from '~common/collectible/resource-details-mo
 import { EmojiModel } from '~common/emoji/emoji.model';
 import AppImgResponsive from '~common/img/AppImgResponsive.vue';
 import { PurchasableProductType } from '~common/inventory/shop/product-owner-helpers';
+import { showPurchaseShopProductModal } from '~common/inventory/shop/purchase-modal/modal.service';
 import AppLoading from '~common/loading/AppLoading.vue';
 import { getMediaItemImageSrc } from '~common/media-item/media-item-model';
 import { storeModel, storeModelList } from '~common/model/model-store.service';

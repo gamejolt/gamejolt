@@ -4,6 +4,49 @@ const pluginVue = require('eslint-plugin-vue');
 const simpleImportSort = require('eslint-plugin-simple-import-sort');
 const vueParser = require('vue-eslint-parser');
 
+const SECTIONS = [
+	'app',
+	'auth',
+	'checkout',
+	'claim',
+	'client',
+	'editor',
+	'gameserver',
+	'site-editor',
+	'widget-package',
+	'z',
+];
+
+const GLOBAL_DIRS = ['_common', '_styles', '_img', 'utils', 'lib'];
+
+const sectionAliases = SECTIONS.map(s => `~${s}`);
+
+function restrictedImportsRule(forbiddenAliases, label) {
+	const patterns = [
+		{
+			group: ['../*'],
+			message:
+				'Use ~section aliases (~app, ~common, ~styles, etc.) instead of ../ relative imports.',
+		},
+	];
+	if (forbiddenAliases.length > 0) {
+		patterns.push({
+			// Forbid any import from another section's alias, except files
+			// ending in `.route` — those are the public route surface
+			// (route records + URL builders) and must stay stateless.
+			//
+			// ESLint's no-restricted-imports uses the `ignore` package
+			// (gitignore-style). Gitignore has a quirk where re-including a
+			// file doesn't work if a parent directory is excluded. The
+			// `!${a}/**/` rule re-includes the directory entries so the
+			// `.route` file re-inclusion can apply.
+			group: forbiddenAliases.flatMap(a => [`${a}/**`, `!${a}/**/`, `!${a}/**/*.route`]),
+			message: `${label} cannot import from other sections. Use ~common, ~styles, ~utils, or ~lib for shared code. (.route files are exempt.)`,
+		});
+	}
+	return ['error', { patterns }];
+}
+
 module.exports = [
 	{
 		ignores: ['build/**', 'node_modules/**', '**/*.d.ts'],
@@ -82,18 +125,25 @@ module.exports = [
 	{
 		files: ['src/**/*'],
 		rules: {
-			'no-restricted-imports': [
-				'error',
-				{
-					patterns: [
-						{
-							group: ['../*'],
-							message:
-								'Use ~section aliases (~app, ~common, ~styles, etc.) instead of ../ relative imports.',
-						},
-					],
-				},
-			],
+			'no-restricted-imports': restrictedImportsRule([], ''),
 		},
 	},
+	// Each section may only reach into its own code plus the global dirs
+	// (~common, ~styles, ~utils, ~lib). Other section aliases are banned.
+	...SECTIONS.map(section => ({
+		files: [`src/${section}/**/*`],
+		rules: {
+			'no-restricted-imports': restrictedImportsRule(
+				sectionAliases.filter(a => a !== `~${section}`),
+				`Section '${section}'`
+			),
+		},
+	})),
+	// Global dirs must not depend on any section.
+	...GLOBAL_DIRS.map(dir => ({
+		files: [`src/${dir}/**/*`],
+		rules: {
+			'no-restricted-imports': restrictedImportsRule(sectionAliases, `Global '${dir}'`),
+		},
+	})),
 ];

@@ -2,9 +2,9 @@
 import { computed, ref, toRef } from 'vue';
 import { useRoute } from 'vue-router';
 
+import AppCommunityCard from '~app/components/community/card/AppCommunityCard.vue';
 import AppShellPageBackdrop from '~app/components/shell/AppShellPageBackdrop.vue';
 import { Api } from '~common/api/api.service';
-import AppCommunityCard from '~common/community/card/AppCommunityCard.vue';
 import AppCommunityCardCreatePlaceholder from '~common/community/card-create-placeholder/AppCommunityCardCreatePlaceholder.vue';
 import { CommunityModel } from '~common/community/community.model';
 import { HistoryCache } from '~common/history/cache/cache.service';

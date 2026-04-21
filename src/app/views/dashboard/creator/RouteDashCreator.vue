@@ -12,7 +12,7 @@ import { routeDashSupporters } from '~app/views/dashboard/supporters/supporters.
 import { routeLandingCreators } from '~app/views/landing/creators/creators.route';
 import {
 	routeLandingHelpCategory,
-	routeLandingHelpRedirect,
+	routeUrlLandingHelpRedirect,
 } from '~app/views/landing/help/help.route';
 import { Api } from '~common/api/api.service';
 import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
@@ -227,10 +227,7 @@ const creatorNextUnlock = computed(() => {
 
 						<RouterLink
 							class="link-help"
-							:to="{
-								name: routeLandingHelpRedirect.name,
-								params: { path: 'creator-levels' },
-							}"
+							:to="routeUrlLandingHelpRedirect({ path: 'creator-levels' })"
 						>
 							{{ $gettext(`Learn how creator leveling works`) }}
 						</RouterLink>

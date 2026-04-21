@@ -2,7 +2,6 @@
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
-import AppGrecaptchaWidget from '~auth/components/grecaptcha/widget/AppGrecaptchaWidget.vue';
 import { trackLoginCaptcha } from '~common/analytics/analytics.service';
 import { Api } from '~common/api/api.service';
 import googleImage from '~common/auth/google-icon.svg';
@@ -14,6 +13,7 @@ import AppFormControl from '~common/form-vue/AppFormControl.vue';
 import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
 import { validateMaxLength, validateUsername } from '~common/form-vue/validators';
+import AppGrecaptchaWidget from '~common/grecaptcha/widget/AppGrecaptchaWidget.vue';
 import { LinkedAccountProvider } from '~common/linked-account/linked-account.model';
 import { LinkedAccounts } from '~common/linked-account/linked-accounts.service';
 import AppLoading from '~common/loading/AppLoading.vue';

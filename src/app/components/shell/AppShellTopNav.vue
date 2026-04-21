@@ -5,7 +5,6 @@ import { RouterLink } from 'vue-router';
 import { useGridStore } from '~app/components/grid/grid-store';
 import AppSearch from '~app/components/search/AppSearch.vue';
 import { CBAR_WIDTH } from '~app/components/shell/AppShell.vue';
-import { imageGameJoltLogo, imageJolt } from '~app/img/images';
 import { useAppStore } from '~app/store/index';
 import { useQuestStore } from '~app/store/quest';
 import {
@@ -25,6 +24,7 @@ import { Screen } from '~common/screen/screen-service';
 import { useCommonStore } from '~common/store/common-store';
 import AppThemeSvg from '~common/theme/svg/AppThemeSvg.vue';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { imageGameJoltLogo, imageJolt } from '~img/images';
 import { styleWhen } from '~styles/mixins';
 
 const AppShellAccountPopover = defineAsyncComponent(

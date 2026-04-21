@@ -3,7 +3,6 @@ import { computed, ref, shallowRef } from 'vue';
 import { useRoute } from 'vue-router';
 
 import { FeaturedItemModel } from '~app/components/featured-item/featured-item.model';
-import socialImage from '~app/img/social/social-share-header.png';
 import AppHomeDefault from '~app/views/discover/home/AppHomeDefault.vue';
 import AppHomeSlider from '~app/views/discover/home/AppHomeSlider.vue';
 import { Api } from '~common/api/api.service';
@@ -17,6 +16,7 @@ import { RealmModel } from '~common/realm/realm-model';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { useCommonStore } from '~common/store/common-store';
 import { $gettext } from '~common/translate/translate.service';
+import socialImage from '~img/social/social-share-header.png';
 import { arrayShuffle } from '~utils/array';
 
 const CachedCreatorsKey = 'HomeCreators';

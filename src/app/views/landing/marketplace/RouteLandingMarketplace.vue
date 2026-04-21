@@ -1,7 +1,6 @@
 <script lang="ts">
 import { computed } from 'vue';
 
-import { imageJolt } from '~app/img/images';
 import socialImage from '~app/views/landing/marketplace/social.png';
 import { Api } from '~common/api/api.service';
 import AppAuthJoin from '~common/auth/join/AppAuthJoin.vue';
@@ -12,6 +11,7 @@ import { createAppRoute, defineAppRouteOptions } from '~common/route/route-compo
 import { useCommonStore } from '~common/store/common-store';
 import AppThemeSvg from '~common/theme/svg/AppThemeSvg.vue';
 import { $gettext } from '~common/translate/translate.service';
+import { imageJolt } from '~img/images';
 
 const assetPaths = import.meta.glob<string>('./*.svg', {
 	eager: true,

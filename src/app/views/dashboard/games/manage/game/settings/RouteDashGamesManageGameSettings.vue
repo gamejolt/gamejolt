@@ -25,10 +25,10 @@ export default {
 
 <script lang="ts" setup>
 const routeStore = useGameDashRouteController()!;
+const { isWizard } = routeStore;
 const { user } = useCommonStore();
 
 const game = computed(() => routeStore.game.value!);
-const isWizard = computed(() => routeStore.isWizard);
 
 const hasCompetitionEntries = ref(false);
 

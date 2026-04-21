@@ -31,7 +31,7 @@
 			"dom-webcodecs"
 		],
 		"paths": {
-			"~img/*": ["./src/app/img/*"],
+			"~img/*": ["./src/_img/*"],
 			"~app/*": ["./src/app/*"],
 			"~auth/*": ["./src/auth/*"],
 			"~checkout/*": ["./src/checkout/*"],

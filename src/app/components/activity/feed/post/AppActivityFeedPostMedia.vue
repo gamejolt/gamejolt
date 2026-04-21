@@ -3,17 +3,17 @@ import { computed, Ref, ref } from 'vue';
 
 import { ActivityFeedItem } from '~app/components/activity/feed/item-service';
 import { useActivityFeed } from '~app/components/activity/feed/view';
-import {
-	kPostItemPaddingContainer,
-	kPostItemPaddingVertical,
-	kPostItemPaddingXs,
-	kPostItemPaddingXsVertical,
-} from '~app/components/post/post-styles';
 import { FiresidePostModel } from '~common/fireside/post/post-model';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import { createLightbox } from '~common/lightbox/lightbox-helpers';
 import AppMediaItemPost from '~common/media-item/post/AppMediaItemPost.vue';
 import AppEventItemMediaIndicator from '~common/pagination/AppPageIndicator.vue';
+import {
+	kPostItemPaddingContainer,
+	kPostItemPaddingVertical,
+	kPostItemPaddingXs,
+	kPostItemPaddingXsVertical,
+} from '~common/post/post-styles';
 import { Screen } from '~common/screen/screen-service';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 import { kThemeBgActual } from '~common/theme/variables';

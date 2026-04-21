@@ -41,3 +41,7 @@ export const routeLandingHelpRedirect: RouteRecordRaw = {
 	path: '/help/:path(.+)',
 	component: () => import('~app/views/landing/help/RouteLandingHelpRedirect.vue'),
 };
+
+export function routeUrlLandingHelpRedirect({ path }: { path: string }) {
+	return `/help/${path}`;
+}

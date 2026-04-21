@@ -3,7 +3,6 @@ import '~auth/views/auth/auth-content.styl';
 
 import { RouterView } from 'vue-router';
 
-import { imageGameJoltLogo } from '~app/img/images';
 import AppCoverImg from '~auth/components/AppCoverImg.vue';
 import AppGameCoverCredits from '~auth/components/AppGameCoverCredits.vue';
 import { useAuthStore } from '~auth/store/index';
@@ -18,6 +17,7 @@ import { commonStore } from '~common/store/common-store';
 import AppThemeSvg from '~common/theme/svg/AppThemeSvg.vue';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 import AppTranslateLangSelector from '~common/translate/lang-selector/AppTranslateLangSelector.vue';
+import { imageGameJoltLogo } from '~img/images';
 
 export function loggedUserBlock() {
 	// Redirect right away if they are logged in.

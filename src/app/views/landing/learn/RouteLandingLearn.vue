@@ -1,11 +1,11 @@
 <script lang="ts">
-import { imageJolt } from '~app/img/images';
 import AppAuthJoin from '~common/auth/join/AppAuthJoin.vue';
 import AppButton from '~common/button/AppButton.vue';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { useCommonStore } from '~common/store/common-store';
 import AppThemeSvg from '~common/theme/svg/AppThemeSvg.vue';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+import { imageJolt } from '~img/images';
 
 const assetPaths = import.meta.glob<string>('./*.(svg|png)', {
 	eager: true,

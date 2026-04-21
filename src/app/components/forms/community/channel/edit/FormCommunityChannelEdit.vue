@@ -63,8 +63,11 @@ const form: FormController<FormModel> = createForm<FormModel>({
 });
 
 async function onClickEditBackground() {
-	await showCommunityChannelBackgroundModal(form.formModel);
-	emit('backgroundChange', form.formModel);
+	const updated = await showCommunityChannelBackgroundModal(form.formModel);
+	if (!updated) {
+		return;
+	}
+	emit('backgroundChange', updated);
 }
 </script>
 

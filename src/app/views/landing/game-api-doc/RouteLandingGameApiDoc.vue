@@ -2,10 +2,10 @@
 import { computed } from 'vue';
 import { RouterView, useRoute } from 'vue-router';
 
-import { imageJolt } from '~app/img/images';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import AppThemeSvg from '~common/theme/svg/AppThemeSvg.vue';
 import { $gettext } from '~common/translate/translate.service';
+import { imageJolt } from '~img/images';
 import nav from '~lib/doc-game-api/v1.x/nav.json';
 
 export default {

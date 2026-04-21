@@ -144,9 +144,13 @@ type Props = {
 	selectedRealms: RealmModel[];
 	maxRealms: number;
 };
-const { selectedRealms, maxRealms } = defineProps<Props>();
+const { selectedRealms: selectedRealmsProp, maxRealms } = defineProps<Props>();
 
-const modal = useModal()!;
+// Local copy — we resolve the final list back to the parent on confirm, so
+// dismissing the modal cleanly discards in-progress changes.
+const selectedRealms = ref([...selectedRealmsProp]);
+
+const modal = useModal<RealmModel[]>()!;
 const scrollController = createScroller();
 
 const currentQuery = ref('');
@@ -171,14 +175,14 @@ const isOverview = computed(() => renderedFeed.value.isOverview);
 const hasError = computed(() => renderedFeed.value.hasError.value);
 
 const canLoadMore = computed(() => renderedFeed.value.canLoadMore.value);
-const canAddRealms = computed(() => selectedRealms.length < maxRealms);
+const canAddRealms = computed(() => selectedRealms.value.length < maxRealms);
 
 onMounted(() => {
 	realmFeeds.value.get(currentQuery.value)?.init();
 });
 
 function isRealmSelected(realm: RealmModel) {
-	return selectedRealms.findIndex(i => i.id === realm.id) !== -1;
+	return selectedRealms.value.findIndex(i => i.id === realm.id) !== -1;
 }
 
 function toggleRealmSelection(realm: RealmModel) {
@@ -190,11 +194,11 @@ function toggleRealmSelection(realm: RealmModel) {
 }
 
 async function selectRealm(realm: RealmModel) {
-	if (selectedRealms.length >= maxRealms || isRealmSelected(realm)) {
+	if (selectedRealms.value.length >= maxRealms || isRealmSelected(realm)) {
 		return;
 	}
 
-	selectedRealms.push(realm);
+	selectedRealms.value.push(realm);
 	await nextTick();
 	const offset = scrollController.element.value?.scrollWidth;
 	if (offset) {
@@ -206,7 +210,7 @@ async function selectRealm(realm: RealmModel) {
 }
 
 function removeRealm(realm: RealmModel) {
-	arrayRemove(selectedRealms, i => i.id === realm.id);
+	arrayRemove(selectedRealms.value, i => i.id === realm.id);
 }
 
 const debounceSearchInput = debounce(() => {
@@ -243,7 +247,7 @@ const debounceSearchInput = debounce(() => {
 			</template>
 
 			<template #modal-controls>
-				<AppButton @click="modal.resolve()">
+				<AppButton @click="modal.resolve(selectedRealms)">
 					{{ $gettext(`Confirm`) }}
 				</AppButton>
 			</template>

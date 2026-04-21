@@ -17,8 +17,7 @@ export default {
 
 <script lang="ts" setup>
 const routeStore = useGameDashRouteController()!;
-
-const canPublish = computed(() => routeStore.canPublish);
+const { canPublish } = routeStore;
 
 createAppRoute({
 	routeTitle: computed(() => $gettext('The End Is Not the End')),

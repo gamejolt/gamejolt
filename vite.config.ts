@@ -162,13 +162,13 @@ export default defineConfig(async (_configEnv: ConfigEnv): Promise<ViteUserConfi
 		<meta name="apple-mobile-web-app-title" content="Game Jolt" />
 		<link
 			rel="apple-touch-icon-precomposed"
-			href="./app/img/touch/apple-touch-icon-precomposed.png"
+			href="./_img/touch/apple-touch-icon-precomposed.png"
 		/>
 
 		<!-- Tile icon for Win8 (144x144 + tile color) -->
 		<meta
 			name="msapplication-TileImage"
-			content="./app/img/touch/ms-touch-icon-144x144-precomposed.png"
+			content="./_img/touch/ms-touch-icon-144x144-precomposed.png"
 		/>
 		<meta name="msapplication-TileColor" content="#191919" />`.trim()
 						);
@@ -222,8 +222,8 @@ export default defineConfig(async (_configEnv: ConfigEnv): Promise<ViteUserConfi
 			// In the post plugin callback we use these resolved paths to do a simple
 			// string replace to get em in.
 			htmlResolver.prePlugin([
-				'./app/img/meta-default-image.png',
-				'./app/img/touch/ms-touch-icon-144x144-precomposed.png',
+				'./_img/meta-default-image.png',
+				'./_img/touch/ms-touch-icon-144x144-precomposed.png',
 			]),
 			htmlResolver.postPlugin((resolved, html) => {
 				for (const entry of resolved.entries()) {
@@ -252,7 +252,6 @@ export default defineConfig(async (_configEnv: ConfigEnv): Promise<ViteUserConfi
 									'app-tooltip',
 									'app-track-event',
 									'app-auth-required',
-									'app-form-autosize',
 									'app-focus-when',
 									'app-observe-dimensions',
 									'app-no-autoscroll',
@@ -540,7 +539,7 @@ export default defineConfig(async (_configEnv: ConfigEnv): Promise<ViteUserConfi
 				// have to meme around with relative paths.
 				// e.g. we can use import(`~img/favicon.png`) to get the favicon
 				// asset no matter where we call it from.
-				'~img': path.resolve(__dirname, 'src/app/img'),
+				'~img': path.resolve(__dirname, 'src/_img'),
 
 				// Section aliases — one per top-level folder under src/.
 				// `_common` and `_styles` drop the underscore in the alias.

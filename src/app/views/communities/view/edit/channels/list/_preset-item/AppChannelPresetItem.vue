@@ -39,7 +39,10 @@ const label = computed(() => {
 const background = computed(() => getCommunityChannelBackground(community, presetType));
 
 async function onClickEditBackground() {
-	await showCommunityChannelPresetBackgroundModal(community, presetType);
+	const updated = await showCommunityChannelPresetBackgroundModal(community, presetType);
+	if (!updated) {
+		return;
+	}
 	emit('edit');
 }
 </script>

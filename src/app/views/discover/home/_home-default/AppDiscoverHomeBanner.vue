@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
+import AppCommunityJoinWidget from '~app/components/community/AppCommunityJoinWidget.vue';
 import { FeaturedItemModel } from '~app/components/featured-item/featured-item.model';
 import AppButton from '~common/button/AppButton.vue';
-import AppCommunityJoinWidget from '~common/community/join-widget/AppCommunityJoinWidget.vue';
 import AppGameFollowWidget from '~common/game/follow-widget/AppGameFollowWidget.vue';
 import AppMediaItemBackdrop from '~common/media-item/backdrop/AppMediaItemBackdrop.vue';
 import { useCommonStore } from '~common/store/common-store';

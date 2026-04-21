@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { computed, CSSProperties } from 'vue';
 
-import { stylePostFeedItem } from '~app/components/post/post-styles';
 import AppButton from '~common/button/AppButton.vue';
+import { stylePostFeedItem } from '~common/post/post-styles';
 import { $gettext } from '~common/translate/translate.service';
 import { TranslateDirective as vTranslate } from '~common/translate/translate-directive';
 import { kFontSizeSmall } from '~styles/variables';

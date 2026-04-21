@@ -3,10 +3,10 @@ import { computed } from 'vue';
 
 import { useGridStore } from '~app/components/grid/grid-store';
 import AppShellCbarItem from '~app/components/shell/cbar/AppShellCbarItem.vue';
-import { showVendingMachineModal } from '~app/components/vending-machine/modal/modal.service';
 import { TogglableLeftPane, useAppStore } from '~app/store/index';
 import { useQuestStore } from '~app/store/quest';
 import { trackCbarControlClick } from '~common/analytics/analytics.service';
+import { showVendingMachineModal } from '~common/inventory/shop/vending-machine/modal.service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import { Screen } from '~common/screen/screen-service';
 import { useCommonStore } from '~common/store/common-store';
