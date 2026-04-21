@@ -280,17 +280,14 @@ export class GamePackageCardModel {
 			//
 			// Start with the primary build. In some cases we want to show it in
 			// the extra builds as well.
-			//
-			// prettier-ignore
 			const showPrimaryInOther =
-				this.primaryBuild && (
-					// If its installable we also want to make it downloadable.
-					this.primaryAction === 'install' ||
+				this.primaryBuild &&
+				// If its installable we also want to make it downloadable.
+				(this.primaryAction === 'install' ||
 					// If its incompatible with the current device the primary
 					// button for it wont actually show, so we need to add it to the
 					// extras list.
-					!this.primaryIsCompatible
-				);
+					!this.primaryIsCompatible);
 
 			// Sort value of -100 ensures it is at the top.
 			if (showPrimaryInOther) {
