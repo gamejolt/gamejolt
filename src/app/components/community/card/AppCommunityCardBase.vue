@@ -2,10 +2,10 @@
 import { computed, toRef } from 'vue';
 import { RouterLink, useRoute } from 'vue-router';
 
+import AppCommunityJoinWidget from '~app/components/community/AppCommunityJoinWidget.vue';
 import { trackGotoCommunity } from '~common/analytics/analytics.service';
 import AppButton from '~common/button/AppButton.vue';
 import { CommunityModel, isEditingCommunity } from '~common/community/community.model';
-import AppCommunityJoinWidget from '~common/community/join-widget/AppCommunityJoinWidget.vue';
 import AppCommunityVerifiedTick from '~common/community/verified-tick/AppCommunityVerifiedTick.vue';
 import { Environment } from '~common/environment/environment.service';
 import { formatNumber } from '~common/filters/number';
@@ -134,4 +134,4 @@ function doTrackGotoCommunity() {
 	</AppTheme>
 </template>
 
-<style lang="stylus" src="~common/community/card-base/card-base.styl" scoped></style>
+<style lang="stylus" src="~app/components/community/card/card-base.styl" scoped></style>

@@ -2,12 +2,12 @@
 import { toRef } from 'vue';
 import { useRouter } from 'vue-router';
 
+import AppCommunityJoinWidget from '~app/components/community/AppCommunityJoinWidget.vue';
 import { showCommunitySidebarModal } from '~app/components/community/sidebar/modal/modal.service';
 import { useAppStore } from '~app/store';
 import AppEditableThumbnail from '~app/views/communities/view/_editable-thumbnail/AppEditableThumbnail.vue';
 import { useCommunityRouteStore } from '~app/views/communities/view/view.store';
 import AppButton from '~common/button/AppButton.vue';
-import AppCommunityJoinWidget from '~common/community/join-widget/AppCommunityJoinWidget.vue';
 import AppCommunityVerifiedTick from '~common/community/verified-tick/AppCommunityVerifiedTick.vue';
 import { Environment } from '~common/environment/environment.service';
 import { formatNumber } from '~common/filters/number';
