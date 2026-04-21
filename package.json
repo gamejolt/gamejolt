@@ -37,6 +37,7 @@
 		"@types/google-publisher-tag": "1.20241202.0",
 		"@types/google_interactive_media_ads_types": "1.20241219.0",
 		"@types/grecaptcha": "2.0.35",
+		"@types/jquery": "3.5.34",
 		"@types/jstimezonedetect": "1.0.1",
 		"@types/node": "16.18.34",
 		"@types/node-fetch": "2.6.1",

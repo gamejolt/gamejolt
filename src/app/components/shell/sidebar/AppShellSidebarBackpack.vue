@@ -3,7 +3,6 @@ import { Ref, ref } from 'vue';
 
 import AppBackpackGift from '~app/components/shell/sidebar/_backpack/AppBackpackGift.vue';
 import AppBackpackSticker from '~app/components/shell/sidebar/_backpack/AppBackpackSticker.vue';
-import { showVendingMachineModal } from '~app/components/vending-machine/modal/modal.service';
 import { Api } from '~common/api/api.service';
 import AppButton from '~common/button/AppButton.vue';
 import AppCurrencyPillList from '~common/currency/AppCurrencyPillList.vue';
@@ -14,6 +13,7 @@ import AppIllustration from '~common/illustration/AppIllustration.vue';
 import { illPointyThing } from '~common/illustration/illustrations';
 import { InventoryShopGiftModel } from '~common/inventory/shop/inventory-shop-gift.model';
 import { InventoryShopProduct } from '~common/inventory/shop/product-owner-helpers';
+import { showVendingMachineModal } from '~common/inventory/shop/vending-machine/modal.service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import { storeModelList } from '~common/model/model-store.service';
 import AppPopper from '~common/popper/AppPopper.vue';

@@ -4,7 +4,7 @@ import { computed, HTMLAttributes } from 'vue';
 import { useOnHover } from '~common/on/useOnHover';
 
 defineProps</* @vue-ignore */ Pick<HTMLAttributes, 'onClick'>>();
-import { stylePostFeedItem } from '~app/components/post/post-styles';
+import { stylePostFeedItem } from '~common/post/post-styles';
 
 /**
  * This is mostly for performance so that it only has to re-render this single

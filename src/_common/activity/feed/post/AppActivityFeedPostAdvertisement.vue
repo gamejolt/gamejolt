@@ -1,7 +1,10 @@
 <script lang="ts">
 import { computed } from 'vue';
 
-import AppActivityFeedPostWrapper from '~app/components/activity/feed/post/AppActivityFeedPostWrapper.vue';
+import AppActivityFeedPostWrapper from '~common/activity/feed/post/AppActivityFeedPostWrapper.vue';
+import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
+import AppButton from '~common/button/AppButton.vue';
+import AppImgResponsive from '~common/img/AppImgResponsive.vue';
 import {
 	kPostItemPaddingVertical,
 	kPostItemPaddingXsVertical,
@@ -14,10 +17,7 @@ import {
 	PostHeaderContentStyles,
 	PostHeaderMetaStyles,
 	PostHeaderStyles,
-} from '~app/components/post/post-styles';
-import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
-import AppButton from '~common/button/AppButton.vue';
-import AppImgResponsive from '~common/img/AppImgResponsive.vue';
+} from '~common/post/post-styles';
 import { Screen } from '~common/screen/screen-service';
 import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
 import { $gettext } from '~common/translate/translate.service';

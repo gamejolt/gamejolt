@@ -8,10 +8,6 @@ import {
 	ActivityFeedKey,
 	ActivityFeedView,
 } from '~app/components/activity/feed/view';
-import {
-	kPostItemPaddingVertical,
-	kPostItemPaddingXsVertical,
-} from '~app/components/post/post-styles';
 import { useAdStore } from '~common/ad/ad-store';
 import AppAdFeedParent from '~common/ad/AppAdFeedParent.vue';
 import AppAdWidget from '~common/ad/widget/AppAdWidget.vue';
@@ -25,6 +21,7 @@ import AppIllustration from '~common/illustration/AppIllustration.vue';
 import { illEndOfFeed } from '~common/illustration/illustrations';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppLoading from '~common/loading/AppLoading.vue';
+import { kPostItemPaddingVertical, kPostItemPaddingXsVertical } from '~common/post/post-styles';
 import { Screen } from '~common/screen/screen-service';
 import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
 import { Scroll } from '~common/scroll/scroll.service';

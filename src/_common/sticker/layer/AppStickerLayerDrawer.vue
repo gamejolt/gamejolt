@@ -11,11 +11,11 @@ import {
 	watch,
 } from 'vue';
 
-import { showVendingMachineModal } from '~app/components/vending-machine/modal/modal.service';
 import { Analytics } from '~common/analytics/analytics.service';
 import AppAnimElectricity from '~common/animation/AppAnimElectricity.vue';
 import AppButton from '~common/button/AppButton.vue';
 import { EscapeStack, EscapeStackCallback } from '~common/escape-stack/escape-stack.service';
+import { showVendingMachineModal } from '~common/inventory/shop/vending-machine/modal.service';
 import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
 import { vAppObserveDimensions } from '~common/observe-dimensions/observe-dimensions.directive';
 import AppPageIndicatorCompact from '~common/pagination/AppPageIndicatorCompact.vue';

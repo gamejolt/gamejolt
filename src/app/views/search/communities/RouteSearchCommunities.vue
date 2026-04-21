@@ -1,9 +1,9 @@
 <script lang="ts">
 import { computed } from 'vue';
 
+import AppCommunityCard from '~app/components/community/card/AppCommunityCard.vue';
 import { sendSearch } from '~app/components/search/search-service';
 import { useSearchRouteController } from '~app/views/search/RouteSearch.vue';
-import AppCommunityCard from '~common/community/card/AppCommunityCard.vue';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { $gettext } from '~common/translate/translate.service';
 import { getQuery } from '~utils/router';

@@ -14,7 +14,7 @@ export async function showVendingMachineModal(options: {
 	return await showModal<void>({
 		modalId: 'VendingMachine',
 		component: defineAsyncComponent(
-			() => import('~app/components/vending-machine/modal/AppVendingMachineModal.vue')
+			() => import('~common/inventory/shop/vending-machine/AppVendingMachineModal.vue')
 		),
 		size: 'lg',
 		props: {

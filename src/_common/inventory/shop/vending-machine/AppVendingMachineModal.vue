@@ -1,10 +1,6 @@
 <script lang="ts" setup>
 import { computed, CSSProperties, onMounted, Ref, ref } from 'vue';
 
-import AppVendingMachineProduct from '~app/components/vending-machine/modal/_product/AppVendingMachineProduct.vue';
-import { showPurchaseShopProductModal } from '~app/components/vending-machine/modal/_purchase-modal/modal.service';
-import AppVendingMachineCurrencyCard from '~app/components/vending-machine/modal/AppVendingMachineCurrencyCard.vue';
-import imageVance from '~app/components/vending-machine/modal/vance.png';
 import { Api } from '~common/api/api.service';
 import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
 import AppButton from '~common/button/AppButton.vue';
@@ -16,6 +12,10 @@ import { illNoCommentsSmall } from '~common/illustration/illustrations';
 import { InventoryShopProductSaleModel } from '~common/inventory/shop/inventory-shop-product-sale.model';
 import { InventoryShopSectionModel } from '~common/inventory/shop/inventory-shop-section.model';
 import { PurchasableProductType } from '~common/inventory/shop/product-owner-helpers';
+import { showPurchaseShopProductModal } from '~common/inventory/shop/purchase-modal/modal.service';
+import AppVendingMachineProduct from '~common/inventory/shop/vending-machine/_product/AppVendingMachineProduct.vue';
+import AppVendingMachineCurrencyCard from '~common/inventory/shop/vending-machine/AppVendingMachineCurrencyCard.vue';
+import imageVance from '~common/inventory/shop/vending-machine/vance.png';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
 import AppModal from '~common/modal/AppModal.vue';

@@ -1,5 +1,5 @@
-import fallbackImageUrl from '~app/img/meta-default-image.png';
 import { MetaContainer } from '~common/meta/meta-container';
+import fallbackImageUrl from '~img/meta-default-image.png';
 
 export class FbMetaContainer {
 	readonly meta = new MetaContainer('property');

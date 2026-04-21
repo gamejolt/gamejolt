@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { RouterLink } from 'vue-router';
 
+import AppCommunityCardBase from '~app/components/community/card/AppCommunityCardBase.vue';
 import { trackGotoCommunity } from '~common/analytics/analytics.service';
-import AppCommunityCardBase from '~common/community/card-base/AppCommunityCardBase.vue';
 import { CommunityModel } from '~common/community/community.model';
 import AppCommunityThumbnailImg from '~common/community/thumbnail/AppCommunityThumbnailImg.vue';
 

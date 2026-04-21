@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { nextTick, onMounted, ref, useTemplateRef, watch } from 'vue';
 
-import { GrecaptchaSdk } from '~auth/components/grecaptcha/sdk/sdk.service';
 import { Environment } from '~common/environment/environment.service';
+import { GrecaptchaSdk } from '~common/grecaptcha/sdk/sdk.service';
 import AppLoading from '~common/loading/AppLoading.vue';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 

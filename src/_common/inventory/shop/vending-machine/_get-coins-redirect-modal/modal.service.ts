@@ -11,7 +11,7 @@ export async function showGetCoinsRedirectModal() {
 		component: defineAsyncComponent(
 			() =>
 				import(
-					'~app/components/vending-machine/modal/_get-coins-redirect-modal/AppGetCoinsRedirectModal.vue'
+					'~common/inventory/shop/vending-machine/_get-coins-redirect-modal/AppGetCoinsRedirectModal.vue'
 				)
 		),
 		size: 'sm',

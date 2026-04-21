@@ -4,6 +4,9 @@ import { RouterLink } from 'vue-router';
 
 import AppActivityFeedPostTime from '~app/components/activity/feed/post/AppActivityFeedPostTime.vue';
 import { ActivityFeedView } from '~app/components/activity/feed/view';
+import { UserFollowLocation } from '~common/analytics/analytics.service';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import {
 	PostHeaderAvatarStyles,
 	PostHeaderBylineGameStyles,
@@ -14,10 +17,7 @@ import {
 	PostHeaderMetaStyles,
 	PostHeaderStyles,
 	PostHeaderTimeStyles,
-} from '~app/components/post/post-styles';
-import { UserFollowLocation } from '~common/analytics/analytics.service';
-import { FiresidePostModel } from '~common/fireside/post/post-model';
-import AppJolticon from '~common/jolticon/AppJolticon.vue';
+} from '~common/post/post-styles';
 import { Screen } from '~common/screen/screen-service';
 import AppTimeAgo from '~common/time/AppTimeAgo.vue';
 import AppTranslate from '~common/translate/AppTranslate.vue';

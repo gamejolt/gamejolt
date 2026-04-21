@@ -22,6 +22,7 @@ Fix any issues reported (`--fix` for eslint, `--write` for prettier) before repo
 
 - Always `<script lang="ts" setup>` with TypeScript.
 - `vue-class-component` and `vue-property-decorator` are **banned** — do not add new usages.
+- Don't annotate function return types unless required (e.g. to break recursion, or to tighten a type that would otherwise infer too broadly). Let TypeScript infer.
 
 ---
 

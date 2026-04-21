@@ -15,7 +15,6 @@ import AppShellPageBackdrop from '~app/components/shell/AppShellPageBackdrop.vue
 import AppProfileActionButtons from '~app/views/profile/overview/AppProfileActionButtons.vue';
 import AppProfileInfoCard from '~app/views/profile/overview/AppProfileInfoCard.vue';
 import AppRouteProfileOverviewBanned from '~app/views/profile/overview/AppRouteProfileOverviewBanned.vue';
-import AppProfileShopButton from '~app/views/profile/overview/shop/AppProfileShopButton.vue';
 import { useProfileRouteStore } from '~app/views/profile/RouteProfile.vue';
 import AppAdTakeoverFloat from '~common/ad/AppAdTakeoverFloat.vue';
 import AppAdWidget from '~common/ad/widget/AppAdWidget.vue';
@@ -40,6 +39,7 @@ import { showModalConfirm } from '~common/modal/confirm/confirm-service';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { Screen } from '~common/screen/screen-service';
 import AppShareCard from '~common/share/card/AppShareCard.vue';
+import AppProfileShopButton from '~common/shop/AppProfileShopButton.vue';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 import AppTopSupportersCard, {
 	OwnSupport,

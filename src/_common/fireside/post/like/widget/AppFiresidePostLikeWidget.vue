@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { computed, ref, toRef } from 'vue';
 
-import { PostOverlayTextStyles } from '~app/components/post/post-styles';
 import { PostControlsLocation, trackPostLike } from '~common/analytics/analytics.service';
 import { vAppAuthRequired } from '~common/auth/auth-required-directive';
 import AppButton from '~common/button/AppButton.vue';
@@ -15,6 +14,7 @@ import { FiresidePostModel } from '~common/fireside/post/post-model';
 import { showErrorGrowl } from '~common/growls/growls.service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import { showLikersModal } from '~common/likers/modal.service';
+import { PostOverlayTextStyles } from '~common/post/post-styles';
 import { Screen } from '~common/screen/screen-service';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import { $gettext } from '~common/translate/translate.service';

@@ -22,7 +22,7 @@
 		"lib": ["esnext", "dom", "dom.iterable", "scripthost"],
 		"baseUrl": ".",
 		"paths": {
-			"~img/*": ["src/app/img/*"],
+			"~img/*": ["src/_img/*"],
 			"~app/*": ["src/app/*"],
 			"~auth/*": ["src/auth/*"],
 			"~checkout/*": ["src/checkout/*"],

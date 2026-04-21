@@ -9,7 +9,6 @@ import AppActivityFeedPostArticle from '~app/components/activity/feed/post/AppAc
 import AppActivityFeedPostBlocked from '~app/components/activity/feed/post/AppActivityFeedPostBlocked.vue';
 import AppActivityFeedPostMedia from '~app/components/activity/feed/post/AppActivityFeedPostMedia.vue';
 import AppActivityFeedPostVideo from '~app/components/activity/feed/post/AppActivityFeedPostVideo.vue';
-import AppActivityFeedPostWrapper from '~app/components/activity/feed/post/AppActivityFeedPostWrapper.vue';
 import { useActivityFeed } from '~app/components/activity/feed/view';
 import AppContentTargets from '~app/components/content/AppContentTargets.vue';
 import AppFiresidePostEmbed from '~app/components/fireside/post/embed/AppFiresidePostEmbed.vue';
@@ -17,11 +16,7 @@ import AppPollVoting from '~app/components/poll/AppPollVoting.vue';
 import AppPostContent from '~app/components/post/AppPostContent.vue';
 import AppPostHeader from '~app/components/post/AppPostHeader.vue';
 import AppPostControls from '~app/components/post/controls/AppPostControls.vue';
-import {
-	kPostItemPaddingVertical,
-	kPostItemPaddingXsVertical,
-	PostFeedItemContainerStyles,
-} from '~app/components/post/post-styles';
+import AppActivityFeedPostWrapper from '~common/activity/feed/post/AppActivityFeedPostWrapper.vue';
 import { trackPostOpen } from '~common/analytics/analytics.service';
 import AppBackground from '~common/background/AppBackground.vue';
 import { CommunityChannelModel } from '~common/community/channel/channel.model';
@@ -32,6 +27,11 @@ import { EventItemModel } from '~common/event-item/event-item.model';
 import { FiresidePostModel } from '~common/fireside/post/post-model';
 import { Navigate } from '~common/navigate/navigate.service';
 import { vAppObserveDimensions } from '~common/observe-dimensions/observe-dimensions.directive';
+import {
+	kPostItemPaddingVertical,
+	kPostItemPaddingXsVertical,
+	PostFeedItemContainerStyles,
+} from '~common/post/post-styles';
 import { Screen } from '~common/screen/screen-service';
 import { Scroll } from '~common/scroll/scroll.service';
 import AppStickerControlsOverlay from '~common/sticker/AppStickerControlsOverlay.vue';

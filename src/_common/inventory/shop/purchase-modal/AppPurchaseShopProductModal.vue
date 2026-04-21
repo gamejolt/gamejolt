@@ -2,10 +2,7 @@
 import { computed, onMounted, onUnmounted, Ref, ref, watchEffect } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { showPurchaseShopProductConfirmModal } from '~app/components/vending-machine/modal/_purchase-modal/confirm/modal.service';
-import { showGiftRecipientModal } from '~app/components/vending-machine/modal/_purchase-modal/gift-recipient/modal.service';
-import { routeLandingHelpRedirect } from '~app/views/landing/help/help.route';
-import AppProfileShopButton from '~app/views/profile/overview/shop/AppProfileShopButton.vue';
+import { routeUrlLandingHelpRedirect } from '~app/views/landing/help/help.route';
 import { Api } from '~common/api/api.service';
 import { vAppAuthRequired } from '~common/auth/auth-required-directive';
 import { AvatarFrameModel } from '~common/avatar/frame.model';
@@ -29,6 +26,8 @@ import {
 	getShopProductDisplayData,
 	PurchasableProductData,
 } from '~common/inventory/shop/product-owner-helpers';
+import { showPurchaseShopProductConfirmModal } from '~common/inventory/shop/purchase-modal/confirm/modal.service';
+import { showGiftRecipientModal } from '~common/inventory/shop/purchase-modal/gift-recipient/modal.service';
 import AppLoading from '~common/loading/AppLoading.vue';
 import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
 import { showPurchaseMicrotransactionModal } from '~common/microtransaction/purchase-modal/modal.service';
@@ -38,6 +37,7 @@ import { useModal } from '~common/modal/modal.service';
 import { storeModel, storeModelList } from '~common/model/model-store.service';
 import AppOnHover from '~common/on/AppOnHover.vue';
 import AppSectionTitle from '~common/section/AppSectionTitle.vue';
+import AppProfileShopButton from '~common/shop/AppProfileShopButton.vue';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 import AppStickerGrid from '~common/sticker/pack/AppStickerGrid.vue';
 import { StickerPackModel } from '~common/sticker/pack/pack.model';
@@ -676,12 +676,7 @@ async function onClickGift(sale: InventoryShopProductSaleModel) {
 						<div class="text-center">
 							<RouterLink
 								class="link-muted"
-								:to="{
-									name: routeLandingHelpRedirect.name,
-									params: {
-										path: 'drop-rates',
-									},
-								}"
+								:to="routeUrlLandingHelpRedirect({ path: 'drop-rates' })"
 							>
 								{{ $gettext(`Learn more about packs`) }}
 							</RouterLink>
