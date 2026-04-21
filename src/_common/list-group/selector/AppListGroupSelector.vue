@@ -1,6 +1,4 @@
-<script lang="ts" setup generic="T extends TrophyNavGame | GameScoreTableModel">
-import { TrophyNavGame } from '~app/views/profile/trophies/_nav/AppProfileTrophiesNav.vue';
-import { GameScoreTableModel } from '~common/game/score-table/score-table.model';
+<script lang="ts" setup generic="T extends { id: string | number }">
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppPopper from '~common/popper/AppPopper.vue';
 
@@ -39,10 +37,7 @@ function select(item: any) {
 						@click="select(item)"
 					>
 						<div class="list-group-item-addon">
-							<AppJolticon
-								v-if="current && (current as any).id === (item as any).id"
-								icon="check"
-							/>
+							<AppJolticon v-if="current && current.id === item.id" icon="check" />
 						</div>
 
 						<slot :item="item" />
