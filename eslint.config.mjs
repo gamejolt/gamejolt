@@ -1,8 +1,8 @@
-const js = require('@eslint/js');
-const tseslint = require('typescript-eslint');
-const pluginVue = require('eslint-plugin-vue');
-const simpleImportSort = require('eslint-plugin-simple-import-sort');
-const vueParser = require('vue-eslint-parser');
+import js from '@eslint/js';
+import simpleImportSort from 'eslint-plugin-simple-import-sort';
+import pluginVue from 'eslint-plugin-vue';
+import tseslint from 'typescript-eslint';
+import vueParser from 'vue-eslint-parser';
 
 const SECTIONS = [
 	'app',
@@ -47,7 +47,7 @@ function restrictedImportsRule(forbiddenAliases, label) {
 	return ['error', { patterns }];
 }
 
-module.exports = [
+export default [
 	{
 		ignores: ['build/**', 'node_modules/**', '**/*.d.ts'],
 	},
@@ -55,7 +55,7 @@ module.exports = [
 	...tseslint.configs.recommended,
 	...pluginVue.configs['flat/recommended'],
 	{
-		files: ['**/*.{js,ts,vue}'],
+		files: ['**/*.{js,mjs,cjs,ts,vue}'],
 		languageOptions: {
 			parser: vueParser,
 			parserOptions: {
