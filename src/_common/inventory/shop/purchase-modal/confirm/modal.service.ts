@@ -8,9 +8,7 @@ export async function showPurchaseShopProductConfirmModal({ giftUser }: { giftUs
 		modalId: 'PurchaseShopProductConfirm',
 		component: defineAsyncComponent(
 			() =>
-				import(
-					'~common/inventory/shop/purchase-modal/confirm/AppPurchaseShopProductConfirmModal.vue'
-				)
+				import('~common/inventory/shop/purchase-modal/confirm/AppPurchaseShopProductConfirmModal.vue')
 		),
 		size: 'sm',
 		props: {

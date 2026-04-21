@@ -9,9 +9,7 @@ export async function showGiftRecipientModal({ sale }: { sale: InventoryShopProd
 		modalId: 'GiftRecipient',
 		component: defineAsyncComponent(
 			() =>
-				import(
-					'~common/inventory/shop/purchase-modal/gift-recipient/AppGiftRecipientModal.vue'
-				)
+				import('~common/inventory/shop/purchase-modal/gift-recipient/AppGiftRecipientModal.vue')
 		),
 		size: 'sm',
 		props: {

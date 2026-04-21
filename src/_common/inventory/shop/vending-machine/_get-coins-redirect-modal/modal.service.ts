@@ -10,9 +10,7 @@ export async function showGetCoinsRedirectModal() {
 		modalId: 'GetCoinsRedirect',
 		component: defineAsyncComponent(
 			() =>
-				import(
-					'~common/inventory/shop/vending-machine/_get-coins-redirect-modal/AppGetCoinsRedirectModal.vue'
-				)
+				import('~common/inventory/shop/vending-machine/_get-coins-redirect-modal/AppGetCoinsRedirectModal.vue')
 		),
 		size: 'sm',
 	});
