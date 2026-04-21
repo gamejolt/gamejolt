@@ -4,7 +4,7 @@
 	"recommendations": [
 		"editorconfig.editorconfig",
 		"sysoev.language-stylus",
-		"esbenp.prettier-vscode",
+		"oxc.oxc-vscode",
 		"thisismanta.stylus-supremacy",
 		"rebornix.project-snippets",
 		"dbaeumer.vscode-eslint",

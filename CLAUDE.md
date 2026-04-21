@@ -11,10 +11,10 @@ After completing work, run lint and format checks **only on the files you modifi
 ```sh
 # Replace with the actual modified paths, space-separated
 yarn eslint path/to/File1.vue path/to/File2.ts
-yarn prettier --check path/to/File1.vue path/to/File2.ts
+yarn oxfmt --check path/to/File1.vue path/to/File2.ts
 ```
 
-Fix any issues reported (`--fix` for eslint, `--write` for prettier) before reporting the task as complete.
+Fix any issues reported (`--fix` for eslint, `--write` for oxfmt) before reporting the task as complete.
 
 ---
 
