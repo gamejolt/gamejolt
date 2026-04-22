@@ -34,6 +34,10 @@ export function createScroller() {
 		offset: number,
 		{ edge, behavior }: ScrollOptions & { edge: 'top' | 'left' } = { edge: 'top' }
 	) {
+		if (import.meta.env.SSR) {
+			return;
+		}
+
 		let target = getOverlayInstance.value?.()?.elements().scrollOffsetElement;
 		if (!(target instanceof HTMLElement)) {
 			target = element.value;
