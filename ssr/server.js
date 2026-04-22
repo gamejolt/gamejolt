@@ -39,7 +39,7 @@ const ssrManifest = require(path.join(webBuildPath, '.vite', 'ssr-manifest.json'
 // We read it as string instead of requiring because we only want to evaluate it within
 // a new node context, and its more efficient reading it from disk once and copying it
 // over to the new node context than to read it from disk for every request.
-const serverBundleFile = path.join(serverBuildPath, 'server.js');
+const serverBundleFile = path.join(serverBuildPath, 'server.cjs');
 const serverBundle = bundleRunner.compileModule(serverBundleFile);
 
 const server = express();
