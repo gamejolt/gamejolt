@@ -44,7 +44,7 @@ createAppRoute({
 			<br />
 
 			<AppForumTopicList
-				:topics="(topics as any)"
+				:topics="topics as any"
 				sort=""
 				:use-upvotes="false"
 				:post-count-per-page="postCountPerPage"

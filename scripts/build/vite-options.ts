@@ -1,8 +1,11 @@
-import { readFile } from 'fs-extra';
+import fsExtra from 'fs-extra';
+import * as path from 'path';
+import { fileURLToPath } from 'url';
 
 import { gjSectionConfigs, gjSectionNames } from './section-config';
 
-const path = require('path') as typeof import('path');
+const { readFile } = fsExtra;
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 type UnwrapPromise<T> = T extends Promise<infer U> ? U : never;
 type ParsedOptions = ReturnType<typeof parseOptionsFromCommandlineArgs>;

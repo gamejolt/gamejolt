@@ -23,12 +23,12 @@ export type ModelData<T> = HidePrivateKeys<{
 	[K in keyof T]: T[K] extends Primitives | Primitives[]
 		? T[K]
 		: T[K] extends Model
-		? ModelData<T[K]>
-		: T[K] extends (infer U)[]
-		? U extends Model
-			? ModelData<U>[]
-			: never
-		: never;
+			? ModelData<T[K]>
+			: T[K] extends (infer U)[]
+				? U extends Model
+					? ModelData<U>[]
+					: never
+				: never;
 }>;
 
 /**

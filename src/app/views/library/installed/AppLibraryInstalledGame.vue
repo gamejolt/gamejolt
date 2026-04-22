@@ -88,14 +88,14 @@ const shouldShowControls = computed(() => {
 .client-installed-game
 	position: relative
 
-	::v-deep(img)
-	::v-deep(video)
+	:deep(img)
+	:deep(video)
 		transition: all 1s
 		filter: grayscale(0)
 
 	&.-is-installing
-		::v-deep(img)
-		::v-deep(video)
+		:deep(img)
+		:deep(video)
 			filter: grayscale(100%)
 
 .-thumb
@@ -124,11 +124,11 @@ const shouldShowControls = computed(() => {
 	background-color: rgba(0, 0, 0, 0.5)
 	z-index: 2
 
-	::v-deep(.client-game-buttons)
+	:deep(.client-game-buttons)
 		display: block
 		width: 100%
 
-	::v-deep(.client-install-progress)
+	:deep(.client-install-progress)
 		rounded-corners()
 		margin: 0
 		margin-left: ($grid-gutter-width / 2)

@@ -54,7 +54,7 @@ watch(
 	}
 );
 
-let successClearTimeout: NodeJS.Timer | undefined;
+let successClearTimeout: NodeJS.Timeout | undefined;
 
 function showSuccess() {
 	// Reset the timeout if it's already showing.
@@ -107,7 +107,7 @@ async function onClick(e: Event) {
 		:solid="solid"
 		:block="block"
 		:disabled="disabled || form.isProcessing"
-		:icon="(icon as any)"
+		:icon="icon as any"
 		@click="onClick"
 	>
 		<slot />

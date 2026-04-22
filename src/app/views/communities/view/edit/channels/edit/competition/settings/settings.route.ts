@@ -7,8 +7,6 @@ export const routeCommunitiesViewEditChannelsCompetitionSettings: RouteRecordRaw
 	path: 'settings',
 	component: lazyImportNoSSR(
 		() =>
-			import(
-				'~app/views/communities/view/edit/channels/edit/competition/settings/RouteCommunitiesViewEditChannelsCompetitionSettings.vue'
-			)
+			import('~app/views/communities/view/edit/channels/edit/competition/settings/RouteCommunitiesViewEditChannelsCompetitionSettings.vue')
 	),
 };

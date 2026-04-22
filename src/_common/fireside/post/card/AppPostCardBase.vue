@@ -364,7 +364,7 @@ $-padding = 8px
 	right: $-padding
 	bottom: ($-padding * 2) + 20
 
-	::v-deep(.fireside-post-lead-content)
+	:deep(.fireside-post-lead-content)
 		font-size: ceil($font-size-small * 1.1)
 
 .-overlay-message
@@ -374,7 +374,7 @@ $-padding = 8px
 	padding: $-padding
 	max-height: 100%
 
-	::v-deep(.fireside-post-lead-content)
+	:deep(.fireside-post-lead-content)
 		color: var(--theme-fg)
 		font-size: $font-size-small
 
@@ -397,7 +397,7 @@ $-padding = 8px
 	justify-content: center
 	align-items: center
 
-	::v-deep(> video)
+	:deep(> video)
 		height: 100% !important
 		width: 100% !important
 </style>

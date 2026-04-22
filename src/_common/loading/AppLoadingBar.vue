@@ -22,8 +22,8 @@ const requestCount = ref(0);
 const completedCount = ref(0);
 const shouldShow = ref(false);
 
-let showTimeout: NodeJS.Timer | undefined;
-let hideTimeout: NodeJS.Timer | undefined;
+let showTimeout: NodeJS.Timeout | undefined;
+let hideTimeout: NodeJS.Timeout | undefined;
 
 // This might not be available on all sections (such as gameserver, which
 // doesn't have a router), so we mark it as potentially undefined.

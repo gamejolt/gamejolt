@@ -539,10 +539,10 @@ export default class ClientLibraryPackageInstallOperations {
 				operation === 'install'
 					? $gettext(`%{package} failed to install.`, {
 							package: packageTitle,
-					  })
+						})
 					: $gettext(`%{package} failed to update.`, {
 							package: packageTitle,
-					  });
+						});
 
 			let cvOperation: ClientVoodooOperation;
 			if (operation === 'install') {

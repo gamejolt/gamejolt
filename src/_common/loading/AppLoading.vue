@@ -3,7 +3,11 @@ import { computed, HTMLAttributes } from 'vue';
 
 import { $gettext } from '~common/translate/translate.service';
 
-const images = import.meta.glob('./*.gif', { eager: true, as: 'url' });
+const images = import.meta.glob<string>('./*.gif', {
+	eager: true,
+	query: '?url',
+	import: 'default',
+});
 
 type Props = {
 	label?: string;

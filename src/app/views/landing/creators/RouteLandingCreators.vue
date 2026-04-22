@@ -37,7 +37,11 @@ import { UserModel } from '~common/user/user.model';
 import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
 import { arrayIndexBy, arrayShuffle } from '~utils/array';
 
-const postImages = import.meta.glob('./_posts/*.jpg', { eager: true, as: 'url' });
+const postImages = import.meta.glob<string>('./_posts/*.jpg', {
+	eager: true,
+	query: '?url',
+	import: 'default',
+});
 
 const boltHeight = computed(() => (Screen.isDesktop ? 182 : 164));
 const boltWidth = computed(() => (104 / 154) * boltHeight.value);
@@ -631,7 +635,7 @@ function getRandomStickers(count = 3) {
 	color: var(--theme-fg)
 	change-bg(bg)
 
-	::v-deep(.button.-lg)
+	:deep(.button.-lg)
 		rounded-corners()
 
 .-shadow

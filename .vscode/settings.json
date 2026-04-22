@@ -1,5 +1,5 @@
 {
-	"typescript.tsdk": "node_modules/typescript/lib",
+	"js/ts.tsdk.path": "node_modules/typescript/lib",
 	"files.associations": {
 		"*.html": "vue-html"
 	},
@@ -12,19 +12,19 @@
 		"source.fixAll.eslint": "explicit"
 	},
 	"[html]": {
-		"editor.defaultFormatter": "esbenp.prettier-vscode"
+		"editor.defaultFormatter": "oxc.oxc-vscode"
 	},
 	"[typescript]": {
-		"editor.defaultFormatter": "esbenp.prettier-vscode"
+		"editor.defaultFormatter": "oxc.oxc-vscode"
 	},
 	"[javascript]": {
-		"editor.defaultFormatter": "esbenp.prettier-vscode"
+		"editor.defaultFormatter": "oxc.oxc-vscode"
 	},
 	"[json]": {
-		"editor.defaultFormatter": "esbenp.prettier-vscode"
+		"editor.defaultFormatter": "oxc.oxc-vscode"
 	},
 	"[vue]": {
-		"editor.defaultFormatter": "esbenp.prettier-vscode"
+		"editor.defaultFormatter": "oxc.oxc-vscode"
 	},
 	"stylusSupremacy.alwaysUseAtBlock": false,
 	"stylusSupremacy.insertBraces": false,
@@ -57,7 +57,7 @@
 	"editor.linkedEditing": true,
 	"editor.semanticHighlighting.enabled": true,
 	"emmet.excludeLanguages": ["markdown", "stylus", "styl"],
-	"typescript.preferences.useAliasesForRenames": false,
+	"js/ts.preferences.useAliasesForRenames": false,
 	"vue.inlayHints.destructuredProps": true,
 	"vue.inlayHints.inlineHandlerLeading": false,
 	"vue.inlayHints.missingProps": true

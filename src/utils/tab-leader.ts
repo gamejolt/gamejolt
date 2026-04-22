@@ -15,9 +15,7 @@ export interface TabLeaderInterface {
  * Determines a leader between tabs using broadcast-channel.
  * Continues to poll until this tab can become leader.
  */
-const BrowserTabLeader: TabLeaderConstructor = class BrowserTabLeader
-	implements TabLeaderInterface
-{
+const BrowserTabLeader: TabLeaderConstructor = class BrowserTabLeader implements TabLeaderInterface {
 	private readonly elector: LeaderElector;
 	private readonly channel: BroadcastChannel;
 

@@ -25,7 +25,7 @@ const emit = defineEmits<{
 
 const isPreviewLoading = ref(false);
 const previewIndex = ref(0);
-const previewTimeout = ref<NodeJS.Timer | null>(null);
+const previewTimeout = ref<NodeJS.Timeout | null>(null);
 const rootElem = useTemplateRef('rootElem');
 
 watch(
@@ -102,8 +102,8 @@ function insertAtCaret(text: string) {
 		txtarea.selectionStart || txtarea.selectionStart === 0
 			? 'ff'
 			: (document as any).selection
-			? 'ie'
-			: false;
+				? 'ie'
+				: false;
 
 	if (br === 'ie') {
 		txtarea.focus();

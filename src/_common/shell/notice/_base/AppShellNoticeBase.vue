@@ -48,7 +48,7 @@ const emit = defineEmits<{
 }>();
 
 const leadingSize = 48;
-let autoCloseTimeout: NodeJS.Timer | undefined;
+let autoCloseTimeout: NodeJS.Timeout | undefined;
 
 // Variables to keep track of auto-close timeout. Used so we can pause the
 // animation and timeout when hovered.

@@ -518,7 +518,7 @@ export function editorSyncScope(c: ContentEditorController) {
 						contextCapabilities.customLink,
 					h1: canHeading,
 					h2: canHeading,
-			  }
+				}
 			: null),
 		...(canInsertBlock
 			? {
@@ -531,7 +531,7 @@ export function editorSyncScope(c: ContentEditorController) {
 					spoiler: contextCapabilities.spoiler,
 					hr: contextCapabilities.hr,
 					customButton: contextCapabilities.customButton,
-			  }
+				}
 			: null),
 	});
 

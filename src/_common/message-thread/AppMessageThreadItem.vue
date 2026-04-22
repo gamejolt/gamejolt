@@ -134,9 +134,9 @@ defineProps<Props>();
 	display: inline-flex
 	margin-left: 5px
 
-	::v-deep(.tag)
+	:deep(.tag)
 		vertical-align: middle
 
-.-blocked ::v-deep(.timeline-list-item-main)
+.-blocked :deep(.timeline-list-item-main)
 	padding-left: 0
 </style>

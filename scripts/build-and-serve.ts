@@ -16,7 +16,14 @@
  *              By default this is 127.0.0.1 which only allows local connections.
  */
 
-import { readFileSync, remove } from 'fs-extra';
+import express from 'express';
+import fsExtra from 'fs-extra';
+import http from 'http';
+import https from 'https';
+import minimist from 'minimist';
+import os from 'os';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 import { acquirePrebuiltFFmpeg } from './build/desktop-app/ffmpeg-prebuilt';
 import { deactivateJsonProperty, patchPackageJson, updateJsonProperty } from './build/packageJson';
@@ -24,12 +31,8 @@ import { gjSectionConfigs, type GjSectionName } from './build/section-config';
 import { Options, parseAndInferOptionsFromCommandline } from './build/vite-options';
 import { runVite } from './build/vite-runner';
 
-const minimist = require('minimist');
-const express = require('express') as typeof import('express');
-const path = require('path') as typeof import('path');
-const http = require('http') as typeof import('http');
-const https = require('https') as typeof import('https');
-const os = require('os') as typeof import('os');
+const { readFileSync, remove } = fsExtra;
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 function initializeHttpServer(
 	args: Record<string, any>,
@@ -96,7 +99,7 @@ function initializeHttpServer(
 					passphrase: 'yame yolt',
 				},
 				app
-		  )
+			)
 		: http.createServer(app);
 
 	server
@@ -197,9 +200,8 @@ function runViteBuild(gjOpts: Options, aborter: AbortController) {
 						section: sectionName,
 						'empty-outdir': false,
 					});
-					const gjOptsForSection = await parseAndInferOptionsFromCommandline(
-						argsForSection
-					);
+					const gjOptsForSection =
+						await parseAndInferOptionsFromCommandline(argsForSection);
 					gjOptsForSection.buildType = 'serve-build';
 					// Don't acquire ffmpeg during the build because multiple build
 					// processes would try overwriting the same ffmpeg binary. For

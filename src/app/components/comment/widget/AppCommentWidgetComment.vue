@@ -290,10 +290,10 @@ function onUnhideBlock() {
 								comment.subscription
 									? $gettext(
 											`You're following this comment thread and will be notified of replies.`
-									  )
+										)
 									: $gettext(
 											`Get notifications when people post new replies to this thread.`
-									  )
+										)
 							"
 							class="list-group-item has-icon"
 							@click="onFollowClick"

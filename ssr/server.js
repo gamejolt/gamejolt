@@ -32,13 +32,14 @@ const indexHtmlTemplate = fs.readFileSync(path.join(webBuildPath, 'index.html'),
 // As the server renders the app, it keeps track of which components it rendered.
 // We use this to figure out the smallest list of assets we need to preload on the client side
 // in order to hydrate it.
-const ssrManifest = require(path.join(webBuildPath, 'ssr-manifest.json'));
+// Vite 5 emits this under .vite/ (previously at the build root).
+const ssrManifest = require(path.join(webBuildPath, '.vite', 'ssr-manifest.json'));
 
 // This is the output of build:server, and is the entry point for the ssr request.
 // We read it as string instead of requiring because we only want to evaluate it within
 // a new node context, and its more efficient reading it from disk once and copying it
 // over to the new node context than to read it from disk for every request.
-const serverBundleFile = path.join(serverBuildPath, 'server.js');
+const serverBundleFile = path.join(serverBuildPath, 'server.cjs');
 const serverBundle = bundleRunner.compileModule(serverBundleFile);
 
 const server = express();

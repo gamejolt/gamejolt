@@ -8,9 +8,7 @@ export async function showClientInstallPackageModal(game: GameModel) {
 		modalId: 'ClientInstallPackage-' + game.id,
 		component: defineAsyncComponent(
 			() =>
-				import(
-					'~app/components/client/install-package-modal/AppClientInstallPackageModal.vue'
-				)
+				import('~app/components/client/install-package-modal/AppClientInstallPackageModal.vue')
 		),
 		props: { game },
 		size: 'sm',

@@ -184,12 +184,12 @@ const onlyFriends = computed(
 								type: 'resource',
 								resource: 'Comment',
 								resourceId: comment.id,
-						  }
+							}
 						: {
 								type: 'commentingOnResource',
 								resource: getCommentModelResourceName(model),
 								resourceId: model.id,
-						  }
+							}
 				"
 				:model-id="contentModelId"
 				focus-end
@@ -229,6 +229,6 @@ const onlyFriends = computed(
 </template>
 
 <style lang="stylus" scoped>
-::v-deep(.form-group)
+:deep(.form-group)
 	margin-bottom: 8px
 </style>

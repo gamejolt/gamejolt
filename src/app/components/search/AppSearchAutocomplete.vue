@@ -240,7 +240,7 @@ function selectLibraryGame(localGame: LocalDbGameType) {
 							<AppGameThumbnailImg
 								radius="md"
 								hide-jolticon
-								:game="(libraryGame as any)"
+								:game="libraryGame as any"
 							/>
 						</span>
 

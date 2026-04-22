@@ -15,7 +15,11 @@ const emit = defineEmits<{
 	select: [stage: number];
 }>();
 
-const assetPaths = import.meta.glob('./*.png', { eager: true, as: 'url' });
+const assetPaths = import.meta.glob<string>('./*.png', {
+	eager: true,
+	query: '?url',
+	import: 'default',
+});
 
 const stages = [
 	GameDevelopmentStatus.Devlog,

@@ -109,7 +109,7 @@ function cancel() {
 		padding: 0 5px
 
 .colorpicker-popover
-	::v-deep(.vc-chrome-picker)
+	:deep(.vc-chrome-picker)
 		margin-left: auto
 		margin-right: auto
 		box-shadow: none

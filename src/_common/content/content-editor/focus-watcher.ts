@@ -25,7 +25,7 @@ export class FocusWatcher {
 	private _blurCallback: () => void;
 	private _focusCallback: () => void;
 
-	private _handle: NodeJS.Timer | null = null;
+	private _handle: NodeJS.Timeout | null = null;
 	private _isSkipping = false;
 	private _hasFocus = false;
 

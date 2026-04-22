@@ -378,7 +378,7 @@ function onUserFollowDismissal() {
 		margin-right: 8px
 
 .-overlay-text
-	::v-deep(*)
+	:deep(*)
 		color: white
 		text-shadow: black 1px 1px 4px
 

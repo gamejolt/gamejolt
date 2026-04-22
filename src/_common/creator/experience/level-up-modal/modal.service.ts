@@ -8,9 +8,7 @@ export async function showCreatorExperienceLevelUpModal(level: CreatorExperience
 		modalId: 'CreatorExperienceLevelUp',
 		component: defineAsyncComponent(
 			() =>
-				import(
-					'~common/creator/experience/level-up-modal/AppCreatorExperienceLevelUpModal.vue'
-				)
+				import('~common/creator/experience/level-up-modal/AppCreatorExperienceLevelUpModal.vue')
 		),
 		props: {
 			level,

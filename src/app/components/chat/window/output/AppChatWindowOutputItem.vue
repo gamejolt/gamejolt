@@ -449,7 +449,7 @@ $-min-item-width = 24px
 	margin-bottom: 4px
 
 	// Some different styling for the fade collapse.
-	::v-deep(.fade-collapse-collapsed)
+	:deep(.fade-collapse-collapsed)
 		theme-prop('border-bottom-color', 'light')
 		margin-bottom: 4px
 		border-bottom-width: $border-width-base
@@ -550,24 +550,24 @@ $-min-item-width = 24px
 .-message-queued
 	color: var(--theme-fg-muted)
 
-	::v-deep(.content-image)
+	:deep(.content-image)
 		filter: grayscale(0.75) brightness(0.9)
 
-	::v-deep(.emoji)
+	:deep(.emoji)
 		filter: grayscale(1) brightness(0.9)
 
-	::v-deep(.content-gif)
+	:deep(.content-gif)
 		filter: grayscale(0.75) brightness(0.9)
 
 .-message-state
 	cursor: default
 	user-select: none
 
-	::v-deep(.jolticon)
+	:deep(.jolticon)
 		margin-right: 4px
 
 	&
-	::v-deep(.jolticon)
+	:deep(.jolticon)
 		font-size: $font-size-tiny
 
 .-floating-data-left
@@ -625,7 +625,7 @@ $-min-item-width = 24px
 		border-right: none
 		width: 40px
 
-	::v-deep(.jolticon)
+	:deep(.jolticon)
 		font-size: 16px
 		margin: 0
 
@@ -644,7 +644,7 @@ $-min-item-width = 24px
 			opacity: 1
 			visibility: visible
 
-			::v-deep(.jolticon)
+			:deep(.jolticon)
 				margin: 0
 				overlay-text-shadow()
 
@@ -659,7 +659,7 @@ $-min-item-width = 24px
 			opacity: 1
 			visibility: visible
 
-			::v-deep(.jolticon)
+			:deep(.jolticon)
 				margin: 0
 				overlay-text-shadow()
 </style>

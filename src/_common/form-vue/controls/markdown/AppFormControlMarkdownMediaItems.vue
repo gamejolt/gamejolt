@@ -148,7 +148,7 @@ function copyLink(mediaItem: MediaItemModel) {
 	border-top-right-radius: 0
 	margin-bottom: 0 // Get rid of the bottom margin from 'well' styling.
 
-	::v-deep(.form-group)
+	:deep(.form-group)
 		margin-bottom: 0
 
 	.media-item-list

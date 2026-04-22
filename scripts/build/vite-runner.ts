@@ -1,11 +1,13 @@
+import * as cp from 'child_process';
+import * as os from 'os';
+import * as path from 'path';
+import treekill from 'tree-kill';
+import { fileURLToPath } from 'url';
 import { ConfigEnv as ViteConfigEnv } from 'vite';
 
 import { Options } from './vite-options';
 
-const path = require('path') as typeof import('path');
-const os = require('os') as typeof import('os');
-const cp = require('child_process') as typeof import('child_process');
-const treekill = require('tree-kill') as typeof import('tree-kill');
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const viteEnvKey = 'GJ_VITE_OPTS';
 function writeToViteEnv(gjOpts: Options, env: (typeof process)['env']) {

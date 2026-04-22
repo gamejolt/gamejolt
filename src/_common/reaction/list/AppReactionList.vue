@@ -201,7 +201,7 @@ const scrollerMarginBottom = buildCSSPixelValue(12);
 
 		<template v-if="Screen.isPointerMouse && useScroller && hoverScroll">
 			<div
-				v-for="side in (['left', 'right'] as const)"
+				v-for="side in ['left', 'right'] as const"
 				:key="side"
 				:style="{
 					position: `absolute`,

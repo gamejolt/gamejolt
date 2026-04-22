@@ -178,7 +178,7 @@ function trackAndTogglePane(pane: TogglableLeftPane) {
 	position: relative
 	z-index: 1
 
-	::v-deep(.jolticon)
+	:deep(.jolticon)
 		color: var(--theme-lighter)
 
 .-control-item

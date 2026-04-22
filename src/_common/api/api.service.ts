@@ -16,16 +16,16 @@ function hasWebpSupport() {
 	if (!_hasWebpSupport) {
 		_hasWebpSupport = import.meta.env.SSR
 			? // SSR passes through the webp support from the client.
-			  Promise.resolve(Environment.ssrContext.accept.includes('image/webp'))
+				Promise.resolve(Environment.ssrContext.accept.includes('image/webp'))
 			: // For normal clients we have to test for it by loading in a webp
-			  // image through a data URI.
-			  new Promise<boolean>(resolve => {
+				// image through a data URI.
+				new Promise<boolean>(resolve => {
 					const image = new Image();
 					image.onerror = () => resolve(false);
 					image.onload = () => resolve(image.width === 1);
 					image.src =
 						'data:image/webp;base64,UklGRiQAAABXRUJQVlA4IBgAAAAwAQCdASoBAAEAAwA0JaQAA3AA/vuUAAA=';
-			  }).catch(() => false);
+				}).catch(() => false);
 	}
 
 	return _hasWebpSupport;

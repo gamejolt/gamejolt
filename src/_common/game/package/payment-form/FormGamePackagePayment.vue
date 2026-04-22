@@ -813,7 +813,7 @@ async function doCheckout(setupData: any, chargeData: any) {
 .form-group
 	margin-bottom: $font-size-base
 
-::v-deep(label)
+:deep(label)
 	font-family: $font-family-base !important
 
 .amount-input

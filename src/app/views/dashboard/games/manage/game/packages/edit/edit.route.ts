@@ -6,8 +6,6 @@ export const routeDashGamesManageGamePackagesEdit: RouteRecordRaw = {
 	name: 'dash.games.manage.game.packages.edit',
 	path: 'packages/:packageId(\\d+)',
 	component: () =>
-		import(
-			'~app/views/dashboard/games/manage/game/packages/edit/RouteDashGamesManageGamePackagesEdit.vue'
-		),
+		import('~app/views/dashboard/games/manage/game/packages/edit/RouteDashGamesManageGamePackagesEdit.vue'),
 	children: [routeDashGamesManageGamePackagesEditWidget],
 };

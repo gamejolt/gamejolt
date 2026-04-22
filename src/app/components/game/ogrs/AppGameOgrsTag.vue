@@ -11,7 +11,11 @@ type Props = {
 
 const { game, full } = defineProps<Props>();
 
-const assetPaths = import.meta.glob('./*.svg', { eager: true, as: 'url' });
+const assetPaths = import.meta.glob<string>('./*.svg', {
+	eager: true,
+	query: '?url',
+	import: 'default',
+});
 
 const imgTag = computed(() => {
 	if (game) {
@@ -67,7 +71,7 @@ const imgTagUrl = computed(() => {
 	border: 4px solid $black
 	background: $black
 
-	::v-deep(img)
+	:deep(img)
 		display: block
 		margin-left: auto
 		margin-right: auto

@@ -1,13 +1,16 @@
-const { spawn, exec } = require('child_process') as typeof import('child_process');
-const { https } = require('follow-redirects') as { https: typeof import('https') };
-const tar = require('tar');
-const path = require('path') as typeof import('path');
-const os = require('os') as typeof import('os');
+import { exec, spawn, SpawnOptions } from 'child_process';
+import followRedirects from 'follow-redirects';
+import fsExtra from 'fs-extra';
+import * as os from 'os';
+import * as path from 'path';
+import * as tar from 'tar';
 
-import { SpawnOptions } from 'child_process';
-import { createWriteStream, mkdirp } from 'fs-extra';
+import pkg from '../../package.json' with { type: 'json' };
 
-export const packageJson = require('../../package.json');
+const { createWriteStream, mkdirp } = fsExtra;
+const { https } = followRedirects;
+
+export const packageJson = pkg;
 
 export function sleep(ms: number) {
 	return new Promise<void>(resolve => {
@@ -29,7 +32,7 @@ export function createTarGz(src: string, dest: string) {
 
 export async function extractTarGz(src: string, dest: string) {
 	await mkdirp(dest);
-	await tar.x({ file: src, gzip: true, cwd: path.resolve(dest, '..') });
+	await tar.x({ file: src, cwd: path.resolve(dest, '..') });
 }
 
 export async function unzip(src: string, dest: string) {

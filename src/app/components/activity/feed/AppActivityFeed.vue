@@ -223,11 +223,11 @@ function shouldShowAd(index: number) {
 								? {
 										marginTop: `-${kPostItemPaddingXsVertical.px}`,
 										marginBottom: 0,
-								  }
+									}
 								: {
 										marginTop: 0,
 										marginBottom: kPostItemPaddingVertical.px,
-								  }
+									}
 						"
 					/>
 				</template>
@@ -285,6 +285,6 @@ function shouldShowAd(index: number) {
 
 <style lang="stylus" scoped>
 // Don't show the split for the last item in the list.
-.-item:last-child ::v-deep(.timeline-list-item-split)
+.-item:last-child :deep(.timeline-list-item-split)
 	display: none
 </style>

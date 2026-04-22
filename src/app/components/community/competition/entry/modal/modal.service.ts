@@ -11,9 +11,7 @@ async function _show(props: any) {
 		modalId: 'CommunityCompetitionEntry',
 		component: defineAsyncComponent(
 			() =>
-				import(
-					'~app/components/community/competition/entry/modal/AppCommunityCompetitionEntryModal.vue'
-				)
+				import('~app/components/community/competition/entry/modal/AppCommunityCompetitionEntryModal.vue')
 		),
 		props,
 		size: 'sm',

@@ -13,7 +13,7 @@ type Props = {
 };
 const { growl } = defineProps<Props>();
 
-let _leaveTimer: NodeJS.Timer | undefined;
+let _leaveTimer: NodeJS.Timeout | undefined;
 
 const classes = computed(() => {
 	return [

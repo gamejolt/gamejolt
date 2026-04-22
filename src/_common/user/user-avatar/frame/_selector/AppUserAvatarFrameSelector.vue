@@ -60,7 +60,7 @@ function isSelected(data: UserAvatarFrameModel | null) {
 						display: `grid`,
 						gap: `8px`,
 						gridTemplateColumns: `repeat(auto-fill, minmax(120px, 1fr))`,
-				  }
+					}
 				: {}
 		"
 	>

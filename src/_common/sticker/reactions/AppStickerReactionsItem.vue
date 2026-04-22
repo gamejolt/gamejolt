@@ -10,7 +10,7 @@ type Props = {
 };
 const { count, animate } = defineProps<Props>();
 
-let timer: NodeJS.Timer | null = null;
+let timer: NodeJS.Timeout | null = null;
 
 let hasQueuedTimer = false;
 const shouldAnimate = ref(false);

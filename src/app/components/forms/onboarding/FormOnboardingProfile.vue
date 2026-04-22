@@ -268,10 +268,10 @@ async function chooseAvatar() {
 	&-placeholder
 		min-height: ($line-height-computed + 22)
 
-::v-deep(.form-group)
+:deep(.form-group)
 	margin-bottom: 0
 
-	::v-deep(.error)
+	.error
 		margin-top: 15px
 		margin-bottom: 0
 </style>

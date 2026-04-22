@@ -56,7 +56,7 @@ function createFormGroup({
 					dropUnderscores: true,
 					expandCamelCase: true,
 					keepLcWords: true,
-			  })
+				})
 			: label.value
 	);
 
@@ -189,6 +189,6 @@ const hasInlineControl = computed(() => !!slots['inline-control']);
 	justify-content: space-between
 	align-items: center
 
-	::v-deep(.control-label)
+	:deep(.control-label)
 		margin-bottom: 0
 </style>

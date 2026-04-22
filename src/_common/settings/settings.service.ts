@@ -5,7 +5,10 @@ const STORAGE_PREFIX = 'settings.';
 type SettingType = string | number | boolean;
 
 abstract class SettingBase<T extends SettingType> {
-	constructor(public readonly key: string, public readonly _defaultValue: T | (() => T)) {}
+	constructor(
+		public readonly key: string,
+		public readonly _defaultValue: T | (() => T)
+	) {}
 
 	public abstract set(value: T): void;
 	public abstract get(): T;
@@ -60,7 +63,7 @@ class NumberSetting extends SettingBase<number> {
 
 	get() {
 		const val = this._get();
-		return typeof val === 'string' ? parseFloat(val) : val ?? 0;
+		return typeof val === 'string' ? parseFloat(val) : (val ?? 0);
 	}
 }
 

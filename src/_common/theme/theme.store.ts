@@ -39,8 +39,8 @@ export function createThemeStore({ commonStore: { user } }: { commonStore: Commo
 
 	const theme = computed(() => {
 		return _alwaysOurs.value
-			? _formTheme.value ?? userTheme.value
-			: _formTheme.value ?? pageTheme.value ?? userTheme.value;
+			? (_formTheme.value ?? userTheme.value)
+			: (_formTheme.value ?? pageTheme.value ?? userTheme.value);
 	});
 
 	function setDark(state: boolean) {

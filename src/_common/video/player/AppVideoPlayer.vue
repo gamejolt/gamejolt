@@ -145,7 +145,7 @@ watch(
 	{ immediate: true }
 );
 
-let _hideUITimer: NodeJS.Timer | null = null;
+let _hideUITimer: NodeJS.Timeout | null = null;
 
 const isHoveringControls = ref(false);
 const isHovered = ref(false);

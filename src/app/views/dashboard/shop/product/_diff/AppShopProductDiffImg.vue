@@ -171,7 +171,7 @@ const gridAreaSizes = {
 			"
 			:style="multiSizeGridStyles"
 		>
-			<template v-for="gridArea in (['a', 'b', 'c', 'd'] as const)" :key="gridArea">
+			<template v-for="gridArea in ['a', 'b', 'c', 'd'] as const" :key="gridArea">
 				<div v-if="gridArea !== 'd' || Screen.width > 500" :style="{ gridArea }">
 					<div :style="imgData.styles">
 						<AppAspectRatio
@@ -207,7 +207,7 @@ const gridAreaSizes = {
 														model && isInstance(model, AvatarFrameModel)
 															? model.scale
 															: DefaultAvatarFrameScale,
-											  }
+												}
 											: undefined
 									"
 									smoosh

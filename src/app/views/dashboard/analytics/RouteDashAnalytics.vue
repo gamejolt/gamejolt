@@ -699,7 +699,7 @@ function _metricChanged() {
 <style lang="stylus" scoped>
 .-metric-stats-wrapper
 	&
-	::v-deep(.gj-scroll-affixed)
+	:deep(.gj-scroll-affixed)
 		// Need this since we affix it
 		background-color: var(--theme-bg)
 		border-bottom: 1px solid var(--theme-bg-subtle)

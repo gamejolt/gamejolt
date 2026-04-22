@@ -43,10 +43,10 @@ export function filterAcquisitionMethods<T extends AcquisitionMethod>(
 ): T extends AcquisitionMethod.ChargeReward
 	? ChargeRewardAcquisition[]
 	: T extends AcquisitionMethod.PackOpen
-	? PackOpenAcquisition[]
-	: T extends AcquisitionMethod.ShopPurchase
-	? ShopPurchaseAcquisition[]
-	: never {
+		? PackOpenAcquisition[]
+		: T extends AcquisitionMethod.ShopPurchase
+			? ShopPurchaseAcquisition[]
+			: never {
 	return acquisitions.filter(i => i.method === method) as any;
 }
 

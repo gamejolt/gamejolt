@@ -781,7 +781,7 @@ function addMs(value: number) {
 </template>
 
 <style lang="stylus" scoped>
-::v-deep(.modal)
+:deep(.modal)
 	change-bg-rgba('0, 0, 0', 0.87, true)
 
 ._anim-modal-fade-out

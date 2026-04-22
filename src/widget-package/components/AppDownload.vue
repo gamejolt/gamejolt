@@ -124,7 +124,7 @@ async function buildClick(build?: GameBuildModel) {
 		<div class="-controls">
 			<AppButton v-if="hasBrowserBuild" primary @click="buildClick(browserBuild)">
 				Play
-				<AppJolticon class="jolticon-addon" :icon="(showcasedBrowserIcon as Jolticon)" />
+				<AppJolticon class="jolticon-addon" :icon="showcasedBrowserIcon as Jolticon" />
 			</AppButton>
 
 			<AppButton
@@ -135,7 +135,7 @@ async function buildClick(build?: GameBuildModel) {
 				Download
 				<small v-if="platformSupportInfo[showcasedOs].arch === '64'"> 64-bit </small>
 				<small>({{ formatFilesize(downloadableBuild.primary_file.filesize) }})</small>
-				<AppJolticon class="jolticon-addon" :icon="(showcasedOsIcon as Jolticon)" />
+				<AppJolticon class="jolticon-addon" :icon="showcasedOsIcon as Jolticon" />
 			</AppButton>
 
 			<!--

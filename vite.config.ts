@@ -1,8 +1,10 @@
 import vue, { Options as VueOptions } from '@vitejs/plugin-vue';
 // import { visualizer } from 'rollup-plugin-visualizer';
-import { copyFileSync, readFileSync } from 'fs-extra';
+import fsExtra from 'fs-extra';
+import * as path from 'path';
+import { fileURLToPath } from 'url';
 import { ConfigEnv, defineConfig, UserConfig as ViteUserConfig } from 'vite';
-import md, { Mode as MarkdownMode } from 'vite-plugin-markdown';
+import { Mode as MarkdownMode, plugin as md } from 'vite-plugin-markdown';
 
 import { acquirePrebuiltFFmpeg } from './scripts/build/desktop-app/ffmpeg-prebuilt';
 import {
@@ -13,7 +15,8 @@ import {
 import viteHtmlResolve from './scripts/build/vite-html-resolve';
 import { readFromViteEnv } from './scripts/build/vite-runner';
 
-const path = require('path') as typeof import('path');
+const { copyFileSync, readFileSync } = fsExtra;
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 type RollupOptions = Required<Required<ViteUserConfig>['build']>['rollupOptions'];
 
@@ -128,8 +131,8 @@ export default defineConfig(async (_configEnv: ConfigEnv): Promise<ViteUserConfi
 				name: 'gj:index-interpolations',
 				enforce: 'pre',
 				transformIndexHtml: {
-					enforce: 'pre',
-					transform: (html: string) => {
+					order: 'pre',
+					handler: (html: string) => {
 						// Patch our entrypoint depending on our section.
 						html = html.replace(
 							'<!-- gj:section-entrypoint -->',
@@ -470,10 +473,21 @@ export default defineConfig(async (_configEnv: ConfigEnv): Promise<ViteUserConfi
 								// pull out the vendor library code into a
 								// chunk. We need to disable that first.
 								manualChunks: undefined,
-								// This option will tell vite to always just
-								// inline the dynamic imports we have in our
-								// codebase.
-								inlineDynamicImports: true,
+								// Inline all dynamic imports into a single
+								// chunk. Rollup 5 replaced
+								// `inlineDynamicImports: true` with
+								// `codeSplitting: false`.
+								codeSplitting: false,
+
+								// Our ssr/server.js loader requires the bundle
+								// as CJS. Vite 5 dropped `build.ssr.format` so
+								// we set it on rollup's output instead. Force
+								// the exports shape to 'named' so the entry's
+								// default + re-exported named members don't
+								// trip Rollup's MIXED_EXPORTS warning.
+								...(gjOpts.platform === 'ssr'
+									? { format: 'cjs' as const, exports: 'named' as const }
+									: {}),
 							},
 						};
 					}
@@ -600,10 +614,6 @@ export default defineConfig(async (_configEnv: ConfigEnv): Promise<ViteUserConfi
 			//
 			// More info: https://vitejs.dev/guide/ssr.html#ssr-externals
 			ssr: {
-				// Vite now makes nodejs module builds by default. We need to
-				// tell it to make a commonjs build so that our current server
-				// code can use it.
-				format: 'cjs',
 				noExternal: [
 					// These modules for whatever reason don't work being
 					// required server-side directly and must be bundled into

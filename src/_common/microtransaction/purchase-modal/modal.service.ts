@@ -7,9 +7,7 @@ export async function showPurchaseMicrotransactionModal() {
 		modalId: 'PurchaseMicrotransaction',
 		component: defineAsyncComponent(
 			() =>
-				import(
-					'~common/microtransaction/purchase-modal/AppPurchaseMicrotransactionModal.vue'
-				)
+				import('~common/microtransaction/purchase-modal/AppPurchaseMicrotransactionModal.vue')
 		),
 		size: 'sm',
 	});

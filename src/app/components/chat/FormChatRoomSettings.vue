@@ -213,7 +213,10 @@ async function leaveRoom() {
 					>
 						<AppFormControl
 							type="text"
-							:validators="[validateMinLength(titleMinLength!), validateMaxLength(titleMaxLength!)]"
+							:validators="[
+								validateMinLength(titleMinLength!),
+								validateMaxLength(titleMaxLength!),
+							]"
 							validate-on-blur
 						/>
 

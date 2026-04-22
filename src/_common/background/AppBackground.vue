@@ -88,9 +88,7 @@ if (import.meta.env.SSR) {
 						:key="loadedBackground.id"
 						class="_stretch anim-fade-in"
 						:background="background"
-						:background-style="
-							styleWhen(!!backgroundStyle, backgroundStyle!)
-						"
+						:background-style="styleWhen(!!backgroundStyle, backgroundStyle!)"
 						:scroll-direction="scrollDirection"
 						:enable-page-scroll="enablePageScroll"
 					/>

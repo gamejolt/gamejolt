@@ -24,7 +24,11 @@ const totalScores = ref(0);
 const totalAchievedTrophies = ref(0);
 const sessionTime = ref(0);
 
-const assetPaths = import.meta.glob('./*.svg', { eager: true, as: 'url' });
+const assetPaths = import.meta.glob<string>('./*.svg', {
+	eager: true,
+	query: '?url',
+	import: 'default',
+});
 
 createAppRoute({
 	routeTitle: computed(() => $gettext(`Game API`)),

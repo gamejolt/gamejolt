@@ -95,7 +95,7 @@ const processingPurchaseCurrencyId = ref<string>();
 const giftUser = ref<UserModel>();
 const productOwner = ref<UserModel>();
 
-let timerBuilder: NodeJS.Timer | null = null;
+let timerBuilder: NodeJS.Timeout | null = null;
 const timeRemaining = ref<string>();
 const isExpired = ref(false);
 
@@ -304,10 +304,10 @@ const actionOptionsData = computed<{
 					chargeUser && authUser.value?.id === chargeUser.id
 						? $gettext(
 								`Other users will get this when they place a charged sticker on your content`
-						  )
+							)
 						: $gettext(
 								`You can obtain this by placing a charged sticker on this creator's content`
-						  ),
+							),
 				canPurchaseForSelf: false,
 			};
 		}

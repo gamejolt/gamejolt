@@ -222,7 +222,7 @@ function setFiles(files: File[]) {
 								? {
 										image_url: form.formModel.imageUrl,
 										scale: DefaultAvatarFrameScale,
-								  }
+									}
 								: null
 						"
 					>

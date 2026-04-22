@@ -207,7 +207,7 @@ export function setVideoMuted(
 	}
 ) {
 	player.muted = mute;
-	setVideoVolume(player, mute ? 0 : options?.unmuteVolume ?? getVolumeSetting(player));
+	setVideoVolume(player, mute ? 0 : (options?.unmuteVolume ?? getVolumeSetting(player)));
 
 	if (player.context === 'feed' || player.context === 'page') {
 		SettingVideoPlayerMuted.set(mute);

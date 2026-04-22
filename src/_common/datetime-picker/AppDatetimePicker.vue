@@ -59,7 +59,7 @@ function select(date: Date) {
 .datetime-picker
 	clearfix()
 
-	::v-deep(.datepicker-table)
+	:deep(.datepicker-table)
 		float: left
 		margin-right: ($grid-gutter-width / 2)
 
@@ -67,7 +67,7 @@ function select(date: Date) {
 			float: none
 			margin-right: 0
 
-	::v-deep(.timepicker)
+	:deep(.timepicker)
 		float: left
 
 		@media $media-xs

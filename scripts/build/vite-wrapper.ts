@@ -1,7 +1,7 @@
+import minimist from 'minimist';
+
 import { parseAndInferOptionsFromCommandline } from './vite-options';
 import { runVite } from './vite-runner';
-
-const minimist = require('minimist');
 
 (async () => {
 	const args = minimist(process.argv.splice(2));

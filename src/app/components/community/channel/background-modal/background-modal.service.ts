@@ -8,9 +8,7 @@ export async function showCommunityChannelBackgroundModal(channel: CommunityChan
 		modalId: 'CommunityChannelBackground',
 		component: defineAsyncComponent(
 			() =>
-				import(
-					'~app/components/community/channel/background-modal/AppCommunityChannelBackgroundModal.vue'
-				)
+				import('~app/components/community/channel/background-modal/AppCommunityChannelBackgroundModal.vue')
 		),
 		props: {
 			channel,

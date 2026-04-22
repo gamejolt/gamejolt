@@ -222,8 +222,8 @@ const popperIndex = PopperIndex++;
 const popperId = `popper-${popperIndex}`;
 
 let popperInstance: Instance | undefined;
-let _hideTimeout: NodeJS.Timer | undefined;
-let _showDelayTimer: NodeJS.Timer | undefined;
+let _hideTimeout: NodeJS.Timeout | undefined;
+let _showDelayTimer: NodeJS.Timeout | undefined;
 
 const computedMaxHeight = computed(() => {
 	if (maxHeight) {

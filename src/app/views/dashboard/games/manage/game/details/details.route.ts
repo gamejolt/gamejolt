@@ -4,9 +4,7 @@ export const routeDashGamesManageGameDetails: RouteRecordRaw = {
 	name: 'dash.games.manage.game.details',
 	path: 'details',
 	component: () =>
-		import(
-			'~app/views/dashboard/games/manage/game/details/RouteDashGamesManageGameDetails.vue'
-		),
+		import('~app/views/dashboard/games/manage/game/details/RouteDashGamesManageGameDetails.vue'),
 	children: [
 		{
 			path: '/dashboard/developer/games/details/:id(\\d+)',

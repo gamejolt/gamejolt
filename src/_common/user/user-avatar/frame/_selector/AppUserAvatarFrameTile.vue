@@ -42,11 +42,11 @@ const rootStyles = computed(() => {
 		...(isPlaceholder
 			? {
 					backgroundColor: kThemeBgSubtle,
-			  }
+				}
 			: {
 					cursor: frame?.isExpired ? 'normal' : 'pointer',
 					backgroundColor: isSelected ? kThemeBgOffset : `transparent`,
-			  }),
+				}),
 	} satisfies CSSProperties;
 });
 
@@ -127,7 +127,7 @@ function onClickFrame() {
 								allowFuture: true,
 								precision: 'rough',
 								nowText: $gettext(`Expired`),
-						  })
+							})
 				}}
 			</div>
 		</div>

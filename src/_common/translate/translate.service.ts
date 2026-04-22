@@ -90,9 +90,8 @@ export async function loadCurrentLanguage() {
 		// Save the language to a variable first to avoid populating
 		// the wrong language if the current language changes while importing.
 		const lang = _language.value;
-		const { default: translationData } = await _translationImports[
-			`../../translations/${lang}/main.json`
-		]();
+		const { default: translationData } =
+			await _translationImports[`../../translations/${lang}/main.json`]();
 
 		const newTranslations = translationData[lang];
 		if (newTranslations) {
@@ -443,8 +442,8 @@ function _getTranslationIndex(languageCode: string, n: number | string) {
 			return n % 10 === 1 && n % 100 !== 11
 				? 0
 				: n % 10 >= 2 && (n % 100 < 10 || n % 100 >= 20)
-				? 1
-				: 2;
+					? 1
+					: 2;
 		case 'be': // Belarusian
 		case 'bs': // Bosnian
 		case 'hr': // Croatian
@@ -455,8 +454,8 @@ function _getTranslationIndex(languageCode: string, n: number | string) {
 			return n % 10 === 1 && n % 100 !== 11
 				? 0
 				: n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20)
-				? 1
-				: 2;
+					? 1
+					: 2;
 		case 'mnk': // Mandinka
 			// 3 forms
 			return n === 0 ? 0 : n === 1 ? 1 : 2;
@@ -468,8 +467,8 @@ function _getTranslationIndex(languageCode: string, n: number | string) {
 			return n === 1
 				? 0
 				: n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20)
-				? 1
-				: 2;
+					? 1
+					: 2;
 		case 'cs': // Czech
 		case 'sk': // Slovak
 			// 3 forms
@@ -479,8 +478,8 @@ function _getTranslationIndex(languageCode: string, n: number | string) {
 			return n === 1
 				? 0
 				: n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20)
-				? 1
-				: 2;
+					? 1
+					: 2;
 		case 'sl': // Slovenian
 			// 4 forms
 			return n % 100 === 1 ? 0 : n % 100 === 2 ? 1 : n % 100 === 3 || n % 100 === 4 ? 2 : 3;
@@ -489,10 +488,10 @@ function _getTranslationIndex(languageCode: string, n: number | string) {
 			return n === 1
 				? 0
 				: n === 0 || (n % 100 > 1 && n % 100 < 11)
-				? 1
-				: n % 100 > 10 && n % 100 < 20
-				? 2
-				: 3;
+					? 1
+					: n % 100 > 10 && n % 100 < 20
+						? 2
+						: 3;
 		case 'gd': // Scottish Gaelic
 			// 4 forms
 			return n === 1 || n === 11 ? 0 : n === 2 || n === 12 ? 1 : n > 2 && n < 20 ? 2 : 3;
@@ -510,14 +509,14 @@ function _getTranslationIndex(languageCode: string, n: number | string) {
 			return n === 0
 				? 0
 				: n === 1
-				? 1
-				: n === 2
-				? 2
-				: n % 100 >= 3 && n % 100 <= 10
-				? 3
-				: n % 100 >= 11
-				? 4
-				: 5;
+					? 1
+					: n === 2
+						? 2
+						: n % 100 >= 3 && n % 100 <= 10
+							? 3
+							: n % 100 >= 11
+								? 4
+								: 5;
 		default:
 			// Everything else
 			return n !== 1 ? 1 : 0;

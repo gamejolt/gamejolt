@@ -61,10 +61,10 @@ const tooltip = computed(() => {
 	return isFollowing.value
 		? $gettext(
 				'Unfollow this playlist to remove it from your library and stop receiving notifications.'
-		  )
+			)
 		: $gettext(
 				'Follow this playlist to add it to your library and be notified when new games are added.'
-		  );
+			);
 });
 
 const icon = computed(() => {
@@ -106,7 +106,7 @@ async function onClick() {
 		v-app-tooltip.bottom="tooltip"
 		class="game-collection-follow-widget"
 		primary
-		:icon="(icon as any)"
+		:icon="icon as any"
 		:circle="circle"
 		:overlay="overlay"
 		:block="block"

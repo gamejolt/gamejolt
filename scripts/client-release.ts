@@ -1,9 +1,13 @@
-import { readFile, writeFile } from 'fs-extra';
+import fsExtra from 'fs-extra';
 import * as path from 'path';
+import { fileURLToPath } from 'url';
 
+import pkg from '../package.json' with { type: 'json' };
 import { execShell, runShell } from './build/utils';
 
-const { version } = require('../package.json');
+const { readFile, writeFile } = fsExtra;
+const { version } = pkg;
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const argv = process.argv;
 
 main();

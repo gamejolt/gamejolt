@@ -17,9 +17,7 @@ export async function showContentTargetManageRealmsModal(
 		modalId: 'ContentTargetManageRealms',
 		component: defineAsyncComponent(
 			() =>
-				import(
-					'~app/components/content/target/manage-realms/AppContentTargetManageRealmsModal.vue'
-				)
+				import('~app/components/content/target/manage-realms/AppContentTargetManageRealmsModal.vue')
 		),
 		props: {
 			selectedRealms,

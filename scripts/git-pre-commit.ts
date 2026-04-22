@@ -1,8 +1,12 @@
-import { readFile, writeFile } from 'fs-extra';
+import fsExtra from 'fs-extra';
 import * as path from 'path';
+import { fileURLToPath } from 'url';
 
 import { activateJsonProperty, updateJsonProperty } from './build/packageJson';
 import { execShell } from './build/utils';
+
+const { readFile, writeFile } = fsExtra;
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 (async () => {
 	const projectRootDir = path.resolve(__dirname, '..');

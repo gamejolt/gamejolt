@@ -1,8 +1,12 @@
-import { remove } from 'fs-extra';
+import fsExtra from 'fs-extra';
 import * as path from 'path';
+import { fileURLToPath } from 'url';
 
 import { gjSectionConfigs, GjSectionName } from '../section-config';
 import { runShell } from '../utils';
+
+const { remove } = fsExtra;
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const rootDir = path.resolve(__dirname, '..', '..', '..');
 

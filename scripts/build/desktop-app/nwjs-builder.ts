@@ -1,7 +1,8 @@
-import { copy, mkdirp, move, pathExists, writeFile } from 'fs-extra';
+import fsExtra from 'fs-extra';
 import * as path from 'path';
-import * as readdirp from 'readdirp';
+import readdirp from 'readdirp';
 import plist from 'simple-plist';
+import { fileURLToPath } from 'url';
 
 import {
 	downloadFile,
@@ -15,6 +16,9 @@ import {
 	unzip,
 } from '../utils';
 import { acquirePrebuiltFFmpeg } from './ffmpeg-prebuilt';
+
+const { copy, mkdirp, move, pathExists, writeFile } = fsExtra;
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const NWJS_VERSION = packageJson.nwjsVersion as string;
 
@@ -184,7 +188,7 @@ export class NwBuilder {
 	}
 
 	async _buildWindows() {
-		const rcedit = require('rcedit');
+		const { rcedit } = await import('rcedit');
 		const outputExe = path.resolve(this.buildDir, 'nw.exe');
 		const winIco = path.resolve(__dirname, 'icons/winico.ico');
 

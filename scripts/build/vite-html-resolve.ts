@@ -52,8 +52,8 @@ export default function viteHtmlResolve(options?: HtmlResolvePluginOptions) {
 			name: 'gj:html-resolve:pre',
 			enforce: 'pre',
 			transformIndexHtml: {
-				enforce: 'pre',
-				transform: html => {
+				order: 'pre',
+				handler: html => {
 					const injects: string[] = [];
 
 					for (let entry of resolve) {
@@ -95,8 +95,8 @@ export default function viteHtmlResolve(options?: HtmlResolvePluginOptions) {
 			name: 'gj:html-resolve:post',
 			enforce: 'post',
 			transformIndexHtml: {
-				enforce: 'post',
-				transform: (html, ctx) => {
+				order: 'post',
+				handler: (html, ctx) => {
 					const imgMatcher = new RegExp(`<img ${captureResolveId} src=${captureString}>`);
 
 					let match: RegExpExecArray | null;

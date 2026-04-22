@@ -208,7 +208,7 @@ function onClickFilter() {
 </template>
 
 <style lang="stylus" scoped>
-::v-deep(.timeline-list-item-split)
+:deep(.timeline-list-item-split)
 	full-bleed()
 
 // The full-bleed would add a scrollbar if we didn't cut it off like this.

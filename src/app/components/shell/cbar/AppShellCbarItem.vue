@@ -161,7 +161,7 @@ const isShowingPane = computed(() => showAsActive.value && !!visibleLeftPane.val
 	transition: opacity 300ms, visibility 300ms
 	transition-timing-function: $strong-ease-out
 
-	::v-deep(.jolticon)
+	:deep(.jolticon)
 		font-size: $font-size-tiny
 		vertical-align: middle
 

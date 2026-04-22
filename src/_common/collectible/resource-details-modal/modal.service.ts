@@ -21,9 +21,7 @@ export async function showCollectibleResourceDetailsModal({
 		modalId: 'CollectibleResourceDetails',
 		component: defineAsyncComponent(
 			() =>
-				import(
-					'~common/collectible/resource-details-modal/AppCollectibleResourceDetailsModal.vue'
-				)
+				import('~common/collectible/resource-details-modal/AppCollectibleResourceDetailsModal.vue')
 		),
 		props: {
 			item,

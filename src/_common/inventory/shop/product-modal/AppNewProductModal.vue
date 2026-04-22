@@ -172,6 +172,6 @@ function getStyles(ratio: number): CSSProperties {
 </template>
 
 <style lang="stylus" scoped>
-::v-deep(.modal)
+:deep(.modal)
 	change-bg-rgba('0, 0, 0', 0.87, true)
 </style>

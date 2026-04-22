@@ -40,7 +40,11 @@ export class Modal<T = any> {
 		return Modals.modals.findIndex(i => i === this);
 	}
 
-	constructor(public id: number, private _resolve: (value?: T) => void, options: ModalOptions) {
+	constructor(
+		public id: number,
+		private _resolve: (value?: T) => void,
+		options: ModalOptions
+	) {
 		// avert your eyes
 		this.size = ref(options.size) as unknown as Modal['size'];
 		this.component = markRaw(options.component);

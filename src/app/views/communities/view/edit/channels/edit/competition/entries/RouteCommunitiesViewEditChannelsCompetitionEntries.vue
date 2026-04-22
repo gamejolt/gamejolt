@@ -246,10 +246,10 @@ createAppRoute({
 								competition.periodNum >= CompetitionPeriodVoting
 									? $gettext(
 											`No new entries can be submitted to the jam, and none have been submitted during its runtime.`
-									  )
+										)
 									: $gettext(
 											`There are currently no submissions entered into the jam yet. Once they are entered, they will show up here.`
-									  )
+										)
 							}}
 						</span>
 					</p>

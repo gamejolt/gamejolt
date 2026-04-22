@@ -167,17 +167,17 @@ function onMarkRead() {
 								>
 									<div class="-community-thumb">
 										<AppCommunityThumbnailImg
-											:community="(notification.from_model as CommunityModel)"
+											:community="notification.from_model as CommunityModel"
 										/>
 									</div>
 								</template>
 								<template v-else-if="showUserAvatar">
 									<AppUserCardHover
-										:user="(notification.from_model as UserModel)"
+										:user="notification.from_model as UserModel"
 										:disabled="!feed.shouldShowUserCards"
 									>
 										<AppUserAvatar
-											:user="(notification.from_model as UserModel)"
+											:user="notification.from_model as UserModel"
 										/>
 									</AppUserCardHover>
 								</template>
@@ -189,7 +189,11 @@ function onMarkRead() {
 								>
 									<div class="-community-thumb">
 										<AppCommunityThumbnailImg
-											:community="(notification.action_model as FiresidePostCommunityModel).community"
+											:community="
+												(
+													notification.action_model as FiresidePostCommunityModel
+												).community
+											"
 										/>
 									</div>
 								</template>
@@ -272,7 +276,8 @@ function onMarkRead() {
 															NotificationType.CommentAddObjectOwner
 													"
 													:source="
-														(notification.action_model as CommentModel).comment_content
+														(notification.action_model as CommentModel)
+															.comment_content
 													"
 												/>
 												<AppContentViewer
@@ -281,8 +286,8 @@ function onMarkRead() {
 														NotificationType.Mention
 													"
 													:source="
-														(notification.action_model as MentionModel).comment
-															?.comment_content || ''
+														(notification.action_model as MentionModel)
+															.comment?.comment_content || ''
 													"
 												/>
 												<AppContentViewer
@@ -291,7 +296,9 @@ function onMarkRead() {
 														NotificationType.SupporterMessage
 													"
 													:source="
-														(notification.action_model as SupporterActionModel).message?.content || ''
+														(
+															notification.action_model as SupporterActionModel
+														).message?.content || ''
 													"
 												/>
 												<span

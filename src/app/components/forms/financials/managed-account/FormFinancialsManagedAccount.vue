@@ -622,7 +622,7 @@ async function createPiiToken(data: any) {
 <style lang="stylus" scoped>
 .form-dashboard-managed-account
 	// Less spacing.
-	::v-deep(.form-horizontal)
+	:deep(.form-horizontal)
 		.form-group
 			margin-bottom: 10px
 

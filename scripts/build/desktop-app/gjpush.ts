@@ -1,9 +1,10 @@
-import { chmod, copy, mkdirp, pathExists, readFile, rename } from 'fs-extra';
+import fsExtra from 'fs-extra';
 import * as https from 'https';
 import type { RequestInit } from 'node-fetch';
 import fetch from 'node-fetch';
 import * as os from 'os';
 import * as path from 'path';
+import { fileURLToPath } from 'url';
 
 import {
 	downloadFile,
@@ -15,6 +16,9 @@ import {
 	unzip,
 } from '../utils';
 import { Options } from '../vite-options';
+
+const { chmod, copy, mkdirp, pathExists, readFile, rename } = fsExtra;
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export const gjpushVersion = packageJson.gjpushVersion as string;
 
@@ -221,9 +225,9 @@ export class Gjpush {
 				args: [
 					'--no-resume',
 					'-g',
-					options.gameId,
+					String(options.gameId),
 					'-p',
-					options.packageId,
+					String(options.packageId),
 					'-r',
 					packageJson.version,
 					options.filepath,

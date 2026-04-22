@@ -359,9 +359,10 @@ async function toggleFavorite(searchResult: SearchResult) {
 								</div>
 							</div>
 							<template v-if="isLoading">
-								<!-- prettier-ignore -->
 								<div
-									v-for="i of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]"
+									v-for="i of [
+										0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+									]"
 									:key="i"
 									class="-grid-item"
 								>

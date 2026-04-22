@@ -163,7 +163,7 @@ function calcData() {
 .-custom-kernel-wrapper
 	--jolticon-size: 24px
 
-	::v-deep(.jolticon)
+	:deep(.jolticon)
 		font-size: var(--jolticon-size)
 		margin: 0
 		vertical-align: middle

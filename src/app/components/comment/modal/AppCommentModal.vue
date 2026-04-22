@@ -45,6 +45,6 @@ const autofocusAdd = computed(() => !Screen.isXs);
 </template>
 
 <style lang="stylus" scoped>
-::v-deep(.timeline-list-item-split)
+:deep(.timeline-list-item-split)
 	full-bleed()
 </style>

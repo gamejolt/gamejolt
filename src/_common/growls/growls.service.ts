@@ -27,7 +27,11 @@ export class Growl {
 	onClick?: (event: Event) => void;
 	system: boolean;
 
-	constructor(public id: number, public type: GrowlType, options: GrowlOptions) {
+	constructor(
+		public id: number,
+		public type: GrowlType,
+		options: GrowlOptions
+	) {
 		this.title = options.title;
 		this.message = options.message;
 		this.component = options.component ? markRaw(options.component) : undefined;

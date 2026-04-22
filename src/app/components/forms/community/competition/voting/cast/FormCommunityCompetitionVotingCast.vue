@@ -357,7 +357,7 @@ async function onClickClear() {
 	&-bolt
 		opacity: 0.75
 
-		::v-deep(.jolticon)
+		:deep(.jolticon)
 			transition: transform 0.1s ease
 			transform: scale(0.8)
 			font-size: 24px !important
@@ -367,7 +367,7 @@ async function onClickClear() {
 			color: var(--theme-bi-bg)
 			opacity: 1
 
-			::v-deep(.jolticon)
+			:deep(.jolticon)
 				transform: none
 
 .-overall-label

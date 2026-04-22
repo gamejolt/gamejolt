@@ -108,7 +108,7 @@ const itemStyling = import.meta.env.SSR
 	: ({
 			maxWidth: mediaItem.width + 'px',
 			maxHeight: mediaItem.height + 'px',
-	  } as const satisfies CSSProperties);
+		} as const satisfies CSSProperties);
 </script>
 
 <template>

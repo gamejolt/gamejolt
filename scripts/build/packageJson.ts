@@ -1,7 +1,11 @@
-import { readFile, writeFile } from 'fs-extra';
+import fsExtra from 'fs-extra';
 import * as path from 'path';
+import { fileURLToPath } from 'url';
 
 import { escapeRegex } from './utils';
+
+const { readFile, writeFile } = fsExtra;
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // These helper functions modify a json string using a dumb string replace.
 // Modifying a json using JSON.parse() + JSON.stringify() does not preserve

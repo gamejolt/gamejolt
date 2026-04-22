@@ -55,8 +55,8 @@ make-button-size(size)
 
 		&
 		.-icon
-		::v-deep(.jolticon-addon)
-		::v-deep(small)
+		:deep(.jolticon-addon)
+		:deep(small)
 			color: var(--theme-bi-fg) !important
 
 	// Disabled state.
@@ -71,14 +71,14 @@ make-button-size(size)
 			cursor: not-allowed
 
 	// Content
-	::v-deep(.jolticon-addon)
+	:deep(.jolticon-addon)
 		color: var(--theme-fg-muted)
 		position: relative
 		top: -1px
 		vertical-align: middle
 		margin-left: 5px
 
-	::v-deep(small)
+	:deep(small)
 		color: var(--theme-fg-muted)
 		font-weight: normal
 		font-size: $font-size-tiny
@@ -114,8 +114,8 @@ make-button-size(size)
 	&:hover
 		&
 		.-icon
-		::v-deep(.jolticon-addon)
-		::v-deep(small)
+		:deep(.jolticon-addon)
+		:deep(small)
 			color: white !important
 
 .-badge
@@ -187,8 +187,8 @@ make-button-size(size)
 
 // Put a bit of spacing between two block buttons on top of each other.
 .-block + .-block
-::v-deep(.button-group) + .-block
-.-block + ::v-deep(.button-group)
+:deep(.button-group) + .-block
+.-block + :deep(.button-group)
 	margin-top: 5px
 
 // Block only on xs.

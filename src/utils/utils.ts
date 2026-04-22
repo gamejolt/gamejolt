@@ -62,7 +62,7 @@ export function debounceWithCancel<T extends FunctionType>(
 	fn: T,
 	delayMs: number
 ): { call: ChangeReturnType<T, void>; cancel: () => void } {
-	let timeout: NodeJS.Timer | null = null;
+	let timeout: NodeJS.Timeout | null = null;
 
 	function cancel() {
 		if (timeout) {
@@ -88,7 +88,7 @@ export function debounceWithMaxTimeout<T extends FunctionType>(
 	delayMs: number,
 	maxTimeoutMs: number
 ): { call: ChangeReturnType<T, void>; cancel: () => void } {
-	let timeout: NodeJS.Timer | null = null;
+	let timeout: NodeJS.Timeout | null = null;
 	let totalDelay: number | null = null;
 	let lastCallTime: number | null = null;
 

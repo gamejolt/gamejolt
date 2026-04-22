@@ -84,8 +84,8 @@ export function createStickerTargetController(
 
 			return Boolean(
 				_shouldShow.value ||
-					parent.value?.shouldShow.value ||
-					layer.value?.isShowingDrawer.value
+				parent.value?.shouldShow.value ||
+				layer.value?.isShowingDrawer.value
 			);
 		},
 		set: value => {

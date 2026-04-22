@@ -55,10 +55,10 @@ const focusToken = createFocusToken();
 const isEditorFocused = ref(false);
 const typing = ref(false);
 
-const nextMessageTimeout = ref<NodeJS.Timer | null>(null);
+const nextMessageTimeout = ref<NodeJS.Timeout | null>(null);
 let lastMessageTimestamp: number | null = null;
 
-let typingTimeout: NodeJS.Timer | null = null;
+let typingTimeout: NodeJS.Timeout | null = null;
 
 const roomChannel = computed(() => chat.value.roomChannels.get(room.id));
 
@@ -459,11 +459,11 @@ function disableTypingTimeout() {
 											type: 'resource',
 											resource: 'Chat_Message',
 											resourceId: room.messageEditing.id,
-									  }
+										}
 									: {
 											type: 'newChatMessage',
 											chatRoomId: room.id,
-									  }
+										}
 							"
 							:model-id="editorModelId"
 							:focus-token="focusToken"
@@ -514,11 +514,11 @@ $-button-height = 40px
 	gap: 8px
 	align-items: stretch
 
-	::v-deep(.content-editor-form-control)
+	:deep(.content-editor-form-control)
 		change-bg(bg-offset)
 		border: 0
 
-	::v-deep(.content-placeholder)
+	:deep(.content-placeholder)
 		text-overflow()
 		max-width: 100%
 
@@ -553,7 +553,7 @@ $-button-height = 40px
 		text-overflow()
 
 	&
-	&::v-deep(.jolticon)
+	&:deep(.jolticon)
 		font-size: $font-size-tiny
 
 	&.fade-leave-active

@@ -108,7 +108,7 @@ const href = computed(() => {
 <style lang="stylus" scoped>
 ._img
 	&
-	::v-deep(img)
+	:deep(img)
 		width: 100%
 		height: 100%
 </style>

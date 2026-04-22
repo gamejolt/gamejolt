@@ -4,7 +4,5 @@ export const routeDashGamesManageCollaborators: RouteRecordRaw = {
 	name: 'dash.games.manage.collaborators',
 	path: 'collaborators',
 	component: () =>
-		import(
-			'~app/views/dashboard/games/manage/collaborators/RouteDashGamesManageCollaborators.vue'
-		),
+		import('~app/views/dashboard/games/manage/collaborators/RouteDashGamesManageCollaborators.vue'),
 };

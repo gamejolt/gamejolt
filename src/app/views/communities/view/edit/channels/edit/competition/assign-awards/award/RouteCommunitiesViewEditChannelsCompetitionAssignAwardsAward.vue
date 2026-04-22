@@ -70,7 +70,7 @@ const isLoading = ref(true);
 const filterValue = ref('');
 const page = ref(1);
 
-let filterDispatcher: NodeJS.Timer | undefined;
+let filterDispatcher: NodeJS.Timeout | undefined;
 
 const noAwards = toRef(() => awardedEntries.value.length === 0);
 const unassignedCount = toRef(() => entryCount.value - awardedEntries.value.length);

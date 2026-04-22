@@ -42,7 +42,7 @@ const appRoute = createAppRoute({
 		realm.value
 			? $gettext(`%{ realm } Realm - Art, videos, guides, polls and more`, {
 					realm: realm.value.name,
-			  })
+				})
 			: null
 	),
 	onInit() {

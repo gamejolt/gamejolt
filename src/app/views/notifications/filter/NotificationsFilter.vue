@@ -161,7 +161,7 @@ function assignAll(value: boolean) {
 .-divider
 	margin: 0
 
-::v-deep(.-group-link)
+:deep(.-group-link)
 	cursor: pointer
 
 .-group

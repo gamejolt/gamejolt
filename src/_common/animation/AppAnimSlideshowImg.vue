@@ -10,7 +10,7 @@ type Props = {
 };
 const { sheet, pause, startOffset = 0 } = defineProps<Props>();
 
-let timer: NodeJS.Timer | null = null;
+let timer: NodeJS.Timeout | null = null;
 
 const frame = ref(0);
 

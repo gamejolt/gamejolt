@@ -11,9 +11,7 @@ export async function showCommunityCompetitionEntrySubmitModal(
 		modalId: 'CommunityCompetitionEntrySubmit',
 		component: defineAsyncComponent(
 			() =>
-				import(
-					'~common/community/competition/entry/submit-modal/AppCommunityCompetitionEntrySubmitModal.vue'
-				)
+				import('~common/community/competition/entry/submit-modal/AppCommunityCompetitionEntrySubmitModal.vue')
 		),
 		props: {
 			competition,

@@ -26,9 +26,7 @@ export interface ChatNewMessageEvent {
 
 export function createChatClient({ grid, appStore }: { grid: GridClient; appStore: AppStore }) {
 	// Don't want to unwrap the refs from the app store.
-	const client = reactive(
-		new ChatClient(markRaw(grid), markRaw(appStore))
-	) as unknown as ChatClient;
+	const client = reactive(new ChatClient(grid, markRaw(appStore))) as unknown as ChatClient;
 
 	// Set it up fresh.
 	clearChat(client);
@@ -36,7 +34,10 @@ export function createChatClient({ grid, appStore }: { grid: GridClient; appStor
 }
 
 export class ChatClient {
-	constructor(private readonly grid: GridClient, public readonly appStore: AppStore) {}
+	constructor(
+		private readonly grid: GridClient,
+		public readonly appStore: AppStore
+	) {}
 
 	readonly logger = createLogger('Chat');
 
