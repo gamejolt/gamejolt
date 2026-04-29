@@ -1,6 +1,7 @@
 import { Router } from 'vue-router';
 
 import { Api } from '~common/api/api.service';
+import { setOAuthPendingToken } from '~common/auth/auth.service';
 import { LinkedAccountProvider } from '~common/linked-account/linked-account.model';
 import { Navigate } from '~common/navigate/navigate.service';
 
@@ -35,6 +36,9 @@ export class LinkedAccounts {
 				query: { token: response.token },
 			});
 		} else {
+			// Store the token so the callback can verify the state wasn't
+			// forged (CSRF protection).
+			setOAuthPendingToken(response.token);
 			Navigate.goto(response.redirectLocation);
 		}
 	}
@@ -59,6 +63,9 @@ export class LinkedAccounts {
 				params: { token: response.token },
 			});
 		} else {
+			// Store the token so the callback can verify the state wasn't
+			// forged (CSRF protection).
+			setOAuthPendingToken(response.token);
 			Navigate.goto(response.redirectLocation);
 		}
 	}

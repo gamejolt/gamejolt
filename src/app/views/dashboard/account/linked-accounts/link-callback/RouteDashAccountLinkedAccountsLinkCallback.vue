@@ -2,6 +2,7 @@
 import { RouteLocationNormalized, useRoute, useRouter } from 'vue-router';
 
 import { Api } from '~common/api/api.service';
+import { consumeOAuthPendingToken } from '~common/auth/auth.service';
 import { showErrorGrowl, showSuccessGrowl } from '~common/growls/growls.service';
 import {
 	getLinkedAccountProviderDisplayName,
@@ -15,7 +16,12 @@ import { $gettext } from '~common/translate/translate.service';
 export default {
 	...defineAppRouteOptions({
 		reloadOn: 'always',
-		resolver({ route }) {
+		async resolver({ route }) {
+			const pendingToken = consumeOAuthPendingToken();
+			if (!pendingToken || pendingToken !== route.query.state) {
+				return { success: false, reason: 'invalid-state' };
+			}
+
 			const url = constructUrl('/web/dash/linked-accounts/link-callback/', route);
 			// Force POST.
 			return Api.sendRequest(url, {});

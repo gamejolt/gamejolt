@@ -58,3 +58,15 @@ export function authOnJoin(method: AuthMethod) {
 export function authOnLogin(method: AuthMethod) {
 	trackLogin(method);
 }
+
+const OAuthPendingTokenKey = 'oauth_pending_token';
+
+export function setOAuthPendingToken(token: string) {
+	sessionStorage.setItem(OAuthPendingTokenKey, token);
+}
+
+export function consumeOAuthPendingToken() {
+	const token = sessionStorage.getItem(OAuthPendingTokenKey);
+	sessionStorage.removeItem(OAuthPendingTokenKey);
+	return token;
+}
