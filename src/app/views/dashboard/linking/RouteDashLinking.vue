@@ -2,6 +2,7 @@
 import { computed, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
+import { setOAuthPendingToken } from '~common/auth/auth.service';
 import { Client } from '~common/client/safe-exports';
 import { showErrorGrowl } from '~common/growls/growls.service';
 import AppLoading from '~common/loading/AppLoading.vue';
@@ -27,6 +28,9 @@ function completed(response: any) {
 
 	const routeParams: { [k: string]: string } =
 		response.resource === 'Game' ? { id: response['resource-id'] } : {};
+
+	// Store token so the callback can verify the state.
+	setOAuthPendingToken(token.value);
 
 	// Redirect them off to complete their social login like normal.
 	router.push({

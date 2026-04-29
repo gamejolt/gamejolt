@@ -6,6 +6,7 @@ import { Api } from '~common/api/api.service';
 import {
 	authOnJoin,
 	authOnLogin,
+	consumeOAuthPendingToken,
 	redirectToDashboard,
 	redirectToOnboarding,
 } from '~common/auth/auth.service';
@@ -17,8 +18,14 @@ export default {
 	...defineAppRouteOptions({
 		lazy: true,
 		reloadOn: 'always',
-		resolver({ route }) {
+		async resolver({ route }) {
 			const { code, state } = route.query;
+
+			const pendingToken = consumeOAuthPendingToken();
+			if (!pendingToken || pendingToken !== state) {
+				return { success: false, reason: 'invalid-state' };
+			}
+
 			return Api.sendRequest(
 				'/web/auth/linked-accounts/link_callback/twitch?code=' + code + '&state=' + state,
 				{}

@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
+import { setOAuthPendingToken } from '~common/auth/auth.service';
 import { Client } from '~common/client/safe-exports';
 import { showErrorGrowl } from '~common/growls/growls.service';
 import AppLoading from '~common/loading/AppLoading.vue';
@@ -36,6 +37,9 @@ function completed(response: any) {
 	const validProviders = ['facebook', 'twitch', 'google'];
 	const provider = response.provider;
 	if (validProviders.indexOf(provider) !== -1) {
+		// Store token so the callback can verify the state.
+		setOAuthPendingToken(token.value);
+
 		router.push({
 			name: `auth.linked-account.${provider}.callback`,
 			query: { code: response.code, state: token.value },
