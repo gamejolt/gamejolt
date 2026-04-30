@@ -5,7 +5,6 @@ import AppTranslate from '~common/translate/AppTranslate.vue';
 
 type Props = {
 	collections: GameCollectionModel[];
-	eventLabel?: string;
 };
 
 const { collections } = defineProps<Props>();

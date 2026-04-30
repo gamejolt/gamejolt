@@ -24,11 +24,11 @@ import AppLoading from '~common/loading/AppLoading.vue';
 import { kPostItemPaddingVertical, kPostItemPaddingXsVertical } from '~common/post/post-styles';
 import { Screen } from '~common/screen/screen-service';
 import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
-import { Scroll } from '~common/scroll/scroll.service';
+import { getScrollOffsetTop } from '~common/scroll/scroll.service';
 import { $gettext } from '~common/translate/translate.service';
 import { styleWhen } from '~styles/mixins';
 
-const InviewConfigShowNew = new ScrollInviewConfig({ margin: `-${Scroll.offsetTop}px` });
+const InviewConfigShowNew = new ScrollInviewConfig({ margin: `-${getScrollOffsetTop()}px` });
 const InviewConfigLoadMore = new ScrollInviewConfig({ margin: `${Screen.height * 1.5}px` });
 
 export type ActivityFeedInterface = ReturnType<typeof createActivityFeedInterface>;

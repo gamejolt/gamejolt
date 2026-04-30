@@ -1,5 +1,7 @@
 import { DirectiveBinding, markRaw, reactive, ref } from 'vue';
 
+import { defineIsolatedState } from '~common/ssr/isolated-state';
+
 // Same thing as Placement (from @popperjs) or TooltipPlacement
 export const TooltipAllowedPlacements: TooltipPlacement[] = [
 	'auto',
@@ -143,12 +145,12 @@ export function makeTooltipController(el: HTMLElement, binding: TooltipDirective
 	return state;
 }
 
-const _activeTooltip = ref<null | TooltipController>(null);
+const _activeTooltip = defineIsolatedState(() => ref<null | TooltipController>(null));
 
 function _assignActiveTooltip(tooltip: TooltipController | null) {
-	_activeTooltip.value = tooltip;
+	_activeTooltip().value = tooltip;
 }
 
 export function getActiveTooltip() {
-	return _activeTooltip.value;
+	return _activeTooltip().value;
 }

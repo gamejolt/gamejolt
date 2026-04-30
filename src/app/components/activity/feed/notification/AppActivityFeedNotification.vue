@@ -4,7 +4,7 @@
 import '~common/comment/comment.styl';
 
 import { computed, ref } from 'vue';
-import { RouterLink, useRouter } from 'vue-router';
+import { RouterLink } from 'vue-router';
 
 import { ActivityFeedItem } from '~app/components/activity/feed/item-service';
 import {
@@ -63,7 +63,6 @@ const emit = defineEmits<{
 }>();
 const feed = useActivityFeed()!;
 const appStore = useAppStore();
-const router = useRouter();
 
 const canToggleContent = ref(false);
 
@@ -142,7 +141,7 @@ const avatarFrameImg = computed(() => {
 
 function go() {
 	$readNotification(notification.value);
-	gotoNotification(notification.value, { router, appStore });
+	gotoNotification(notification.value, { appStore });
 	emit('clicked');
 }
 

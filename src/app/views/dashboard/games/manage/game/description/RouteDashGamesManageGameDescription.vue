@@ -6,7 +6,7 @@ import { useGameDashRouteController } from '~app/views/dashboard/games/manage/ma
 import { Api } from '~common/api/api.service';
 import { showSuccessGrowl } from '~common/growls/growls.service';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
-import { Scroll } from '~common/scroll/scroll.service';
+import { scrollTo } from '~common/scroll/scroll.service';
 import { $gettext } from '~common/translate/translate.service';
 
 export default {
@@ -27,7 +27,7 @@ function onSaved() {
 		$gettext(`Your game description has been saved.`),
 		$gettext(`Description Saved`)
 	);
-	Scroll.to(0);
+	scrollTo(0);
 }
 
 createAppRoute({

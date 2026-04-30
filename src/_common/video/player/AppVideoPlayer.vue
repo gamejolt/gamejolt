@@ -23,7 +23,6 @@ import {
 	queueVideoTimeChange,
 	scrubVideoVolume,
 	toggleVideoPlayback,
-	trackVideoPlayerEvent,
 	VideoPlayerController,
 	VideoPlayerControllerContext,
 } from '~common/video/player/controller';
@@ -362,11 +361,6 @@ function onVideoClick() {
 	if (player.value.state === 'playing') {
 		scheduleUIHide(UIHideTimeout);
 	}
-	trackVideoPlayerEvent(
-		player.value,
-		player.value.state === 'playing' ? 'play' : 'pause',
-		'click-video'
-	);
 }
 
 function onKeypress(event: KeyboardEvent) {
@@ -386,11 +380,6 @@ function onKeypress(event: KeyboardEvent) {
 	switch (key as KEY_SHORTCUTS) {
 		case ' ':
 			toggleVideoPlayback(player.value);
-			trackVideoPlayerEvent(
-				player.value,
-				player.value.state === 'playing' ? 'play' : 'pause',
-				'keybind'
-			);
 			break;
 		case 'ArrowLeft':
 			triggerScrubLeft();
@@ -415,7 +404,6 @@ function triggerScrubLeft() {
 		player.value,
 		player.value.currentTime - Math.min(player.value.duration / 4, 5000)
 	);
-	trackVideoPlayerEvent(player.value, 'scrub-left', 'keybind');
 }
 
 function triggerScrubRight() {
@@ -426,7 +414,6 @@ function triggerScrubRight() {
 		player.value,
 		player.value.currentTime + Math.min(player.value.duration / 4, 5000)
 	);
-	trackVideoPlayerEvent(player.value, 'scrub-right', 'keybind');
 }
 
 function triggerVolumeDown() {
@@ -438,7 +425,6 @@ function triggerVolumeDown() {
 		Math.round(Math.max(player.value.volume - 0.1, 0) * 100) / 100,
 		'end'
 	);
-	trackVideoPlayerEvent(player.value, 'volume-down', 'keybind');
 }
 
 function triggerVolumeUp() {
@@ -450,7 +436,6 @@ function triggerVolumeUp() {
 		Math.round(Math.min(player.value.volume + 0.1, 1) * 100) / 100,
 		'end'
 	);
-	trackVideoPlayerEvent(player.value, 'volume-up', 'keybind');
 }
 
 function onFullscreenChange() {

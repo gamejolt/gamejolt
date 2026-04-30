@@ -7,7 +7,7 @@ import { useGameDashRouteController } from '~app/views/dashboard/games/manage/ma
 import { Api } from '~common/api/api.service';
 import { GameScoreTableModel } from '~common/game/score-table/score-table.model';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
-import { Scroll } from '~common/scroll/scroll.service';
+import { setShouldAutoScroll } from '~common/scroll/scroll.service';
 import { $gettext } from '~common/translate/translate.service';
 import { UserGameScoreModel } from '~common/user/game-score/game-score.model';
 
@@ -36,7 +36,7 @@ const selectedTable = ref(0);
 const scores = ref<UserGameScoreModel[]>([]);
 
 function changeTable() {
-	Scroll.shouldAutoScroll = false;
+	setShouldAutoScroll(false);
 	router.push({
 		name: route.name ?? undefined,
 		params: Object.assign({}, route.params, {

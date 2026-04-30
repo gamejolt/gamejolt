@@ -13,7 +13,7 @@ import { Environment } from '~common/environment/environment.service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import { Navigate } from '~common/navigate/navigate.service';
 import AppPopper from '~common/popper/AppPopper.vue';
-import { Popper } from '~common/popper/popper.service';
+import { hideAllPoppers } from '~common/popper/popper.service';
 import { useSidebarStore } from '~common/sidebar/sidebar.store';
 import { useCommonStore } from '~common/store/common-store';
 import { useThemeStore } from '~common/theme/theme.store';
@@ -51,7 +51,7 @@ const shouldShowLeave = computed(() => !community.hasPerms() && !!community.is_m
 const shouldShowJoin = computed(() => !community.is_member);
 
 async function onLeaveCommunityClick() {
-	Popper.hideAll();
+	hideAllPoppers();
 	await leaveCommunity(community, {
 		grid: grid.value,
 		location: 'cbar',
@@ -60,7 +60,7 @@ async function onLeaveCommunityClick() {
 }
 
 async function onJoinCommunityClick() {
-	Popper.hideAll();
+	hideAllPoppers();
 	await joinCommunity(community, { grid: grid.value, location: 'cbar' });
 }
 
@@ -80,7 +80,7 @@ function onGotoCommunity() {
 }
 
 function gotoModerate() {
-	Popper.hideAll();
+	hideAllPoppers();
 	Navigate.newWindow(Environment.baseUrl + `/moderate/communities/view/${community.id}`);
 }
 </script>

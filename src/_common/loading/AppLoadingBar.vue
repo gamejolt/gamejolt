@@ -2,7 +2,7 @@
 import { computed, onMounted, ref, watch } from 'vue';
 import { type Router, useRouter } from 'vue-router';
 
-import { Api } from '~common/api/api.service';
+import { getLoadingBarRequests } from '~common/api/api.service';
 import { styleChangeBg } from '~styles/mixins';
 import { kLayerLoadingBar, kStrongEaseOut } from '~styles/variables';
 
@@ -36,7 +36,7 @@ const width = computed(() => {
 	return (completedCount.value / requestCount.value) * 100;
 });
 
-const apiRequestCount = computed(() => Api.loadingBarRequests.value);
+const apiRequestCount = getLoadingBarRequests();
 
 onMounted(() => {
 	// We hook into router so that we can show loading bar while the async

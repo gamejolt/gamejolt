@@ -7,13 +7,12 @@ import {
 	libraryRemoveGameFromPlaylist,
 	useLibraryStore,
 } from '~app/store/library';
-import { Analytics } from '~common/analytics/analytics.service';
 import { vAppFocusWhen } from '~common/form-vue/focus-when.directive';
 import { GameModel } from '~common/game/game.model';
 import { GamePlaylistModel } from '~common/game-playlist/game-playlist.model';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppLoading from '~common/loading/AppLoading.vue';
-import { Popper } from '~common/popper/popper.service';
+import { hideAllPoppers } from '~common/popper/popper.service';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 import { stringSort } from '~utils/array';
 import { fuzzysearch } from '~utils/string';
@@ -39,11 +38,10 @@ const filteredPlaylists = computed(() => {
 
 onMounted(() => {
 	fetchPlaylists();
-	Analytics.trackEvent('add-to-playlist', 'open');
 });
 
 function close() {
-	Popper.hideAll();
+	hideAllPoppers();
 }
 
 async function fetchPlaylists() {
@@ -59,10 +57,8 @@ async function fetchPlaylists() {
 function selectPlaylist(playlist: GamePlaylistModel) {
 	if (playlistsWithGame.value.indexOf(playlist.id) === -1) {
 		addToPlaylist(playlist);
-		Analytics.trackEvent('add-to-playlist', 'add-game');
 	} else {
 		removeFromPlaylist(playlist);
-		Analytics.trackEvent('add-to-playlist', 'remove-game');
 	}
 }
 

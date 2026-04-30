@@ -1,6 +1,6 @@
 import { Directive } from 'vue';
 
-import { Scroll } from '~common/scroll/scroll.service';
+import { setShouldAutoScroll } from '~common/scroll/scroll.service';
 
 // I'm not sure of a better way to do this with Vue. When I tried to attach to
 // the click handler of the element the router-link click handler gets called
@@ -19,7 +19,7 @@ if (!import.meta.env.SSR) {
 			}
 
 			if (target.dataset.gjAutoscroll) {
-				Scroll.shouldAutoScroll = false;
+				setShouldAutoScroll(false);
 			}
 		},
 		true

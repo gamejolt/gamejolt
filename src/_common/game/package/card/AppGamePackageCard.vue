@@ -1,7 +1,6 @@
 <script lang="ts">
 import type { Component } from 'vue';
 import { computed, ref } from 'vue';
-import { useRouter } from 'vue-router';
 
 import AppFadeCollapse from '~common/AppFadeCollapse.vue';
 import AppButton from '~common/button/AppButton.vue';
@@ -18,7 +17,7 @@ import AppGamePackageCardButtons from '~common/game/package/card/AppGamePackageC
 import { GamePackageCardModel } from '~common/game/package/card/card.model';
 import { GamePackageModel } from '~common/game/package/package.model';
 import { showGamePackagePurchaseModal } from '~common/game/package/purchase-modal/purchase-modal.service';
-import { showGamePlayModal } from '~common/game/play-modal/play-modal.service';
+import { useShowGamePlayModal } from '~common/game/play-modal/play-modal.service';
 import { GameReleaseModel } from '~common/game/release/release.model';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import { LinkedKeyModel } from '~common/linked-key/linked-key.model';
@@ -49,6 +48,7 @@ type Props = {
 	builds?: GameBuildModel[];
 	accessKey?: string;
 };
+
 const {
 	game,
 	package: gamePackage,
@@ -57,7 +57,8 @@ const {
 	builds = [],
 	accessKey,
 } = defineProps<Props>();
-const router = useRouter();
+
+const showGamePlayModal = useShowGamePlayModal();
 
 const showFullDescription = ref(false);
 const canToggleDescription = ref(false);
@@ -140,7 +141,7 @@ function showPayment(build: GameBuildModel | null, fromExtraSection: boolean) {
 }
 
 function download(build: GameBuildModel) {
-	GameDownloader.download(router, game, build, {
+	GameDownloader.download(game, build, {
 		isOwned: isOwned.value,
 		key: accessKey,
 	});

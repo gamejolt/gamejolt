@@ -16,14 +16,14 @@ import { FiresidePostLikeModel } from '~common/fireside/post/like/like-model';
 import { FiresidePostRealmModel } from '~common/fireside/post/realm/realm.model';
 import { FiresidePostVideoModel } from '~common/fireside/post/video/video-model';
 import { GameModel } from '~common/game/game.model';
-import { HistoryTick } from '~common/history-tick/history-tick-service';
+import { sendHistoryTick } from '~common/history-tick/history-tick-service';
 import { KeyGroupModel } from '~common/key-group/key-group.model';
 import { MediaItemModel } from '~common/media-item/media-item-model';
 import { showModalConfirm } from '~common/modal/confirm/confirm-service';
 import { Model, ModelSaveRequestOptions } from '~common/model/model.service';
 import { storeModel } from '~common/model/model-store.service';
 import { PollModel } from '~common/poll/poll.model';
-import { Registry } from '~common/registry/registry.service';
+import { storeInRegistry } from '~common/registry/registry.service';
 import { StickerPlacementModel } from '~common/sticker/placement/placement.model';
 import { constructStickerCounts, StickerCount } from '~common/sticker/sticker-count';
 import { $gettext } from '~common/translate/translate.service';
@@ -183,7 +183,7 @@ export class FiresidePostModel extends Model implements ContentContainerModel, C
 			this.background = storeModel(BackgroundModel, data.background);
 		}
 
-		Registry.store('FiresidePost', this);
+		storeInRegistry('FiresidePost', this);
 	}
 
 	get isActive() {
@@ -458,7 +458,7 @@ export async function loadArticleIntoPost(post: FiresidePostModel) {
 }
 
 export function $viewPost(post: FiresidePostModel, sourceFeed?: string) {
-	HistoryTick.sendBeacon('fireside-post', post.id, { sourceFeed });
+	sendHistoryTick('fireside-post', post.id, { sourceFeed });
 }
 
 export async function $saveFiresidePost(model: FiresidePostModel) {

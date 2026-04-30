@@ -16,6 +16,15 @@ export class EventTopic<T> {
 	private listeners: EventListener<T>[] = [];
 
 	subscribe(listener: EventListener<T>): EventSubscription {
+		// Event topics are module-global but their subscribers are inherently
+		// browser-only (UI side effects, analytics, route-change DOM work).
+		// Skipping subscribe on the server prevents subscribers from leaking
+		// across concurrent SSR requests, which would otherwise accumulate
+		// because onUnmounted never fires during server rendering.
+		if (import.meta.env.SSR) {
+			return { close: () => {} };
+		}
+
 		this.listeners.push(listener);
 
 		return {

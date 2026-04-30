@@ -1,5 +1,4 @@
 import { computed, inject, InjectionKey, provide, ref, unref } from 'vue';
-import { Router } from 'vue-router';
 
 import { Api } from '~common/api/api.service';
 import {
@@ -18,6 +17,7 @@ import { GameSketchfabModel } from '~common/game/sketchfab/sketchfab.model';
 import { GameVideoModel } from '~common/game/video/video.model';
 import { showInfoGrowl, showSuccessGrowl } from '~common/growls/growls.service';
 import { showModalConfirm } from '~common/modal/confirm/confirm-service';
+import { getCurrentRouter } from '~common/route/current-router-service';
 import { $gettext } from '~common/translate/translate.service';
 import { arrayRemove } from '~utils/array';
 
@@ -57,7 +57,7 @@ export function startWizard() {
 	window.sessionStorage.setItem(WizardKey, 'active');
 }
 
-export function createGameDashRouteController({ router }: { router: Router }) {
+export function createGameDashRouteController() {
 	const game = ref<GameModel>();
 	const collaboration = ref<CollaboratorModel>();
 	const media = ref<Media[]>([]);
@@ -158,6 +158,7 @@ export function createGameDashRouteController({ router }: { router: Router }) {
 			transitionMap = TransitionMapDevlog;
 		}
 
+		const router = getCurrentRouter();
 		const routeName = router.currentRoute.value.name!;
 		for (const current in transitionMap) {
 			if (
@@ -194,6 +195,7 @@ export function createGameDashRouteController({ router }: { router: Router }) {
 
 		finishWizard();
 
+		const router = getCurrentRouter();
 		router.push({
 			name: 'dash.games.manage.game.overview',
 			params: router.currentRoute.value.params,
@@ -204,6 +206,7 @@ export function createGameDashRouteController({ router }: { router: Router }) {
 		finishWizard();
 
 		// Simply go to the overview and pull out of the wizard!
+		const router = getCurrentRouter();
 		router.push({
 			name: 'dash.games.manage.game.overview',
 			params: router.currentRoute.value.params,
@@ -266,7 +269,7 @@ export function createGameDashRouteController({ router }: { router: Router }) {
 			$gettext('Game Removed')
 		);
 
-		router.push({ name: 'home' });
+		getCurrentRouter().push({ name: 'home' });
 	}
 
 	async function leaveProject() {
@@ -290,7 +293,7 @@ export function createGameDashRouteController({ router }: { router: Router }) {
 			$gettext('Left Project')
 		);
 
-		router.push({ name: 'home' });
+		getCurrentRouter().push({ name: 'home' });
 	}
 
 	async function saveMediaSort(items: Media[]) {

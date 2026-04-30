@@ -38,7 +38,7 @@ createAppRoute({
 		if (payload.success === false) {
 			console.log('Error status for adding game.', payload);
 
-			handleGameAddFailure(user.value!, payload.reason, router);
+			handleGameAddFailure(user.value!, payload.reason);
 		}
 	},
 });

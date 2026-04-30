@@ -1,5 +1,4 @@
-import { computed, inject, InjectionKey, Ref, ref } from 'vue';
-import { Router } from 'vue-router';
+import { computed, inject, InjectionKey, Ref, ref, shallowReadonly } from 'vue';
 
 import {
 	$followGameCollection,
@@ -8,7 +7,6 @@ import {
 	GameCollectionType,
 } from '~app/components/game/collection/collection.model';
 import { showGamePlaylistSaveModal } from '~app/components/game-playlist/save-modal/save-modal.service';
-import { router } from '~app/views';
 import { trackGameFollow } from '~common/analytics/analytics.service';
 import { GameModel, unfollowGame } from '~common/game/game.model';
 import {
@@ -19,7 +17,8 @@ import {
 } from '~common/game-playlist/game-playlist.model';
 import { showErrorGrowl, showSuccessGrowl } from '~common/growls/growls.service';
 import { showModalConfirm } from '~common/modal/confirm/confirm-service';
-import { Scroll } from '~common/scroll/scroll.service';
+import { getCurrentRouter } from '~common/route/current-router-service';
+import { setShouldAutoScroll } from '~common/scroll/scroll.service';
 import { $gettext } from '~common/translate/translate.service';
 import { arrayRemove } from '~utils/array';
 
@@ -38,16 +37,15 @@ class GamePlaylistFolder {
 	) {}
 }
 
-function _isViewingCollection(router: Router, collection: GameCollectionModel) {
+function _isViewingCollection(collection: GameCollectionModel) {
+	const router = getCurrentRouter();
 	return (
 		router.currentRoute.value.name === collection.routeLocation.name &&
 		router.currentRoute.value.params.id === (collection as any).id
 	);
 }
 
-export function createLibraryStore({ router }: { router: Router }) {
-	const _router = router;
-
+export function createLibraryStore() {
 	const collections = ref<GameCollectionModel[]>([]);
 	const followedCollection = ref<GameCollectionModel>();
 	const developerCollection = ref<GameCollectionModel>();
@@ -113,7 +111,7 @@ export function createLibraryStore({ router }: { router: Router }) {
 		arrayRemove(collections.value, i => i._id === collection._id);
 	}
 
-	return {
+	return shallowReadonly({
 		collections,
 		followedCollection,
 		developerCollection,
@@ -125,9 +123,7 @@ export function createLibraryStore({ router }: { router: Router }) {
 		clear,
 		addCollection,
 		removeCollection,
-
-		_router,
-	};
+	});
 }
 
 export async function libraryFollowCollection(
@@ -167,15 +163,15 @@ export async function libraryNewPlaylist(store: LibraryStore) {
 	return collection;
 }
 
-export async function libraryEditPlaylist(store: LibraryStore, collection: GameCollectionModel) {
+export async function libraryEditPlaylist(_store: LibraryStore, collection: GameCollectionModel) {
 	// If we're viewing the playlist we're editing, we want to sync the new
 	// URL after.
-	const syncUrlAfter = _isViewingCollection(store._router, collection);
+	const syncUrlAfter = _isViewingCollection(collection);
 
 	if (await showGamePlaylistSaveModal(collection)) {
 		if (syncUrlAfter) {
-			Scroll.shouldAutoScroll = false;
-			router.replace(collection.routeLocation);
+			setShouldAutoScroll(false);
+			getCurrentRouter().replace(collection.routeLocation);
 		}
 	}
 }
@@ -201,8 +197,8 @@ export async function libraryRemovePlaylist(store: LibraryStore, collection: Gam
 
 		// If they're currently on the playlist page, let's push them to
 		// the library instead.
-		if (_isViewingCollection(store._router, collection)) {
-			router.replace({ name: 'library.overview' });
+		if (_isViewingCollection(collection)) {
+			getCurrentRouter().replace({ name: 'library.overview' });
 
 			showSuccessGrowl(
 				$gettext(

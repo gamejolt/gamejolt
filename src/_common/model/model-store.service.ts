@@ -1,6 +1,7 @@
 import { reactive, ref } from 'vue';
 
 import { Api, type RequestOptions } from '~common/api/api.service';
+import { defineIsolatedState } from '~common/ssr/isolated-state';
 
 export type ModelSaveRequestOptions = RequestOptions & { data?: any };
 
@@ -15,7 +16,7 @@ export interface RemovableModel {
 
 type ModelConstructor<T extends ModelStoreModel> = new () => T;
 
-const _models = ref(new Map<string, ModelStoreModel>());
+const _models = defineIsolatedState(() => ref(new Map<string, ModelStoreModel>()));
 
 /**
  * Will register new model data with the store and return the corresponding
@@ -33,7 +34,7 @@ export function storeModel<T extends ModelStoreModel>(
 
 	const id = _getModelId(data);
 	const key = _generateKey(typename, id);
-	let targetModel = _models.value.get(key) as T | undefined;
+	let targetModel = _models().value.get(key) as T | undefined;
 
 	if (targetModel) {
 		targetModel.update(data);
@@ -42,7 +43,7 @@ export function storeModel<T extends ModelStoreModel>(
 
 	targetModel = reactive(new modelConstructor()) as T;
 	targetModel.update(data);
-	_models.value.set(key, targetModel);
+	_models().value.set(key, targetModel);
 
 	return targetModel;
 }
@@ -72,7 +73,7 @@ export function getModel<T extends ModelStoreModel>(
 	id: number | string
 ) {
 	const key = _generateKey(modelConstructor.name, id);
-	return _models.value.get(key) as T | undefined;
+	return _models().value.get(key) as T | undefined;
 }
 
 function _getModelId(modelData: any) {

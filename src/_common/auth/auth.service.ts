@@ -2,7 +2,11 @@ import { trackJoin, trackLogin } from '~common/analytics/analytics.service';
 import { configSaveJoinOptions } from '~common/config/config.service';
 import { Environment } from '~common/environment/environment.service';
 import { Navigate } from '~common/navigate/navigate.service';
-import Onboarding from '~common/onboarding/onboarding.service';
+import {
+	endOnboarding,
+	isOnboarding,
+	startOnboarding,
+} from '~common/onboarding/onboarding.service';
 
 export type AuthMethod = 'email' | 'google' | 'facebook' | 'twitch' | 'apple';
 
@@ -11,7 +15,7 @@ export function redirectToOnboarding() {
 		return;
 	}
 
-	Onboarding.start();
+	startOnboarding();
 	Navigate.goto(Environment.wttfBaseUrl + '/welcome');
 }
 
@@ -20,8 +24,8 @@ export function redirectToDashboard() {
 		return;
 	}
 
-	if (Onboarding.isOnboarding) {
-		Onboarding.end();
+	if (isOnboarding()) {
+		endOnboarding();
 	}
 
 	// This is mainly for client.

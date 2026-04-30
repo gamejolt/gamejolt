@@ -1,6 +1,5 @@
 <script lang="ts">
 import { computed, ref } from 'vue';
-import { useRouter } from 'vue-router';
 
 import { showUserSetPasswordModal } from '~app/components/user/set-password-modal/set-password-modal.service';
 import { useAccountRouteController } from '~app/views/dashboard/account/RouteDashAccount.vue';
@@ -27,7 +26,6 @@ export default {
 <script lang="ts" setup>
 const { heading } = useAccountRouteController()!;
 const { user } = useCommonStore();
-const router = useRouter();
 
 const accounts = ref<LinkedAccountModel[]>([]);
 const loading = ref(false);
@@ -49,7 +47,7 @@ function getAccount(provider: LinkedAccountProvider) {
 
 async function onLink(provider: LinkedAccountProvider) {
 	loading.value = true;
-	await LinkedAccounts.link(router, provider, '/web/dash/linked-accounts/link/', 'User');
+	await LinkedAccounts.link(provider, '/web/dash/linked-accounts/link/', 'User');
 }
 
 async function onUnlink(provider: LinkedAccountProvider) {

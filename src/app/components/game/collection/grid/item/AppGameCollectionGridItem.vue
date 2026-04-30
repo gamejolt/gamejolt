@@ -8,7 +8,6 @@ import { TranslateDirective as vTranslate } from '~common/translate/translate-di
 
 type Props = {
 	collection: GameCollectionModel;
-	eventLabel?: string;
 };
 
 const { collection } = defineProps<Props>();

@@ -1,9 +1,8 @@
-import { computed, inject, InjectionKey, Ref, ref, unref, watch } from 'vue';
-import { Router } from 'vue-router';
+import { computed, inject, InjectionKey, Ref, ref, shallowReadonly, unref, watch } from 'vue';
 
-import { Analytics } from '~common/analytics/analytics.service';
 import { Connection } from '~common/connection/connection-service';
 import { isDynamicGoogleBot } from '~common/device/device.service';
+import { getCurrentRouter } from '~common/route/current-router-service';
 import { Screen } from '~common/screen/screen-service';
 import { SettingFeedNotifications } from '~common/settings/settings.service';
 import { CommonStore } from '~common/store/common-store';
@@ -17,13 +16,7 @@ export function useBannerStore() {
 	return inject(BannerStoreKey)!;
 }
 
-export function createBannerStore({
-	commonStore,
-	router,
-}: {
-	commonStore: CommonStore;
-	router: Router;
-}) {
+export function createBannerStore({ commonStore }: { commonStore: CommonStore }) {
 	const banners = ref([
 		_createBanner({
 			message: computed(() =>
@@ -41,7 +34,7 @@ export function createBannerStore({
 					return false;
 				}
 
-				const route = router.currentRoute.value;
+				const route = getCurrentRouter().currentRoute.value;
 
 				return !!(
 					commonStore.user.value &&
@@ -52,14 +45,10 @@ export function createBannerStore({
 				);
 			}),
 			async onClick() {
-				Analytics.trackEvent('notifications', 'request');
-
 				const result = await Notification.requestPermission();
 				if (result === 'denied') {
-					Analytics.trackEvent('notifications', 'denied');
 					SettingFeedNotifications.set(false);
 				} else if (result === 'default') {
-					Analytics.trackEvent('notifications', 'accepted');
 					SettingFeedNotifications.set(true);
 					return;
 				}
@@ -95,13 +84,13 @@ export function createBannerStore({
 		}
 	}
 
-	return {
+	return shallowReadonly({
 		banners,
 		hasBanner,
 		currentBanner,
 		clickBanner,
 		closeBanner,
-	};
+	});
 }
 
 function _createBanner({

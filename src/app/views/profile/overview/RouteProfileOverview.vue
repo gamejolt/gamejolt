@@ -168,9 +168,8 @@ createAppRoute({
 		};
 
 		if (routeUser.value) {
-			showCommentThreadModalFromPermalink(router, routeUser.value, 'shouts');
+			showCommentThreadModalFromPermalink(routeUser.value, 'shouts');
 			permalinkWatchDeregister = watchForCommentThreadModalPermalink(
-				router,
 				routeUser.value,
 				'shouts'
 			);
@@ -365,11 +364,7 @@ async function onFriendRequestReject() {
 								</div>
 
 								<AppGameListPlaceholder v-if="!isOverviewLoaded" :num="7" />
-								<AppGameList
-									v-else-if="games.length"
-									:games="games"
-									event-label="profile"
-								/>
+								<AppGameList v-else-if="games.length" :games />
 							</div>
 						</AppAdTakeoverFloat>
 					</template>

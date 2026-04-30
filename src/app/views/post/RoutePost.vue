@@ -1,6 +1,6 @@
 <script lang="ts">
 import { computed, ref } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 
 import {
 	CommentThreadModalPermalinkDeregister,
@@ -15,7 +15,7 @@ import { CommunityUserNotificationModel } from '~common/community/user-notificat
 import { pullFiresidePostHashFromUrl } from '~common/fireside/post/post-model';
 import { $viewPost, FiresidePostModel } from '~common/fireside/post/post-model';
 import { Meta } from '~common/meta/meta-service';
-import { Registry } from '~common/registry/registry.service';
+import { findInRegistry } from '~common/registry/registry.service';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { useThemeStore } from '~common/theme/theme.store';
 import { $gettext } from '~common/translate/translate.service';
@@ -56,7 +56,6 @@ export default {
 const PostThemeKey = 'post';
 
 const route = useRoute();
-const router = useRouter();
 const themeStore = useThemeStore();
 
 const post = ref<FiresidePostModel | null>(null);
@@ -102,7 +101,7 @@ createAppRoute({
 	}),
 	onInit() {
 		const hash = pullFiresidePostHashFromUrl(route.params.slug.toString());
-		post.value = Registry.find<FiresidePostModel>('FiresidePost', i => i.hash === hash);
+		post.value = findInRegistry<FiresidePostModel>('FiresidePost', i => i.hash === hash);
 		setPageTheme();
 	},
 	onResolved({ payload }) {
@@ -121,12 +120,8 @@ createAppRoute({
 
 		setPageTheme();
 
-		showCommentThreadModalFromPermalink(router, post.value, 'comments');
-		permalinkWatchDeregister = watchForCommentThreadModalPermalink(
-			router,
-			post.value,
-			'comments'
-		);
+		showCommentThreadModalFromPermalink(post.value, 'comments');
+		permalinkWatchDeregister = watchForCommentThreadModalPermalink(post.value, 'comments');
 
 		$viewPost(post.value);
 

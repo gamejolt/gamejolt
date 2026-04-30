@@ -1,4 +1,4 @@
-import { computed, inject, InjectionKey, ref, watch } from 'vue';
+import { computed, inject, InjectionKey, ref, shallowReadonly, watch } from 'vue';
 
 import { setChatFocused } from '~app/components/chat/client';
 import type {
@@ -220,5 +220,13 @@ export function createGridStore({ appStore }: { appStore: AppStore }) {
 		}
 	}
 
-	return { grid, chat, chatUnsafe, loadGrid, clearGrid, whenGridBootstrapped, whenGridConnected };
+	return shallowReadonly({
+		grid,
+		chat,
+		chatUnsafe,
+		loadGrid,
+		clearGrid,
+		whenGridBootstrapped,
+		whenGridConnected,
+	});
 }

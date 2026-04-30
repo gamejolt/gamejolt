@@ -1,51 +1,94 @@
-import { onMounted, onUnmounted } from 'vue';
+import {
+	inject,
+	InjectionKey,
+	MaybeRefOrGetter,
+	onUnmounted,
+	ref,
+	shallowReadonly,
+	toValue,
+	watch,
+} from 'vue';
 
 import { arrayRemove } from '~utils/array';
 
-export type EscapeStackCallback = () => void;
+type EscapeStackCallback = () => void;
 
-class EscapeStackService {
-	stack: EscapeStackCallback[] = [];
-	private initialized = false;
+export type EscapeStackStore = ReturnType<typeof createEscapeStackStore>;
 
-	register(cb: EscapeStackCallback) {
-		this.stack.push(cb);
-		this.init();
+export const EscapeStackStoreKey: InjectionKey<EscapeStackStore> = Symbol('escape-stack-store');
+
+export function createEscapeStackStore() {
+	let initialized = false;
+
+	const stack = ref<EscapeStackCallback[]>([]);
+
+	function register(cb: EscapeStackCallback) {
+		if (import.meta.env.SSR) {
+			return;
+		}
+
+		stack.value.push(cb);
+		_init();
 	}
 
-	deregister(cb: EscapeStackCallback) {
-		arrayRemove(this.stack, i => i === cb);
+	function deregister(cb: EscapeStackCallback) {
+		if (import.meta.env.SSR) {
+			return;
+		}
+
+		arrayRemove(stack.value, i => i === cb);
 	}
 
-	private handle(e: KeyboardEvent) {
+	function _handle(e: KeyboardEvent) {
 		if (e.key !== 'Escape') {
 			return;
 		}
 
-		const top = this.stack[this.stack.length - 1];
+		const top = stack.value[stack.value.length - 1];
 		if (top) {
 			top();
 		}
 	}
 
-	private init() {
-		if (this.initialized) {
+	function _init() {
+		if (initialized) {
 			return;
 		}
 
-		document.addEventListener('keydown', e => this.handle(e));
-		this.initialized = true;
+		document.addEventListener('keydown', _handle);
+		initialized = true;
 	}
+
+	return shallowReadonly({
+		stack,
+		register,
+		deregister,
+	});
 }
 
-export const EscapeStack = /** @__PURE__ */ new EscapeStackService();
+export function useEscapeStack({
+	onEscape,
+	enabled = true,
+}: {
+	onEscape: () => void;
+	enabled?: MaybeRefOrGetter<boolean>;
+}) {
+	const store = inject(EscapeStackStoreKey)!;
+	let isRegistered = false;
 
-export function useEscapeStack(cb: () => void) {
-	onMounted(() => {
-		EscapeStack.register(cb);
-	});
+	function _setEnabled(value: boolean) {
+		if (value && !isRegistered) {
+			store.register(onEscape);
+			isRegistered = true;
+		} else if (!value && isRegistered) {
+			store.deregister(onEscape);
+			isRegistered = false;
+		}
+	}
+
+	watch(() => toValue(enabled), _setEnabled, { immediate: true });
 
 	onUnmounted(() => {
-		EscapeStack.deregister(cb);
+		_setEnabled(false);
 	});
 }

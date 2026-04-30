@@ -2,7 +2,6 @@
 import { ref, useTemplateRef } from 'vue';
 
 import { GameFilteringContainer } from '~app/components/game/filtering/container';
-import { Analytics } from '~common/analytics/analytics.service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 
 type Props = {
@@ -21,19 +20,11 @@ function clear() {
 	query.value = '';
 	filtering.unsetFilter('query');
 	filtering.onChanged();
-
-	Analytics.trackEvent('game-filtering', 'query-clear');
 }
 
 function sendSearch() {
 	filtering.setFilter('query', query.value);
 	filtering.onChanged();
-
-	if (query.value) {
-		Analytics.trackEvent('game-filtering', 'query-change', query.value);
-	} else {
-		Analytics.trackEvent('game-filtering', 'query-change-empty');
-	}
 }
 
 function blur() {

@@ -10,7 +10,7 @@ import AppLinkHelp from '~common/link/AppLinkHelp.vue';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { Screen } from '~common/screen/screen-service';
 import AppScrollAffix from '~common/scroll/AppScrollAffix.vue';
-import { Scroll } from '~common/scroll/scroll.service';
+import { scrollTo } from '~common/scroll/scroll.service';
 import { $gettext } from '~common/translate/translate.service';
 
 export default {
@@ -31,7 +31,7 @@ function onSaved() {
 		$gettext(`Maturity Rating Saved`)
 	);
 
-	Scroll.to(0);
+	scrollTo(0);
 }
 
 createAppRoute({

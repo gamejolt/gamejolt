@@ -40,15 +40,6 @@ import { kGridGutterWidth, kGridGutterWidthXs } from '~styles/variables';
 import { numberSort } from '~utils/array';
 import { fuzzysearch } from '~utils/string';
 
-import { router } from '..';
-
-const RouteHomeActivity = defineAsyncComponent(() =>
-	asyncRouteLoader(router, import('~app/views/home/RouteHomeActivity.vue'))
-);
-const RouteHomeFyp = defineAsyncComponent(() =>
-	asyncRouteLoader(router, import('~app/views/home/RouteHomeFYP.vue'))
-);
-
 class DashGame {
 	constructor(
 		public id: number,
@@ -79,6 +70,13 @@ defineOptions({
 const { user } = useCommonStore();
 const questStore = useQuestStore();
 const route = useRoute();
+
+const RouteHomeActivity = defineAsyncComponent(() =>
+	asyncRouteLoader(import('~app/views/home/RouteHomeActivity.vue'))
+);
+const RouteHomeFyp = defineAsyncComponent(() =>
+	asyncRouteLoader(import('~app/views/home/RouteHomeFYP.vue'))
+);
 
 const { grid } = useGridStore();
 
@@ -173,7 +171,6 @@ function onPostAdded(post: FiresidePostModel) {
 			feed,
 			post,
 			appRoute,
-			router,
 			route,
 		});
 	}

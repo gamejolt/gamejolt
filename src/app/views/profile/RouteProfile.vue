@@ -24,7 +24,7 @@ import AppAdTakeoverBackground from '~common/ad/AppAdTakeoverBackground.vue';
 import { Api } from '~common/api/api.service';
 import { Environment } from '~common/environment/environment.service';
 import { LinkedAccountModel } from '~common/linked-account/linked-account.model';
-import { Registry } from '~common/registry/registry.service';
+import { findInRegistry } from '~common/registry/registry.service';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { Screen } from '~common/screen/screen-service';
 import { usePageScrollSubscription } from '~common/scroll/scroll.service';
@@ -194,7 +194,7 @@ function createProfileRouteStore({
 	function bootstrapUser(username: string) {
 		const prevId = user.value?.id;
 		const newUser =
-			Registry.find<UserModel>(
+			findInRegistry<UserModel>(
 				'User',
 				i => i.username.toLowerCase() === username.toLowerCase()
 			) ?? undefined;

@@ -1,5 +1,4 @@
 import { showClientAntiVirusModal } from '~app/components/client/anti-virus-modal/anti-virus-modal.service';
-import { Analytics } from '~common/analytics/analytics.service';
 import { getExecutable } from '~common/client/client-voodoo-imports';
 import { showErrorGrowl } from '~common/growls/growls.service';
 import { isErrnoException } from '~utils/utils.client';
@@ -18,13 +17,9 @@ export type ClientVoodooOperation =
 	| 'uninstall-begin'
 	| 'uninstall-end';
 
-export function trackClientVoodooOperation(operation: ClientVoodooOperation, success: boolean) {
-	Analytics.trackEvent('client-op', success ? 'success' : 'error', operation);
-}
-
 export function handleClientVoodooError(
 	err: unknown,
-	operation: ClientVoodooOperation,
+	_operation: ClientVoodooOperation,
 	message?: string,
 	title?: string
 ) {
@@ -34,10 +29,6 @@ export function handleClientVoodooError(
 		err.path &&
 		path.resolve(err.path) === path.resolve(getExecutable())
 	) {
-		if (operation) {
-			trackClientVoodooOperation(operation, false);
-		}
-
 		if (message) {
 			showClientAntiVirusModal(message, title);
 		}

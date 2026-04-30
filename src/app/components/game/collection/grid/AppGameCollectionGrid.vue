@@ -4,10 +4,9 @@ import AppGameCollectionGridItem from '~app/components/game/collection/grid/item
 
 type Props = {
 	collections: GameCollectionModel[];
-	eventLabel?: string;
 };
 
-const { collections, eventLabel } = defineProps<Props>();
+defineProps<Props>();
 </script>
 
 <template>
@@ -17,7 +16,7 @@ const { collections, eventLabel } = defineProps<Props>();
 			:key="collection._id"
 			class="col-xs-12 col-sm-6 col-lg-4 game-collection-grid-item"
 		>
-			<AppGameCollectionGridItem :collection="collection" :event-label="eventLabel" />
+			<AppGameCollectionGridItem :collection />
 		</div>
 	</div>
 </template>

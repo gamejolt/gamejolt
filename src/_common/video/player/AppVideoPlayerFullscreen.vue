@@ -1,10 +1,6 @@
 <script lang="ts" setup>
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
-import {
-	queueVideoFullscreenChange,
-	trackVideoPlayerEvent,
-	VideoPlayerController,
-} from '~common/video/player/controller';
+import { queueVideoFullscreenChange, VideoPlayerController } from '~common/video/player/controller';
 
 type Props = {
 	player: VideoPlayerController;
@@ -12,11 +8,6 @@ type Props = {
 const { player } = defineProps<Props>();
 
 function toggleFullscreen() {
-	trackVideoPlayerEvent(
-		player,
-		!player.isFullscreen ? 'fullscreen' : 'un-fullscreen',
-		'click-control'
-	);
 	queueVideoFullscreenChange(player, !player.isFullscreen);
 }
 </script>

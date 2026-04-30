@@ -16,7 +16,7 @@ import AppNavTabList from '~common/nav/tab-list/AppNavTabList.vue';
 import AppPagination from '~common/pagination/AppPagination.vue';
 import { vAppNoAutoscroll } from '~common/scroll/auto-scroll/no-autoscroll.directive';
 import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
-import { Scroll } from '~common/scroll/scroll.service';
+import { scrollTo } from '~common/scroll/scroll.service';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 
 const InviewConfig = new ScrollInviewConfig();
@@ -120,7 +120,7 @@ const { shouldShow: globalShouldShowAds } = useAdStore();
 										:items-per-page="listing.perPage"
 										:total-items="listing.gamesCount"
 										:current-page="listing.currentPage"
-										@pagechange="Scroll.to('games', { animate: false })"
+										@pagechange="scrollTo('games', { animate: false })"
 									/>
 								</template>
 								<template v-else-if="!listing.reachedEnd">

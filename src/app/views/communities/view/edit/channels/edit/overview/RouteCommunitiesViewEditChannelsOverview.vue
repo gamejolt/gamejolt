@@ -15,7 +15,7 @@ import {
 import { showErrorGrowl, showSuccessGrowl } from '~common/growls/growls.service';
 import { showModalConfirm } from '~common/modal/confirm/confirm-service';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
-import { Scroll } from '~common/scroll/scroll.service';
+import { scrollTo } from '~common/scroll/scroll.service';
 import { $gettext } from '~common/translate/translate.service';
 import { arrayRemove } from '~utils/array';
 
@@ -82,7 +82,7 @@ async function onClickArchive() {
 			community.value.has_archived_channels = true;
 
 			showSuccessGrowl($gettext(`Channel is now archived.`));
-			Scroll.to(0);
+			scrollTo(0);
 		}
 	}
 }
@@ -105,7 +105,7 @@ async function onClickUnarchive() {
 			}
 
 			showSuccessGrowl($gettext(`Channel was restored from the archive.`));
-			Scroll.to(0);
+			scrollTo(0);
 		} catch (payload: any) {
 			if (payload.errors) {
 				if (payload.errors['too_many_channels']) {

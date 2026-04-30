@@ -189,13 +189,8 @@ const slicedRealms = computed(() => {
 						v-if="Screen.isMobile"
 						:games="searchPayload.games"
 						force-scrollable
-						event-label="search-overview-games"
 					/>
-					<AppGameList
-						v-else
-						:games="searchPayload.games"
-						event-label="search-overview-games"
-					/>
+					<AppGameList v-else :games="searchPayload.games" />
 
 					<div class="hidden-xs hidden-sm">
 						<RouterLink

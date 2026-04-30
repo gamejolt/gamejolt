@@ -1,13 +1,20 @@
+import { AsyncLocalStorage } from 'node:async_hooks';
+
 import { renderToString } from 'vue/server-renderer';
 
 import { createApp } from '~app/bootstrap';
 import { setDeviceUserAgent } from '~common/device/device.service';
-import { Environment } from '~common/environment/environment.service';
+import { getSsrContext } from '~common/environment/environment.service';
 import { ssrRenderMeta } from '~common/meta/meta-service';
+import { initIsolatedScope, runInIsolatedScope } from '~common/ssr/isolated-state';
 import { translationsReady } from '~common/translate/translate.service';
 
-export default async (context: any) => {
-	Environment.ssrContext = context;
+initIsolatedScope(new AsyncLocalStorage());
+
+export default async (context: any) => runInIsolatedScope(() => renderRequest(context));
+
+async function renderRequest(context: any) {
+	Object.assign(getSsrContext(), context);
 	setDeviceUserAgent(context.ua);
 
 	const { app, router } = await createApp();
@@ -37,16 +44,18 @@ export default async (context: any) => {
 
 		context.meta = {
 			title: 'Game Jolt - Share your creations',
-			renderTags() {
-				return ssrRenderMeta();
-			},
 		};
 
 		const renderContext = {};
 		const appHtml = await renderToString(app, renderContext);
 
+		// Snapshot the meta tags into a string while we're still inside the
+		// ALS scope — `ssr/server.js` interpolates them after the scope ends.
+		const metaTagsHtml = ssrRenderMeta();
+		context.meta.renderTags = () => metaTagsHtml;
+
 		return [appHtml, renderContext];
 	} catch (e) {
 		throw { code: 500 };
 	}
-};
+}

@@ -1,5 +1,3 @@
-import { reactive } from 'vue';
-
 import type { LocalDbGame } from '~app/components/client/local-db/game/game.model';
 import type { ClientLibraryStore } from '~app/store/client-library';
 import { Api } from '~common/api/api.service';
@@ -13,12 +11,6 @@ export interface SearchOptions {
 	type: 'all' | 'user' | 'game' | 'community' | 'realms' | 'typeahead';
 	page?: number;
 }
-
-class SearchService {
-	query = '';
-}
-
-export const Search = reactive(new SearchService()) as SearchService;
 
 let clientLibraryStore: ClientLibraryStore | undefined;
 

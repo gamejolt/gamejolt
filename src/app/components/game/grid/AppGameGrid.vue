@@ -32,7 +32,6 @@ type Props = {
 	forceScrollable?: boolean;
 	showAds?: boolean;
 	canReorder?: boolean;
-	eventLabel?: string;
 };
 const {
 	games = [],

@@ -4,7 +4,7 @@
  * for [AppGameThumbnail]
  */
 
-import AppGamePlaylistAddToWidget from '~app/components/game-playlist/add-to-widget/add-to-widget.vue';
+import AppGamePlaylistAddToWidget from '~app/components/game-playlist/add-to-widget/AppGamePlaylistAddToWidget.vue';
 import AppButton from '~common/button/AppButton.vue';
 import AppGameFollowWidget from '~common/game/follow-widget/AppGameFollowWidget.vue';
 import { GameModel } from '~common/game/game.model';
@@ -24,7 +24,7 @@ const { user } = useCommonStore();
 	<template v-if="user">
 		<AppGameFollowWidget :game="game" overlay circle location="thumbnail" />
 		{{ ' ' }}
-		<AppGamePlaylistAddToWidget :game="game" overlay circle event-label="game-thumb" />
+		<AppGamePlaylistAddToWidget :game="game" overlay circle />
 		{{ ' ' }}
 		<template v-if="user.isMod">
 			<AppPopper popover-class="fill-darkest">

@@ -9,7 +9,6 @@ import AppUserCardHover from '~common/user/card/AppUserCardHover.vue';
 
 type Props = {
 	game: GameModel;
-	eventLabel?: string;
 };
 const { game } = defineProps<Props>();
 

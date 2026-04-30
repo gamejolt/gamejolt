@@ -9,12 +9,12 @@ import { Api } from '~common/api/api.service';
 import { GameScoreTableModel } from '~common/game/score-table/score-table.model';
 import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
 import AppNavTabList from '~common/nav/tab-list/AppNavTabList.vue';
-import { Popper } from '~common/popper/popper.service';
+import { hideAllPoppers } from '~common/popper/popper.service';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { Screen } from '~common/screen/screen-service';
 import AppScrollAffix from '~common/scroll/AppScrollAffix.vue';
 import { vAppNoAutoscroll } from '~common/scroll/auto-scroll/no-autoscroll.directive';
-import { Scroll } from '~common/scroll/scroll.service';
+import { setShouldAutoScroll } from '~common/scroll/scroll.service';
 import { useCommonStore } from '~common/store/common-store';
 import { $gettext } from '~common/translate/translate.service';
 import { UserGameScoreModel } from '~common/user/game-score/game-score.model';
@@ -60,14 +60,14 @@ const scoresLeft = computed(() => scores.value.filter((_score, i) => i % 2 === 0
 const scoresRight = computed(() => scores.value.filter((_score, i) => i % 2 === 1));
 
 function changeTable(table: GameScoreTableModel) {
-	Scroll.shouldAutoScroll = false;
+	setShouldAutoScroll(false);
 
 	router.push({
 		name: 'discover.games.view.scores.list',
 		params: { tableId: table.id + '' },
 	});
 
-	Popper.hideAll();
+	hideAllPoppers();
 }
 
 const { isLoading } = createAppRoute({

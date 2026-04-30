@@ -6,7 +6,7 @@ import FormOnboardingProfile from '~app/components/forms/onboarding/FormOnboardi
 import FormOnboardingRealms from '~app/components/forms/onboarding/FormOnboardingRealms.vue';
 import { Api } from '~common/api/api.service';
 import AppFormButton from '~common/form-vue/AppFormButton.vue';
-import Onboarding from '~common/onboarding/onboarding.service';
+import { endOnboarding, startOnboarding } from '~common/onboarding/onboarding.service';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import AppScrollAffix from '~common/scroll/AppScrollAffix.vue';
 import { useCommonStore } from '~common/store/common-store';
@@ -40,7 +40,9 @@ const stepComponent = computed(() => {
 createAppRoute({
 	routeTitle: computed(() => $gettext(`Welcome to Game Jolt!`)),
 	onInit() {
-		Onboarding.start();
+		if (!import.meta.env.SSR) {
+			startOnboarding();
+		}
 	},
 	onResolved({ payload }) {
 		if (!user.value) {
@@ -56,7 +58,7 @@ createAppRoute({
 
 function onNextStep() {
 	if (currentStep.value === steps.length - 1) {
-		Onboarding.end();
+		endOnboarding();
 
 		if (inviteUser.value) {
 			showUserInviteFollowGrowl(inviteUser.value);

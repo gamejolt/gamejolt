@@ -1,17 +1,30 @@
 import { Environment } from '~common/environment/environment.service';
+import { defineIsolatedState } from '~common/ssr/isolated-state';
 import { createLogger } from '~utils/logging';
 
 export type DestructorFunc = (href?: string) => void;
 
 export const logger = createLogger('Navigate');
 
-class NavigateService {
-	private redirecting = false;
-	private destructors: DestructorFunc[] = [];
+const _state = defineIsolatedState(() => ({
+	redirecting: false,
+	destructors: [] as DestructorFunc[],
+}));
 
-	get isRedirecting() {
-		return this.redirecting;
+function _callDestructors(href?: string) {
+	const state = _state();
+	while (state.destructors.length > 0) {
+		const destructor = state.destructors.shift();
+		if (destructor) {
+			destructor(href);
+		}
 	}
+}
+
+export const Navigate = {
+	get isRedirecting() {
+		return _state().redirecting;
+	},
 
 	/**
 	 * Only usable in client.
@@ -40,42 +53,44 @@ class NavigateService {
 		}
 
 		return null;
-	}
-
-	private callDestructors(href?: string) {
-		while (this.destructors.length > 0) {
-			const destructor = this.destructors.shift();
-			if (destructor) {
-				destructor(href);
-			}
-		}
-	}
+	},
 
 	registerDestructor(destructor: DestructorFunc) {
-		this.destructors.push(destructor);
-	}
+		if (import.meta.env.SSR) {
+			return;
+		}
+		_state().destructors.push(destructor);
+	},
 
 	reload() {
-		logger.info('Reloading');
-		this.redirecting = true;
+		if (import.meta.env.SSR) {
+			return;
+		}
 
-		this.callDestructors();
+		logger.info('Reloading');
+		_state().redirecting = true;
+
+		_callDestructors();
 
 		if (GJ_IS_DESKTOP_APP) {
 			nw.Window.get().reload();
 		} else {
 			window.location.reload();
 		}
-	}
+	},
 
-	public goto(href: string) {
+	goto(href: string) {
+		if (import.meta.env.SSR) {
+			return;
+		}
+
 		logger.info('Going to ' + href);
 
-		this.redirecting = true;
+		_state().redirecting = true;
 
-		this.callDestructors(href);
+		_callDestructors(href);
 		window.location.href = href;
-	}
+	},
 
 	gotoExternal(href: string) {
 		logger.info('Going to in a new tab ' + href);
@@ -83,9 +98,9 @@ class NavigateService {
 		if (GJ_IS_DESKTOP_APP) {
 			nw.Shell.openExternal(href);
 		} else {
-			this.goto(href);
+			Navigate.goto(href);
 		}
-	}
+	},
 
 	newWindow(
 		url: string,
@@ -138,7 +153,5 @@ class NavigateService {
 
 			window.open(url, '_blank', options.join(','));
 		}
-	}
-}
-
-export const Navigate = /** @__PURE__ */ new NavigateService();
+	},
+};

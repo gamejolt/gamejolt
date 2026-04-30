@@ -9,38 +9,40 @@ import { AppStoreKey, createAppStore } from '~app/store/index';
 import { createJoltydexStore, JoltydexStoreKey } from '~app/store/joltydex';
 import { createLibraryStore, LibraryStoreKey } from '~app/store/library';
 import { createQuestStore, QuestStoreKey } from '~app/store/quest';
-import { router } from '~app/views/index';
+import { createAppRouter } from '~app/views/index';
 import { bootstrapCommon } from '~common/bootstrap';
 import { setContentEmojiWrapper } from '~common/content/components/AppContentEmoji.vue';
 import { setChatInviteComponent } from '~common/content/content-viewer/components/AppContentViewerChatInvite.vue';
-import { initGamePlayModal } from '~common/game/play-modal/play-modal.service';
+import { createGamePlayStore, GamePlayStoreKey } from '~common/game/play-modal/play-modal.service';
+import { createMinbarStore, MinbarStoreKey } from '~common/minbar/minbar.service';
 import { addModalBackdropCheck } from '~common/modal/AppModal.vue';
-import handlePayloadActions from '~common/payload/payload-actions.service';
-import { Payload } from '~common/payload/payload-service';
-import { Registry } from '~common/registry/registry.service';
-import { Scroll } from '~common/scroll/scroll.service';
+import { setRegistryConfig } from '~common/registry/registry.service';
+import { setScrollOffsetTop } from '~common/scroll/scroll.service';
 import { createSidebarStore, SidebarStoreKey } from '~common/sidebar/sidebar.store';
 import { createStickerStore, StickerStoreKey } from '~common/sticker/sticker-store';
 
 export async function createApp() {
-	const { app, commonStore } = await bootstrapCommon({
+	const router = createAppRouter();
+
+	const { app, commonStore, backdropStore } = await bootstrapCommon({
 		appComponentLoader: async () => (await import('~app/AppMain.vue')).default,
 		initSectionSafeExportsForClient: initSafeExportsForClient,
 		router,
 	});
 
 	const sidebarStore = createSidebarStore();
-	const libraryStore = createLibraryStore({ router });
-	const bannerStore = createBannerStore({ commonStore, router });
+	const libraryStore = createLibraryStore();
+	const bannerStore = createBannerStore({ commonStore });
 	const stickerStore = createStickerStore({
 		user: commonStore.user,
 	});
 
 	const appStore = createAppStore({
-		router,
 		commonStore,
+		backdropStore,
 		sidebarStore,
 		libraryStore,
+		// Because of circular dependencies.
 		getQuestStore() {
 			return questStore;
 		},
@@ -52,6 +54,8 @@ export async function createApp() {
 	const joltydexStore = createJoltydexStore();
 
 	// Section stores.
+	app.provide(GamePlayStoreKey, createGamePlayStore({ canMinimize: true }));
+	app.provide(MinbarStoreKey, createMinbarStore());
 	app.provide(SidebarStoreKey, sidebarStore);
 	app.provide(LibraryStoreKey, libraryStore);
 	app.provide(BannerStoreKey, bannerStore);
@@ -63,7 +67,7 @@ export async function createApp() {
 
 	if (GJ_IS_DESKTOP_APP) {
 		const { bootstrapClient } = await import('~app/bootstrap-client');
-		await bootstrapClient(app, appStore, commonStore);
+		await bootstrapClient({ app, appStore, commonStore });
 	}
 
 	// The content viewer component that renders this lives in _common, but it
@@ -81,17 +85,12 @@ export async function createApp() {
 	);
 	setContentEmojiWrapper(AppStickerCollectibleWrapper);
 
-	// App-specific payload handling.
-	Payload.addPayloadHandler(handlePayloadActions);
-
-	initGamePlayModal({ canMinimize: true });
-
-	Registry.setConfig('Game', { maxItems: 100 });
-	Registry.setConfig('User', { maxItems: 150 });
-	Registry.setConfig('FiresidePost', { maxItems: 50 });
+	setRegistryConfig('Game', { maxItems: 100 });
+	setRegistryConfig('User', { maxItems: 150 });
+	setRegistryConfig('FiresidePost', { maxItems: 50 });
 
 	// The height of the top nav bar.
-	Scroll.setOffsetTop(56);
+	setScrollOffsetTop(56);
 
 	// Set up the modals to not dismiss when sticker drawer is active.
 	addModalBackdropCheck(() => !stickerStore.isDrawerOpen.value);

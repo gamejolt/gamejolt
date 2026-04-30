@@ -1,15 +1,13 @@
 <script lang="ts">
 import { computed } from 'vue';
-import { useRouter } from 'vue-router';
 
-import { Analytics } from '~common/analytics/analytics.service';
 import AppButton from '~common/button/AppButton.vue';
 import { GameBuildModel, GameBuildType } from '~common/game/build/build.model';
 import { GameDownloader } from '~common/game/downloader/downloader.service';
 import type { GameModel } from '~common/game/game.model';
 import type { GamePackageModel } from '~common/game/package/package.model';
 import FormGamePackagePayment from '~common/game/package/payment-form/FormGamePackagePayment.vue';
-import { showGamePlayModal } from '~common/game/play-modal/play-modal.service';
+import { useShowGamePlayModal } from '~common/game/play-modal/play-modal.service';
 import { showSuccessGrowl } from '~common/growls/growls.service';
 import AppModal from '~common/modal/AppModal.vue';
 import { useModal } from '~common/modal/modal.service';
@@ -36,7 +34,7 @@ const { game, package: gamePackage, build, fromExtraSection } = defineProps<Prop
 const sellable = gamePackage._sellable!;
 
 const modal = useModal()!;
-const router = useRouter();
+const showGamePlayModal = useShowGamePlayModal();
 
 const packageOperation = computed(() => {
 	if (!build) {
@@ -90,12 +88,10 @@ function skipPayment() {
 }
 
 function _download(gameBuild: GameBuildModel) {
-	Analytics.trackEvent('game-purchase-modal', 'download', 'download');
-	GameDownloader.download(router, game, gameBuild);
+	GameDownloader.download(game, gameBuild);
 }
 
 function _showBrowserModal(gameBuild: GameBuildModel) {
-	Analytics.trackEvent('game-purchase-modal', 'download', 'play');
 	showGamePlayModal(game, gameBuild);
 }
 </script>

@@ -3,7 +3,7 @@ import { Player as ShakaPlayer, polyfill } from 'shaka-player';
 import { markRaw, onBeforeUnmount } from 'vue';
 
 import AppVideo from '~common/video/AppVideo.vue';
-import { trackVideoPlayerEvent, VideoPlayerController } from '~common/video/player/controller';
+import { VideoPlayerController } from '~common/video/player/controller';
 
 type Props = {
 	player: VideoPlayerController;
@@ -14,8 +14,6 @@ const { player, autoplay = false, allowDegradedAutoplay = false } = defineProps<
 
 let video: HTMLVideoElement | undefined;
 let shakaPlayer: ShakaPlayer | undefined;
-let previousState: shaka.extern.Track | null = null;
-let currentState: shaka.extern.Track | null = null;
 let isDestroyed = false;
 
 onBeforeUnmount(() => {
@@ -31,7 +29,6 @@ async function initShakaWithVideo(newVideo: HTMLVideoElement) {
 	video = markRaw(newVideo);
 	polyfill.installAll();
 	if (!ShakaPlayer.isBrowserSupported()) {
-		trackVideoPlayerEvent(player, 'browser-unsupported');
 		console.error('Browser not supported for video streaming.');
 		return false;
 	}
@@ -59,18 +56,18 @@ async function initShakaWithVideo(newVideo: HTMLVideoElement) {
 		throw new Error(`No manifests to load.`);
 	}
 
-	let chosenManifestType: string | undefined;
+	let loadedManifest = false;
 
 	// We go with the first one that loads in properly. This way if DASH is
 	// unsupported in the browser, we fallback to HLS.
-	for (const { src: manifestUrl, type: manifestType } of player.sources) {
+	for (const { src: manifestUrl } of player.sources) {
 		if (isDestroyed) {
 			return false;
 		}
 
 		try {
 			await shakaPlayer.load(manifestUrl);
-			chosenManifestType = manifestType.split('/').pop();
+			loadedManifest = true;
 			// Don't attempt to load next manifest, this one worked.
 			break;
 		} catch (e) {
@@ -78,11 +75,9 @@ async function initShakaWithVideo(newVideo: HTMLVideoElement) {
 		}
 	}
 
-	if (!chosenManifestType) {
-		trackVideoPlayerEvent(player, 'load-manifest-failed');
+	if (!loadedManifest) {
 		return false;
 	}
-	trackVideoPlayerEvent(player, 'load-manifest', chosenManifestType);
 
 	return setupShakaEvents();
 }
@@ -93,33 +88,6 @@ function setupShakaEvents() {
 		return false;
 	}
 
-	shakaPlayer.addEventListener('adaptation', () => {
-		const tracks: shaka.extern.TrackList = shakaPlayer!.getVariantTracks();
-
-		if (currentState) {
-			previousState = currentState;
-		}
-
-		currentState = tracks.find(i => i.active) || null;
-
-		if (previousState && currentState) {
-			const prev = previousState;
-			const next = currentState;
-
-			if (prev === next || !prev.videoBandwidth || !next.videoBandwidth) {
-				return;
-			}
-
-			let eventAction = prev.videoBandwidth < next.videoBandwidth ? 'increase-' : 'decrease-';
-			eventAction += Math.abs(prev.id - next.id);
-
-			if (!eventAction) {
-				return;
-			}
-
-			trackVideoPlayerEvent(player, 'bitrate-change', eventAction, `${next.videoBandwidth}`);
-		}
-	});
 	return true;
 }
 </script>

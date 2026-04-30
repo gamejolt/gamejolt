@@ -1,4 +1,4 @@
-import { type Component, computed, inject, InjectionKey, markRaw, ref } from 'vue';
+import { type Component, computed, inject, InjectionKey, markRaw, ref, shallowReadonly } from 'vue';
 
 import { arrayRemove } from '~utils/array';
 
@@ -64,12 +64,12 @@ export function createSidebarStore() {
 		showOnRouteChange.value = shouldShow;
 	}
 
-	return {
+	return shallowReadonly({
 		hideOnRouteChange,
 		showOnRouteChange,
 		activeContextPane,
 		addContextPane,
 		removeContextPane,
 		showContextOnRouteChange,
-	};
+	});
 }

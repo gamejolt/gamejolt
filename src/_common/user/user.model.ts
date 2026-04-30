@@ -11,7 +11,7 @@ import { MediaItemModel } from '~common/media-item/media-item-model';
 import { showModalConfirm } from '~common/modal/confirm/confirm-service';
 import { Model } from '~common/model/model.service';
 import { storeModel } from '~common/model/model-store.service';
-import { Registry } from '~common/registry/registry.service';
+import { storeInRegistry } from '~common/registry/registry.service';
 import { ThemeModel } from '~common/theme/theme.model';
 import { $gettext } from '~common/translate/translate.service';
 import type { RouteLocationDefinition } from '~utils/router';
@@ -212,7 +212,7 @@ export class UserModel
 			this.avatar_frame = storeModel(AvatarFrameModel, data.avatar_frame);
 		}
 
-		Registry.store('User', this);
+		storeInRegistry('User', this);
 	}
 }
 

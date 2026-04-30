@@ -14,7 +14,7 @@ import AppButton from '~common/button/AppButton.vue';
 import { ContextCapabilities } from '~common/content/content-context';
 import { ContentDocument } from '~common/content/content-document';
 import { ContentRules } from '~common/content/content-rules';
-import { EscapeStack, EscapeStackCallback } from '~common/escape-stack/escape-stack.service';
+import { useEscapeStack } from '~common/escape-stack/escape-stack.service';
 import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
 import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
@@ -22,7 +22,6 @@ import AppFormControlContent from '~common/form-vue/controls/AppFormControlConte
 import { validateContentMaxLength } from '~common/form-vue/validators';
 import { FormValidatorContentNoMediaUpload } from '~common/form-vue/validators/content_no_media_upload';
 import { Screen } from '~common/screen/screen-service';
-import AppShortkey from '~common/shortkey/AppShortkey.vue';
 import { useThemeStore } from '~common/theme/theme.store';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import { $gettext } from '~common/translate/translate.service';
@@ -49,6 +48,11 @@ const emit = defineEmits<{
 
 const { isDark } = useThemeStore();
 const { chatUnsafe: chat } = useGridStore();
+
+useEscapeStack({
+	onEscape: () => cancelEditing(),
+	enabled: () => !!room.messageEditing,
+});
 
 const focusToken = createFocusToken();
 
@@ -166,25 +170,6 @@ onUnmounted(() => {
 	}
 });
 
-// Edit handling.
-let escapeCallback: EscapeStackCallback | null = null;
-
-function registerEditEscape() {
-	escapeCallback = () => cancelEditing();
-	EscapeStack.register(escapeCallback);
-}
-
-function deregisterEditEscape() {
-	if (escapeCallback) {
-		EscapeStack.deregister(escapeCallback);
-		escapeCallback = null;
-	}
-}
-
-onUnmounted(() => {
-	deregisterEditEscape();
-});
-
 watch(
 	() => room.messageEditing,
 	async (message: ChatMessageModel | null) => {
@@ -196,10 +181,7 @@ watch(
 			await nextTick();
 			// Regain focus on the editor
 			focusToken.focus();
-
-			registerEditEscape();
 		} else {
-			deregisterEditEscape();
 			cancelEditing();
 		}
 	}
@@ -348,12 +330,6 @@ function onBlurEditor() {
 	emit('focus-change', false);
 }
 
-function onTabKeyPressed() {
-	if (!isEditorFocused.value) {
-		focusToken.focus();
-	}
-}
-
 function onUpKeyPressed(event: KeyboardEvent) {
 	if (isEditing.value || hasContent.value) {
 		return;
@@ -404,8 +380,6 @@ function disableTypingTimeout() {
 	<div class="chat-window-send">
 		<div class="-container">
 			<AppForm :controller="form">
-				<AppShortkey shortkey="tab" @press="onTabKeyPressed" />
-
 				<transition name="fade">
 					<div
 						v-if="isDisconnected || typingText || isEditing"

@@ -1,6 +1,6 @@
 <script lang="ts">
 import { computed, Ref, ref } from 'vue';
-import { RouteLocationNormalized, RouterLink, useRoute, useRouter } from 'vue-router';
+import { RouteLocationNormalized, RouterLink, useRoute } from 'vue-router';
 
 import AppActivityFeedPlaceholder from '~app/components/activity/feed/AppActivityFeedPlaceholder.vue';
 import { ActivityFeedService } from '~app/components/activity/feed/feed-service';
@@ -51,7 +51,6 @@ export default {
 const { user } = useProfileRouteStore()!;
 const { user: sessionUser } = useCommonStore();
 const route = useRoute();
-const router = useRouter();
 
 const feed = ref(null) as Ref<ActivityFeedView | null>;
 const isBootstrapped = ref(false);
@@ -111,7 +110,6 @@ function onPostAdded(post: FiresidePostModel) {
 		post,
 		appRoute,
 		route,
-		router,
 	});
 }
 
@@ -120,7 +118,6 @@ function onPostEdited(eventItem: EventItemModel) {
 		eventItem,
 		appRoute,
 		route,
-		router,
 	});
 }
 
@@ -129,7 +126,6 @@ function onPostPublished(eventItem: EventItemModel) {
 		eventItem,
 		appRoute,
 		route,
-		router,
 	});
 }
 </script>

@@ -13,7 +13,9 @@ import { styleChangeBg } from '~styles/mixins';
 const { closeChatPane } = useAppStore();
 const { chat } = useGridStore();
 
-useEscapeStack(() => closeChatPane());
+useEscapeStack({
+	onEscape: () => closeChatPane(),
+});
 </script>
 
 <template>

@@ -6,7 +6,6 @@ import { useAppStore } from '~app/store';
 import { CommunityModel } from '~common/community/community.model';
 import AppCommunityThumbnailImg from '~common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
-import Onboarding from '~common/onboarding/onboarding.service';
 
 type Props = {
 	community: CommunityModel;
@@ -33,11 +32,6 @@ const highlightFg = computed(() => {
 });
 
 async function toggleJoin() {
-	Onboarding.trackEvent(
-		community.is_member ? 'community-leave' : 'community-join',
-		`${community.id}-${community.path}`
-	);
-
 	if (!community.is_member) {
 		joinCommunity(community, { grid: grid.value, location: 'onboarding' });
 	} else {

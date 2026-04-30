@@ -1,6 +1,6 @@
 <script lang="ts">
 import { computed, Ref, ref } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 
 import { ActivityFeedService } from '~app/components/activity/feed/feed-service';
 import { ActivityFeedView } from '~app/components/activity/feed/view';
@@ -31,7 +31,6 @@ export default {
 
 <script lang="ts" setup>
 const { realm, processPayload } = useRealmRouteStore();
-const router = useRouter();
 const route = useRoute();
 
 const feed = ref(null) as Ref<ActivityFeedView | null>;
@@ -75,7 +74,6 @@ function onPostAdded(post: FiresidePostModel) {
 		post,
 		appRoute,
 		route,
-		router,
 	});
 }
 </script>

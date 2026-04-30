@@ -3,7 +3,7 @@ import { CSSProperties, ref, toRef, useTemplateRef } from 'vue';
 
 import { Ruler } from '~common/ruler/ruler-service';
 import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
-import { Scroll } from '~common/scroll/scroll.service';
+import { getScrollOffsetTop } from '~common/scroll/scroll.service';
 import { styleWhen } from '~styles/mixins';
 import { useResizeObserver } from '~utils/resize-observer';
 
@@ -60,7 +60,7 @@ function inview() {
 }
 
 function getOffsetTop() {
-	return offsetTop ?? Scroll.offsetTop;
+	return offsetTop ?? getScrollOffsetTop();
 }
 
 function _createInviewConfig() {

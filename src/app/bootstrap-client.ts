@@ -7,7 +7,6 @@ import { createClientTrayMenuBuilder } from '~app/components/client/hooks/tray/t
 import { setClientLibraryStore } from '~app/components/search/search-service';
 import { AppStore } from '~app/store';
 import { ClientLibraryStoreKey, createClientLibraryStore } from '~app/store/client-library';
-import { router } from '~app/views/index';
 import { ClientAutoStart } from '~common/client/autostart/autostart.service';
 import { bootstrapCommonClient } from '~common/client/bootstrap';
 import { ClientShortcut } from '~common/client/shortcut/shortcut.service';
@@ -19,7 +18,15 @@ import {
 import { setDownloadPackageHook } from '~common/game/package/purchase-modal/AppGamePackagePurchaseModal.vue';
 import type { CommonStore } from '~common/store/common-store';
 
-export async function bootstrapClient(app: App, appStore: AppStore, commonStore: CommonStore) {
+export async function bootstrapClient({
+	app,
+	appStore,
+	commonStore,
+}: {
+	app: App;
+	appStore: AppStore;
+	commonStore: CommonStore;
+}) {
 	bootstrapCommonClient({ commonStore });
 
 	const clientLibraryStore = createClientLibraryStore();
@@ -31,6 +38,6 @@ export async function bootstrapClient(app: App, appStore: AppStore, commonStore:
 	setPackageCardButtonsComponent(AppClientPackageCardButtons);
 	setMetaComponent(AppClientPackageCardMeta);
 	setDownloadPackageHook(makeDownloadPackageHook(clientLibraryStore));
-	setMenuBuilderHook(createClientTrayMenuBuilder(router, appStore));
+	setMenuBuilderHook(createClientTrayMenuBuilder(appStore));
 	setClientLibraryStore(clientLibraryStore);
 }

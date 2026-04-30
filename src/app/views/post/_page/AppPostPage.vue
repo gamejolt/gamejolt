@@ -22,7 +22,7 @@ import { showInfoGrowl, showSuccessGrowl } from '~common/growls/growls.service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppResponsiveDimensions from '~common/responsive-dimensions/AppResponsiveDimensions.vue';
 import { Screen } from '~common/screen/screen-service';
-import { Scroll } from '~common/scroll/scroll.service';
+import { scrollTo } from '~common/scroll/scroll.service';
 import AppShareCard from '~common/share/card/AppShareCard.vue';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 import AppStickerControlsOverlay from '~common/sticker/AppStickerControlsOverlay.vue';
@@ -105,7 +105,7 @@ function onPostPublished() {
 
 function scrollToStickers() {
 	if (stickerScroll.value) {
-		Scroll.to(stickerScroll.value, { preventDirections: ['down'] });
+		scrollTo(stickerScroll.value, { preventDirections: ['down'] });
 	}
 }
 
@@ -283,7 +283,6 @@ function onVideoPlay() {
 						:post="post"
 						should-show-follow
 						location="postPage"
-						event-label="page"
 						@post-remove="onPostRemoved"
 						@post-publish="onPostPublished"
 						@sticker="scrollToStickers()"

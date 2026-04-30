@@ -76,8 +76,6 @@ const filters = computed(() => {
 });
 
 function removeFilterOption(filter: string, option: any) {
-	// Analytics.trackEvent('game-filtering', 'remove', filter + '-' + option);
-
 	filtering.unsetFilter(filter, option);
 	filtering.onChanged();
 }

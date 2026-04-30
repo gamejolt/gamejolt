@@ -33,6 +33,8 @@ export interface NodeViewRenderData {
 	targetElement: HTMLElement;
 }
 
+// Note, it's fine that we have this module global even for SSR since it's
+// literally just incrementing. We'll never overflow.
 let idIncrementer = 0;
 
 export abstract class BaseNodeView implements NodeView {

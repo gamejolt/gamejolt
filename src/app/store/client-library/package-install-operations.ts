@@ -10,10 +10,7 @@ import {
 	LocalDbPackageRemoveState,
 } from '~app/components/client/local-db/package/package.model';
 import type { ClientVoodooOperation } from '~app/store/client-library/client-voodoo';
-import {
-	handleClientVoodooError,
-	trackClientVoodooOperation,
-} from '~app/store/client-library/client-voodoo';
+import { handleClientVoodooError } from '~app/store/client-library/client-voodoo';
 import type ClientLibraryGameDataMutations from '~app/store/client-library/game-data-mutations';
 import type ClientLibraryPackageDataMutations from '~app/store/client-library/package-data-mutations';
 import { Api } from '~common/api/api.service';
@@ -29,7 +26,7 @@ import type { GameModel } from '~common/game/game.model';
 import type { GamePackageModel } from '~common/game/package/package.model';
 import type { GameReleaseModel } from '~common/game/release/release.model';
 import { showSuccessGrowl } from '~common/growls/growls.service';
-import { HistoryTick } from '~common/history-tick/history-tick-service';
+import { sendHistoryTick } from '~common/history-tick/history-tick-service';
 import { SettingGameInstallDir } from '~common/settings/settings.service';
 import { $gettext } from '~common/translate/translate.service';
 
@@ -55,11 +52,11 @@ export default class ClientLibraryPackageInstallOperations {
 		launchOptions: GameBuildLaunchOptionModel[]
 	) {
 		// TODO: Are these needed?
-		HistoryTick.sendBeacon('game-build', build.id, {
+		sendHistoryTick('game-build', build.id, {
 			sourceResource: 'Game',
 			sourceResourceId: game.id,
 		});
-		HistoryTick.sendBeacon('game-build-install', build.id, {
+		sendHistoryTick('game-build-install', build.id, {
 			sourceResource: 'Game',
 			sourceResourceId: game.id,
 		});
@@ -296,10 +293,6 @@ export default class ClientLibraryPackageInstallOperations {
 			);
 
 			patchBegun = true;
-			trackClientVoodooOperation(
-				operation === 'install' ? 'install-begin' : 'update-begin',
-				true
-			);
 
 			const canceled = await new Promise<boolean>((resolve, reject) => {
 				this.currentlyPatching.value[localPackage.id] = patchInstance;
@@ -458,12 +451,6 @@ export default class ClientLibraryPackageInstallOperations {
 
 			delete this.currentlyPatching.value[localPackage.id];
 
-			// Even if our patch operation has been canceled - as far as the installation flow is concerned it was a success.
-			trackClientVoodooOperation(
-				operation === 'install' ? 'install-end' : 'update-end',
-				true
-			);
-
 			if (!canceled) {
 				if (localPackage.install_state) {
 					await this.pkgDataOps.clearPackageOperations(localPackage);
@@ -486,11 +473,6 @@ export default class ClientLibraryPackageInstallOperations {
 				// If we were cancelling the first installation - we have to treat the package as uninstalled.
 				// By this point we can assume joltron has removed it from disk.
 				if (operation === 'install') {
-					// Since the actual aborting is done by joltron for first installations we don't
-					// really have a hook to use for sending the patch-abort-begin/end analytics. This is a best effort.
-					trackClientVoodooOperation('patch-abort-begin', true);
-					trackClientVoodooOperation('patch-abort-end', true);
-
 					console.log(
 						'installerInstall: This is a first installation. Marking as uninstalled from db with packageUninstall(true)'
 					);
@@ -594,7 +576,6 @@ export default class ClientLibraryPackageInstallOperations {
 		try {
 			const uninstallInstance = markRaw(await Uninstaller.uninstall(localPackage as any));
 			uninstallBegun = true;
-			trackClientVoodooOperation('uninstall-begin', true);
 
 			await new Promise<void>((resolve, reject) => {
 				uninstallInstance
@@ -602,8 +583,6 @@ export default class ClientLibraryPackageInstallOperations {
 					.on('uninstallFailed', reject)
 					.on('fatal', reject);
 			});
-
-			trackClientVoodooOperation('uninstall-end', true);
 		} catch (err) {
 			console.error(err);
 
@@ -725,7 +704,6 @@ export default class ClientLibraryPackageInstallOperations {
 		try {
 			const rollbackInstance = markRaw(await Rollbacker.rollback(localPackage as any));
 			abortBegun = true;
-			trackClientVoodooOperation('patch-abort-begin', true);
 
 			await new Promise<void>((resolve, reject) => {
 				rollbackInstance
@@ -741,7 +719,6 @@ export default class ClientLibraryPackageInstallOperations {
 			});
 
 			await this.pkgDataOps.clearPackageOperations(localPackage);
-			trackClientVoodooOperation('patch-abort-end', true);
 		} catch (err) {
 			const title = $gettext('Update Failed');
 			const message = $gettext(

@@ -1,5 +1,5 @@
 <script lang="ts">
-import { RouterLink, useRoute, useRouter } from 'vue-router';
+import { RouterLink, useRoute } from 'vue-router';
 
 import AppGamePerms from '~app/components/game/perms/AppGamePerms.vue';
 import { IntentService } from '~app/components/intent/intent.service';
@@ -40,7 +40,7 @@ export default {
 </script>
 
 <script lang="ts" setup>
-const { game, isWizard, populate } = createGameDashRouteController({ router: useRouter() });
+const { game, isWizard, populate } = createGameDashRouteController();
 const { setPageTheme, clearPageTheme } = useThemeStore();
 const { user } = useCommonStore();
 const route = useRoute();

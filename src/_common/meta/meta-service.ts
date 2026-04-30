@@ -1,12 +1,13 @@
 import { reactive } from 'vue';
 import { Router } from 'vue-router';
 
-import { Environment } from '~common/environment/environment.service';
+import { getSsrContext } from '~common/environment/environment.service';
 import { FbMetaContainer } from '~common/meta/fb-meta-container';
 import { MetaContainer, ssrRenderMetaContainer } from '~common/meta/meta-container';
 import { MicrodataContainer, ssrRenderMicrodata } from '~common/meta/microdata-container';
 import { SeoMetaContainer, ssrRenderSeoMetaContainer } from '~common/meta/seo-meta-container';
 import { TwitterMetaContainer } from '~common/meta/twitter-meta-container';
+import { defineIsolatedState } from '~common/ssr/isolated-state';
 
 export function escapeString(str: string) {
 	return String(str)
@@ -19,19 +20,96 @@ export function escapeString(str: string) {
 
 const originalSuffix = ' - Game Jolt';
 
-class MetaService extends MetaContainer {
-	titleSuffix = originalSuffix;
+interface MetaState {
+	titleSuffix: string;
+	_title: string;
+	_originalTitle: string | null;
+	_base: MetaContainer;
+	_fb: FbMetaContainer;
+	_twitter: TwitterMetaContainer;
+	_microdata: MicrodataContainer;
+	_seo: SeoMetaContainer;
+	_baseTitle: string | null;
+	_notificationsCount: number;
+}
 
-	_title = '';
-	_originalTitle = !import.meta.env.SSR ? document.title : null;
-	_base = new MetaContainer();
-	_fb = new FbMetaContainer();
-	_twitter = new TwitterMetaContainer();
-	_microdata = new MicrodataContainer();
-	_seo = new SeoMetaContainer();
+/**
+ * Per-request metadata state. Held inside `defineIsolatedState` so concurrent
+ * SSR requests don't stomp on each other's `<meta>` tags; `MetaService`
+ * exposes each field as a getter/setter that delegates to this state, giving
+ * callers the familiar `Meta.foo = x` ergonomics without a `Proxy`.
+ */
+const _state = defineIsolatedState<MetaState>(
+	() =>
+		reactive({
+			titleSuffix: originalSuffix,
+			_title: '',
+			_originalTitle: !import.meta.env.SSR ? document.title : null,
+			_base: new MetaContainer(),
+			_fb: new FbMetaContainer(),
+			_twitter: new TwitterMetaContainer(),
+			_microdata: new MicrodataContainer(),
+			_seo: new SeoMetaContainer(),
+			_baseTitle: null,
+			_notificationsCount: 0,
+		}) as unknown as MetaState
+);
 
-	_baseTitle: string | null = null;
-	_notificationsCount = 0;
+class MetaService {
+	get titleSuffix() {
+		return _state().titleSuffix;
+	}
+	set titleSuffix(value: string) {
+		_state().titleSuffix = value;
+	}
+
+	get _title() {
+		return _state()._title;
+	}
+	set _title(value: string) {
+		_state()._title = value;
+	}
+
+	get _originalTitle() {
+		return _state()._originalTitle;
+	}
+	set _originalTitle(value: string | null) {
+		_state()._originalTitle = value;
+	}
+
+	get _base() {
+		return _state()._base;
+	}
+
+	get _fb() {
+		return _state()._fb;
+	}
+
+	get _twitter() {
+		return _state()._twitter;
+	}
+
+	get _microdata() {
+		return _state()._microdata;
+	}
+
+	get _seo() {
+		return _state()._seo;
+	}
+
+	get _baseTitle() {
+		return _state()._baseTitle;
+	}
+	set _baseTitle(value: string | null) {
+		_state()._baseTitle = value;
+	}
+
+	get _notificationsCount() {
+		return _state()._notificationsCount;
+	}
+	set _notificationsCount(value: number) {
+		_state()._notificationsCount = value;
+	}
 
 	set title(title: string | null) {
 		setMetaTitle(title);
@@ -84,7 +162,7 @@ class MetaService extends MetaContainer {
 	}
 }
 
-export const Meta = reactive(/** @__PURE__ */ new MetaService()) as MetaService;
+export const Meta: MetaService = /** @__PURE__ */ new MetaService();
 
 export function initMetaService(router: Router) {
 	router.beforeEach((_to, _from, next) => {
@@ -137,7 +215,7 @@ function _updatePageTitle() {
 		Meta._title = title;
 
 		// We escape in the template, so no need to escape here.
-		Environment.ssrContext.meta.title = title;
+		getSsrContext().meta.title = title;
 	}
 }
 

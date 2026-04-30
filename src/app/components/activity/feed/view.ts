@@ -3,17 +3,17 @@ import { inject, InjectionKey } from 'vue';
 import { ActivityFeedInterface } from '~app/components/activity/feed/AppActivityFeed.vue';
 import { ActivityFeedInput, ActivityFeedItem } from '~app/components/activity/feed/item-service';
 import { ActivityFeedState } from '~app/components/activity/feed/state';
-import { Analytics } from '~common/analytics/analytics.service';
 import { Api, RequestOptions } from '~common/api/api.service';
 import { CommunityModel } from '~common/community/community.model';
 import { EventItemModel } from '~common/event-item/event-item.model';
 import { NotificationModel } from '~common/notification/notification-model';
 import { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
+import { defineIsolatedState } from '~common/ssr/isolated-state';
 
 const ScrollDirectionFrom = 'from';
 const ScrollDirectionTo = 'to';
 
-let globalIndex = 0;
+const _globalIndex = defineIsolatedState(() => ({ value: 0 }));
 
 class ActivityFeedViewItemState {
 	isBootstrapped = true;
@@ -55,7 +55,7 @@ export class ActivityFeedView {
 	 * We keep a feed ID so that when we clear we can change it and let vue
 	 * know that the feed has completely modified
 	 */
-	id = ++globalIndex;
+	id = ++_globalIndex().value;
 	readonly state: ActivityFeedState;
 	itemStates: { [k: string]: ActivityFeedViewItemState } = {};
 	slice: number | null = null;
@@ -160,7 +160,7 @@ export class ActivityFeedView {
 	}
 
 	clear() {
-		this.id = ++globalIndex;
+		this.id = ++_globalIndex().value;
 		this.state.clear();
 		this.itemStates = {};
 		this.timesLoaded = 0;
@@ -373,7 +373,6 @@ export class ActivityFeedView {
 
 		if (!response.items || !response.items.length) {
 			this.state.reachedEnd = true;
-			Analytics.trackEvent('activity-feed', 'reached-end');
 			return;
 		}
 
@@ -382,8 +381,6 @@ export class ActivityFeedView {
 		} else if (this.state.feedType === 'EventItem') {
 			this.append(EventItemModel.populate(response.items));
 		}
-
-		Analytics.trackEvent('activity-feed', 'loaded-more', 'page-' + this.totalTimesLoaded);
 	}
 
 	async loadNew(newCount = this.itemsPerPage) {

@@ -3,7 +3,12 @@ import { onMounted, onUnmounted, useTemplateRef, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { Ruler } from '~common/ruler/ruler-service';
-import { AutoscrollAnchorState, Scroll } from '~common/scroll/scroll.service';
+import {
+	AutoscrollAnchorState,
+	getScrollOffsetTop,
+	getScrollTop,
+	setAutoscrollAnchor,
+} from '~common/scroll/scroll.service';
 
 type Props = {
 	disabled?: boolean;
@@ -22,8 +27,8 @@ const rootEl = useTemplateRef('root');
 const router = useRouter();
 
 /**
- * Plain object stored in Scroll.autoscrollAnchor so the autoscroll service
- * can read/write state without needing Vue reactivity.
+ * Plain object stored as the autoscroll anchor so the autoscroll service can
+ * read/write state without needing Vue reactivity.
  */
 const anchorState: AutoscrollAnchorState = {
 	/**
@@ -45,19 +50,19 @@ watch(
 );
 
 onMounted(() => {
-	Scroll.autoscrollAnchor = anchorState;
+	setAutoscrollAnchor(anchorState);
 
 	beforeRouteDeregister = router.beforeEach((_to, _from, next) => {
 		if (disabled) {
 			anchorState.scrollTo = 0;
 		} else {
-			const recordedScroll = Scroll.getScrollTop();
+			const recordedScroll = getScrollTop();
 
 			// We only scroll to the anchor if they're scrolled past it currently.
 			const offset = Ruler.offset(rootEl.value!);
-			if (recordedScroll > offset.top - Scroll.offsetTop) {
+			if (recordedScroll > offset.top - getScrollOffsetTop()) {
 				// Scroll to the anchor.
-				anchorState.scrollTo = offset.top - Scroll.offsetTop;
+				anchorState.scrollTo = offset.top - getScrollOffsetTop();
 			} else {
 				// Don't scroll since they're above the anchor.
 				anchorState.scrollTo = undefined;
@@ -69,7 +74,7 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
-	Scroll.autoscrollAnchor = undefined;
+	setAutoscrollAnchor(undefined);
 
 	if (beforeRouteDeregister) {
 		beforeRouteDeregister();

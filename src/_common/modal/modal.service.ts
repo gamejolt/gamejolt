@@ -1,6 +1,7 @@
-import { type Component, inject, markRaw, MaybeRef, reactive, ref } from 'vue';
+import { type Component, inject, markRaw, ref, shallowRef } from 'vue';
 
-import { Popper } from '~common/popper/popper.service';
+import { hideAllPoppers } from '~common/popper/popper.service';
+import { defineIsolatedState } from '~common/ssr/isolated-state';
 import { arrayRemove } from '~utils/array';
 
 export const ModalKey = Symbol('modal-key');
@@ -14,7 +15,7 @@ export type ModalDismissReason = 'route-change' | 'esc' | 'backdrop' | 'manual';
 export interface ModalOptions {
 	component: Component;
 	modalId: string;
-	size?: MaybeRef<'xs' | 'sm' | 'lg' | 'full' | undefined>;
+	size?: 'xs' | 'sm' | 'lg' | 'full';
 	props?: any;
 	noBackdrop?: boolean;
 	noBackdropClose?: boolean;
@@ -37,21 +38,19 @@ export class Modal<T = any> {
 	onDismiss?: (reason: ModalDismissReason) => void;
 
 	get index(): number {
-		return Modals.modals.findIndex(i => i === this);
+		return Modals.modals.value.findIndex(i => i === this);
 	}
 
 	constructor(
 		public id: number,
-		private _resolve: (value?: T) => void,
+		public _resolve: (value?: T) => void,
 		options: ModalOptions
 	) {
-		// avert your eyes
-		this.size = ref(options.size) as unknown as Modal['size'];
+		this.size = options.size;
 		this.component = markRaw(options.component);
-		// Mark props raw so Vue's reactive proxy over `Modals` doesn't deep-wrap
-		// the props object — otherwise nested refs (e.g. on a controller/store
-		// passed in as a prop) get auto-unwrapped and callers hit `undefined`
-		// when they try to read `.value` off them.
+		// Mark props raw so the reactive array doesn't deep-wrap them — otherwise
+		// nested refs (e.g. on a controller/store passed in as a prop) get
+		// auto-unwrapped and callers hit `undefined` when they read `.value`.
 		this.props = options.props ? markRaw(options.props) : options.props;
 		this.noBackdrop = options.noBackdrop;
 		this.noBackdropClose = options.noBackdropClose;
@@ -72,45 +71,65 @@ export class Modal<T = any> {
 	}
 }
 
-class ModalsService {
-	modals: Modal[] = [];
-	incrementer = 0;
-
+const _state = defineIsolatedState(() => ({
+	modals: ref<Modal[]>([]),
+	incrementer: ref(0),
 	/**
 	 * Can be set within a section to define a wrapping component for all modal
 	 * bodies.
 	 */
-	modalBodyWrapper?: Component;
-}
+	modalBodyWrapper: shallowRef<Component | undefined>(undefined),
+}));
 
-export const Modals = reactive(new ModalsService()) as ModalsService;
+export const Modals = {
+	get modals() {
+		return _state().modals;
+	},
+	get incrementer() {
+		return _state().incrementer;
+	},
+	get modalBodyWrapper() {
+		return _state().modalBodyWrapper;
+	},
+};
 
 function _canAddToStack(id: string | undefined) {
 	if (id) {
-		return !Modals.modals.some(i => i.modalId === id);
+		return !Modals.modals.value.some(i => i.modalId === id);
 	}
 	return true;
 }
 
 export function showModal<T>(options: ModalOptions) {
 	return new Promise<T | undefined>(resolve => {
+		if (import.meta.env.SSR) {
+			resolve(undefined);
+			return;
+		}
+
 		if (_canAddToStack(options.modalId)) {
-			Popper.hideAll();
-			++Modals.incrementer;
-			const modal = new Modal(Modals.incrementer, resolve, options);
-			Modals.modals.push(modal);
+			hideAllPoppers();
+			++Modals.incrementer.value;
+			const modal = new Modal(Modals.incrementer.value, resolve, options);
+			Modals.modals.value.push(modal);
 		}
 	});
 }
 
 export function findModalById(modalId: string) {
-	return Modals.modals.filter(i => i.modalId === modalId);
+	return Modals.modals.value.filter(i => i.modalId === modalId);
 }
 
 function _removeModal(modal: Modal) {
-	arrayRemove(Modals.modals, i => i.id === modal.id);
+	if (import.meta.env.SSR) {
+		return;
+	}
+	arrayRemove(Modals.modals.value, i => i.id === modal.id);
 }
 
 export function setModalBodyWrapper(component: Component) {
-	Modals.modalBodyWrapper = markRaw(component);
+	if (import.meta.env.SSR) {
+		return;
+	}
+	Modals.modalBodyWrapper.value = component;
 }

@@ -7,7 +7,6 @@ import AppSlider, { ScrubberCallback } from '~common/slider/AppSlider.vue';
 import {
 	scrubVideoVolume,
 	setVideoMuted,
-	trackVideoPlayerEvent,
 	VideoPlayerController,
 } from '~common/video/player/controller';
 
@@ -33,11 +32,6 @@ function onClickMute() {
 	}
 
 	setVideoMuted(player, !currentState);
-	trackVideoPlayerEvent(
-		player,
-		!player.volume || player.muted ? 'mute' : 'unmute',
-		'click-control'
-	);
 }
 
 function onVolumeScrub({ percent, stage }: ScrubberCallback) {

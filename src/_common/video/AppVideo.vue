@@ -2,11 +2,7 @@
 import { nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue';
 
 import AppLoading from '~common/loading/AppLoading.vue';
-import {
-	setVideoMuted,
-	trackVideoPlayerEvent,
-	VideoPlayerController,
-} from '~common/video/player/controller';
+import { setVideoMuted, VideoPlayerController } from '~common/video/player/controller';
 
 export type VideoSourceArray = Array<VideoSourceObject>;
 type VideoSourceObject = {
@@ -45,7 +41,6 @@ const root = useTemplateRef('root');
 const isLoaded = ref(false);
 
 let videoElem: HTMLVideoElement = null as any;
-let videoStartTime = 0;
 
 onMounted(() => {
 	videoElem = document.createElement('video');
@@ -92,7 +87,6 @@ onMounted(() => {
  * https://dev.w3.org/html5/spec-author-view/video.html#best-practices-for-authors-using-media-elements
  */
 onBeforeUnmount(() => {
-	trackVideoPlaytime();
 	if (videoElem) {
 		// Empty all sources.
 		while (videoElem.firstChild) {
@@ -135,30 +129,15 @@ async function syncStates() {
 	await syncPlayState();
 }
 
-function trackVideoPlaytime() {
-	// Gifs currently don't pause when they become 'inactive'.
-	if (!videoStartTime || player.context === 'gif') {
-		return;
-	}
-
-	const playtime = Date.now() - videoStartTime;
-	const loops = Math.floor(playtime / player.duration);
-	trackVideoPlayerEvent(player, 'watched', 'playtime', `${Math.ceil(playtime / 1000)}`);
-	trackVideoPlayerEvent(player, 'watched', 'loops', `${loops}`);
-	videoStartTime = 0;
-}
-
 function setupVideoEvents() {
 	if (!videoElem) {
 		return;
 	}
 	videoElem.addEventListener('play', () => {
 		player.state = 'playing';
-		videoStartTime = Date.now();
 	});
 	videoElem.addEventListener('pause', () => {
 		player.state = 'paused';
-		trackVideoPlaytime();
 	});
 	videoElem.addEventListener('volumechange', () => {
 		player.volume = videoElem.volume;

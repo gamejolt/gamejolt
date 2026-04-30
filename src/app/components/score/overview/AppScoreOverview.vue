@@ -9,7 +9,7 @@ import { formatNumber } from '~common/filters/number';
 import { GameModel } from '~common/game/game.model';
 import { GameScoreTableModel } from '~common/game/score-table/score-table.model';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
-import { Popper } from '~common/popper/popper.service';
+import { hideAllPoppers } from '~common/popper/popper.service';
 import { Screen } from '~common/screen/screen-service';
 import { useCommonStore } from '~common/store/common-store';
 import AppTimeAgo from '~common/time/AppTimeAgo.vue';
@@ -72,7 +72,7 @@ function processPayload(payload: any) {
 }
 
 async function changeTable(table?: GameScoreTableModel) {
-	Popper.hideAll();
+	hideAllPoppers();
 
 	if (table && scoreTable.value && table.id === scoreTable.value.id) {
 		return;

@@ -2,7 +2,7 @@
 import '~app/views/discover/games/view/view-content.styl';
 
 import { computed, inject, InjectionKey, provide, ref, toRef } from 'vue';
-import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router';
+import { RouterLink, RouterView, useRoute } from 'vue-router';
 
 import AppGameMaturityBlock from '~app/components/game/maturity-block/AppGameMaturityBlock.vue';
 import AppGamePerms from '~app/components/game/perms/AppGamePerms.vue';
@@ -53,10 +53,10 @@ import { GameScreenshotModel } from '~common/game/screenshot/screenshot.model';
 import { GameSketchfabModel } from '~common/game/sketchfab/sketchfab.model';
 import { GameSongModel } from '~common/game/song/song.model';
 import { GameVideoModel } from '~common/game/video/video.model';
-import { HistoryTick } from '~common/history-tick/history-tick-service';
+import { getHistoryTickStore } from '~common/history-tick/history-tick-service';
 import { LinkedAccountModel } from '~common/linked-account/linked-account.model';
 import { storeModelList } from '~common/model/model-store.service';
-import { Registry } from '~common/registry/registry.service';
+import { findInRegistry } from '~common/registry/registry.service';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { Screen } from '~common/screen/screen-service';
 import { useCommonStore } from '~common/store/common-store';
@@ -179,7 +179,7 @@ function createController() {
 
 	function bootstrapGame(gameId: number) {
 		const prevId = game.value?.id;
-		const newGame = Registry.find<GameModel>('Game', i => i.id === gameId) ?? undefined;
+		const newGame = findInRegistry<GameModel>('Game', i => i.id === gameId) ?? undefined;
 
 		_updateGame(newGame);
 
@@ -347,8 +347,6 @@ export default {
 		cache: true,
 		reloadOn: { params: ['slug', 'id'], query: ['intent'] },
 		async resolver({ route }) {
-			HistoryTick.trackSource('Game', parseInt(route.params.id as string));
-
 			const intentRedirect = IntentService.checkRoute(
 				route,
 				{
@@ -383,9 +381,9 @@ export default {
 const commentManager = useCommentStoreManager();
 const adStore = useAdStore();
 const route = useRoute();
-const router = useRouter();
 const { user } = useCommonStore();
 const { setPageTheme, clearPageTheme } = useThemeStore();
+const { trackSource } = getHistoryTickStore();
 const {
 	game,
 	collaboratorInvite,
@@ -415,7 +413,7 @@ async function acceptCollaboration() {
 		acceptCollaboratorInvite(collaboratorInvite.value!);
 	} catch (error: any) {
 		console.log('Error status for accepting game collaboration.', error);
-		handleGameAddFailure(user.value!, error.reason, router);
+		handleGameAddFailure(user.value!, error.reason);
 	}
 }
 
@@ -450,8 +448,11 @@ function _releaseAdSettings() {
 
 createAppRoute({
 	onInit() {
+		const gameId = parseInt(route.params.id as string);
+		trackSource('Game', gameId);
+
 		// This isn't needed by SSR or anything, so it's fine to call it here.
-		bootstrapGame(parseInt(route.params.id as string));
+		bootstrapGame(gameId);
 		applyPageTheme();
 		_setAdSettings();
 

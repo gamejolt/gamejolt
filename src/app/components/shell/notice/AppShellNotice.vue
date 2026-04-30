@@ -1,17 +1,18 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 
+import AppShellNoticeBase from '~app/components/shell/notice/AppShellNoticeBase.vue';
+import AppShellNoticeCreatorExperience from '~app/components/shell/notice/AppShellNoticeCreatorExperience.vue';
+import AppShellNoticeStickerMastery from '~app/components/shell/notice/AppShellNoticeStickerMastery.vue';
+import { usePayloadActionsStore } from '~app/components/shell/notice/payload-actions.store';
+import { kShellTopNavHeight } from '~app/styles/variables';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
-import AppShellNoticeBase from '~common/shell/notice/_base/AppShellNoticeBase.vue';
-import AppShellNoticeCreatorExperience from '~common/shell/notice/creator-experience/AppShellNoticeCreatorExperience.vue';
-import { getShellNotice } from '~common/shell/notice/notice.service';
-import AppShellNoticeStickerMastery from '~common/shell/notice/sticker-mastery/AppShellNoticeStickerMastery.vue';
 import { kThemeBgOffset, kThemeFg, kThemeFg10 } from '~common/theme/variables';
 import { styleFlexCenter } from '~styles/mixins';
 import { kBorderRadiusLg, kBorderWidthBase } from '~styles/variables';
 import { sleep } from '~utils/utils';
 
-const { notices, remove: removeNotice } = getShellNotice();
+const { notices, remove: removeNotice } = usePayloadActionsStore();
 
 const isRemoving = ref(false);
 
@@ -47,8 +48,7 @@ async function removeAllNotices() {
 	<div
 		class="shell-notice-container"
 		:style="{
-			// kShellTopNavHeight is in [app] section and can't be imported here.
-			top: `56px`,
+			top: kShellTopNavHeight.px,
 			display: `grid`,
 			justifyItems: `end`,
 		}"

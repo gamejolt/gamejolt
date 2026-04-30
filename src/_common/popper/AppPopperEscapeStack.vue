@@ -10,7 +10,9 @@ const emit = defineEmits<{
 	trigger: [];
 }>();
 
-useEscapeStack(() => emit('trigger'));
+useEscapeStack({
+	onEscape: () => emit('trigger'),
+});
 </script>
 
 <template>

@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { computed, CSSProperties, ref } from 'vue';
 
+import AppShellNoticeBase from '~app/components/shell/notice/AppShellNoticeBase.vue';
+import { StickerMasteryNotice } from '~app/components/shell/notice/payload-actions.store';
 import AppJolticon, { Jolticon } from '~common/jolticon/AppJolticon.vue';
 import AppCircularProgress from '~common/progress/AppCircularProgress.vue';
-import AppShellNoticeBase from '~common/shell/notice/_base/AppShellNoticeBase.vue';
-import { StickerMasteryNotice } from '~common/shell/notice/notice.service';
 import AppStickerImg from '~common/sticker/AppStickerImg.vue';
 import { $gettext } from '~common/translate/translate.service';
 import { styleFlexCenter } from '~styles/mixins';

@@ -3,7 +3,7 @@ import { onUnmounted, unref, watch } from 'vue';
 
 import { useBannerStore } from '~app/store/banner';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
-import { Scroll } from '~common/scroll/scroll.service';
+import { setScrollOffsetTop } from '~common/scroll/scroll.service';
 
 const { hasBanner, currentBanner, clickBanner, closeBanner } = useBannerStore();
 
@@ -11,16 +11,16 @@ watch(
 	() => unref(hasBanner),
 	isShowing => {
 		if (isShowing) {
-			Scroll.setOffsetTop(56 * 2);
+			setScrollOffsetTop(56 * 2);
 		} else {
-			Scroll.setOffsetTop(56);
+			setScrollOffsetTop(56);
 		}
 	},
 	{ immediate: true }
 );
 
 onUnmounted(() => {
-	Scroll.setOffsetTop(56);
+	setScrollOffsetTop(56);
 });
 </script>
 

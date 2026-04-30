@@ -44,12 +44,12 @@ import { GameModel } from '~common/game/game.model';
 import AppGameMediaBar from '~common/game/media-bar/AppGameMediaBar.vue';
 import AppGamePackageCard from '~common/game/package/card/AppGamePackageCard.vue';
 import AppGameSoundtrackCard from '~common/game/soundtrack/card/AppGameSoundtrackCard.vue';
-import { HistoryTick } from '~common/history-tick/history-tick-service';
+import { sendHistoryTick } from '~common/history-tick/history-tick-service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppLazyPlaceholder from '~common/lazy/placeholder/AppLazyPlaceholder.vue';
 import { Meta } from '~common/meta/meta-service';
 import { storeModelList } from '~common/model/model-store.service';
-import { PartnerReferral } from '~common/partner-referral/partner-referral-service';
+import { getPartnerReferrer } from '~common/partner-referral/partner-referral-service';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { Screen } from '~common/screen/screen-service';
 import AppScrollAffix from '~common/scroll/AppScrollAffix.vue';
@@ -68,17 +68,11 @@ export default {
 		cache: true,
 		reloadOn: { query: ['feed_last_id'] },
 		resolver({ route }) {
-			const gameId = parseInt(route.params.id as string);
-			HistoryTick.sendBeacon('game-view', gameId, {
-				sourceResource: 'Game',
-				sourceResourceId: gameId,
-			});
-
 			// If we have a tracked partner "ref" in the URL, we want to pass that along
 			// when gathering the payload.
 			let apiOverviewUrl = '/web/discover/games/overview/' + route.params.id;
 
-			const ref = PartnerReferral.getReferrer('Game', parseInt(route.params.id as string));
+			const ref = getPartnerReferrer('Game', parseInt(route.params.id as string));
 			if (ref) {
 				apiOverviewUrl += '?ref=' + ref;
 			}
@@ -166,6 +160,12 @@ const appRoute = createAppRoute({
 		return null;
 	}),
 	onInit() {
+		const gameId = parseInt(route.params.id as string);
+		sendHistoryTick('game-view', gameId, {
+			sourceResource: 'Game',
+			sourceResourceId: gameId,
+		});
+
 		feed.value = ActivityFeedService.routeInit(isBootstrapped.value);
 	},
 	onResolved({ payload, fromCache }) {
@@ -182,12 +182,8 @@ const appRoute = createAppRoute({
 		}
 
 		if (game.value) {
-			showCommentThreadModalFromPermalink(router, game.value, 'comments');
-			permalinkWatchDeregister = watchForCommentThreadModalPermalink(
-				router,
-				game.value,
-				'comments'
-			);
+			showCommentThreadModalFromPermalink(game.value, 'comments');
+			permalinkWatchDeregister = watchForCommentThreadModalPermalink(game.value, 'comments');
 		}
 
 		feed.value = ActivityFeedService.routed(
@@ -223,7 +219,6 @@ function onPostAdded(post: FiresidePostModel) {
 		post,
 		appRoute: appRoute,
 		route: route,
-		router: router,
 	});
 }
 
@@ -330,11 +325,7 @@ async function reloadPreviewComments() {
 							</h4>
 
 							<AppGameListPlaceholder v-if="!isOverviewLoaded" :num="5" />
-							<AppGameList
-								v-else
-								:games="recommendedGames"
-								event-label="recommended"
-							/>
+							<AppGameList v-else :games="recommendedGames" />
 						</template>
 					</template>
 

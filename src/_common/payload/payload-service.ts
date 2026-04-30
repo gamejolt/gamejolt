@@ -1,9 +1,10 @@
 import { AxiosError, AxiosPromise } from 'axios';
 
 import { RequestOptions } from '~common/api/api.service';
-import { Environment } from '~common/environment/environment.service';
+import { Environment, getSsrContext } from '~common/environment/environment.service';
 import { showErrorGrowl } from '~common/growls/growls.service';
 import { Seo } from '~common/seo/seo.service';
+import { defineIsolatedState } from '~common/ssr/isolated-state';
 import { CommonStore } from '~common/store/common-store';
 import { $gettext } from '~common/translate/translate.service';
 
@@ -60,17 +61,35 @@ function _buildPayloadErrorFromAxios({ response }: AxiosError) {
 	);
 }
 
+const _state = defineIsolatedState(() => ({
+	commonStore: undefined as CommonStore | undefined,
+	ver: undefined as number | undefined,
+	payloadHandlers: [] as ((payload: any) => void)[],
+}));
+
 class PayloadService {
 	readonly httpErrors = [400, 403, 404, 500];
 	// These http errors are not redirects, so the noRedirect behavior should not apply to them.
 	readonly httpNoRedirectOverrides = [429];
 
-	declare private commonStore: CommonStore;
-	private ver?: number = undefined;
-	private payloadHandlers: ((payload: any) => void)[] = [];
+	private get commonStore(): CommonStore {
+		return _state().commonStore!;
+	}
+
+	private get ver(): number | undefined {
+		return _state().ver;
+	}
+
+	private set ver(value: number | undefined) {
+		_state().ver = value;
+	}
+
+	private get payloadHandlers() {
+		return _state().payloadHandlers;
+	}
 
 	init({ commonStore }: { commonStore: CommonStore }) {
-		this.commonStore = commonStore;
+		_state().commonStore = commonStore;
 	}
 
 	async processResponse(
@@ -226,7 +245,7 @@ class PayloadService {
 			// reload.
 		} else if (error.type === PayloadErrorType.NotLogged) {
 			const redirect = encodeURIComponent(
-				import.meta.env.SSR ? Environment.ssrContext.url : window.location.href
+				import.meta.env.SSR ? getSsrContext().url : window.location.href
 			);
 			const location = Environment.authBaseUrl + '/login?redirect=' + redirect;
 			this.commonStore.redirect(location);

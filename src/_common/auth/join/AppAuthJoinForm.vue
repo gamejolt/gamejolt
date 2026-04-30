@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import { useRouter } from 'vue-router';
-
 import { Api } from '~common/api/api.service';
 import googleImage from '~common/auth/google-icon.svg';
 import AppButton from '~common/button/AppButton.vue';
@@ -37,8 +35,6 @@ const emit = defineEmits<{
 	submit: [model: JoinFormModel];
 }>();
 
-const router = useRouter();
-
 const form: FormController<JoinFormModel> = createForm<JoinFormModel>({
 	warnOnDiscard: false,
 	onSubmit() {
@@ -55,7 +51,7 @@ const form: FormController<JoinFormModel> = createForm<JoinFormModel>({
  * when it figures out if they have an account in the callback URL.
  */
 function linkedChoose(provider: LinkedAccountProvider) {
-	LinkedAccounts.login(router, provider);
+	LinkedAccounts.login(provider);
 }
 </script>
 

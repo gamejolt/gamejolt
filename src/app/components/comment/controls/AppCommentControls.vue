@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { computed, toRef } from 'vue';
-import { useRouter } from 'vue-router';
 
 import { showCommentThreadModal } from '~app/components/comment/thread/modal.service';
 import { useCommentWidget } from '~app/components/comment/widget/AppCommentWidget.vue';
@@ -41,7 +40,6 @@ const {
 	canReact,
 } = defineProps<Props>();
 
-const router = useRouter();
 const { resourceOwner } = useCommentWidget()!;
 const { user } = useCommonStore();
 
@@ -148,7 +146,6 @@ async function $voteComment(vote: number) {
 
 function onReplyClick(autofocus: boolean) {
 	showCommentThreadModal({
-		router: router,
 		model,
 		commentId: comment.id,
 		displayMode: 'comments',

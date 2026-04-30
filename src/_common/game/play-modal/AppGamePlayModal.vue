@@ -4,7 +4,7 @@ import { onMounted, onUnmounted, ref, useTemplateRef } from 'vue';
 import AppButton from '~common/button/AppButton.vue';
 import { GameModel } from '~common/game/game.model';
 import { showGameRatingGrowl } from '~common/game/rating-growl/rating-growl.service';
-import { addMinbarItem, removeMinbarItem } from '~common/minbar/minbar.service';
+import { useMinbarStore } from '~common/minbar/minbar.service';
 import AppModal from '~common/modal/AppModal.vue';
 import { useModal } from '~common/modal/modal.service';
 
@@ -15,6 +15,7 @@ type Props = {
 };
 const { game, url, canMinimize } = defineProps<Props>();
 const modal = useModal()!;
+const { addItem, removeItem } = useMinbarStore();
 
 const isMinimized = ref(false);
 const frameElem = useTemplateRef('frame');
@@ -39,13 +40,13 @@ function minimize() {
 	document.body.classList.remove('game-play-modal-open');
 
 	// When this minbar item is clicked, it basically shows this modal again.
-	const minbarItem = addMinbarItem({
+	const minbarItem = addItem({
 		title: game.title,
 		thumb: game.img_thumbnail,
 		isActive: true, // Only one game open at a time, so make it active.
 		onClick: () => {
 			// We remove the item from the minbar.
-			removeMinbarItem(minbarItem);
+			removeItem(minbarItem);
 
 			// Then we show the modal again.
 			maximize();

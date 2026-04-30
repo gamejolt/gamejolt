@@ -1,9 +1,11 @@
 import '~checkout/main.styl';
 
-import { router } from '~checkout/views/index';
+import { createCheckoutRouter } from '~checkout/views/index';
 import { bootstrapCommon } from '~common/bootstrap';
 
 export async function createApp() {
+	const router = createCheckoutRouter();
+
 	const { app } = await bootstrapCommon({
 		appComponentLoader: async () => (await import('~checkout/AppMain.vue')).default,
 		router,

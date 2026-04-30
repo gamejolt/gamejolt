@@ -17,7 +17,7 @@ import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppLinkHelp from '~common/link/AppLinkHelp.vue';
 import { showModalConfirm } from '~common/modal/confirm/confirm-service';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
-import { Scroll } from '~common/scroll/scroll.service';
+import { scrollTo } from '~common/scroll/scroll.service';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import { $gettext } from '~common/translate/translate.service';
 import { BaseTrophyDifficulties, BaseTrophyDifficulty } from '~common/trophy/base-trophy.model';
@@ -85,7 +85,7 @@ async function onTrophyAdded(trophy: GameTrophyModel) {
 	// since the form is pretty long. The position may change if they
 	// changed the difficulty level, so we let it compile first.
 	await nextTick();
-	Scroll.to('trophy-container-' + trophy.id);
+	scrollTo('trophy-container-' + trophy.id);
 }
 
 async function onTrophyEdited(trophy: GameTrophyModel) {
@@ -96,7 +96,7 @@ async function onTrophyEdited(trophy: GameTrophyModel) {
 	// the form is pretty long. The position may change if they changed the
 	// difficulty level, so we let angular compile first.
 	await nextTick();
-	Scroll.to('trophy-container-' + trophy.id);
+	scrollTo('trophy-container-' + trophy.id);
 }
 
 function saveTrophySort(difficulty: BaseTrophyDifficulty, newTrophies: GameTrophyModel[]) {

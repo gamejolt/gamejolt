@@ -1,10 +1,19 @@
+import { AsyncLocalStorage } from 'node:async_hooks';
+
 import { createApp as bootstrapCreateApp } from '~auth/bootstrap';
 import { setDeviceUserAgent } from '~common/device/device.service';
-import { Environment } from '~common/environment/environment.service';
+import { getSsrContext } from '~common/environment/environment.service';
 import { Meta } from '~common/meta/meta-service';
+import { initIsolatedScope, runInIsolatedScope } from '~common/ssr/isolated-state';
 
-export default async function (context: typeof Environment.ssrContext) {
-	Environment.ssrContext = context;
+initIsolatedScope(new AsyncLocalStorage());
+
+export default async function (context: any) {
+	return runInIsolatedScope(() => renderRequest(context));
+}
+
+async function renderRequest(context: any) {
+	Object.assign(getSsrContext(), context);
 	setDeviceUserAgent(context.ua);
 
 	const { app, router } = await bootstrapCreateApp();

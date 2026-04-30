@@ -3,7 +3,6 @@ import {
 	computed,
 	CSSProperties,
 	nextTick,
-	onBeforeUnmount,
 	onMounted,
 	ref,
 	toRef,
@@ -11,10 +10,9 @@ import {
 	watch,
 } from 'vue';
 
-import { Analytics } from '~common/analytics/analytics.service';
 import AppAnimElectricity from '~common/animation/AppAnimElectricity.vue';
 import AppButton from '~common/button/AppButton.vue';
-import { EscapeStack, EscapeStackCallback } from '~common/escape-stack/escape-stack.service';
+import { useEscapeStack } from '~common/escape-stack/escape-stack.service';
 import { showVendingMachineModal } from '~common/inventory/shop/vending-machine/modal.service';
 import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
 import { vAppObserveDimensions } from '~common/observe-dimensions/observe-dimensions.directive';
@@ -63,8 +61,11 @@ const {
 	drawerCollapsedHeight,
 } = stickerStore;
 
+useEscapeStack({
+	onEscape: () => closeDrawer(),
+});
+
 let _touchedSticker: StickerModel | null = null;
-let _escapeCallback: EscapeStackCallback | null = null;
 
 const sheetPage = ref(1);
 const isSwipingSheets = ref(false);
@@ -167,16 +168,6 @@ function closeDrawer() {
 
 onMounted(() => {
 	calculateStickersPerRow();
-
-	_escapeCallback = () => closeDrawer();
-	EscapeStack.register(_escapeCallback);
-});
-
-onBeforeUnmount(() => {
-	if (_escapeCallback) {
-		EscapeStack.deregister(_escapeCallback);
-		_escapeCallback = null;
-	}
 });
 
 async function onClickPlace() {
@@ -187,7 +178,6 @@ async function onClickPlace() {
 		return;
 	}
 	isConfirmingPlacement.value = true;
-	Analytics.trackEvent('sticker-drawer', 'confirm-placement');
 	await commitStickerStoreItemPlacement(stickerStore);
 	isConfirmingPlacement.value = false;
 }
@@ -226,7 +216,6 @@ function goNext() {
 		return;
 	}
 	sheetPage.value = Math.min(sheetPage.value + 1, stickerSheets.value.length);
-	Analytics.trackEvent('sticker-drawer', 'swipe-next');
 	_updateSliderOffset();
 }
 
@@ -236,7 +225,6 @@ function goPrev() {
 		return;
 	}
 	sheetPage.value = Math.max(sheetPage.value - 1, 1);
-	Analytics.trackEvent('sticker-drawer', 'swipe-previous');
 	_updateSliderOffset();
 }
 
@@ -302,8 +290,6 @@ function panEnd(event: AppTouchInput) {
 			goNext();
 		}
 		return;
-	} else {
-		Analytics.trackEvent('sticker-drawer', 'swipe-cancel');
 	}
 
 	_updateSliderOffset();

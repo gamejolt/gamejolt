@@ -13,7 +13,7 @@ import {
 import { useRouter } from 'vue-router';
 
 import AppSearchInput from '~app/components/search/AppSearchInput.vue';
-import { Search } from '~app/components/search/search-service';
+import { useAppStore } from '~app/store/index';
 import { trackSearch } from '~common/analytics/analytics.service';
 import AppPopper from '~common/popper/AppPopper.vue';
 import AppTranslate from '~common/translate/AppTranslate.vue';
@@ -47,8 +47,9 @@ function createSearchController({
 	autocompleteDisabled: Ref<boolean>;
 	autofocus: Ref<boolean>;
 }) {
+	const { searchQuery } = useAppStore();
 	const id = ref(++searchIterator);
-	const query = ref(Search.query);
+	const query = ref(searchQuery.value);
 	const isFocused = ref(false);
 	const isShowingAutocomplete = ref(false);
 	const keydownSpies = ref([] as SearchKeydownSpy[]);
@@ -63,12 +64,9 @@ function createSearchController({
 		}
 	});
 
-	watch(
-		() => Search.query,
-		newQuery => {
-			query.value = newQuery;
-		}
-	);
+	watch(searchQuery, newQuery => {
+		query.value = newQuery;
+	});
 
 	/**
 	 * Ability to set watchers for when a keydown event fires.

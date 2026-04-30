@@ -6,7 +6,7 @@ import { ChromePicker } from 'vue-color';
 
 import AppButton from '~common/button/AppButton.vue';
 import AppPopper from '~common/popper/AppPopper.vue';
-import { Popper } from '~common/popper/popper.service';
+import { hideAllPoppers } from '~common/popper/popper.service';
 import { $gettext } from '~common/translate/translate.service';
 
 const modelValue = defineModel<string>({ required: true });
@@ -36,12 +36,12 @@ watch(
 
 function accept() {
 	modelValue.value = colors.value;
-	Popper.hideAll();
+	hideAllPoppers();
 }
 
 function cancel() {
 	colors.value = modelValue.value;
-	Popper.hideAll();
+	hideAllPoppers();
 }
 </script>
 

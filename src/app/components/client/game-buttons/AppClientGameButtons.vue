@@ -6,7 +6,6 @@ import AppClientInstallProgress from '~app/components/client/AppClientInstallPro
 import { showClientInstallPackageModal } from '~app/components/client/install-package-modal/install-package-modal.service';
 import { LocalDbPackage } from '~app/components/client/local-db/package/package.model';
 import { useClientLibraryStore } from '~app/store/client-library';
-import { Analytics } from '~common/analytics/analytics.service';
 import { Api } from '~common/api/api.service';
 import AppButton from '~common/button/AppButton.vue';
 import { getDeviceArch, getDeviceOS } from '~common/device/device.service';
@@ -19,7 +18,7 @@ import { GamePackagePayloadModel } from '~common/game/package/package-payload.mo
 import { showGamePackagePurchaseModal } from '~common/game/package/purchase-modal/purchase-modal.service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppPopper from '~common/popper/AppPopper.vue';
-import { Popper } from '~common/popper/popper.service';
+import { hideAllPoppers } from '~common/popper/popper.service';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import { $gettext } from '~common/translate/translate.service';
 import { arrayGroupBy } from '~utils/array';
@@ -83,8 +82,6 @@ const os = computed(() => getDeviceOS());
 const arch = computed(() => getDeviceArch());
 
 async function install() {
-	Analytics.trackEvent('client-game-buttons', 'install');
-
 	if (!packageDataPromise.value) {
 		packageDataPromise.value = fetchPackageData();
 	}
@@ -132,7 +129,6 @@ function pause() {
 		return;
 	}
 
-	Analytics.trackEvent('client-game-buttons', 'pause-install');
 	installerPause(localPackage.value);
 }
 
@@ -141,7 +137,6 @@ function resume() {
 		return;
 	}
 
-	Analytics.trackEvent('client-game-buttons', 'resume-install');
 	installerResume(localPackage.value);
 }
 
@@ -150,7 +145,6 @@ function cancel() {
 		return;
 	}
 
-	Analytics.trackEvent('client-game-buttons', 'cancel-install');
 	packageUninstall(localPackage.value);
 }
 
@@ -159,7 +153,6 @@ function retryInstall() {
 		return;
 	}
 
-	Analytics.trackEvent('client-game-buttons', 'retry-install');
 	installerRetry(localPackage.value);
 }
 
@@ -169,8 +162,7 @@ function launch(localPackage: LocalDbPackage) {
 		return;
 	}
 
-	Analytics.trackEvent('client-game-buttons', 'launch');
-	Popper.hideAll();
+	hideAllPoppers();
 	return launcherLaunch(localPackage);
 }
 
@@ -195,8 +187,7 @@ async function uninstallPackage(localPackage: LocalDbPackage) {
 		return;
 	}
 
-	Analytics.trackEvent('client-game-buttons', 'uninstall');
-	Popper.hideAll();
+	hideAllPoppers();
 
 	await packageUninstall(localPackage);
 }

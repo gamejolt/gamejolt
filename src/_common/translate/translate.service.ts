@@ -1,6 +1,7 @@
 import { App, computed, ref } from 'vue';
 
 import { isDynamicGoogleBot } from '~common/device/device.service';
+import { defineIsolatedState } from '~common/ssr/isolated-state';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 import { TranslateDirective } from '~common/translate/translate-directive';
 import { arrayIndexBy } from '~utils/array';
@@ -24,8 +25,6 @@ const EscapeHTMLMap = {
 	"'": '&#039;',
 };
 
-const _language = ref('en_US');
-
 // Plural forms are in an array indexed by the plural form index (number).
 type Translation = string | string[];
 
@@ -34,37 +33,46 @@ type Translation = string | string[];
 type LanguageTranslations = Record<string, Translation>;
 
 /**
- * Indexed by language code and then the key's representing the "msgid".
+ * Append-only cache of translations, keyed by language code. Stays module-global
+ * because the data is identical across requests — filling it for one request
+ * produces correct reads for any other request. Specifically for en_US we don't
+ * do translations; we use the english translations as the translation keys, so
+ * we can reliably fall back to just using the key for english.
  *
  * { en_US: {key1: 'translated1', key2: ['translated single', 'translated plural'] } }
  */
-const _translations = ref<Record<string, LanguageTranslations>>({});
+const _translations = ref<Record<string, LanguageTranslations>>({ en_US: {} });
 
-// easygettext's gettext-compile generates a JSON version of a .po file based on
-// its Language field. But in this field, 'll_CC' combinations denoting a
-// language’s main dialect are abbreviated as 'll', for example 'de' is
-// equivalent to 'de_DE' (German as spoken in Germany). See the 'Language'
-// section in
-// https://www.gnu.org/software/gettext/manual/html_node/Header-Entry.html So
-// try 'll_CC' first, or the 'll' abbreviation which can be three-letter
-// sometimes:
-// https://www.gnu.org/software/gettext/manual/html_node/Language-Codes.html#Language-Codes
-const _currentTranslations = computed(
-	() => _translations.value[_language.value] ?? _translations.value[_language.value.split('_')[0]]
-);
+// Per-request state: concurrent SSR requests may want different languages, and
+// each has its own translations-loaded promise.
+const _state = defineIsolatedState(() => {
+	const language = ref('en_US');
+	const translationsReady = ref(new Promise<void>(() => {}));
 
-let _translationsReady: Promise<void> = /** @__PURE__ */ new Promise(() => {});
+	// easygettext's gettext-compile generates a JSON version of a .po file based
+	// on its Language field. But in this field, 'll_CC' combinations denoting a
+	// language's main dialect are abbreviated as 'll', for example 'de' is
+	// equivalent to 'de_DE' (German as spoken in Germany). See the 'Language'
+	// section in
+	// https://www.gnu.org/software/gettext/manual/html_node/Header-Entry.html So
+	// try 'll_CC' first, or the 'll' abbreviation which can be three-letter
+	// sometimes:
+	// https://www.gnu.org/software/gettext/manual/html_node/Language-Codes.html#Language-Codes
+	//
+	// Cached as a computed so the lookup isn't redone on every $gettext call.
+	const currentTranslations = computed(
+		() =>
+			_translations.value[language.value] ?? _translations.value[language.value.split('_')[0]]
+	);
+
+	return { language, translationsReady, currentTranslations };
+});
 
 export function initTranslations(app: App) {
-	// Initialize our starting values. [loadCurrentLanguage] should be called
-	// once the app is mounted to switch to their real language.
-	_language.value = (!import.meta.env.SSR && localStorage.getItem(LangStorageKey)) || 'en_US';
-	_translations.value = {
-		// Specifically for en_US we don't want to do translations.
-		// We use the english translations as the translation keys, so
-		// we can reliably fall back to just using the key for english.
-		en_US: {},
-	};
+	// [loadCurrentLanguage] should be called once the app is mounted to switch
+	// to their real language.
+	_state().language.value =
+		(!import.meta.env.SSR && localStorage.getItem(LangStorageKey)) || 'en_US';
 	loadCurrentLanguage();
 
 	// Convenience to make it easier to translate in templates.
@@ -81,15 +89,16 @@ export function initTranslations(app: App) {
  * have to wait for the translations to load before showing anything.
  */
 export async function loadCurrentLanguage() {
-	if (import.meta.env.SSR || _language.value === 'en_US') {
-		_translationsReady = Promise.resolve();
+	const state = _state();
+	if (import.meta.env.SSR || state.language.value === 'en_US') {
+		state.translationsReady.value = Promise.resolve();
 		return;
 	}
 
-	_translationsReady = (async () => {
+	state.translationsReady.value = (async () => {
 		// Save the language to a variable first to avoid populating
 		// the wrong language if the current language changes while importing.
-		const lang = _language.value;
+		const lang = state.language.value;
 		const { default: translationData } =
 			await _translationImports[`../../translations/${lang}/main.json`]();
 
@@ -101,15 +110,15 @@ export async function loadCurrentLanguage() {
 }
 
 export async function translationsReady() {
-	return _translationsReady;
+	return _state().translationsReady.value;
 }
 
 export function getTranslationLang() {
-	return _language.value;
+	return _state().language.value;
 }
 
 export function setTranslationLang(lang: string) {
-	_language.value = lang;
+	_state().language.value = lang;
 	localStorage?.setItem(LangStorageKey, lang);
 }
 
@@ -328,26 +337,29 @@ export function getTranslation(msgid: string, n = 1, defaultPlural: string | nul
 		return '';
 	}
 
+	const state = _state();
+	const lang = state.language.value;
+
 	function _untranslatedDefault() {
 		// Returns the untranslated string, singular or plural.
-		return defaultPlural && _getTranslationIndex(_language.value, n) > 0
-			? defaultPlural
-			: msgid;
+		return defaultPlural && _getTranslationIndex(lang, n) > 0 ? defaultPlural : msgid;
 	}
 
+	const currentTranslations = state.currentTranslations.value;
+
 	// No translations for the language yet.
-	if (!_currentTranslations.value) {
+	if (!currentTranslations) {
 		return _untranslatedDefault();
 	}
 
-	let translated = _currentTranslations.value[msgid];
+	let translated = currentTranslations[msgid];
 
 	// If the fastpath of search for the wrong string didn't work, we need to
 	// search for a trimmed and normalized version. This is in case there's some
 	// extra formatting around the text for code reasons.
 	if (!translated) {
 		msgid = msgid.trim().replace(/\s{2,}/g, ' ');
-		translated = _currentTranslations.value[msgid];
+		translated = currentTranslations[msgid];
 	}
 
 	if (!translated) {
@@ -358,7 +370,7 @@ export function getTranslation(msgid: string, n = 1, defaultPlural: string | nul
 		translated = [translated];
 	}
 
-	return translated[_getTranslationIndex(_language.value, n)] ?? '';
+	return translated[_getTranslationIndex(lang, n)] ?? '';
 }
 
 function _getTranslationIndex(languageCode: string, n: number | string) {

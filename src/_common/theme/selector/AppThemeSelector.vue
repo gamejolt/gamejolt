@@ -3,7 +3,7 @@ import { ref, watch } from 'vue';
 
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppPopper from '~common/popper/AppPopper.vue';
-import { Popper } from '~common/popper/popper.service';
+import { hideAllPoppers } from '~common/popper/popper.service';
 import { SiteTemplateModel } from '~common/site/template/template-model';
 
 type Props = {
@@ -36,7 +36,7 @@ function onTemplateChange() {
 
 function select(id: number) {
 	emit('change', id);
-	Popper.hideAll();
+	hideAllPoppers();
 }
 </script>
 

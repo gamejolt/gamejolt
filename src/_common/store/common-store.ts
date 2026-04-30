@@ -4,7 +4,7 @@ import { computed, inject, InjectionKey, Ref, ref } from 'vue';
 
 import { isDynamicGoogleBot } from '~common/device/device.service';
 import { EmojiGroupModel } from '~common/emoji/emoji-group.model';
-import { Environment } from '~common/environment/environment.service';
+import { getSsrContext } from '~common/environment/environment.service';
 import { Navigate } from '~common/navigate/navigate.service';
 import { UserTimeoutModel } from '~common/user/timeout/timeout.model';
 import { UserModel } from '~common/user/user.model';
@@ -141,7 +141,7 @@ export function createCommonStore() {
 
 	function setError(newError: number | string) {
 		error.value = newError;
-		Environment.ssrContext.errorCode = typeof newError === 'string' ? 500 : newError;
+		getSsrContext().errorCode = typeof newError === 'string' ? 500 : newError;
 	}
 
 	function clearError() {
@@ -150,7 +150,7 @@ export function createCommonStore() {
 
 	function redirect(location: string) {
 		if (import.meta.env.SSR) {
-			Environment.ssrContext.redirect = location;
+			getSsrContext().redirect = location;
 		} else {
 			Navigate.goto(location);
 		}

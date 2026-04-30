@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 
-import { Analytics } from '~common/analytics/analytics.service';
 import AppFadeCollapse from '~common/AppFadeCollapse.vue';
 import AppButton from '~common/button/AppButton.vue';
 import AppCard from '~common/card/AppCard.vue';
@@ -42,8 +41,6 @@ const platforms = computed(() => {
 });
 
 function gotoExternal() {
-	Analytics.trackEvent('game-package-card', 'download', 'external');
-
 	Navigate.newWindow(gamePackage.url);
 }
 </script>

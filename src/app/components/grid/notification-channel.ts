@@ -1,5 +1,4 @@
 import { computed, reactive, shallowReadonly } from 'vue';
-import { Router } from 'vue-router';
 
 import { GridClient } from '~app/components/grid/client.service';
 import { addNewQuestIds, addQuestActivityIds } from '~app/store/quest';
@@ -109,10 +108,7 @@ interface NewPostPayload {
 	channel_id: string;
 }
 
-export function createGridNotificationChannel(
-	client: GridClient,
-	options: { userId: number; router: Router }
-) {
+export function createGridNotificationChannel(client: GridClient, options: { userId: number }) {
 	const { socketController, appStore } = client;
 	const { userId } = options;
 	const { communityStates, stickerStore } = appStore;

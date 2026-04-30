@@ -6,7 +6,7 @@ import FormGame from '~app/components/forms/game/FormGame.vue';
 import { useGameDashRouteController } from '~app/views/dashboard/games/manage/manage.store';
 import { showSuccessGrowl } from '~common/growls/growls.service';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
-import { Scroll } from '~common/scroll/scroll.service';
+import { scrollTo } from '~common/scroll/scroll.service';
 import { useCommonStore } from '~common/store/common-store';
 import { $gettext } from '~common/translate/translate.service';
 
@@ -29,7 +29,7 @@ function onSaved() {
 		$gettext('Game Details Saved')
 	);
 
-	Scroll.to(0);
+	scrollTo(0);
 }
 
 createAppRoute({

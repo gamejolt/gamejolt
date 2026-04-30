@@ -1,15 +1,19 @@
 <script lang="ts" setup>
-import { onMounted, provide, reactive, watch } from 'vue';
+import { defineAsyncComponent, onMounted, provide, reactive, watch } from 'vue';
 import { RouterView } from 'vue-router';
 
 import { useGridStore } from '~app/components/grid/grid-store';
 import AppShell from '~app/components/shell/AppShell.vue';
+import {
+	createPayloadActionsStore,
+	PayloadActionsStoreKey,
+} from '~app/components/shell/notice/payload-actions.store';
 import { useAppStore } from '~app/store';
 import { createAdStore } from '~common/ad/ad-store';
 import { CommentStoreManager, CommentStoreManagerKey } from '~common/comment/comment-store';
 import AppErrorPage from '~common/error/page/AppErrorPage.vue';
 import { createAppPromotionStore } from '~common/mobile-app/store';
-import Onboarding from '~common/onboarding/onboarding.service';
+import { clearOnboardingStartTimestamp } from '~common/onboarding/onboarding.service';
 import { Payload } from '~common/payload/payload-service';
 import handlePayloadTargetingTags from '~common/payload/payload-targeting-tags';
 import AppCommonShell from '~common/shell/AppCommonShell.vue';
@@ -23,6 +27,12 @@ const { loadGrid, clearGrid } = useGridStore();
 
 const adStore = createAdStore();
 Payload.addPayloadHandler(payload => handlePayloadTargetingTags({ adStore }, payload));
+
+provide(PayloadActionsStoreKey, createPayloadActionsStore());
+
+const AppShellNotice = defineAsyncComponent(
+	() => import('~app/components/shell/notice/AppShellNotice.vue')
+);
 
 createAppPromotionStore();
 provide(CommentStoreManagerKey, reactive(new CommentStoreManager()));
@@ -38,9 +48,9 @@ if (!import.meta.env.SSR) {
 	// to be onboarding.
 	//
 	// NOTE: This can't be done for SSR. It also can't be done within
-	// [onMounted], otherwise it gets called after [Onboarding] sets the new
+	// [onMounted], otherwise it gets called after onboarding sets the new
 	// token.
-	Onboarding.clearOnboardingStartTimestamp();
+	clearOnboardingStartTimestamp();
 }
 
 onMounted(() => {
@@ -89,5 +99,6 @@ watch(
 				</AppErrorPage>
 			</div>
 		</AppShell>
+		<AppShellNotice />
 	</AppCommonShell>
 </template>
