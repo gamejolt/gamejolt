@@ -40,16 +40,15 @@ const renderRequest = require(path.join(serverBuildPath, 'server.cjs')).default;
 
 // Workers gracefully self-terminate after handling this many requests so the
 // cluster orchestrator can fork a fresh process. Bounds long-lived memory
-// growth / leaks in the SSR bundle without needing a full deploy. Jitter is
-// applied per-worker so we don't restart every worker at the same moment.
+// growth / leaks in the SSR bundle without needing a full deploy. No jitter
+// needed since request times are not even close to consistent that the workers
+// will drift naturally.
 //
-// When running standalone (e.g. `yarn ssr`), there's no cluster orchestrator
-// to fork a replacement, so we disable the threshold entirely — otherwise the
-// dev server would just exit mid-session with nothing to bring it back up.
+// When running standalone (e.g. `yarn ssr`), there's no cluster orchestrator to
+// fork a replacement, so we disable the threshold entirely — otherwise the dev
+// server would just exit mid-session with nothing to bring it back up.
 const isClustered = typeof process.send === 'function';
-const BaseRestartAfterRequests = 10_000;
-const RestartJitter = Math.floor(BaseRestartAfterRequests * 0.2 * Math.random());
-const RestartThreshold = isClustered ? BaseRestartAfterRequests + RestartJitter : Infinity;
+const RestartThreshold = isClustered ? 10_000 : Infinity;
 
 let requestCount = 0;
 let isAwaitingDrainGrant = false;
