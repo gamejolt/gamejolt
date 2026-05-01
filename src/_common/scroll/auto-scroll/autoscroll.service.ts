@@ -32,7 +32,7 @@ export function initScrollBehavior(): RouterScrollBehavior {
 		}
 
 		if (savedPosition) {
-			return _scroll(savedPosition);
+			return _scroll(savedPosition, { waitForLayout: true });
 		}
 
 		// If the anchor key hasn't changed then we can do the anchor scrolling.
@@ -63,13 +63,43 @@ export function initScrollBehavior(): RouterScrollBehavior {
 }
 
 /**
- * Returns the scroll position but also sets up a timeout to enforce the scroll
- * position. Browsers for some reason scroll randomly through the vue-router
- * scroll behavior. It's always slightly off. Scrolling again in the browser's
- * next tick seems to solve this in most cases.
+ * Maximum time to wait for the page to lay out enough content to satisfy the
+ * scroll target before giving up and scrolling anyway.
  */
-async function _scroll(pos: { left: number; top: number }) {
+const ScrollWaitForLayoutTimeoutMs = 500;
+
+async function _scroll(
+	pos: { left: number; top: number },
+	options: { waitForLayout?: boolean } = {}
+) {
 	await nextTick();
+
+	if (options.waitForLayout) {
+		// vue-router fires scrollBehavior after one nextTick, but the new
+		// route's DOM may not have laid out enough content for the target
+		// position yet (cached feed views render their items across multiple
+		// frames). `window.scrollTo` would clamp to the current scrollHeight
+		// and land us at the top. Poll layout until it's tall enough.
+		await _waitForScrollHeight(pos.top + window.innerHeight);
+	}
+
 	window.scrollTo(pos);
 	return pos;
+}
+
+function _waitForScrollHeight(requiredHeight: number) {
+	return new Promise<void>(resolve => {
+		const start = performance.now();
+		function check() {
+			if (
+				document.documentElement.scrollHeight >= requiredHeight ||
+				performance.now() - start >= ScrollWaitForLayoutTimeoutMs
+			) {
+				resolve();
+				return;
+			}
+			requestAnimationFrame(check);
+		}
+		requestAnimationFrame(check);
+	});
 }
