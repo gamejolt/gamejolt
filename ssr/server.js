@@ -38,7 +38,103 @@ const ssrManifest = require(path.join(webBuildPath, '.vite', 'ssr-manifest.json'
 // require is safe — no per-request module sandbox needed.
 const renderRequest = require(path.join(serverBuildPath, 'server.cjs')).default;
 
+// Workers gracefully self-terminate after handling this many requests so the
+// cluster orchestrator can fork a fresh process. Bounds long-lived memory
+// growth / leaks in the SSR bundle without needing a full deploy. Jitter is
+// applied per-worker so we don't restart every worker at the same moment.
+//
+// When running standalone (e.g. `yarn ssr`), there's no cluster orchestrator
+// to fork a replacement, so we disable the threshold entirely — otherwise the
+// dev server would just exit mid-session with nothing to bring it back up.
+const isClustered = typeof process.send === 'function';
+const BaseRestartAfterRequests = 10_000;
+const RestartJitter = Math.floor(BaseRestartAfterRequests * 0.2 * Math.random());
+const RestartThreshold = isClustered ? BaseRestartAfterRequests + RestartJitter : Infinity;
+
+let requestCount = 0;
+let isAwaitingDrainGrant = false;
+let isShuttingDown = false;
+/** @type {import('http').Server | undefined} */
+let httpServer;
+
+// Ask the cluster master for permission to drain. The master only hands out
+// one drain slot at a time across the worker pool, so we keep serving full
+// traffic until our turn comes up — this protects throughput when the worker
+// count is small. Only callable when clustered (RestartThreshold is Infinity
+// otherwise, so the counter middleware never reaches this path).
+function requestDrain() {
+	if (isShuttingDown || isAwaitingDrainGrant) {
+		return;
+	}
+	isAwaitingDrainGrant = true;
+	console.log(`Worker ${process.pid} reached ${requestCount} requests, requesting drain slot`);
+	process.send({ cmd: 'request-drain' });
+}
+
+process.on(
+	'message',
+	/** @param {unknown} msg */
+	msg => {
+		if (
+			typeof msg === 'object' &&
+			msg !== null &&
+			/** @type {{cmd?: string}} */ (msg).cmd === 'drain-granted'
+		) {
+			beginGracefulShutdown();
+		}
+	}
+);
+
+function beginGracefulShutdown() {
+	if (isShuttingDown) {
+		return;
+	}
+
+	isShuttingDown = true;
+	console.log(`Worker ${process.pid} draining and exiting (${requestCount} requests served)`);
+
+	// We're a node cluster worker, so the listening socket isn't actually ours —
+	// the cluster master holds it and round-robins accepted connections to
+	// workers via IPC. Calling close() here just tells the master to remove us
+	// from the dispatch pool; the listening socket stays open and new TCP
+	// handshakes continue to be accepted and routed to the other workers.
+	// In-flight requests on this worker are allowed to finish, and the callback
+	// fires once they're all done.
+	httpServer.close(() => {
+		console.log(`Worker ${process.pid} drained, exiting`);
+		process.exit(0);
+	});
+
+	// close() also waits on idle keep-alive sockets, which can sit around for
+	// seconds before the client times them out. Kick them now so the drain
+	// isn't gated on idle clients — active requests are untouched.
+	httpServer.closeIdleConnections();
+
+	// Hard timeout in case an in-flight render hangs.
+	setTimeout(() => {
+		console.log(`Worker ${process.pid} drain timed out, force-exiting`);
+		process.exit(0);
+	}, 30_000).unref();
+}
+
 const server = express();
+
+server.use((req, res, next) => {
+	if (!isShuttingDown) {
+		++requestCount;
+		if (requestCount >= RestartThreshold) {
+			requestDrain();
+		}
+	}
+
+	// Encourage the load balancer to drop keep-alive once we're shutting down,
+	// so subsequent requests are routed to a healthy worker.
+	if (isShuttingDown) {
+		res.set('Connection', 'close');
+	}
+
+	next();
+});
 
 // Only needed in dev builds, in prod everything would be served from cdn.
 if (!isProd) {
@@ -67,7 +163,7 @@ server.use(async (req, res) => {
 		const result = await renderRequest(request);
 
 		if (result.redirect) {
-			console.log('sending redirect', result.redirect);
+			console.log('Sending redirect', result.redirect);
 			res.redirect(301, result.redirect);
 			return;
 		}
@@ -83,7 +179,7 @@ server.use(async (req, res) => {
 			.replace(`<!-- gj:ssr-metatags -->`, result.metaTagsHtml);
 
 		if (result.errorCode) {
-			console.log('sending error code', result.errorCode);
+			console.log('Sending error code', result.errorCode);
 			res.status(result.errorCode);
 		} else {
 			res.status(200);
@@ -92,7 +188,7 @@ server.use(async (req, res) => {
 		res.set({ 'Content-Type': 'text/html' }).end(html, () => {
 			const total = Date.now() - start;
 			console.log(
-				'response ended',
+				'Response ended',
 				'total time:',
 				total + 'ms',
 				'render time:',
@@ -103,12 +199,15 @@ server.use(async (req, res) => {
 			);
 		});
 	} catch (e) {
-		console.log('got error', req.url, e);
+		console.log('Got error', req.url, e);
 		res.status(500).end('Internal Server Error');
 	}
 });
 
 const port = 3501;
-server.listen(port, () => {
-	console.log(`server started at localhost:${port}`);
+httpServer = server.listen(port, () => {
+	const restartNote = isClustered
+		? `will restart after ${RestartThreshold} requests`
+		: 'standalone mode — request-based restart disabled';
+	console.log(`Server started at localhost:${port} (${restartNote})`);
 });
