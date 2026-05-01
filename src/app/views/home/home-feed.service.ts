@@ -1,6 +1,6 @@
 import { RouteLocationNormalized } from 'vue-router';
 
-import { commonStore } from '~common/store/common-store';
+import { getCommonStore } from '~common/store/common-store';
 
 export const HOME_FEED_FYP = 'fyp' as const;
 export const HOME_FEED_ACTIVITY = 'activity' as const;
@@ -48,7 +48,7 @@ export class HomeFeedService {
 }
 
 export function shouldUseFYPDefault() {
-	const user = commonStore.user.value;
+	const user = getCommonStore().user.value;
 
 	if (!user || !user.created_on) {
 		return true;

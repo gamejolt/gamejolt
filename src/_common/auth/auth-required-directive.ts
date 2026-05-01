@@ -1,14 +1,15 @@
 import { Directive } from 'vue';
 
 import { showAuthModal } from '~common/auth/auth-modal.service';
-import { commonStore } from '~common/store/common-store';
+import { getCommonStore } from '~common/store/common-store';
 
 export const vAppAuthRequired: Directive<unknown, void> = {
 	beforeMount(el: HTMLElement) {
 		el.addEventListener(
 			'click',
 			e => {
-				if (commonStore.user.value) {
+				const { user } = getCommonStore();
+				if (user.value) {
 					return;
 				}
 

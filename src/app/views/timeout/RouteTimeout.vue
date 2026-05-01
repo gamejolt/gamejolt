@@ -11,7 +11,7 @@ import { illTimeOut } from '~common/illustration/illustrations';
 import AppLinkHelp from '~common/link/AppLinkHelp.vue';
 import { Navigate } from '~common/navigate/navigate.service';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
-import { commonStore, useCommonStore } from '~common/store/common-store';
+import { getCommonStore, useCommonStore } from '~common/store/common-store';
 import AppThemeSvg from '~common/theme/svg/AppThemeSvg.vue';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 import { $gettext } from '~common/translate/translate.service';
@@ -26,7 +26,8 @@ export default {
 			const payload = await Api.sendRequest('/web/touch');
 
 			// Redirect to home for guests or users without active timeouts.
-			if (!commonStore.user.value || !commonStore.isUserTimedOut.value) {
+			const { user, isUserTimedOut } = getCommonStore();
+			if (!user.value || !isUserTimedOut.value) {
 				return new RouteLocationRedirect({
 					name: 'home',
 				});

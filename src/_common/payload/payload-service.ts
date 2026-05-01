@@ -124,7 +124,6 @@ class PayloadService {
 
 			this.checkClientForceUpgrade(responseData);
 			this.checkPayloadUser(responseData, options);
-			this.checkPayloadConsents(responseData);
 			this.checkPayloadVersion(responseData, options);
 			this.checkPayloadSeo(responseData, options);
 
@@ -212,19 +211,6 @@ class PayloadService {
 		}
 
 		Seo.processPayloadDirectives(data.meta.seo);
-	}
-
-	private checkPayloadConsents(data: any) {
-		if (!data || !this.commonStore) {
-			return;
-		}
-
-		if (typeof data.c === 'object') {
-			this.commonStore.setConsents(data.c);
-			return;
-		}
-
-		this.commonStore.setConsents({});
 	}
 
 	private checkClientForceUpgrade(data: any) {

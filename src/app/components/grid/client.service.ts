@@ -26,7 +26,7 @@ import { isOnboarding } from '~common/onboarding/onboarding.service';
 import { SettingFeedNotifications } from '~common/settings/settings.service';
 import { SiteTrophyModel } from '~common/site/trophy/trophy.model';
 import { createSocketController, SocketController } from '~common/socket/socket-controller';
-import { commonStore } from '~common/store/common-store';
+import { getCommonStore } from '~common/store/common-store';
 import { $gettext } from '~common/translate/translate.service';
 import { getTrophyImg } from '~common/trophy/thumbnail/AppTrophyThumbnail.vue';
 import { UserGameTrophyModel } from '~common/user/trophy/game-trophy.model';
@@ -150,7 +150,7 @@ export class GridClient {
 	init() {
 		this.socketController = markRaw(
 			createSocketController({
-				commonStore,
+				commonStore: getCommonStore(),
 				logContext: 'Grid',
 				onDisconnect: () => {
 					this.reconnect(0);
@@ -189,7 +189,7 @@ export class GridClient {
 
 	private async connect() {
 		const { isGuest, guestToken } = this;
-		const { user } = commonStore;
+		const { user } = getCommonStore();
 
 		const didConnect = await this.socketController.connect({
 			socketUrl: Environment.grid,
@@ -345,7 +345,7 @@ export class GridClient {
 				if (notification.from_model instanceof UserModel) {
 					// We send a notification to the author of the post.
 					// Do not show a notification in that case, the purpose is to increment the activity feed counter.
-					if (notification.from_model.id === commonStore.user.value?.id) {
+					if (notification.from_model.id === getCommonStore().user.value?.id) {
 						return;
 					}
 

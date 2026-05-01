@@ -13,7 +13,7 @@ import { Environment } from '~common/environment/environment.service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { Screen } from '~common/screen/screen-service';
-import { commonStore } from '~common/store/common-store';
+import { getCommonStore } from '~common/store/common-store';
 import AppThemeSvg from '~common/theme/svg/AppThemeSvg.vue';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 import AppTranslateLangSelector from '~common/translate/lang-selector/AppTranslateLangSelector.vue';
@@ -21,7 +21,7 @@ import { imageGameJoltLogo } from '~img/images';
 
 export function loggedUserBlock() {
 	// Redirect right away if they are logged in.
-	if (commonStore.user.value) {
+	if (getCommonStore().user.value) {
 		redirectToDashboard();
 
 		// Never resolve.

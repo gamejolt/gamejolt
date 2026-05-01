@@ -10,7 +10,7 @@ import { FiresidePostModel } from '~common/fireside/post/post-model';
 import { NotificationModel, NotificationType } from '~common/notification/notification-model';
 import { QuestNotificationModel } from '~common/quest/quest-notification-model';
 import { createSocketChannelController } from '~common/socket/socket-controller';
-import { commonStore } from '~common/store/common-store';
+import { getCommonStore } from '~common/store/common-store';
 import { TabLeaderInterface } from '~utils/tab-leader';
 const TabLeaderLazy = importNoSSR(async () => await import('~utils/tab-leader'));
 
@@ -159,8 +159,9 @@ export function createGridNotificationChannel(client: GridClient, options: { use
 			addNewQuestIds(questStore, payload.newQuestIds);
 			addQuestActivityIds(questStore, payload.questActivityIds);
 
-			commonStore.coinBalance.value = payload.coinBalance;
-			commonStore.joltbuxBalance.value = payload.buxBalance;
+			const { coinBalance, joltbuxBalance } = getCommonStore();
+			coinBalance.value = payload.coinBalance;
+			joltbuxBalance.value = payload.buxBalance;
 
 			const {
 				charge,
@@ -279,10 +280,12 @@ export function createGridNotificationChannel(client: GridClient, options: { use
 	}
 
 	function _onWalletUpdated(payload: WalletUpdatedPayload) {
+		const { coinBalance, joltbuxBalance } = getCommonStore();
+
 		if (payload.identifier === CurrencyType.coins.id) {
-			commonStore.coinBalance.value = payload.available_balance;
+			coinBalance.value = payload.available_balance;
 		} else if (payload.identifier === CurrencyType.joltbux.id) {
-			commonStore.joltbuxBalance.value = payload.available_balance;
+			joltbuxBalance.value = payload.available_balance;
 		}
 	}
 

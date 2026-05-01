@@ -9,7 +9,7 @@ import { ChatUserCollection } from '~app/components/chat/user-collection';
 import { type GridClient } from '~app/components/grid/client.service';
 import { AppStore } from '~app/store';
 import { storeModel, storeModelList } from '~common/model/model-store.service';
-import { commonStore } from '~common/store/common-store';
+import { getCommonStore } from '~common/store/common-store';
 import { EventTopic } from '~common/system/event/event-topic';
 import { arrayRemove, numberSort } from '~utils/array';
 import { createLogger } from '~utils/logging';
@@ -109,7 +109,7 @@ export function clearChat(chat: ChatClient) {
 }
 
 export async function connectChat(chat: ChatClient) {
-	const { user } = commonStore;
+	const { user } = getCommonStore();
 
 	if (user.value) {
 		const channel = createChatUserChannel(chat, { userId: user.value.id });

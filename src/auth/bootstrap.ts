@@ -7,7 +7,7 @@ import { bootstrapCommon } from '~common/bootstrap';
 export async function createApp() {
 	const router = createAuthRouter();
 
-	const { app } = await bootstrapCommon({
+	const { app, commonStore } = await bootstrapCommon({
 		appComponentLoader: async () => (await import('~auth/AppMain.vue')).default,
 		router,
 	});
@@ -27,7 +27,6 @@ export async function createApp() {
 
 	if (GJ_IS_DESKTOP_APP) {
 		const { bootstrapCommonClient } = await import('~common/client/bootstrap');
-		const { commonStore } = await import('~common/store/common-store');
 		bootstrapCommonClient({ commonStore });
 	}
 

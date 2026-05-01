@@ -20,7 +20,7 @@ import { initMetaService } from '~common/meta/meta-service';
 import { Payload } from '~common/payload/payload-service';
 import { setCurrentRouter } from '~common/route/current-router-service';
 import { initScreenService } from '~common/screen/screen-service';
-import { commonStore, CommonStoreKey } from '~common/store/common-store';
+import { CommonStoreKey, createCommonStore } from '~common/store/common-store';
 import { createThemeStore, ThemeStoreKey } from '~common/theme/theme.store';
 import { initTranslations } from '~common/translate/translate.service';
 import { hijackLinks } from '~utils/router';
@@ -37,6 +37,9 @@ export type BootstrapOptions<T = Component> = {
  */
 export async function bootstrapCommon(options: BootstrapOptions) {
 	const router = options?.router ?? null;
+
+	// Do this first so that everything has access to it from here on.
+	const commonStore = createCommonStore();
 
 	// Check to make sure our build config is correct.
 	// We only want to throw this while developing as it is not a critical error at the time of writing.
@@ -63,7 +66,6 @@ export async function bootstrapCommon(options: BootstrapOptions) {
 	const appComponent = await options.appComponentLoader();
 	const app = import.meta.env.SSR ? createSSRApp(appComponent) : createApp(appComponent);
 
-	// Our global stores.
 	app.provide(CommonStoreKey, commonStore);
 	app.provide(ThemeStoreKey, createThemeStore({ commonStore }));
 

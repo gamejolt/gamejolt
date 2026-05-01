@@ -20,7 +20,7 @@ import { onRouteChangeAfter } from '~common/route/route-component';
 import { SettingThemeDark } from '~common/settings/settings.service';
 import { ShareProvider, ShareResource } from '~common/share/share.service';
 import { defineIsolatedState } from '~common/ssr/isolated-state';
-import { CommonStore, commonStore } from '~common/store/common-store';
+import { CommonStore } from '~common/store/common-store';
 import { getTranslationLang } from '~common/translate/translate.service';
 import { arrayRemove } from '~utils/array';
 import { createLogger } from '~utils/logging';
@@ -300,7 +300,7 @@ export async function trackExperimentEngagement(option: ConfigOption) {
 
 	// Only track their experiment engagement once we're sure everything is
 	// loaded in for them.
-	await commonStore.userBootstrappedPromise;
+	await _state().store!.userBootstrappedPromise;
 	await ensureConfig();
 
 	_trackEvent('experiment_engagement', {
