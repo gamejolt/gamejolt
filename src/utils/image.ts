@@ -1,4 +1,4 @@
-import { Environment } from '~common/environment/environment.service';
+import { MediaserverUrl } from '~common/environment/environment.service';
 import { getScreen } from '~common/screen/screen-service';
 
 export const imageMimeTypes = [
@@ -111,7 +111,7 @@ export function getMediaserverUrlForBounds(
 	},
 	hiDpiOptions: HiDpiOptions = {}
 ) {
-	if (!src || !src.startsWith(Environment.mediaserverUrl)) {
+	if (!src || !src.startsWith(MediaserverUrl)) {
 		return src;
 	}
 

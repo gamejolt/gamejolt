@@ -13,7 +13,7 @@ import { Api } from '~common/api/api.service';
 import AppFadeCollapse from '~common/AppFadeCollapse.vue';
 import AppButton from '~common/button/AppButton.vue';
 import AppContentViewer from '~common/content/content-viewer/AppContentViewer.vue';
-import { Environment } from '~common/environment/environment.service';
+import { BaseUrl } from '~common/environment/environment.service';
 import { formatNumber } from '~common/filters/number';
 import { ForumChannelModel } from '~common/forum/channel/channel.model';
 import { ForumPostModel } from '~common/forum/post/post.model';
@@ -186,8 +186,7 @@ createAppRoute({
 										v-if="user.permission_level > 0"
 										class="list-group-item"
 										:href="
-											Environment.baseUrl +
-											`/moderate/forums/topics/remove/${topic.id}`
+											BaseUrl + `/moderate/forums/topics/remove/${topic.id}`
 										"
 										target="_blank"
 									>
@@ -196,10 +195,7 @@ createAppRoute({
 									<a
 										v-if="user.permission_level > 0"
 										class="list-group-item"
-										:href="
-											Environment.baseUrl +
-											`/moderate/users/view/${topic.user_id}`
-										"
+										:href="BaseUrl + `/moderate/users/view/${topic.user_id}`"
 										target="_blank"
 									>
 										{{ $gettext(`Moderate User`) }}

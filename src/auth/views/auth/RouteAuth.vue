@@ -9,7 +9,7 @@ import { useAuthStore } from '~auth/store/index';
 import { Api } from '~common/api/api.service';
 import { redirectToDashboard } from '~common/auth/auth.service';
 import { Connection } from '~common/connection/connection-service';
-import { Environment } from '~common/environment/environment.service';
+import { AuthBaseUrl, BaseUrl } from '~common/environment/environment.service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { getScreen } from '~common/screen/screen-service';
@@ -64,13 +64,7 @@ createAppRoute({
 
 		<div class="auth-scroll-container">
 			<div class="auth-logo text-center anim-fade-in-enlarge stagger">
-				<a
-					:href="
-						!GJ_IS_DESKTOP_APP
-							? Environment.baseUrl + '/'
-							: Environment.authBaseUrl + '/login'
-					"
-				>
+				<a :href="!GJ_IS_DESKTOP_APP ? BaseUrl + '/' : AuthBaseUrl + '/login'">
 					<AppThemeSvg
 						:src="imageGameJoltLogo"
 						width="328"
@@ -107,14 +101,14 @@ createAppRoute({
 			<div class="auth-shell-bottom-links">
 				<a
 					class="link-unstyled anim-fade-in stagger"
-					:href="Environment.baseUrl + '/terms'"
+					:href="BaseUrl + '/terms'"
 					target="_blank"
 				>
 					<AppTranslate>Terms</AppTranslate>
 				</a>
 				<a
 					class="link-unstyled anim-fade-in stagger"
-					:href="Environment.baseUrl + '/privacy'"
+					:href="BaseUrl + '/privacy'"
 					target="_blank"
 				>
 					<AppTranslate>Privacy</AppTranslate>
@@ -122,7 +116,7 @@ createAppRoute({
 				<a
 					v-if="!GJ_IS_DESKTOP_APP"
 					class="link-unstyled anim-fade-in stagger"
-					:href="Environment.baseUrl + '/cookies'"
+					:href="BaseUrl + '/cookies'"
 					target="_blank"
 				>
 					<AppTranslate>Cookie Policy</AppTranslate>

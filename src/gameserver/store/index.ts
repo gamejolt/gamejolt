@@ -2,7 +2,7 @@ import { parse } from 'qs';
 import { computed, inject, InjectionKey, ref } from 'vue';
 
 import { Api } from '~common/api/api.service';
-import { Environment } from '~common/environment/environment.service';
+import { GameserverApiHost, IsSecureEnvironment } from '~common/environment/environment.service';
 import { GameBuildModel } from '~common/game/build/build.model';
 import { GameModel } from '~common/game/game.model';
 import { GamePackageModel } from '~common/game/package/package.model';
@@ -62,7 +62,7 @@ export function createGameserverStore() {
 	});
 
 	async function bootstrap() {
-		Api.apiHost = Environment.gameserverApiHost;
+		Api.apiHost = GameserverApiHost;
 
 		const query = parse(window.location.search.substring(1));
 		if (!query['token']) {
@@ -72,7 +72,7 @@ export function createGameserverStore() {
 		const tokenId = query['token'];
 		let requestUrl = `/gameserver/${tokenId}`;
 
-		if (!Environment.isSecure) {
+		if (!IsSecureEnvironment) {
 			requestUrl += '?insecure';
 		}
 

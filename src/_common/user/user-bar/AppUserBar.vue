@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { Environment } from '~common/environment/environment.service';
+import { BaseUrl } from '~common/environment/environment.service';
 import { getScreen } from '~common/screen/screen-service';
 import { UserModel } from '~common/user/user.model';
 import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
@@ -38,7 +38,7 @@ const { isXs, isDesktop } = getScreen();
 								paddingTop: `10px !important`,
 								paddingBottom: `10px !important`,
 							}"
-							:href="Environment.baseUrl + '/dashboard'"
+							:href="BaseUrl + '/dashboard'"
 						>
 							<AppUserAvatarImg
 								:style="{

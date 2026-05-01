@@ -2,7 +2,7 @@ import Axios, { AxiosRequestConfig } from 'axios';
 import { ref } from 'vue';
 
 import { setTimezoneOffsetCookie } from '~common/cookie/cookie.service';
-import { Environment, getSsrContext } from '~common/environment/environment.service';
+import { ApiHost, getSsrContext, UploadHost } from '~common/environment/environment.service';
 import { Payload } from '~common/payload/payload-service';
 import { defineIsolatedState } from '~common/ssr/isolated-state';
 
@@ -122,8 +122,8 @@ export interface RequestOptions {
 }
 
 class ApiService {
-	apiHost: string = Environment.apiHost;
-	uploadHost: string = Environment.uploadHost;
+	apiHost: string = ApiHost;
+	uploadHost: string = UploadHost;
 	apiPath = '/site-api';
 
 	async sendRequest<T = any>(

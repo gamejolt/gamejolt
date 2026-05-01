@@ -3,7 +3,7 @@ import { computed } from 'vue';
 
 import FormSiteSettings from '~app/components/forms/site/settings/FormSiteSettings.vue';
 import AppButton from '~common/button/AppButton.vue';
-import { Environment } from '~common/environment/environment.service';
+import { BaseUrlInsecure } from '~common/environment/environment.service';
 import { showErrorGrowl, showSuccessGrowl } from '~common/growls/growls.service';
 import { $activateSite, SiteModel } from '~common/site/site-model';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
@@ -49,7 +49,7 @@ function onSettingsSaved() {
 }
 
 function getEditorLocation(tab: string) {
-	return Environment.baseUrlInsecure + `/site-editor/${tab}?id=${site!.id}`;
+	return BaseUrlInsecure + `/site-editor/${tab}?id=${site!.id}`;
 }
 </script>
 

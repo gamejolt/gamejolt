@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { Environment } from '~common/environment/environment.service';
+import { WidgetHost } from '~common/environment/environment.service';
 import { SellableModel } from '~common/sellable/sellable.model';
 
 type Props = {
@@ -15,7 +15,7 @@ const { sellables = [], theme = 'dark' } = defineProps<Props>();
 			<iframe
 				nwdisable
 				nwfaketop
-				:src="`${Environment.widgetHost}/sale/v1?key=${sellable.key}&theme=${theme}`"
+				:src="`${WidgetHost}/sale/v1?key=${sellable.key}&theme=${theme}`"
 				frameborder="0"
 				width="100%"
 				height="245"

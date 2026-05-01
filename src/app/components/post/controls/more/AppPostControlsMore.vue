@@ -13,7 +13,7 @@ import { showCollectibleResourceDetailsModal } from '~common/collectible/resourc
 import { CommunityChannelModel } from '~common/community/channel/channel.model';
 import { CommunityModel } from '~common/community/community.model';
 import AppCommunityThumbnailImg from '~common/community/thumbnail/AppCommunityThumbnailImg.vue';
-import { Environment } from '~common/environment/environment.service';
+import { BaseUrl } from '~common/environment/environment.service';
 import { FiresidePostCommunityModel } from '~common/fireside/post/community/community.model';
 import {
 	$featureFiresidePost,
@@ -64,9 +64,7 @@ const shouldShowManageCommunities = toRef(
 	() => post.status === FiresidePostStatus.Active && post.manageableCommunities.length !== 0
 );
 const shouldShowModTools = toRef(() => sessionUser.value && sessionUser.value.isMod);
-const siteModerateLink = toRef(
-	() => Environment.baseUrl + `/moderate/fireside-posts/view/${post.id}`
-);
+const siteModerateLink = toRef(() => BaseUrl + `/moderate/fireside-posts/view/${post.id}`);
 const avatarFrame = toRef(() => post.displayUser.avatar_frame);
 const shouldShowBlockCommunityUser = toRef(() => {
 	// Cannot block yourself.

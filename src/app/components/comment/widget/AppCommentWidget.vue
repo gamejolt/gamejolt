@@ -45,7 +45,7 @@ import {
 	CommentStoreThreadView,
 	CommentStoreView,
 } from '~common/comment/comment-store-view';
-import { Environment } from '~common/environment/environment.service';
+import { AuthBaseUrl } from '~common/environment/environment.service';
 import { formatNumber } from '~common/filters/number';
 import AppIllustration from '~common/illustration/AppIllustration.vue';
 import { illNoComments } from '~common/illustration/illustrations';
@@ -94,7 +94,7 @@ export function createCommentWidget(options: {
 	const commentManager = useCommentStoreManager()!;
 
 	const loginUrl = computed(
-		() => Environment.authBaseUrl + '/login?redirect=' + encodeURIComponent(route.fullPath)
+		() => AuthBaseUrl + '/login?redirect=' + encodeURIComponent(route.fullPath)
 	);
 
 	const shouldShowLoadMore = computed(() => {

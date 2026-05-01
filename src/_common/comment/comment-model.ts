@@ -7,7 +7,7 @@ import {
 	CommentVoteType,
 } from '~common/comment/vote/vote-model';
 import { ContentDocument } from '~common/content/content-document';
-import { Environment } from '~common/environment/environment.service';
+import { BaseUrl } from '~common/environment/environment.service';
 import { FiresidePostModel } from '~common/fireside/post/post-model';
 import { GameModel } from '~common/game/game.model';
 import { showErrorGrowl } from '~common/growls/growls.service';
@@ -97,7 +97,7 @@ export class CommentModel implements ModelStoreModel, RemovableModel, Reactionab
 	}
 
 	get permalink() {
-		return Environment.baseUrl + '/x/permalink/comment/' + this.id;
+		return BaseUrl + '/x/permalink/comment/' + this.id;
 	}
 }
 

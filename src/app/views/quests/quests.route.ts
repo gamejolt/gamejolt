@@ -2,7 +2,7 @@ import { RouteRecordRaw } from 'vue-router';
 
 import { routeHome } from '~app/views/home/home.route';
 import { routeQuestsView } from '~app/views/quests/view/view.route';
-import { Environment } from '~common/environment/environment.service';
+import { BaseUrl } from '~common/environment/environment.service';
 
 export const routeQuests: RouteRecordRaw = {
 	name: 'quests',
@@ -21,5 +21,5 @@ export const routeQuests: RouteRecordRaw = {
  * called from the app section, or a full URL back to the app otherwise.
  */
 export function routeUrlQuests() {
-	return GJ_SECTION === 'app' ? '#quest' : `${Environment.baseUrl}/#quest`;
+	return GJ_SECTION === 'app' ? '#quest' : `${BaseUrl}/#quest`;
 }

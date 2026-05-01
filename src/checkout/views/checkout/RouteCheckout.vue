@@ -4,7 +4,7 @@ import { computed, CSSProperties, ref } from 'vue';
 import FormPayment from '~checkout/components/forms/FormPayment.vue';
 import { Api } from '~common/api/api.service';
 import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
-import { Environment } from '~common/environment/environment.service';
+import { BaseUrl, WttfBaseUrl } from '~common/environment/environment.service';
 import { GameModel } from '~common/game/game.model';
 import { GamePackageModel } from '~common/game/package/package.model';
 import { showErrorGrowl } from '~common/growls/growls.service';
@@ -151,7 +151,7 @@ function onFormSubmit(response: any) {
 
 	if (GJ_IS_DESKTOP_APP && redirect) {
 		// Replaces "https://gamejolt.com" with whatever the desktop app has as its base url.
-		redirect = redirect.replace(Environment.baseUrl, Environment.wttfBaseUrl);
+		redirect = redirect.replace(BaseUrl, WttfBaseUrl);
 	}
 
 	if (!redirect) {

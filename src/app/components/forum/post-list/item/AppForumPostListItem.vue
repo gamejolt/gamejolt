@@ -7,7 +7,7 @@ import { Api } from '~common/api/api.service';
 import AppButton from '~common/button/AppButton.vue';
 import { Clipboard } from '~common/clipboard/clipboard-service';
 import AppContentViewer from '~common/content/content-viewer/AppContentViewer.vue';
-import { Environment } from '~common/environment/environment.service';
+import { BaseUrl } from '~common/environment/environment.service';
 import AppExpand from '~common/expand/AppExpand.vue';
 import { formatDate } from '~common/filters/date';
 import { formatNumber } from '~common/filters/number';
@@ -259,16 +259,14 @@ function copyPermalink() {
 						<template v-if="appUser.permission_level > 0">
 							<a
 								class="list-group-item"
-								:href="
-									Environment.baseUrl + `/moderate/forums/posts/remove/${post.id}`
-								"
+								:href="BaseUrl + `/moderate/forums/posts/remove/${post.id}`"
 								target="_blank"
 							>
 								<AppTranslate>Remove (Mod)</AppTranslate>
 							</a>
 							<a
 								class="list-group-item"
-								:href="Environment.baseUrl + `/moderate/users/view/${post.user_id}`"
+								:href="BaseUrl + `/moderate/users/view/${post.user_id}`"
 								target="_blank"
 							>
 								<AppTranslate>Moderate User</AppTranslate>

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { toRef } from 'vue';
 
-import { Environment } from '~common/environment/environment.service';
+import { BaseUrl } from '~common/environment/environment.service';
 import { GameModel } from '~common/game/game.model';
 import AppGameThumbnailImg from '~common/game/thumbnail/AppGameThumbnailImg.vue';
 import { WidgetCompiler } from '~common/widget-compiler/widget-compiler.service';
@@ -14,7 +14,7 @@ const { games = [] } = defineProps<Props>();
 const contentClass = toRef(() => WidgetCompiler.getContentClass());
 
 function url(game: GameModel) {
-	return game.site ? game.site.url : Environment.baseUrl + game.getUrl();
+	return game.site ? game.site.url : BaseUrl + game.getUrl();
 }
 </script>
 

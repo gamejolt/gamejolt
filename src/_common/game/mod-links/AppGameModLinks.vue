@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { Api } from '~common/api/api.service';
-import { Environment } from '~common/environment/environment.service';
+import { BaseUrl } from '~common/environment/environment.service';
 import { GameModel } from '~common/game/game.model';
 import { showSuccessGrowl } from '~common/growls/growls.service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
@@ -63,7 +63,7 @@ async function untag(tag: string) {
 		</a>
 		<a
 			class="list-group-item has-icon"
-			:href="Environment.baseUrl + `/moderate/games/view/${game.id}`"
+			:href="BaseUrl + `/moderate/games/view/${game.id}`"
 			target="_blank"
 		>
 			<AppJolticon icon="cog" />

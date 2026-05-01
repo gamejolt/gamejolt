@@ -1,6 +1,6 @@
 import { CommunityCompetitionEntryAwardModel } from '~common/community/competition/entry/award/award.model';
 import { CommunityCompetitionEntryVoteResultModel } from '~common/community/competition/entry/vote/vote-result.model';
-import { Environment } from '~common/environment/environment.service';
+import { BaseUrl } from '~common/environment/environment.service';
 import { GameModel } from '~common/game/game.model';
 import { Model } from '~common/model/model.service';
 import { UserModel } from '~common/user/user.model';
@@ -25,7 +25,7 @@ export class CommunityCompetitionEntryModel extends Model {
 	}
 
 	get permalink() {
-		return Environment.baseUrl + '/x/permalink/jam-entry/' + this.id;
+		return BaseUrl + '/x/permalink/jam-entry/' + this.id;
 	}
 
 	constructor(data: any = {}) {

@@ -1,5 +1,5 @@
 import { HelpCategoryModel } from '~app/components/help/category/category.model';
-import { Environment } from '~common/environment/environment.service';
+import { BaseUrl } from '~common/environment/environment.service';
 import { Model } from '~common/model/model.service';
 
 export class HelpPageModel extends Model {
@@ -21,9 +21,6 @@ export class HelpPageModel extends Model {
 	}
 
 	getShareUrl() {
-		return (
-			Environment.baseUrl +
-			`/help-docs/${this.help_category.url}/${this.url}?utm_source=share`
-		);
+		return BaseUrl + `/help-docs/${this.help_category.url}/${this.url}?utm_source=share`;
 	}
 }

@@ -1,5 +1,5 @@
 import { isDynamicGoogleBot } from '~common/device/device.service';
-import { Environment } from '~common/environment/environment.service';
+import { BaseUrl } from '~common/environment/environment.service';
 
 export function getCookie(name: string): Promise<string | undefined> {
 	return new Promise(resolve => {
@@ -58,7 +58,7 @@ export function setTimezoneOffsetCookie() {
 				name: cookieName,
 				value: offsetSeconds.toString(),
 				expirationDate: Math.floor(expiresTimestamp / 1000),
-				url: Environment.baseUrl,
+				url: BaseUrl,
 				path: '/',
 			},
 			() => {}

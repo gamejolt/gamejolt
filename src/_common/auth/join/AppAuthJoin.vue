@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router';
 
 import { Api } from '~common/api/api.service';
 import AppAuthJoinForm, { JoinFormModel } from '~common/auth/join/AppAuthJoinForm.vue';
-import { Environment } from '~common/environment/environment.service';
+import { AuthBaseUrl } from '~common/environment/environment.service';
 import { Navigate } from '~common/navigate/navigate.service';
 
 type Props = {
@@ -28,7 +28,7 @@ function onJoin(formModel: JoinFormModel) {
 	sessionStorage.setItem('signup-password', formModel.password);
 
 	if (GJ_SECTION !== 'auth') {
-		Navigate.goto(`${Environment.authBaseUrl}/join/captcha`);
+		Navigate.goto(`${AuthBaseUrl}/join/captcha`);
 	} else {
 		router.push({
 			name: 'auth.join-captcha',

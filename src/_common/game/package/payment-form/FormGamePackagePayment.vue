@@ -4,7 +4,7 @@ import { computed, ref, watch } from 'vue';
 import { Api } from '~common/api/api.service';
 import AppButton from '~common/button/AppButton.vue';
 import { getDeviceArch, getDeviceOS } from '~common/device/device.service';
-import { Environment } from '~common/environment/environment.service';
+import { CheckoutBaseUrl } from '~common/environment/environment.service';
 import AppExpand from '~common/expand/AppExpand.vue';
 import { formatCurrency } from '~common/filters/currency';
 import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
@@ -154,7 +154,7 @@ const form: FormController<FormModel> = createForm({
 		if (GJ_IS_DESKTOP_APP) {
 			// Our checkout can be done in client.
 			if (checkoutType.value === OrderPaymentMethod.CCStripe) {
-				Navigate.goto(Environment.checkoutBaseUrl + '/checkout/' + response.cart.hash);
+				Navigate.goto(CheckoutBaseUrl + '/checkout/' + response.cart.hash);
 			} else {
 				// Otherwise we have to open in browser.
 				Navigate.gotoExternal(response.redirectUrl);

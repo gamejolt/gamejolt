@@ -8,7 +8,7 @@ import { useGameDashRouteController } from '~app/views/dashboard/games/manage/ma
 import { Api } from '~common/api/api.service';
 import AppButton from '~common/button/AppButton.vue';
 import { Clipboard } from '~common/clipboard/clipboard-service';
-import { Environment } from '~common/environment/environment.service';
+import { BaseUrl } from '~common/environment/environment.service';
 import AppExpand from '~common/expand/AppExpand.vue';
 import { formatNumber } from '~common/filters/number';
 import { GamePackageModel } from '~common/game/package/package.model';
@@ -69,7 +69,7 @@ async function searchKeys() {
 }
 
 function copyKeyLink(key: KeyModel) {
-	Clipboard.copy(`${Environment.baseUrl}/claim/${key.key}`);
+	Clipboard.copy(`${BaseUrl}/claim/${key.key}`);
 }
 
 function onNewKeysAdded() {
@@ -163,8 +163,8 @@ const appRoute = createAppRoute({
 								to their email addresses.
 							</AppTranslate>
 						</p>
-						<a :href="`${Environment.baseUrl}/claim/g-${game.id}`" target="_blank">
-							{{ Environment.baseUrl }}/claim/g-{{ game.id }}
+						<a :href="`${BaseUrl}/claim/g-${game.id}`" target="_blank">
+							{{ BaseUrl }}/claim/g-{{ game.id }}
 						</a>
 					</div>
 					<div v-else-if="keyGroup.type === KeyGroupTypeUser" class="alert">
@@ -241,7 +241,7 @@ const appRoute = createAppRoute({
 						<AppTranslate>Add Keys</AppTranslate>
 					</AppButton>
 					<AppButton
-						:href="`${Environment.baseUrl}/x/keys/export-csv/${game.id}/${keyGroup.id}`"
+						:href="`${BaseUrl}/x/keys/export-csv/${game.id}/${keyGroup.id}`"
 						target="_blank"
 					>
 						<AppTranslate>Export CSV</AppTranslate>

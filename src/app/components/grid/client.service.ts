@@ -15,7 +15,7 @@ import {
 import { AppStore } from '~app/store/index';
 import { CommunityModel } from '~common/community/community.model';
 import { ensureConfig } from '~common/config/config.service';
-import { Environment } from '~common/environment/environment.service';
+import { GridHost } from '~common/environment/environment.service';
 import { FiresidePostCommunityModel } from '~common/fireside/post/community/community.model';
 import { FiresidePostModel } from '~common/fireside/post/post-model';
 import { GameTrophyModel } from '~common/game/trophy/trophy.model';
@@ -192,7 +192,7 @@ export class GridClient {
 		const { user } = getCommonStore();
 
 		const didConnect = await this.socketController.connect({
-			socketUrl: Environment.grid,
+			socketUrl: GridHost,
 			isGuest,
 			guestToken,
 			hostSuffix: '/grid/socket',

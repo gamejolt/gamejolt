@@ -9,7 +9,7 @@ import AppEditableThumbnail from '~app/views/communities/view/_editable-thumbnai
 import { useCommunityRouteStore } from '~app/views/communities/view/view.store';
 import AppButton from '~common/button/AppButton.vue';
 import AppCommunityVerifiedTick from '~common/community/verified-tick/AppCommunityVerifiedTick.vue';
-import { Environment } from '~common/environment/environment.service';
+import { BaseUrl } from '~common/environment/environment.service';
 import { formatNumber } from '~common/filters/number';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppPopper from '~common/popper/AppPopper.vue';
@@ -174,9 +174,7 @@ function copyShareUrl() {
 						<a
 							v-if="shouldShowModTools"
 							class="list-group-item has-icon"
-							:href="
-								Environment.baseUrl + `/moderate/communities/view/${community.id}`
-							"
+							:href="BaseUrl + `/moderate/communities/view/${community.id}`"
 							target="_blank"
 							@click="onClickExtrasOption"
 						>

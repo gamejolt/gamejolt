@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import { Environment } from '~common/environment/environment.service';
+import { WttfBaseUrl } from '~common/environment/environment.service';
 import { UserCommonFields } from '~common/user/user.model';
 import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
 
@@ -16,7 +16,7 @@ const href = computed(() => {
 		return undefined;
 	}
 
-	return Environment.wttfBaseUrl + '/@' + user.username;
+	return WttfBaseUrl + '/@' + user.username;
 });
 </script>
 

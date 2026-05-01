@@ -1,4 +1,9 @@
-import { Environment } from '~common/environment/environment.service';
+import {
+	AuthBaseUrl,
+	CheckoutBaseUrl,
+	ClientSectionUrl,
+	WttfBaseUrl,
+} from '~common/environment/environment.service';
 import { defineIsolatedState } from '~common/ssr/isolated-state';
 import { createLogger } from '~utils/logging';
 
@@ -42,13 +47,13 @@ export const Navigate = {
 			return GJ_SECTION;
 		}
 
-		if (window.location.href.startsWith(Environment.wttfBaseUrl)) {
+		if (window.location.href.startsWith(WttfBaseUrl)) {
 			return 'app';
-		} else if (window.location.href.startsWith(Environment.authBaseUrl)) {
+		} else if (window.location.href.startsWith(AuthBaseUrl)) {
 			return 'auth';
-		} else if (window.location.href.startsWith(Environment.checkoutBaseUrl)) {
+		} else if (window.location.href.startsWith(CheckoutBaseUrl)) {
 			return 'checkout';
-		} else if (window.location.href.startsWith(Environment.clientSectionUrl)) {
+		} else if (window.location.href.startsWith(ClientSectionUrl)) {
 			return 'client';
 		}
 

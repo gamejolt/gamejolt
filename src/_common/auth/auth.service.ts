@@ -1,6 +1,6 @@
 import { trackJoin, trackLogin } from '~common/analytics/analytics.service';
 import { configSaveJoinOptions } from '~common/config/config.service';
-import { Environment } from '~common/environment/environment.service';
+import { BaseUrl, WttfBaseUrl } from '~common/environment/environment.service';
 import { Navigate } from '~common/navigate/navigate.service';
 import {
 	endOnboarding,
@@ -16,7 +16,7 @@ export function redirectToOnboarding() {
 	}
 
 	startOnboarding();
-	Navigate.goto(Environment.wttfBaseUrl + '/welcome');
+	Navigate.goto(WttfBaseUrl + '/welcome');
 }
 
 export function redirectToDashboard() {
@@ -31,7 +31,7 @@ export function redirectToDashboard() {
 	// This is mainly for client.
 	// It tells the intro animation that it should play the intro even if it can't find a user.
 	sessionStorage.setItem('client-intro-login-play', 'play');
-	Navigate.goto(Environment.wttfBaseUrl);
+	Navigate.goto(WttfBaseUrl);
 }
 
 export function getRedirectUrl(redirectTo: string): string | null {
@@ -48,7 +48,7 @@ export function getRedirectUrl(redirectTo: string): string | null {
 
 		// Normal redirect, within the gamejolt.com domain.
 		// This is domain-less so we'll redirect to the path.
-		return Environment.baseUrl + redirectTo;
+		return BaseUrl + redirectTo;
 	}
 
 	return null;

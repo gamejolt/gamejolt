@@ -1,6 +1,6 @@
 import { unref, watch } from 'vue';
 
-import { Environment } from '~common/environment/environment.service';
+import { AuthBaseUrl } from '~common/environment/environment.service';
 import { Navigate } from '~common/navigate/navigate.service';
 import type { CommonStore } from '~common/store/common-store';
 
@@ -62,7 +62,7 @@ export class ClientUser {
 		// /upgrade route.
 		const fromSection = Navigate.currentClientSection;
 		if (!Navigate.isRedirecting && (!fromSection || fromSection !== 'client')) {
-			Navigate.goto(Environment.authBaseUrl + '/login');
+			Navigate.goto(AuthBaseUrl + '/login');
 		}
 	}
 }

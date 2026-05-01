@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { toRef } from 'vue';
 
-import { Environment } from '~common/environment/environment.service';
+import { HelpBaseUrl } from '~common/environment/environment.service';
 import { useForm } from '~common/form-vue/AppForm.vue';
 import { createFormControl, FormControlEmits } from '~common/form-vue/AppFormControl.vue';
 import { useFormGroup } from '~common/form-vue/AppFormGroup.vue';
@@ -48,14 +48,14 @@ function onChange(event: Event) {
 		<nav class="platform-list inline clearfix">
 			<div class="form-control-markdown-helptext">
 				<span class="form-control-markdown-helplink">
-					<a :href="Environment.helpBaseUrl + '/markdown'" target="_blank">
+					<a :href="HelpBaseUrl + '/markdown'" target="_blank">
 						<AppJolticon icon="markdown" class="hidden-xs" />
 						<AppJolticon icon="markdown" big class="hidden-sm hidden-md hidden-lg" />
 						<AppTranslate class="hidden-xs">Use Markdown to Edit</AppTranslate>
 					</a>
 				</span>
 				<span class="form-control-markdown-helplink">
-					<a :href="Environment.helpBaseUrl + '/widgets-' + markdownMode" target="_blank">
+					<a :href="HelpBaseUrl + '/widgets-' + markdownMode" target="_blank">
 						<AppJolticon icon="plug" class="hidden-xs" />
 						<AppJolticon icon="plug" big class="hidden-sm hidden-md hidden-lg" />
 						<AppTranslate class="hidden-xs">Available Widgets</AppTranslate>

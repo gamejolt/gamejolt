@@ -10,7 +10,7 @@ import {
 } from '~common/community/user-notification/user-notification.model';
 import { CreatorExperienceLevelModel } from '~common/creator/experience/level.model';
 import { showCreatorExperienceLevelUpModal } from '~common/creator/experience/level-up-modal/modal.service';
-import { Environment } from '~common/environment/environment.service';
+import { BaseUrl } from '~common/environment/environment.service';
 import { FiresidePostCommunityModel } from '~common/fireside/post/community/community.model';
 import { FiresidePostModel } from '~common/fireside/post/post-model';
 import { ForumPostModel, getForumPostUrl } from '~common/forum/post/post.model';
@@ -216,7 +216,7 @@ export async function gotoNotification(
 
 			// If we're going to a URL within this domain, then we want to strip off the domain stuff
 			// and go to the URL. Otherwise we need to do a full-page change to the domain/url.
-			const search = Environment.baseUrl;
+			const search = BaseUrl;
 			if (url.search(search) === 0) {
 				url = url.replace(search, '');
 

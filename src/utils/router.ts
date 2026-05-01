@@ -10,15 +10,13 @@ import {
 	RouterHistory,
 } from 'vue-router';
 
-import { Environment } from '~common/environment/environment.service';
+import { BaseUrl, BaseUrlDesktopApp, WttfBaseUrl } from '~common/environment/environment.service';
 import { routeError404 } from '~common/error/page/404.route';
 import { logger as navigateLogger, Navigate } from '~common/navigate/navigate.service';
 import { initScrollBehavior } from '~common/scroll/auto-scroll/autoscroll.service';
 import { escapeRegex } from '~utils/string';
 
-const ClientBaseRegex = new RegExp(
-	escapeRegex(Environment.baseUrlDesktopApp) + '\\/([^.]+)\\.html#'
-);
+const ClientBaseRegex = new RegExp(escapeRegex(BaseUrlDesktopApp) + '\\/([^.]+)\\.html#');
 
 /**
  * @__NO_SIDE_EFFECTS__
@@ -137,7 +135,7 @@ export function hijackLinks(router: Router, host: string) {
 					//
 					// Gotta rewrite the URL to include the correct base URL (to include the #).
 					// Otherwise it'll try to direct to the URL below as the raw URL.
-					Navigate.goto(Environment.wttfBaseUrl + href);
+					Navigate.goto(WttfBaseUrl + href);
 					e.preventDefault();
 					return;
 				}
@@ -280,7 +278,7 @@ export function getAbsoluteLink(router: Router, location: RouteLocationRaw) {
 	let url = typeof location === 'string' ? location : router.resolve(location).href;
 	url = url.replace(/^#/, '');
 
-	return Environment.baseUrl + url;
+	return BaseUrl + url;
 }
 
 /**

@@ -5,7 +5,7 @@ import { HelpPageModel } from '~app/components/help/page/page.model';
 import { Api } from '~common/api/api.service';
 import AppButton from '~common/button/AppButton.vue';
 import AppContentViewer from '~common/content/content-viewer/AppContentViewer.vue';
-import { Environment } from '~common/environment/environment.service';
+import { BaseUrl } from '~common/environment/environment.service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import { Meta } from '~common/meta/meta-service';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
@@ -58,7 +58,7 @@ const canModerate = computed(() => user.value && user.value.permission_level > 3
 			{{ page?.title }}
 			<a
 				v-if="canModerate"
-				:href="`${Environment.baseUrl}/moderate/help/page/${page.id}`"
+				:href="`${BaseUrl}/moderate/help/page/${page.id}`"
 				target="_blank"
 				:style="{ color: kThemeFgMuted }"
 			>
@@ -68,10 +68,7 @@ const canModerate = computed(() => user.value && user.value.permission_level > 3
 		<div class="anim-fade-in">
 			<div v-if="canModerate">
 				<p>
-					<a
-						:href="`${Environment.baseUrl}/z/content/help-page/${page.id}`"
-						target="_blank"
-					>
+					<a :href="`${BaseUrl}/z/content/help-page/${page.id}`" target="_blank">
 						<AppButton icon="edit">
 							{{ $gettext(`Edit`) }}
 						</AppButton>

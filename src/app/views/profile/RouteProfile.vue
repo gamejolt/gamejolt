@@ -22,7 +22,7 @@ import { UserFriendshipHelper } from '~app/components/user/friendships-helper/fr
 import AppProfileDogtags from '~app/views/profile/dogtags/AppProfileDogtags.vue';
 import AppAdTakeoverBackground from '~common/ad/AppAdTakeoverBackground.vue';
 import { Api } from '~common/api/api.service';
-import { Environment } from '~common/environment/environment.service';
+import { BaseUrl } from '~common/environment/environment.service';
 import { LinkedAccountModel } from '~common/linked-account/linked-account.model';
 import { findInRegistry } from '~common/registry/registry.service';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
@@ -91,9 +91,9 @@ function createProfileRouteStore({
 
 	const shareUrl = computed(() => {
 		if (!user.value) {
-			return Environment.baseUrl;
+			return BaseUrl;
 		}
-		return Environment.baseUrl + user.value.url;
+		return BaseUrl + user.value.url;
 	});
 
 	const _headerHeight = ref(0);

@@ -16,7 +16,7 @@ import { AppClientHistoryNavigator } from '~common/client/safe-exports';
 import AppConfigLoaded from '~common/config/AppConfigLoaded.vue';
 import { configShowStoreInMoreMenu } from '~common/config/config.service';
 import { Connection } from '~common/connection/connection-service';
-import { Environment } from '~common/environment/environment.service';
+import { AuthBaseUrl } from '~common/environment/environment.service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppNotificationBlip from '~common/notification/AppNotificationBlip.vue';
 import { vAppObserveDimensions } from '~common/observe-dimensions/observe-dimensions.directive';
@@ -256,12 +256,12 @@ trackExperimentEngagement(configShowStoreInMoreMenu);
 				<template v-if="!user">
 					<ul class="navbar-items">
 						<li>
-							<a :href="Environment.authBaseUrl + '/login'">
+							<a :href="AuthBaseUrl + '/login'">
 								{{ $gettext(`Log in`) }}
 							</a>
 						</li>
 						<li>
-							<a :href="Environment.authBaseUrl + '/join'">
+							<a :href="AuthBaseUrl + '/join'">
 								{{ $gettext(`Sign up`) }}
 							</a>
 						</li>

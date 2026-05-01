@@ -7,7 +7,7 @@ import { Api } from '~common/api/api.service';
 import AppButton from '~common/button/AppButton.vue';
 import { $publishCommunityChannel } from '~common/community/channel/channel.model';
 import { CommunityCompetitionVotingCategoryModel } from '~common/community/competition/voting-category/voting-category.model';
-import { Environment } from '~common/environment/environment.service';
+import { BaseUrl } from '~common/environment/environment.service';
 import { formatDuration } from '~common/filters/duration';
 import { showSuccessGrowl } from '~common/growls/growls.service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
@@ -214,8 +214,7 @@ createAppRoute({
 					</th>
 					<td>
 						<router-link :to="{ name: 'communities.view.channel' }">
-							{{ Environment.baseUrl + '/c/' + community.path + '/'
-							}}<b>{{ channel.title }}</b>
+							{{ BaseUrl + '/c/' + community.path + '/' }}<b>{{ channel.title }}</b>
 						</router-link>
 					</td>
 				</tr>

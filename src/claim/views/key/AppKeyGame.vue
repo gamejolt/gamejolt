@@ -5,7 +5,7 @@ import { useRoute } from 'vue-router';
 import AppFadeCollapse from '~common/AppFadeCollapse.vue';
 import AppButton from '~common/button/AppButton.vue';
 import AppContentViewer from '~common/content/content-viewer/AppContentViewer.vue';
-import { Environment } from '~common/environment/environment.service';
+import { BaseUrl } from '~common/environment/environment.service';
 import { CustomGameMessage, GameModel } from '~common/game/game.model';
 import AppGamePackageCard from '~common/game/package/card/AppGamePackageCard.vue';
 import { GamePackagePayloadModel } from '~common/game/package/package-payload.model';
@@ -98,7 +98,7 @@ function claim() {
 			<h4>
 				{{ $gettext('by') }}
 				{{ ' ' }}
-				<a class="link-unstyled" :href="Environment.baseUrl + game.developer.url">
+				<a class="link-unstyled" :href="BaseUrl + game.developer.url">
 					{{ game.developer.display_name }}
 				</a>
 			</h4>

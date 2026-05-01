@@ -22,7 +22,7 @@ import AppBackground from '~common/background/AppBackground.vue';
 import { CommunityChannelModel } from '~common/community/channel/channel.model';
 import { CommunityModel } from '~common/community/community.model';
 import { isDynamicGoogleBot } from '~common/device/device.service';
-import { Environment } from '~common/environment/environment.service';
+import { WttfBaseUrl } from '~common/environment/environment.service';
 import { EventItemModel } from '~common/event-item/event-item.model';
 import { FiresidePostModel } from '~common/fireside/post/post-model';
 import { Navigate } from '~common/navigate/navigate.service';
@@ -171,7 +171,7 @@ function onClick(e: MouseEvent) {
 
 	trackPostOpen({ source: 'feed' });
 	if (!GJ_IS_DESKTOP_APP && (e.ctrlKey || e.shiftKey)) {
-		Navigate.newWindow(Environment.wttfBaseUrl + linkResolved.value);
+		Navigate.newWindow(WttfBaseUrl + linkResolved.value);
 		return;
 	}
 

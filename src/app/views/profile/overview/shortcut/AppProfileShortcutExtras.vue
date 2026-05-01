@@ -5,7 +5,7 @@ import { useRouter } from 'vue-router';
 import { useProfileRouteStore } from '~app/views/profile/RouteProfile.vue';
 import { showBlockModal } from '~common/block/modal/modal.service';
 import AppButton from '~common/button/AppButton.vue';
-import { Environment } from '~common/environment/environment.service';
+import { BaseUrl } from '~common/environment/environment.service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppPopper from '~common/popper/AppPopper.vue';
 import { showReportModal } from '~common/report/modal/modal.service';
@@ -24,7 +24,7 @@ function copyShareUrl() {
 	if (!routeUser.value) {
 		return;
 	}
-	const url = Environment.baseUrl + routeUser.value.url;
+	const url = BaseUrl + routeUser.value.url;
 	copyShareLink(url, 'user');
 }
 
@@ -85,7 +85,7 @@ async function blockUser() {
 				<a
 					v-if="myUser && myUser.permission_level > 0"
 					class="list-group-item has-icon"
-					:href="`${Environment.baseUrl}/moderate/users/view/${routeUser.id}`"
+					:href="`${BaseUrl}/moderate/users/view/${routeUser.id}`"
 					target="_blank"
 				>
 					<AppJolticon icon="cog" />

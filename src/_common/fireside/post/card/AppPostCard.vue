@@ -5,7 +5,7 @@ import { RouterLink } from 'vue-router';
 import { PostOpenSource, trackPostOpen } from '~common/analytics/analytics.service';
 import { ContentRules } from '~common/content/content-rules';
 import AppContentViewer from '~common/content/content-viewer/AppContentViewer.vue';
-import { Environment } from '~common/environment/environment.service';
+import { WttfBaseUrl } from '~common/environment/environment.service';
 import { formatFuzzynumber } from '~common/filters/fuzzynumber';
 import AppPostCardBase from '~common/fireside/post/card/AppPostCardBase.vue';
 import { FiresidePostModel } from '~common/fireside/post/post-model';
@@ -64,7 +64,7 @@ const likedPost = computed(() => {
 	return false;
 });
 
-const userLink = computed(() => Environment.wttfBaseUrl + post?.user.url);
+const userLink = computed(() => WttfBaseUrl + post?.user.url);
 </script>
 
 <template>

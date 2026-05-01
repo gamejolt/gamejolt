@@ -8,7 +8,7 @@ import { GameMediaItemEditModalRemoveCallback } from '~app/components/game/media
 import { Media } from '~app/views/dashboard/games/manage/manage.store';
 import AppButton from '~common/button/AppButton.vue';
 import { Clipboard } from '~common/clipboard/clipboard-service';
-import { Environment } from '~common/environment/environment.service';
+import { BaseUrl } from '~common/environment/environment.service';
 import { GameModel } from '~common/game/game.model';
 import { $removeGameScreenshot } from '~common/game/screenshot/screenshot.model';
 import { $removeGameSketchfab } from '~common/game/sketchfab/sketchfab.model';
@@ -94,7 +94,7 @@ async function remove() {
 }
 
 function copyLink() {
-	Clipboard.copy(Environment.baseUrl + item.getUrl(game));
+	Clipboard.copy(BaseUrl + item.getUrl(game));
 }
 
 function onMediaEdited(editedItem: Media) {

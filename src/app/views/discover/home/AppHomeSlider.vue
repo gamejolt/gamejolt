@@ -5,7 +5,7 @@ import AppHomeFsPost from '~app/views/discover/home/_home-slider/AppHomeFsPost.v
 import AppHomeFsPostMeta from '~app/views/discover/home/_home-slider/AppHomeFsPostMeta.vue';
 import AppAdTakeoverFloat from '~common/ad/AppAdTakeoverFloat.vue';
 import AppAuthJoin from '~common/auth/join/AppAuthJoin.vue';
-import { Environment } from '~common/environment/environment.service';
+import { AuthBaseUrl } from '~common/environment/environment.service';
 import { FiresidePostModel } from '~common/fireside/post/post-model';
 import AppMobileAppButtons from '~common/mobile-app/AppMobileAppButtons.vue';
 import { getScreen } from '~common/screen/screen-service';
@@ -137,13 +137,13 @@ function onPostLoaded(post: FiresidePostModel) {
 					</div>
 
 					<div class="-links -text-shadow">
-						<a :href="Environment.authBaseUrl + '/join'">
+						<a :href="AuthBaseUrl + '/join'">
 							{{ $gettext(`Sign up`) }}
 						</a>
 						{{ ' ' }}
 						{{ $gettext(`or`) }}
 						{{ ' ' }}
-						<a :href="Environment.authBaseUrl + '/login'">
+						<a :href="AuthBaseUrl + '/login'">
 							{{ $gettext(`Log in`) }}
 						</a>
 					</div>
@@ -158,7 +158,7 @@ function onPostLoaded(post: FiresidePostModel) {
 							<div class="-trouble-text -text-shadow">
 								{{ $gettext(`Already have an account`) }}
 								{{ ' ' }}
-								<a :href="Environment.authBaseUrl + '/login'">
+								<a :href="AuthBaseUrl + '/login'">
 									{{ $gettext(`Log in`) }}
 								</a>
 							</div>

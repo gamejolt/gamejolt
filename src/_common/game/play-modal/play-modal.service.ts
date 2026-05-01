@@ -1,6 +1,6 @@
 import { defineAsyncComponent, inject, InjectionKey, ref, shallowReadonly } from 'vue';
 
-import { Environment } from '~common/environment/environment.service';
+import { IsSecureEnvironment } from '~common/environment/environment.service';
 import { GameBuildModel, GameBuildType } from '~common/game/build/build.model';
 import { GameModel } from '~common/game/game.model';
 import { showErrorGrowl } from '~common/growls/growls.service';
@@ -108,8 +108,8 @@ async function _getDownloadUrl(build: GameBuildModel, options: { key?: string })
 	const payload = await build.getDownloadUrl({ key: options.key });
 	let url = payload.url;
 
-	// TODO: Get rid of the Environment.isSecure check once we switch to https-only.
-	if (!build.https_enabled || !Environment.isSecure) {
+	// TODO: Get rid of the IsSecureEnvironment check once we switch to https-only.
+	if (!build.https_enabled || !IsSecureEnvironment) {
 		url = url.replace('https://', 'http://');
 	}
 

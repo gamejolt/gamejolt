@@ -1,5 +1,5 @@
 import { Api } from '~common/api/api.service';
-import { Environment } from '~common/environment/environment.service';
+import { BaseUrl } from '~common/environment/environment.service';
 import { ForumTopicModel } from '~common/forum/topic/topic.model';
 import { Model } from '~common/model/model.service';
 import { NotificationModel } from '~common/notification/notification-model';
@@ -55,7 +55,7 @@ export class ForumPostModel extends Model {
 	}
 
 	getPermalink() {
-		return Environment.baseUrl + '/x/permalink/forum-post/' + this.id;
+		return BaseUrl + '/x/permalink/forum-post/' + this.id;
 	}
 }
 

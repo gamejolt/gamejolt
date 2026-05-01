@@ -1,7 +1,7 @@
 import { FirebaseApp, initializeApp } from 'firebase/app';
 
 import { isDynamicGoogleBot } from '~common/device/device.service';
-import { Environment } from '~common/environment/environment.service';
+import { FirebaseAppId, FirebaseMeasurementId } from '~common/environment/environment.service';
 
 const firebaseConfig = {
 	apiKey: 'AIzaSyB8-lpXgBHQKGd92EkkDEc_4eIl4tpk_AA',
@@ -12,8 +12,8 @@ const firebaseConfig = {
 	messagingSenderId: '1065321331780',
 
 	// These change depending on the "app" which is web or client.
-	appId: Environment.firebaseAppId,
-	measurementId: Environment.firebaseMeasurementId,
+	appId: FirebaseAppId,
+	measurementId: FirebaseMeasurementId,
 };
 
 let _firebaseApp: FirebaseApp | null = null;

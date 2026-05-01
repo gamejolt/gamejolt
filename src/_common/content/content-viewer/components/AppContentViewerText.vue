@@ -5,7 +5,7 @@ import { ContentObject } from '~common/content/content-object';
 import { useContentOwnerController } from '~common/content/content-owner';
 import AppContentViewerMention from '~common/content/content-viewer/components/AppContentViewerMention.vue';
 import AppContentViewerTag from '~common/content/content-viewer/components/AppContentViewerTag.vue';
-import { Environment } from '~common/environment/environment.service';
+import { BaseUrl, BaseUrlInsecure } from '~common/environment/environment.service';
 import AppLinkExternal from '~common/link/AppLinkExternal.vue';
 
 type Props = {
@@ -70,8 +70,7 @@ const contentNode = computed(() => {
 
 		// If this is a local link to gamejolt.com, we want to open it in
 		// same tab, otherwise we open in new window.
-		const ourHost =
-			href.startsWith(Environment.baseUrl) || href.startsWith(Environment.baseUrlInsecure);
+		const ourHost = href.startsWith(BaseUrl) || href.startsWith(BaseUrlInsecure);
 
 		if (ourHost) {
 			vnode = h('a', elementAttrs, {

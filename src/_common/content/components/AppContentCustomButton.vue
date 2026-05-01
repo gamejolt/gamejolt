@@ -6,7 +6,7 @@ import AppBaseContentComponent from '~common/content/components/AppBaseContentCo
 import { showContentEditorCustomButtonModal } from '~common/content/content-editor/modals/custom-button/custom-button-modal.service.js';
 import { useContentOwnerController } from '~common/content/content-owner';
 import { CustomButtonModel } from '~common/custom-button/custom-button-model.js';
-import { Environment } from '~common/environment/environment.service.js';
+import { BaseUrl, BaseUrlInsecure } from '~common/environment/environment.service.js';
 import { showErrorGrowl } from '~common/growls/growls.service';
 import AppLoading from '~common/loading/AppLoading.vue';
 import { Navigate } from '~common/navigate/navigate.service.js';
@@ -66,7 +66,7 @@ async function onClick(e: Event) {
 		}
 
 		let href = targetUrl;
-		const replacements = [Environment.baseUrl, Environment.baseUrlInsecure];
+		const replacements = [BaseUrl, BaseUrlInsecure];
 		for (const replacement of replacements) {
 			href = href.replace(replacement, '');
 		}

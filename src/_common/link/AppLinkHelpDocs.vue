@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import { Environment } from '~common/environment/environment.service';
+import { HelpDocsBaseUrl } from '~common/environment/environment.service';
 import { Navigate } from '~common/navigate/navigate.service';
 
 type Props = {
@@ -11,7 +11,7 @@ type Props = {
 const { category, page } = defineProps<Props>();
 
 const url = computed(() => {
-	let result = Environment.helpDocsBaseUrl + '/' + category;
+	let result = HelpDocsBaseUrl + '/' + category;
 	if (page) {
 		result += '/' + page;
 	}

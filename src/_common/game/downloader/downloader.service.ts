@@ -1,4 +1,4 @@
-import { Environment } from '~common/environment/environment.service';
+import { BaseUrl } from '~common/environment/environment.service';
 import { GameBuildModel } from '~common/game/build/build.model';
 import { GameModel } from '~common/game/game.model';
 import { showErrorGrowl } from '~common/growls/growls.service';
@@ -50,7 +50,7 @@ class GameDownloaderService {
 			// When built, the client prepends urls with hashtag (#) that needs to be trimmed when going to external site.
 			urlPath = urlPath.replace(/^#/, '');
 
-			Navigate.gotoExternal(`${Environment.baseUrl}${urlPath}`);
+			Navigate.gotoExternal(`${BaseUrl}${urlPath}`);
 		} else if (
 			game.bundle_only ||
 			options.key ||

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { nextTick, onMounted, ref, useTemplateRef, watch } from 'vue';
 
-import { Environment } from '~common/environment/environment.service';
+import { RecaptchaSiteKey } from '~common/environment/environment.service';
 import { GrecaptchaSdk } from '~common/grecaptcha/sdk/sdk.service';
 import AppLoading from '~common/loading/AppLoading.vue';
 import AppTranslate from '~common/translate/AppTranslate.vue';
@@ -65,7 +65,7 @@ async function init() {
 	await nextTick();
 
 	widgetId.value = grecaptcha.render(grecaptchaRef.value!, {
-		sitekey: Environment.recaptchaSiteKey,
+		sitekey: RecaptchaSiteKey,
 		theme,
 		type,
 		size,

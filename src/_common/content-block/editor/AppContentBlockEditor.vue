@@ -4,7 +4,7 @@ import { ref, toRaw, useTemplateRef, watch } from 'vue';
 import { Api } from '~common/api/api.service';
 import AppButton from '~common/button/AppButton.vue';
 import FormContentBlockEditor from '~common/content-block/editor/FormContentBlockEditor.vue';
-import { Environment } from '~common/environment/environment.service';
+import { HelpBaseUrl } from '~common/environment/environment.service';
 import AppLoading from '~common/loading/AppLoading.vue';
 import { SiteContentBlockModel } from '~common/site/content-block/content-block-model';
 import { SiteModel } from '~common/site/site-model';
@@ -165,11 +165,7 @@ function insertAtCaret(text: string) {
 						>
 							{{ $gettext(`Game List`) }}
 						</AppButton>
-						<AppButton
-							trans
-							:href="Environment.helpBaseUrl + '/widgets-user-site'"
-							target="_blank"
-						>
+						<AppButton trans :href="HelpBaseUrl + '/widgets-user-site'" target="_blank">
 							{{ $gettext(`View all`) }}
 						</AppButton>
 					</template>
@@ -194,11 +190,7 @@ function insertAtCaret(text: string) {
 						>
 							{{ $gettext(`Game Packages`) }}
 						</AppButton>
-						<AppButton
-							trans
-							:href="Environment.helpBaseUrl + '/widgets-game-site'"
-							target="_blank"
-						>
+						<AppButton trans :href="HelpBaseUrl + '/widgets-game-site'" target="_blank">
 							{{ $gettext(`View all`) }}
 						</AppButton>
 					</template>

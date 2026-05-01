@@ -9,7 +9,7 @@ import { useAppStore } from '~app/store';
 import { trackGotoCommunity } from '~common/analytics/analytics.service';
 import { CommunityModel } from '~common/community/community.model';
 import AppCommunityThumbnailImg from '~common/community/thumbnail/AppCommunityThumbnailImg.vue';
-import { Environment } from '~common/environment/environment.service';
+import { BaseUrl } from '~common/environment/environment.service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import { Navigate } from '~common/navigate/navigate.service';
 import AppPopper from '~common/popper/AppPopper.vue';
@@ -81,7 +81,7 @@ function onGotoCommunity() {
 
 function gotoModerate() {
 	hideAllPoppers();
-	Navigate.newWindow(Environment.baseUrl + `/moderate/communities/view/${community.id}`);
+	Navigate.newWindow(BaseUrl + `/moderate/communities/view/${community.id}`);
 }
 </script>
 

@@ -7,7 +7,7 @@ import { trackGotoCommunity } from '~common/analytics/analytics.service';
 import AppButton from '~common/button/AppButton.vue';
 import { CommunityModel, isEditingCommunity } from '~common/community/community.model';
 import AppCommunityVerifiedTick from '~common/community/verified-tick/AppCommunityVerifiedTick.vue';
-import { Environment } from '~common/environment/environment.service';
+import { BaseUrl } from '~common/environment/environment.service';
 import { formatNumber } from '~common/filters/number';
 import { useCommonStore } from '~common/store/common-store';
 import AppTheme from '~common/theme/AppTheme.vue';
@@ -123,7 +123,7 @@ function doTrackGotoCommunity() {
 					<AppButton
 						v-if="shouldShowModTools"
 						class="-moderate"
-						:href="Environment.baseUrl + `/moderate/communities/view/${community.id}`"
+						:href="BaseUrl + `/moderate/communities/view/${community.id}`"
 						icon="cog"
 						circle
 						trans

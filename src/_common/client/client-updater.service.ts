@@ -3,7 +3,7 @@ import { markRaw, reactive } from 'vue';
 
 import { Client } from '~common/client/client.service';
 import { Logger, PatcherState, SelfUpdater } from '~common/client/client-voodoo-imports';
-import { Environment } from '~common/environment/environment.service';
+import { ClientSectionUrl } from '~common/environment/environment.service';
 import { Navigate } from '~common/navigate/navigate.service';
 
 const path = require('path') as typeof import('path');
@@ -284,7 +284,7 @@ class ClientUpdaterService {
 			return;
 		}
 
-		Navigate.goto(Environment.clientSectionUrl + '/upgrade');
+		Navigate.goto(ClientSectionUrl + '/upgrade');
 	}
 }
 

@@ -2,7 +2,7 @@
 import { ref, watch } from 'vue';
 
 import { Api } from '~common/api/api.service';
-import { Environment } from '~common/environment/environment.service';
+import { WidgetHost } from '~common/environment/environment.service';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { getScreen } from '~common/screen/screen-service';
 import { SellableModel } from '~common/sellable/sellable.model';
@@ -34,7 +34,7 @@ watch(theme, () => {
 		return;
 	}
 
-	widgetUrl.value = Environment.widgetHost + '/package/v1?key=' + sellable.value.key;
+	widgetUrl.value = WidgetHost + '/package/v1?key=' + sellable.value.key;
 	if (theme.value === 'light') {
 		widgetUrl.value += '&theme=light';
 	}

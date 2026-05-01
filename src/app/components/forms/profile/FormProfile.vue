@@ -4,7 +4,7 @@ import { computed, onUnmounted, type Ref, ref, shallowReactive, toRef } from 'vu
 
 import { ContextCapabilities } from '~common/content/content-context';
 import { DogtagModel, DogtagType } from '~common/dogtag/dogtag-model';
-import { Environment } from '~common/environment/environment.service';
+import { BaseUrl } from '~common/environment/environment.service';
 import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
 import AppFormButton from '~common/form-vue/AppFormButton.vue';
 import AppFormControl from '~common/form-vue/AppFormControl.vue';
@@ -177,7 +177,7 @@ function onThemeChanged() {
 				<AppTranslate>Profile URL:</AppTranslate>
 				{{ ' ' }}
 				<code>
-					<span class="text-muted">{{ Environment.baseUrl }}/@</span>
+					<span class="text-muted">{{ BaseUrl }}/@</span>
 					<b>{{ form.formModel.username || '_' }}</b>
 				</code>
 			</p>

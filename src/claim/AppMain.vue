@@ -3,7 +3,7 @@ import { onMounted } from 'vue';
 import { RouterView } from 'vue-router';
 
 import AppContactLink from '~common/contact-link/AppContactLink.vue';
-import { Environment } from '~common/environment/environment.service';
+import { BaseUrl } from '~common/environment/environment.service';
 import AppErrorPage from '~common/error/page/AppErrorPage.vue';
 import { formatDate } from '~common/filters/date';
 import AppCommonShell from '~common/shell/AppCommonShell.vue';
@@ -49,16 +49,12 @@ onMounted(() => {
 
 							<br />
 
-							<a :href="Environment.baseUrl + '/terms'" target="_blank">Terms</a>
+							<a :href="BaseUrl + '/terms'" target="_blank">Terms</a>
 							&nbsp; | &nbsp;
-							<a :href="Environment.baseUrl + '/privacy'" target="_blank">
-								Privacy Policy
-							</a>
+							<a :href="BaseUrl + '/privacy'" target="_blank"> Privacy Policy </a>
 							<template v-if="!GJ_IS_DESKTOP_APP">
 								&nbsp; | &nbsp;
-								<a :href="Environment.baseUrl + '/cookies'" target="_blank">
-									Cookie Policy
-								</a>
+								<a :href="BaseUrl + '/cookies'" target="_blank"> Cookie Policy </a>
 							</template>
 						</p>
 					</div>

@@ -7,7 +7,7 @@ import AppHomeDefault from '~app/views/discover/home/AppHomeDefault.vue';
 import AppHomeSlider from '~app/views/discover/home/AppHomeSlider.vue';
 import { Api } from '~common/api/api.service';
 import { CommunityModel } from '~common/community/community.model';
-import { Environment } from '~common/environment/environment.service';
+import { BaseUrl } from '~common/environment/environment.service';
 import { FiresidePostModel } from '~common/fireside/post/post-model';
 import { HistoryCache } from '~common/history/cache/cache.service';
 import AppLoading from '~common/loading/AppLoading.vue';
@@ -53,7 +53,7 @@ const { isBootstrapped } = createAppRoute({
 		Meta.fb = payload.fb;
 		Meta.twitter = payload.twitter;
 		Meta.fb.image = Meta.twitter.image = socialImage;
-		Meta.fb.url = Meta.twitter.url = Environment.baseUrl;
+		Meta.fb.url = Meta.twitter.url = BaseUrl;
 
 		Meta.microdata = {
 			'@context': 'http://schema.org',

@@ -11,7 +11,7 @@ import {
 import { CommunityCompetitionEntryModel } from '~common/community/competition/entry/entry.model';
 import { CommunityCompetitionEntryVoteModel } from '~common/community/competition/entry/vote/vote.model';
 import { CommunityCompetitionVotingCategoryModel } from '~common/community/competition/voting-category/voting-category.model';
-import { Environment } from '~common/environment/environment.service';
+import { AuthBaseUrl } from '~common/environment/environment.service';
 import { formatNumber } from '~common/filters/number';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import { useCommonStore } from '~common/store/common-store';
@@ -39,7 +39,7 @@ const route = useRoute();
 const moreVoteResultInfoVisible = ref(false);
 
 const loginUrl = computed(() => {
-	let url = Environment.authBaseUrl + '/login?redirect=' + encodeURIComponent(route.fullPath);
+	let url = AuthBaseUrl + '/login?redirect=' + encodeURIComponent(route.fullPath);
 
 	// Append the current entry modal hash to open it back up if there isn't one on the current url.
 	if (!route.hash) {

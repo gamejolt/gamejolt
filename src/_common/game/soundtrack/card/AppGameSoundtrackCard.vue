@@ -7,7 +7,7 @@ import AppFadeCollapse from '~common/AppFadeCollapse.vue';
 import AppAudioPlaylist from '~common/audio/playlist/AppAudioPlaylist.vue';
 import AppButton from '~common/button/AppButton.vue';
 import AppCard from '~common/card/AppCard.vue';
-import { Environment } from '~common/environment/environment.service';
+import { BaseUrl } from '~common/environment/environment.service';
 import { formatNumber } from '~common/filters/number';
 import { GameModel } from '~common/game/game.model';
 import { GameSongModel } from '~common/game/song/song.model';
@@ -43,7 +43,7 @@ function download() {
 
 	if (GJ_IS_DESKTOP_APP) {
 		// Gotta go past the first char since it's # in client.
-		Navigate.gotoExternal(Environment.baseUrl + router.resolve(location).href.substr(1));
+		Navigate.gotoExternal(BaseUrl + router.resolve(location).href.substr(1));
 		return;
 	}
 

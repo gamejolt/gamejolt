@@ -4,7 +4,7 @@ import { computed, CSSProperties } from 'vue';
 import AppAvatarFrame from '~common/avatar/AppAvatarFrame.vue';
 import { AvatarFrameModel } from '~common/avatar/frame.model';
 import { ComponentProps } from '~common/component-helpers';
-import { Environment } from '~common/environment/environment.service';
+import { WttfBaseUrl } from '~common/environment/environment.service';
 import { ThemeColor } from '~common/theme/variables';
 import AppUserVerifiedWrapper from '~common/user/AppUserVerifiedWrapper.vue';
 import { UserCommonFields } from '~common/user/user.model';
@@ -61,7 +61,7 @@ const href = computed(() => {
 		return undefined;
 	}
 
-	return Environment.wttfBaseUrl + '/@' + user.username;
+	return WttfBaseUrl + '/@' + user.username;
 });
 </script>
 

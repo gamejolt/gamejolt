@@ -2,7 +2,7 @@ import { ref, shallowReadonly } from 'vue';
 import { Router } from 'vue-router';
 
 import { getDeviceArch, getDeviceOS, isDynamicGoogleBot } from '~common/device/device.service';
-import { Environment } from '~common/environment/environment.service';
+import { ApiHost } from '~common/environment/environment.service';
 import { getPartnerReferrer } from '~common/partner-referral/partner-referral-service';
 import { onRouteChangeAfter } from '~common/route/route-component';
 import { defineIsolatedState } from '~common/ssr/isolated-state';
@@ -161,7 +161,7 @@ export function sendHistoryTick(
 			queryParams.push('feed=' + options.sourceFeed);
 		}
 
-		let url = `${Environment.apiHost}/tick/${type}`;
+		let url = `${ApiHost}/tick/${type}`;
 		if (resourceId) {
 			url += `/${resourceId}`;
 		}

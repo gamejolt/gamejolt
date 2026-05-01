@@ -1,7 +1,12 @@
 import { AxiosError, AxiosPromise } from 'axios';
 
 import { RequestOptions } from '~common/api/api.service';
-import { Environment, getSsrContext } from '~common/environment/environment.service';
+import {
+	AuthBaseUrl,
+	ClientSectionUrl,
+	getSsrContext,
+	WttfBaseUrl,
+} from '~common/environment/environment.service';
 import { showErrorGrowl } from '~common/growls/growls.service';
 import { Seo } from '~common/seo/seo.service';
 import { defineIsolatedState } from '~common/ssr/isolated-state';
@@ -233,12 +238,12 @@ class PayloadService {
 			const redirect = encodeURIComponent(
 				import.meta.env.SSR ? getSsrContext().url : window.location.href
 			);
-			const location = Environment.authBaseUrl + '/login?redirect=' + redirect;
+			const location = AuthBaseUrl + '/login?redirect=' + redirect;
 			this.commonStore.redirect(location);
 		} else if (error.type === PayloadErrorType.NewClientVersion) {
-			this.commonStore.redirect(Environment.clientSectionUrl + '/upgrade');
+			this.commonStore.redirect(ClientSectionUrl + '/upgrade');
 		} else if (error.type === PayloadErrorType.UserTimedOut) {
-			this.commonStore.redirect(Environment.wttfBaseUrl + '/timeout');
+			this.commonStore.redirect(WttfBaseUrl + '/timeout');
 		} else if (error.type === PayloadErrorType.Invalid) {
 			this.commonStore.setError(500);
 		} else if (error.type === PayloadErrorType.RateLimit) {

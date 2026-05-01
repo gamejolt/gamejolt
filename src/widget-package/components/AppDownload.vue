@@ -2,7 +2,7 @@
 import { computed, ref } from 'vue';
 
 import AppButton from '~common/button/AppButton.vue';
-import { Environment } from '~common/environment/environment.service';
+import { BaseUrl } from '~common/environment/environment.service';
 import { formatCurrency } from '~common/filters/currency';
 import { formatFilesize } from '~common/filters/filesize';
 import {
@@ -87,7 +87,7 @@ async function buildClick(build?: GameBuildModel) {
 			win.location.href = payload.url;
 		}
 	} else {
-		window.open(Environment.baseUrl + build.getUrl(game.value, 'download'));
+		window.open(BaseUrl + build.getUrl(game.value, 'download'));
 	}
 }
 </script>

@@ -3,7 +3,7 @@ import { computed } from 'vue';
 
 import AppButton from '~common/button/AppButton.vue';
 import { Clipboard } from '~common/clipboard/clipboard-service';
-import { Environment } from '~common/environment/environment.service';
+import { BaseUrl } from '~common/environment/environment.service';
 import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
 import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
 import AppFormControlRadio from '~common/form-vue/controls/AppFormControlRadio.vue';
@@ -64,7 +64,7 @@ const previewImage = computed(() => ({
 }));
 
 const processedTag = computed(() => {
-	const gameUrl = `href="${Environment.baseUrl}/games/${game.path}/${game.id}"`;
+	const gameUrl = `href="${BaseUrl}/games/${game.path}/${game.id}"`;
 	const imgSize = `width="${form.formModel.size.width}" height="${form.formModel.size.height}"`;
 	const imgAlt = `alt="${previewImage.value.alt.replace(/"/g, '&quot;')}"`;
 

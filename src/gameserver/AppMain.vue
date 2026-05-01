@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { defineAsyncComponent } from 'vue';
 
-import { Environment } from '~common/environment/environment.service';
+import { IsSecureEnvironment } from '~common/environment/environment.service';
 import { GameBuildType } from '~common/game/build/build.model';
 import AppCommonShell from '~common/shell/AppCommonShell.vue';
 import { useGameserverStore } from '~gameserver/store/index';
@@ -25,7 +25,7 @@ const { build, bootstrap } = useGameserverStore();
 
 // We need to tell the browser to attempt to upgrade any insecure requests on
 // the page. This allows game api calls in HTML games to get upgraded to https.
-if (Environment.isSecure) {
+if (IsSecureEnvironment) {
 	const meta = window.document.createElement('meta');
 	meta.httpEquiv = 'Content-Security-Policy';
 	meta.content = 'upgrade-insecure-requests';

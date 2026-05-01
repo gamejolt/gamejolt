@@ -3,7 +3,7 @@ import { Api } from '~common/api/api.service';
 import googleImage from '~common/auth/google-icon.svg';
 import AppButton from '~common/button/AppButton.vue';
 import { Connection } from '~common/connection/connection-service';
-import { Environment } from '~common/environment/environment.service';
+import { BaseUrl } from '~common/environment/environment.service';
 import AppFormVue, { createForm, FormController } from '~common/form-vue/AppForm.vue';
 import AppFormButton from '~common/form-vue/AppFormButton.vue';
 import AppFormControl from '~common/form-vue/AppFormControl.vue';
@@ -154,11 +154,11 @@ function linkedChoose(provider: LinkedAccountProvider) {
 				}"
 			>
 				By signing up, you agree to the
-				<a :href="Environment.baseUrl + '/terms'">Terms of Use</a>
+				<a :href="BaseUrl + '/terms'">Terms of Use</a>
 				and
-				<a :href="Environment.baseUrl + '/privacy'">Privacy Policy</a>
+				<a :href="BaseUrl + '/privacy'">Privacy Policy</a>
 				, including the
-				<a :href="Environment.baseUrl + '/cookies'">Cookie Policy</a>
+				<a :href="BaseUrl + '/cookies'">Cookie Policy</a>
 				.
 			</div>
 		</div>

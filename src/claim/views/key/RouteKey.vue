@@ -6,7 +6,7 @@ import AppInvalidKey from '~claim/components/AppInvalidKey.vue';
 import AppKeyBundle from '~claim/views/key/AppKeyBundle.vue';
 import AppKeyGame from '~claim/views/key/AppKeyGame.vue';
 import { Api } from '~common/api/api.service';
-import { Environment } from '~common/environment/environment.service';
+import { AuthBaseUrl, WttfBaseUrl } from '~common/environment/environment.service';
 import { GameModel } from '~common/game/game.model';
 import { GameBundleModel } from '~common/game-bundle/game-bundle.model';
 import { showErrorGrowl } from '~common/growls/growls.service';
@@ -41,7 +41,7 @@ const type = ref('');
 
 const accessKey = computed(() => String(route.params.accessKey));
 const loginUrl = computed(
-	() => Environment.authBaseUrl + '/login?redirect=' + encodeURIComponent(route.fullPath)
+	() => AuthBaseUrl + '/login?redirect=' + encodeURIComponent(route.fullPath)
 );
 const component = computed(() =>
 	type.value === 'bundle' && !route.query.bundleGameId ? AppKeyBundle : AppKeyGame
@@ -114,10 +114,9 @@ async function claim(resource: GameModel | GameBundleModel) {
 
 		let location = '';
 		if (resource instanceof GameBundleModel) {
-			location =
-				Environment.wttfBaseUrl + `/library/bundle/${resource.slug}/${resource.id}/games`;
+			location = WttfBaseUrl + `/library/bundle/${resource.slug}/${resource.id}/games`;
 		} else if (resource instanceof GameModel) {
-			location = Environment.wttfBaseUrl + `/@${user.value.username}/owned`;
+			location = WttfBaseUrl + `/@${user.value.username}/owned`;
 		}
 
 		if (location) {

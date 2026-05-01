@@ -16,7 +16,7 @@ import {
 	getCommentBlockReason,
 	removeComment,
 } from '~common/comment/comment-model';
-import { Environment } from '~common/environment/environment.service';
+import { BaseUrl } from '~common/environment/environment.service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import { FormCommentLazy } from '~common/lazy';
 import AppMessageThreadItem from '~common/message-thread/AppMessageThreadItem.vue';
@@ -321,7 +321,7 @@ function onUnhideBlock() {
 						<a
 							v-if="user.permission_level >= 3"
 							class="list-group-item has-icon"
-							:href="`${Environment.baseUrl}/moderate/comments/remove/${comment.id}`"
+							:href="`${BaseUrl}/moderate/comments/remove/${comment.id}`"
 							target="_blank"
 						>
 							<AppJolticon icon="remove" notice />
