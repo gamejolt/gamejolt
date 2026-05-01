@@ -1,4 +1,4 @@
-import { RouteLocationNormalized, RouteLocationNormalizedLoaded, Router } from 'vue-router';
+import { RouteLocationNormalized, RouteLocationNormalizedLoaded } from 'vue-router';
 
 import { ActivityFeedInput } from '~app/components/activity/feed/item-service';
 import { ActivityFeedState, ActivityFeedStateOptions } from '~app/components/activity/feed/state';
@@ -9,6 +9,7 @@ import { FiresidePostModel, FiresidePostStatus } from '~common/fireside/post/pos
 import { GameModel } from '~common/game/game.model';
 import { HistoryCache } from '~common/history/cache/cache.service';
 import { NotificationModel } from '~common/notification/notification-model';
+import { getCurrentRouter } from '~common/route/current-router-service';
 import { AppRoute } from '~common/route/route-component';
 import { UserModel } from '~common/user/user.model';
 import { arrayRemove } from '~utils/array';
@@ -190,10 +191,9 @@ export class ActivityFeedService {
 		feed: ActivityFeedView;
 		post: FiresidePostModel;
 		route: RouteLocationNormalizedLoaded;
-		router: Router;
 		appRoute: AppRoute;
 	}) {
-		const { post, feed, route, router, appRoute } = options;
+		const { post, feed, route, appRoute } = options;
 
 		if (!post.event_item) {
 			throw new Error('Post was expected to have an event_item field after being added');
@@ -212,7 +212,7 @@ export class ActivityFeedService {
 			} else {
 				// Redirect to the correct feed.
 				const location = this.getCorrectManageFeedLocation(post, route);
-				router.push(location);
+				getCurrentRouter().push(location);
 			}
 		} else if (this.isInCorrectGameOverview(post, route)) {
 			// When an active post got created in the correct game overview, we can prepend.
@@ -226,10 +226,9 @@ export class ActivityFeedService {
 	static onPostEdited(options: {
 		eventItem: EventItemModel;
 		route: RouteLocationNormalizedLoaded;
-		router: Router;
 		appRoute: AppRoute;
 	}) {
-		const { eventItem, route, router, appRoute } = options;
+		const { eventItem, route, appRoute } = options;
 
 		const post = postFromEventItem(eventItem);
 
@@ -241,7 +240,7 @@ export class ActivityFeedService {
 			if (!this.isInCorrectManageFeed(post, route)) {
 				// Redirect to the correct feed.
 				const location = this.getCorrectManageFeedLocation(post, route);
-				router.push(location);
+				getCurrentRouter().push(location);
 			} else if (this.isScheduledFeed(route)) {
 				// If we still are in the correct feed, but it's a scheduled feed:
 				// Means we had a scheduled post that remained a scheduled post and it got changed in another way.
@@ -263,7 +262,7 @@ export class ActivityFeedService {
 					},
 				};
 				this.applyCorrectManageFeedLocation(post, location);
-				router.push(location);
+				getCurrentRouter().push(location);
 			}
 		}
 	}
@@ -271,17 +270,16 @@ export class ActivityFeedService {
 	static onPostPublished(options: {
 		eventItem: EventItemModel;
 		route: RouteLocationNormalizedLoaded;
-		router: Router;
 		appRoute: AppRoute;
 	}) {
-		const { eventItem, route, router } = options;
+		const { eventItem, route } = options;
 
 		const post = postFromEventItem(eventItem);
 
 		// Redirect to the active posts feed.
 		// A post can only be published from the draft/scheduled feed of the correct route, no need to redirect.
 		const location = this.getCorrectManageFeedLocation(post, route);
-		router.push(location);
+		getCurrentRouter().push(location);
 
 		// Show the publish growl to give them an option to go to the community.
 		if (post.communities.length > 0) {

@@ -1,6 +1,7 @@
 import { computed, ref, shallowReadonly } from 'vue';
 
 import { Modals } from '~common/modal/modal.service';
+import { defineIsolatedState } from '~common/ssr/isolated-state';
 import { arrayRemove } from '~utils/array';
 
 type ContentFocusService = ReturnType<typeof createContentFocusService>;
@@ -12,10 +13,15 @@ function createContentFocusService() {
 
 	const _watchers = ref<(() => boolean)[]>([]);
 
-	const isModalOpen = computed(() => Modals.modals.length > 0);
+	const isModalOpen = computed(() => Modals.modals.value.length > 0);
 	const hasContentFocus = computed(
 		() => isWindowFocused.value && !isModalOpen.value && _watchers.value.every(i => i())
 	);
+
+	if (typeof window !== 'undefined') {
+		window.addEventListener('focus', () => (isWindowFocused.value = true));
+		window.addEventListener('blur', () => (isWindowFocused.value = false));
+	}
 
 	return shallowReadonly({
 		isWindowFocused,
@@ -29,24 +35,17 @@ function createContentFocusService() {
 	});
 }
 
-let _contentFocusService: ContentFocusService | undefined;
+const _contentFocusService = defineIsolatedState<ContentFocusService>(createContentFocusService);
 
 export function useContentFocusService() {
-	if (!_contentFocusService) {
-		_contentFocusService = createContentFocusService();
-
-		const { isWindowFocused } = _contentFocusService;
-
-		if (typeof window !== 'undefined') {
-			window.addEventListener('focus', () => (isWindowFocused.value = true));
-			window.addEventListener('blur', () => (isWindowFocused.value = false));
-		}
-	}
-
-	return _contentFocusService;
+	return _contentFocusService();
 }
 
 export function registerContentFocusWatcher(cb: () => boolean) {
+	if (import.meta.env.SSR) {
+		return () => {};
+	}
+
 	const { _watchers: watchers } = useContentFocusService();
 	watchers.value.push(cb);
 

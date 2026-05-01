@@ -1,7 +1,11 @@
 import { nextTick } from 'vue';
 import { RouterScrollBehavior } from 'vue-router';
 
-import { Scroll } from '~common/scroll/scroll.service';
+import {
+	getAutoscrollAnchor,
+	getShouldAutoScroll,
+	setShouldAutoScroll,
+} from '~common/scroll/scroll.service';
 
 export function initScrollBehavior(): RouterScrollBehavior {
 	// Should tell the browser that we want to handle our own scrolling.
@@ -14,7 +18,7 @@ export function initScrollBehavior(): RouterScrollBehavior {
 	return (to, _from, savedPosition) => {
 		// We always want to clear the keyChanged attribute for anchors every
 		// autoscroll event.
-		const anchor = Scroll.autoscrollAnchor;
+		const anchor = getAutoscrollAnchor();
 		let didAnchorChange = false;
 		if (anchor) {
 			didAnchorChange = anchor.keyChanged;
@@ -22,8 +26,8 @@ export function initScrollBehavior(): RouterScrollBehavior {
 		}
 
 		// Skip one auto scroll trigger.
-		if (!Scroll.shouldAutoScroll) {
-			Scroll.shouldAutoScroll = true;
+		if (!getShouldAutoScroll()) {
+			setShouldAutoScroll(true);
 			return;
 		}
 

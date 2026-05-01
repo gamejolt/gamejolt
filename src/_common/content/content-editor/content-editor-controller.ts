@@ -345,9 +345,6 @@ export async function editorCreateView(
 			nodeViews,
 			handleDOMEvents: eventHandlers,
 			editable: () => !c.disabled,
-			attributes: {
-				'data-prevent-shortkey': '',
-			},
 		})
 	);
 

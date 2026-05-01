@@ -6,12 +6,15 @@ This guide defines the conventions for all Vue components in this project. It is
 
 ## Post-Work Checks
 
-After completing work, run lint and format checks **only on the files you modified** — never on the full `src/` tree. Do this once at the end, not between iterations.
+After completing work, run lint and format checks **only on the files you modified** — never on the full `src/` tree. Then run a typecheck across the whole project. Do this once at the end, not between iterations.
 
 ```sh
 # Replace with the actual modified paths, space-separated
 yarn eslint path/to/File1.vue path/to/File2.ts
 yarn oxfmt --check path/to/File1.vue path/to/File2.ts
+
+# Typecheck runs project-wide (vue-tsc --noEmit) — no per-file mode.
+yarn typecheck
 ```
 
 Fix any issues reported (`--fix` for eslint, `--write` for oxfmt) before reporting the task as complete.
@@ -30,8 +33,8 @@ Fix any issues reported (`--fix` for eslint, `--write` for oxfmt) before reporti
 
 ```ts
 type Props = {
-  myProp: string;
-  optional?: boolean;
+	myProp: string;
+	optional?: boolean;
 };
 const { myProp, optional = false } = defineProps<Props>();
 ```
@@ -47,8 +50,8 @@ const { myProp, optional = false } = defineProps<Props>();
 
 ```ts
 const emit = defineEmits<{
-  done: [];
-  seek: [pos: number];
+	done: [];
+	seek: [pos: number];
 }>();
 ```
 
@@ -122,6 +125,61 @@ import { vAppTooltip } from '../../_common/tooltip/tooltip-directive';
 
 ---
 
+## Stores
+
+Stores are creator functions returning a bag of refs, not classes. Follow the pattern from [src/\_common/sidebar/sidebar.store.ts](src/_common/sidebar/sidebar.store.ts), [src/\_common/sticker/sticker-store.ts](src/_common/sticker/sticker-store.ts), [src/\_common/sticker/layer/layer-controller.ts](src/_common/sticker/layer/layer-controller.ts).
+
+```ts
+import { inject, InjectionKey, ref, shallowReadonly } from 'vue';
+
+export type FooStore = ReturnType<typeof createFooStore>;
+
+export const FooStoreKey: InjectionKey<FooStore> = Symbol('foo-store');
+
+export function useFooStore() {
+	return inject(FooStoreKey)!;
+}
+
+export function createFooStore() {
+	const isOpen = ref(false);
+	const items = ref<Item[]>([]);
+
+	function open() {
+		isOpen.value = true;
+	}
+
+	function addItem(item: Item) {
+		items.value.push(item);
+	}
+
+	return shallowReadonly({ isOpen, items, open, addItem });
+}
+```
+
+- Never `class Foo { ... }` with method bodies. Never `reactive(new Foo())`.
+- Each piece of state is its own `const x = ref(...)` or `computed(...)`. Collections are `ref<T[]>([])`, not `reactive`/`shallowReactive` arrays.
+- Functions close over the refs in the same scope; no `this`.
+- Return `shallowReadonly({ ...refs, ...functions })`. `shallowReadonly` freezes the bag's shape — `store.foo = newRef` is blocked — while leaving the refs inside fully mutable via `.value`. Refs are _not_ auto-unwrapped, so consumers keep using `.value` explicitly.
+- Pair with `XxxStoreKey: InjectionKey<XxxStore>`, `type XxxStore = ReturnType<typeof createXxxStore>`, and a `useXxxStore()` composable.
+- Register the store via `app.provide(XxxStoreKey, createXxxStore(...))` in the section's bootstrap (or in [bootstrapCommon](src/_common/bootstrap.ts) when every section needs it).
+
+**Consuming a store from a component:** destructure immediately. Only keep the full store object when you need to pass it somewhere.
+
+```ts
+// Prefer — destructure the pieces you use
+const { isOpen, addItem } = useFooStore();
+```
+
+```ts
+// Only when you need to pass the whole store onwards
+const fooStore = useFooStore();
+someHelper(fooStore);
+```
+
+Destructured refs stay reactive because the store bag is populated with refs (not plain values), so `isOpen.value` still works as expected after destructuring.
+
+---
+
 ## Route Components (dual script pattern)
 
 Route components need `defineAppRouteOptions` in a plain `<script>` (for `beforeRouteEnter`) and all reactive logic in `<script setup>`:
@@ -132,10 +190,10 @@ import { defineAppRouteOptions } from '../../../_common/route/route-component';
 import { Api } from '../../../_common/api/api.service';
 
 export default {
-  ...defineAppRouteOptions({
-    reloadOn: { params: ['id'] },
-    resolver: ({ route }) => Api.sendRequest(`/web/.../${route.params.id}`),
-  }),
+	...defineAppRouteOptions({
+		reloadOn: { params: ['id'] },
+		resolver: ({ route }) => Api.sendRequest(`/web/.../${route.params.id}`),
+	}),
 };
 </script>
 
@@ -154,14 +212,14 @@ createAppRoute({
 
 Route lifecycle mapping:
 
-| Old (`LegacyRouteComponent`) | New (`createAppRoute`) |
-|---|---|
-| `routeCreated()` | `onInit()` |
-| `routeResolved($payload)` | `onResolved({ payload, fromCache })` |
-| `routeDestroyed()` | `onDestroyed()` |
-| `this.isRouteLoading` | `appRoute.isLoading.value` |
-| `this.isRouteBootstrapped` | `appRoute.isBootstrapped.value` |
-| `this.reloadRoute()` | `appRoute.reload()` |
+| Old (`LegacyRouteComponent`) | New (`createAppRoute`)               |
+| ---------------------------- | ------------------------------------ |
+| `routeCreated()`             | `onInit()`                           |
+| `routeResolved($payload)`    | `onResolved({ payload, fromCache })` |
+| `routeDestroyed()`           | `onDestroyed()`                      |
+| `this.isRouteLoading`        | `appRoute.isLoading.value`           |
+| `this.isRouteBootstrapped`   | `appRoute.isBootstrapped.value`      |
+| `this.reloadRoute()`         | `appRoute.reload()`                  |
 
 ---
 
@@ -227,7 +285,7 @@ Use Vue's shorthand syntax in templates wherever applicable:
 <slot name="item" :element :index />
 ```
 
-Applies to regular props *and* slot props. Only use it when the names actually match — `:item="element"` stays as-is.
+Applies to regular props _and_ slot props. Only use it when the names actually match — `:item="element"` stays as-is.
 
 ---
 
@@ -241,7 +299,7 @@ When adding a package with `yarn add`, follow up with an edit to strip the leadi
 
 ## Reference Examples (New Style)
 
-- Regular component: [src/_common/ad/widget/AppAdWidget.vue](src/_common/ad/widget/AppAdWidget.vue)
+- Regular component: [src/\_common/ad/widget/AppAdWidget.vue](src/_common/ad/widget/AppAdWidget.vue)
 - Route component: [src/app/views/dashboard/account/edit/RouteDashAccountEdit.vue](src/app/views/dashboard/account/edit/RouteDashAccountEdit.vue)
 - Route component with store: [src/app/views/communities/view/channel/RouteCommunitiesViewChannel.vue](src/app/views/communities/view/channel/RouteCommunitiesViewChannel.vue)
-- Composable: [src/_common/on/useOnHover.ts](src/_common/on/useOnHover.ts)
+- Composable: [src/\_common/on/useOnHover.ts](src/_common/on/useOnHover.ts)

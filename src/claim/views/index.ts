@@ -3,5 +3,6 @@ import { routeRetrieve } from '~claim/views/retrieve/retrieve.route';
 import { routeSentKey } from '~claim/views/sent-key/sent-key.route';
 import { initRouter } from '~utils/router';
 
-const routes = [routeKey, routeRetrieve, routeSentKey];
-export const router = initRouter(routes);
+export function createClaimRouter() {
+	return initRouter([routeKey, routeRetrieve, routeSentKey]);
+}

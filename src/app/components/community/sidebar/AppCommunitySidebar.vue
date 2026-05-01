@@ -177,7 +177,7 @@ function onClickReport() {
 					{{ $gettext(`Games`) }}
 				</h5>
 			</div>
-			<AppGameList :games="visibleGames" event-label="community-sidebar" />
+			<AppGameList :games="visibleGames" />
 		</div>
 
 		<div class="-mod-list">

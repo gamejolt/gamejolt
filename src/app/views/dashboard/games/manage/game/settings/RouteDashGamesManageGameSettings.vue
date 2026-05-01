@@ -8,7 +8,7 @@ import AppButton from '~common/button/AppButton.vue';
 import { GameStatus } from '~common/game/game.model';
 import { showSuccessGrowl } from '~common/growls/growls.service';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
-import { Scroll } from '~common/scroll/scroll.service';
+import { scrollTo } from '~common/scroll/scroll.service';
 import { useCommonStore } from '~common/store/common-store';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 import { $gettext } from '~common/translate/translate.service';
@@ -38,7 +38,7 @@ const isCollaborator = computed(() => user.value!.id !== game.value.developer.id
 
 function onSaved() {
 	showSuccessGrowl($gettext('Your game settings have been saved.'), $gettext('Settings Saved'));
-	Scroll.to(0);
+	scrollTo(0);
 }
 
 createAppRoute({

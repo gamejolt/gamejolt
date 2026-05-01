@@ -314,7 +314,7 @@ async function loadMore() {
 				}}
 			</div>
 
-			<AppGameGrid :games="listing.games" show-ads event-label="browse-games" />
+			<AppGameGrid :games="listing.games" show-ads />
 		</AppGameListing>
 	</AppShellPageBackdrop>
 </template>

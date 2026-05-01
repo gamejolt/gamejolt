@@ -19,18 +19,11 @@ import { AppPromotionSource } from '~common/mobile-app/store';
 import { onRouteChangeAfter } from '~common/route/route-component';
 import { SettingThemeDark } from '~common/settings/settings.service';
 import { ShareProvider, ShareResource } from '~common/share/share.service';
-import { CommonStore, commonStore } from '~common/store/common-store';
+import { defineIsolatedState } from '~common/ssr/isolated-state';
+import { CommonStore } from '~common/store/common-store';
 import { getTranslationLang } from '~common/translate/translate.service';
 import { arrayRemove } from '~utils/array';
 import { createLogger } from '~utils/logging';
-
-export const SOCIAL_NETWORK_FB = 'facebook';
-export const SOCIAL_NETWORK_TWITTER = 'twitter';
-
-export const SOCIAL_ACTION_LIKE = 'like';
-export const SOCIAL_ACTION_SEND = 'send';
-export const SOCIAL_ACTION_TWEET = 'tweet';
-export const SOCIAL_ACTION_FOLLOW = 'follow';
 
 export type CommunityOpenSource = 'communityChunk' | 'card' | 'cbar' | 'thumbnail';
 export type CommunityJoinLocation = 'onboarding' | 'card' | 'communityPage' | 'homeBanner' | 'cbar';
@@ -64,17 +57,23 @@ const logger = createLogger('Analytics');
  */
 const EXP_ENGAGEMENT_EXPIRY = 5 * 60 * 1_000;
 
-let _store: CommonStore;
-let _pageViewRecorded = false;
+const _state = defineIsolatedState(() => ({
+	store: undefined as CommonStore | undefined,
+	pageViewRecorded: false,
+	analytics: undefined as FirebaseAnalytics | undefined,
+	expEngagements: [] as { time: number; configOption: ConfigOption }[],
+}));
 
-let _analytics: FirebaseAnalytics;
 function _getFirebaseAnalytics() {
-	_analytics ??= initializeAnalytics(getFirebaseApp(), { config: { send_page_view: false } });
-	return _analytics;
+	const state = _state();
+	state.analytics ??= initializeAnalytics(getFirebaseApp(), {
+		config: { send_page_view: false },
+	});
+	return state.analytics;
 }
 
 function _getStoreUser() {
-	return _store.user.value;
+	return _state().store!.user.value;
 }
 
 function _shouldTrack() {
@@ -100,7 +99,7 @@ export function initAnalytics({ commonStore }: { commonStore: CommonStore }) {
 		return;
 	}
 
-	_store = commonStore;
+	_state().store = commonStore;
 
 	watch(
 		() => unref(commonStore.user),
@@ -135,7 +134,7 @@ export function initAnalyticsRouter(router: Router) {
 
 	// Reset all page trackers since we're starting the page route.
 	router.beforeEach((_to, _from, next) => {
-		_pageViewRecorded = false;
+		_state().pageViewRecorded = false;
 		next();
 	});
 
@@ -178,7 +177,7 @@ function _trackPageview(path?: string) {
 		}
 
 		// Don't track the page view if it already was.
-		if (_pageViewRecorded) {
+		if (_state().pageViewRecorded) {
 			return;
 		}
 
@@ -201,7 +200,7 @@ function _trackPageview(path?: string) {
 			logEvent(_getFirebaseAnalytics(), 'page_view', { page_path: path, page_title: path });
 		}
 
-		_pageViewRecorded = true;
+		_state().pageViewRecorded = true;
 	});
 }
 
@@ -259,8 +258,6 @@ export function trackSearch(params: { query: string }) {
 	logEvent(_getFirebaseAnalytics(), 'view_search_results', { search_term: params.query });
 }
 
-const _expEngagements: { time: number; configOption: ConfigOption }[] = [];
-
 function _getExperimentKey(option: ConfigOption) {
 	// Limits:
 	// https://support.google.com/analytics/answer/9267744?hl=en
@@ -287,9 +284,14 @@ function _getExperimentValue(option: ConfigOption) {
  * We rate limit this so that it doesn't trigger too much.
  */
 export async function trackExperimentEngagement(option: ConfigOption) {
+	if (import.meta.env.SSR || GJ_IS_DESKTOP_APP || isDynamicGoogleBot()) {
+		return;
+	}
+
 	// If we already tracked an experiment engagement for this config option
 	// within the expiry time, we want to ignore.
-	const prevEngagement = _expEngagements.find(
+	const expEngagements = _state().expEngagements;
+	const prevEngagement = expEngagements.find(
 		i => i.configOption === option && i.time > Date.now() - EXP_ENGAGEMENT_EXPIRY
 	);
 	if (prevEngagement) {
@@ -298,15 +300,15 @@ export async function trackExperimentEngagement(option: ConfigOption) {
 
 	// Only track their experiment engagement once we're sure everything is
 	// loaded in for them.
-	await commonStore.userBootstrappedPromise;
+	await _state().store!.userBootstrappedPromise;
 	await ensureConfig();
 
 	_trackEvent('experiment_engagement', {
 		[_getExperimentKey(option)]: _getExperimentValue(option),
 	});
 
-	arrayRemove(_expEngagements, i => i.configOption === option);
-	_expEngagements.push({ configOption: option, time: Date.now() });
+	arrayRemove(expEngagements, i => i.configOption === option);
+	expEngagements.push({ configOption: option, time: Date.now() });
 }
 
 export function trackLogin(method: AuthMethod) {
@@ -581,80 +583,3 @@ export function trackResourceInfoView(params: {
 }) {
 	_trackEvent('resource_info_view', params);
 }
-
-/**
- * @deprecated This is left here so that old code doesn't break.
- */
-class AnalyticsService {
-	private warnDeprecated(name: string) {
-		if (import.meta.env.MODE === 'development' || import.meta.env.DEV) {
-			console.warn(
-				`[Analytics] - [${name}] is deprecated and no longer functional. Use new analytics functions instead.`
-			);
-		}
-	}
-
-	trackEvent(_category: string, _action: string, _label?: string, _value?: string) {
-		this.warnDeprecated('trackEvent');
-		return;
-
-		// if (!this.shouldTrack) {
-		// 	console.log('Skip tracking event since not a normal user.');
-		// 	return;
-		// }
-
-		// if (Environment.buildType === 'development') {
-		// 	console.log(
-		// 		`Track event: ${category}:${action || '-'}:${label || '-'}:${value || '-'}`
-		// 	);
-		// } else {
-		// 	const options = {
-		// 		nonInteraction: 1,
-		// 		hitCallback: true,
-		// 	};
-
-		// 	this.ga('send', 'event', category, action, label, value, options);
-		// }
-	}
-
-	trackSocial(_network: string, _action: string, _target: string) {
-		this.warnDeprecated('trackSocial');
-		return;
-
-		// if (!this.shouldTrack) {
-		// 	console.log('Skip tracking social event since not a normal user.');
-		// 	return;
-		// }
-
-		// if (Environment.buildType === 'development') {
-		// 	console.log(`Track social event: ${network}:${action}:${target}`);
-		// } else {
-		// 	this.ga('send', 'social', network, action, target, {
-		// 		hitCallback: true,
-		// 	});
-		// }
-	}
-
-	trackTiming(_category: string, _timingVar: string, _value: number, _label?: string) {
-		this.warnDeprecated('trackTiming');
-		return;
-
-		// if (!this.shouldTrack) {
-		// 	console.log('Skip tracking timing event since not a normal user.');
-		// 	return;
-		// }
-
-		// console.info(`Timing (${category}${label ? ':' + label : ''}) ${timingVar} = ${value}`);
-
-		// if (Environment.buildType === 'production') {
-		// 	this.ga('send', 'timing', category, timingVar, value, label, {
-		// 		hitCallback: true,
-		// 	});
-		// }
-	}
-}
-
-/**
- * @deprecated This is left here so that old code doesn't break.
- */
-export const Analytics = /** @__PURE__ */ new AnalyticsService();

@@ -2,7 +2,6 @@
 import { computed, ref } from 'vue';
 
 import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
-import Onboarding from '~common/onboarding/onboarding.service';
 import AppRealmFullCard from '~common/realm/AppRealmFullCard.vue';
 import { RealmModel } from '~common/realm/realm-model';
 import AppScrollScroller from '~common/scroll/AppScrollScroller.vue';
@@ -25,21 +24,14 @@ const realms = ref<RealmModel[]>([]);
 
 const form: FormController<FormModel> = createForm({
 	warnOnDiscard: false,
-	onInit() {
-		Onboarding.startStep('follows');
-	},
 	loadUrl: '/web/onboarding/realms',
 	onLoad(payload) {
 		realms.value = RealmModel.populate(payload.realms);
-	},
-	onBeforeSubmit() {
-		Onboarding.trackEvent(joinedAnyRealm.value ? 'follow-realms-set' : 'follow-realms-skip');
 	},
 	async onSubmit() {
 		// Nothing to submit.
 	},
 	onSubmitSuccess() {
-		Onboarding.endStep(shouldShowSkip.value);
 		emit('next');
 	},
 });

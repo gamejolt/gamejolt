@@ -16,7 +16,7 @@ import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import { $gettext } from '~common/translate/translate.service';
 import AppVideoEmbed from '~common/video/embed/AppVideoEmbed.vue';
 
-const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height * 0.5}px` });
+const InviewConfig = new ScrollInviewConfig({ margin: () => `${Screen.height * 0.5}px` });
 </script>
 
 <script lang="ts" setup>

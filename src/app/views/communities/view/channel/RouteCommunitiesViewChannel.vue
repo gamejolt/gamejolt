@@ -1,7 +1,4 @@
 <script lang="ts">
-import { defineAsyncComponent, toRef } from 'vue';
-
-import { router } from '~app/views';
 import {
 	getChannelPathFromRoute,
 	useCommunityRouteStore,
@@ -14,23 +11,9 @@ import {
 	defineAppRouteOptions,
 } from '~common/route/route-component';
 
-const RouteCommunitiesViewChannelFeed = defineAsyncComponent(() =>
-	asyncRouteLoader(
-		router,
-		import('~app/views/communities/view/channel/RouteCommunitiesViewChannelFeed.vue')
-	)
-);
-const RouteCommunitiesViewChannelJam = defineAsyncComponent(() =>
-	asyncRouteLoader(
-		router,
-		import('~app/views/communities/view/channel/RouteCommunitiesViewChannelJam.vue')
-	)
-);
-
 /**
  * Route dependencies for channel-type pages.
  */
-
 export const CommunitiesViewChannelDeps = {
 	params: ['path', 'channel'],
 	query: ['sort', 'feed_last_id'],
@@ -48,6 +31,19 @@ export default {
 </script>
 
 <script lang="ts" setup>
+import { defineAsyncComponent, toRef } from 'vue';
+
+const RouteCommunitiesViewChannelFeed = defineAsyncComponent(() =>
+	asyncRouteLoader(
+		import('~app/views/communities/view/channel/RouteCommunitiesViewChannelFeed.vue')
+	)
+);
+const RouteCommunitiesViewChannelJam = defineAsyncComponent(() =>
+	asyncRouteLoader(
+		import('~app/views/communities/view/channel/RouteCommunitiesViewChannelJam.vue')
+	)
+);
+
 const routeStore = useCommunityRouteStore()!;
 const channel = toRef(() => routeStore.channel);
 

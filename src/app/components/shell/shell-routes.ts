@@ -36,6 +36,9 @@ interface HashEvents {
 let hasInitialized = false;
 
 export function initShellRoutes() {
+	if (import.meta.env.SSR) {
+		return;
+	}
 	if (hasInitialized) {
 		throw new Error('Route hash helpers have already been initialized.');
 	}

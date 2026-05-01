@@ -5,7 +5,7 @@ import {
 	provide,
 	Ref,
 	ref,
-	shallowReactive,
+	shallowReadonly,
 	ShallowRef,
 	shallowRef,
 	toRaw,
@@ -97,7 +97,7 @@ export function createStickerLayerController(store: StickerStore) {
 		return c;
 	});
 
-	const c: StickerLayerController = shallowReactive({
+	const c: StickerLayerController = shallowReadonly({
 		scroller,
 
 		hoveredTarget,

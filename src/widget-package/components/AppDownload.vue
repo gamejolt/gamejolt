@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
 
-import { Analytics } from '~common/analytics/analytics.service';
 import AppButton from '~common/button/AppButton.vue';
 import { Environment } from '~common/environment/environment.service';
 import { formatCurrency } from '~common/filters/currency';
@@ -11,7 +10,7 @@ import {
 	GameBuildModel,
 	GameBuildType,
 } from '~common/game/build/build.model';
-import { HistoryTick } from '~common/history-tick/history-tick-service';
+import { sendHistoryTick } from '~common/history-tick/history-tick-service';
 import AppJolticon, { Jolticon } from '~common/jolticon/AppJolticon.vue';
 import { SellableType } from '~common/sellable/sellable.model';
 import { useCommonStore } from '~common/store/common-store';
@@ -71,16 +70,12 @@ async function buildClick(build?: GameBuildModel) {
 
 	isShowingPayment.value = false;
 
-	Analytics.trackEvent('game-widget', 'dowload');
-
-	HistoryTick.sendBeacon('game-build', build.id, {
+	sendHistoryTick('game-build', build.id, {
 		sourceResource: 'Game',
 		sourceResourceId: game.value.id,
 	});
 
 	if (build.isBrowserBased || build.type === GameBuildType.Rom) {
-		Analytics.trackEvent('game-play', 'play');
-
 		// We have to open the window first before getting the URL. The browser
 		// will block the popup unless it's done directly in the onclick
 		// handler. Once we have the download URL we can direct the window that
@@ -92,7 +87,6 @@ async function buildClick(build?: GameBuildModel) {
 			win.location.href = payload.url;
 		}
 	} else {
-		Analytics.trackEvent('game-play', 'download');
 		window.open(Environment.baseUrl + build.getUrl(game.value, 'download'));
 	}
 }

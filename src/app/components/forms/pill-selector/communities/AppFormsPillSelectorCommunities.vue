@@ -9,7 +9,7 @@ import { CommunityModel } from '~common/community/community.model';
 import AppCommunityThumbnailImg from '~common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import AppCommunityVerifiedTick from '~common/community/verified-tick/AppCommunityVerifiedTick.vue';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
-import { Popper } from '~common/popper/popper.service';
+import { hideAllPoppers } from '~common/popper/popper.service';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 
 type Props = {
@@ -64,7 +64,7 @@ function resetSelections() {
 }
 
 function _closeAndReset() {
-	Popper.hideAll();
+	hideAllPoppers();
 	selectedCommunity.value = initialCommunity;
 }
 </script>

@@ -2,13 +2,15 @@
 import AppGrowl from '~common/growls/AppGrowl.vue';
 import { Growls } from '~common/growls/growls.service';
 import { Screen } from '~common/screen/screen-service';
+
+const { growls } = Growls;
 </script>
 
 <template>
 	<div class="growl-container">
 		<transition-group>
 			<AppGrowl
-				v-for="(growl, index) of Growls.growls"
+				v-for="(growl, index) of growls"
 				:key="index"
 				:growl="growl"
 				:index="index"

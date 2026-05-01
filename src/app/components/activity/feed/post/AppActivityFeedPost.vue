@@ -28,12 +28,12 @@ import { FiresidePostModel } from '~common/fireside/post/post-model';
 import { Navigate } from '~common/navigate/navigate.service';
 import { vAppObserveDimensions } from '~common/observe-dimensions/observe-dimensions.directive';
 import {
+	getPostFeedItemContainerStyles,
 	kPostItemPaddingVertical,
 	kPostItemPaddingXsVertical,
-	PostFeedItemContainerStyles,
 } from '~common/post/post-styles';
 import { Screen } from '~common/screen/screen-service';
-import { Scroll } from '~common/scroll/scroll.service';
+import { scrollTo } from '~common/scroll/scroll.service';
 import AppStickerControlsOverlay from '~common/sticker/AppStickerControlsOverlay.vue';
 import AppStickerPlacementList from '~common/sticker/AppStickerPlacementList.vue';
 import AppStickerLayer from '~common/sticker/layer/AppStickerLayer.vue';
@@ -185,7 +185,7 @@ function onUnhideBlock() {
 function scrollToStickers() {
 	// Only scroll up if they've expanded the item.
 	if (stickerScroll.value && feed.isItemOpen(item)) {
-		Scroll.to(stickerScroll.value, { preventDirections: ['down'] });
+		scrollTo(stickerScroll.value, { preventDirections: ['down'] });
 	}
 }
 
@@ -231,7 +231,7 @@ const vPadding = computed(() =>
 </script>
 
 <template>
-	<div ref="root" v-app-observe-dimensions="onResize" :style="PostFeedItemContainerStyles">
+	<div ref="root" v-app-observe-dimensions="onResize" :style="getPostFeedItemContainerStyles()">
 		<AppStickerLayer no-mask>
 			<AppActivityFeedPostBlocked
 				v-if="shouldBlock"
@@ -336,7 +336,6 @@ const vPadding = computed(() =>
 						:overlay
 						show-comments
 						location="feed"
-						event-label="feed"
 						@post-edit="onPostEdited(eventItem)"
 						@post-publish="onPostPublished(eventItem)"
 						@post-remove="onPostRemoved(eventItem)"

@@ -65,19 +65,16 @@ const collectionGroups = computed(() =>
 		{
 			key: 'mainCollections',
 			heading: null as string | null,
-			eventLabel: 'system',
 			collections: mainCollections.value,
 		},
 		{
 			key: 'playlistCollections',
 			heading: $gettext('Your Playlists'),
-			eventLabel: 'playlist',
 			collections: playlistCollections.value,
 		},
 		{
 			key: 'followedCollections',
 			heading: $gettext('Followed Playlists'),
-			eventLabel: 'followed',
 			collections: followedCollections.value,
 		},
 	].filter(i => i.collections.length > 0)
@@ -129,17 +126,9 @@ createAppRoute({
 				</div>
 
 				<div :class="!Screen.isXs ? 'container' : ''">
-					<AppGameCollectionList
-						v-if="Screen.isXs"
-						:collections="group.collections"
-						:event-label="`library-overview:collection:${group.eventLabel}`"
-					/>
+					<AppGameCollectionList v-if="Screen.isXs" :collections="group.collections" />
 
-					<AppGameCollectionGrid
-						v-else
-						:collections="group.collections"
-						:event-label="`library-overview:collection:${group.eventLabel}`"
-					/>
+					<AppGameCollectionGrid v-else :collections="group.collections" />
 				</div>
 			</section>
 		</template>

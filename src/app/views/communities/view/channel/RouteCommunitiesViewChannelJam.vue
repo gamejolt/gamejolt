@@ -1,10 +1,7 @@
 <script lang="ts">
-import { computed, defineAsyncComponent, ref, toRef } from 'vue';
-
 import AppCommunityCompetitionCountdown from '~app/components/community/competition/countdown/AppCommunityCompetitionCountdown.vue';
 import AppCommunityCompetitionEntryGrid from '~app/components/community/competition/entry/grid/AppCommunityCompetitionEntryGrid.vue';
 import AppCommunityPerms from '~app/components/community/perms/AppCommunityPerms.vue';
-import { router } from '~app/views';
 import AppCommunityPageContainer from '~app/views/communities/view/_page-container/AppCommunityPageContainer.vue';
 import {
 	getChannelPathFromRoute,
@@ -31,13 +28,6 @@ import { useCommonStore } from '~common/store/common-store';
 import { $gettext } from '~common/translate/translate.service';
 import { arrayRemove } from '~utils/array';
 
-const RouteCommunitiesViewChannelJamEntries = defineAsyncComponent(() =>
-	asyncRouteLoader(
-		router,
-		import('~app/views/communities/view/channel/RouteCommunitiesViewChannelJamEntries.vue')
-	)
-);
-
 export default {
 	...defineAppRouteOptions({
 		reloadOn: { params: ['path', 'channel'] },
@@ -52,6 +42,14 @@ export default {
 </script>
 
 <script lang="ts" setup>
+import { computed, defineAsyncComponent, ref, toRef } from 'vue';
+
+const RouteCommunitiesViewChannelJamEntries = defineAsyncComponent(() =>
+	asyncRouteLoader(
+		import('~app/views/communities/view/channel/RouteCommunitiesViewChannelJamEntries.vue')
+	)
+);
+
 const routeStore = useCommunityRouteStore()!;
 const { user } = useCommonStore();
 

@@ -1,5 +1,4 @@
 import { computed, reactive, shallowReadonly } from 'vue';
-import { Router } from 'vue-router';
 
 import { GridClient } from '~app/components/grid/client.service';
 import { addNewQuestIds, addQuestActivityIds } from '~app/store/quest';
@@ -11,7 +10,7 @@ import { FiresidePostModel } from '~common/fireside/post/post-model';
 import { NotificationModel, NotificationType } from '~common/notification/notification-model';
 import { QuestNotificationModel } from '~common/quest/quest-notification-model';
 import { createSocketChannelController } from '~common/socket/socket-controller';
-import { commonStore } from '~common/store/common-store';
+import { getCommonStore } from '~common/store/common-store';
 import { TabLeaderInterface } from '~utils/tab-leader';
 const TabLeaderLazy = importNoSSR(async () => await import('~utils/tab-leader'));
 
@@ -109,10 +108,7 @@ interface NewPostPayload {
 	channel_id: string;
 }
 
-export function createGridNotificationChannel(
-	client: GridClient,
-	options: { userId: number; router: Router }
-) {
+export function createGridNotificationChannel(client: GridClient, options: { userId: number }) {
 	const { socketController, appStore } = client;
 	const { userId } = options;
 	const { communityStates, stickerStore } = appStore;
@@ -163,8 +159,9 @@ export function createGridNotificationChannel(
 			addNewQuestIds(questStore, payload.newQuestIds);
 			addQuestActivityIds(questStore, payload.questActivityIds);
 
-			commonStore.coinBalance.value = payload.coinBalance;
-			commonStore.joltbuxBalance.value = payload.buxBalance;
+			const { coinBalance, joltbuxBalance } = getCommonStore();
+			coinBalance.value = payload.coinBalance;
+			joltbuxBalance.value = payload.buxBalance;
 
 			const {
 				charge,
@@ -283,10 +280,12 @@ export function createGridNotificationChannel(
 	}
 
 	function _onWalletUpdated(payload: WalletUpdatedPayload) {
+		const { coinBalance, joltbuxBalance } = getCommonStore();
+
 		if (payload.identifier === CurrencyType.coins.id) {
-			commonStore.coinBalance.value = payload.available_balance;
+			coinBalance.value = payload.available_balance;
 		} else if (payload.identifier === CurrencyType.joltbux.id) {
-			commonStore.joltbuxBalance.value = payload.available_balance;
+			joltbuxBalance.value = payload.available_balance;
 		}
 	}
 

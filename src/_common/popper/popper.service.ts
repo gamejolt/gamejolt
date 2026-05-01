@@ -1,23 +1,21 @@
+import { defineIsolatedState } from '~common/ssr/isolated-state';
+
 export interface PopperComponentInterface {
 	onHideAll: () => void;
 }
 
-class PopperService {
-	popperInterfaces = new Map<number, PopperComponentInterface>();
+const _interfaces = defineIsolatedState(() => new Map<number, PopperComponentInterface>());
 
-	registerPopper(id: number, popper: PopperComponentInterface) {
-		this.popperInterfaces.set(id, popper);
-	}
-
-	deregisterPopper(id: number) {
-		this.popperInterfaces.delete(id);
-	}
-
-	hideAll() {
-		for (const [_id, popper] of this.popperInterfaces) {
-			popper.onHideAll();
-		}
-	}
+export function registerPopper(id: number, popper: PopperComponentInterface) {
+	_interfaces().set(id, popper);
 }
 
-export const Popper = /** @__PURE__ */ new PopperService();
+export function deregisterPopper(id: number) {
+	_interfaces().delete(id);
+}
+
+export function hideAllPoppers() {
+	for (const popper of _interfaces().values()) {
+		popper.onHideAll();
+	}
+}

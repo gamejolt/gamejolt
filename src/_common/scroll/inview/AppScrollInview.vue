@@ -50,7 +50,7 @@ export class ScrollInviewConfig {
 	 * property and always have the "px" after each value.
 	 * Note: This is not reactive.
 	 */
-	margin = '0px';
+	margin: () => string = () => '0px';
 
 	/**
 	 * The emits-on prop determines when the inview and outview events emit. Possible values:

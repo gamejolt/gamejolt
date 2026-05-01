@@ -7,7 +7,7 @@ import { Client } from '~common/client/client.service';
 import { Connection } from '~common/connection/connection-service';
 import AppExpand from '~common/expand/AppExpand.vue';
 import AppLoading from '~common/loading/AppLoading.vue';
-import Onboarding from '~common/onboarding/onboarding.service';
+import { isOnboarding } from '~common/onboarding/onboarding.service';
 import { onRouteChangeAfter } from '~common/route/route-component';
 import { useCommonStore } from '~common/store/common-store';
 import { EventSubscription } from '~common/system/event/event-topic';
@@ -55,7 +55,7 @@ run(async () => {
 		return;
 	}
 
-	if (Onboarding.isOnboarding) {
+	if (isOnboarding()) {
 		console.log('Skip intro -- onboarding started.');
 		finish();
 		return;

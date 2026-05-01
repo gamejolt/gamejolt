@@ -20,7 +20,7 @@ import { GameModel } from '~common/game/game.model';
 import { GamePackageModel } from '~common/game/package/package.model';
 import { Geo, GeoRegion } from '~common/geo/geo.service';
 import { showErrorGrowl } from '~common/growls/growls.service';
-import { HistoryTick } from '~common/history-tick/history-tick-service';
+import { getHistoryTickStore } from '~common/history-tick/history-tick-service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppLoading from '~common/loading/AppLoading.vue';
 import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
@@ -50,6 +50,7 @@ const emit = defineEmits<{
 	skip: [];
 }>();
 const { user } = useCommonStore();
+const { getSource } = getHistoryTickStore();
 
 const isBootstrapped = ref(false);
 const isLoadingMethods = ref(true);
@@ -142,7 +143,7 @@ const form: FormController<FormModel> = createForm({
 			data.address_id = addresses.value[0].id;
 		}
 
-		data['source'] = HistoryTick.getSource('Game', gamePackage.game_id) || null;
+		data['source'] = getSource('Game', gamePackage.game_id) || null;
 		data['os'] = getDeviceOS();
 		data['arch'] = getDeviceArch();
 
@@ -331,7 +332,7 @@ async function doCheckout(setupData: any, chargeData: any) {
 
 	isProcessing.value = true;
 
-	setupData['source'] = HistoryTick.getSource('Game', gamePackage.game_id) || null;
+	setupData['source'] = getSource('Game', gamePackage.game_id) || null;
 	setupData['os'] = getDeviceOS();
 	setupData['arch'] = getDeviceArch();
 

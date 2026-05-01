@@ -1,12 +1,11 @@
-import { Router } from 'vue-router';
-
 import { Environment } from '~common/environment/environment.service';
 import { GameBuildModel } from '~common/game/build/build.model';
 import { GameModel } from '~common/game/game.model';
 import { showErrorGrowl } from '~common/growls/growls.service';
-import { HistoryTick } from '~common/history-tick/history-tick-service';
+import { sendHistoryTick } from '~common/history-tick/history-tick-service';
 import { Navigate } from '~common/navigate/navigate.service';
-import { Popper } from '~common/popper/popper.service';
+import { hideAllPoppers } from '~common/popper/popper.service';
+import { getCurrentRouter } from '~common/route/current-router-service';
 import { $gettext } from '~common/translate/translate.service';
 
 export interface GameDownloaderOptions {
@@ -18,14 +17,11 @@ class GameDownloaderService {
 	isDownloadQueued = false;
 	shouldTransition = false;
 
-	async download(
-		router: Router,
-		game: GameModel,
-		build: GameBuildModel,
-		options: GameDownloaderOptions = {}
-	) {
+	async download(game: GameModel, build: GameBuildModel, options: GameDownloaderOptions = {}) {
 		// In case any popover was used to click the download.
-		Popper.hideAll();
+		hideAllPoppers();
+
+		const router = getCurrentRouter();
 
 		// Any time we transition away from the page, make sure we reset our
 		// download transition. This will ensure the download won't start.
@@ -84,7 +80,7 @@ class GameDownloaderService {
 				const downloadUrl = response.url;
 
 				// We await so that we're sure the tick has logged.
-				await HistoryTick.sendBeacon('game-build', build.id, {
+				await sendHistoryTick('game-build', build.id, {
 					sourceResource: 'Game',
 					sourceResourceId: game.id,
 					key: options.key || undefined,

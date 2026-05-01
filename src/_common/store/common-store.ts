@@ -1,19 +1,13 @@
-import '~common/model/model.service';
-
-import { computed, inject, InjectionKey, Ref, ref } from 'vue';
+import { computed, inject, InjectionKey, Ref, ref, shallowReadonly } from 'vue';
 
 import { isDynamicGoogleBot } from '~common/device/device.service';
 import { EmojiGroupModel } from '~common/emoji/emoji-group.model';
-import { Environment } from '~common/environment/environment.service';
+import { getSsrContext } from '~common/environment/environment.service';
 import { Navigate } from '~common/navigate/navigate.service';
+import { defineIsolatedState } from '~common/ssr/isolated-state';
 import { UserTimeoutModel } from '~common/user/timeout/timeout.model';
 import { UserModel } from '~common/user/user.model';
 import { loadScript } from '~utils/utils';
-
-interface UserConsents {
-	ads?: boolean;
-	eea?: boolean;
-}
 
 export interface EmojiGroupData {
 	group: EmojiGroupModel;
@@ -26,8 +20,27 @@ export const CommonStoreKey: InjectionKey<CommonStore> = Symbol('common-store');
 
 export type CommonStore = ReturnType<typeof createCommonStore>;
 
+const _storeHandle = defineIsolatedState(() => ({
+	store: null as CommonStore | null,
+}));
+
+/**
+ * For Vue components — prefer this over `getCommonStore()`.
+ */
 export function useCommonStore() {
 	return inject(CommonStoreKey)!;
+}
+
+/**
+ * Returns the common store for the current app/request scope. Use this
+ * sparingly, only in non-Vue contexts where `useCommonStore()` isn't available.
+ */
+export function getCommonStore() {
+	const store = _storeHandle().store;
+	if (!store) {
+		throw new Error(`CommonStore has not yet been set.`);
+	}
+	return store;
 }
 
 export function createCommonStore() {
@@ -44,7 +57,6 @@ export function createCommonStore() {
 	const reactionsData = ref(new Map()) as Ref<Map<number, EmojiGroupData>>;
 	const reactionsCursor = ref<string>();
 
-	const consents = ref<UserConsents>({});
 	const error = ref<number | string | null>(null);
 	const timeout = ref<UserTimeoutModel | null>(null);
 
@@ -135,13 +147,9 @@ export function createCommonStore() {
 		showInitialPackWatermark.value = false;
 	}
 
-	function setConsents(newConsents: UserConsents) {
-		consents.value = newConsents;
-	}
-
 	function setError(newError: number | string) {
 		error.value = newError;
-		Environment.ssrContext.errorCode = typeof newError === 'string' ? 500 : newError;
+		getSsrContext().errorCode = typeof newError === 'string' ? 500 : newError;
 	}
 
 	function clearError() {
@@ -150,7 +158,7 @@ export function createCommonStore() {
 
 	function redirect(location: string) {
 		if (import.meta.env.SSR) {
-			Environment.ssrContext.redirect = location;
+			getSsrContext().redirect = location;
 		} else {
 			Navigate.goto(location);
 		}
@@ -204,20 +212,18 @@ export function createCommonStore() {
 		return deferred;
 	}
 
-	return {
+	const c = shallowReadonly({
 		user,
 		userBootstrapped,
 		userBootstrappedPromise,
 		reactionsData,
 		reactionsCursor,
-		consents,
 		error,
 		timeout,
 		isUserTimedOut,
 		setUser,
 		clearUser,
 		setTimeout,
-		setConsents,
 		setError,
 		clearError,
 		redirect,
@@ -226,7 +232,8 @@ export function createCommonStore() {
 		joltbuxBalance,
 		showInitialPackWatermark,
 		setInitialPackWatermarkStorageValue,
-	};
-}
+	});
 
-export const commonStore = createCommonStore();
+	_storeHandle().store = c;
+	return c;
+}

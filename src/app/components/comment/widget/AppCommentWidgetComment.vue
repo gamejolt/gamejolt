@@ -23,7 +23,7 @@ import AppMessageThreadItem from '~common/message-thread/AppMessageThreadItem.vu
 import { showModalConfirm } from '~common/modal/confirm/confirm-service';
 import { Model } from '~common/model/model.service';
 import AppPopper from '~common/popper/AppPopper.vue';
-import { Popper } from '~common/popper/popper.service';
+import { hideAllPoppers } from '~common/popper/popper.service';
 import { showReportModal } from '~common/report/modal/modal.service';
 import { useCommonStore } from '~common/store/common-store';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
@@ -180,7 +180,7 @@ onMounted(() => {
 
 function startEdit() {
 	isEditing.value = true;
-	Popper.hideAll();
+	hideAllPoppers();
 }
 
 function commentEdited(comment: CommentModel) {
@@ -190,7 +190,7 @@ function commentEdited(comment: CommentModel) {
 
 async function doRemoveComment() {
 	isEditing.value = false;
-	Popper.hideAll();
+	hideAllPoppers();
 
 	const result = await showModalConfirm(
 		$gettext(`Are you sure you want to remove this comment?`)

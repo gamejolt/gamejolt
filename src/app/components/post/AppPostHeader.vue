@@ -8,13 +8,13 @@ import { UserFollowLocation } from '~common/analytics/analytics.service';
 import { FiresidePostModel } from '~common/fireside/post/post-model';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import {
-	PostHeaderAvatarStyles,
+	getPostHeaderAvatarStyles,
+	getPostHeaderMetaStyles,
 	PostHeaderBylineGameStyles,
 	PostHeaderBylineNameStyles,
 	PostHeaderBylineStyles,
 	PostHeaderBylineUsernameStyles,
 	PostHeaderContentStyles,
-	PostHeaderMetaStyles,
 	PostHeaderStyles,
 	PostHeaderTimeStyles,
 } from '~common/post/post-styles';
@@ -63,7 +63,7 @@ const shouldShowFollow = computed(() => {
 	<div v-if="user" :style="PostHeaderStyles">
 		<div :style="PostHeaderContentStyles">
 			<AppUserCardHover :user="user" :disabled="feed && !feed.shouldShowUserCards">
-				<div :style="PostHeaderAvatarStyles">
+				<div :style="getPostHeaderAvatarStyles()">
 					<AppUserAvatarBubble
 						:user="user"
 						show-frame
@@ -114,7 +114,7 @@ const shouldShowFollow = computed(() => {
 				</div>
 			</div>
 		</div>
-		<div :style="PostHeaderMetaStyles">
+		<div :style="getPostHeaderMetaStyles()">
 			<span v-if="showPinned">
 				<span class="tag">
 					<AppJolticon icon="thumbtack" />

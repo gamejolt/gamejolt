@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { computed, watch } from 'vue';
-import { useRouter } from 'vue-router';
 
 import { DisplayMode } from '~app/components/comment/modal/modal.service';
 import { showCommentThreadModal } from '~app/components/comment/thread/modal.service';
@@ -34,7 +33,6 @@ const emit = defineEmits<{
 }>();
 
 const commentManager = useCommentStoreManager()!;
-const router = useRouter();
 
 const displayComments = computed(() => {
 	return comments.filter(c => getCommentBlockReason(c) === false);
@@ -70,7 +68,6 @@ watch(commentStoreDirtyState, dirtyState => {
 
 function open(comment: CommentModel) {
 	showCommentThreadModal({
-		router,
 		model,
 		commentId: comment.id,
 		displayMode,

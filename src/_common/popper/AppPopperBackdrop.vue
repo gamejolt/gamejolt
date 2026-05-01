@@ -1,20 +1,22 @@
 <script lang="ts" setup>
 import { onBeforeUnmount, onMounted } from 'vue';
 
-import { Backdrop, BackdropController } from '~common/backdrop/backdrop.service';
+import { BackdropController, useBackdropStore } from '~common/backdrop/backdrop.service';
 
-let backdrop: BackdropController | undefined;
+const { push: pushBackdrop } = useBackdropStore();
+
+let controller: BackdropController | undefined;
 
 onMounted(() => {
-	if (!backdrop) {
-		backdrop = Backdrop.push({ className: 'popper-backdrop' });
+	if (!controller) {
+		controller = pushBackdrop({ className: 'popper-backdrop' }) ?? undefined;
 	}
 });
 
 onBeforeUnmount(() => {
-	if (backdrop) {
-		backdrop.remove();
-		backdrop = undefined;
+	if (controller) {
+		controller.remove();
+		controller = undefined;
 	}
 });
 </script>

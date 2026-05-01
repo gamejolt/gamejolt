@@ -9,11 +9,7 @@ import AppPostControlsMore from '~app/components/post/controls/more/AppPostContr
 import AppPostControlsSaveProgress from '~app/components/post/controls/save-progress/AppPostControlsSaveProgress.vue';
 import AppPostControlsUserFollow from '~app/components/post/controls/user-follow/AppPostControlsUserFollow.vue';
 import { showPostEditModal } from '~app/components/post/edit-modal/edit-modal-service';
-import {
-	Analytics,
-	PostControlsLocation,
-	trackPostPublish,
-} from '~common/analytics/analytics.service';
+import { PostControlsLocation, trackPostPublish } from '~common/analytics/analytics.service';
 import AppAnimElectricity from '~common/animation/AppAnimElectricity.vue';
 import { vAppAuthRequired } from '~common/auth/auth-required-directive';
 import AppButton from '~common/button/AppButton.vue';
@@ -49,18 +45,10 @@ type Props = {
 	shouldShowFollow?: boolean;
 	showComments?: boolean;
 	overlay?: boolean;
-	eventLabel?: string;
 };
-const {
-	post,
-	feed,
-	item,
-	location,
-	shouldShowFollow,
-	showComments,
-	overlay,
-	eventLabel = '',
-} = defineProps<Props>();
+
+const { post, feed, item, location, shouldShowFollow, showComments, overlay } =
+	defineProps<Props>();
 
 const emit = defineEmits<{
 	postEdit: [];
@@ -139,8 +127,6 @@ onUnmounted(() => {
 });
 
 function openComments() {
-	Analytics.trackEvent('post-controls', 'comments', eventLabel);
-
 	showCommentModal({
 		model: post,
 		displayMode: 'comments',
@@ -148,7 +134,6 @@ function openComments() {
 }
 
 async function openEdit() {
-	Analytics.trackEvent('post-controls', 'edit', eventLabel);
 	if (await showPostEditModal(post)) {
 		emit('postEdit');
 	}
@@ -165,7 +150,6 @@ async function placeSticker() {
 		return;
 	}
 
-	Analytics.trackEvent('post-controls', 'sticker-place', eventLabel);
 	openStickerDrawer(stickerStore, stickerLayer);
 	emit('sticker');
 }
@@ -178,10 +162,6 @@ function setUserFollow(showing: boolean) {
 			return;
 		}
 
-		// Track analytics for how many people see user-follow,
-		// and stop suggesting to follow the user for 'X' amount
-		// of time - specified in UserFollowSuggestion.
-		Analytics.trackEvent('user-follow', 'show', 'fireside-post-like-widget');
 		UserFollowSuggestion.doNotSuggest(post.user.id);
 	}
 
@@ -194,9 +174,6 @@ function setUserFollow(showing: boolean) {
 }
 
 function onUserFollowDismissal() {
-	// Track analytics for how often people click
-	// on the 'X' button to hide user-follow.
-	Analytics.trackEvent('user-follow', 'hide', 'fireside-post-like-widget');
 	setUserFollow(false);
 }
 </script>

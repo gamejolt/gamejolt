@@ -1,6 +1,8 @@
 <script lang="ts" setup>
-import { Minbar, MinbarItem } from '~common/minbar/minbar.service';
+import { MinbarItem, useMinbarStore } from '~common/minbar/minbar.service';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
+
+const { items } = useMinbarStore();
 
 function onItemClick(item: MinbarItem) {
 	if (item.onClick) {
@@ -13,7 +15,7 @@ function onItemClick(item: MinbarItem) {
 	<div class="minbar">
 		<TransitionGroup tag="div" class="minbar-items">
 			<a
-				v-for="item of Minbar.items"
+				v-for="item of items"
 				:key="item.id"
 				class="minbar-item anim-fade-enter-up anim-fade-leave-shrink"
 				:class="{ active: item.isActive }"

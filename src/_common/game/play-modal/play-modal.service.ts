@@ -1,91 +1,107 @@
-import { defineAsyncComponent } from 'vue';
+import { defineAsyncComponent, inject, InjectionKey, ref, shallowReadonly } from 'vue';
 
 import { Environment } from '~common/environment/environment.service';
 import { GameBuildModel, GameBuildType } from '~common/game/build/build.model';
 import { GameModel } from '~common/game/game.model';
 import { showErrorGrowl } from '~common/growls/growls.service';
-import { HistoryTick } from '~common/history-tick/history-tick-service';
+import { sendHistoryTick } from '~common/history-tick/history-tick-service';
 import { showModal } from '~common/modal/modal.service';
 import { Navigate } from '~common/navigate/navigate.service';
-import { Popper } from '~common/popper/popper.service';
+import { hideAllPoppers } from '~common/popper/popper.service';
 import { $gettext } from '~common/translate/translate.service';
 
-let canMinimize = false;
-let hasModal = false;
+export type GamePlayStore = ReturnType<typeof createGamePlayStore>;
 
-export function initGamePlayModal(options: { canMinimize?: boolean }) {
-	canMinimize = options.canMinimize || false;
+export const GamePlayStoreKey: InjectionKey<GamePlayStore> = Symbol('game-play-store');
+
+export function createGamePlayStore({ canMinimize }: { canMinimize: boolean }) {
+	const hasModal = ref(false);
+
+	return shallowReadonly({
+		hasModal,
+		canMinimize,
+	});
 }
 
-export async function showGamePlayModal(
-	game: GameModel,
-	build: GameBuildModel,
-	options: { key?: string } = {}
-) {
-	if (hasModal) {
-		showErrorGrowl(
-			$gettext(
-				`You already have a browser game open. You can only have one running at a time.`
-			)
-		);
-		return;
-	}
+export function useShowGamePlayModal() {
+	const store = inject(GamePlayStoreKey)!;
 
-	HistoryTick.sendBeacon('game-build', build.id, {
-		sourceResource: 'Game',
-		sourceResourceId: game.id,
-		key: options.key,
-	});
-
-	// If they clicked into this through a popover.
-	Popper.hideAll();
-
-	// Will open the gameserver in their browser.
-	if (
-		GJ_IS_DESKTOP_APP &&
-		build.type !== GameBuildType.Html &&
-		build.type !== GameBuildType.Rom
+	return async function showGamePlayModal(
+		game: GameModel,
+		build: GameBuildModel,
+		options: { key?: string } = {}
 	) {
-		const downloadUrl = await _getDownloadUrl(build, { key: options.key });
-		Navigate.gotoExternal(downloadUrl);
-		return;
-	}
-
-	// Modern browsers don't allow you to set cookies on a domain that isn't the
-	// same as the current domain. That means our cookie signing breaks in
-	// the iframe. To fix we have to open a new tab to the gameserver.
-	// We also open the game in a new tab if it's not https enabled so the
-	// site doesn't complain about mixed security elements.
-	// In the client however we can continue to embed because we don't have cookie issues.
-	if (!build.https_enabled || !GJ_IS_DESKTOP_APP) {
-		// We have to open the window first before getting the URL. The
-		// browser will block the popup unless it's done directly in the
-		// onclick handler. Once we have the download URL we can direct the
-		// window that we now have the reference to.
-		const win = window.open('');
-		if (win) {
-			const downloadUrl = await _getDownloadUrl(build, { key: options.key });
-			win.location.href = downloadUrl;
+		if (import.meta.env.SSR) {
+			return;
 		}
-		return;
-	}
 
-	hasModal = true;
-	const url = await _getDownloadUrl(build, { key: options.key });
+		const { hasModal, canMinimize } = store;
 
-	await showModal({
-		modalId: 'GamePlay',
-		component: defineAsyncComponent(
-			() => import('~common/game/play-modal/AppGamePlayModal.vue')
-		),
-		props: { game, build, url, canMinimize },
-		noBackdrop: true,
-		noBackdropClose: true,
-		noEscClose: true,
-		size: 'full',
-	});
+		if (hasModal.value) {
+			showErrorGrowl(
+				$gettext(
+					`You already have a browser game open. You can only have one running at a time.`
+				)
+			);
+			return;
+		}
 
-	hasModal = false;
+		sendHistoryTick('game-build', build.id, {
+			sourceResource: 'Game',
+			sourceResourceId: game.id,
+			key: options.key,
+		});
+
+		// If they clicked into this through a popover.
+		hideAllPoppers();
+
+		// Will open the gameserver in their browser.
+		if (
+			GJ_IS_DESKTOP_APP &&
+			build.type !== GameBuildType.Html &&
+			build.type !== GameBuildType.Rom
+		) {
+			const downloadUrl = await _getDownloadUrl(build, { key: options.key });
+			Navigate.gotoExternal(downloadUrl);
+			return;
+		}
+
+		// Modern browsers don't allow you to set cookies on a domain that isn't the
+		// same as the current domain. That means our cookie signing breaks in
+		// the iframe. To fix we have to open a new tab to the gameserver.
+		// We also open the game in a new tab if it's not https enabled so the
+		// site doesn't complain about mixed security elements.
+		// In the client however we can continue to embed because we don't have cookie issues.
+		if (!build.https_enabled || !GJ_IS_DESKTOP_APP) {
+			// We have to open the window first before getting the URL. The
+			// browser will block the popup unless it's done directly in the
+			// onclick handler. Once we have the download URL we can direct the
+			// window that we now have the reference to.
+			const win = window.open('');
+			if (win) {
+				const downloadUrl = await _getDownloadUrl(build, { key: options.key });
+				win.location.href = downloadUrl;
+			}
+			return;
+		}
+
+		hasModal.value = true;
+		const url = await _getDownloadUrl(build, { key: options.key });
+
+		await showModal({
+			modalId: 'GamePlay',
+			component: defineAsyncComponent(
+				() => import('~common/game/play-modal/AppGamePlayModal.vue')
+			),
+			props: { game, build, url, canMinimize },
+			noBackdrop: true,
+			noBackdropClose: true,
+			noEscClose: true,
+			size: 'full',
+		});
+
+		hasModal.value = false;
+	};
 }
 
 async function _getDownloadUrl(build: GameBuildModel, options: { key?: string }) {

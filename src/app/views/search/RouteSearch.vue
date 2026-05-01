@@ -4,8 +4,9 @@ import { RouterLink, RouterView, useRoute } from 'vue-router';
 
 import AppPageHeader from '~app/components/page-header/AppPageHeader.vue';
 import AppSearch from '~app/components/search/AppSearch.vue';
-import { Search, SearchPayload } from '~app/components/search/search-service';
+import { SearchPayload } from '~app/components/search/search-service';
 import AppShellPageBackdrop from '~app/components/shell/AppShellPageBackdrop.vue';
+import { useAppStore } from '~app/store/index';
 import { routeSearchRealms } from '~app/views/search/realms/realms.route';
 import AppAdStickyRail from '~common/ad/AppAdStickyRail.vue';
 import AppAdTakeoverBackground from '~common/ad/AppAdTakeoverBackground.vue';
@@ -16,7 +17,7 @@ import { Meta } from '~common/meta/meta-service';
 import AppPagination from '~common/pagination/AppPagination.vue';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { Screen } from '~common/screen/screen-service';
-import { Scroll } from '~common/scroll/scroll.service';
+import { scrollTo } from '~common/scroll/scroll.service';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 import { $gettext } from '~common/translate/translate.service';
 import { getQuery } from '~utils/router';
@@ -31,6 +32,7 @@ export function useSearchRouteController() {
 
 function createController() {
 	const route = useRoute();
+	const { searchQuery } = useAppStore();
 
 	const isBootstrapped = ref(false);
 
@@ -56,9 +58,9 @@ function createController() {
 		query.value = newQuery;
 		searchPayload.value = payload;
 
-		// We sync the query to the search service so that all places get
-		// updated with the new query.
-		Search.query = query.value;
+		// Sync the query so every other AppSearch instance (e.g. the top
+		// nav) reflects the new search term.
+		searchQuery.value = query.value;
 		isBootstrapped.value = true;
 
 		if (payload.socialMetadata) {
@@ -235,7 +237,7 @@ const noResults = computed(() => {
 					:items-per-page="searchPayload.perPage"
 					:total-items="searchPayload.count"
 					:current-page="searchPayload.page"
-					@pagechange="Scroll.to('search-results', { animate: false })"
+					@pagechange="scrollTo('search-results', { animate: false })"
 				/>
 			</AppAdStickyRail>
 		</section>

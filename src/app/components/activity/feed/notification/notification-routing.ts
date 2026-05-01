@@ -1,5 +1,3 @@
-import { Router } from 'vue-router';
-
 import { showGiftActionModal } from '~app/components/gift/modal.service';
 import { AppStore } from '~app/store/index';
 import { routeDashAccountEdit } from '~app/views/dashboard/account/edit/edit.route';
@@ -23,6 +21,7 @@ import { MentionModel } from '~common/mention/mention.model';
 import { Navigate } from '~common/navigate/navigate.service';
 import { NotificationModel, NotificationType } from '~common/notification/notification-model';
 import { QuestNotificationModel } from '~common/quest/quest-notification-model';
+import { getCurrentRouter } from '~common/route/current-router-service';
 import { SupporterActionModel } from '~common/supporters/action.model';
 import { showSupporterMessageModal } from '~common/supporters/message/modal.service';
 import { $gettext } from '~common/translate/translate.service';
@@ -164,9 +163,10 @@ export function getNotificationRouteLocation(
 
 export async function gotoNotification(
 	notification: NotificationModel,
-	{ router, appStore }: { router: Router; appStore: AppStore }
+	{ appStore }: { appStore: AppStore }
 ) {
 	const { id, type, action_model } = notification;
+	const router = getCurrentRouter();
 
 	const routeLocation = getNotificationRouteLocation(notification);
 	if (routeLocation !== '') {

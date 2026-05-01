@@ -1,6 +1,5 @@
 import { computed, reactive, Ref, ref } from 'vue';
 
-import { Analytics } from '~common/analytics/analytics.service';
 import {
 	SettingVideoPlayerFeedAutoplay,
 	SettingVideoPlayerMuted,
@@ -235,18 +234,4 @@ export function scrubVideo(player: VideoPlayerController, position: number, stag
 
 export function queueVideoFullscreenChange(player: VideoPlayerController, fullscreen: boolean) {
 	player.queuedFullScreenChange = fullscreen;
-}
-
-export function trackVideoPlayerEvent(
-	player: VideoPlayerController,
-	action: string,
-	label?: string,
-	value?: string
-) {
-	Analytics.trackEvent(
-		'video-player' + (player.context ? `-${player.context}` : ''),
-		action,
-		label,
-		value
-	);
 }

@@ -1,11 +1,13 @@
 import { ComponentOptions, getCurrentInstance, MaybeRef, onUnmounted, ref, watch } from 'vue';
-import { NavigationGuardWithThis, RouteLocationNormalized, Router, useRouter } from 'vue-router';
+import { NavigationGuardWithThis, RouteLocationNormalized, useRouter } from 'vue-router';
 
 import { ensureConfig } from '~common/config/config.service';
 import { HistoryCache } from '~common/history/cache/cache.service';
 import { Meta, setMetaTitle } from '~common/meta/meta-service';
 import { Navigate } from '~common/navigate/navigate.service';
 import { PayloadError, PayloadErrorType } from '~common/payload/payload-service';
+import { getCurrentRouter } from '~common/route/current-router-service';
+import { defineIsolatedState } from '~common/ssr/isolated-state';
 import { useCommonStore } from '~common/store/common-store';
 import { EventTopic } from '~common/system/event/event-topic';
 import { RouteLocationRedirect } from '~utils/router';
@@ -84,6 +86,22 @@ export function defineAppRouteOptions(options: AppRouteOptions): {
 	};
 }
 
+/**
+ * Stores a mapping of all resolvers that are currently resolving, mapped to the
+ * route component's name that created it. We use this in order to resolve it
+ * into the correct component instance.
+ */
+const _activeRouteResolvers = defineIsolatedState(() => new Map<symbol, Resolver>());
+
+function _clearActiveResolvers() {
+	const resolvers = _activeRouteResolvers();
+	for (const [_, resolver] of resolvers) {
+		resolver.cancel();
+	}
+
+	resolvers.clear();
+}
+
 export function createAppRoute({
 	onInit,
 	onResolved,
@@ -148,7 +166,7 @@ export function createAppRoute({
 		{ immediate: true }
 	);
 
-	const activeResolver = _activeRouteResolvers.get(routeKey);
+	const activeResolver = _activeRouteResolvers().get(routeKey);
 	if (activeResolver) {
 		// If we were resolving lazily, let's finalize it.
 		if (!activeResolver.isResolved) {
@@ -337,7 +355,7 @@ export function createAppRoute({
  * out of the route, and assign the payload to it so that "created()" hook can
  * resolve it synchonously later.
  */
-export async function asyncRouteLoader(router: Router, loader: Promise<any>) {
+export async function asyncRouteLoader(loader: Promise<any>) {
 	if (!import.meta.env.SSR) {
 		return loader;
 	}
@@ -346,9 +364,13 @@ export async function asyncRouteLoader(router: Router, loader: Promise<any>) {
 	const component = mod.default as ComponentOptions;
 
 	// Basically copy the flow of the beforeRouteEnter for SSR.
-	const resolver = new Resolver(component.appRouteOptions!, router.currentRoute.value, {
-		useCache: false,
-	});
+	const resolver = new Resolver(
+		component.appRouteOptions!,
+		getCurrentRouter().currentRoute.value,
+		{
+			useCache: false,
+		}
+	);
 	await resolver.resolvePayload();
 
 	return mod;
@@ -369,8 +391,9 @@ class Resolver {
 
 		// If there's already a resolver resolving for this component, cancel it
 		// first. Only one resolver at a time is valid.
-		_activeRouteResolvers.get(this.routeKey)?.cancel();
-		_activeRouteResolvers.set(this.routeKey, this);
+		const resolvers = _activeRouteResolvers();
+		resolvers.get(this.routeKey)?.cancel();
+		resolvers.set(this.routeKey, this);
 	}
 
 	readonly routeKey: symbol;
@@ -425,27 +448,12 @@ class Resolver {
 	}
 
 	finalize() {
-		_activeRouteResolvers.delete(this.routeKey);
+		_activeRouteResolvers().delete(this.routeKey);
 	}
 
 	cancel() {
 		this.canceled = true;
 	}
-}
-
-/**
- * Stores a mapping of all resolvers that are currently resolving, mapped to the
- * route component's name that created it. We use this in order to resolve it
- * into the correct component instance.
- */
-const _activeRouteResolvers = new Map<symbol, Resolver>();
-
-function _clearActiveResolvers() {
-	for (const [_, resolver] of _activeRouteResolvers) {
-		resolver.cancel();
-	}
-
-	_activeRouteResolvers.clear();
 }
 
 /**
@@ -573,14 +581,17 @@ function _getChangedProperties(base: { [k: string]: any }, compare: { [k: string
 	return changed;
 }
 
-let _leafRoute: symbol | undefined;
+const _leafRoute = defineIsolatedState(() => ({
+	key: undefined as symbol | undefined,
+}));
+
 function setLeafRoute(key?: symbol) {
-	_leafRoute = key;
+	_leafRoute().key = key;
 }
 
 // The leaf route is the last in the hierarchy of routes. We only want to
 // trigger the route change after this one has resolved, otherwise we end up
 // triggering many routeChangeAfter events.
 function isLeafRoute(key?: symbol) {
-	return _leafRoute === key;
+	return _leafRoute().key === key;
 }

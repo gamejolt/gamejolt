@@ -3,7 +3,7 @@ import { computed, ref, watch } from 'vue';
 
 import AppButton from '~common/button/AppButton.vue';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
-import { Scroll } from '~common/scroll/scroll.service';
+import { scrollTo } from '~common/scroll/scroll.service';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 import { UserModel } from '~common/user/user.model';
 
@@ -31,7 +31,7 @@ watch(
 
 function proceed() {
 	hasBypassed.value = true;
-	Scroll.to(0, { animate: false });
+	scrollTo(0, { animate: false });
 }
 </script>
 

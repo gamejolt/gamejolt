@@ -1,7 +1,7 @@
 import { RouteLocationNormalized } from 'vue-router';
 
-import { router } from '~app/views/index';
-import { Scroll } from '~common/scroll/scroll.service';
+import { getCurrentRouter } from '~common/route/current-router-service';
+import { setShouldAutoScroll } from '~common/scroll/scroll.service';
 import { $gettext } from '~common/translate/translate.service';
 import { forEach } from '~utils/collection';
 import { objectEquals } from '~utils/object';
@@ -314,8 +314,9 @@ export class GameFilteringContainer {
 	 * We want to refresh the page with the new filtering params.
 	 */
 	onChanged() {
-		Scroll.shouldAutoScroll = false;
+		setShouldAutoScroll(false);
 
+		const router = getCurrentRouter();
 		const query = getRouteData(this.filters);
 		const location = getNewRouteLocation(router.currentRoute.value, query);
 

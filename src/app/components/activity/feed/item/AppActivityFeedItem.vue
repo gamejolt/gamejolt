@@ -10,7 +10,7 @@ import { Screen } from '~common/screen/screen-service';
 import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
 
 const InviewConfig = new ScrollInviewConfig();
-const InviewConfigHydration = new ScrollInviewConfig({ margin: `${Screen.height}px` });
+const InviewConfigHydration = new ScrollInviewConfig({ margin: () => `${Screen.height}px` });
 </script>
 
 <script lang="ts" setup>

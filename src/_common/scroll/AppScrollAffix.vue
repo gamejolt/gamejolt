@@ -3,7 +3,7 @@ import { CSSProperties, ref, toRef, useTemplateRef } from 'vue';
 
 import { Ruler } from '~common/ruler/ruler-service';
 import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
-import { Scroll } from '~common/scroll/scroll.service';
+import { getScrollOffsetTop } from '~common/scroll/scroll.service';
 import { styleWhen } from '~styles/mixins';
 import { useResizeObserver } from '~utils/resize-observer';
 
@@ -60,23 +60,27 @@ function inview() {
 }
 
 function getOffsetTop() {
-	return offsetTop ?? Scroll.offsetTop;
+	return offsetTop ?? getScrollOffsetTop();
 }
 
 function _createInviewConfig() {
-	let offset = padding;
-	if (anchor === 'top') {
-		offset += getOffsetTop();
-	} else if (offsetTop !== undefined) {
-		offset += offsetTop;
-	}
+	return new ScrollInviewConfig({
+		margin() {
+			let offset = padding;
+			if (anchor === 'top') {
+				offset += getOffsetTop();
+			} else if (offsetTop !== undefined) {
+				offset += offsetTop;
+			}
 
-	// The 10000px is so that it only considers the element "out of view" in
-	// one direction.
-	const margin =
-		anchor === 'top' ? `${offset * -1}px 0px 10000px 0px` : `10000px 0px ${offset * -1}px 0px`;
-
-	return new ScrollInviewConfig({ margin, emitsOn: 'full-overlap' });
+			// The 10000px is so that it only considers the element "out of view" in
+			// one direction.
+			return anchor === 'top'
+				? `${offset * -1}px 0px 10000px 0px`
+				: `10000px 0px ${offset * -1}px 0px`;
+		},
+		emitsOn: 'full-overlap',
+	});
 }
 </script>
 

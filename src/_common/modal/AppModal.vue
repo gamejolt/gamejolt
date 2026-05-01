@@ -2,8 +2,8 @@
 import { computed, onMounted, onUnmounted, ref, useTemplateRef } from 'vue';
 import { isNavigationFailure, useRouter } from 'vue-router';
 
-import { Backdrop, BackdropController } from '~common/backdrop/backdrop.service';
-import { EscapeStack, EscapeStackCallback } from '~common/escape-stack/escape-stack.service';
+import { BackdropController, useBackdropStore } from '~common/backdrop/backdrop.service';
+import { useEscapeStack } from '~common/escape-stack/escape-stack.service';
 import { ModalDismissReason, Modals, useModal } from '~common/modal/modal.service';
 import { Screen } from '~common/screen/screen-service';
 import AppScrollAffix from '~common/scroll/AppScrollAffix.vue';
@@ -22,6 +22,10 @@ export interface AppModalInterface {
  * called anytime modal backdrops are trying to be dismissed.
  */
 export function addModalBackdropCheck(fn: () => boolean) {
+	if (import.meta.env.SSR) {
+		return;
+	}
+
 	_modalBackdropChecks.push(fn);
 }
 
@@ -45,6 +49,8 @@ defineExpose<AppModalInterface>({
 
 const router = useRouter();
 const modal = useModal()!;
+const { push: pushBackdrop } = useBackdropStore();
+const { modalBodyWrapper } = Modals;
 const scroller = createScroller();
 
 const root = useTemplateRef('root');
@@ -52,16 +58,20 @@ const isHoveringContent = ref(false);
 
 let _backdrop: BackdropController | undefined;
 let _afterEachDeregister: (() => void) | undefined;
-let _escapeCallback: EscapeStackCallback | undefined;
 
 const zIndex = computed(() => 1050 + modal.index);
 
+useEscapeStack({
+	onEscape: () => dismissEsc(),
+});
+
 onMounted(() => {
 	if (!modal.noBackdrop) {
-		_backdrop = Backdrop.push({
-			context: root.value!,
-			className: 'modal-backdrop',
-		});
+		_backdrop =
+			pushBackdrop({
+				context: root.value!,
+				className: 'modal-backdrop',
+			}) ?? undefined;
 	}
 
 	_afterEachDeregister = router.afterEach((_to, _from, failure) => {
@@ -71,9 +81,6 @@ onMounted(() => {
 			_dismissRouteChange();
 		}
 	});
-
-	_escapeCallback = () => dismissEsc();
-	EscapeStack.register(_escapeCallback);
 });
 
 onUnmounted(() => {
@@ -86,11 +93,6 @@ onUnmounted(() => {
 	if (_afterEachDeregister) {
 		_afterEachDeregister();
 		_afterEachDeregister = undefined;
-	}
-
-	if (_escapeCallback) {
-		EscapeStack.deregister(_escapeCallback);
-		_escapeCallback = undefined;
 	}
 });
 
@@ -152,8 +154,8 @@ function scrollTo(offsetY: number) {
 			modal-scroller
 		>
 			<component
-				:is="Modals.modalBodyWrapper || 'div'"
-				v-bind="Modals.modalBodyWrapper ? { modal } : {}"
+				:is="modalBodyWrapper || 'div'"
+				v-bind="modalBodyWrapper ? { modal } : {}"
 				class="modal-layer"
 			>
 				<AppTheme

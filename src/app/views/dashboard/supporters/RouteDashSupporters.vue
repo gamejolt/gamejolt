@@ -25,7 +25,7 @@ import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
 import { getCurrentServerTime } from '~utils/server-time';
 
 const ACTIONS_PER_PAGE = 25;
-const InviewConfigLoadMore = new ScrollInviewConfig({ margin: `${Screen.height}px` });
+const InviewConfigLoadMore = new ScrollInviewConfig({ margin: () => `${Screen.height}px` });
 
 export default {
 	...defineAppRouteOptions({

@@ -1,4 +1,4 @@
-import { HistoryTick } from '~common/history-tick/history-tick-service';
+import { sendHistoryTick } from '~common/history-tick/history-tick-service';
 import { MediaItemModel, MediaItemType } from '~common/media-item/media-item-model';
 import { Model } from '~common/model/model.service';
 import { VideoSourceArray } from '~common/video/AppVideo.vue';
@@ -57,5 +57,5 @@ export class FiresidePostVideoModel extends Model {
 }
 
 export function $viewPostVideo(video: FiresidePostVideoModel) {
-	return HistoryTick.sendBeacon('fireside-post-video', video.id);
+	return sendHistoryTick('fireside-post-video', video.id);
 }

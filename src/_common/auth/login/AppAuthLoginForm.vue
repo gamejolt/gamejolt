@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue';
-import { useRouter } from 'vue-router';
 
 import { trackLoginCaptcha } from '~common/analytics/analytics.service';
 import { Api } from '~common/api/api.service';
@@ -33,8 +32,6 @@ const emit = defineEmits<{
 	'needs-approved-login': [token: string];
 	submit: [formModel: FormModel, response: any];
 }>();
-
-const router = useRouter();
 
 const captchaToken = ref<string | null>(null);
 const captchaResponse = ref<string | null>(null);
@@ -135,7 +132,7 @@ function onRecaptchaResponse(response: string) {
 }
 
 function linkedChoose(provider: LinkedAccountProvider) {
-	LinkedAccounts.login(router, provider);
+	LinkedAccounts.login(provider);
 }
 </script>
 

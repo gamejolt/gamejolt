@@ -2,36 +2,45 @@ import Axios, { AxiosRequestConfig } from 'axios';
 import { ref } from 'vue';
 
 import { setTimezoneOffsetCookie } from '~common/cookie/cookie.service';
-import { Environment } from '~common/environment/environment.service';
+import { Environment, getSsrContext } from '~common/environment/environment.service';
 import { Payload } from '~common/payload/payload-service';
+import { defineIsolatedState } from '~common/ssr/isolated-state';
 
 export interface ApiProgressEvent {
 	loaded: number;
 	total: number;
 }
 
+export const getLoadingBarRequests = defineIsolatedState(() => ref(0));
+
+const _hasWebpSupport = defineIsolatedState(() => ({
+	promise: null as Promise<boolean> | null,
+}));
+
 /** @__NO_SIDE_EFFECTS__ */
 function hasWebpSupport() {
-	// Memoized essentially, and lazily fetched when first needed.
-	if (!_hasWebpSupport) {
-		_hasWebpSupport = import.meta.env.SSR
-			? // SSR passes through the webp support from the client.
-				Promise.resolve(Environment.ssrContext.accept.includes('image/webp'))
-			: // For normal clients we have to test for it by loading in a webp
-				// image through a data URI.
-				new Promise<boolean>(resolve => {
-					const image = new Image();
-					image.onerror = () => resolve(false);
-					image.onload = () => resolve(image.width === 1);
-					image.src =
-						'data:image/webp;base64,UklGRiQAAABXRUJQVlA4IBgAAAAwAQCdASoBAAEAAwA0JaQAA3AA/vuUAAA=';
-				}).catch(() => false);
+	const cache = _hasWebpSupport();
+
+	// Memoized per-scope, lazily fetched when first needed.
+	if (!cache.promise) {
+		if (import.meta.env.SSR) {
+			// SSR passes through the webp support from the client.
+			cache.promise = Promise.resolve(getSsrContext().accept.includes('image/webp'));
+		} else {
+			// For normal clients we have to test for it by loading in a webp
+			// image through a data URI.
+			cache.promise = new Promise<boolean>(resolve => {
+				const image = new Image();
+				image.onerror = () => resolve(false);
+				image.onload = () => resolve(image.width === 1);
+				image.src =
+					'data:image/webp;base64,UklGRiQAAABXRUJQVlA4IBgAAAAwAQCdASoBAAEAAwA0JaQAA3AA/vuUAAA=';
+			}).catch(() => false);
+		}
 	}
 
-	return _hasWebpSupport;
+	return cache.promise;
 }
-
-let _hasWebpSupport: null | Promise<boolean> = null;
 
 export interface RequestOptions {
 	/**
@@ -113,8 +122,6 @@ export interface RequestOptions {
 }
 
 class ApiService {
-	loadingBarRequests = ref(0);
-
 	apiHost: string = Environment.apiHost;
 	uploadHost: string = Environment.uploadHost;
 	apiPath = '/site-api';
@@ -226,7 +233,7 @@ class ApiService {
 
 		const showLoading = !options.ignoreLoadingBar;
 		if (showLoading) {
-			++this.loadingBarRequests.value;
+			++getLoadingBarRequests().value;
 		}
 
 		try {
@@ -278,7 +285,7 @@ class ApiService {
 			}
 		} finally {
 			if (showLoading) {
-				--this.loadingBarRequests.value;
+				--getLoadingBarRequests().value;
 			}
 		}
 	}

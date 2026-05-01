@@ -21,7 +21,7 @@ import { GamePackageCardModel } from '~common/game/package/card/card.model';
 import { GamePackageModel } from '~common/game/package/package.model';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppPopper from '~common/popper/AppPopper.vue';
-import { Popper } from '~common/popper/popper.service';
+import { hideAllPoppers } from '~common/popper/popper.service';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 import { TranslateDirective as vTranslate } from '~common/translate/translate-directive';
@@ -137,7 +137,7 @@ function uninstall() {
 		return;
 	}
 
-	Popper.hideAll();
+	hideAllPoppers();
 
 	packageUninstall(localPackage.value);
 }
@@ -147,7 +147,7 @@ function retryUninstall() {
 		throw new Error(`Local package isn't set`);
 	}
 
-	Popper.hideAll();
+	hideAllPoppers();
 
 	packageUninstall(localPackage.value);
 }

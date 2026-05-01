@@ -1,15 +1,14 @@
-import type { Router } from 'vue-router';
-
 import { showUserTokenModal } from '~app/components/user/token-modal/token-modal.service';
 import { AppStore } from '~app/store';
 import { Client } from '~common/client/client.service';
-import { commonStore } from '~common/store/common-store';
+import { getCurrentRouter } from '~common/route/current-router-service';
+import { getCommonStore } from '~common/store/common-store';
 import { $gettext } from '~common/translate/translate.service';
 import type { RouteLocationDefinition } from '~utils/router';
 
-export function createClientTrayMenuBuilder(router: Router, appStore: AppStore) {
+export function createClientTrayMenuBuilder(appStore: AppStore) {
 	function go(location: RouteLocationDefinition) {
-		router.push(location);
+		getCurrentRouter().push(location);
 		Client.show();
 	}
 
@@ -71,7 +70,7 @@ export function createClientTrayMenuBuilder(router: Router, appStore: AppStore) 
 				click: () =>
 					go({
 						name: 'profile.overview',
-						params: { username: commonStore.user.value!.username },
+						params: { username: getCommonStore().user.value!.username },
 					}),
 			})
 		);

@@ -1,13 +1,11 @@
-import { Router } from 'vue-router';
-
 import { Api } from '~common/api/api.service';
 import { setOAuthPendingToken } from '~common/auth/auth.service';
 import { LinkedAccountProvider } from '~common/linked-account/linked-account.model';
 import { Navigate } from '~common/navigate/navigate.service';
+import { getCurrentRouter } from '~common/route/current-router-service';
 
 export class LinkedAccounts {
 	static async link(
-		router: Router,
 		provider: LinkedAccountProvider | '',
 		routeUrl: string,
 		resource: 'User' | 'Game',
@@ -31,7 +29,7 @@ export class LinkedAccounts {
 			// Now redirect them to the page that will continuously check if they
 			// are linked yet. We pass in the request token returned since this is
 			// what tells us our oauth state.
-			router.push({
+			getCurrentRouter().push({
 				name: 'dash.linking',
 				query: { token: response.token },
 			});
@@ -43,7 +41,7 @@ export class LinkedAccounts {
 		}
 	}
 
-	static async login(router: Router, provider: LinkedAccountProvider) {
+	static async login(provider: LinkedAccountProvider) {
 		let url = '/web/auth/linked-accounts/link/' + provider;
 		if (GJ_IS_DESKTOP_APP) {
 			url += '?client';
@@ -58,7 +56,7 @@ export class LinkedAccounts {
 			// Now redirect them to the page that will continuously check if they
 			// are authed yet. We pass in the request token returned since this is
 			// what tells us our oauth state.
-			router.push({
+			getCurrentRouter().push({
 				name: 'auth.linked-account.poll',
 				params: { token: response.token },
 			});

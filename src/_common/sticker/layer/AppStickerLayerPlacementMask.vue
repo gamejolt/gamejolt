@@ -1,10 +1,9 @@
 <script lang="ts" setup>
 import { computed, ref, toRef } from 'vue';
 
-import { Analytics } from '~common/analytics/analytics.service';
 import { vAppObserveDimensions } from '~common/observe-dimensions/observe-dimensions.directive';
 import { useScroller } from '~common/scroll/AppScrollScroller.vue';
-import { Scroll } from '~common/scroll/scroll.service';
+import { getScrollLeft, getScrollTop } from '~common/scroll/scroll.service';
 import AppStickerChargeCard from '~common/sticker/charge/AppStickerChargeCard.vue';
 import AppStickerLayerDrawer from '~common/sticker/layer/AppStickerLayerDrawer.vue';
 import AppStickerLayerGhost from '~common/sticker/layer/AppStickerLayerGhost.vue';
@@ -55,14 +54,13 @@ function onDimensionsChange([
 
 	// The scroll functions will either work on the scroller, or if
 	// undefined is passed in it will pull from the main document.
-	const scrollLeft = Scroll.getScrollLeft(scrollElement);
-	const scrollTop = Scroll.getScrollTop(scrollElement);
+	const scrollLeft = getScrollLeft(scrollElement);
+	const scrollTop = getScrollTop(scrollElement);
 
 	calculateStickerTargetRects(layer, scrollLeft, scrollTop);
 }
 
 function onClickMask() {
-	Analytics.trackEvent('sticker-drawer', 'click-mask-hide');
 	closeStickerDrawer(stickerStore);
 }
 </script>

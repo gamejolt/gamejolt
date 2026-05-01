@@ -9,7 +9,11 @@ import { FiresidePostModel, loadArticleIntoPost } from '~common/fireside/post/po
 import AppLoading from '~common/loading/AppLoading.vue';
 import { kPostItemPaddingContainer } from '~common/post/post-styles';
 import { Screen } from '~common/screen/screen-service';
-import { Scroll } from '~common/scroll/scroll.service';
+import {
+	getElementOffsetTopFromContext,
+	getScrollTop,
+	scrollTo,
+} from '~common/scroll/scroll.service';
 import { styleWhen } from '~styles/mixins';
 
 type Props = {
@@ -60,12 +64,12 @@ async function collapse() {
 
 	// We will scroll to the bottom of the element minus some extra padding.
 	// This keeps the element in view a bit.
-	const elementOffset = Scroll.getElementOffsetTopFromContext(rootElem.value);
-	const scrollTo = elementOffset - Screen.height * 0.25;
+	const elementOffset = getElementOffsetTopFromContext(rootElem.value);
+	const targetTop = elementOffset - Screen.height * 0.25;
 
 	// Only if we're past where we would scroll.
-	if (Scroll.getScrollTop() > elementOffset) {
-		Scroll.to(scrollTo, { animate: false });
+	if (getScrollTop() > elementOffset) {
+		scrollTo(targetTop, { animate: false });
 	}
 
 	feed.setItemOpen(item, false);

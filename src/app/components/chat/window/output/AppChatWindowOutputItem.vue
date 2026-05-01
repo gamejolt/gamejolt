@@ -25,7 +25,7 @@ import { formatDate } from '~common/filters/date';
 import AppJolticon, { Jolticon } from '~common/jolticon/AppJolticon.vue';
 import { showModalConfirm } from '~common/modal/confirm/confirm-service';
 import AppPopper, { PopperPlacementType } from '~common/popper/AppPopper.vue';
-import { Popper } from '~common/popper/popper.service';
+import { hideAllPoppers } from '~common/popper/popper.service';
 import AppReactionList from '~common/reaction/list/AppReactionList.vue';
 import { selectReactionForResource } from '~common/reaction/reaction-count';
 import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
@@ -214,16 +214,16 @@ function onAvatarPopperVisible(isShowing: boolean) {
 
 function startEdit() {
 	room.messageEditing = message;
-	Popper.hideAll();
+	hideAllPoppers();
 }
 
 function stopEdit() {
 	room.messageEditing = null;
-	Popper.hideAll();
+	hideAllPoppers();
 }
 
 async function removeMessage() {
-	Popper.hideAll();
+	hideAllPoppers();
 
 	const result = await showModalConfirm(
 		$gettext(`Are you sure you want to remove this message?`)

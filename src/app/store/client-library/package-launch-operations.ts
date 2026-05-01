@@ -2,10 +2,7 @@ import type { LaunchInstance as TypeofLaunchInstance, OldLaunchInstance } from '
 import type { Ref } from 'vue';
 
 import type { LocalDbPackage } from '~app/components/client/local-db/package/package.model';
-import {
-	handleClientVoodooError,
-	trackClientVoodooOperation,
-} from '~app/store/client-library/client-voodoo';
+import { handleClientVoodooError } from '~app/store/client-library/client-voodoo';
 import type ClientLibraryPackageDataMutations from '~app/store/client-library/package-data-mutations';
 import { Api } from '~common/api/api.service';
 import { Launcher, LaunchInstance } from '~common/client/client-voodoo-imports';
@@ -47,7 +44,6 @@ export default class ClientLibraryPackageLaunchOperations {
 
 			const launchInstance = await Launcher.launch(localPackage as any, credentials);
 			this.launcherAttach(localPackage, launchInstance);
-			trackClientVoodooOperation('launch', true);
 		} catch (err) {
 			console.error(err);
 			handleClientVoodooError(err, 'launch', $gettext('Could not launch game.'));
@@ -63,7 +59,6 @@ export default class ClientLibraryPackageLaunchOperations {
 		try {
 			const launchInstance = await Launcher.attach(localPackage.running_pid);
 			this.launcherAttach(localPackage, launchInstance);
-			trackClientVoodooOperation('attach', true);
 		} catch (err) {
 			console.log(`Could not reattach launcher instance: ${localPackage.running_pid}`);
 			console.error(err);

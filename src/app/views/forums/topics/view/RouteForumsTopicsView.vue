@@ -18,16 +18,16 @@ import { formatNumber } from '~common/filters/number';
 import { ForumChannelModel } from '~common/forum/channel/channel.model';
 import { ForumPostModel } from '~common/forum/post/post.model';
 import { ForumTopicModel } from '~common/forum/topic/topic.model';
-import { HistoryTick } from '~common/history-tick/history-tick-service';
+import { sendHistoryTick } from '~common/history-tick/history-tick-service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppMessageThreadPagination from '~common/message-thread/pagination/AppMessageThreadPagination.vue';
 import AppPopper from '~common/popper/AppPopper.vue';
-import { Popper } from '~common/popper/popper.service';
+import { hideAllPoppers } from '~common/popper/popper.service';
 import { showReportModal } from '~common/report/modal/modal.service';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { Screen } from '~common/screen/screen-service';
 import AppScrollAffix from '~common/scroll/AppScrollAffix.vue';
-import { Scroll } from '~common/scroll/scroll.service';
+import { scrollTo } from '~common/scroll/scroll.service';
 import { useCommonStore } from '~common/store/common-store';
 import AppTimeAgo from '~common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
@@ -43,8 +43,6 @@ export default {
 		cache: true,
 		reloadOn: { params: ['slug', 'id'], query: ['page'] },
 		async resolver({ route }) {
-			HistoryTick.sendBeacon('forum-topic', parseInt(validateString(route.params.id), 10));
-
 			const payload = await Api.sendRequest(
 				'/web/forums/topics/' + route.params.id + '?page=' + (route.query.page || 1)
 			);
@@ -81,7 +79,7 @@ const sort = computed(() => route.query.sort as string);
 
 function editTopic() {
 	isEditingTopic.value = true;
-	Popper.hideAll();
+	hideAllPoppers();
 }
 
 function closeEditTopic() {
@@ -95,7 +93,7 @@ function pageChange() {
 	// that gets loaded in once the content is loaded for main post? Would
 	// sure be a lot of work just to get the scrolling hook working better.
 	setTimeout(() => {
-		Scroll.to('forum-posts-list', { animate: true });
+		scrollTo('forum-posts-list', { animate: true });
 	}, 200);
 }
 
@@ -110,6 +108,9 @@ createAppRoute({
 		}
 		return null;
 	}),
+	onInit() {
+		sendHistoryTick('forum-topic', parseInt(validateString(route.params.id), 10));
+	},
 	onResolved({ payload }) {
 		topic.value = new ForumTopicModel(payload.topic);
 		channel.value = new ForumChannelModel(payload.channel);

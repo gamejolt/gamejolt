@@ -43,5 +43,3 @@ export function createAuthStore() {
 		hideCoverImage,
 	};
 }
-
-export const authStore = createAuthStore();

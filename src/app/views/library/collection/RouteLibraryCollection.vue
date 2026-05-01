@@ -696,7 +696,6 @@ async function loadMore() {
 				<AppGameGrid
 					v-if="listing"
 					:games="listing.games"
-					event-label="collection-games"
 					:can-reorder="canReorder"
 					@sort="$event => onSortedGames($event)"
 				>
@@ -749,11 +748,7 @@ async function loadMore() {
 					</div>
 
 					<AppLoadingFade :is-loading="isLoadingRecommended">
-						<AppGameGrid
-							:games="recommendedGames"
-							scrollable
-							event-label="collection-games-mix"
-						/>
+						<AppGameGrid :games="recommendedGames" scrollable />
 					</AppLoadingFade>
 
 					<p class="visible-xs">

@@ -3,7 +3,7 @@ import { reactive } from 'vue';
 
 import { isDynamicGoogleBot } from '~common/device/device.service';
 import { getFirebaseApp } from '~common/firebase/firebase.service';
-import { commonStore } from '~common/store/common-store';
+import { getCommonStore } from '~common/store/common-store';
 
 const ConfigService_ = {
 	isLoaded: false,
@@ -64,7 +64,7 @@ export abstract class ConfigOption<T extends ValueType = any> {
 		}
 
 		if (authed !== undefined) {
-			const hasUser = !!commonStore.user.value;
+			const hasUser = !!getCommonStore().user.value;
 			// Exclude if our authed condition doesn't match the current login
 			// state.
 			if (authed !== hasUser) {

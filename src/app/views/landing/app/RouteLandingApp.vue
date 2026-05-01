@@ -17,7 +17,7 @@ import AppContactLink from '~common/contact-link/AppContactLink.vue';
 import { DeviceArch, DeviceOs, getDeviceOS } from '~common/device/device.service';
 import { chooseBestGameBuild, pluckInstallableGameBuilds } from '~common/game/game.model';
 import { GamePackagePayloadModel } from '~common/game/package/package-payload.model';
-import { HistoryTick } from '~common/history-tick/history-tick-service';
+import { sendHistoryTick } from '~common/history-tick/history-tick-service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import { Meta } from '~common/meta/meta-service';
 import AppMobileAppButtons from '~common/mobile-app/AppMobileAppButtons.vue';
@@ -95,7 +95,7 @@ createAppRoute({
 });
 
 async function downloadDesktopApp(platform: DeviceOs, arch: DeviceArch) {
-	HistoryTick.sendBeacon('client-download');
+	sendHistoryTick('client-download');
 	trackAppDownload({ platform, arch });
 
 	const downloadUrl = await _getDownloadUrl(platform, arch);

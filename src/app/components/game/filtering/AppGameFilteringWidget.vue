@@ -2,7 +2,6 @@
 import { reactive } from 'vue';
 
 import { GameFilteringContainer } from '~app/components/game/filtering/container';
-import { Analytics } from '~common/analytics/analytics.service';
 import { formatNumber } from '~common/filters/number';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppPopper from '~common/popper/AppPopper.vue';
@@ -28,13 +27,6 @@ function onMouseout(filter: string) {
 }
 
 function toggleFilterOption(filter: string, option: any) {
-	const label = filter + '-' + option;
-	if (filtering.isFilterOptionSet(filter, option)) {
-		Analytics.trackEvent('game-filtering', 'toggle', label + '-off');
-	} else {
-		Analytics.trackEvent('game-filtering', 'toggle', label + '-on');
-	}
-
 	filtering.toggleFilterOption(filter, option);
 	filtering.onChanged();
 }

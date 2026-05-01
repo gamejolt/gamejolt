@@ -9,7 +9,6 @@ import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vu
 
 type Props = {
 	user: UserModel;
-	eventLabel?: string;
 	userHoverCard?: boolean;
 };
 defineProps<Props>();
@@ -44,7 +43,7 @@ const { user: sessionUser } = useCommonStore();
 		<div v-if="sessionUser && user.id !== sessionUser.id" class="-button">
 			<!--
 			Gotta prevent default so that the RouterLink doesn't go to the user
-			page. The stop is so that we don't double track events.
+			page.
 			-->
 			<AppUserFollowButton
 				:user="user"

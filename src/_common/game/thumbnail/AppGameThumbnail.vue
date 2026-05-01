@@ -14,7 +14,7 @@ import AppUserVerifiedTick from '~common/user/AppUserVerifiedTick.vue';
 import AppUserCardHover from '~common/user/card/AppUserCardHover.vue';
 import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
 
-const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height}px` });
+const InviewConfig = new ScrollInviewConfig({ margin: () => `${Screen.height}px` });
 </script>
 
 <script lang="ts" setup>

@@ -20,7 +20,7 @@ import { GameBuildModel } from '~common/game/build/build.model';
 import { GameModel } from '~common/game/game.model';
 import { GameSongModel } from '~common/game/song/song.model';
 import AppGameThumbnail from '~common/game/thumbnail/AppGameThumbnail.vue';
-import { HistoryTick } from '~common/history-tick/history-tick-service';
+import { sendHistoryTick } from '~common/history-tick/history-tick-service';
 import { setAppPromotionCohort, useAppPromotionStore } from '~common/mobile-app/store';
 import { Navigate } from '~common/navigate/navigate.service';
 import { buildPayloadErrorForStatusCode } from '~common/payload/payload-service';
@@ -52,11 +52,6 @@ defineOptions({
 				if (!buildId) {
 					return buildPayloadErrorForStatusCode(404);
 				}
-
-				HistoryTick.sendBeacon('game-build', buildId, {
-					sourceResource: 'Game',
-					sourceResourceId: gameId,
-				});
 
 				query.push(`build=${buildId}`);
 			}
@@ -108,6 +103,22 @@ const { isBootstrapped } = createAppRoute({
 		}
 		return null;
 	}),
+	onInit() {
+		if (route.params.type !== 'build') {
+			return;
+		}
+
+		const buildId = typeof route.query.build === 'string' ? parseInt(route.query.build) : null;
+		const gameId = typeof route.query.game === 'string' ? parseInt(route.query.game) : null;
+		if (!buildId || !gameId) {
+			return;
+		}
+
+		sendHistoryTick('game-build', buildId, {
+			sourceResource: 'Game',
+			sourceResourceId: gameId,
+		});
+	},
 	async onResolved({ payload }) {
 		game.value = new GameModel(payload.game);
 		build.value = payload.build ? new GameBuildModel(payload.build) : null;

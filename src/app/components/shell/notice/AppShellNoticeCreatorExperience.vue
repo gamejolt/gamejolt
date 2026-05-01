@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { computed, CSSProperties, ref } from 'vue';
 
+import AppShellNoticeBase from '~app/components/shell/notice/AppShellNoticeBase.vue';
+import { CreatorExperienceNotice } from '~app/components/shell/notice/payload-actions.store';
 import AppCircularProgress from '~common/progress/AppCircularProgress.vue';
-import AppShellNoticeBase from '~common/shell/notice/_base/AppShellNoticeBase.vue';
-import { CreatorExperienceNotice } from '~common/shell/notice/notice.service';
 import { $gettext } from '~common/translate/translate.service';
 import { kFontSizeTiny } from '~styles/variables';
 import { sleep } from '~utils/utils';

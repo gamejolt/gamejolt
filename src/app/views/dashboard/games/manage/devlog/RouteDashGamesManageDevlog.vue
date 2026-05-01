@@ -1,6 +1,6 @@
 <script lang="ts">
 import { computed, Ref, ref, toRef } from 'vue';
-import { RouteLocationNormalized, RouterLink, useRoute, useRouter } from 'vue-router';
+import { RouteLocationNormalized, RouterLink, useRoute } from 'vue-router';
 
 import AppActivityFeed from '~app/components/activity/feed/AppActivityFeed.vue';
 import AppActivityFeedPlaceholder from '~app/components/activity/feed/AppActivityFeedPlaceholder.vue';
@@ -34,7 +34,6 @@ export default {
 
 <script lang="ts" setup>
 const route = useRoute();
-const router = useRouter();
 const { game } = useGameDashRouteController()!;
 
 const feed = ref(null) as Ref<ActivityFeedView | null>;
@@ -47,7 +46,6 @@ function onPostAdded(post: FiresidePostModel) {
 		post,
 		appRoute: appRoute,
 		route: route,
-		router: router,
 	});
 }
 
@@ -56,7 +54,6 @@ function onPostEdited(eventItem: EventItemModel) {
 		eventItem,
 		appRoute: appRoute,
 		route: route,
-		router: router,
 	});
 }
 
@@ -65,7 +62,6 @@ function onPostPublished(eventItem: EventItemModel) {
 		eventItem,
 		appRoute: appRoute,
 		route: route,
-		router: router,
 	});
 }
 

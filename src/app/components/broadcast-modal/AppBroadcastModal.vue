@@ -121,7 +121,7 @@ function onVideoPlay() {
 				<br />
 			</template>
 
-			<AppPostControls :post="post" location="broadcast" event-label="broadcast" />
+			<AppPostControls :post="post" location="broadcast" />
 		</div>
 	</AppModal>
 </template>

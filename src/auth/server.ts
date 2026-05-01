@@ -1,27 +1,9 @@
-import { createApp as bootstrapCreateApp } from '~auth/bootstrap';
-import { setDeviceUserAgent } from '~common/device/device.service';
-import { Environment } from '~common/environment/environment.service';
-import { Meta } from '~common/meta/meta-service';
+import { AsyncLocalStorage } from 'node:async_hooks';
 
-export default async function (context: typeof Environment.ssrContext) {
-	Environment.ssrContext = context;
-	setDeviceUserAgent(context.ua);
+import { createApp } from '~auth/bootstrap';
+import { createSsrHandler } from '~common/ssr/createSsrHandler';
 
-	const { app, router } = await bootstrapCreateApp();
-
-	const s = Date.now();
-
-	// set the router to the desired URL before rendering
-	router.push(context.url);
-	await router.isReady();
-
-	console.log(`data pre-fetch: ${Date.now() - s}ms`);
-
-	context.meta = {
-		title: Meta.title,
-	};
-
-	(context as any).prefetchTime = Date.now() - s;
-
-	return app;
-}
+export default createSsrHandler({
+	createApp,
+	asyncLocalStorage: new AsyncLocalStorage(),
+});

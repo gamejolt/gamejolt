@@ -1,7 +1,7 @@
 import { showErrorGrowl, showSuccessGrowl } from '~common/growls/growls.service';
 import { showModalConfirm } from '~common/modal/confirm/confirm-service';
 import { Payload } from '~common/payload/payload-service';
-import { commonStore } from '~common/store/common-store';
+import { getCommonStore } from '~common/store/common-store';
 import { $gettext } from '~common/translate/translate.service';
 import {
 	$acceptUserFriendship,
@@ -120,7 +120,8 @@ export class UserFriendshipHelper {
 	}
 
 	static async removeFriend(friendship: UserFriendshipModel) {
-		const them = friendship.getThem(commonStore.user.value!);
+		const { user } = getCommonStore();
+		const them = friendship.getThem(user.value!);
 
 		const confirmResult = await showModalConfirm(
 			$gettext(`Remove @%{ username } as a friend?`, {

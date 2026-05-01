@@ -1,6 +1,6 @@
 import { Directive } from 'vue';
 
-import { Scroll } from '~common/scroll/scroll.service';
+import { scrollTo } from '~common/scroll/scroll.service';
 
 export const vAppScrollTo: Directive<unknown, string | undefined> = {
 	beforeMount(el: HTMLElement, binding) {
@@ -12,7 +12,7 @@ export const vAppScrollTo: Directive<unknown, string | undefined> = {
 				console.error(new Error(`Couldn't get scroll to.`));
 			}
 
-			Scroll.to(to);
+			scrollTo(to);
 		});
 	},
 };

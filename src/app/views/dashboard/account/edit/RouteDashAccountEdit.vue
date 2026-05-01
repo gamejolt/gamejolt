@@ -6,7 +6,7 @@ import { showUserAvatarModal } from '~app/components/user/avatar-modal/avatar-mo
 import { useAccountRouteController } from '~app/views/dashboard/account/RouteDashAccount.vue';
 import { showSuccessGrowl } from '~common/growls/growls.service';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
-import { Scroll } from '~common/scroll/scroll.service';
+import { scrollTo } from '~common/scroll/scroll.service';
 import { useCommonStore } from '~common/store/common-store';
 import { $gettext } from '~common/translate/translate.service';
 import { bangRef } from '~utils/vue';
@@ -40,7 +40,7 @@ function showEditAvatar() {
 
 function onProfileSaved() {
 	showSuccessGrowl($gettext(`Your profile has been updated. Right on!`));
-	Scroll.to(0);
+	scrollTo(0);
 }
 </script>
 

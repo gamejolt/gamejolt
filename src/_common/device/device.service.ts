@@ -1,5 +1,6 @@
 import { UAParser } from 'ua-parser-js';
-import { ref } from 'vue';
+
+import { defineIsolatedState } from '~common/ssr/isolated-state';
 
 export type DeviceOs = 'windows' | 'mac' | 'linux' | 'ios' | 'android' | 'other';
 export type DeviceArch = '32' | '64';
@@ -43,30 +44,33 @@ const OS_ANDROID = ['android'];
 const ARCH_32 = ['68k', 'arm', 'avr', 'ia32', 'irix', 'mips', 'pa-risc', 'ppc', 'sparc'];
 const ARCH_64 = ['amd64', 'arm64', 'ia64', 'irix64', 'mips64', 'sparc64'];
 
-let _userAgentOverride: string | undefined = undefined;
-
-const _os = ref<DeviceOs>();
-const _arch = ref<DeviceArch>();
-const _browser = ref<string>();
-const _deviceType = ref<DeviceType>();
-
-let _parserResult: null | UAParser.IResult = null;
+const _cache = defineIsolatedState(() => ({
+	userAgentOverride: undefined as string | undefined,
+	parserResult: null as UAParser.IResult | null,
+	os: undefined as DeviceOs | undefined,
+	arch: undefined as DeviceArch | undefined,
+	browser: undefined as string | undefined,
+	deviceType: undefined as DeviceType | undefined,
+	isDynamicGoogleBot: null as boolean | null,
+}));
 
 function _getResult() {
-	if (!_parserResult) {
-		const parser = new UAParser(_userAgentOverride);
-		_parserResult = parser.getResult();
+	const cache = _cache();
+	if (!cache.parserResult) {
+		const parser = new UAParser(cache.userAgentOverride);
+		cache.parserResult = parser.getResult();
 	}
 
-	return _parserResult;
+	return cache.parserResult;
 }
 
 export function setDeviceUserAgent(newUserAgent: string) {
-	if (_parserResult) {
+	const cache = _cache();
+	if (cache.parserResult) {
 		throw new Error(`Already parsed the UA result.`);
 	}
 
-	_userAgentOverride = newUserAgent;
+	cache.userAgentOverride = newUserAgent;
 }
 
 export function getDeviceOS(): DeviceOs {
@@ -84,26 +88,27 @@ export function getDeviceOS(): DeviceOs {
 		}
 	}
 
-	if (!_os.value) {
+	const cache = _cache();
+	if (!cache.os) {
 		const result = _getResult();
 		const osName = result.os.name ? result.os.name.toLowerCase() : 'windows';
 
 		if (OS_WINDOWS.indexOf(osName) !== -1) {
-			_os.value = 'windows';
+			cache.os = 'windows';
 		} else if (OS_MAC.indexOf(osName) !== -1) {
-			_os.value = 'mac';
+			cache.os = 'mac';
 		} else if (OS_LINUX.indexOf(osName) !== -1) {
-			_os.value = 'linux';
+			cache.os = 'linux';
 		} else if (OS_ANDROID.indexOf(osName) !== -1) {
-			_os.value = 'android';
+			cache.os = 'android';
 		} else if (OS_IOS.indexOf(osName) !== -1) {
-			_os.value = 'ios';
+			cache.os = 'ios';
 		} else {
-			_os.value = 'other';
+			cache.os = 'other';
 		}
 	}
 
-	return _os.value;
+	return cache.os;
 }
 
 export function getDeviceArch(): DeviceArch {
@@ -126,21 +131,22 @@ export function getDeviceArch(): DeviceArch {
 		}
 	}
 
-	if (typeof _arch.value === 'undefined') {
+	const cache = _cache();
+	if (typeof cache.arch === 'undefined') {
 		const result = _getResult();
 		const arch =
 			result.cpu && result.cpu.architecture ? result.cpu.architecture.toLowerCase() : null;
 
 		if (ARCH_64.indexOf(arch!) !== -1) {
-			_arch.value = '64';
+			cache.arch = '64';
 		} else if (ARCH_32.indexOf(arch!) !== -1) {
-			_arch.value = '32';
+			cache.arch = '32';
 		} else {
-			_arch.value = '32';
+			cache.arch = '32';
 		}
 	}
 
-	return _arch.value;
+	return cache.arch;
 }
 
 export function getDeviceBrowser(): string {
@@ -148,12 +154,13 @@ export function getDeviceBrowser(): string {
 		return 'Client';
 	}
 
-	if (typeof _browser.value === 'undefined') {
+	const cache = _cache();
+	if (typeof cache.browser === 'undefined') {
 		const result = _getResult();
-		_browser.value = result.browser.name!;
+		cache.browser = result.browser.name!;
 	}
 
-	return _browser.value;
+	return cache.browser;
 }
 
 export function getDeviceType(): DeviceType {
@@ -161,12 +168,13 @@ export function getDeviceType(): DeviceType {
 		return 'client';
 	}
 
-	if (typeof _deviceType.value === 'undefined') {
+	const cache = _cache();
+	if (typeof cache.deviceType === 'undefined') {
 		const result = _getResult();
-		_deviceType.value = result.device.type as DeviceType;
+		cache.deviceType = result.device.type as DeviceType;
 	}
 
-	return _deviceType.value;
+	return cache.deviceType;
 }
 
 /**
@@ -181,12 +189,11 @@ export function isDynamicGoogleBot() {
 		return false;
 	}
 
-	if (_isDynamicGoogleBot === null) {
+	const cache = _cache();
+	if (cache.isDynamicGoogleBot === null) {
 		const result = _getResult();
-		_isDynamicGoogleBot = /googlebot|google-inspectiontool/i.test(result.ua);
+		cache.isDynamicGoogleBot = /googlebot|google-inspectiontool/i.test(result.ua);
 	}
 
-	return _isDynamicGoogleBot;
+	return cache.isDynamicGoogleBot;
 }
-
-let _isDynamicGoogleBot: boolean | null = null;

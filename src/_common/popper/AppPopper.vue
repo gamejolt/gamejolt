@@ -23,7 +23,7 @@ import { useRouter } from 'vue-router';
 import { vAppObserveDimensions } from '~common/observe-dimensions/observe-dimensions.directive';
 import AppPopperBackdrop from '~common/popper/AppPopperBackdrop.vue';
 import AppPopperEscapeStack from '~common/popper/AppPopperEscapeStack.vue';
-import { Popper } from '~common/popper/popper.service';
+import { deregisterPopper, hideAllPoppers, registerPopper } from '~common/popper/popper.service';
 import { Screen } from '~common/screen/screen-service';
 import AppScrollScroller from '~common/scroll/AppScrollScroller.vue';
 import { styleWhen } from '~styles/mixins';
@@ -265,7 +265,7 @@ onMounted(() => {
 		});
 	}
 
-	Popper.registerPopper(popperIndex, {
+	registerPopper(popperIndex, {
 		onHideAll: () => {
 			if (trigger === 'manual' || debugActual.value) {
 				return;
@@ -290,7 +290,7 @@ onBeforeUnmount(() => {
 
 onUnmounted(() => {
 	_deregisterRouter?.();
-	Popper.deregisterPopper(popperIndex);
+	deregisterPopper(popperIndex);
 });
 
 watch([() => manualShow, debugActual], onManualShow);
@@ -337,7 +337,7 @@ function onContextMenu(event: MouseEvent) {
 		return _hide();
 	}
 
-	Popper.hideAll();
+	hideAllPoppers();
 	_show();
 }
 

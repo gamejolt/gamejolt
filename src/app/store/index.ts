@@ -1,5 +1,14 @@
-import { computed, inject, InjectionKey, Ref, ref, ShallowRef, shallowRef, watch } from 'vue';
-import { Router } from 'vue-router';
+import {
+	computed,
+	inject,
+	InjectionKey,
+	Ref,
+	ref,
+	shallowReadonly,
+	ShallowRef,
+	shallowRef,
+	watch,
+} from 'vue';
 
 import { ActivityFeedState } from '~app/components/activity/feed/state';
 import { checkBroadcastModal } from '~app/components/broadcast-modal/broadcast-modal.service';
@@ -9,7 +18,7 @@ import { LibraryStore } from '~app/store/library';
 import { QuestStore } from '~app/store/quest';
 import { CommunityJoinLocation } from '~common/analytics/analytics.service';
 import { Api } from '~common/api/api.service';
-import { Backdrop, BackdropController } from '~common/backdrop/backdrop.service';
+import type { BackdropController, BackdropStore } from '~common/backdrop/backdrop.service';
 import {
 	CommunityModel,
 	joinCommunity as joinCommunityModel,
@@ -19,6 +28,7 @@ import { Connection } from '~common/connection/connection-service';
 import { registerContentFocusWatcher as registerFocusWatcher } from '~common/content-focus/content-focus.service';
 import { showSuccessGrowl } from '~common/growls/growls.service';
 import { showModalConfirm } from '~common/modal/confirm/confirm-service';
+import { getCurrentRouter } from '~common/route/current-router-service';
 import { Screen } from '~common/screen/screen-service';
 import { SidebarStore } from '~common/sidebar/sidebar.store';
 import { StickerStore } from '~common/sticker/sticker-store';
@@ -44,15 +54,15 @@ export function useAppStore() {
 }
 
 export function createAppStore({
-	router,
 	commonStore,
+	backdropStore,
 	sidebarStore,
 	libraryStore,
 	getQuestStore,
 	stickerStore,
 }: {
-	router: Router;
 	commonStore: CommonStore;
+	backdropStore: BackdropStore;
 	sidebarStore: SidebarStore;
 	libraryStore: LibraryStore;
 	getQuestStore: () => QuestStore;
@@ -85,6 +95,12 @@ export function createAppStore({
 	const activeCommunity = ref<CommunityModel>();
 	const communities = ref<CommunityModel[]>([]);
 	const communityStates = ref(new CommunityStates());
+
+	/**
+	 * Shared between every `AppSearch` instance so that the nav input and the
+	 * `/search` page header input mirror each other.
+	 */
+	const searchQuery = ref('');
 
 	const _backdrop = shallowRef(null) as ShallowRef<BackdropController | null>;
 
@@ -188,7 +204,7 @@ export function createAppStore({
 		await Api.sendRequest('/web/dash/account/logout', {});
 
 		// We go to the homepage currently just in case they're in a view they shouldn't be.
-		router.push({ name: 'discover.home' });
+		getCurrentRouter().push({ name: 'discover.home' });
 
 		showSuccessGrowl($gettext('You are now logged out.'), $gettext('Goodbye!'));
 	}
@@ -489,7 +505,7 @@ export function createAppStore({
 			return;
 		}
 
-		_backdrop.value = Backdrop.push({ context: document.body });
+		_backdrop.value = backdropStore.push({ context: document.body });
 	}
 
 	function _removeBackdrop() {
@@ -504,7 +520,7 @@ export function createAppStore({
 	// Handles route meta changes during redirects.
 	// Routes in the app section can define the following meta:
 	// 	isFullPage: boolean - wether to not display the shell and treat the route as a "full page"
-	router.beforeEach((to, _from, next) => {
+	getCurrentRouter().beforeEach((to, _from, next) => {
 		if (to.matched.some(record => record.meta.isFullPage)) {
 			hideShell();
 		} else {
@@ -514,7 +530,7 @@ export function createAppStore({
 		next();
 	});
 
-	return {
+	return shallowReadonly({
 		isBootstrapped,
 		tillStoreBootstrapped,
 		isLibraryBootstrapped,
@@ -532,6 +548,7 @@ export function createAppStore({
 		activeCommunity,
 		communities,
 		communityStates,
+		searchQuery,
 		hasTopBar,
 		hasSidebar,
 		hasCbar,
@@ -566,5 +583,5 @@ export function createAppStore({
 		viewCommunity,
 		getQuestStore,
 		stickerStore,
-	};
+	});
 }

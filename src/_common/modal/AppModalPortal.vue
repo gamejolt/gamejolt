@@ -1,10 +1,8 @@
 <script lang="ts" setup>
-import { computed } from 'vue';
-
 import AppModalWrapper from '~common/modal/AppModalWrapper.vue';
 import { Modals } from '~common/modal/modal.service';
 
-const modals = computed(() => Modals.modals);
+const { modals } = Modals;
 </script>
 
 <template>

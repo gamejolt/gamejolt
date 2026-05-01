@@ -2,10 +2,9 @@
 import { computed, ref, watch } from 'vue';
 
 import AppGameOgrs from '~app/components/game/ogrs/AppGameOgrs.vue';
-import { Analytics } from '~common/analytics/analytics.service';
 import AppButton from '~common/button/AppButton.vue';
 import { GameModel } from '~common/game/game.model';
-import { Scroll } from '~common/scroll/scroll.service';
+import { scrollTo } from '~common/scroll/scroll.service';
 import { SettingRestrictedBrowsing } from '~common/settings/settings.service';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 
@@ -41,8 +40,7 @@ watch(
 
 function proceed() {
 	hasBypassed.value = true;
-	Scroll.to(0, { animate: false });
-	Analytics.trackEvent('restricted-browsing', 'unblock');
+	scrollTo(0, { animate: false });
 }
 
 function removeRestriction() {

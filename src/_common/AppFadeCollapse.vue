@@ -2,7 +2,11 @@
 import { onMounted, ref, useTemplateRef, watch } from 'vue';
 
 import { Screen } from '~common/screen/screen-service';
-import { Scroll } from '~common/scroll/scroll.service';
+import {
+	getElementOffsetTopFromContext,
+	getScrollTop,
+	scrollTo,
+} from '~common/scroll/scroll.service';
 import { sleep } from '~utils/utils';
 
 const ExtraCollapsePadding = 200;
@@ -99,17 +103,15 @@ function collapse() {
 	if (isPrimed) {
 		// We will scroll to the bottom of the element minus some extra padding.
 		// This keeps the element in view a bit.
-		const scrollTo =
-			Scroll.getElementOffsetTopFromContext(root.value) +
-			collapseHeight -
-			ExtraCollapsePadding;
+		const targetTop =
+			getElementOffsetTopFromContext(root.value) + collapseHeight - ExtraCollapsePadding;
 
 		// Only if we're past where we would scroll.
-		if (Scroll.getScrollTop() > scrollTo) {
+		if (getScrollTop() > targetTop) {
 			// If we're on a tiny screen, don't animate the scroll.
 			// Just set it and move on.
 			if (Screen.isXs || !animate) {
-				Scroll.to(scrollTo, { animate: false });
+				scrollTo(targetTop, { animate: false });
 			} else {
 				// Otherwise set up a scroll animation to follow the bottom of the element as it collapses.
 				setupScrollAnim();
@@ -131,15 +133,13 @@ function animStep() {
 	// Bottom of element from the scroll context top.
 	// We then subtract some padding so that they still see some of the element while scrolling.
 	const curPos =
-		Scroll.getElementOffsetTopFromContext(root.value) +
-		root.value.offsetHeight -
-		ExtraCollapsePadding;
+		getElementOffsetTopFromContext(root.value) + root.value.offsetHeight - ExtraCollapsePadding;
 
 	// Only scroll if we have to.
 	// This will allow the element to collapse freely until our marker would go out of view.
 	// Then we scroll.
-	if (Scroll.getScrollTop() > curPos) {
-		Scroll.to(curPos, { animate: false });
+	if (getScrollTop() > curPos) {
+		scrollTo(curPos, { animate: false });
 	}
 
 	// Request another frame to loop again.

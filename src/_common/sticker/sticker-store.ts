@@ -5,6 +5,7 @@ import {
 	Ref,
 	ref,
 	shallowReactive,
+	shallowReadonly,
 	shallowRef,
 	toRaw,
 	toRef,
@@ -175,7 +176,7 @@ export function createStickerStore(options: { user: Ref<UserModel | null> }) {
 	// Set up modals to have the sticker layer as their layer element.
 	setModalBodyWrapper(AppStickerLayer);
 
-	const c = {
+	const c = shallowReadonly({
 		layers,
 		eventStickers,
 		creatorStickers,
@@ -213,7 +214,7 @@ export function createStickerStore(options: { user: Ref<UserModel | null> }) {
 		canPlaceChargedStickerOnResource,
 		setChargeData,
 		user,
-	};
+	});
 
 	return c;
 }

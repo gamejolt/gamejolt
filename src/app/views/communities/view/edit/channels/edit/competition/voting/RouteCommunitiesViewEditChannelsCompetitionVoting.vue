@@ -30,7 +30,7 @@ import { showErrorGrowl } from '~common/growls/growls.service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import { showModalConfirm } from '~common/modal/confirm/confirm-service';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
-import { Scroll } from '~common/scroll/scroll.service';
+import { scrollTo } from '~common/scroll/scroll.service';
 import AppTimeAgo from '~common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import { $gettext } from '~common/translate/translate.service';
@@ -96,14 +96,14 @@ function onFormCancel() {
 
 	// Scroll to top of page, because the form got removed and would leave us with an almost
 	// white space otherwise.
-	Scroll.to(0);
+	scrollTo(0);
 }
 
 function onFormSubmit() {
 	isEditing.value = false;
 
 	// Scroll to top of page to show new voting information.
-	Scroll.to(0);
+	scrollTo(0);
 }
 
 function onClickChange() {

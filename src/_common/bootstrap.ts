@@ -2,19 +2,25 @@ import { AsyncComponentLoader, type Component, createApp, createSSRApp } from 'v
 import { Router } from 'vue-router';
 
 import { initAnalytics, initAnalyticsRouter } from '~common/analytics/analytics.service';
+import { BackdropStoreKey, createBackdropStore } from '~common/backdrop/backdrop.service';
 import AppButton from '~common/button/AppButton.vue';
 import { initSafeExportsForClient as initCommonSafeExportsForClient } from '~common/client/safe-exports';
 import { ensureConfig } from '~common/config/config.service';
 import { initConnectionService } from '~common/connection/connection-service';
 import { setTimezoneOffsetCookie } from '~common/cookie/cookie.service';
+import {
+	createEscapeStackStore,
+	EscapeStackStoreKey,
+} from '~common/escape-stack/escape-stack.service';
+import { initHistoryTickStore } from '~common/history-tick/history-tick-service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppLinkExternal from '~common/link/AppLinkExternal.vue';
 import AppLinkHelp from '~common/link/AppLinkHelp.vue';
 import { initMetaService } from '~common/meta/meta-service';
 import { Payload } from '~common/payload/payload-service';
-import { Referrer } from '~common/referrer/referrer.service';
+import { setCurrentRouter } from '~common/route/current-router-service';
 import { initScreenService } from '~common/screen/screen-service';
-import { commonStore, CommonStoreKey } from '~common/store/common-store';
+import { CommonStoreKey, createCommonStore } from '~common/store/common-store';
 import { createThemeStore, ThemeStoreKey } from '~common/theme/theme.store';
 import { initTranslations } from '~common/translate/translate.service';
 import { hijackLinks } from '~utils/router';
@@ -31,6 +37,9 @@ export type BootstrapOptions<T = Component> = {
  */
 export async function bootstrapCommon(options: BootstrapOptions) {
 	const router = options?.router ?? null;
+
+	// Do this first so that everything has access to it from here on.
+	const commonStore = createCommonStore();
 
 	// Check to make sure our build config is correct.
 	// We only want to throw this while developing as it is not a critical error at the time of writing.
@@ -57,13 +66,17 @@ export async function bootstrapCommon(options: BootstrapOptions) {
 	const appComponent = await options.appComponentLoader();
 	const app = import.meta.env.SSR ? createSSRApp(appComponent) : createApp(appComponent);
 
-	// Our global stores.
 	app.provide(CommonStoreKey, commonStore);
 	app.provide(ThemeStoreKey, createThemeStore({ commonStore }));
+
+	const backdropStore = createBackdropStore();
+	app.provide(BackdropStoreKey, backdropStore);
+	app.provide(EscapeStackStoreKey, createEscapeStackStore());
 
 	// Try to start loading this as soon as possible.
 	ensureConfig();
 
+	initHistoryTickStore(router ?? undefined);
 	initScreenService();
 	initTranslations(app);
 	initAnalytics({ commonStore });
@@ -72,8 +85,8 @@ export async function bootstrapCommon(options: BootstrapOptions) {
 	setTimezoneOffsetCookie();
 
 	if (router) {
+		setCurrentRouter(router);
 		initMetaService(router);
-		Referrer.init(router);
 		initAnalyticsRouter(router);
 		hijackLinks(router, 'gamejolt.com');
 	}
@@ -99,5 +112,5 @@ export async function bootstrapCommon(options: BootstrapOptions) {
 		app.use(router);
 	}
 
-	return { app, commonStore };
+	return { app, commonStore, backdropStore };
 }

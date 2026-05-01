@@ -7,7 +7,7 @@ import { queuedThrottle } from '~utils/utils';
 
 const InviewConfig = new ScrollInviewConfig({
 	emitsOn: 'partial-overlap',
-	margin: '0px 0px 300px 0px',
+	margin: () => '0px 0px 300px 0px',
 });
 </script>
 

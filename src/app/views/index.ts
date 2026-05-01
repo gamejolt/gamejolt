@@ -21,28 +21,28 @@ import { routeWelcome } from '~app/views/welcome/welcome.route';
 import { routeWeplay } from '~app/views/weplay/weplay.route';
 import { initRouter } from '~utils/router';
 
-const routes = [
-	routeHome,
-	routeDiscover,
-	routeDownload,
-	routeCommunitiesView,
-	routeLanding,
-	routeSearch,
-	routePost,
-	routeProfile,
-	routeLibrary,
-	routeDash,
-	routeNotifications,
-	routeForums,
-	routeStyleguide,
-	routeLegal,
-	routeIntent,
-	routeWeplay,
-	routeWelcome,
-	routeTimeout,
-	routeRealmsView,
-	routeQuests,
-	routeLandingCreators,
-];
-
-export const router = initRouter(routes);
+export function createAppRouter() {
+	return initRouter([
+		routeHome,
+		routeDiscover,
+		routeDownload,
+		routeCommunitiesView,
+		routeLanding,
+		routeSearch,
+		routePost,
+		routeProfile,
+		routeLibrary,
+		routeDash,
+		routeNotifications,
+		routeForums,
+		routeStyleguide,
+		routeLegal,
+		routeIntent,
+		routeWeplay,
+		routeWelcome,
+		routeTimeout,
+		routeRealmsView,
+		routeQuests,
+		routeLandingCreators,
+	]);
+}

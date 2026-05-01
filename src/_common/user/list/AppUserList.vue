@@ -4,7 +4,6 @@ import { UserModel } from '~common/user/user.model';
 
 type Props = {
 	users: UserModel[];
-	eventLabel?: string;
 	userHoverCard?: boolean;
 };
 defineProps<Props>();
@@ -21,7 +20,6 @@ const emit = defineEmits<{
 			v-for="user of users"
 			:key="user.id"
 			:user="user"
-			:event-label="eventLabel"
 			:user-hover-card="userHoverCard"
 			@follow="emit('follow', user)"
 			@unfollow="emit('unfollow', user)"

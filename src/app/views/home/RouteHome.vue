@@ -1,6 +1,6 @@
-<script lang="ts">
+<script lang="ts" setup>
 import { defineAsyncComponent } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 import { IntentService } from '~app/components/intent/intent.service';
 import { HomeFeedService } from '~app/views/home/home-feed.service';
@@ -15,16 +15,14 @@ import { useCommonStore } from '~common/store/common-store';
 import { $gettext } from '~common/translate/translate.service';
 import { objectOmit } from '~utils/object';
 
-import { router } from '..';
-
 const RouteHomeFeed = defineAsyncComponent(() =>
-	asyncRouteLoader(router, import('~app/views/home/RouteHomeFeed.vue'))
+	asyncRouteLoader(import('~app/views/home/RouteHomeFeed.vue'))
 );
 const RouteDiscoverHome = defineAsyncComponent(() =>
-	asyncRouteLoader(router, import('~app/views/discover/home/RouteDiscoverHome.vue'))
+	asyncRouteLoader(import('~app/views/discover/home/RouteDiscoverHome.vue'))
 );
 
-export default {
+defineOptions({
 	...defineAppRouteOptions({
 		lazy: true,
 		reloadOn: { query: IntentService.APPROVED_LOGIN_QUERY_PARAMS as [string, ...string[]] },
@@ -37,12 +35,11 @@ export default {
 			return await Api.sendRequest('/web/touch');
 		},
 	}),
-};
-</script>
+});
 
-<script lang="ts" setup>
 const { user, userBootstrapped } = useCommonStore();
 const route = useRoute();
+const router = useRouter();
 
 createAppRoute({
 	routeTitle: null,

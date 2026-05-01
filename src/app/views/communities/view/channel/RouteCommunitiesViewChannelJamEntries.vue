@@ -23,7 +23,7 @@ import AppPagination from '~common/pagination/AppPagination.vue';
 import AppPopper from '~common/popper/AppPopper.vue';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { vAppNoAutoscroll } from '~common/scroll/auto-scroll/no-autoscroll.directive';
-import { Scroll } from '~common/scroll/scroll.service';
+import { setShouldAutoScroll } from '~common/scroll/scroll.service';
 import { $gettext, $ngettext } from '~common/translate/translate.service';
 
 export default {
@@ -241,7 +241,7 @@ watch(
 	() => competition.value.entry_count,
 	() => {
 		if (route.query.sort !== 'new' || route.query.page !== undefined) {
-			Scroll.shouldAutoScroll = false;
+			setShouldAutoScroll(false);
 			router.push({
 				query: {
 					sort: 'new',
@@ -305,9 +305,9 @@ createAppRoute({
 	},
 	onResolved({ payload }) {
 		handlePayload(payload);
-		showCommunityCompetitionEntryModalIdFromHash(router);
+		showCommunityCompetitionEntryModalIdFromHash();
 		if (!hashWatchDeregister) {
-			hashWatchDeregister = watchCommunityCompetitionEntryModalForHash(router);
+			hashWatchDeregister = watchCommunityCompetitionEntryModalForHash();
 		}
 	},
 	onDestroyed() {

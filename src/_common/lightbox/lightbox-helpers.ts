@@ -1,6 +1,7 @@
 import { computed, ComputedRef, onUnmounted, reactive, readonly, Ref, ref } from 'vue';
 
 import { MediaItemModel } from '~common/media-item/media-item-model';
+import { defineIsolatedState } from '~common/ssr/isolated-state';
 
 export const LightboxConfig = {
 	// This should match the $-controls-height variable in lightbox.styl
@@ -79,16 +80,16 @@ export function createLightbox(items: Ref<LightboxMediaModel[]>) {
 	return lightbox;
 }
 
-const _activeLightbox = ref<null | LightboxController>(null);
+const _activeLightbox = defineIsolatedState(() => ref<null | LightboxController>(null));
 
 function _assignActiveLightbox(lightbox: LightboxController | null) {
-	_activeLightbox.value = lightbox;
+	_activeLightbox().value = lightbox;
 }
 
 function _compareLightbox(lightbox: LightboxController) {
-	return _activeLightbox.value === lightbox;
+	return _activeLightbox().value === lightbox;
 }
 
 export function getActiveLightbox() {
-	return _activeLightbox.value;
+	return _activeLightbox().value;
 }

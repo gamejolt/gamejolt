@@ -13,8 +13,6 @@ import {
 	GridNotificationChannel,
 } from '~app/components/grid/notification-channel';
 import { AppStore } from '~app/store/index';
-import { router } from '~app/views';
-import { Analytics } from '~common/analytics/analytics.service';
 import { CommunityModel } from '~common/community/community.model';
 import { ensureConfig } from '~common/config/config.service';
 import { Environment } from '~common/environment/environment.service';
@@ -24,11 +22,11 @@ import { GameTrophyModel } from '~common/game/trophy/trophy.model';
 import { showInfoGrowl } from '~common/growls/growls.service';
 import { NotificationModel, NotificationType } from '~common/notification/notification-model';
 import { NotificationText } from '~common/notification/notification-text.service';
-import Onboarding from '~common/onboarding/onboarding.service';
+import { isOnboarding } from '~common/onboarding/onboarding.service';
 import { SettingFeedNotifications } from '~common/settings/settings.service';
 import { SiteTrophyModel } from '~common/site/trophy/trophy.model';
 import { createSocketController, SocketController } from '~common/socket/socket-controller';
-import { commonStore } from '~common/store/common-store';
+import { getCommonStore } from '~common/store/common-store';
 import { $gettext } from '~common/translate/translate.service';
 import { getTrophyImg } from '~common/trophy/thumbnail/AppTrophyThumbnail.vue';
 import { UserGameTrophyModel } from '~common/user/trophy/game-trophy.model';
@@ -76,12 +74,6 @@ export type OnConnectedHandler = (grid: GridClient) => void;
 export type DeregisterOnConnected = () => void;
 
 /**
- * List of resolvers waiting for grid to connect.
- * These resolvers get resolved in the connect function once Grid connected.
- */
-let connectionResolvers: (() => void)[] = [];
-
-/**
  * Resolves once Grid is fully connected.
  */
 function tillConnection(client: GridClient) {
@@ -89,7 +81,7 @@ function tillConnection(client: GridClient) {
 		if (client.connected) {
 			resolve();
 		} else {
-			connectionResolvers.push(resolve);
+			client.connectionResolvers.push(resolve);
 		}
 	});
 }
@@ -110,6 +102,11 @@ export class GridClient {
 
 	// Stores a unique id that identifies this session when it pushes data to Grid.
 	readonly clientId = uuidv4();
+
+	/**
+	 * Resolvers waiting for this client to connect. Drained by `markConnected`.
+	 */
+	connectionResolvers: (() => void)[] = [];
 
 	// Will get created in "init".
 	socketController: SocketController = null as any;
@@ -153,7 +150,7 @@ export class GridClient {
 	init() {
 		this.socketController = markRaw(
 			createSocketController({
-				commonStore,
+				commonStore: getCommonStore(),
 				logContext: 'Grid',
 				onDisconnect: () => {
 					this.reconnect(0);
@@ -192,7 +189,7 @@ export class GridClient {
 
 	private async connect() {
 		const { isGuest, guestToken } = this;
-		const { user } = commonStore;
+		const { user } = getCommonStore();
 
 		const didConnect = await this.socketController.connect({
 			socketUrl: Environment.grid,
@@ -227,7 +224,6 @@ export class GridClient {
 		else if (user.value) {
 			const notificationChannel = createGridNotificationChannel(this, {
 				userId: user.value.id,
-				router,
 			});
 			await notificationChannel.joinPromise;
 			this.notificationChannel = markRaw(notificationChannel);
@@ -244,10 +240,10 @@ export class GridClient {
 
 	markConnected() {
 		this.connected = true;
-		for (const resolver of connectionResolvers) {
+		for (const resolver of this.connectionResolvers) {
 			resolver();
 		}
-		connectionResolvers = [];
+		this.connectionResolvers = [];
 
 		for (const handler of this.onConnectedHandlers) {
 			try {
@@ -317,7 +313,7 @@ export class GridClient {
 		}
 
 		// Don't show Notification growls if the user is still in onboarding.
-		if (Onboarding.isOnboarding) {
+		if (isOnboarding()) {
 			return;
 		}
 
@@ -349,7 +345,7 @@ export class GridClient {
 				if (notification.from_model instanceof UserModel) {
 					// We send a notification to the author of the post.
 					// Do not show a notification in that case, the purpose is to increment the activity feed counter.
-					if (notification.from_model.id === commonStore.user.value?.id) {
+					if (notification.from_model.id === getCommonStore().user.value?.id) {
 						return;
 					}
 
@@ -401,8 +397,9 @@ export class GridClient {
 				message,
 				icon,
 				onClick: () => {
-					Analytics.trackEvent('grid', 'notification-click', notification.type);
-					gotoNotification(notification, { router, appStore: this.appStore });
+					gotoNotification(notification, {
+						appStore: this.appStore,
+					});
 				},
 				system: isSystem,
 			});

@@ -13,7 +13,7 @@ import AppNavTabList from '~common/nav/tab-list/AppNavTabList.vue';
 import AppPagination from '~common/pagination/AppPagination.vue';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { Screen } from '~common/screen/screen-service';
-import { Scroll } from '~common/scroll/scroll.service';
+import { scrollTo } from '~common/scroll/scroll.service';
 import { $gettext, $ngettext } from '~common/translate/translate.service';
 
 const sort = 'archived';
@@ -153,7 +153,7 @@ createAppRoute({
 						:items-per-page="perPage"
 						:total-items="listableTopicsCount"
 						:current-page="currentPage"
-						@pagechange="Scroll.to('forum-topics-list', { animate: false })"
+						@pagechange="scrollTo('forum-topics-list', { animate: false })"
 					/>
 				</template>
 				<div v-else class="text-center">

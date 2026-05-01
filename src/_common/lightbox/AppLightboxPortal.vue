@@ -1,15 +1,12 @@
 <script lang="ts" setup>
-import { nextTick, ref, toRef, watch } from 'vue';
+import { nextTick, onWatcherCleanup, ref, toRef, watch } from 'vue';
 
-import { Analytics } from '~common/analytics/analytics.service';
 import AppButton from '~common/button/AppButton.vue';
-import { EscapeStack, EscapeStackCallback } from '~common/escape-stack/escape-stack.service';
+import { useEscapeStack } from '~common/escape-stack/escape-stack.service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppLightboxItem from '~common/lightbox/item/AppLightboxItem.vue';
 import { getActiveLightbox } from '~common/lightbox/lightbox-helpers';
 import { onScreenResize, Screen } from '~common/screen/screen-service';
-import AppShortkey from '~common/shortkey/AppShortkey.vue';
-import { EventSubscription } from '~common/system/event/event-topic';
 import AppTouch, { AppTouchInput } from '~common/touch/AppTouch.vue';
 import { $gettext } from '~common/translate/translate.service';
 
@@ -45,54 +42,69 @@ const activeMediaType = toRef(() => {
 	return lightbox.value.activeItem.getMediaType();
 });
 
-let resize$: EventSubscription | null = null;
-let escapeCallback: EscapeStackCallback | null = null;
+useEscapeStack({
+	onEscape: () => close(),
+	enabled: () => !!lightbox.value?.length,
+});
 
-// We need to watch for changes of the lightbox instance and its data.
 watch(
-	lightbox,
-	async () => {
-		if (!lightbox.value || !lightbox.value.length) {
-			lightbox.value?.close();
-			_onClose();
+	() => !!lightbox.value,
+	async isOpen => {
+		if (!isOpen) {
 			return;
 		}
 
-		_onShow();
-	},
-	{ deep: true }
+		document.body.classList.add(lightboxClass);
+		const resize$ = onScreenResize.subscribe(refreshSliderPosition);
+
+		const onKeyDown = (e: KeyboardEvent) => {
+			if (e.key === 'ArrowLeft') {
+				e.preventDefault();
+				goPrev();
+			} else if (e.key === 'ArrowRight') {
+				e.preventDefault();
+				goNext();
+			}
+		};
+		document.addEventListener('keydown', onKeyDown);
+
+		onWatcherCleanup(() => {
+			document.removeEventListener('keydown', onKeyDown);
+
+			document.body.classList.remove(lightboxClass);
+
+			resize$.close();
+
+			currentSliderOffset = 0;
+			isDragging.value = false;
+		});
+
+		await nextTick();
+		refreshSliderPosition();
+	}
 );
 
-async function _onShow() {
-	document.body.classList.add(lightboxClass);
-	resize$ = onScreenResize.subscribe(refreshSliderPosition);
+// Keep the slider position in sync with the active item if it changes outside
+// of the local goNext/goPrev wrappers (which refresh inline).
+watch(activeIndex, () => {
+	nextTick(refreshSliderPosition);
+});
 
-	escapeCallback = () => close();
-	EscapeStack.register(escapeCallback);
-	await nextTick();
-	refreshSliderPosition();
-}
-
-function _onClose() {
-	document.body.classList.remove(lightboxClass);
-
-	resize$?.close();
-
-	if (escapeCallback) {
-		EscapeStack.deregister(escapeCallback);
-		escapeCallback = null;
+// Auto-close the lightbox if its items are emptied during a session.
+watch(
+	() => lightbox.value?.length ?? 0,
+	length => {
+		if (lightbox.value && length === 0) {
+			lightbox.value.close();
+		}
 	}
-
-	currentSliderOffset = 0;
-	isDragging.value = false;
-}
+);
 
 function goNext() {
 	if (!lightbox.value) {
 		return;
 	}
 	lightbox.value.goNext();
-	refreshSliderPosition();
 }
 
 function goPrev() {
@@ -100,7 +112,6 @@ function goPrev() {
 		return;
 	}
 	lightbox.value.goPrev();
-	refreshSliderPosition();
 }
 
 function close() {
@@ -151,10 +162,8 @@ function panEnd(event: AppTouchInput) {
 	) {
 		if (velocityX > 0 || deltaX > 0) {
 			goPrev();
-			Analytics.trackEvent('media-bar', 'swiped-prev');
 		} else {
 			goNext();
-			Analytics.trackEvent('media-bar', 'swiped-next');
 		}
 		return;
 	}
@@ -174,9 +183,6 @@ function panEnd(event: AppTouchInput) {
 			@panmove="pan"
 			@panend="panEnd"
 		>
-			<AppShortkey shortkey="arrowleft" @press="goPrev" />
-			<AppShortkey shortkey="arrowright" @press="goNext" />
-
 			<div class="-inner">
 				<div class="-controls">
 					<a v-if="activeIndex > 0" class="-prev" @click="goPrev">

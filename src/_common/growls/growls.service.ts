@@ -1,8 +1,23 @@
-import { type Component, markRaw, reactive } from 'vue';
+import { type Component, markRaw, ref } from 'vue';
 
 import { Client } from '~common/client/safe-exports';
+import { defineIsolatedState } from '~common/ssr/isolated-state';
 import { $gettext } from '~common/translate/translate.service';
 import { arrayRemove } from '~utils/array';
+
+const _state = defineIsolatedState(() => ({
+	growls: ref<Growl[]>([]),
+	incrementer: ref(0),
+}));
+
+export const Growls = {
+	get growls() {
+		return _state().growls;
+	},
+	get incrementer() {
+		return _state().incrementer;
+	},
+};
 
 export type GrowlType = 'info' | 'success' | 'error';
 
@@ -43,18 +58,17 @@ export class Growl {
 	}
 
 	close() {
-		arrayRemove(Growls.growls, i => i.id === this.id);
+		arrayRemove(Growls.growls.value, i => i.id === this.id);
 	}
 }
 
-class GrowlsService {
-	incrementer = 0;
-	growls: Growl[] = [];
-}
-
-export const Growls = reactive(new GrowlsService()) as GrowlsService;
-
 function _addGrowl(type: GrowlType, options: GrowlOptions) {
+	if (import.meta.env.SSR) {
+		return;
+	}
+
+	const { incrementer, growls } = Growls;
+
 	if (!options.title) {
 		if (type === 'error') {
 			options.title = $gettext('Oh no!');
@@ -69,9 +83,9 @@ function _addGrowl(type: GrowlType, options: GrowlOptions) {
 		return _createSystemNotification(options);
 	}
 
-	++Growls.incrementer;
-	const growl = new Growl(Growls.incrementer, type, options);
-	Growls.growls.push(growl);
+	++incrementer.value;
+	const growl = new Growl(incrementer.value, type, options);
+	growls.value.push(growl);
 }
 
 function _createSystemNotification(options: GrowlOptions) {

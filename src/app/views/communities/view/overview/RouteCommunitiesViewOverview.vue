@@ -1,6 +1,6 @@
 <script lang="ts">
 import { computed, Ref, ref, toRef, watchEffect } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 
 import { ActivityFeedService } from '~app/components/activity/feed/feed-service';
 import { ActivityFeedView } from '~app/components/activity/feed/view';
@@ -44,7 +44,6 @@ const { user } = useCommonStore();
 const { grid } = useGridStore();
 const routeStore = useCommunityRouteStore()!;
 const route = useRoute();
-const router = useRouter();
 
 const isBootstrapped = ref(false);
 const feed = ref(null) as Ref<ActivityFeedView | null>;
@@ -98,7 +97,6 @@ function onPostAdded(post: FiresidePostModel) {
 		post,
 		appRoute: appRoute,
 		route: route,
-		router: router,
 	});
 }
 

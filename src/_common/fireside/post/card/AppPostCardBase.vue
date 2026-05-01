@@ -22,7 +22,7 @@ import {
 
 export const AppPostCardAspectRatio = 10 / 16;
 
-const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height}px` });
+const InviewConfig = new ScrollInviewConfig({ margin: () => `${Screen.height}px` });
 </script>
 
 <script lang="ts" setup>

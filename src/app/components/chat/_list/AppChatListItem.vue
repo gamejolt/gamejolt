@@ -6,7 +6,7 @@ import AppPopper, { PopperPlacementType, PopperTriggerType } from '~common/poppe
 import { Screen } from '~common/screen/screen-service';
 import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
 
-const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height / 2}px` });
+const InviewConfig = new ScrollInviewConfig({ margin: () => `${Screen.height / 2}px` });
 </script>
 
 <script lang="ts" setup>

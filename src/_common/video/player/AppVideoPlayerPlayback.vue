@@ -2,11 +2,7 @@
 import { computed } from 'vue';
 
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
-import {
-	toggleVideoPlayback,
-	trackVideoPlayerEvent,
-	VideoPlayerController,
-} from '~common/video/player/controller';
+import { toggleVideoPlayback, VideoPlayerController } from '~common/video/player/controller';
 import { assertNever } from '~utils/utils';
 
 type Props = {
@@ -27,7 +23,6 @@ const icon = computed(() => {
 
 function onClickPlayback() {
 	toggleVideoPlayback(player);
-	trackVideoPlayerEvent(player, player.state === 'playing' ? 'play' : 'pause', 'click-control');
 }
 </script>
 

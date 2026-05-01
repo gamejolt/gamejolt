@@ -5,12 +5,12 @@ import { FiresidePostModel } from '~common/fireside/post/post-model';
 import { showModal } from '~common/modal/modal.service';
 import { Screen } from '~common/screen/screen-service';
 import { SettingBroadcastModal } from '~common/settings/settings.service';
-import { commonStore } from '~common/store/common-store';
+import { getCommonStore } from '~common/store/common-store';
 
 const STORAGE_KEY_PREFIX = 'broadcast-modal:date:';
 
 function _key() {
-	return STORAGE_KEY_PREFIX + commonStore.user.value!.id;
+	return STORAGE_KEY_PREFIX + getCommonStore().user.value!.id;
 }
 
 async function _show(posts: FiresidePostModel[]) {
@@ -26,7 +26,7 @@ async function _show(posts: FiresidePostModel[]) {
 }
 
 export async function checkBroadcastModal() {
-	const { user } = commonStore;
+	const { user } = getCommonStore();
 	if (!user.value || !SettingBroadcastModal.get() || import.meta.env.SSR || Screen.isXs) {
 		return;
 	}

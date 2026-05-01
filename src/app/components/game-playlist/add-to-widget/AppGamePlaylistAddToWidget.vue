@@ -8,7 +8,6 @@ import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 
 type Props = {
 	game: GameModel;
-	eventLabel?: string;
 	overlay?: boolean;
 	circle?: boolean;
 };

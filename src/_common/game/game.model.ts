@@ -1,5 +1,3 @@
-import { Router } from 'vue-router';
-
 import { Api } from '~common/api/api.service';
 import { Collaboratable } from '~common/collaborator/collaboratable';
 import { CommentableModel } from '~common/comment/comment-model';
@@ -13,7 +11,8 @@ import { GamePackageModel } from '~common/game/package/package.model';
 import { showErrorGrowl } from '~common/growls/growls.service';
 import { MediaItemModel } from '~common/media-item/media-item-model';
 import { Model } from '~common/model/model.service';
-import { Registry } from '~common/registry/registry.service';
+import { storeInRegistry } from '~common/registry/registry.service';
+import { getCurrentRouter } from '~common/route/current-router-service';
 import { SellableModel } from '~common/sellable/sellable.model';
 import { SiteModel } from '~common/site/site-model';
 import { ThemeModel } from '~common/theme/theme.model';
@@ -158,7 +157,7 @@ export class GameModel
 			this.community = new CommunityModel(data.community);
 		}
 
-		Registry.store('Game', this);
+		storeInRegistry('Game', this);
 	}
 
 	get is_paid_game() {
@@ -412,7 +411,7 @@ export async function unfollowGame(game: GameModel) {
 	}
 }
 
-export function handleGameAddFailure(user: UserModel, reason: string, router: Router) {
+export function handleGameAddFailure(user: UserModel, reason: string) {
 	switch (reason) {
 		case 'game-limit-reached':
 			showErrorGrowl(
@@ -425,7 +424,7 @@ export function handleGameAddFailure(user: UserModel, reason: string, router: Ro
 			break;
 	}
 
-	router.push({
+	getCurrentRouter().push({
 		name: 'library.collection.developer',
 		params: { id: user.username },
 	});

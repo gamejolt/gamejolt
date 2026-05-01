@@ -1,4 +1,4 @@
-import { inject, InjectionKey, ref } from 'vue';
+import { inject, InjectionKey, ref, shallowReadonly } from 'vue';
 
 import { UserModel } from '~common/user/user.model';
 
@@ -13,7 +13,7 @@ export function useJoltydexStore() {
 export function createJoltydexStore() {
 	const selectedJoltydexUser = ref<UserModel>();
 
-	return {
+	return shallowReadonly({
 		selectedJoltydexUser,
-	};
+	});
 }

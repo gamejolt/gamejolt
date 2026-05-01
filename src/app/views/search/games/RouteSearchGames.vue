@@ -43,7 +43,6 @@ createAppRoute({
 			:games-count="searchPayload.gamesCount"
 			:current-page="searchPayload.page"
 			show-ads
-			event-label="search-games"
 		/>
 	</div>
 </template>

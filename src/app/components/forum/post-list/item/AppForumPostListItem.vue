@@ -19,10 +19,10 @@ import AppMessageThread from '~common/message-thread/AppMessageThread.vue';
 import AppMessageThreadItem from '~common/message-thread/AppMessageThreadItem.vue';
 import { $readNotification } from '~common/notification/notification-model';
 import AppPopper from '~common/popper/AppPopper.vue';
-import { Popper } from '~common/popper/popper.service';
+import { hideAllPoppers } from '~common/popper/popper.service';
 import { showReportModal } from '~common/report/modal/modal.service';
 import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
-import { Scroll } from '~common/scroll/scroll.service';
+import { scrollTo } from '~common/scroll/scroll.service';
 import { useCommonStore } from '~common/store/common-store';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import AppTranslate from '~common/translate/AppTranslate.vue';
@@ -64,7 +64,7 @@ watch(
 	async val => {
 		await nextTick();
 		if (val) {
-			Scroll.to(document.getElementById(`forum-post-${id.value}`) as HTMLElement);
+			scrollTo(document.getElementById(`forum-post-${id.value}`) as HTMLElement);
 		}
 	},
 	{ immediate: true }
@@ -123,7 +123,7 @@ async function loadParentPost() {
 
 function edit() {
 	isEditing.value = true;
-	Popper.hideAll();
+	hideAllPoppers();
 }
 
 function closeEdit() {

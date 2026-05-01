@@ -13,7 +13,7 @@ import { Environment } from '~common/environment/environment.service';
 import { formatNumber } from '~common/filters/number';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppPopper from '~common/popper/AppPopper.vue';
-import { Popper } from '~common/popper/popper.service';
+import { hideAllPoppers } from '~common/popper/popper.service';
 import { Screen } from '~common/screen/screen-service';
 import { copyShareLink } from '~common/share/share.service';
 import { useSidebarStore } from '~common/sidebar/sidebar.store';
@@ -71,14 +71,14 @@ function onClickAbout() {
 }
 
 function onClickExtrasOption() {
-	Popper.hideAll();
+	hideAllPoppers();
 }
 
 function copyShareUrl() {
 	const url = getAbsoluteLink(router, community.value.routeLocation);
 	copyShareLink(url, 'community');
 
-	Popper.hideAll();
+	hideAllPoppers();
 }
 </script>
 

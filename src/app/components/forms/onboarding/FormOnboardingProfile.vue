@@ -17,7 +17,6 @@ import {
 	validateMinLength,
 	validateUsername,
 } from '~common/form-vue/validators';
-import Onboarding from '~common/onboarding/onboarding.service';
 import { $saveUser, UserModel } from '~common/user/user.model';
 import AppUserAvatar from '~common/user/user-avatar/AppUserAvatar.vue';
 
@@ -45,28 +44,17 @@ const allowBioChange = ref(false);
 const bioCapabilities = ref(ContextCapabilities.getPlaceholder());
 const bioLengthLimit = ref(5_000);
 
-const bootstrappedAvatar = ref(false);
 const hasSelectedAvatar = ref(false);
 
 const form: FormController<FormModel> = createForm({
 	warnOnDiscard: false,
 	onInit() {
-		Onboarding.startStep('profile');
-
-		bootstrappedAvatar.value = !!user && !!user.avatar_media_item;
-		if (bootstrappedAvatar.value) {
-			Onboarding.trackEvent('avatar-bootstrap');
-		}
-
 		originalUsername.value = user.username;
 		form.formModel.username = originalUsername.value;
 
 		const emptyBio = new ContentDocument('user-bio').toJson();
 		originalBio.value = user.bio_content || emptyBio;
 		form.formModel.bio = originalBio.value;
-		if (hasBio.value) {
-			Onboarding.trackEvent('bio-bootstrap');
-		}
 	},
 	loadUrl: '/web/onboarding/profile',
 	onLoad(payload) {
@@ -76,31 +64,16 @@ const form: FormController<FormModel> = createForm({
 		bioLengthLimit.value = payload.lengthLimit;
 	},
 	async onSubmit() {
-		// If the user did not change their avatar (or bio) it means they either accepted
-		// the bootstrapped value for them or just skipped setting it altogether. Log the appropriate event.
-		if (!hasSelectedAvatar.value) {
-			Onboarding.trackEvent(bootstrappedAvatar.value ? 'avatar-accept' : 'avatar-skip');
-		}
-
 		if (isSocialRegistration) {
-			const usernameChanged = originalUsername.value !== form.formModel.username;
-			Onboarding.trackEvent(usernameChanged ? 'username-change' : 'username-accept');
 			user.username = form.formModel.username;
 			user.name = form.formModel.username;
 		}
 
-		const doc = ContentDocument.fromJson(originalBio.value);
-		if (doc.hasContent) {
-			Onboarding.trackEvent(hasModifiedBio.value ? 'bio-change' : 'bio-accept');
-		} else {
-			Onboarding.trackEvent(hasModifiedBio.value ? 'bio-set' : 'bio-skip');
-		}
 		user.bio_content = form.formModel.bio;
 
 		return $saveUser(user);
 	},
 	onSubmitSuccess() {
-		Onboarding.endStep(shouldShowSkip.value);
 		emit('next');
 	},
 });
@@ -124,13 +97,6 @@ const shouldShowSkip = computed(() => {
 });
 
 async function chooseAvatar() {
-	if (!hasSelectedAvatar.value) {
-		if (bootstrappedAvatar.value) {
-			Onboarding.trackEvent('avatar-change');
-		} else {
-			Onboarding.trackEvent('avatar-set');
-		}
-	}
 	hasSelectedAvatar.value = true;
 
 	await showUserAvatarModal();

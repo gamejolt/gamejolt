@@ -10,8 +10,8 @@ import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppSc
 import { EmojiGroupData } from '~common/store/common-store';
 import { kFontSizeBase } from '~styles/variables';
 
-const GroupInviewConfig = new ScrollInviewConfig({ margin: `${Screen.height / 2}px` });
-const EmojiInviewConfig = new ScrollInviewConfig({ margin: `200px` });
+const GroupInviewConfig = new ScrollInviewConfig({ margin: () => `${Screen.height / 2}px` });
+const EmojiInviewConfig = new ScrollInviewConfig({ margin: () => `200px` });
 </script>
 
 <script lang="ts" setup>

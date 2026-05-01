@@ -1,7 +1,7 @@
 import { Api } from '~common/api/api.service';
 import { GamePlaylistModel } from '~common/game-playlist/game-playlist.model';
 import { Model } from '~common/model/model.service';
-import { commonStore } from '~common/store/common-store';
+import { getCommonStore } from '~common/store/common-store';
 import { UserModel } from '~common/user/user.model';
 
 export const enum GameCollectionType {
@@ -63,7 +63,7 @@ export class GameCollectionModel extends Model {
 	}
 
 	get isOwner() {
-		const { user } = commonStore;
+		const { user } = getCommonStore();
 		return !!(user.value && this.owner && user.value.id === this.owner.id);
 	}
 

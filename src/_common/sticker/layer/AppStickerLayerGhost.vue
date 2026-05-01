@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { onUnmounted, ref, toRef, useTemplateRef } from 'vue';
 
-import { Analytics } from '~common/analytics/analytics.service';
 import AppAnimElectricity from '~common/animation/AppAnimElectricity.vue';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppSlider from '~common/slider/AppSlider.vue';
@@ -36,7 +35,6 @@ onUnmounted(() => {
 });
 
 function onStartDrag(event: MouseEvent | TouchEvent) {
-	Analytics.trackEvent('sticker-drawer', 'start-drag');
 	setStickerStoreActiveItem(stickerStore, sticker.value, event, true);
 }
 

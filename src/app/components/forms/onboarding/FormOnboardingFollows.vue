@@ -4,7 +4,6 @@ import { computed, ref } from 'vue';
 import AppOnboardingFollowsCommunityItem from '~app/components/forms/onboarding/AppOnboardingFollowsCommunityItem.vue';
 import { CommunityModel } from '~common/community/community.model';
 import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
-import Onboarding from '~common/onboarding/onboarding.service';
 import AppScrollScroller from '~common/scroll/AppScrollScroller.vue';
 import { UserModel } from '~common/user/user.model';
 
@@ -26,23 +25,14 @@ const communities = ref<CommunityModel[]>([]);
 
 const form: FormController<FormModel> = createForm({
 	warnOnDiscard: false,
-	onInit() {
-		Onboarding.startStep('follows');
-	},
 	loadUrl: '/web/onboarding/follows',
 	onLoad(payload) {
 		communities.value = CommunityModel.populate(payload.communities);
-	},
-	onBeforeSubmit() {
-		Onboarding.trackEvent(
-			followsAnyCommunity.value ? 'follow-communities-set' : 'follow-communities-skip'
-		);
 	},
 	async onSubmit() {
 		// Nothing to submit.
 	},
 	onSubmitSuccess() {
-		Onboarding.endStep(shouldShowSkip.value);
 		emit('next');
 	},
 });

@@ -1,10 +1,12 @@
 <script lang="ts" setup>
 import AppBackdrop from '~common/backdrop/AppBackdrop.vue';
-import { Backdrop, BackdropController } from '~common/backdrop/backdrop.service';
+import { BackdropController, useBackdropStore } from '~common/backdrop/backdrop.service';
 
-function getTargetForBackdrop(backdrop: BackdropController) {
-	if (backdrop.context) {
-		return backdrop.context;
+const { backdrops } = useBackdropStore();
+
+function getTargetForBackdrop(controller: BackdropController) {
+	if (controller.context) {
+		return controller.context;
 	}
 	return 'body';
 }
@@ -13,11 +15,11 @@ function getTargetForBackdrop(backdrop: BackdropController) {
 <template>
 	<div>
 		<teleport
-			v-for="(backdrop, index) of Backdrop.backdrops"
+			v-for="(controller, index) of backdrops"
 			:key="index"
-			:to="getTargetForBackdrop(backdrop)"
+			:to="getTargetForBackdrop(controller)"
 		>
-			<AppBackdrop :controller="backdrop" />
+			<AppBackdrop :controller />
 		</teleport>
 	</div>
 </template>

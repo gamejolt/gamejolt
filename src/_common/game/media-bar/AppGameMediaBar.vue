@@ -2,7 +2,6 @@
 import { nextTick, onUpdated, ref, toRef, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { Analytics } from '~common/analytics/analytics.service';
 import AppGameMediaBarItem, {
 	MediaBarItemMaxHeight,
 } from '~common/game/media-bar/item/AppGameMediaBarItem.vue';
@@ -66,7 +65,6 @@ function setActiveItem(item: any) {
 	}
 
 	go(index);
-	trackEvent('item-click', index);
 }
 
 function go(index: number) {
@@ -98,7 +96,6 @@ function checkUrl() {
 			const item = mediaItems.find(_item => _item.id === id);
 			if (item) {
 				setActiveItem(item);
-				trackEvent('permalink');
 			} else {
 				if (type === 'image') {
 					showErrorGrowl(
@@ -122,14 +119,9 @@ function checkUrl() {
 						$gettext(`Invalid Sketchfab URL`)
 					);
 				}
-				trackEvent('permalink-invalid');
 			}
 		}
 	}
-}
-
-function trackEvent(action: string, label?: string) {
-	Analytics.trackEvent('media-bar', action, label);
 }
 </script>
 

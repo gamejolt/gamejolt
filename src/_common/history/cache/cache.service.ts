@@ -44,6 +44,13 @@ class HistoryCacheService {
 	}
 
 	store<T = any>(route: RouteLocationNormalized, data: T, tag?: string | symbol) {
+		// History-cached payloads are only useful for browser back-navigation.
+		// Skip storing during SSR to avoid accumulating entries from concurrent
+		// requests in the shared `states` array.
+		if (import.meta.env.SSR) {
+			return;
+		}
+
 		const state = this._get(route, tag);
 
 		if (state) {

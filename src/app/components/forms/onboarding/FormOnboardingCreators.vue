@@ -4,7 +4,6 @@ import { computed, ref } from 'vue';
 import AppCreatorCard from '~common/creator/AppCreatorCard.vue';
 import { FiresidePostModel } from '~common/fireside/post/post-model';
 import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
-import Onboarding from '~common/onboarding/onboarding.service';
 import AppScrollScroller from '~common/scroll/AppScrollScroller.vue';
 import { arrayShuffle } from '~utils/array';
 
@@ -20,9 +19,6 @@ const creatorPosts = ref<FiresidePostModel[]>([]);
 
 const form: FormController<FormModel> = createForm({
 	warnOnDiscard: false,
-	onInit() {
-		Onboarding.startStep('follows');
-	},
 	loadUrl: '/web/onboarding/creators',
 	onLoad(payload) {
 		let newCreatorPosts = payload.creatorPosts
@@ -37,16 +33,10 @@ const form: FormController<FormModel> = createForm({
 
 		creatorPosts.value = Object.values(uniqueCreatorPosts);
 	},
-	onBeforeSubmit() {
-		Onboarding.trackEvent(
-			followsAnyCreator.value ? 'follow-creators-set' : 'follow-creators-skip'
-		);
-	},
 	async onSubmit() {
 		// Nothing to submit.
 	},
 	onSubmitSuccess() {
-		Onboarding.endStep(shouldShowSkip.value);
 		emit('next');
 	},
 });

@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { onMounted, watch } from 'vue';
 
+import { usePayloadActionsStore } from '~app/components/shell/notice/payload-actions.store';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import { useOnHover } from '~common/on/useOnHover';
 import { Screen } from '~common/screen/screen-service';
-import { getShellNotice } from '~common/shell/notice/notice.service';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 import {
 	kThemeBgOffset,
@@ -25,7 +25,7 @@ import {
 import { kBorderWidthBase, kFontSizeLarge, kFontSizeSmall } from '~styles/variables';
 import { sleep } from '~utils/utils';
 
-const { remove: removeShellNoticeItem } = getShellNotice();
+const { remove: removeShellNoticeItem } = usePayloadActionsStore();
 
 type Props = {
 	noticeId: number;
