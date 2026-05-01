@@ -171,6 +171,62 @@ const routeTitle = computed(() => {
 	return null;
 });
 
+const id = toRef(() => route.params.id);
+
+const processedId = computed(() => {
+	// Get the collection id.
+	let result = id.value;
+	if (type.value && GameCollectionUserTypes.indexOf(type.value) !== -1) {
+		result = '@' + result;
+	}
+
+	return result;
+});
+
+const shouldShowFollowers = toRef(() => {
+	return type.value !== GameCollectionType.Bundle && type.value !== GameCollectionType.Owned;
+});
+
+const shouldShowFollow = computed(() => {
+	if (!collection.value) {
+		return false;
+	}
+
+	// Don't show follow for owned collections
+	if (collection.value.isOwner || collection.value.type === GameCollectionType.Owned) {
+		return false;
+	}
+
+	// Special case for developer collections: They prompt to follow the user instead of a playlist,
+	// so we need to make sure we hide the button if the user is blocked.
+	if (
+		collection.value.type === 'developer' &&
+		collection.value.owner &&
+		sessionUser.value &&
+		collection.value.owner.id !== sessionUser.value.id
+	) {
+		return !collection.value.owner.is_blocked && !collection.value.owner.blocked_you;
+	}
+
+	return true;
+});
+
+const shouldShowEditPlaylist = computed(() => {
+	return (
+		!shouldShowFollow.value &&
+		collection.value.type === GameCollectionType.Playlist &&
+		collection.value.isOwner
+	);
+});
+
+const canReorder = computed(() => {
+	return (
+		collection.value.type === GameCollectionType.Developer &&
+		collection.value.isOwner &&
+		(filtering.value === null || filtering.value.areTagFiltersEmpty)
+	);
+});
+
 const { reload: reloadRoute, isLoading } = createAppRoute({
 	routeTitle,
 	async onResolved({ payload }) {
@@ -258,62 +314,6 @@ function _processMeta(payload: any) {
 		Meta.twitter.title = routeTitle.value;
 	}
 }
-
-const id = toRef(() => route.params.id);
-
-const processedId = computed(() => {
-	// Get the collection id.
-	let result = id.value;
-	if (type.value && GameCollectionUserTypes.indexOf(type.value) !== -1) {
-		result = '@' + result;
-	}
-
-	return result;
-});
-
-const shouldShowFollowers = toRef(() => {
-	return type.value !== GameCollectionType.Bundle && type.value !== GameCollectionType.Owned;
-});
-
-const shouldShowFollow = computed(() => {
-	if (!collection.value) {
-		return false;
-	}
-
-	// Don't show follow for owned collections
-	if (collection.value.isOwner || collection.value.type === GameCollectionType.Owned) {
-		return false;
-	}
-
-	// Special case for developer collections: They prompt to follow the user instead of a playlist,
-	// so we need to make sure we hide the button if the user is blocked.
-	if (
-		collection.value.type === 'developer' &&
-		collection.value.owner &&
-		sessionUser.value &&
-		collection.value.owner.id !== sessionUser.value.id
-	) {
-		return !collection.value.owner.is_blocked && !collection.value.owner.blocked_you;
-	}
-
-	return true;
-});
-
-const shouldShowEditPlaylist = computed(() => {
-	return (
-		!shouldShowFollow.value &&
-		collection.value.type === GameCollectionType.Playlist &&
-		collection.value.isOwner
-	);
-});
-
-const canReorder = computed(() => {
-	return (
-		collection.value.type === GameCollectionType.Developer &&
-		collection.value.isOwner &&
-		(filtering.value === null || filtering.value.areTagFiltersEmpty)
-	);
-});
 
 async function onSortedGames(games: GameModel[]) {
 	if (!canReorder.value || !listing.value) {
