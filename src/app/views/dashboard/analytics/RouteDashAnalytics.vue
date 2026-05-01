@@ -51,7 +51,7 @@ import AppGraph from '~common/graph/AppGraph.vue';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppLoading from '~common/loading/AppLoading.vue';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppScrollAffix from '~common/scroll/AppScrollAffix.vue';
 import AppScrollScroller from '~common/scroll/AppScrollScroller.vue';
 import { vAppScrollWhen } from '~common/scroll/scroll-when.directive';
@@ -588,7 +588,7 @@ function _metricChanged() {
 			</AppExpand>
 
 			<div ref="metricsElem" class="-metric-stats-wrapper">
-				<AppScrollAffix :disabled="Screen.height < 800" :padding="0">
+				<AppScrollAffix :disabled="getScreen().screenHeight.value < 800" :padding="0">
 					<AppSpacer vertical :scale="4" />
 
 					<AppScrollScroller horizontal>

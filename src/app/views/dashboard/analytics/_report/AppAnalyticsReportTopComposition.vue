@@ -6,7 +6,7 @@ import { ReportComponent } from '~app/components/site-analytics/site-analytics-s
 import AppAnalyticsReportUserModel from '~app/views/dashboard/analytics/_report/AppAnalyticsReportUserModel.vue';
 import { formatNumber } from '~common/filters/number';
 import AppGraph from '~common/graph/AppGraph.vue';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 
 type Props = {
@@ -94,7 +94,10 @@ function isScalarLabel(val: any) {
 				</tbody>
 			</table>
 		</div>
-		<div v-if="!Screen.isXs && reportData.hasData && reportData.graph" class="col-sm-4">
+		<div
+			v-if="!getScreen().isXs.value && reportData.hasData && reportData.graph"
+			class="col-sm-4"
+		>
 			<AppGraph type="doughnut" :dataset="reportData.graph" />
 		</div>
 	</div>

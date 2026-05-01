@@ -9,7 +9,7 @@ import AppAdMonetizeMoreTakeover, {
 	AdTakeoverProps,
 } from '~common/ad/monetizemore/AppAdMonetizeMoreTakeover.vue';
 import { AdMonetizeMoreAdapter } from '~common/ad/monetizemore/monetizemore-adapter';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 
 type Props = AdAdapterComponentProps<AdMonetizeMoreAdapter>;
 
@@ -47,7 +47,7 @@ const tagUnit = computed(() => {
 	} else if (adSlot.nativePost) {
 		suffix = '_native';
 	}
-	return Screen.isMobile
+	return getScreen().isMobile.value
 		? `mobile_${adSlot.unitName}${suffix}`
 		: `desktop_${adSlot.unitName}${suffix}`;
 });

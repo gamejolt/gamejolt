@@ -6,7 +6,7 @@ import { formatCurrency } from '~common/filters/currency';
 import AppGameCompatIcons from '~common/game/compat-icons/AppGameCompatIcons.vue';
 import { GameModel } from '~common/game/game.model';
 import AppGameThumbnailImg from '~common/game/thumbnail/AppGameThumbnailImg.vue';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
 import { SettingAnimatedThumbnails } from '~common/settings/settings.service';
 import AppTranslate from '~common/translate/AppTranslate.vue';
@@ -14,7 +14,9 @@ import AppUserVerifiedTick from '~common/user/AppUserVerifiedTick.vue';
 import AppUserCardHover from '~common/user/card/AppUserCardHover.vue';
 import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
 
-const InviewConfig = new ScrollInviewConfig({ margin: () => `${Screen.height}px` });
+const InviewConfig = new ScrollInviewConfig({
+	margin: () => `${getScreen().screenHeight.value}px`,
+});
 </script>
 
 <script lang="ts" setup>
@@ -26,6 +28,8 @@ type Props = {
 };
 
 const { game, linkTo = '' } = defineProps<Props>();
+
+const { isLg } = getScreen();
 
 const isBootstrapped = ref(import.meta.env.SSR);
 const isHydrated = ref(import.meta.env.SSR);
@@ -88,7 +92,7 @@ function outView() {
 <template>
 	<RouterLink class="game-thumbnail" :to="url">
 		<AppScrollInview :config="InviewConfig" @inview="inView" @outview="outView">
-			<div v-if="Screen.isLg && isHydrated" class="_controls theme-dark" @click.prevent>
+			<div v-if="isLg && isHydrated" class="_controls theme-dark" @click.prevent>
 				<slot />
 			</div>
 

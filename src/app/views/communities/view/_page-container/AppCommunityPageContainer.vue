@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, useSlots } from 'vue';
 
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 
 type Props = {
 	full?: boolean;
@@ -10,15 +10,16 @@ type Props = {
 const { full = false } = defineProps<Props>();
 
 const slots = useSlots();
+const { isMd, isLg } = getScreen();
 
 const sidebarHasContent = computed(() => !!slots.sidebar);
 
-const shouldShowSidebar = computed(() => Screen.isLg || (Screen.isMd && sidebarHasContent.value));
+const shouldShowSidebar = computed(() => isLg.value || (isMd.value && sidebarHasContent.value));
 </script>
 
 <template>
 	<div class="-container">
-		<div v-if="Screen.isLg && !full" class="-offset" />
+		<div v-if="isLg && !full" class="-offset" />
 		<div
 			class="-content"
 			:class="{ '-single': !sidebarHasContent, '-full': full && !sidebarHasContent }"
@@ -68,7 +69,7 @@ $-sidebar-basis = $-sidebar-width - $-offset-width
 	// Hiding from the element selector, not needed otherwise.
 	z-index: -1
 
-	// Prevent shifting when v-if="Screen.isSize" removes the element.
+	// Prevent shifting when v-if="getScreen().isSize" removes the element.
 	@media $media-md-down
 		display: none
 

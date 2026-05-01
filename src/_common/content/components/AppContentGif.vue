@@ -5,12 +5,14 @@ import AppBaseContentComponent from '~common/content/components/AppBaseContentCo
 import { useContentOwnerController } from '~common/content/content-owner';
 import { useContentFocusService } from '~common/content-focus/content-focus.service';
 import AppResponsiveDimensions from '~common/responsive-dimensions/AppResponsiveDimensions.vue';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
 import AppVideo from '~common/video/AppVideo.vue';
 import { getVideoPlayerFromSources } from '~common/video/player/controller';
 
-const InviewConfig = new ScrollInviewConfig({ margin: () => `${Screen.height * 0.25}px` });
+const InviewConfig = new ScrollInviewConfig({
+	margin: () => `${getScreen().screenHeight.value * 0.25}px`,
+});
 </script>
 
 <script lang="ts" setup>

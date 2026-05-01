@@ -9,7 +9,7 @@ import { CommentableModel, CommentSort } from '~common/comment/comment-model';
 import AppModal from '~common/modal/AppModal.vue';
 import { useModal } from '~common/modal/modal.service';
 import { Model } from '~common/model/model.service';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 
 type Props = {
 	displayMode: DisplayMode;
@@ -20,7 +20,7 @@ defineProps<Props>();
 
 const modal = useModal()!;
 
-const autofocusAdd = computed(() => !Screen.isXs);
+const autofocusAdd = computed(() => !getScreen().isXs.value);
 </script>
 
 <template>

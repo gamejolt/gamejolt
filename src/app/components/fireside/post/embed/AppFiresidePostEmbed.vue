@@ -9,14 +9,16 @@ import {
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import { Navigate } from '~common/navigate/navigate.service';
 import AppResponsiveDimensions from '~common/responsive-dimensions/AppResponsiveDimensions.vue';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
 import AppSketchfabEmbed from '~common/sketchfab/embed/AppSketchfabEmbed.vue';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import { $gettext } from '~common/translate/translate.service';
 import AppVideoEmbed from '~common/video/embed/AppVideoEmbed.vue';
 
-const InviewConfig = new ScrollInviewConfig({ margin: () => `${Screen.height * 0.5}px` });
+const InviewConfig = new ScrollInviewConfig({
+	margin: () => `${getScreen().screenHeight.value * 0.5}px`,
+});
 </script>
 
 <script lang="ts" setup>

@@ -27,7 +27,7 @@ import AppEditableOverlay from '~common/editable-overlay/AppEditableOverlay.vue'
 import AppExpand from '~common/expand/AppExpand.vue';
 import AppMediaItemCover from '~common/media-item/cover/AppMediaItemCover.vue';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { useCommonStore } from '~common/store/common-store';
 import AppUserAvatar from '~common/user/user-avatar/AppUserAvatar.vue';
 import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
@@ -57,6 +57,7 @@ export default {
 
 <script lang="ts" setup>
 const { user: maybeUser, setUser } = useCommonStore();
+const { isXs } = getScreen();
 
 const routeStore = createController();
 provide(Key, routeStore);
@@ -83,7 +84,7 @@ function showEditAvatar() {
 
 <template>
 	<div>
-		<div v-if="Screen.isXs" class="well fill-darker sans-margin-bottom sans-rounded">
+		<div v-if="isXs" class="well fill-darker sans-margin-bottom sans-rounded">
 			<AppButton block icon="chevron-left" :to="{ name: routeDashAccountMobileNav.name }">
 				{{ $gettext(`Back to settings`) }}
 			</AppButton>
@@ -91,7 +92,7 @@ function showEditAvatar() {
 
 		<AppPageHeader
 			:override-slots="{
-				spotlight: !Screen.isXs,
+				spotlight: !isXs,
 			}"
 		>
 			<h1>{{ heading }}</h1>
@@ -100,7 +101,7 @@ function showEditAvatar() {
 				<small>@{{ user.username }}</small>
 			</p>
 
-			<template v-if="!Screen.isXs" #spotlight>
+			<template v-if="!isXs" #spotlight>
 				<AppPageHeaderAvatar :user="user" disable-link>
 					<AppEditableOverlay
 						:disabled="route.name !== routeDashAccountEdit.name"
@@ -143,7 +144,7 @@ function showEditAvatar() {
 		<section v-if="isBootstrapped" class="section">
 			<div class="container">
 				<div class="row">
-					<div v-if="!Screen.isXs" class="col-sm-3 col-md-2">
+					<div v-if="!isXs" class="col-sm-3 col-md-2">
 						<nav class="platform-list">
 							<ul>
 								<li>
@@ -263,7 +264,7 @@ function showEditAvatar() {
 						</nav>
 					</div>
 					<div class="col-xs-12 col-sm-9 col-md-10">
-						<template v-if="Screen.isXs && route.name === routeDashAccountEdit.name">
+						<template v-if="isXs && route.name === routeDashAccountEdit.name">
 							<AppAvatarFrame
 								:style="{
 									margin: `0 auto`,

@@ -31,7 +31,7 @@ import {
 import { showSuccessGrowl } from '~common/growls/growls.service';
 import AppLinkHelp from '~common/link/AppLinkHelp.vue';
 import { showModalConfirm } from '~common/modal/confirm/confirm-service';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { Timezone, TimezoneData } from '~common/timezone/timezone.service';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 import { $gettext } from '~common/translate/translate.service';
@@ -460,7 +460,7 @@ function timezoneByName(timezone: string) {
 			</AppButton>
 		</template>
 
-		<div :class="{ 'pull-right': !Screen.isXs }">
+		<div :class="{ 'pull-right': !getScreen().isXs.value }">
 			<br class="visible-xs" />
 
 			<AppButton

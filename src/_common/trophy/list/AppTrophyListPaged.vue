@@ -4,7 +4,7 @@ import { computed, ref, watch } from 'vue';
 import { Api } from '~common/api/api.service';
 import AppButton from '~common/button/AppButton.vue';
 import AppLoading from '~common/loading/AppLoading.vue';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { $gettext } from '~common/translate/translate.service';
 import AppTrophyCard from '~common/trophy/AppTrophyCard.vue';
 import { populateTrophies } from '~common/user/trophy/trophy-utils';
@@ -18,15 +18,17 @@ type Props = {
 };
 const { url, initialTrophies = [] } = defineProps<Props>();
 
+const { isXs, isSm } = getScreen();
+
 const trophies = ref<UserBaseTrophyModel[]>([]);
 const isLoading = ref(false);
 const reachedEnd = ref(false);
 
 const placeholderCount = computed(() => {
 	// 2 rows, except for xs.
-	if (Screen.isXs) {
+	if (isXs.value) {
 		return 1;
-	} else if (Screen.isSm) {
+	} else if (isSm.value) {
 		return 4;
 	}
 	return 6;

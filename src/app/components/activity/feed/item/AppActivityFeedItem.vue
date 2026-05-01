@@ -6,11 +6,13 @@ import { ActivityFeedItem } from '~app/components/activity/feed/item-service';
 import AppActivityFeedNotification from '~app/components/activity/feed/notification/AppActivityFeedNotification.vue';
 import AppActivityFeedPost from '~app/components/activity/feed/post/AppActivityFeedPost.vue';
 import { useActivityFeed } from '~app/components/activity/feed/view';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
 
 const InviewConfig = new ScrollInviewConfig();
-const InviewConfigHydration = new ScrollInviewConfig({ margin: () => `${Screen.height}px` });
+const InviewConfigHydration = new ScrollInviewConfig({
+	margin: () => `${getScreen().screenHeight.value}px`,
+});
 </script>
 
 <script lang="ts" setup>

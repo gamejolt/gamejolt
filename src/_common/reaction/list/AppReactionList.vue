@@ -9,7 +9,7 @@ import {
 	ReactionCount,
 	toggleReactionOnResource,
 } from '~common/reaction/reaction-count';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppScrollScroller, { createScroller } from '~common/scroll/AppScrollScroller.vue';
 import { styleWhen } from '~styles/mixins';
 import { buildCSSPixelValue } from '~styles/variables';
@@ -199,7 +199,7 @@ const scrollerMarginBottom = buildCSSPixelValue(12);
 			</div>
 		</component>
 
-		<template v-if="Screen.isPointerMouse && useScroller && hoverScroll">
+		<template v-if="getScreen().isPointerMouse.value && useScroller && hoverScroll">
 			<div
 				v-for="side in ['left', 'right'] as const"
 				:key="side"

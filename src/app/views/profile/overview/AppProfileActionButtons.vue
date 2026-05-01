@@ -11,7 +11,7 @@ import { useProfileRouteStore } from '~app/views/profile/RouteProfile.vue';
 import AppAdTakeoverFloat from '~common/ad/AppAdTakeoverFloat.vue';
 import AppButton from '~common/button/AppButton.vue';
 import AppButtonGroup from '~common/button/AppButtonGroup.vue';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppUserFollowButton from '~common/user/follow/AppUserFollowButton.vue';
 
 type Props = {
@@ -51,7 +51,7 @@ function openMessaging() {
 	if (routeUser.value && chat.value) {
 		const chatUser = chat.value.friendsList.get(routeUser.value.id);
 		if (chatUser) {
-			if (Screen.isXs) {
+			if (getScreen().isXs.value) {
 				toggleLeftPane('chat');
 			}
 			openChatRoom(chat.value, chatUser.room_id);

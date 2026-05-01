@@ -25,7 +25,7 @@ import AppPopper from '~common/popper/AppPopper.vue';
 import { hideAllPoppers } from '~common/popper/popper.service';
 import { showReportModal } from '~common/report/modal/modal.service';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppScrollAffix from '~common/scroll/AppScrollAffix.vue';
 import { scrollTo } from '~common/scroll/scroll.service';
 import { useCommonStore } from '~common/store/common-store';
@@ -62,6 +62,7 @@ export default {
 
 <script lang="ts" setup>
 const route = useRoute();
+const { isXs, isMobile, isDesktop } = getScreen();
 
 const { user } = useCommonStore();
 
@@ -139,7 +140,7 @@ createAppRoute({
 				</span>
 			</div>
 
-			<h1 :class="{ h2: Screen.isMobile }">
+			<h1 :class="{ h2: isMobile }">
 				{{ topic.title }}
 			</h1>
 
@@ -155,7 +156,7 @@ createAppRoute({
 					<small>@{{ topic.user.username }}</small>
 				</RouterLink>
 
-				<span v-if="!Screen.isXs" class="small">
+				<span v-if="!isXs" class="small">
 					<span class="dot-separator" />
 					<AppTimeAgo :date="topic.posted_on" />
 				</span>
@@ -217,7 +218,7 @@ createAppRoute({
 
 				<div class="row">
 					<div class="col-sm-3 col-sm-push-9 col-md-offset-1 col-md-push-8">
-						<AppScrollAffix v-if="user" :disabled="!Screen.isDesktop">
+						<AppScrollAffix v-if="user" :disabled="!isDesktop">
 							<AppButton
 								v-if="topic.user_id === user.id && !topic.is_locked"
 								block

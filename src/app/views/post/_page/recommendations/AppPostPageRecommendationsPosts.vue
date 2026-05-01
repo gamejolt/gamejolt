@@ -6,7 +6,7 @@ import { Api } from '~common/api/api.service';
 import AppPostCard from '~common/fireside/post/card/AppPostCard.vue';
 import { FiresidePostModel } from '~common/fireside/post/post-model';
 import { HistoryCache } from '~common/history/cache/cache.service';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 
 type Props = {
@@ -14,6 +14,7 @@ type Props = {
 };
 const { post } = defineProps<Props>();
 const route = useRoute();
+const { isXs, isSm } = getScreen();
 
 const cacheKey = `post-recommendations-${post.id}`;
 
@@ -28,7 +29,7 @@ HistoryCache.store(route, payload, cacheKey);
 const posts = ref(FiresidePostModel.populate<FiresidePostModel>(payload.posts));
 
 const usablePosts = computed(() => {
-	if (Screen.isSm) {
+	if (isSm.value) {
 		return posts.value.slice(0, 8);
 	}
 
@@ -47,7 +48,7 @@ const usablePosts = computed(() => {
 			/>
 		</div>
 
-		<AppSpacer v-if="Screen.isXs" horizontal :scale="4" />
+		<AppSpacer v-if="isXs" horizontal :scale="4" />
 	</template>
 </template>
 

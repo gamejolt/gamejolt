@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 
 type Props = {
 	center?: boolean;
@@ -7,6 +7,8 @@ type Props = {
 };
 
 defineProps<Props>();
+
+const { isMobile } = getScreen();
 </script>
 
 <template>
@@ -20,15 +22,15 @@ defineProps<Props>();
 					<slot />
 
 					<div class="tab-list-addons">
-						<div v-if="!Screen.isMobile" class="tab-list-meta">
+						<div v-if="!isMobile" class="tab-list-meta">
 							<slot name="meta" />
 						</div>
 
-						<div v-if="!Screen.isMobile" class="tab-list-input">
+						<div v-if="!isMobile" class="tab-list-input">
 							<slot name="input" />
 						</div>
 
-						<div v-if="!Screen.isMobile" class="tab-list-controls">
+						<div v-if="!isMobile" class="tab-list-controls">
 							<slot name="controls" />
 						</div>
 					</div>
@@ -36,11 +38,11 @@ defineProps<Props>();
 			</div>
 		</nav>
 
-		<div v-if="Screen.isMobile" class="tab-list-input">
+		<div v-if="isMobile" class="tab-list-input">
 			<slot name="input" />
 		</div>
 
-		<div v-if="Screen.isMobile" class="tab-list-meta">
+		<div v-if="isMobile" class="tab-list-meta">
 			<slot name="meta" />
 		</div>
 	</div>

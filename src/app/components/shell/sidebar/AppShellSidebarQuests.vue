@@ -10,7 +10,7 @@ import AppIllustration from '~common/illustration/AppIllustration.vue';
 import { illNoComments, illNoCommentsSmall } from '~common/illustration/illustrations';
 import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
 import { QuestModel, QuestPriority, QuestRepeatType, QuestSeries } from '~common/quest/quest-model';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 import { $gettext } from '~common/translate/translate.service';
 import { numberSort } from '~utils/array';
@@ -41,6 +41,7 @@ interface QuestChunk {
 }
 
 const { toggleLeftPane } = useAppStore();
+const { isXs, isDesktop } = getScreen();
 const questStore = useQuestStore();
 const {
 	isLoading,
@@ -60,7 +61,7 @@ useEscapeStack({
 
 		// Mobile sizes should close the quest window before closing the sidebar.
 		// Desktop should close the sidebar always.
-		if (!hadQuestWindow || Screen.isDesktop) {
+		if (!hadQuestWindow || isDesktop.value) {
 			toggleLeftPane('');
 		}
 	},
@@ -152,7 +153,7 @@ onMounted(async () => {
 						v-if="!hasLoaded || dailyQuests.length > 0"
 						:active-quest-id="activeQuestId"
 						show-charge
-						:direction="Screen.isXs ? 'column' : 'row'"
+						:direction="isXs ? 'column' : 'row'"
 						:constrain-charge-tooltip="true"
 						:grid-styles="{
 							marginLeft: `-8px`,
@@ -180,9 +181,7 @@ onMounted(async () => {
 					</template>
 					<template v-else-if="!hasQuests">
 						<div class="_empty">
-							<AppIllustration
-								:asset="Screen.isXs ? illNoCommentsSmall : illNoComments"
-							>
+							<AppIllustration :asset="isXs ? illNoCommentsSmall : illNoComments">
 								{{ $gettext(`You have no active quests`) }}
 							</AppIllustration>
 						</div>

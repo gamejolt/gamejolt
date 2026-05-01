@@ -3,7 +3,7 @@ import { computed, ref, watch } from 'vue';
 
 import { Api } from '~common/api/api.service';
 import AppPopper from '~common/popper/AppPopper.vue';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppUserCard from '~common/user/card/AppUserCard.vue';
 import { UserModel } from '~common/user/user.model';
 
@@ -31,7 +31,7 @@ const emit = defineEmits<{
 const isShowing = ref(false);
 const isLoaded = ref(false);
 
-const isDisabled = computed(() => Screen.isXs || !!disabled || import.meta.env.SSR);
+const isDisabled = computed(() => getScreen().isXs.value || !!disabled || import.meta.env.SSR);
 
 const component = computed(() => {
 	return isDisabled.value ? 'span' : AppPopper;

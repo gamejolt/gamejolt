@@ -13,7 +13,7 @@ import { MicrotransactionProductModel } from '~common/microtransaction/product.m
 import { OrderModel } from '~common/order/order.model';
 import { OrderPaymentMethod } from '~common/order/payment/payment.model';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { $gettext } from '~common/translate/translate.service';
 
 export default {
@@ -26,6 +26,7 @@ export default {
 
 <script lang="ts" setup>
 const { heading } = useAccountRouteController()!;
+const { isXs } = getScreen();
 
 const order = ref(null) as Ref<OrderModel | null>;
 
@@ -142,7 +143,7 @@ function isMicrotransactionProduct(resource: any): resource is MicrotransactionP
 				<br />
 			</div>
 			<div v-if="hasVisiblePayment" class="col-sm-4">
-				<h4 :class="{ 'section-header': !Screen.isXs }">
+				<h4 :class="{ 'section-header': !isXs }">
 					{{ $gettext(`Payment`) }}
 				</h4>
 				<div v-for="payment of order.payments" :key="payment.id">
@@ -169,7 +170,7 @@ function isMicrotransactionProduct(resource: any): resource is MicrotransactionP
 				</div>
 			</div>
 			<div class="col-sm-4">
-				<h4 :class="{ 'section-header': !Screen.isXs }">
+				<h4 :class="{ 'section-header': !isXs }">
 					{{ $gettext(`Summary`) }}
 				</h4>
 

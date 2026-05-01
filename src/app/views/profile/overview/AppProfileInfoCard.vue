@@ -16,7 +16,7 @@ import AppProfileStats, {
 	ProfileStat,
 } from '~app/views/profile/overview/stats/AppProfileStats.vue';
 import { useProfileRouteStore } from '~app/views/profile/RouteProfile.vue';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 import { kThemeFg10 } from '~common/theme/variables';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
@@ -43,6 +43,7 @@ const {
 	communitiesCount,
 	floatingAvatarSize,
 } = useProfileRouteStore()!;
+const { isMobile, isDesktop, isSm } = getScreen();
 
 const stats = computed<ProfileStat[]>(() => {
 	const user = routeUser.value;
@@ -158,7 +159,7 @@ const floatingInfoSpacerExpandedHeight = computed(() => floatingAvatarSize.value
 			:style="{
 				...avatarExpandStyles,
 				height: 0,
-				...styleWhen(Screen.isDesktop && showAvatar, {
+				...styleWhen(isDesktop && showAvatar, {
 					height: `${floatingAvatarSize.value * 0.6}px`,
 				}),
 			}"
@@ -169,20 +170,20 @@ const floatingInfoSpacerExpandedHeight = computed(() => floatingAvatarSize.value
 			class="sheet"
 			:style="{
 				...cardStyles,
-				...styleWhen(Screen.isMobile, {
+				...styleWhen(isMobile, {
 					// Use the same background as the parent on mobile.
 					backgroundColor: `inherit`,
 					// Bleed the bottom padding since this no longer appears as a sheet.
 					paddingBottom: 0,
 				}),
-				...styleWhen(Screen.isSm, {
+				...styleWhen(isSm, {
 					paddingLeft: 0,
 					paddingRight: 0,
 				}),
 			}"
 		>
 			<div
-				v-if="Screen.isMobile && !routeUser.header_media_item"
+				v-if="isMobile && !routeUser.header_media_item"
 				:style="{
 					height: `${floatingAvatarSize.value + 80 - floatingInfoSpacerExpandedHeight}px`,
 				}"
@@ -193,7 +194,7 @@ const floatingInfoSpacerExpandedHeight = computed(() => floatingAvatarSize.value
 					...avatarExpandStyles,
 					height: 0,
 					...styleWhen(showAvatar, {
-						height: Screen.isDesktop
+						height: isDesktop
 							? `${floatingAvatarSize.value * 0.6 - 12}px`
 							: `${floatingInfoSpacerExpandedHeight}px`,
 					}),
@@ -204,7 +205,7 @@ const floatingInfoSpacerExpandedHeight = computed(() => floatingAvatarSize.value
 						minWidth: `100%`,
 						height: `100%`,
 						position: `relative`,
-						...styleWhen(Screen.isMobile, {
+						...styleWhen(isMobile, {
 							transition: `opacity 100ms linear, transform 100ms linear`,
 							transform: `translateY(${fadeAvatar ? -50 : 0}%)`,
 							opacity: fadeAvatar ? 0 : 1,
@@ -223,7 +224,7 @@ const floatingInfoSpacerExpandedHeight = computed(() => floatingAvatarSize.value
 								position: `absolute`,
 								width: `100%`,
 								bottom: 0,
-								...styleWhen(Screen.isDesktop, {
+								...styleWhen(isDesktop, {
 									bottom: `24px`,
 								}),
 							}"
@@ -248,7 +249,7 @@ const floatingInfoSpacerExpandedHeight = computed(() => floatingAvatarSize.value
 									paddingTop: `8px`,
 								}"
 							>
-								<template v-if="Screen.isMobile">
+								<template v-if="isMobile">
 									<div
 										:style="{
 											fontSize: kFontSizeSmall.px,
@@ -295,16 +296,16 @@ const floatingInfoSpacerExpandedHeight = computed(() => floatingAvatarSize.value
 				</template>
 			</AppProfileStats>
 
-			<div v-if="Screen.isDesktop" :style="dividerStyles" />
+			<div v-if="isDesktop" :style="dividerStyles" />
 			<AppSpacer v-else vertical :scale="4" />
 
 			<!-- Shortcuts -->
-			<AppProfileShortcuts v-if="Screen.isDesktop" :items="quickLinks" />
+			<AppProfileShortcuts v-if="isDesktop" :items="quickLinks" />
 			<template v-else>
 				<AppProfileActionButtons :quick-links="quickLinks" collapse />
 			</template>
 
-			<template v-if="Screen.isDesktop">
+			<template v-if="isDesktop">
 				<!-- Bio divider -->
 				<div v-if="!isOverviewLoaded || routeUser.hasBio" :style="dividerStyles" />
 

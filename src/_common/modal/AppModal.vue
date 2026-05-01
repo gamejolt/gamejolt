@@ -5,7 +5,7 @@ import { isNavigationFailure, useRouter } from 'vue-router';
 import { BackdropController, useBackdropStore } from '~common/backdrop/backdrop.service';
 import { useEscapeStack } from '~common/escape-stack/escape-stack.service';
 import { ModalDismissReason, Modals, useModal } from '~common/modal/modal.service';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppScrollAffix from '~common/scroll/AppScrollAffix.vue';
 import AppScrollScroller, { createScroller } from '~common/scroll/AppScrollScroller.vue';
 import AppTheme from '~common/theme/AppTheme.vue';
@@ -110,7 +110,7 @@ function dismissEsc() {
 
 function dismissBackdrop() {
 	if (
-		Screen.isMobile ||
+		getScreen().isMobile.value ||
 		modal.noBackdropClose ||
 		isHoveringContent.value ||
 		// If any of the extra backdrop checks return false then don't dismiss.

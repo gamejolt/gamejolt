@@ -26,7 +26,7 @@ import { Environment } from '~common/environment/environment.service';
 import { LinkedAccountModel } from '~common/linked-account/linked-account.model';
 import { findInRegistry } from '~common/registry/registry.service';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { usePageScrollSubscription } from '~common/scroll/scroll.service';
 import { useCommonStore } from '~common/store/common-store';
 import { useThemeStore } from '~common/theme/theme.store';
@@ -305,6 +305,7 @@ const routeStore = createProfileRouteStore({ myUser, header, chat });
 provideProfileRouteStore(routeStore);
 
 const { user: routeUser, bootstrapUser, profilePayload, stickySides } = routeStore;
+const { isMobile, screenHeight } = getScreen();
 
 const route = useRoute();
 
@@ -351,7 +352,7 @@ const headingUsernameStyles = {
 	marginLeft: `8px`,
 } satisfies CSSProperties;
 
-const coverMaxHeight = computed(() => Math.min(Screen.height * 0.35, 400));
+const coverMaxHeight = computed(() => Math.min(screenHeight.value * 0.35, 400));
 </script>
 
 <template>
@@ -378,18 +379,18 @@ const coverMaxHeight = computed(() => Math.min(Screen.height * 0.35, 400));
 						should-affix-nav
 						:autoscroll-anchor-key="autoscrollAnchorKey"
 						:style="{
-							...styleWhen(Screen.isMobile && !routeUser.header_media_item, {
+							...styleWhen(isMobile && !routeUser.header_media_item, {
 								height: 0,
 								minHeight: 0,
 							}),
 						}"
 						:cover-header-styles="{
-							...styleWhen(Screen.isMobile && !routeUser.header_media_item, {
+							...styleWhen(isMobile && !routeUser.header_media_item, {
 								background: `transparent`,
 							}),
 						}"
 					>
-						<template v-if="!Screen.isMobile" #default>
+						<template v-if="!isMobile" #default>
 							<RouterLink
 								:to="{
 									name: 'profile.overview',
@@ -419,7 +420,7 @@ const coverMaxHeight = computed(() => Math.min(Screen.height * 0.35, 400));
 
 						<template #spotlight>
 							<AppPageHeaderAvatar
-								v-if="!Screen.isMobile && !stickySides"
+								v-if="!isMobile && !stickySides"
 								class="anim-fade-in"
 								:user="routeUser"
 							/>

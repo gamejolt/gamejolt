@@ -3,7 +3,7 @@ import { computed, inject, InjectionKey, Ref, ref, shallowReadonly, unref, watch
 import { Connection } from '~common/connection/connection-service';
 import { isDynamicGoogleBot } from '~common/device/device.service';
 import { getCurrentRouter } from '~common/route/current-router-service';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { SettingFeedNotifications } from '~common/settings/settings.service';
 import { CommonStore } from '~common/store/common-store';
 import { $gettext } from '~common/translate/translate.service';
@@ -28,7 +28,7 @@ export function createBannerStore({ commonStore }: { commonStore: CommonStore })
 				if (
 					import.meta.env.SSR ||
 					GJ_IS_DESKTOP_APP ||
-					Screen.isXs ||
+					getScreen().isXs.value ||
 					isDynamicGoogleBot()
 				) {
 					return false;

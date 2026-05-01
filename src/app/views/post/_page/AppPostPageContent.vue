@@ -13,7 +13,7 @@ import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import { createLightbox } from '~common/lightbox/lightbox-helpers';
 import { MediaItemModel } from '~common/media-item/media-item-model';
 import AppMediaItemPost from '~common/media-item/post/AppMediaItemPost.vue';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { StickerTargetController } from '~common/sticker/target/target-controller';
 import { useCommonStore } from '~common/store/common-store';
 import AppTimeAgo from '~common/time/AppTimeAgo.vue';
@@ -97,7 +97,7 @@ const overlayText: CSSProperties = {
 				<!-- User Info -->
 				<div class="-user-info">
 					<div class="-avatar">
-						<AppUserCardHover :user="displayUser" :disabled="Screen.isXs">
+						<AppUserCardHover :user="displayUser" :disabled="getScreen().isXs.value">
 							<AppUserAvatarBubble
 								:user="displayUser"
 								show-verified

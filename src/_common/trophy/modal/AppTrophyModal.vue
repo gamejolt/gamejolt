@@ -7,7 +7,7 @@ import AppButton from '~common/button/AppButton.vue';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppModal from '~common/modal/AppModal.vue';
 import { useModal } from '~common/modal/modal.service';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { SiteTrophyModel } from '~common/site/trophy/trophy.model';
 import { useCommonStore } from '~common/store/common-store';
 import AppTimeAgo from '~common/time/AppTimeAgo.vue';
@@ -180,7 +180,10 @@ async function populateFriends() {
 							</span>
 
 							<span v-if="completionPercentageForDisplay" class="text-muted small">
-								<span v-if="Screen.isDesktop" class="dot-separator small" />
+								<span
+									v-if="getScreen().isDesktop.value"
+									class="dot-separator small"
+								/>
 								<br v-else />
 								<span v-if="completionPercentageForDisplay === 1">
 									{{ $gettext(`<1% of players achieved this trophy`) }}

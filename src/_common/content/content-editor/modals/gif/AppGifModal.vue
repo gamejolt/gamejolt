@@ -14,7 +14,7 @@ import AppLoading from '~common/loading/AppLoading.vue';
 import AppModal from '~common/modal/AppModal.vue';
 import { useModal } from '~common/modal/modal.service';
 import { Ruler } from '~common/ruler/ruler-service';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppScrollScroller, { createScroller } from '~common/scroll/AppScrollScroller.vue';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 import { $gettext } from '~common/translate/translate.service';
@@ -52,7 +52,7 @@ const reachedLastPage = computed(
 	() => currentSearchPage.value === maxPages.value || isLastPage.value
 );
 const shouldShowMoreButton = computed(
-	() => Screen.isXs && searchValue.value.length > 0 && !isLoading.value
+	() => getScreen().isXs.value && searchValue.value.length > 0 && !isLoading.value
 );
 const isFavorites = computed(() => currentSearchTerm.value.toLowerCase().trim() === 'favorites');
 

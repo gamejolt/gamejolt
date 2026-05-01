@@ -5,7 +5,7 @@ import { formatNumber } from '~common/filters/number';
 import { ForumCategoryModel } from '~common/forum/category/category.model';
 import { ForumChannelModel } from '~common/forum/channel/channel.model';
 import { ForumPostModel } from '~common/forum/post/post.model';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppTimeAgo from '~common/time/AppTimeAgo.vue';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 import AppUserVerifiedTick from '~common/user/AppUserVerifiedTick.vue';
@@ -21,6 +21,8 @@ type Props = {
 };
 
 const { channels, latestPosts = [], postCountPerPage } = defineProps<Props>();
+
+const { isXs, isDesktop } = getScreen();
 
 const indexedPosts = computed(() => {
 	return arrayIndexByFunc(latestPosts, item => item.topic!.channel_id);
@@ -62,7 +64,7 @@ function getPostPage(post: ForumPostModel) {
 					{{ channel.description }}
 				</div>
 			</div>
-			<div class="col-sm-3 col-md-2 text-muted small" :class="{ 'text-right': !Screen.isXs }">
+			<div class="col-sm-3 col-md-2 text-muted small" :class="{ 'text-right': !isXs }">
 				<AppTranslate
 					:translate-n="channel.topics_count || 0"
 					translate-plural="%{ count } Topics"
@@ -82,7 +84,7 @@ function getPostPage(post: ForumPostModel) {
 					%{ count } Reply
 				</AppTranslate>
 			</div>
-			<div v-if="Screen.isDesktop" class="col-md-3">
+			<div v-if="isDesktop" class="col-md-3">
 				<template v-if="indexedPosts[channel.id]">
 					<template v-for="latestPost of [indexedPosts[channel.id]]" :key="latestPost.id">
 						<div class="forum-channel-list-item-latest-topic clearfix">

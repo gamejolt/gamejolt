@@ -30,7 +30,7 @@ import {
 	createAppRoute,
 	defineAppRouteOptions,
 } from '~common/route/route-component';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 import AppStickerChargeCard from '~common/sticker/charge/AppStickerChargeCard.vue';
 import { useCommonStore } from '~common/store/common-store';
@@ -79,6 +79,7 @@ const RouteHomeFyp = defineAsyncComponent(() =>
 );
 
 const { grid } = useGridStore();
+const { isXs, isLg, isMobile, isDesktop } = getScreen();
 
 // Mark as loading until Grid is fully bootstrapped.
 const isLoadingCharge = ref(grid.value?.bootstrapReceived !== true);
@@ -103,7 +104,7 @@ const isLoadingQuests = ref(true);
 const controller = createActivityFeedController();
 provide('route-activity-feed', controller);
 
-const hasGamesSection = toRef(() => games.value.length > 0 && Screen.isLg);
+const hasGamesSection = toRef(() => games.value.length > 0 && isLg.value);
 const hasGameFilter = toRef(() => games.value.length > 7);
 
 const filteredGames = computed(() => {
@@ -195,13 +196,11 @@ async function refreshQuests() {
 			<AppPageContainer
 				xl
 				sticky-sides
-				:sticky-side-top-margin="
-					Screen.isXs ? kGridGutterWidthXs.value : kGridGutterWidth.value
-				"
+				:sticky-side-top-margin="isXs ? kGridGutterWidthXs.value : kGridGutterWidth.value"
 			>
 				<!-- Left sidebar -->
 				<template #left>
-					<template v-if="Screen.isDesktop">
+					<template v-if="isDesktop">
 						<AppAdTakeoverFloat>
 							<AppStickerChargeCard
 								elevate
@@ -293,7 +292,7 @@ async function refreshQuests() {
 				</template>
 
 				<!-- Right sidebar -->
-				<template v-if="!Screen.isMobile" #right>
+				<template v-if="!isMobile" #right>
 					<template v-if="featuredItem">
 						<AppHomeFeaturedBanner :featured-item="featuredItem" />
 						<AppSpacer vertical :scale="8" />
@@ -307,7 +306,7 @@ async function refreshQuests() {
 					<AppAdTakeoverFloat>
 						<AppPostAddButton @add="onPostAdded" />
 
-						<template v-if="!Screen.isXs && featuredItem">
+						<template v-if="!isXs && featuredItem">
 							<AppHomeFeaturedBanner :featured-item="featuredItem" />
 						</template>
 

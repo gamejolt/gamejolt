@@ -51,7 +51,7 @@ import { Meta } from '~common/meta/meta-service';
 import { storeModelList } from '~common/model/model-store.service';
 import { getPartnerReferrer } from '~common/partner-referral/partner-referral-service';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppScrollAffix from '~common/scroll/AppScrollAffix.vue';
 import AppShareCard from '~common/share/card/AppShareCard.vue';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
@@ -113,6 +113,7 @@ const { shouldShow: globalShouldShowAds } = useAdStore();
 const commentManager = useCommentStoreManager()!;
 const router = useRouter();
 const route = useRoute();
+const { isLg, isMobile, screenWidth } = getScreen();
 
 const isBootstrapped = ref(false);
 const feed = ref(null) as Ref<ActivityFeedView | null>;
@@ -240,7 +241,7 @@ async function reloadPreviewComments() {
 
 		<section class="section section-thin">
 			<AppAdWidget
-				v-if="globalShouldShowAds && !Screen.isMobile"
+				v-if="globalShouldShowAds && !isMobile"
 				unit-name="billboard"
 				:style-override="{
 					paddingBottom: `8px`,
@@ -270,7 +271,7 @@ async function reloadPreviewComments() {
 						<AppGameCommunityBadge v-if="game?.community" :community="game.community" />
 					</template>
 
-					<template v-if="!Screen.isMobile && game?.comments_enabled" #left-bottom>
+					<template v-if="!isMobile && game?.comments_enabled" #left-bottom>
 						<div class="pull-right">
 							<AppButton trans @click="showComments()">
 								{{ $gettext(`View all`) }}
@@ -299,11 +300,11 @@ async function reloadPreviewComments() {
 					</template>
 
 					<template #right>
-						<template v-if="globalShouldShowAds && !Screen.isMobile">
+						<template v-if="globalShouldShowAds && !isMobile">
 							<AppScrollAffix
 								:style="{ position: `relative`, zIndex: kLayerAds }"
-								:padding="Screen.isLg ? 80 : 8"
-								:affixed-styles="styleWhen(Screen.width > 2300, { right: `8px` })"
+								:padding="isLg ? 80 : 8"
+								:affixed-styles="styleWhen(screenWidth > 2300, { right: `8px` })"
 							>
 								<AppAdWidget
 									unit-name="mpu"
@@ -319,7 +320,7 @@ async function reloadPreviewComments() {
 							<AppSpacer vertical :scale="4" />
 						</template>
 
-						<template v-if="!Screen.isMobile">
+						<template v-if="!isMobile">
 							<h4 class="section-header">
 								{{ $gettext(`Recommended`) }}
 							</h4>

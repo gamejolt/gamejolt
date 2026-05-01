@@ -3,7 +3,7 @@ import { computed, toRef } from 'vue';
 import { RouteLocationRaw, useRoute } from 'vue-router';
 
 import AppButton from '~common/button/AppButton.vue';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { vAppNoAutoscroll } from '~common/scroll/auto-scroll/no-autoscroll.directive';
 import { $gettext } from '~common/translate/translate.service';
 
@@ -36,6 +36,7 @@ const emit = defineEmits<{
 }>();
 
 const route = useRoute();
+const { isXs } = getScreen();
 
 const MaxPagesShown = 5;
 
@@ -115,7 +116,7 @@ function onPageClick(event: Event, page: number) {
 <template>
 	<div>
 		<!-- Number pagination type -->
-		<template v-if="!pager && !Screen.isXs">
+		<template v-if="!pager && !isXs">
 			<div v-if="totalItems > itemsPerPage" class="pagination">
 				<div
 					v-if="prevPage && prevPage !== 1"
@@ -198,7 +199,7 @@ function onPageClick(event: Event, page: number) {
 		</template>
 
 		<!-- Pager type -->
-		<template v-else-if="pager || Screen.isXs">
+		<template v-else-if="pager || isXs">
 			<div class="pager" :class="{ reverse: reverseButtons }">
 				<div
 					v-if="prevPage"

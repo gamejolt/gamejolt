@@ -16,7 +16,7 @@ import { ModelData } from '~common/model/model.service';
 import { Navigate } from '~common/navigate/navigate.service';
 import { OrderModel } from '~common/order/order.model';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { useThemeStore } from '~common/theme/theme.store';
 import { kThemeFgMuted } from '~common/theme/variables';
 import { $gettext } from '~common/translate/translate.service';
@@ -187,7 +187,7 @@ const headingStyles = computed<CSSProperties>(() => ({
 						...styleMaxWidthForOptions({
 							ratio: 1,
 							maxWidth: 160,
-							maxHeight: Screen.height * 0.3,
+							maxHeight: getScreen().screenHeight.value * 0.3,
 						}),
 						flex: `auto`,
 					}"

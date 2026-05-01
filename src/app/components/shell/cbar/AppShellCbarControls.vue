@@ -8,7 +8,7 @@ import { useQuestStore } from '~app/store/quest';
 import { trackCbarControlClick } from '~common/analytics/analytics.service';
 import { showVendingMachineModal } from '~common/inventory/shop/vending-machine/modal.service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { useCommonStore } from '~common/store/common-store';
 import { DefaultTheme } from '~common/theme/theme.model';
 import { useThemeStore } from '~common/theme/theme.store';
@@ -19,6 +19,7 @@ const { user, showInitialPackWatermark } = useCommonStore();
 const { theme } = useThemeStore();
 const { chat } = useGridStore();
 const { newQuestIds, questActivityIds } = useQuestStore();
+const { isXs } = getScreen();
 
 const highlight = computed(() => {
 	const _theme = activeCommunity.value?.theme ?? theme.value ?? DefaultTheme;
@@ -53,7 +54,7 @@ function trackAndTogglePane(pane: TogglableLeftPane) {
 	<div>
 		<!-- Mobile -->
 		<AppShellCbarItem
-			v-if="Screen.isXs"
+			v-if="isXs"
 			class="-control"
 			:highlight="highlight"
 			:is-active="visibleLeftPane === 'mobile'"
@@ -164,7 +165,7 @@ function trackAndTogglePane(pane: TogglableLeftPane) {
 			</AppShellCbarItem>
 		</template>
 
-		<hr v-if="Screen.isXs || user" class="-hr" />
+		<hr v-if="isXs || user" class="-hr" />
 	</div>
 </template>
 

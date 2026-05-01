@@ -12,7 +12,7 @@ import { ForumTopicModel } from '~common/forum/topic/topic.model';
 import AppNavTabList from '~common/nav/tab-list/AppNavTabList.vue';
 import AppPagination from '~common/pagination/AppPagination.vue';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { scrollTo } from '~common/scroll/scroll.service';
 import { $gettext, $ngettext } from '~common/translate/translate.service';
 
@@ -83,7 +83,7 @@ createAppRoute({
 			<div class="clearfix">
 				<br class="hidden-sm-up" />
 
-				<ul class="stat-list" :class="Screen.isXs ? 'text-center' : 'pull-left'">
+				<ul class="stat-list" :class="getScreen().isXs.value ? 'text-center' : 'pull-left'">
 					<li class="stat-big stat-big-smaller">
 						<div class="stat-big-label">Topics</div>
 						<div class="stat-big-digit">

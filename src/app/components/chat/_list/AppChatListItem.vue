@@ -3,10 +3,12 @@ import { ref } from 'vue';
 
 import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
 import AppPopper, { PopperPlacementType, PopperTriggerType } from '~common/popper/AppPopper.vue';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
 
-const InviewConfig = new ScrollInviewConfig({ margin: () => `${Screen.height / 2}px` });
+const InviewConfig = new ScrollInviewConfig({
+	margin: () => `${getScreen().screenHeight.value / 2}px`,
+});
 </script>
 
 <script lang="ts" setup>

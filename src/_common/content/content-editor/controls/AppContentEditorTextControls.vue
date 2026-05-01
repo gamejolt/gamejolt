@@ -11,10 +11,11 @@ import {
 } from '~common/content/content-editor/content-editor-controller';
 import { showContentEditorLinkModal } from '~common/content/content-editor/modals/link/link-modal.service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 
 const controller = useContentEditorController()!;
+const { isXs } = getScreen();
 
 const container = useTemplateRef('container');
 const containerWidth = ref(100);
@@ -157,8 +158,8 @@ function onClickHeading(level: 2 | 1) {
 			left: left,
 		}"
 		:class="{
-			'controls-desktop': !Screen.isXs,
-			'controls-mobile': Screen.isXs,
+			'controls-desktop': !isXs,
+			'controls-mobile': isXs,
 		}"
 	>
 		<transition name="fade">

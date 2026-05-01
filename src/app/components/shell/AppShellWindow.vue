@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, CSSProperties } from 'vue';
 
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { buildCSSPixelValue, kBorderRadiusLg } from '~styles/variables';
 
 type Props = {
@@ -14,7 +14,7 @@ const { closeCallback, avoidSidebar } = defineProps<Props>();
 
 const zeroPx = buildCSSPixelValue(0);
 const windowBorderRadius = computed(() => {
-	if (Screen.isXs) {
+	if (getScreen().isXs.value) {
 		return zeroPx;
 	}
 

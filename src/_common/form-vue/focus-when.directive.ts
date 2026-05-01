@@ -1,6 +1,6 @@
 import { Directive } from 'vue';
 
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 
 export const vAppFocusWhen: Directive<unknown, boolean | void> = {
 	mounted(el: HTMLElement, binding) {
@@ -12,7 +12,7 @@ export const vAppFocusWhen: Directive<unknown, boolean | void> = {
 };
 
 function _tryFocus(el: HTMLElement, value: boolean | void, oldValue: boolean | void | null) {
-	if (Screen.isMobile) {
+	if (getScreen().isMobile.value) {
 		return;
 	}
 

@@ -14,7 +14,7 @@ import { formatNumber } from '~common/filters/number';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppPopper from '~common/popper/AppPopper.vue';
 import { hideAllPoppers } from '~common/popper/popper.service';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { copyShareLink } from '~common/share/share.service';
 import { useSidebarStore } from '~common/sidebar/sidebar.store';
 import { useCommonStore } from '~common/store/common-store';
@@ -32,6 +32,7 @@ const { toggleLeftPane } = useAppStore();
 const { user } = useCommonStore();
 const { activeContextPane } = useSidebarStore();
 const router = useRouter();
+const { isXs, isMobile } = getScreen();
 
 const community = toRef(() => routeStore.community);
 const channel = toRef(() => routeStore.channel);
@@ -51,7 +52,7 @@ const shouldShowAbout = toRef(() => {
 	}
 
 	if (sidebarData.value) {
-		return Screen.isMobile;
+		return isMobile.value;
 	}
 
 	return false;
@@ -127,12 +128,12 @@ function copyShareUrl() {
 				<AppButton
 					icon="menu"
 					trans
-					:sparse="Screen.isXs && shouldShowAbout"
-					:circle="Screen.isXs && shouldShowAbout"
+					:sparse="isXs && shouldShowAbout"
+					:circle="isXs && shouldShowAbout"
 					@click="onClickMenu"
 				>
 					<div v-if="hasUnread" class="-unread-blip" />
-					<template v-if="!Screen.isXs || !shouldShowAbout">
+					<template v-if="!isXs || !shouldShowAbout">
 						<template v-if="channelPath">
 							{{ $gettext(`Channels`) }}
 						</template>

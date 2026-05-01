@@ -2,7 +2,7 @@
 import { computed, CSSProperties, useTemplateRef } from 'vue';
 
 import { Ruler } from '~common/ruler/ruler-service';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { useStickerStore } from '~common/sticker/sticker-store';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 
@@ -33,6 +33,7 @@ type Props = {
 const { caretElement, widthTrackerElement = null, show, fixed } = defineProps<Props>();
 
 const { chargeCost } = useStickerStore();
+const { screenWidth } = getScreen();
 
 const root = useTemplateRef('root');
 
@@ -98,7 +99,7 @@ const tooltipPosition = computed<CSSProperties | null>(() => {
 	const wantedScreenMargin = 8;
 	const tooltipWidth = hasBounds
 		? undefined
-		: Math.min(Math.max(32, Screen.width - wantedScreenMargin * 2), 350);
+		: Math.min(Math.max(32, screenWidth.value - wantedScreenMargin * 2), 350);
 
 	const result: CSSProperties = {
 		position: fixed ? 'fixed' : 'absolute',
@@ -124,7 +125,7 @@ const tooltipPosition = computed<CSSProperties | null>(() => {
 
 	let translateResult = caretLeft - wantedLeft;
 
-	const screenMarginRight = Screen.width - caretCenter - baseTooltipOffset;
+	const screenMarginRight = screenWidth.value - caretCenter - baseTooltipOffset;
 	const screenMarginLeft = caretCenter - baseTooltipOffset;
 
 	const needsNudgedRight = screenMarginLeft < wantedScreenMargin;

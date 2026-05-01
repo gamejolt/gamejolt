@@ -13,7 +13,7 @@ import { showLikersModal } from '~common/likers/modal.service';
 import { Model } from '~common/model/model.service';
 import { storeModel } from '~common/model/model-store.service';
 import { selectReactionForResource } from '~common/reaction/reaction-count';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { useCommonStore } from '~common/store/common-store';
 import { kThemeBg, kThemeBgOffset } from '~common/theme/variables';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
@@ -178,7 +178,7 @@ function showLikers() {
 				class="blip"
 				:class="{
 					'blip-active': canVote && hasUpvote,
-					mobile: Screen.isXs,
+					mobile: getScreen().isXs.value,
 				}"
 				@click="showLikers()"
 			>

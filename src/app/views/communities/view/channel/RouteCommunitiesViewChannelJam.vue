@@ -23,7 +23,7 @@ import {
 	createAppRoute,
 	defineAppRouteOptions,
 } from '~common/route/route-component';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { useCommonStore } from '~common/store/common-store';
 import { $gettext } from '~common/translate/translate.service';
 import { arrayRemove } from '~utils/array';
@@ -52,6 +52,7 @@ const RouteCommunitiesViewChannelJamEntries = defineAsyncComponent(() =>
 
 const routeStore = useCommunityRouteStore()!;
 const { user } = useCommonStore();
+const { isXs, isMobile } = getScreen();
 
 const canToggleDescription = ref(false);
 const isDescriptionOpen = ref(false);
@@ -172,7 +173,13 @@ createAppRoute({
 
 			<div class="-header">
 				<div class="-header-title">
-					<h1 v-if="channel" :class="{ 'text-center': Screen.isXs, h2: Screen.isMobile }">
+					<h1
+						v-if="channel"
+						:class="{
+							'text-center': isXs,
+							h2: isMobile,
+						}"
+					>
 						{{ channel.displayTitle }}
 					</h1>
 

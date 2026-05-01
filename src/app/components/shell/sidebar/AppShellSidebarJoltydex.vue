@@ -11,7 +11,7 @@ import AppIllustration from '~common/illustration/AppIllustration.vue';
 import { illJoltydexBrowse } from '~common/illustration/illustrations';
 import { showVendingMachineModal } from '~common/inventory/shop/vending-machine/modal.service';
 import AppLoading from '~common/loading/AppLoading.vue';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { useCommonStore } from '~common/store/common-store';
 import { kThemeBgActual } from '~common/theme/variables';
 import { $gettext } from '~common/translate/translate.service';
@@ -70,7 +70,7 @@ useEscapeStack({
 
 		// Mobile sizes should close the quest window before closing the sidebar.
 		// Desktop should close the sidebar always.
-		if (!hadWindow || Screen.isDesktop) {
+		if (!hadWindow || getScreen().isDesktop.value) {
 			toggleLeftPane('');
 		}
 	},

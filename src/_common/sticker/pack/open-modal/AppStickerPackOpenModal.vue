@@ -19,7 +19,7 @@ import AppLoading from '~common/loading/AppLoading.vue';
 import AppModal from '~common/modal/AppModal.vue';
 import { useModal } from '~common/modal/modal.service';
 import { storeModelList } from '~common/model/model-store.service';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 import AppStickerImg from '~common/sticker/AppStickerImg.vue';
 import AppStickerPack from '~common/sticker/pack/AppStickerPack.vue';
@@ -136,6 +136,7 @@ const {
 	generalStickers,
 	allStickers,
 } = useStickerStore();
+const { isXs, screenWidth, screenHeight } = getScreen();
 
 const root = useTemplateRef('root');
 const packSlice = useTemplateRef('packSlice');
@@ -156,8 +157,8 @@ const stickerAnimationDuration = computed(() =>
 
 const stickerSizing = computed(() => {
 	let size = 128;
-	if (Screen.isXs) {
-		size = Math.min(size, Math.max(Screen.width * 0.2, size / 2));
+	if (isXs.value) {
+		size = Math.min(size, Math.max(screenWidth.value * 0.2, size / 2));
 	}
 	return size;
 });
@@ -389,13 +390,13 @@ async function setStage(newStage: PackOpenStage) {
 function getBottomForRotation(angle: number) {
 	const maxAngle = 120 / 2;
 	const factor = Math.abs(angle) / maxAngle;
-	return Math.max(Screen.height * 0.15, Screen.height * 0.25 * factor);
+	return Math.max(screenHeight.value * 0.15, screenHeight.value * 0.25 * factor);
 }
 
 function getRotationForIndex(index: number) {
-	const originFromTop = Screen.height * 0.5;
+	const originFromTop = screenHeight.value * 0.5;
 	const stickerLandingFromOrigin = originFromTop * 0.5;
-	const stickerLandingHalfWidth = (Screen.width - 64) / 2;
+	const stickerLandingHalfWidth = (screenWidth.value - 64) / 2;
 	const coneEdgeLength = Math.sqrt(
 		Math.pow(stickerLandingFromOrigin, 2) + Math.pow(stickerLandingHalfWidth, 2)
 	);

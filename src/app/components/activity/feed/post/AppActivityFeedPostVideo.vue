@@ -6,7 +6,7 @@ import { ActivityFeedItem } from '~app/components/activity/feed/item-service';
 import { FiresidePostModel } from '~common/fireside/post/post-model';
 import { $viewPostVideo } from '~common/fireside/post/video/video-model';
 import { kPostItemPaddingVertical, kPostItemPaddingXsVertical } from '~common/post/post-styles';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppVideoProcessingProgress from '~common/video/processing-progress/AppVideoProcessingProgress.vue';
 import { kBorderWidthBase, kGridGutterWidth, kGridGutterWidthXs } from '~styles/variables';
 
@@ -51,7 +51,7 @@ function onVideoProcessingError(err: string | Error) {
 }
 
 const containerStyles = computed(() => {
-	if (Screen.isXs) {
+	if (getScreen().isXs.value) {
 		const hMargin = `-${kGridGutterWidthXs.value / 2}px` as const;
 		return {
 			marginLeft: hMargin,

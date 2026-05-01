@@ -19,7 +19,7 @@ import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import { showModalConfirm } from '~common/modal/confirm/confirm-service';
 import { storeModel } from '~common/model/model-store.service';
 import AppNavTabList from '~common/nav/tab-list/AppNavTabList.vue';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { ShopProductResource } from '~common/shop/product/product-model';
 import { StickerPackModel } from '~common/sticker/pack/pack.model';
 import { StickerModel } from '~common/sticker/sticker.model';
@@ -73,7 +73,7 @@ watch(
 	}
 );
 
-const useTabView = computed(() => Screen.isMobile);
+const useTabView = computed(() => getScreen().isMobile.value);
 const availableTabs = computed(() => {
 	const tabs: Section[] = [];
 	if (useTabView.value) {

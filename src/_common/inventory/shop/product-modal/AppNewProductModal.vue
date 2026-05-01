@@ -12,7 +12,7 @@ import { illPointyThing } from '~common/illustration/illustrations';
 import AppMediaItemBackdrop from '~common/media-item/backdrop/AppMediaItemBackdrop.vue';
 import AppModal from '~common/modal/AppModal.vue';
 import { useModal } from '~common/modal/modal.service';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 import { useCommonStore } from '~common/store/common-store';
 import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
@@ -27,6 +27,7 @@ const { product } = defineProps<Props>();
 
 const { user: myUser } = useCommonStore();
 const modal = useModal()!;
+const { screenHeight, isXs } = getScreen();
 
 const equipFrameState = ref<'done' | 'processing' | 'standby'>('standby');
 
@@ -70,7 +71,7 @@ function getStyles(ratio: number): CSSProperties {
 	return {
 		...styleMaxWidthForOptions({
 			ratio,
-			maxHeight: Screen.height * 0.4,
+			maxHeight: screenHeight.value * 0.4,
 			maxWidth: 240,
 		}),
 		width: `100%`,
@@ -87,7 +88,7 @@ function getStyles(ratio: number): CSSProperties {
 					direction: `column`,
 				}),
 				...styleAbsoluteFill(),
-				padding: Screen.isXs ? `16px` : `32px`,
+				padding: isXs ? `16px` : `32px`,
 			}"
 		>
 			<h2 class="modal-title text-center" :style="{ margin: 0 }">

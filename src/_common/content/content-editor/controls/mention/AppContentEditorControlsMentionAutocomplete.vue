@@ -18,7 +18,7 @@ import {
 import ContentEditorMentionCache from '~common/content/content-editor/controls/mention/cache.service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppLoading from '~common/loading/AppLoading.vue';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { $gettext } from '~common/translate/translate.service';
 import AppUserVerifiedTick from '~common/user/AppUserVerifiedTick.vue';
 import { UserModel } from '~common/user/user.model';
@@ -29,6 +29,7 @@ type Props = {
 };
 const { canShow } = defineProps<Props>();
 const controller = useContentEditorController()!;
+const { isXs, screenHeight } = getScreen();
 
 const query = ref(''); // Currently active suggestion query
 const selectedIndex = ref(0);
@@ -53,7 +54,7 @@ const visible = computed(() => controller.capabilities.hasMentionControls && can
 
 // If the text control is more than 50% down the page, open the control
 // above ("inverted")
-const isInverted = computed(() => (controller.window.top ?? 0) / Screen.height >= 0.5);
+const isInverted = computed(() => (controller.window.top ?? 0) / screenHeight.value >= 0.5);
 
 const styles = computed<CSSProperties>(() => {
 	const {
@@ -65,7 +66,7 @@ const styles = computed<CSSProperties>(() => {
 	return {
 		top: isInverted.value ? 'auto' : offset,
 		bottom: isInverted.value ? offset : 'auto',
-		left: Screen.isXs ? `-${left}px` : 'auto',
+		left: isXs.value ? `-${left}px` : 'auto',
 		visibility: showControl.value ? 'visible' : 'hidden',
 	};
 });

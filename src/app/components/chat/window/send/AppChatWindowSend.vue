@@ -21,7 +21,7 @@ import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
 import AppFormControlContent from '~common/form-vue/controls/AppFormControlContent.vue';
 import { validateContentMaxLength } from '~common/form-vue/validators';
 import { FormValidatorContentNoMediaUpload } from '~common/form-vue/validators/content_no_media_upload';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { useThemeStore } from '~common/theme/theme.store';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import { $gettext } from '~common/translate/translate.service';
@@ -48,6 +48,7 @@ const emit = defineEmits<{
 
 const { isDark } = useThemeStore();
 const { chatUnsafe: chat } = useGridStore();
+const { isXs, isMobile, isDesktop } = getScreen();
 
 useEscapeStack({
 	onEscape: () => cancelEditing(),
@@ -83,7 +84,7 @@ const contentEditorTempResourceContextData = computed(() => {
 	return undefined;
 });
 
-const shouldShiftEditor = computed(() => Screen.isXs && isEditorFocused);
+const shouldShiftEditor = computed(() => isXs.value && isEditorFocused);
 
 const hasContent = computed(() => {
 	const { content } = form.formModel;
@@ -422,11 +423,11 @@ function disableTypingTimeout() {
 							:capabilities="capabilities"
 							:temp-resource-context-data="contentEditorTempResourceContextData"
 							:placeholder="$gettext('Send a message')"
-							:single-line-mode="Screen.isDesktop"
+							:single-line-mode="isDesktop"
 							:validators="[validateContentMaxLength(maxContentLength)]"
 							:max-height="160"
 							:display-rules="displayRules"
-							:autofocus="!Screen.isMobile"
+							:autofocus="!isMobile"
 							:model-data="
 								room.messageEditing
 									? {

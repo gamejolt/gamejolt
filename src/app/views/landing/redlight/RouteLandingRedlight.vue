@@ -7,7 +7,7 @@ import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppLinkExternal from '~common/link/AppLinkExternal.vue';
 import { Meta } from '~common/meta/meta-service';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppSocialFacebookLike from '~common/social/facebook/like/AppSocialFacebookLike.vue';
 import AppSocialTwitterShare from '~common/social/twitter/share/AppSocialTwitterShare.vue';
 import { useCommonStore } from '~common/store/common-store';
@@ -60,6 +60,7 @@ export default {
 
 <script lang="ts" setup>
 const { user } = useCommonStore();
+const { isXs } = getScreen();
 
 const chosenHandle = handles[getRandomInt(0, handles.length)];
 const chosenSlogan = slogans[getRandomInt(0, slogans.length)];
@@ -104,8 +105,8 @@ createAppRoute({
 			<div class="container">
 				<h1 class="anim-fade-in-down">
 					<img
-						:width="1068 / (Screen.isXs ? 4 : 2)"
-						:height="108 / (Screen.isXs ? 4 : 2)"
+						:width="1068 / (isXs ? 4 : 2)"
+						:height="108 / (isXs ? 4 : 2)"
 						:src="assetPaths['./logo.png']"
 						alt="Redlight"
 					/>

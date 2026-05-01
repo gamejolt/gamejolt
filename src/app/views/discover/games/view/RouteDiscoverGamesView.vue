@@ -58,7 +58,7 @@ import { LinkedAccountModel } from '~common/linked-account/linked-account.model'
 import { storeModelList } from '~common/model/model-store.service';
 import { findInRegistry } from '~common/registry/registry.service';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { useCommonStore } from '~common/store/common-store';
 import { EventSubscription } from '~common/system/event/event-topic';
 import { useThemeStore } from '~common/theme/theme.store';
@@ -562,7 +562,7 @@ createAppRoute({
 					<AppDiscoverGamesViewControls v-if="!configGuestNoAuthRequired.value" />
 				</template>
 
-				<h1 :class="{ h2: Screen.isMobile }">
+				<h1 :class="{ h2: getScreen().isMobile.value }">
 					<RouterLink :to="{ name: 'discover.games.view.overview' }">
 						{{ game.title }}
 					</RouterLink>

@@ -4,7 +4,7 @@ import { computed } from 'vue';
 import { useAppStore } from '~app/store';
 import { formatNumber } from '~common/filters/number';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { useSidebarStore } from '~common/sidebar/sidebar.store';
 import { kThemeGjOverlayNotice } from '~common/theme/variables';
 import { styleWhen } from '~styles/mixins';
@@ -44,7 +44,7 @@ const notificationCountText = computed(() => {
 // We want a context indicator only for non-control items that are the current
 // active item (selected or active route).
 const hasContextIndicator = computed(
-	() => !Screen.isLg && isActive && !isControl && activeContextPane.value
+	() => !getScreen().isLg.value && isActive && !isControl && activeContextPane.value
 );
 
 // There can be two active items between the cbar controls and normal cbar

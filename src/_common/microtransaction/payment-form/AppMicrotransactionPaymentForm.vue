@@ -21,7 +21,7 @@ import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
 import { Navigate } from '~common/navigate/navigate.service';
 import { OrderPaymentMethod } from '~common/order/payment/payment.model';
 import AppPopper from '~common/popper/AppPopper.vue';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { SellableModel } from '~common/sellable/sellable.model';
 import { useCommonStore } from '~common/store/common-store';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
@@ -45,6 +45,7 @@ type Props = {
 const { sellable } = defineProps<Props>();
 
 const { user } = useCommonStore();
+const { isXs } = getScreen();
 
 const isBootstrapped = ref(false);
 const isLoadingMethods = ref(true);
@@ -326,8 +327,8 @@ async function doCheckout(setupData: any, chargeData: any) {
 				<div
 					v-if="checkoutStep === 'primary'"
 					:class="{
-						'form-horizontal': !Screen.isXs,
-						row: Screen.isXs,
+						'form-horizontal': !isXs,
+						row: isXs,
 					}"
 				>
 					<AppFormGroup name="amount" label-class="col-sm-4">

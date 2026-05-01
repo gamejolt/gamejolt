@@ -22,14 +22,16 @@ import { illEndOfFeed } from '~common/illustration/illustrations';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppLoading from '~common/loading/AppLoading.vue';
 import { kPostItemPaddingVertical, kPostItemPaddingXsVertical } from '~common/post/post-styles';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
 import { getScrollOffsetTop } from '~common/scroll/scroll.service';
 import { $gettext } from '~common/translate/translate.service';
 import { styleWhen } from '~styles/mixins';
 
 const InviewConfigShowNew = new ScrollInviewConfig({ margin: () => `-${getScrollOffsetTop()}px` });
-const InviewConfigLoadMore = new ScrollInviewConfig({ margin: () => `${Screen.height * 1.5}px` });
+const InviewConfigLoadMore = new ScrollInviewConfig({
+	margin: () => `${getScreen().screenHeight.value * 1.5}px`,
+});
 
 export type ActivityFeedInterface = ReturnType<typeof createActivityFeedInterface>;
 
@@ -76,6 +78,7 @@ const emit = defineEmits<{
 }>();
 
 const { shouldShow: globalShouldShowAds } = useAdStore();
+const { isMobile } = getScreen();
 
 provide(ActivityFeedKey, feed);
 
@@ -220,7 +223,7 @@ function shouldShowAd(index: number) {
 						:native-post="i === 1"
 						class-override="well fill-offset full-bleed-xs text-center"
 						:style-override="
-							Screen.isMobile
+							isMobile
 								? {
 										marginTop: `-${kPostItemPaddingXsVertical.px}`,
 										marginBottom: 0,
@@ -248,7 +251,11 @@ function shouldShowAd(index: number) {
 				<AppLoading
 					v-if="feed.isLoadingMore"
 					class="-bottom-loading loading-centered"
-					:style="styleWhen(Screen.isMobile, { marginTop: kPostItemPaddingVertical.px })"
+					:style="
+						styleWhen(isMobile, {
+							marginTop: kPostItemPaddingVertical.px,
+						})
+					"
 				/>
 			</RouterLink>
 

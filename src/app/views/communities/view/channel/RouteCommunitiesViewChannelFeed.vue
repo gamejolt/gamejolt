@@ -23,7 +23,7 @@ import { FiresidePostModel } from '~common/fireside/post/post-model';
 import AppIllustration from '~common/illustration/AppIllustration.vue';
 import { illNoComments } from '~common/illustration/illustrations';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { useCommonStore } from '~common/store/common-store';
 import { $gettext } from '~common/translate/translate.service';
 
@@ -43,6 +43,7 @@ const { communityStates } = useAppStore();
 const { grid } = useGridStore();
 const { user } = useCommonStore();
 const route = useRoute();
+const { isMobile, isDesktop } = getScreen();
 
 const feed = ref(null) as Ref<ActivityFeedView | null>;
 const isBootstrapped = ref(false);
@@ -181,12 +182,12 @@ const appRoute = createAppRoute({
 <template>
 	<AppCommunityPageContainer>
 		<template #default>
-			<h1 class="section-header" :class="{ 'h2 -text-overflow': Screen.isMobile }">
+			<h1 class="section-header" :class="{ 'h2 -text-overflow': isMobile }">
 				<template v-if="channel === routeStore.allChannel">
 					{{ $gettext(`All Posts`) }}
 				</template>
 				<template v-else-if="channel">{{ channel.displayTitle }}</template>
-				<small v-if="Screen.isDesktop">{{ ' ' }} in {{ community.name }}</small>
+				<small v-if="isDesktop">{{ ' ' }} in {{ community.name }}</small>
 			</h1>
 
 			<div v-if="channel && channel.visibility === 'draft'">

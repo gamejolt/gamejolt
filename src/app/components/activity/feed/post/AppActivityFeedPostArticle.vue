@@ -8,7 +8,7 @@ import AppContentViewer from '~common/content/content-viewer/AppContentViewer.vu
 import { FiresidePostModel, loadArticleIntoPost } from '~common/fireside/post/post-model';
 import AppLoading from '~common/loading/AppLoading.vue';
 import { kPostItemPaddingContainer } from '~common/post/post-styles';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import {
 	getElementOffsetTopFromContext,
 	getScrollTop,
@@ -23,6 +23,7 @@ type Props = {
 const { item, post } = defineProps<Props>();
 
 const feed = useActivityFeed()!;
+const { isDesktop, screenHeight } = getScreen();
 
 const rootElem = useTemplateRef('rootElem');
 const isToggling = ref(false);
@@ -65,7 +66,7 @@ async function collapse() {
 	// We will scroll to the bottom of the element minus some extra padding.
 	// This keeps the element in view a bit.
 	const elementOffset = getElementOffsetTopFromContext(rootElem.value);
-	const targetTop = elementOffset - Screen.height * 0.25;
+	const targetTop = elementOffset - screenHeight.value * 0.25;
 
 	// Only if we're past where we would scroll.
 	if (getScrollTop() > elementOffset) {
@@ -77,7 +78,7 @@ async function collapse() {
 
 const pageCutStyles = computed(() => {
 	return {
-		...styleWhen(Screen.isDesktop, {
+		...styleWhen(isDesktop.value, {
 			marginLeft: `-${kPostItemPaddingContainer.px}`,
 			marginRight: `-${kPostItemPaddingContainer.px}`,
 		}),

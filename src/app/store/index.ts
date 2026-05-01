@@ -29,7 +29,7 @@ import { registerContentFocusWatcher as registerFocusWatcher } from '~common/con
 import { showSuccessGrowl } from '~common/growls/growls.service';
 import { showModalConfirm } from '~common/modal/confirm/confirm-service';
 import { getCurrentRouter } from '~common/route/current-router-service';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { SidebarStore } from '~common/sidebar/sidebar.store';
 import { StickerStore } from '~common/sticker/sticker-store';
 import { CommonStore } from '~common/store/common-store';
@@ -68,6 +68,8 @@ export function createAppStore({
 	getQuestStore: () => QuestStore;
 	stickerStore: StickerStore;
 }) {
+	const { isXs, isLg } = getScreen();
+
 	const isBootstrapped = ref(false);
 	const _bootstrapResolver = ref(null) as Ref<((value?: any) => void) | null>;
 	const tillStoreBootstrapped = ref(new Promise(resolve => (_bootstrapResolver.value = resolve)));
@@ -85,7 +87,7 @@ export function createAppStore({
 
 	const mobileCbarShowing = ref(false);
 	const lastOpenLeftPane = ref<Exclude<TogglableLeftPane, 'context'>>(
-		Screen.isXs ? 'mobile' : 'library'
+		isXs.value ? 'mobile' : 'library'
 	);
 	const overlayedLeftPane = ref<TogglableLeftPane>('');
 	const overlayedRightPane = ref('');
@@ -114,11 +116,11 @@ export function createAppStore({
 
 		// The cbar is pretty empty without a user and active context pane,
 		// so we want to hide it if those conditions are met.
-		if (!commonStore.user.value && !sidebarStore.activeContextPane.value && !Screen.isXs) {
+		if (!commonStore.user.value && !sidebarStore.activeContextPane.value && !isXs.value) {
 			return false;
 		}
 
-		return mobileCbarShowing.value || !Screen.isXs;
+		return mobileCbarShowing.value || !isXs.value;
 	});
 
 	/**
@@ -129,7 +131,7 @@ export function createAppStore({
 	const visibleLeftPane = computed<TogglableLeftPane>(() => {
 		// If there's no other left-pane pane opened, Large breakpoint should
 		// always show the 'context' pane if there is a context component set.
-		if (Screen.isLg && sidebarStore.activeContextPane.value && !overlayedLeftPane.value) {
+		if (isLg.value && sidebarStore.activeContextPane.value && !overlayedLeftPane.value) {
 			return 'context';
 		}
 
@@ -305,7 +307,7 @@ export function createAppStore({
 		if (
 			(!!overlayedRightPane.value || !!overlayedLeftPane.value) &&
 			// We only want backdrops on the Lg breakpoint if the pane isn't context.
-			!(Screen.isLg && overlayedLeftPane.value === 'context')
+			!(isLg.value && overlayedLeftPane.value === 'context')
 		) {
 			if (_backdrop.value) {
 				return;
@@ -333,7 +335,7 @@ export function createAppStore({
 		// We use this to scooch the footer over to make room for the sidebar
 		// content, but we only care about that when the sidebar isn't behaving
 		// as an overlay - which is currently only on the Lg breakpoint.
-		if (Screen.isLg) {
+		if (isLg.value) {
 			hasContentSidebar.value = isShowing;
 		} else {
 			hasContentSidebar.value = false;

@@ -24,7 +24,7 @@ import { validateMaxLength, validateMinLength } from '~common/form-vue/validator
 import AppLoading from '~common/loading/AppLoading.vue';
 import { showModalConfirm } from '~common/modal/confirm/confirm-service';
 import { storeModelList } from '~common/model/model-store.service';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 import { $gettext } from '~common/translate/translate.service';
@@ -270,7 +270,7 @@ async function leaveRoom() {
 					small
 				>
 					<AppFormControlToggleButtonGroup
-						:direction="Screen.isMobile ? 'row' : 'column'"
+						:direction="getScreen().isMobile.value ? 'row' : 'column'"
 					>
 						<AppFormControlToggleButton
 							v-for="{ label, value } of notificationSettings"

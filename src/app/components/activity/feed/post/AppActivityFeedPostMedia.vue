@@ -14,7 +14,7 @@ import {
 	kPostItemPaddingXs,
 	kPostItemPaddingXsVertical,
 } from '~common/post/post-styles';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 import { kThemeBgActual } from '~common/theme/variables';
 import AppTouch, { AppTouchInput } from '~common/touch/AppTouch.vue';
@@ -29,6 +29,7 @@ type Props = {
 const { item, post, canPlaceSticker = false } = defineProps<Props>();
 
 const feed = useActivityFeed()!;
+const { isXs } = getScreen();
 
 const root = ref() as Ref<HTMLElement>;
 const slider = ref() as Ref<HTMLElement>;
@@ -110,7 +111,7 @@ function onClickFullscreen() {
 }
 
 const vPadding = computed(() =>
-	Screen.isXs ? kPostItemPaddingXsVertical : kPostItemPaddingVertical
+	isXs.value ? kPostItemPaddingXsVertical : kPostItemPaddingVertical
 );
 </script>
 
@@ -133,10 +134,10 @@ const vPadding = computed(() =>
 				:style="{
 					display: `block`,
 					overflow: `hidden`,
-					marginLeft: Screen.isXs
+					marginLeft: isXs
 						? `-${kPostItemPaddingXs.px}`
 						: `-${kPostItemPaddingContainer.px}`,
-					marginRight: Screen.isXs
+					marginRight: isXs
 						? `-${kPostItemPaddingXs.px}`
 						: `-${kPostItemPaddingContainer.px}`,
 				}"

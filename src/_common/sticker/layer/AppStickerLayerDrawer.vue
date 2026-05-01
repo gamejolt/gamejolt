@@ -18,7 +18,7 @@ import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
 import { vAppObserveDimensions } from '~common/observe-dimensions/observe-dimensions.directive';
 import AppPageIndicatorCompact from '~common/pagination/AppPageIndicatorCompact.vue';
 import { Ruler } from '~common/ruler/ruler-service';
-import { onScreenResize, Screen } from '~common/screen/screen-service';
+import { getScreen, onScreenResize } from '~common/screen/screen-service';
 import AppScrollScroller from '~common/scroll/AppScrollScroller.vue';
 import AppStickerLayerDrawerItem from '~common/sticker/layer/AppStickerLayerDrawerItem.vue';
 import { StickerModel, StickerStack } from '~common/sticker/sticker.model';
@@ -60,6 +60,7 @@ const {
 	drawerNumRows,
 	drawerCollapsedHeight,
 } = stickerStore;
+const { isXs, isPointerMouse } = getScreen();
 
 useEscapeStack({
 	onEscape: () => closeDrawer(),
@@ -80,7 +81,7 @@ const slider = useTemplateRef('slider');
 
 const showPlaceButton = toRef(() => !!placedItem.value);
 const hasStickers = toRef(() => !!items.value.length);
-const topBarMargin = toRef(() => (Screen.isXs ? `0px` : `4px`));
+const topBarMargin = toRef(() => (isXs.value ? `0px` : `4px`));
 const creatorSize = computed(() => Math.max(drawerStickerSize.value * 0.25, 16));
 const drawerMaxHeight = computed(
 	() =>
@@ -115,7 +116,7 @@ const stickerSheets = computed(() => {
 	return sheets;
 });
 const maxStickersPerSheet = computed(() => {
-	if (Screen.isPointerMouse) {
+	if (isPointerMouse.value) {
 		return null;
 	}
 	return _stickersPerRow.value * 2;
@@ -132,15 +133,15 @@ const styleOuter = computed(() => {
 		overflow: `hidden`,
 		// Max-width is unset when Xs (so it can bleed and span the whole
 		// width), with margins of 64px on other breakpoints.
-		maxWidth: Screen.isXs ? 'unset' : `calc(100% - 64px)`,
-		...styleWhen(Screen.isPointerMouse, {
+		maxWidth: isXs.value ? 'unset' : `calc(100% - 64px)`,
+		...styleWhen(isPointerMouse.value, {
 			// Max-height of 2 sticker rows
 			maxHeight: drawerMaxHeight.value,
 		}),
-		...styleWhen(Screen.isXs, {
+		...styleWhen(isXs.value, {
 			width: `100%`,
 		}),
-		...styleWhen(!Screen.isXs, {
+		...styleWhen(!isXs.value, {
 			borderTopLeftRadius: kBorderRadiusLg.px,
 			borderTopRightRadius: kBorderRadiusLg.px,
 		}),
@@ -308,14 +309,14 @@ function _updateSliderOffset(extraOffsetPx = 0) {
 		ref="root"
 		:style="{
 			position: `fixed`,
-			left: Screen.isXs ? 0 : `64px`,
+			left: isXs ? 0 : `64px`,
 			right: 0,
 			bottom: 0,
 			display: `flex`,
 			justifyContent: `center`,
 			transition: `transform 250ms ${kStrongEaseOut}`,
 			transform: `translateY(0)`,
-			...styleWhen(Screen.isPointerMouse, {
+			...styleWhen(isPointerMouse, {
 				// Max-height of 2 sticker rows
 				maxHeight: drawerMaxHeight,
 			}),
@@ -342,7 +343,7 @@ function _updateSliderOffset(extraOffsetPx = 0) {
 					gap: `12px`,
 					padding: `12px`,
 					position: `relative`,
-					...styleWhen(!Screen.isXs, {
+					...styleWhen(!isXs, {
 						flex: 3,
 						maxWidth: `calc(min(100% - 64px, 500px))`,
 					}),
@@ -361,10 +362,10 @@ function _updateSliderOffset(extraOffsetPx = 0) {
 						zIndex: -1,
 						left: 0,
 						maxWidth: `100%`,
-						...styleWhen(Screen.isXs, {
+						...styleWhen(isXs, {
 							right: 0,
 						}),
-						...styleWhen(!Screen.isXs, styleBorderRadiusLg),
+						...styleWhen(!isXs, styleBorderRadiusLg),
 					}"
 					@click="overflowTopBarText = !overflowTopBarText"
 				>
@@ -435,12 +436,12 @@ function _updateSliderOffset(extraOffsetPx = 0) {
 		>
 			<AppLoadingFade :is-loading="isLoading">
 				<component
-					:is="Screen.isPointerMouse ? AppScrollScroller : 'div'"
+					:is="isPointerMouse ? AppScrollScroller : 'div'"
 					:style="{
-						minWidth: Screen.isXs ? 'unset' : '400px',
+						minWidth: isXs ? 'unset' : '400px',
 						minHeight: `${drawerStickerSize}px`,
 						paddingBottom: drawerPadding.px,
-						...styleWhen(Screen.isPointerMouse, {
+						...styleWhen(isPointerMouse, {
 							// Max-height of 2 sticker rows
 							maxHeight: drawerMaxHeight,
 						}),
@@ -448,12 +449,12 @@ function _updateSliderOffset(extraOffsetPx = 0) {
 				>
 					<AppLoadingFade :is-loading="isLoading">
 						<component
-							:is="Screen.isPointerMouse ? 'div' : AppTouch"
+							:is="isPointerMouse ? 'div' : AppTouch"
 							:style="{
 								height: `100%`,
 							}"
 							v-bind="
-								Screen.isPointerMouse
+								isPointerMouse
 									? {}
 									: {
 											'pan-options': { threshold: 16 },
@@ -467,7 +468,7 @@ function _updateSliderOffset(extraOffsetPx = 0) {
 								ref="slider"
 								:style="{
 									transition: `transform 300ms ${kStrongEaseOut}`,
-									...styleWhen(!Screen.isPointerMouse, {
+									...styleWhen(!isPointerMouse, {
 										whiteSpace: `nowrap`,
 										display: `flex`,
 										flexWrap: `nowrap`,
@@ -486,7 +487,7 @@ function _updateSliderOffset(extraOffsetPx = 0) {
 											gap: `${drawerStickerSpacing}px`,
 											justifyContent: `space-between`,
 											flexWrap: `wrap`,
-											...styleWhen(!Screen.isPointerMouse, {
+											...styleWhen(!isPointerMouse, {
 												display: `inline-flex`,
 												flex: `none`,
 											}),
@@ -533,7 +534,7 @@ function _updateSliderOffset(extraOffsetPx = 0) {
 								</template>
 							</div>
 						</component>
-						<div v-if="!Screen.isPointerMouse" :style="{ marginTop: `8px` }">
+						<div v-if="!isPointerMouse" :style="{ marginTop: `8px` }">
 							<AppPageIndicatorCompact
 								:count="stickerSheets.length"
 								:current="sheetPage"

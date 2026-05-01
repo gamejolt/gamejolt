@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { Environment } from '~common/environment/environment.service';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { UserModel } from '~common/user/user.model';
 import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
 import { styleWhen } from '~styles/mixins';
@@ -9,13 +9,15 @@ type Props = {
 	user: UserModel | null | undefined;
 };
 const { user } = defineProps<Props>();
+
+const { isXs, isDesktop } = getScreen();
 </script>
 
 <template>
 	<div
 		class="container"
 		:style="{
-			...styleWhen(Screen.isXs, {
+			...styleWhen(isXs, {
 				paddingLeft: 0,
 				paddingRight: 0,
 			}),
@@ -49,7 +51,7 @@ const { user } = defineProps<Props>();
 							/>
 
 							<span
-								v-if="Screen.isDesktop"
+								v-if="isDesktop"
 								:style="{
 									display: `inline-block`,
 									marginLeft: `10px`,

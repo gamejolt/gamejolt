@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { useAdStore } from '~common/ad/ad-store';
 import AppAdWidget from '~common/ad/widget/AppAdWidget.vue';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppScrollAffix from '~common/scroll/AppScrollAffix.vue';
 import { kLayerAds } from '~styles/variables';
 
@@ -17,12 +17,13 @@ type Props = {
 const { showLeft, showRight, minWidth = 2000 } = defineProps<Props>();
 
 const { shouldShow } = useAdStore();
+const { screenWidth } = getScreen();
 </script>
 
 <template>
 	<div :style="{ position: `relative` }">
 		<div
-			v-if="showLeft && shouldShow && Screen.width >= minWidth"
+			v-if="showLeft && shouldShow && screenWidth >= minWidth"
 			:style="{
 				position: `absolute`,
 				left: `20px`,
@@ -38,7 +39,7 @@ const { shouldShow } = useAdStore();
 		</div>
 
 		<div
-			v-if="showRight && shouldShow && Screen.width >= minWidth"
+			v-if="showRight && shouldShow && screenWidth >= minWidth"
 			:style="{
 				position: `absolute`,
 				right: `20px`,

@@ -9,7 +9,7 @@ import { illChargeOrbEmpty } from '~common/animation/slideshow/sheets';
 import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 import AppStickerChargeTooltip from '~common/sticker/charge/AppStickerChargeTooltip.vue';
 import AppStickerChargeTooltipCaret from '~common/sticker/charge/AppStickerChargeTooltipCaret.vue';
@@ -55,6 +55,7 @@ const showTooltip = ref(false);
 
 const stickerStore = useStickerStore();
 const { currentCharge, chargeLimit, canChargeSticker } = stickerStore;
+const { isPointerMouse } = getScreen();
 
 const gridStyling = computed<CSSProperties>(() => {
 	return {
@@ -70,7 +71,7 @@ const showFullyChargedText = computed(() => allowFullyChargedText && canChargeSt
 <template>
 	<AppStickerChargeTooltipHandler
 		trigger="focus"
-		:disabled="Screen.isPointerMouse"
+		:disabled="isPointerMouse"
 		:style="{
 			'--padding-v': paddingV + 'px',
 			'--padding-h': paddingH + 'px',
@@ -94,7 +95,7 @@ const showFullyChargedText = computed(() => allowFullyChargedText && canChargeSt
 				<div :style="{ width: headerCharge ? '100%' : undefined }">
 					<AppStickerChargeTooltipHandler
 						trigger="hover"
-						:disabled="!Screen.isPointerMouse"
+						:disabled="!isPointerMouse"
 						inline
 						@show="showTooltip = true"
 						@hide="showTooltip = false"

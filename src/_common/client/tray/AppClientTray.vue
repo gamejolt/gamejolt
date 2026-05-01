@@ -9,7 +9,7 @@ import { computed, onMounted, onUnmounted, Ref, ref } from 'vue';
 
 import { Client } from '~common/client/client.service';
 import { Navigate } from '~common/navigate/navigate.service';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { $gettext } from '~common/translate/translate.service';
 </script>
 
@@ -70,7 +70,7 @@ function createTray() {
 		title: 'Game Jolt Client',
 		icon: path.resolve(
 			Client.nwStaticAssetsDir,
-			`client-tray-icon${Screen.isHiDpi ? '-2x' : ''}.png`
+			`client-tray-icon${getScreen().isHiDpi.value ? '-2x' : ''}.png`
 		),
 	});
 

@@ -8,7 +8,7 @@ import { routeUrlLandingHelpRedirect } from '~app/views/landing/help/help.route'
 import { trackAppPromotionClick } from '~common/analytics/analytics.service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppLinkExternal from '~common/link/AppLinkExternal.vue';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 import AppUserCreatorBadge from '~common/user/creator/AppUserCreatorBadge.vue';
 
@@ -17,7 +17,7 @@ defineProps</* @vue-ignore */ Pick<HTMLAttributes, 'onClick'>>();
 
 <template>
 	<div id="shell-sidebar-mobile">
-		<ul v-if="Screen.isXs" class="shell-nav">
+		<ul v-if="getScreen().isXs.value" class="shell-nav">
 			<li>
 				<RouterLink :to="{ name: 'discover.home' }" active-class="active">
 					<span class="shell-nav-icon">

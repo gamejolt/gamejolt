@@ -4,7 +4,7 @@ import { computed, CSSProperties } from 'vue';
 import { ShopProductBaseForm } from '~app/views/dashboard/shop/product/_forms/FormShopProductBase.vue';
 import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
 import { AvatarFrameModel, DefaultAvatarFrameScale } from '~common/avatar/frame.model';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppScrollScroller from '~common/scroll/AppScrollScroller.vue';
 import { ShopProductModel, ShopProductResource } from '~common/shop/product/product-model';
 import { StickerPackRatio } from '~common/sticker/pack/AppStickerPack.vue';
@@ -20,6 +20,8 @@ type Props = {
 	imgUrl?: string;
 };
 const { resource, form, model, imgUrl } = defineProps<Props>();
+
+const { screenWidth, screenHeight } = getScreen();
 
 const backgroundData = computed(() => {
 	if (resource !== ShopProductResource.Background) {
@@ -122,7 +124,7 @@ const gridAreaSizes = {
 				!backgroundData?.tileSize,
 				styleMaxWidthForOptions({
 					ratio: imgData.placeholderRatio,
-					maxHeight: Math.max(250, Screen.height * 0.3),
+					maxHeight: Math.max(250, screenHeight * 0.3),
 				})
 			),
 		}"
@@ -172,7 +174,7 @@ const gridAreaSizes = {
 			:style="multiSizeGridStyles"
 		>
 			<template v-for="gridArea in ['a', 'b', 'c', 'd'] as const" :key="gridArea">
-				<div v-if="gridArea !== 'd' || Screen.width > 500" :style="{ gridArea }">
+				<div v-if="gridArea !== 'd' || screenWidth > 500" :style="{ gridArea }">
 					<div :style="imgData.styles">
 						<AppAspectRatio
 							:ratio="1"

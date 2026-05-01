@@ -18,7 +18,7 @@ import {
 	PostHeaderStyles,
 	PostHeaderTimeStyles,
 } from '~common/post/post-styles';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppTimeAgo from '~common/time/AppTimeAgo.vue';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 import AppUserCardHover from '~common/user/card/AppUserCardHover.vue';
@@ -130,7 +130,7 @@ const shouldShowFollow = computed(() => {
 			<AppUserFollowButton
 				v-if="shouldShowFollow"
 				:user="user"
-				:sm="Screen.isXs"
+				:sm="getScreen().isXs.value"
 				:overlay="overlay"
 				hide-count
 				:location="followLocation"

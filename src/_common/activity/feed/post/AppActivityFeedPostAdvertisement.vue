@@ -18,7 +18,7 @@ import {
 	PostHeaderContentStyles,
 	PostHeaderStyles,
 } from '~common/post/post-styles';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
 import { $gettext } from '~common/translate/translate.service';
 import { styleAbsoluteFill } from '~styles/mixins';
@@ -42,7 +42,7 @@ defineProps<Props>();
 const emit = defineEmits<{ click: []; inview: [] }>();
 
 const vPadding = computed(() =>
-	Screen.isXs ? kPostItemPaddingXsVertical : kPostItemPaddingVertical
+	getScreen().isXs.value ? kPostItemPaddingXsVertical : kPostItemPaddingVertical
 );
 </script>
 

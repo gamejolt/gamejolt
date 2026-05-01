@@ -23,7 +23,7 @@ import AppModalFloatingHeader from '~common/modal/AppModalFloatingHeader.vue';
 import { useModal } from '~common/modal/modal.service';
 import { storeModel, storeModelList } from '~common/model/model-store.service';
 import AppOnHover from '~common/on/AppOnHover.vue';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 import { StickerPackRatio } from '~common/sticker/pack/AppStickerPack.vue';
 import { StickerPackModel } from '~common/sticker/pack/pack.model';
@@ -82,6 +82,7 @@ const { userId } = defineProps<Props>();
 
 const { isDark } = useThemeStore();
 const { user: authUser, coinBalance, joltbuxBalance } = useCommonStore();
+const { isXs, screenHeight } = getScreen();
 
 const modal = useModal()!;
 
@@ -252,7 +253,7 @@ async function purchaseProduct(sale: InventoryShopProductSaleModel) {
 
 // Make the vending machine content full-height for phone sizes.
 const containerStyles = computed<CSSProperties>(() =>
-	styleWhen(Screen.isXs, {
+	styleWhen(isXs.value, {
 		display: `flex`,
 		flexDirection: `column`,
 		minHeight: `100vh`,
@@ -263,7 +264,7 @@ const containerStyles = computed<CSSProperties>(() =>
 const loadingFadeStyles = computed<CSSProperties>(() => {
 	return {
 		...styleBorderRadiusLg,
-		...styleWhen(Screen.isXs, {
+		...styleWhen(isXs.value, {
 			flex: `auto`,
 			display: `flex`,
 			flexDirection: `column`,
@@ -614,7 +615,7 @@ const rewardPackImageSize = run(() => {
 						:style="{
 							...styleMaxWidthForOptions({
 								ratio: 4,
-								maxHeight: Math.max(Screen.height * 0.15, 80),
+								maxHeight: Math.max(screenHeight * 0.15, 80),
 							}),
 							width: `100%`,
 						}"

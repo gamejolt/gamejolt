@@ -16,7 +16,7 @@ import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import { Meta } from '~common/meta/meta-service';
 import AppPagination from '~common/pagination/AppPagination.vue';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { scrollTo } from '~common/scroll/scroll.service';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 import { $gettext } from '~common/translate/translate.service';
@@ -114,7 +114,7 @@ const noResults = computed(() => {
 	<AppAdTakeoverBackground />
 
 	<AppPageHeader should-affix-nav :hide-nav="!hasSearch">
-		<template v-if="Screen.isXs">
+		<template v-if="getScreen().isXs.value">
 			<label>
 				<AppTranslate>Enter your search</AppTranslate>
 			</label>

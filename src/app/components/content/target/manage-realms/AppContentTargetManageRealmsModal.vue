@@ -16,7 +16,7 @@ import AppModalFloatingHeader from '~common/modal/AppModalFloatingHeader.vue';
 import { useModal } from '~common/modal/modal.service';
 import AppRealmFullCard, { REALM_CARD_RATIO } from '~common/realm/AppRealmFullCard.vue';
 import { RealmModel } from '~common/realm/realm-model';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppScrollScroller, { createScroller } from '~common/scroll/AppScrollScroller.vue';
 import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
@@ -28,7 +28,9 @@ type RealmSearchFeed = ReturnType<typeof createRealmSearchFeed>;
 const COL_COUNT_BASE = 4;
 const COL_COUNT_XS = 2;
 
-const InviewConfig = new ScrollInviewConfig({ margin: () => `${Screen.height}px` });
+const InviewConfig = new ScrollInviewConfig({
+	margin: () => `${getScreen().screenHeight.value}px`,
+});
 
 function createRealmSearchFeed(query: string) {
 	const safeQuery = encodeURIComponent(query);

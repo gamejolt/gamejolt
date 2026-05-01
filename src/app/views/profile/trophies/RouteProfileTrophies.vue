@@ -7,7 +7,7 @@ import AppProfileTrophiesNav, {
 } from '~app/views/profile/trophies/_nav/AppProfileTrophiesNav.vue';
 import { Api } from '~common/api/api.service';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { stringSort } from '~utils/array';
 
 export default {
@@ -43,7 +43,7 @@ createAppRoute({
 		<section class="section">
 			<div class="container">
 				<div class="row">
-					<div v-if="Screen.isDesktop" class="col-md-3">
+					<div v-if="getScreen().isDesktop.value" class="col-md-3">
 						<nav class="platform-list">
 							<AppProfileTrophiesNav
 								:games="games"

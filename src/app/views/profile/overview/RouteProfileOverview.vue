@@ -37,7 +37,7 @@ import { LinkedAccountModel } from '~common/linked-account/linked-account.model'
 import { Meta } from '~common/meta/meta-service';
 import { showModalConfirm } from '~common/modal/confirm/confirm-service';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppShareCard from '~common/share/card/AppShareCard.vue';
 import AppProfileShopButton from '~common/shop/AppProfileShopButton.vue';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
@@ -92,6 +92,7 @@ const {
 } = useProfileRouteStore()!;
 
 const { grid } = useGridStore();
+const { isXs, isMd, isLg, isMobile, isDesktop } = getScreen();
 
 const route = useRoute();
 const router = useRouter();
@@ -115,7 +116,7 @@ const routeTitle = computed(() => {
 });
 
 const userBlockedYou = computed(() => routeUser.value && routeUser.value.blocked_you);
-const showSidebarAvatar = computed(() => stickySides.value || Screen.isMobile);
+const showSidebarAvatar = computed(() => stickySides.value || isMobile.value);
 
 createAppRoute({
 	routeTitle,
@@ -251,7 +252,7 @@ async function onFriendRequestReject() {
 			<section
 				class="section"
 				:style="{
-					...styleWhen(Screen.isMobile, {
+					...styleWhen(isMobile, {
 						paddingTop: 0,
 					}),
 				}"
@@ -265,7 +266,7 @@ async function onFriendRequestReject() {
 				>
 					<template #left>
 						<AppAdTakeoverFloat>
-							<template v-if="Screen.isMd">
+							<template v-if="isMd">
 								<AppProfileActionButtons />
 
 								<AppSpacer vertical :scale="4" />
@@ -291,7 +292,7 @@ async function onFriendRequestReject() {
 									zIndex: 2,
 								}"
 								:card-styles="{
-									...styleWhen(Screen.isMobile, {
+									...styleWhen(isMobile, {
 										borderTopLeftRadius: 0,
 										borderTopRightRadius: 0,
 									}),
@@ -306,13 +307,13 @@ async function onFriendRequestReject() {
 									:own-support="supportersData.ownSupport"
 									inset-header
 								/>
-								<br v-if="Screen.isDesktop" />
+								<br v-if="isDesktop" />
 							</template>
 						</AppAdTakeoverFloat>
 					</template>
 
 					<template #right>
-						<template v-if="Screen.isLg">
+						<template v-if="isLg">
 							<AppProfileActionButtons />
 
 							<AppSpacer vertical :scale="4" />
@@ -331,15 +332,15 @@ async function onFriendRequestReject() {
 							<AppSpacer vertical :scale="6" />
 						</template>
 
-						<AppSpacer v-if="Screen.isXs" :scale="4" vertical />
+						<AppSpacer v-if="isXs" :scale="4" vertical />
 
-						<template v-if="Screen.isDesktop">
+						<template v-if="isDesktop">
 							<AppShareCard v-if="!myUser || !isMe" resource="user" :url="shareUrl" />
 							<AppInviteCard v-else :user="myUser" />
 						</template>
 
 						<!-- Developer's Games -->
-						<AppAdTakeoverFloat v-if="Screen.isDesktop && gamesCount > 0">
+						<AppAdTakeoverFloat v-if="isDesktop && gamesCount > 0">
 							<AppSpacer vertical :scale="6" />
 
 							<div class="sheet">

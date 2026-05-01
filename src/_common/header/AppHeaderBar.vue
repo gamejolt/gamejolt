@@ -2,7 +2,7 @@
 import { computed, toRef } from 'vue';
 
 import { useDynamicSlots } from '~common/component-helpers';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 
 const validSlots = ['leading', 'title', 'actions', 'bottom'] as const;
 export type HeaderBarSlots = (typeof validSlots)[number];
@@ -35,6 +35,7 @@ const {
 } = defineProps<Props>();
 
 const { hasSlot } = useDynamicSlots(toRef(() => dynamicSlots));
+const { isXs } = getScreen();
 
 const hasLeading = computed(() => hasSlot('leading'));
 const hasTitle = computed(() => hasSlot('title'));
@@ -50,14 +51,14 @@ const effectiveTitleSpacing = computed(() => {
 	if (typeof titleSpacing === 'number') {
 		return titleSpacing;
 	}
-	return Screen.isXs ? 12 : 16;
+	return isXs.value ? 12 : 16;
 });
 
 const effectiveEdgePadding = computed(() => {
 	if (typeof edgePadding === 'number') {
 		return edgePadding;
 	}
-	return Screen.isXs ? 12 : 16;
+	return isXs.value ? 12 : 16;
 });
 </script>
 

@@ -1,9 +1,10 @@
 <script lang="ts" setup>
 import AppGrowl from '~common/growls/AppGrowl.vue';
 import { Growls } from '~common/growls/growls.service';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 
 const { growls } = Growls;
+const { isXs } = getScreen();
 </script>
 
 <template>
@@ -15,8 +16,8 @@ const { growls } = Growls;
 				:growl="growl"
 				:index="index"
 				:class="{
-					'anim-fade-enter-left anim-fade-leave-left': !Screen.isXs,
-					'anim-fade-enter-down anim-back-leave-down': Screen.isXs,
+					'anim-fade-enter-left anim-fade-leave-left': !isXs,
+					'anim-fade-enter-down anim-back-leave-down': isXs,
 				}"
 			/>
 		</transition-group>

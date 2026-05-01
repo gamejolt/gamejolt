@@ -14,7 +14,7 @@ import { Api } from '~common/api/api.service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import { Meta } from '~common/meta/meta-service';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { $gettext } from '~common/translate/translate.service';
 import { kFontSizeLarge } from '~styles/variables';
 
@@ -81,7 +81,7 @@ createAppRoute({
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-3 col-sm-12">
-					<div v-if="Screen.isMobile">
+					<div v-if="getScreen().isMobile.value">
 						<nav
 							class="breadcrumb"
 							:style="{

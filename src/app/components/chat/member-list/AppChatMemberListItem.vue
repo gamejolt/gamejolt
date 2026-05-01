@@ -9,7 +9,7 @@ import AppChatUserOnlineStatus from '~app/components/chat/user-online-status/App
 import AppChatUserPopover from '~app/components/chat/user-popover/AppChatUserPopover.vue';
 import { useGridStore } from '~app/components/grid/grid-store';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { kThemePrimary } from '~common/theme/variables';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
@@ -36,7 +36,7 @@ const roleData = computed(() => getChatUserRoleData(room, user));
 <template>
 	<AppChatListItem
 		:horizontal-padding="horizontalPadding"
-		:popper-placement="Screen.isMobile ? 'bottom' : 'left'"
+		:popper-placement="getScreen().isMobile.value ? 'bottom' : 'left'"
 		popper-trigger="click"
 	>
 		<template #leading>
