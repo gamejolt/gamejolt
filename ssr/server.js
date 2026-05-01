@@ -193,6 +193,8 @@ server.use(async (req, res) => {
 				total + 'ms',
 				'render time:',
 				total - result.prefetchTime + 'ms',
+				'request count:',
+				`${requestCount}/${RestartThreshold}`,
 				req.url,
 				req.headers['host'],
 				req.headers['user-agent']
