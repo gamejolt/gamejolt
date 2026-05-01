@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 
 import { FiresidePostModel } from '~common/fireside/post/post-model';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppStickerSupporters from '~common/sticker/AppStickerSupporters.vue';
 import AppStickerReactions from '~common/sticker/reactions/AppStickerReactions.vue';
 import { StickerCount } from '~common/sticker/sticker-count';
@@ -20,6 +20,8 @@ const emit = defineEmits<{
 	show: [];
 }>();
 
+const { isDesktop, screenWidth } = getScreen();
+
 // We only allow this type of model to show the supporters currently.
 const supportersModel = computed(() =>
 	stickerTargetController.model instanceof FiresidePostModel
@@ -34,7 +36,7 @@ const supportersModel = computed(() =>
 			v-if="supporters.length && supportersModel"
 			class="-supporters"
 			:model="supportersModel"
-			:limit="Screen.isDesktop ? 8 : Math.max(1, Math.min(8, Math.round(Screen.width / 100)))"
+			:limit="isDesktop ? 8 : Math.max(1, Math.min(8, Math.round(screenWidth / 100)))"
 			:supporters="supporters"
 			:style="{
 				marginRight: stickers.length ? '12px' : undefined,

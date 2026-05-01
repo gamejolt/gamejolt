@@ -9,7 +9,7 @@ import { useLibraryStore } from '~app/store/library';
 import { Connection } from '~common/connection/connection-service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 import { $gettext } from '~common/translate/translate.service';
 
@@ -23,6 +23,7 @@ export default {
 
 <script lang="ts" setup>
 const { followedCollection, developerCollection, ownedCollection, collections } = useLibraryStore();
+const { isXs } = getScreen();
 
 const mainCollections = computed(() => {
 	const main: GameCollectionModel[] = [];
@@ -120,13 +121,13 @@ createAppRoute({
 				class="section collection-row-section"
 			>
 				<div v-if="group.heading" class="container">
-					<h2 class="section-header" :class="{ h4: Screen.isXs }">
+					<h2 class="section-header" :class="{ h4: isXs }">
 						{{ group.heading }}
 					</h2>
 				</div>
 
-				<div :class="!Screen.isXs ? 'container' : ''">
-					<AppGameCollectionList v-if="Screen.isXs" :collections="group.collections" />
+				<div :class="!isXs ? 'container' : ''">
+					<AppGameCollectionList v-if="isXs" :collections="group.collections" />
 
 					<AppGameCollectionGrid v-else :collections="group.collections" />
 				</div>

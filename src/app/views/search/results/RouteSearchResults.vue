@@ -17,7 +17,7 @@ import AppCommunityThumbnail from '~common/community/thumbnail/AppCommunityThumb
 import { formatNumber } from '~common/filters/number';
 import AppRealmFullCard from '~common/realm/AppRealmFullCard.vue';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppScrollAffix from '~common/scroll/AppScrollAffix.vue';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 import { $gettext } from '~common/translate/translate.service';
@@ -42,6 +42,7 @@ export default {
 <script lang="ts" setup>
 const route = useRoute();
 const { processPayload, hasSearch, searchPayload, query } = useSearchRouteController()!;
+const { isXs, isSm, isLg, isMobile } = getScreen();
 
 const feed = ref(null) as Ref<ActivityFeedView | null>;
 
@@ -76,16 +77,16 @@ createAppRoute({
 });
 
 const slicedUsers = computed(() =>
-	Screen.isXs ? searchPayload.value.users : searchPayload.value.users.slice(0, 2)
+	isXs.value ? searchPayload.value.users : searchPayload.value.users.slice(0, 2)
 );
 
 const slicedCommunities = computed(() => searchPayload.value.communities.slice(0, 4));
 
 const slicedRealms = computed(() => {
 	let count = REALM_COL_DESKTOP;
-	if (Screen.isSm) {
+	if (isSm.value) {
 		count = REALM_COL_SM;
-	} else if (Screen.isXs) {
+	} else if (isXs.value) {
 		count = REALM_COL_XS;
 	}
 
@@ -136,7 +137,7 @@ const slicedRealms = computed(() => {
 
 		<AppPageContainer no-left order="right,main">
 			<!-- Games -->
-			<template v-if="!Screen.isMobile" #right>
+			<template v-if="!isMobile" #right>
 				<AppSpacer vertical :scale="6" />
 
 				<AppScrollAffix
@@ -149,7 +150,7 @@ const slicedRealms = computed(() => {
 						minHeight: `225px`,
 						margin: `0 auto`,
 					}"
-					:padding="Screen.isLg ? 80 : 8"
+					:padding="isLg ? 80 : 8"
 				>
 					<AppAdWidget
 						unit-name="mpu"
@@ -185,11 +186,7 @@ const slicedRealms = computed(() => {
 						<small>({{ formatNumber(searchPayload.gamesCount) }})</small>
 					</h3>
 
-					<AppGameGrid
-						v-if="Screen.isMobile"
-						:games="searchPayload.games"
-						force-scrollable
-					/>
+					<AppGameGrid v-if="isMobile" :games="searchPayload.games" force-scrollable />
 					<AppGameList v-else :games="searchPayload.games" />
 
 					<div class="hidden-xs hidden-sm">

@@ -6,7 +6,7 @@ import AppButton from '~common/button/AppButton.vue';
 import { Jolticon } from '~common/jolticon/AppJolticon.vue';
 import AppLinkExternal from '~common/link/AppLinkExternal.vue';
 import { LinkedAccountProvider } from '~common/linked-account/linked-account.model';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 import { $gettext } from '~common/translate/translate.service';
 
@@ -28,7 +28,7 @@ function _getLinkedAccount(provider: LinkedAccountProvider) {
 
 const socialLinks = computed(() => {
 	const items: { label: string; icon: Jolticon; url: string }[] = [];
-	if (!user.value || Screen.isMobile) {
+	if (!user.value || getScreen().isMobile.value) {
 		return items;
 	}
 

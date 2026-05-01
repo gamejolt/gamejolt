@@ -29,7 +29,7 @@ import {
 import { showErrorGrowl } from '~common/growls/growls.service';
 import AppLinkHelp from '~common/link/AppLinkHelp.vue';
 import { Model } from '~common/model/model.service';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 import { $gettext } from '~common/translate/translate.service';
@@ -51,6 +51,8 @@ const emit = defineEmits<{
 	'editor-blur': [];
 	cancel: [];
 }>();
+
+const { isMobile } = getScreen();
 
 const lengthLimit = ref(5_000);
 const contentCapabilities = ref(ContextCapabilities.getPlaceholder());
@@ -108,7 +110,7 @@ const form: FormController<FormModel> = createForm({
 });
 
 const displayRules = computed(() => {
-	if (Screen.isMobile) {
+	if (isMobile.value) {
 		return new ContentRules({ maxMediaWidth: 200, maxMediaHeight: 200 });
 	}
 
@@ -116,7 +118,7 @@ const displayRules = computed(() => {
 });
 
 const maxHeight = computed(() => {
-	if (Screen.isMobile) {
+	if (isMobile.value) {
 		return 250;
 	}
 

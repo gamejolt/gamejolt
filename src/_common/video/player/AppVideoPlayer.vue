@@ -11,7 +11,7 @@ import { MediaItemModel } from '~common/media-item/media-item-model';
 import AppResponsiveDimensions, {
 	AppResponsiveDimensionsChangeEvent,
 } from '~common/responsive-dimensions/AppResponsiveDimensions.vue';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import { VideoSourceArray } from '~common/video/AppVideo.vue';
 import AppVideoPlayerFullscreen from '~common/video/player/AppVideoPlayerFullscreen.vue';
@@ -121,6 +121,8 @@ const emit = defineEmits<{
 	time: [timestamp: number];
 }>();
 
+const { isXs, isSm, isMobile, screenWidth, screenHeight } = getScreen();
+
 const root = ref() as Ref<HTMLDivElement>;
 
 const localPlayer = ref(null) as Ref<VideoPlayerController | null>;
@@ -182,9 +184,9 @@ const blackBarsBreakpoint = computed(() => {
 	if (isFeedVideo.value) {
 		return '100%';
 	}
-	if (Screen.isXs) {
+	if (isXs.value) {
 		return '100%';
-	} else if (Screen.isSm) {
+	} else if (isSm.value) {
 		return '260px';
 	}
 	return '400px';
@@ -230,7 +232,7 @@ const maxWidth = computed(() => {
 		return undefined;
 	}
 	if (player.value.isFullscreen) {
-		return Screen.width;
+		return screenWidth.value;
 	}
 	return mediaItem.width;
 });
@@ -240,7 +242,7 @@ const maxHeight = computed(() => {
 		return undefined;
 	}
 	if (player.value?.isFullscreen) {
-		return Screen.height;
+		return screenHeight.value;
 	}
 
 	function modify(value: number) {
@@ -250,10 +252,10 @@ const maxHeight = computed(() => {
 		return value - 150;
 	}
 
-	if (Screen.isMobile) {
+	if (isMobile.value) {
 		return modify(window.screen.height);
 	}
-	return modify(Screen.height);
+	return modify(screenHeight.value);
 });
 
 const shouldShowVideoStats = computed(

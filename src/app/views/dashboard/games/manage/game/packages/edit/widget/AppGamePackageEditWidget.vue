@@ -4,7 +4,7 @@ import { ref, watch } from 'vue';
 import { Api } from '~common/api/api.service';
 import { Environment } from '~common/environment/environment.service';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { SellableModel } from '~common/sellable/sellable.model';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 
@@ -109,7 +109,7 @@ createAppRoute({
 			<textarea v-model="widgetCode" class="form-control" rows="3" readonly />
 		</div>
 		<div class="col-sm-10 col-md-7 col-lg-6">
-			<h3 :class="{ 'section-header': Screen.isDesktop }">
+			<h3 :class="{ 'section-header': getScreen().isDesktop.value }">
 				<AppTranslate>Widget Preview</AppTranslate>
 			</h3>
 

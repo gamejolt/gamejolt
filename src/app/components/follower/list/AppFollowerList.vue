@@ -4,7 +4,7 @@ import { ref, toRef, watch } from 'vue';
 import { Api } from '~common/api/api.service';
 import AppButton from '~common/button/AppButton.vue';
 import AppLoading from '~common/loading/AppLoading.vue';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { $gettext } from '~common/translate/translate.service';
 import AppUserCard from '~common/user/card/AppUserCard.vue';
 import AppUserCardPlaceholder from '~common/user/card/AppUserCardPlaceholder.vue';
@@ -17,6 +17,8 @@ type Props = {
 };
 const { url, count, initialUsers } = defineProps<Props>();
 
+const { isXs, isSm, isMd } = getScreen();
+
 const users = ref<UserModel[]>([]);
 const page = ref(1);
 const isLoading = ref(false);
@@ -24,11 +26,11 @@ const reachedEnd = ref(false);
 
 const placeholderCount = toRef(() => {
 	// 2 rows, except for xs.
-	if (Screen.isXs) {
+	if (isXs.value) {
 		return 1;
-	} else if (Screen.isSm) {
+	} else if (isSm.value) {
 		return 4;
-	} else if (Screen.isMd) {
+	} else if (isMd.value) {
 		return 6;
 	}
 	return 8;

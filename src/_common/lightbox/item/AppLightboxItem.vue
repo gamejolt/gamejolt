@@ -8,7 +8,7 @@ import AppImgResponsive from '~common/img/AppImgResponsive.vue';
 import { LightboxConfig, LightboxMediaModel } from '~common/lightbox/lightbox-helpers';
 import AppMediaItemBackdrop from '~common/media-item/backdrop/AppMediaItemBackdrop.vue';
 import { MediaItemModel } from '~common/media-item/media-item-model';
-import { onScreenResize, Screen } from '~common/screen/screen-service';
+import { getScreen, onScreenResize } from '~common/screen/screen-service';
 import AppSketchfabEmbed from '~common/sketchfab/embed/AppSketchfabEmbed.vue';
 import { useEventSubscription } from '~common/system/event/event-topic';
 import AppVideo from '~common/video/AppVideo.vue';
@@ -22,6 +22,8 @@ type Props = {
 	activeIndex: number;
 };
 const { item, itemIndex, activeIndex } = defineProps<Props>();
+
+const { isXs, screenWidth, screenHeight } = getScreen();
 
 const isActive = ref(false);
 const isNext = ref(false);
@@ -68,13 +70,13 @@ onMounted(async () => {
 async function calcDimensions() {
 	await nextTick();
 
-	if (Screen.isXs) {
+	if (isXs.value) {
 		return;
 	}
 
 	// Very fragile. Kinda lame.
-	maxWidth.value = Screen.width - LightboxConfig.buttonSize * 2;
-	maxHeight.value = Screen.height - LightboxConfig.controlsHeight * 2;
+	maxWidth.value = screenWidth.value - LightboxConfig.buttonSize * 2;
+	maxHeight.value = screenHeight.value - LightboxConfig.controlsHeight * 2;
 
 	if (caption.value) {
 		maxHeight.value -= caption.value.offsetHeight;

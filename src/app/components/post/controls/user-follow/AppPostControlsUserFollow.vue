@@ -3,7 +3,7 @@ import { computed } from 'vue';
 
 import AppButton from '~common/button/AppButton.vue';
 import { FiresidePostModel } from '~common/fireside/post/post-model';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 import AppUserFollowButton from '~common/user/follow/AppUserFollowButton.vue';
 
@@ -38,7 +38,7 @@ const user = computed(() => {
 				</p>
 				<AppUserFollowButton
 					class="-flex-none"
-					:sm="Screen.isXs"
+					:sm="getScreen().isXs.value"
 					:user="user"
 					location="postLike"
 				/>

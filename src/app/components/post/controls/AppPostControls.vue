@@ -25,7 +25,7 @@ import { CommunityModel } from '~common/community/community.model';
 import { formatFuzzynumber } from '~common/filters/fuzzynumber';
 import AppFiresidePostLikeWidget from '~common/fireside/post/like/widget/AppFiresidePostLikeWidget.vue';
 import { $publishFiresidePost, FiresidePostModel } from '~common/fireside/post/post-model';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppStickerControlsOverlay from '~common/sticker/AppStickerControlsOverlay.vue';
 import { useStickerLayer } from '~common/sticker/layer/layer-controller';
 import { openStickerDrawer, useStickerStore } from '~common/sticker/sticker-store';
@@ -70,6 +70,7 @@ const { user } = useCommonStore();
 const stickerStore = useStickerStore();
 
 const { canChargeSticker } = stickerStore;
+const { isXs } = getScreen();
 
 // The 'feed' and 'item' props will be included when this is used in the
 // activity feed. If that's the case, we need to make sure we synchronize with
@@ -211,7 +212,7 @@ function onUserFollowDismissal() {
 								<a
 									v-if="post.can_view_comments && commentsCount > 0"
 									class="blip"
-									:class="{ mobile: Screen.isXs }"
+									:class="{ mobile: isXs }"
 									@click="openComments()"
 								>
 									{{ formatFuzzynumber(commentsCount) }}
@@ -280,10 +281,7 @@ function onUserFollowDismissal() {
 						</span>
 					</div>
 
-					<div
-						class="-row small"
-						:class="{ '-spacing-top': shouldShowEdit, tiny: Screen.isXs }"
-					>
+					<div class="-row small" :class="{ '-spacing-top': shouldShowEdit, tiny: isXs }">
 						<AppPostControlsStats
 							:key="'stats'"
 							:class="{ 'text-muted': !overlay }"

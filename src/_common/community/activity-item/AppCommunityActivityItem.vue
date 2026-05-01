@@ -13,7 +13,7 @@ import { formatDate } from '~common/filters/date';
 import { FiresidePostModel } from '~common/fireside/post/post-model';
 import { GameModel } from '~common/game/game.model';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import { $gettext } from '~common/translate/translate.service';
 import { TranslateDirective as vTranslate } from '~common/translate/translate-directive';
@@ -28,6 +28,8 @@ type Props = {
 	showIcon: boolean;
 };
 const { item, usersplit, showIcon } = defineProps<Props>();
+
+const { isXs } = getScreen();
 
 const icon = computed(() => item.getTypeIcon()?.icon);
 const color = computed(() => item.getTypeIcon()?.color);
@@ -129,7 +131,7 @@ function getExtraData(key: string) {
 
 <template>
 	<div class="-item" :class="{ '-item-usersplit': usersplit }">
-		<span v-if="!Screen.isXs" class="-left">
+		<span v-if="!isXs" class="-left">
 			<AppUserAvatar v-if="usersplit" class="-avatar" :user="item.user" />
 			<span
 				v-else
@@ -160,9 +162,7 @@ function getExtraData(key: string) {
 					</span>
 				</template>
 				<span class="-user-sub">
-					<template v-if="item.user && !Screen.isXs">
-						@{{ item.user.username }}
-					</template>
+					<template v-if="item.user && !isXs"> @{{ item.user.username }} </template>
 					<span
 						v-app-tooltip="
 							formatDate(item.added_on, 'fullDate') +

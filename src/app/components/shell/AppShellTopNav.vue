@@ -20,7 +20,7 @@ import { Environment } from '~common/environment/environment.service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppNotificationBlip from '~common/notification/AppNotificationBlip.vue';
 import { vAppObserveDimensions } from '~common/observe-dimensions/observe-dimensions.directive';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { useCommonStore } from '~common/store/common-store';
 import AppThemeSvg from '~common/theme/svg/AppThemeSvg.vue';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
@@ -44,15 +44,16 @@ const { visibleLeftPane, hasCbar, unreadActivityCount, toggleCbarMenu } = useApp
 const { isUserTimedOut, user, userBootstrapped, showInitialPackWatermark } = useCommonStore();
 const { chat } = useGridStore();
 const { questActivityIds } = useQuestStore();
+const { isXs, isSm, isMobile, isDesktop, screenWidth } = getScreen();
 
 const left = useTemplateRef('left');
 const right = useTemplateRef('right');
 const baseMinColWidth = ref<number>();
 
-const shouldShowSearch = computed(() => !Screen.isXs && !isUserTimedOut.value);
-const shouldShowMenu = computed(() => Screen.isXs && !isUserTimedOut.value);
-const shouldShowDiscover = computed(() => !Screen.isXs && user.value && !isUserTimedOut.value);
-const shouldShowMoreMenu = computed(() => !Screen.isXs && !isUserTimedOut.value);
+const shouldShowSearch = computed(() => !isXs.value && !isUserTimedOut.value);
+const shouldShowMenu = computed(() => isXs.value && !isUserTimedOut.value);
+const shouldShowDiscover = computed(() => !isXs.value && user.value && !isUserTimedOut.value);
+const shouldShowMoreMenu = computed(() => !isXs.value && !isUserTimedOut.value);
 const shouldShowStoreInMoreMenu = computed(
 	() => shouldShowMoreMenu.value && !user.value && configShowStoreInMoreMenu.value
 );
@@ -64,7 +65,7 @@ const minColWidth = computed(() => {
 	// When we are smaller than this, we just set the search to stretch
 	// full-width with a max-width. It mostly looks fine on sizes smaller
 	// than this.
-	if (Screen.width < 1300) {
+	if (screenWidth.value < 1300) {
 		return undefined;
 	}
 
@@ -135,16 +136,11 @@ trackExperimentEngagement(configShowStoreInMoreMenu);
 					class="navbar-item"
 					:class="{
 						active: $route.name === 'home',
-						'-small-home': Screen.isSm,
+						'-small-home': isSm,
 					}"
 					to="/"
 				>
-					<AppThemeSvg
-						v-if="!Screen.isMobile"
-						:src="imageGameJoltLogo"
-						alt=""
-						strict-colors
-					/>
+					<AppThemeSvg v-if="!isMobile" :src="imageGameJoltLogo" alt="" strict-colors />
 					<AppThemeSvg v-else :src="imageJolt" alt="" strict-colors />
 					<span
 						v-if="unreadActivityCount > 0"
@@ -167,7 +163,7 @@ trackExperimentEngagement(configShowStoreInMoreMenu);
 				</RouterLink>
 
 				<RouterLink
-					v-if="!Screen.isXs && !shouldShowStoreInMoreMenu"
+					v-if="!isXs && !shouldShowStoreInMoreMenu"
 					class="navbar-item"
 					:class="{ active: String($route.name).startsWith('discover.games.') }"
 					:to="{
@@ -217,14 +213,14 @@ trackExperimentEngagement(configShowStoreInMoreMenu);
 			We don't have the space to show the Get App button here on mobile,
 			but we do prompt them in the modal that shows up on mobile web
 			-->
-			<template v-if="!GJ_IS_DESKTOP_APP && !Screen.isXs">
+			<template v-if="!GJ_IS_DESKTOP_APP && !isXs">
 				<div class="-button">
 					<AppButton
 						:to="{ name: 'landing.app' }"
 						@click="
 							trackAppPromotionClick({
 								source: 'top-nav',
-								platform: Screen.isDesktop ? 'desktop' : 'mobile',
+								platform: isDesktop ? 'desktop' : 'mobile',
 							})
 						"
 					>

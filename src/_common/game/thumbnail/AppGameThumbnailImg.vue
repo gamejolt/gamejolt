@@ -7,7 +7,7 @@ import { GameModel } from '~common/game/game.model';
 import AppImgResponsive from '~common/img/AppImgResponsive.vue';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppMediaItemBackdrop from '~common/media-item/backdrop/AppMediaItemBackdrop.vue';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppVideo from '~common/video/AppVideo.vue';
 import { getVideoPlayerFromSources } from '~common/video/player/controller';
 
@@ -25,7 +25,11 @@ const isThumbnailLoaded = ref(import.meta.env.SSR);
 
 const mediaItem = computed(() => game.thumbnail_media_item);
 const hasVideo = computed(
-	() => mediaItem.value?.is_animated && Screen.isDesktop && !import.meta.env.SSR && animate
+	() =>
+		mediaItem.value?.is_animated &&
+		getScreen().isDesktop.value &&
+		!import.meta.env.SSR &&
+		animate
 );
 const shouldPlayVideo = computed(() => hasVideo.value && hasContentFocus.value);
 const videoController = computed(() => {

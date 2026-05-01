@@ -11,7 +11,7 @@ import { illChargeOrbEmpty } from '~common/animation/slideshow/sheets';
 import AppIllustration from '~common/illustration/AppIllustration.vue';
 import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
 import { QuestPriority } from '~common/quest/quest-model.js';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppStickerChargeTooltip from '~common/sticker/charge/AppStickerChargeTooltip.vue';
 import AppStickerChargeTooltipCaret from '~common/sticker/charge/AppStickerChargeTooltipCaret.vue';
 import AppStickerChargeTooltipHandler from '~common/sticker/charge/AppStickerChargeTooltipHandler.vue';
@@ -62,6 +62,7 @@ const questStore = useQuestStore();
 const { dailyQuests, isLoading: isQuestStoreLoading } = questStore;
 
 const { currentCharge, chargeLimit } = useStickerStore();
+const { isXs, isPointerMouse } = getScreen();
 
 const chargeOrb = useTemplateRef('chargeOrb');
 const header = useTemplateRef('header');
@@ -129,7 +130,7 @@ function onRefresh() {
 	<AppLoadingFade v-if="showPlaceholders || hasQuests" :is-loading>
 		<div ref="header" class="_header">
 			<slot name="header">
-				<h4 class="section-header" :class="{ h6: Screen.isXs }">
+				<h4 class="section-header" :class="{ h6: isXs }">
 					{{ $gettext(`Daily Quests`) }}
 				</h4>
 			</slot>
@@ -145,7 +146,7 @@ function onRefresh() {
 								color: kThemeFg,
 							}),
 						]"
-						:trigger="Screen.isPointerMouse ? 'hover' : 'focus'"
+						:trigger="isPointerMouse ? 'hover' : 'focus'"
 						inline
 						@show="showChargeTooltip = true"
 						@hide="showChargeTooltip = false"

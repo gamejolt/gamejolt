@@ -12,7 +12,7 @@ import { Connection } from '~common/connection/connection-service';
 import { Environment } from '~common/environment/environment.service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { getCommonStore } from '~common/store/common-store';
 import AppThemeSvg from '~common/theme/svg/AppThemeSvg.vue';
 import AppTranslate from '~common/translate/AppTranslate.vue';
@@ -98,7 +98,7 @@ createAppRoute({
 			</div>
 
 			<div
-				v-if="!GJ_IS_DESKTOP_APP && shouldShowCoverImage && Screen.isDesktop"
+				v-if="!GJ_IS_DESKTOP_APP && shouldShowCoverImage && getScreen().isDesktop.value"
 				class="-game-credits anim-fade-in-up"
 			>
 				<AppGameCoverCredits />

@@ -8,7 +8,7 @@ import {
 	HomeFeedTabTypes as HomeFeedTabType,
 } from '~app/views/home/home-feed.service';
 import { trackHomeFeedSwitch } from '~common/analytics/analytics.service';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { kThemeBg, kThemeBiBg, kThemeBiFg, kThemeGjOverlayNotice } from '~common/theme/variables';
 import { $gettext } from '~common/translate/translate.service';
 import { styleBorderRadiusLg, styleElevate, styleWhen } from '~styles/mixins';
@@ -99,7 +99,7 @@ function onTabClick(path: string, isActive: boolean) {
 						borderColor: kThemeBiFg,
 						color: kThemeBiFg,
 					}),
-					...styleWhen(Screen.isMobile, {
+					...styleWhen(getScreen().isMobile.value, {
 						display: `block`,
 						width: `100%`,
 					}),

@@ -7,7 +7,7 @@ import AppButton from '~common/button/AppButton.vue';
 import { isDynamicGoogleBot } from '~common/device/device.service';
 import { illMobileKikkerstein } from '~common/illustration/illustrations';
 import { getAppUrl, useAppPromotionStore } from '~common/mobile-app/store';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 import { useCommonStore } from '~common/store/common-store';
 import AppTheme from '~common/theme/AppTheme.vue';
@@ -28,7 +28,12 @@ const shouldShow = computed(() => {
 		return false;
 	}
 
-	if (sessionStorage.getItem(StorageKey) || !Screen.isXs || forceClosed.value || !route.name) {
+	if (
+		sessionStorage.getItem(StorageKey) ||
+		!getScreen().isXs.value ||
+		forceClosed.value ||
+		!route.name
+	) {
 		return false;
 	}
 

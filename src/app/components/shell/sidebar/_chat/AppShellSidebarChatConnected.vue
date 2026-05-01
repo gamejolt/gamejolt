@@ -10,7 +10,7 @@ import { formatNumber } from '~common/filters/number';
 import AppIllustration from '~common/illustration/AppIllustration.vue';
 import { illNoCommentsSmall } from '~common/illustration/illustrations';
 import { showInviteModal } from '~common/invite/modal/modal.service';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { useCommonStore } from '~common/store/common-store';
 import AppTabBar from '~common/tab-bar/AppTabBar.vue';
 import AppTabBarItem from '~common/tab-bar/AppTabBarItem.vue';
@@ -34,7 +34,7 @@ onMounted(() => {
 
 	// xs size needs to show the friends list instead of opening the last chat
 	// room.
-	if (sessionRoomId && !Screen.isXs) {
+	if (sessionRoomId && !getScreen().isXs.value) {
 		openChatRoom(chat.value, sessionRoomId);
 	}
 });

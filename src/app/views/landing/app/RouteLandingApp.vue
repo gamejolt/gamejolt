@@ -25,7 +25,7 @@ import { getAppUrl, useAppPromotionStore } from '~common/mobile-app/store';
 import { storeModel, storeModelList } from '~common/model/model-store.service';
 import { Navigate } from '~common/navigate/navigate.service';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 import { kThemeGjOverlayNotice } from '~common/theme/variables';
 import { styleFlexCenter, styleWhen } from '~styles/mixins';
@@ -188,7 +188,7 @@ async function _getDownloadUrl(platform: DeviceOs, arch: DeviceArch) {
 						</div>
 
 						<div class="-header-buttons">
-							<template v-if="!Screen.isXs">
+							<template v-if="!getScreen().isXs.value">
 								<!-- Sized a bit smaller than the original image so it's sharp on hidpi -->
 								<img
 									:src="qrImage"

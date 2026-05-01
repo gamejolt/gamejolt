@@ -1,6 +1,6 @@
 import { computed, ref, watch } from 'vue';
 
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 
 /**
  * Returns a CSS representation of the full screen's height. Useful for
@@ -10,7 +10,7 @@ export function useFullscreenHeight() {
 	const height = ref(0);
 
 	watch(
-		() => Screen.height,
+		() => getScreen().screenHeight.value,
 		(screenHeight: number) => {
 			// The mobile address bar takes up space and when they scroll,
 			// it's pretty jarring to have the whole screen shift around.

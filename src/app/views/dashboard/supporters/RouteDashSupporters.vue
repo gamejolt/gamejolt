@@ -14,7 +14,7 @@ import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppLoading from '~common/loading/AppLoading.vue';
 import { showModalConfirm } from '~common/modal/confirm/confirm-service';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 import { SupporterActionModel } from '~common/supporters/action.model';
@@ -25,7 +25,9 @@ import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
 import { getCurrentServerTime } from '~utils/server-time';
 
 const ACTIONS_PER_PAGE = 25;
-const InviewConfigLoadMore = new ScrollInviewConfig({ margin: () => `${Screen.height}px` });
+const InviewConfigLoadMore = new ScrollInviewConfig({
+	margin: () => `${getScreen().screenHeight.value}px`,
+});
 
 export default {
 	...defineAppRouteOptions({

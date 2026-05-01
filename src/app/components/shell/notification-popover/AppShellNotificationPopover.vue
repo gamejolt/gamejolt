@@ -19,7 +19,7 @@ import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppLoading from '~common/loading/AppLoading.vue';
 import { NotificationFeedTypes, NotificationModel } from '~common/notification/notification-model';
 import AppPopper from '~common/popper/AppPopper.vue';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { kThemeDarkest } from '~common/theme/variables';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import { styleChangeBg } from '~styles/mixins';
@@ -29,6 +29,7 @@ const route = useRoute();
 const router = useRouter();
 const { notificationState, hasUnreadNotifications, markNotificationsAsRead } = useAppStore();
 const { grid } = useGridStore();
+const { isXs } = getScreen();
 
 const isShowing = ref(false);
 const isLoading = ref(true);
@@ -65,7 +66,7 @@ watch(
  * page, since there is no popover on mobile.
  */
 const isNavbarItemActive = computed(() => {
-	return (Screen.isXs && route.name === 'notifications') || isShowing.value;
+	return (isXs.value && route.name === 'notifications') || isShowing.value;
 });
 
 /**
@@ -73,7 +74,7 @@ const isNavbarItemActive = computed(() => {
  * mobile. Let's just go to the notifications page.
  */
 function onNavbarItemClick(e: Event) {
-	if (Screen.isXs) {
+	if (isXs.value) {
 		e.stopPropagation();
 		router.push({ name: 'notifications' });
 	}

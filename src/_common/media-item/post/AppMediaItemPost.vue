@@ -9,7 +9,7 @@ import { MediaItemModel } from '~common/media-item/media-item-model';
 import AppResponsiveDimensions, {
 	AppResponsiveDimensionsChangeEvent,
 } from '~common/responsive-dimensions/AppResponsiveDimensions.vue';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppStickerTarget from '~common/sticker/target/AppStickerTarget.vue';
 import {
 	createStickerTargetController,
@@ -41,6 +41,8 @@ const emit = defineEmits<{
 	fullscreen: [mediaItem: MediaItemModel];
 }>();
 
+const { isXs, isMobile, screenHeight } = getScreen();
+
 const parentStickerTarget = useStickerTargetController();
 const stickerTargetController = createStickerTargetController(mediaItem, {
 	parent: () => toValue(parentStickerTarget),
@@ -70,7 +72,7 @@ const itemRadius = computed(() => {
 		return isFilled.value ? undefined : 'lg';
 	}
 
-	return Screen.isXs && isFilled.value ? undefined : 'lg';
+	return isXs.value && isFilled.value ? undefined : 'lg';
 });
 
 const deviceMaxHeight = computed(() => {
@@ -82,10 +84,10 @@ const deviceMaxHeight = computed(() => {
 	// the mobile keyboard as if it doesn't exist. Using the
 	// 'window.screen.height' will let us get the height of
 	// the screen, rather than the viewport.
-	if (Screen.isMobile) {
+	if (isMobile.value) {
 		return window.screen.height * 0.45;
 	}
-	return Screen.height * 0.45;
+	return screenHeight.value * 0.45;
 });
 
 async function onDimensionsChange(e: AppResponsiveDimensionsChangeEvent) {

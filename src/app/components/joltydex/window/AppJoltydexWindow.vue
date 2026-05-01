@@ -10,7 +10,7 @@ import AppButton from '~common/button/AppButton.vue';
 import AppHeaderBar from '~common/header/AppHeaderBar.vue';
 import { showVendingMachineModal } from '~common/inventory/shop/vending-machine/modal.service';
 import AppJoltydexBrowser from '~common/joltydex/AppJoltydexBrowser.vue';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppScrollScroller from '~common/scroll/AppScrollScroller.vue';
 import { kThemeFgMuted } from '~common/theme/variables';
 import { UserModel } from '~common/user/user.model';
@@ -24,6 +24,7 @@ type Props = {
 const { selectedUser } = defineProps<Props>();
 const { selectedJoltydexUser } = useJoltydexStore();
 const { toggleLeftPane } = useAppStore();
+const { isXs, isDesktop } = getScreen();
 
 onMounted(() => {
 	trackJoltydex({ action: 'show-collection', collectionId: selectedUser.id });
@@ -77,7 +78,7 @@ function close() {
 	// Close the sidebar only for breakpoints that always show it. Mobile
 	// breakpoints have the quest window overlay everything, so we should keep
 	// the sidebar open.
-	if (Screen.isDesktop) {
+	if (isDesktop.value) {
 		toggleLeftPane('');
 	}
 }
@@ -152,8 +153,8 @@ function close() {
 						v-if="hasSale"
 						solid
 						primary
-						:icon="Screen.isXs ? 'marketplace-filled' : undefined"
-						:circle="Screen.isXs"
+						:icon="isXs ? 'marketplace-filled' : undefined"
+						:circle="isXs"
 						@click="
 							showVendingMachineModal({
 								userId: selectedUser.id,
@@ -161,7 +162,7 @@ function close() {
 							})
 						"
 					>
-						<template v-if="!Screen.isXs">
+						<template v-if="!isXs">
 							{{ $gettext(`Open shop`) }}
 						</template>
 					</AppButton>

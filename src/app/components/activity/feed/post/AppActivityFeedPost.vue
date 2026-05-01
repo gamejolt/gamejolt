@@ -32,7 +32,7 @@ import {
 	kPostItemPaddingVertical,
 	kPostItemPaddingXsVertical,
 } from '~common/post/post-styles';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { scrollTo } from '~common/scroll/scroll.service';
 import AppStickerControlsOverlay from '~common/sticker/AppStickerControlsOverlay.vue';
 import AppStickerPlacementList from '~common/sticker/AppStickerPlacementList.vue';
@@ -226,7 +226,7 @@ function onPostUnpinned(item: EventItemModel) {
 }
 
 const vPadding = computed(() =>
-	Screen.isXs ? kPostItemPaddingXsVertical.px : kPostItemPaddingVertical.px
+	getScreen().isXs.value ? kPostItemPaddingXsVertical.px : kPostItemPaddingVertical.px
 );
 </script>
 

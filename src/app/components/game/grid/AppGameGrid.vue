@@ -10,7 +10,7 @@ import AppAdWidget from '~common/ad/widget/AppAdWidget.vue';
 import { formatNumber } from '~common/filters/number';
 import { GameModel } from '~common/game/game.model';
 import AppGameThumbnail from '~common/game/thumbnail/AppGameThumbnail.vue';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppScrollAffix from '~common/scroll/AppScrollAffix.vue';
 import { styleWhen } from '~styles/mixins';
 import { kLayerAds } from '~styles/variables';
@@ -49,19 +49,20 @@ const emit = defineEmits<{
 }>();
 
 const { shouldShow: globalShouldShowAds } = useAdStore();
+const { isXs, isSm, isMd, isLg, isDesktop, screenWidth } = getScreen();
 
 const id = ++idCounter;
 
 const shouldShowAds = toRef(() => !canReorder && showAds && globalShouldShowAds.value);
-const isScrollable = toRef(() => (Screen.isXs && scrollable) || forceScrollable);
-const shouldShowStickyAd = toRef(() => Screen.width >= 2100);
+const isScrollable = toRef(() => (isXs.value && scrollable) || forceScrollable);
+const shouldShowStickyAd = toRef(() => screenWidth.value >= 2100);
 
 const rowSize = toRef(() => {
-	if (Screen.isSm) {
+	if (isSm.value) {
 		return GameGridRowSizeSm;
-	} else if (Screen.isMd) {
+	} else if (isMd.value) {
 		return GameGridRowSizeMd;
-	} else if (Screen.isLg) {
+	} else if (isLg.value) {
 		return GameGridRowSizeLg;
 	}
 
@@ -82,7 +83,7 @@ const processedGames = computed({
 		let chunkSize = Math.max(1, Math.floor(games.length / rowSize.value)) * rowSize.value;
 
 		// Subtract one for the ad slot.
-		if (Screen.isDesktop && shouldShowAds.value) {
+		if (isDesktop.value && shouldShowAds.value) {
 			chunkSize -= 1;
 		}
 
@@ -101,13 +102,13 @@ function shouldShowAd(index: number) {
 	const numGames = processedGames.value.length;
 
 	index = index + 1;
-	if (Screen.isDesktop) {
+	if (isDesktop.value) {
 		// Show every X games. This index will set it to be the the third
 		// placement in the row which looks pretty good.
 		if (index % 13 === 0) {
 			return true;
 		}
-	} else if (Screen.isSm) {
+	} else if (isSm.value) {
 		// Show after the first 4 games, but only if 6 or more will show
 		// after the ad.
 		if (index === 5 && numGames - index >= 6) {
@@ -117,7 +118,7 @@ function shouldShowAd(index: number) {
 			// show after the ad.
 			return true;
 		}
-	} else if (Screen.isXs) {
+	} else if (isXs.value) {
 		// Show after the first 2 games, but only if 6 or more will show
 		// after the ad.
 		if (index === 3 && numGames - index >= 6) {
@@ -146,7 +147,7 @@ function shouldShowAd(index: number) {
 
 		<div :class="{ 'scrollable-grid': isScrollable }">
 			<AppAdFeedParent :is-active="shouldShowAds" class="_game-grid-items">
-				<div v-if="Screen.isDesktop && shouldShowAds" class="_game-grid-ad">
+				<div v-if="isDesktop && shouldShowAds" class="_game-grid-ad">
 					<div
 						:style="{
 							...styleWhen(shouldShowStickyAd, {

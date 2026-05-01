@@ -20,7 +20,7 @@ import AppProgressBarQuest from '~common/quest/AppQuestProgress.vue';
 import AppQuestReward from '~common/quest/AppQuestReward.vue';
 import { QuestModel } from '~common/quest/quest-model';
 import { QuestRewardModel } from '~common/quest/quest-reward-model';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppScrollAffix from '~common/scroll/AppScrollAffix.vue';
 import AppScrollScroller from '~common/scroll/AppScrollScroller.vue';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
@@ -45,6 +45,7 @@ const { questId, resource } = defineProps<Props>();
 
 const { toggleLeftPane } = useAppStore();
 const { clearNewQuestIds, clearQuestActivityIds, activeQuest, activeQuestId } = useQuestStore();
+const { isXs, isDesktop } = getScreen();
 
 const isLoading = ref(false);
 const hasError = ref(false);
@@ -143,7 +144,7 @@ function closeQuests() {
 	// Close the sidebar only for breakpoints that always show it. Mobile
 	// breakpoints have the quest window overlay everything, so we should keep
 	// the sidebar open.
-	if (Screen.isDesktop) {
+	if (isDesktop.value) {
 		toggleLeftPane('');
 	}
 }
@@ -393,8 +394,8 @@ const fillStyles: CSSProperties = {
 										marginTop: `auto`,
 									}"
 									anchor="bottom"
-									:padding="Screen.isXs ? 0 : 16"
-									:offset-top="Screen.isXs ? undefined : -17"
+									:padding="isXs ? 0 : 16"
+									:offset-top="isXs ? undefined : -17"
 								>
 									<template #default="{ affixed }">
 										<div
@@ -413,7 +414,7 @@ const fillStyles: CSSProperties = {
 												:key="quest.id"
 												:style="{
 													padding: `12px`,
-													...styleWhen(!Screen.isXs, {
+													...styleWhen(!isXs, {
 														padding: `16px`,
 													}),
 												}"

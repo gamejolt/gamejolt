@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, nextTick, onMounted, ref, useSlots, useTemplateRef, watch } from 'vue';
+import { computed, nextTick, onMounted, ref, useTemplateRef, watch } from 'vue';
 
 import AppFadeCollapse from '~common/AppFadeCollapse.vue';
 import AppBackground from '~common/background/AppBackground.vue';
@@ -10,7 +10,7 @@ import AppImgResponsive from '~common/img/AppImgResponsive.vue';
 import AppMediaItemBackdrop from '~common/media-item/backdrop/AppMediaItemBackdrop.vue';
 import { MediaItemType } from '~common/media-item/media-item-model';
 import AppResponsiveDimensions from '~common/responsive-dimensions/AppResponsiveDimensions.vue';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
 import AppVideo from '~common/video/AppVideo.vue';
 import {
@@ -22,7 +22,9 @@ import {
 
 export const AppPostCardAspectRatio = 10 / 16;
 
-const InviewConfig = new ScrollInviewConfig({ margin: () => `${Screen.height}px` });
+const InviewConfig = new ScrollInviewConfig({
+	margin: () => `${getScreen().screenHeight.value}px`,
+});
 </script>
 
 <script lang="ts" setup>
@@ -63,7 +65,7 @@ const {
 	fullGradient,
 } = defineProps<Props>();
 const { hasContentFocus } = useContentFocusService();
-useSlots();
+const { isDesktop } = getScreen();
 
 const root = useTemplateRef('root');
 const message = useTemplateRef('message');
@@ -87,7 +89,7 @@ const isHydrated = ref(import.meta.env.SSR);
 const postCardRatio = computed(() => aspectRatio ?? AppPostCardAspectRatio);
 
 const shouldPlayVideo = computed(
-	() => Screen.isDesktop && !import.meta.env.SSR && isHydrated.value && hasContentFocus.value
+	() => isDesktop.value && !import.meta.env.SSR && isHydrated.value && hasContentFocus.value
 );
 
 onMounted(() => calcData());

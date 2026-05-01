@@ -17,7 +17,7 @@ import { showErrorGrowl } from '~common/growls/growls.service';
 import { setModalBodyWrapper } from '~common/modal/modal.service';
 import { ModelData } from '~common/model/model.service';
 import { storeModel, storeModelList } from '~common/model/model-store.service';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppStickerLayer from '~common/sticker/layer/AppStickerLayer.vue';
 import {
 	getCollidingStickerTarget,
@@ -52,6 +52,8 @@ export type CreatorStickersList = StickerStack[];
 export type StickerStore = ReturnType<typeof createStickerStore>;
 
 export function createStickerStore(options: { user: Ref<UserModel | null> }) {
+	const { isXs, isPointerMouse, screenHeight } = getScreen();
+
 	const user = computed(() => options.user.value);
 	const layers = shallowReactive<StickerLayerController[]>([]);
 	const targetController = shallowRef<StickerTargetController | null>(null);
@@ -73,15 +75,15 @@ export function createStickerStore(options: { user: Ref<UserModel | null> }) {
 	const drawerHeight = ref(0);
 	const drawerCollapsedHeight = buildCSSPixelValue(48);
 	const drawerPadding = buildCSSPixelValue(8);
-	const drawerStickerSpacing = toRef(() => (Screen.isXs ? 8 : 12));
-	const drawerNumRows = toRef(() => (Screen.isPointerMouse ? 2.8 : 2));
+	const drawerStickerSpacing = toRef(() => (isXs.value ? 8 : 12));
+	const drawerNumRows = toRef(() => (isPointerMouse.value ? 2.8 : 2));
 	const drawerStickerSize = computed(() => {
 		const min = 64;
-		if (Screen.isXs) {
+		if (isXs.value) {
 			return min;
 		}
 
-		const maxDrawerHeight = Screen.height * 0.4;
+		const maxDrawerHeight = screenHeight.value * 0.4;
 		return clampNumber(
 			Math.round(
 				(maxDrawerHeight - drawerPadding.value * 2) / drawerNumRows.value -

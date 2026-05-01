@@ -12,7 +12,7 @@ import {
 import { CommunityChannelModel } from '~common/community/channel/channel.model';
 import { CommunityModel, CommunityPresetChannelType } from '~common/community/community.model';
 import { Meta } from '~common/meta/meta-service';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { $gettext } from '~common/translate/translate.service';
 import { UserModel } from '~common/user/user.model';
 import { numberSort } from '~utils/array';
@@ -61,7 +61,7 @@ export class CommunityRouteStore {
 	}
 
 	get isShowingSidebar() {
-		return Screen.isLg;
+		return getScreen().isLg.value;
 	}
 }
 

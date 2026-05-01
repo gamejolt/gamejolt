@@ -2,7 +2,7 @@
 import { defineAsyncComponent, watch } from 'vue';
 
 import { useAppStore } from '~app/store';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppScrollScroller from '~common/scroll/AppScrollScroller.vue';
 
 const AppShellSidebarBackpack = defineAsyncComponent(
@@ -30,7 +30,7 @@ const AppShellSidebarJoltydex = defineAsyncComponent(
 const { visibleLeftPane, checkBackdrop } = useAppStore();
 
 watch(
-	() => Screen.isLg,
+	() => getScreen().isLg.value,
 	() => {
 		// Since our context pane is an overlay for breakpoints other than Lg,
 		// we want to trigger this action to add or remove the backdrop as

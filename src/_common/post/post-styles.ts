@@ -1,6 +1,6 @@
 import { CSSProperties, MaybeRefOrGetter, toValue } from 'vue';
 
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { kThemeFgMuted, kThemeLink } from '~common/theme/variables';
 import {
 	styleBorderRadiusLg,
@@ -42,12 +42,14 @@ export const PostOverlayTextStyles = {
 
 export function getPostFeedItemContainerStyles() {
 	return {
-		paddingBottom: Screen.isXs ? kPostItemPaddingXsVertical.px : kPostItemPaddingVertical.px,
+		paddingBottom: getScreen().isXs.value
+			? kPostItemPaddingXsVertical.px
+			: kPostItemPaddingVertical.px,
 	} as const satisfies CSSProperties;
 }
 
 function getPostFeedItemPaddingStyles() {
-	return Screen.isXs
+	return getScreen().isXs.value
 		? ({
 				paddingTop: kPostItemPaddingXsVertical.px,
 				paddingBottom: kPostItemPaddingXsVertical.px,
@@ -74,12 +76,12 @@ export const stylePostFeedItem = (options: { isHovered: MaybeRefOrGetter<boolean
 		overflow: `hidden`,
 		position: `relative`,
 		zIndex: 1,
-		...styleWhen(Screen.isXs, {
+		...styleWhen(getScreen().isXs.value, {
 			...styleElevate(1),
 			marginLeft: `-${kPostItemPaddingXs.value}px`,
 			marginRight: `-${kPostItemPaddingXs.value}px`,
 		}),
-		...styleWhen(!Screen.isXs, {
+		...styleWhen(!getScreen().isXs.value, {
 			...styleElevate(3),
 			...styleBorderRadiusLg,
 			borderWidth: kPostBorderWidth.px,
@@ -108,7 +110,7 @@ export function getPostHeaderAvatarStyles() {
 	return {
 		position: `relative`,
 		flex: `none`,
-		marginRight: Screen.isMobile ? kPostItemPaddingXs.px : kPostItemPadding.px,
+		marginRight: getScreen().isMobile.value ? kPostItemPaddingXs.px : kPostItemPadding.px,
 		width: kPostAvatarSize.px,
 		height: kPostAvatarSize.px,
 		lineHeight: kPostAvatarSize.px,
@@ -168,7 +170,7 @@ export function getPostHeaderMetaStyles() {
 		alignItems: `center`,
 		flexDirection: `row`,
 		gridGap: `8px`,
-		marginLeft: Screen.isMobile ? kPostItemPaddingXs.px : kPostItemPadding.px,
+		marginLeft: getScreen().isMobile.value ? kPostItemPaddingXs.px : kPostItemPadding.px,
 		lineHeight: kLineHeightComputed.px,
 		fontSize: kFontSizeSmall.px,
 		color: kThemeFgMuted,
@@ -183,7 +185,9 @@ export const PostContentContainerStyles = (overlay: boolean) => {
 		return {} as CSSProperties;
 	}
 
-	const padding = Screen.isMobile ? kPostItemPaddingXs.value / 2 : kPostItemPadding.value / 2;
+	const padding = getScreen().isMobile.value
+		? kPostItemPaddingXs.value / 2
+		: kPostItemPadding.value / 2;
 	return {
 		...styleBorderRadiusLg,
 		...styleChangeBg('bg'),
@@ -195,7 +199,9 @@ export const PostContentContainerStyles = (overlay: boolean) => {
 };
 
 export function getPostContentLeadStyles() {
-	const margin = Screen.isMobile ? kPostItemPaddingXsVertical.px : kPostItemPaddingVertical.px;
+	const margin = getScreen().isMobile.value
+		? kPostItemPaddingXsVertical.px
+		: kPostItemPaddingVertical.px;
 	return {
 		marginTop: margin,
 		marginBottom: margin,

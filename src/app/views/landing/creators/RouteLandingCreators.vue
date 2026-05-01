@@ -1,58 +1,9 @@
 <script lang="ts">
-import { computed, onMounted, ref } from 'vue';
-import { RouterLink } from 'vue-router';
-
-import {
-	creatorApplyDesktop,
-	creatorApplySm,
-	creatorApplyXs,
-} from '~app/views/landing/creators/_backgrounds/backgrounds';
-import AppCreatorMooMoo from '~app/views/landing/creators/AppCreatorMooMoo.vue';
-import socialImage from '~app/views/landing/creators/social.png';
-import { trackCreatorApply } from '~common/analytics/analytics.service';
 import { Api } from '~common/api/api.service';
-import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
-import AppBackground from '~common/background/AppBackground.vue';
-import { BackgroundModel } from '~common/background/background.model';
-import AppBean from '~common/bean/AppBean.vue';
-import AppButton from '~common/button/AppButton.vue';
-import AppCreatorsList from '~common/creator/AppCreatorsList.vue';
-import { FiresidePostModel } from '~common/fireside/post/post-model';
-import {
-	illMobileKikkerstein,
-	illPointyThing,
-	illStreamingJelly,
-} from '~common/illustration/illustrations';
-import AppImgResponsive from '~common/img/AppImgResponsive.vue';
-import { ImgHelper } from '~common/img/helper/helper-service';
-import AppLinkExternal from '~common/link/AppLinkExternal.vue';
-import { Meta } from '~common/meta/meta-service';
-import { storeModel } from '~common/model/model-store.service';
-import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
-import { Screen } from '~common/screen/screen-service';
-import AppSpacer from '~common/spacer/AppSpacer.vue';
-import AppTheme from '~common/theme/AppTheme.vue';
-import { DefaultTheme } from '~common/theme/theme.model';
-import { UserModel } from '~common/user/user.model';
-import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
-import { arrayIndexBy, arrayShuffle } from '~utils/array';
-
-const postImages = import.meta.glob<string>('./_posts/*.jpg', {
-	eager: true,
-	query: '?url',
-	import: 'default',
-});
-
-const boltHeight = computed(() => (Screen.isDesktop ? 182 : 164));
-const boltWidth = computed(() => (104 / 154) * boltHeight.value);
+import { defineAppRouteOptions } from '~common/route/route-component';
 
 const boltPath = `M103.51 7.56474L36.9422 0.148525L0.589619 87.1413L36.0049 87.2411L15.2471 153.757L99.5527 61.591L67.4268 54.046L103.51 7.56474Z`;
 const boltGap = 24;
-
-const boltCount = computed(() => {
-	const bleed = 24;
-	return Math.ceil((Screen.width + bleed * 2) / (boltWidth.value + boltGap));
-});
 
 const stickers = [
 	'https://m.gjcdn.net/sticker/200/10-pwkhwvdr-v4.png',
@@ -80,11 +31,56 @@ export default {
 </script>
 
 <script lang="ts" setup>
+import { computed, onMounted, ref } from 'vue';
+import { RouterLink } from 'vue-router';
+
+import {
+	creatorApplyDesktop,
+	creatorApplySm,
+	creatorApplyXs,
+} from '~app/views/landing/creators/_backgrounds/backgrounds';
+import AppCreatorMooMoo from '~app/views/landing/creators/AppCreatorMooMoo.vue';
+import socialImage from '~app/views/landing/creators/social.png';
+import { trackCreatorApply } from '~common/analytics/analytics.service';
+import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
+import AppBackground from '~common/background/AppBackground.vue';
+import { BackgroundModel } from '~common/background/background.model';
+import AppBean from '~common/bean/AppBean.vue';
+import AppButton from '~common/button/AppButton.vue';
+import AppCreatorsList from '~common/creator/AppCreatorsList.vue';
+import { FiresidePostModel } from '~common/fireside/post/post-model';
+import {
+	illMobileKikkerstein,
+	illPointyThing,
+	illStreamingJelly,
+} from '~common/illustration/illustrations';
+import AppImgResponsive from '~common/img/AppImgResponsive.vue';
+import { ImgHelper } from '~common/img/helper/helper-service';
+import AppLinkExternal from '~common/link/AppLinkExternal.vue';
+import { Meta } from '~common/meta/meta-service';
+import { storeModel } from '~common/model/model-store.service';
+import { createAppRoute } from '~common/route/route-component';
+import { getScreen } from '~common/screen/screen-service';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
+import AppTheme from '~common/theme/AppTheme.vue';
+import { DefaultTheme } from '~common/theme/theme.model';
+import { UserModel } from '~common/user/user.model';
+import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
+import { arrayIndexBy, arrayShuffle } from '~utils/array';
+
+const postImages = import.meta.glob<string>('./_posts/*.jpg', {
+	eager: true,
+	query: '?url',
+	import: 'default',
+});
+
 interface Testimonial {
 	user: number;
 	text: string;
 	tag: string;
 }
+
+const { isXs, isSm, isDesktop, screenWidth } = getScreen();
 
 const postImageKeys = arrayShuffle(Object.keys(postImages));
 
@@ -97,14 +93,21 @@ const whyBackground = ref<BackgroundModel>();
 const testimonialUsers = ref<UserModel[]>([]);
 const testimonials = ref<Testimonial[]>([]);
 
+const boltHeight = computed(() => (isDesktop.value ? 182 : 164));
+const boltWidth = computed(() => (104 / 154) * boltHeight.value);
+const boltCount = computed(() => {
+	const bleed = 24;
+	return Math.ceil((screenWidth.value + bleed * 2) / (boltWidth.value + boltGap));
+});
+
 const headerPost = computed(() => getPostFromIndex(postIndex.value));
 const postsCount = computed(() => postImageKeys.length);
 const testimonialUsersIndexed = computed(() => arrayIndexBy(testimonialUsers.value, 'id'));
 
 const applyBackground = computed(() => {
-	if (Screen.isXs) {
+	if (isXs.value) {
 		return creatorApplyXs;
-	} else if (Screen.isSm) {
+	} else if (isSm.value) {
 		return creatorApplySm;
 	}
 
@@ -259,7 +262,7 @@ function getRandomStickers(count = 3) {
 
 			<div class="-page-header-content -col-mobile">
 				<div class="-header-lead -shadow">
-					<div v-if="Screen.isDesktop" class="-header-lead-spacer" />
+					<div v-if="isDesktop" class="-header-lead-spacer" />
 
 					<div class="-header-lead-text -main-header-text">
 						Become a Game Jolt Creator
@@ -333,7 +336,7 @@ function getRandomStickers(count = 3) {
 						<AppBean :variant="1" flip>
 							<img
 								:style="{
-									width: Screen.isDesktop ? '140px' : '124px',
+									width: isDesktop ? '140px' : '124px',
 									marginRight: '10%',
 								}"
 								:src="illMobileKikkerstein.path"
@@ -358,7 +361,7 @@ function getRandomStickers(count = 3) {
 						<AppBean :variant="2">
 							<img
 								:style="{
-									width: Screen.isDesktop ? '248px' : '220px',
+									width: isDesktop ? '248px' : '220px',
 									marginBottom: '5%',
 								}"
 								:src="illStreamingJelly.path"
@@ -382,7 +385,7 @@ function getRandomStickers(count = 3) {
 						<AppBean :variant="1">
 							<img
 								:style="{
-									width: Screen.isDesktop ? '240px' : '213px',
+									width: isDesktop ? '240px' : '213px',
 									marginLeft: '5%',
 									marginBottom: '5%',
 								}"

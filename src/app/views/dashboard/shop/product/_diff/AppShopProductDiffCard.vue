@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { kThemeBgOffset } from '~common/theme/variables';
 import {
 	styleBorderRadiusLg,
@@ -38,7 +38,7 @@ import {
 				...styleElevate(1),
 				backgroundColor: kThemeBgOffset,
 				padding: `24px`,
-				...styleWhen(Screen.isXs, {
+				...styleWhen(getScreen().isXs.value, {
 					padding: `12px`,
 				}),
 			}"

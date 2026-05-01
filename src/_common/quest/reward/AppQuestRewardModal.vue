@@ -9,7 +9,7 @@ import AppPopcornKettle from '~common/popcorn/AppPopcornKettle.vue';
 import { createPopcornKettleController } from '~common/popcorn/popcorn-kettle-controller';
 import AppQuestThumbnail from '~common/quest/AppQuestThumbnail.vue';
 import { QuestModel } from '~common/quest/quest-model';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 import AppThemeSvg from '~common/theme/svg/AppThemeSvg.vue';
 import { sleep } from '~utils/utils';
@@ -71,6 +71,7 @@ type Props = {
 const { quest, rewards, title } = defineProps<Props>();
 
 const kettleController = createPopcornKettleController();
+const { screenWidth, screenHeight } = getScreen();
 
 const backpackEnter = useTemplateRef('backpackEnter');
 const backpackOpen = useTemplateRef('backpackOpen');
@@ -105,8 +106,8 @@ async function startBackpackFlow() {
 	openBackpack();
 	await sleep(DurationBackpackItem + DurationBackpackOpen);
 
-	const opposite = Screen.width / 3;
-	const adjacent = Screen.height * 0.7;
+	const opposite = screenWidth.value / 3;
+	const adjacent = screenHeight.value * 0.7;
 	const hypo = Math.sqrt(Math.pow(opposite, 2) + Math.pow(adjacent, 2));
 	const radians = Math.asin(opposite / hypo);
 	const angle = radians / (Math.PI / 180);

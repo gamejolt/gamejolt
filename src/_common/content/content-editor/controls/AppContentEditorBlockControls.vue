@@ -15,11 +15,12 @@ import {
 } from '~common/content/content-editor/content-editor-controller';
 import { showErrorGrowl } from '~common/growls/growls.service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import { $gettext } from '~common/translate/translate.service';
 
 const controller = useContentEditorController()!;
+const { isXs } = getScreen();
 const top = ref(0);
 
 const contextCapabilities = computed(() => controller.contextCapabilities);
@@ -138,8 +139,8 @@ function onClickOrderedList() {
 			left: '-32px',
 		}"
 		:class="{
-			'-controls-desktop': !Screen.isXs,
-			'-controls-mobile': Screen.isXs,
+			'-controls-desktop': !isXs,
+			'-controls-mobile': isXs,
 		}"
 		tabindex="0"
 	>
@@ -147,7 +148,7 @@ function onClickOrderedList() {
 		<!-- When adding new buttons here, make sure they are added in both mobile and desktop views -->
 		<transition name="fade">
 			<div v-if="shouldShow">
-				<template v-if="Screen.isXs">
+				<template v-if="isXs">
 					<button
 						v-if="contextCapabilities.media"
 						v-app-tooltip="$gettext('Add an image or GIF')"

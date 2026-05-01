@@ -20,7 +20,7 @@ import AppLoading from '~common/loading/AppLoading.vue';
 import { getMediaItemImageSrc } from '~common/media-item/media-item-model';
 import { storeModel, storeModelList } from '~common/model/model-store.service';
 import AppCircularProgress from '~common/progress/AppCircularProgress.vue';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppStickerMastery from '~common/sticker/AppStickerMastery.vue';
 import AppStickerPack, { StickerPackRatio } from '~common/sticker/pack/AppStickerPack.vue';
 import { StickerPackModel } from '~common/sticker/pack/pack.model';
@@ -45,12 +45,14 @@ const { item } = defineProps<Props>();
 
 const packs = defineModel<StickerPackModel[]>('packs', { required: true });
 
+const { isPointerMouse, screenHeight } = getScreen();
+
 const isLoading = ref(true);
 const collectible = ref<CollectibleModel>();
 
 const hideCollectibleRibbon = ref(false);
 watch(
-	() => Screen.isPointerMouse,
+	() => isPointerMouse.value,
 	() => {
 		hideCollectibleRibbon.value = false;
 	}
@@ -264,14 +266,12 @@ const mutedStyles = {
 				...styleMaxWidthForOptions({
 					ratio: 1,
 					maxWidth: 320,
-					maxHeight: Screen.height / 3,
+					maxHeight: screenHeight / 3,
 				}),
 			}"
-			@mouseover="Screen.isPointerMouse ? (hideCollectibleRibbon = true) : undefined"
-			@mouseout="Screen.isPointerMouse ? (hideCollectibleRibbon = false) : undefined"
-			@click="
-				Screen.isPointerMouse ? undefined : (hideCollectibleRibbon = !hideCollectibleRibbon)
-			"
+			@mouseover="isPointerMouse ? (hideCollectibleRibbon = true) : undefined"
+			@mouseout="isPointerMouse ? (hideCollectibleRibbon = false) : undefined"
+			@click="isPointerMouse ? undefined : (hideCollectibleRibbon = !hideCollectibleRibbon)"
 		>
 			<AppAspectRatio
 				:style="{

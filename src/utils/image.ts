@@ -1,5 +1,5 @@
 import { Environment } from '~common/environment/environment.service';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 
 export const imageMimeTypes = [
 	'image/jpg',
@@ -64,7 +64,7 @@ function getMaxMediaserverDimension(maxDimension: number, options: HiDpiOptions)
 
 	let dimension = maxDimension;
 
-	if (Screen.isHiDpi) {
+	if (getScreen().isHiDpi.value) {
 		const hiDpiScale = 2;
 
 		let hiDpiThreshold = step / hiDpiScale;

@@ -2,7 +2,7 @@
 import { formatNumber } from '~common/filters/number';
 import { ForumTopicModel } from '~common/forum/topic/topic.model';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppTimeAgo from '~common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import AppTranslate from '~common/translate/AppTranslate.vue';
@@ -18,6 +18,8 @@ type Props = {
 };
 
 const { topics, sort, postCountPerPage } = defineProps<Props>();
+
+const { isXs, isDesktop } = getScreen();
 
 function getPostPage(topic: ForumTopicModel) {
 	if (!postCountPerPage) {
@@ -95,7 +97,7 @@ function getPostPage(topic: ForumTopicModel) {
 					</div>
 					<div
 						class="col-sm-3 col-md-2 text-muted small"
-						:class="{ 'text-right': !Screen.isXs }"
+						:class="{ 'text-right': !isXs }"
 					>
 						<AppTranslate
 							:translate-n="topic.replies_count || 0"
@@ -114,10 +116,7 @@ function getPostPage(topic: ForumTopicModel) {
 							%{ count } Follower
 						</AppTranslate>
 					</div>
-					<div
-						v-if="Screen.isDesktop && topic.latest_post"
-						class="col-md-3 text-muted small"
-					>
+					<div v-if="isDesktop && topic.latest_post" class="col-md-3 text-muted small">
 						<div class="forum-topic-list-item-latest-post clearfix">
 							<div class="forum-topic-list-item-latest-post-avatar">
 								<AppUserCardHover :user="topic.latest_post.user">

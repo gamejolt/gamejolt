@@ -21,7 +21,7 @@ import { $viewPostVideo, FiresidePostVideoModel } from '~common/fireside/post/vi
 import { showInfoGrowl, showSuccessGrowl } from '~common/growls/growls.service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppResponsiveDimensions from '~common/responsive-dimensions/AppResponsiveDimensions.vue';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { scrollTo } from '~common/scroll/scroll.service';
 import AppShareCard from '~common/share/card/AppShareCard.vue';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
@@ -45,6 +45,7 @@ const { post, communityNotifications = [] } = defineProps<Props>();
 
 const route = useRoute();
 const router = useRouter();
+const { isXs, isMobile } = getScreen();
 
 const stickerTargetController = shallowRef<StickerTargetController>(
 	createStickerTargetController(post, {
@@ -146,7 +147,7 @@ function onVideoPlay() {
 		>
 			<AppBackground :background="background" darken enable-page-scroll>
 				<div v-if="video" class="container-xl">
-					<AppSpacer v-if="!Screen.isXs" vertical :scale="4" />
+					<AppSpacer v-if="!isXs" vertical :scale="4" />
 
 					<div class="full-bleed-xs">
 						<template v-if="!hasVideoProcessingError">
@@ -290,7 +291,7 @@ function onVideoPlay() {
 
 					<br />
 
-					<div v-if="Screen.isMobile">
+					<div v-if="isMobile">
 						<AppPostPageRecommendations :key="post.id" :post="post" />
 					</div>
 					<br />
@@ -299,7 +300,7 @@ function onVideoPlay() {
 					</AppCommentDisabledCheck>
 				</template>
 
-				<template v-if="!Screen.isMobile" #right>
+				<template v-if="!isMobile" #right>
 					<div class="_side-col">
 						<div class="_share">
 							<AppShareCard resource="post" :url="post.url" offset-color />

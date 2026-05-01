@@ -33,7 +33,7 @@ import { showSuccessGrowl } from '~common/growls/growls.service';
 import AppHeaderBar from '~common/header/AppHeaderBar.vue';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import { getModel } from '~common/model/model-store.service';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppScrollScroller from '~common/scroll/AppScrollScroller.vue';
 import { SettingChatGroupShowMembers } from '~common/settings/settings.service';
 import { kThemeBacklight, kThemeBacklightFg } from '~common/theme/variables';
@@ -56,6 +56,7 @@ const emit = defineEmits<{
 }>();
 const { closeChatPane } = useAppStore();
 const { chatUnsafe: chat } = useGridStore();
+const { isXs, isMobile, isDesktop } = getScreen();
 
 const headerAvatarSizeStyles: CSSProperties = {
 	width: `36px`,
@@ -137,7 +138,7 @@ const friendAddJolticonVersion = ref<1 | 2>(1);
  * The sidebar that we want to be displayed.
  */
 const preferredSidebar = ref<SidebarTab | undefined>(
-	!Screen.isXs && SettingChatGroupShowMembers.get() ? 'members' : undefined
+	!isXs.value && SettingChatGroupShowMembers.get() ? 'members' : undefined
 );
 
 /**
@@ -166,7 +167,7 @@ const isShowingUsers = toRef(() => preferredSidebar.value === 'members');
 const membersCount = toRef(() => formatNumber(room.value?.member_count || 0));
 const roomTitle = computed(() => (!room.value ? $gettext(`Chat`) : getChatRoomTitle(room.value)));
 const showMembersViewButton = toRef(() =>
-	!room.value ? false : !room.value.isPmRoom && !Screen.isXs
+	!room.value ? false : !room.value.isPmRoom && !isXs.value
 );
 const friends = toRef(() => chat.value.friendsList.users);
 
@@ -204,7 +205,7 @@ function closeWindow() {
 
 	// xs size needs to show the friends list when closing the room. Any other
 	// size can close the whole chat instead.
-	if (!Screen.isXs) {
+	if (!isXs.value) {
 		closeChatPane();
 	}
 }
@@ -230,7 +231,7 @@ function onMobileAppBarBack() {
 			>
 				<template #leading>
 					<AppButton
-						v-if="Screen.isXs"
+						v-if="isXs"
 						v-app-tooltip="$gettext('Close')"
 						circle
 						trans
@@ -348,7 +349,7 @@ function onMobileAppBarBack() {
 					</template>
 
 					<AppButton
-						v-if="!Screen.isXs"
+						v-if="!isXs"
 						v-app-tooltip="$gettext('Close')"
 						class="_header-control"
 						circle
@@ -386,10 +387,10 @@ function onMobileAppBarBack() {
 				</div>
 
 				<div v-if="room && sidebar" class="_sidebar">
-					<div v-if="Screen.isDesktop" class="_sidebar-shadow" />
+					<div v-if="isDesktop" class="_sidebar-shadow" />
 
 					<div class="_sidebar-container">
-						<AppHeaderBar v-if="Screen.isMobile" title-size="lg" center-title>
+						<AppHeaderBar v-if="isMobile" title-size="lg" center-title>
 							<template #leading>
 								<AppButton
 									icon="chevron-left"
@@ -434,18 +435,17 @@ function onMobileAppBarBack() {
 								<FormChatRoomSettings
 									:room="room"
 									:show-members-preview="
-										(!showMembersViewButton || Screen.isMobile) &&
-										room.isGroupRoom
+										(!showMembersViewButton || isMobile) && room.isGroupRoom
 									"
 									:style="{
-										paddingTop: Screen.isXs ? '16px' : undefined,
+										paddingTop: isXs ? '16px' : undefined,
 									}"
 									@view-members="preferredSidebar = 'members'"
 								/>
 							</AppScrollScroller>
 						</template>
 						<template v-else-if="sidebar === 'members'">
-							<div v-if="Screen.isDesktop" class="_header-members">
+							<div v-if="isDesktop" class="_header-members">
 								<AppTranslate>Members</AppTranslate>
 								<span> ({{ membersCount }}) </span>
 							</div>

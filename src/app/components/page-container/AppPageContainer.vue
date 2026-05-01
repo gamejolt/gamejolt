@@ -3,7 +3,7 @@ import { computed, CSSProperties, toRef, watch } from 'vue';
 
 import { kShellTopNavHeight } from '~app/styles/variables';
 import { ComponentProps } from '~common/component-helpers';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppScrollAffix from '~common/scroll/AppScrollAffix.vue';
 import AppScrollScroller, { createScroller } from '~common/scroll/AppScrollScroller.vue';
 import { styleWhen } from '~styles/mixins';
@@ -44,6 +44,8 @@ const {
 	disableStickySides = false,
 } = defineProps<Props>();
 
+const { isLg, isDesktop } = getScreen();
+
 const scrollerLeft = createScroller();
 const scrollerRight = createScroller();
 
@@ -72,14 +74,14 @@ watch(
 	{ immediate: true }
 );
 
-const hasLeftColumn = toRef(() => !noLeft && Screen.isLg);
+const hasLeftColumn = toRef(() => !noLeft && isLg.value);
 const hasRightColumn = toRef(() => !noRight);
-const shouldCombineColumns = toRef(() => !noLeft && !Screen.isLg);
+const shouldCombineColumns = toRef(() => !noLeft && !isLg.value);
 const stickyTopMargin = toRef(() => stickySideTopMargin ?? 0);
 
 const stickySideData = toRef(() => {
 	if (
-		!Screen.isDesktop ||
+		!isDesktop.value ||
 		(!hasLeftColumn.value && !hasRightColumn.value) ||
 		stickySides === false
 	) {

@@ -9,7 +9,7 @@ import AppCurrencyPillList from '~common/currency/AppCurrencyPillList.vue';
 import { shorthandReadableTime } from '~common/filters/duration';
 import { InventoryShopProductSaleModel } from '~common/inventory/shop/inventory-shop-product-sale.model';
 import { useOnHover } from '~common/on/useOnHover';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppStickerPack, {
 	StickerPackExpiryStyles,
 	StickerPackRatio,
@@ -39,7 +39,7 @@ const { user: myUser } = useCommonStore();
 const name = computed(() => shopProduct.product?.name || '');
 
 const { hoverBinding, hovered } = useOnHover({
-	disable: toRef(() => !Screen.isPointerMouse),
+	disable: toRef(() => !getScreen().isPointerMouse.value),
 });
 
 function onClickProduct() {

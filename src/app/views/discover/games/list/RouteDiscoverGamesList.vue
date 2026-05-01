@@ -23,7 +23,7 @@ import AppGameAddBanner from '~common/game/add-banner/AppGameAddBanner.vue';
 import { HistoryCache } from '~common/history/cache/cache.service';
 import { Meta } from '~common/meta/meta-service';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { $gettext } from '~common/translate/translate.service';
 import { arrayShuffle } from '~utils/array';
 import { getParam, RouteLocationRedirect } from '~utils/router';
@@ -279,7 +279,7 @@ async function loadMore() {
 		<AppAdTakeoverBackground />
 
 		<AppAdTakeoverFloat>
-			<AppGameAddBanner v-if="Screen.isDesktop" />
+			<AppGameAddBanner v-if="getScreen().isDesktop.value" />
 
 			<section v-if="section !== 'by-date'" class="fill-offset">
 				<div class="container-xl">

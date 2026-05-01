@@ -9,7 +9,7 @@ import { showCollectibleDetailsModal } from '~common/collectible/details-modal/m
 import { JoltydexFeed } from '~common/joltydex/joltydex-feed';
 import { useOnHover } from '~common/on/useOnHover';
 import AppPopper from '~common/popper/AppPopper.vue';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppStickerMastery from '~common/sticker/AppStickerMastery.vue';
 import { kThemeBgOffset, kThemeBiBg, kThemeBiFg, kThemeGjBlue } from '~common/theme/variables';
 import {
@@ -34,7 +34,7 @@ const { collectible, feed } = defineProps<Props>();
 const { hoverBinding, hovered } = useOnHover();
 
 function onClick(e: MouseEvent) {
-	if (!Screen.isXs) {
+	if (!getScreen().isXs.value) {
 		return;
 	}
 

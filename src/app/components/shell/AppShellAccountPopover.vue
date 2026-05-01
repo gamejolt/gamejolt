@@ -12,7 +12,7 @@ import { formatCurrency, formatGemsCurrency } from '~common/filters/currency';
 import { showInviteModal } from '~common/invite/modal/modal.service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppPopper from '~common/popper/AppPopper.vue';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { SettingThemeDark } from '~common/settings/settings.service';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 import { useCommonStore } from '~common/store/common-store';
@@ -150,7 +150,9 @@ function quit() {
 					<RouterLink
 						class="list-group-item offline-disable"
 						:to="{
-							name: Screen.isXs ? 'dash.account-mobile-nav' : 'dash.account.edit',
+							name: getScreen().isXs.value
+								? 'dash.account-mobile-nav'
+								: 'dash.account.edit',
 						}"
 					>
 						<AppTranslate>Settings</AppTranslate>

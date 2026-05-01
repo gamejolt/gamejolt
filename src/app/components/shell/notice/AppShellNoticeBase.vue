@@ -4,7 +4,7 @@ import { onMounted, watch } from 'vue';
 import { usePayloadActionsStore } from '~app/components/shell/notice/payload-actions.store';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import { useOnHover } from '~common/on/useOnHover';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 import {
 	kThemeBgOffset,
@@ -26,6 +26,7 @@ import { kBorderWidthBase, kFontSizeLarge, kFontSizeSmall } from '~styles/variab
 import { sleep } from '~utils/utils';
 
 const { remove: removeShellNoticeItem } = usePayloadActionsStore();
+const { isXs, screenWidth } = getScreen();
 
 type Props = {
 	noticeId: number;
@@ -99,8 +100,8 @@ function removeNotice() {
 	<div
 		v-bind="{ ...hoverBinding }"
 		:class="{
-			'anim-fade-enter-right anim-fade-leave-right': !Screen.isXs,
-			'anim-fade-enter-down anim-back-leave-up': Screen.isXs,
+			'anim-fade-enter-right anim-fade-leave-right': !isXs,
+			'anim-fade-enter-down anim-back-leave-up': isXs,
 		}"
 		:style="
 			styleTyped({
@@ -109,7 +110,7 @@ function removeNotice() {
 				}),
 				display: `inline-flex`,
 				justifyContent: `flex-end`,
-				minWidth: `${Math.min(200, Screen.width - 32)}px`,
+				minWidth: `${Math.min(200, screenWidth - 32)}px`,
 				maxWidth: `350px`,
 				marginBottom: `4px`,
 			})

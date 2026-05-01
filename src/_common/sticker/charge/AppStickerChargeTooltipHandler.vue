@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref, useTemplateRef, watch } from 'vue';
 
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 
 type StickerChargeTooltipTrigger = 'hover' | 'focus';
 
@@ -42,7 +42,7 @@ function onMouseHoverHelp(isHovering: boolean) {
 
 	if (!isHovering) {
 		emit('hide');
-	} else if (Screen.isPointerMouse) {
+	} else if (getScreen().isPointerMouse.value) {
 		emit('show');
 	}
 }

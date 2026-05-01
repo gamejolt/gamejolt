@@ -24,7 +24,7 @@ import { vAppObserveDimensions } from '~common/observe-dimensions/observe-dimens
 import AppPopperBackdrop from '~common/popper/AppPopperBackdrop.vue';
 import AppPopperEscapeStack from '~common/popper/AppPopperEscapeStack.vue';
 import { deregisterPopper, hideAllPoppers, registerPopper } from '~common/popper/popper.service';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppScrollScroller from '~common/scroll/AppScrollScroller.vue';
 import { styleWhen } from '~styles/mixins';
 
@@ -207,6 +207,7 @@ const emit = defineEmits<{
 
 const slots = useSlots();
 const router = GJ_HAS_ROUTER ? useRouter() : undefined;
+const { isXs, screenHeight } = getScreen();
 
 const debugActual = computed(() => GJ_BUILD_TYPE !== 'build' && debug);
 
@@ -230,7 +231,7 @@ const computedMaxHeight = computed(() => {
 		return maxHeight;
 	}
 
-	return Screen.height - 100 + 'px';
+	return screenHeight.value - 100 + 'px';
 });
 
 const contentClass = computed(() => {
@@ -464,7 +465,7 @@ function _calcWidth() {
 	// If we are tracking a particular element's width, then we set this popover
 	// to be the same width as the element. We don't track width when it's an XS
 	// screen since we do a full width popover in those cases.
-	if (trackTriggerWidth && !Screen.isXs) {
+	if (trackTriggerWidth && !isXs.value) {
 		if (triggerElem.value) {
 			calculatedWidth.value = triggerElem.value.offsetWidth + 'px';
 			maxWidth.value = 'none';
@@ -541,7 +542,7 @@ function onManualShow() {
 
 		<teleport v-if="isVisible" :to="to">
 			<template v-if="!isHiding">
-				<AppPopperBackdrop v-if="Screen.isXs" />
+				<AppPopperBackdrop v-if="isXs" />
 				<AppPopperEscapeStack v-if="wantsEscapeStack" @trigger="_hide" />
 			</template>
 

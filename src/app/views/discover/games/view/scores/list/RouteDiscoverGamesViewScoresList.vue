@@ -11,7 +11,7 @@ import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
 import AppNavTabList from '~common/nav/tab-list/AppNavTabList.vue';
 import { hideAllPoppers } from '~common/popper/popper.service';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppScrollAffix from '~common/scroll/AppScrollAffix.vue';
 import { vAppNoAutoscroll } from '~common/scroll/auto-scroll/no-autoscroll.directive';
 import { setShouldAutoScroll } from '~common/scroll/scroll.service';
@@ -48,6 +48,7 @@ const route = useRoute();
 const router = useRouter();
 const { game } = useGameRouteController()!;
 const { user } = useCommonStore();
+const { isXs, isMobile, isDesktop } = getScreen();
 
 const scoreTables = ref<GameScoreTableModel[]>([]);
 const scoreTable = ref<GameScoreTableModel | null>(null);
@@ -92,7 +93,7 @@ const { isLoading } = createAppRoute({
 		<section class="section">
 			<div class="container">
 				<AppScoreboardSelector
-					v-if="Screen.isMobile && scoreTables.length > 1"
+					v-if="isMobile && scoreTables.length > 1"
 					:current-table="scoreTable"
 					:tables="scoreTables"
 					@select="changeTable($event)"
@@ -143,7 +144,7 @@ const { isLoading } = createAppRoute({
 							When screen isn't XS, we split the scores out into two columns.
 						-->
 						<AppLoadingFade :is-loading="isLoading">
-							<div v-if="!Screen.isXs" class="row">
+							<div v-if="!isXs" class="row">
 								<div class="col-sm-6">
 									<AppScoreList :scores="scoresLeft" :step="2" />
 								</div>
@@ -157,7 +158,7 @@ const { isLoading } = createAppRoute({
 							When screen is XS we just show as one long list.
 						-->
 						<AppLoadingFade :is-loading="isLoading">
-							<AppScoreList v-if="Screen.isXs" :scores="scores" />
+							<AppScoreList v-if="isXs" :scores="scores" />
 						</AppLoadingFade>
 
 						<div v-if="!scores.length" class="alert alert-notice full-bleed-xs">
@@ -173,7 +174,7 @@ const { isLoading } = createAppRoute({
 					<!--
 						On larger screens we show the score board selector to the right.
 					-->
-					<div v-if="Screen.isDesktop && scoreTables.length > 1" class="col-md-4">
+					<div v-if="isDesktop && scoreTables.length > 1" class="col-md-4">
 						<!--
 							We put some extra spacing in here because of the affixed game header.
 						-->

@@ -4,7 +4,7 @@ import { computed } from 'vue';
 import AppCreatorCard, { AppCreatorCardAspectRatio } from '~common/creator/AppCreatorCard.vue';
 import AppPostCardPlaceholder from '~common/fireside/post/card/AppPostCardPlaceholder.vue';
 import { FiresidePostModel } from '~common/fireside/post/post-model';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppScrollScroller from '~common/scroll/AppScrollScroller.vue';
 
 type Props = {
@@ -26,15 +26,17 @@ const {
 	gridColumnsXs = 2,
 } = defineProps<Props>();
 
+const { isXs, isSm } = getScreen();
+
 const displayPosts = computed(() => {
 	if (listType !== 'grid') {
 		return posts;
 	}
 
 	let count: number;
-	if (Screen.isXs) {
+	if (isXs.value) {
 		count = gridColumnsXs * 3;
-	} else if (Screen.isSm) {
+	} else if (isSm.value) {
 		count = gridColumnsSm * 2;
 	} else {
 		count = gridColumnsDesktop * 2;
@@ -48,9 +50,9 @@ const placeholderCount = computed(() => {
 		return 4;
 	}
 
-	if (Screen.isXs) {
+	if (isXs.value) {
 		return gridColumnsXs;
-	} else if (Screen.isSm) {
+	} else if (isSm.value) {
 		return gridColumnsSm;
 	} else {
 		return gridColumnsDesktop;

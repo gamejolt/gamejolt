@@ -3,7 +3,7 @@ import { defineAsyncComponent } from 'vue';
 import { Api } from '~common/api/api.service';
 import { FiresidePostModel } from '~common/fireside/post/post-model';
 import { showModal } from '~common/modal/modal.service';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { SettingBroadcastModal } from '~common/settings/settings.service';
 import { getCommonStore } from '~common/store/common-store';
 
@@ -27,7 +27,12 @@ async function _show(posts: FiresidePostModel[]) {
 
 export async function checkBroadcastModal() {
 	const { user } = getCommonStore();
-	if (!user.value || !SettingBroadcastModal.get() || import.meta.env.SSR || Screen.isXs) {
+	if (
+		!user.value ||
+		!SettingBroadcastModal.get() ||
+		import.meta.env.SSR ||
+		getScreen().isXs.value
+	) {
 		return;
 	}
 

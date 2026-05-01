@@ -17,7 +17,7 @@ import { $removeCommunity } from '~common/community/community.model';
 import { showInfoGrowl, showSuccessGrowl } from '~common/growls/growls.service';
 import { showModalConfirm } from '~common/modal/confirm/confirm-service';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { useThemeStore } from '~common/theme/theme.store';
 import { $gettext } from '~common/translate/translate.service';
 import { enforceLocation } from '~utils/router';
@@ -36,6 +36,7 @@ const { setPageTheme } = useThemeStore();
 const { grid } = useGridStore();
 const route = useRoute();
 const router = useRouter();
+const { isMobile } = getScreen();
 
 /* The owner's collaboration is not returned from backend.*/ /* The owner's collaboration is not returned from backend.*/
 
@@ -185,7 +186,7 @@ createAppRoute({});
 					<FormCommunity :model="community" @submit="onDetailsChange" />
 					<div class="-spacer" />
 
-					<template v-if="canEditDescription && Screen.isMobile">
+					<template v-if="canEditDescription && isMobile">
 						<h2 class="section-header">
 							{{ $gettext(`Edit Description`) }}
 						</h2>
@@ -239,7 +240,7 @@ createAppRoute({});
 				</div>
 			</template>
 
-			<template v-if="canEditDescription && !Screen.isMobile" #sidebar>
+			<template v-if="canEditDescription && !isMobile" #sidebar>
 				<h2 class="section-header">{{ $gettext(`Edit Description`) }}</h2>
 
 				<FormCommunityDescription :model="community" />

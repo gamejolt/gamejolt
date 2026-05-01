@@ -5,7 +5,7 @@ import AppImgResponsive from '~common/img/AppImgResponsive.vue';
 import AppMediaItemBackdrop from '~common/media-item/backdrop/AppMediaItemBackdrop.vue';
 import { MediaItemModel } from '~common/media-item/media-item-model';
 import { Ruler } from '~common/ruler/ruler-service';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { useResizeObserver } from '~utils/resize-observer';
 
 type Props = {
@@ -41,7 +41,7 @@ function recalcHeight() {
 			// We extend the header to the right and left by 20% on XS since the
 			// screen is so small. This makes sure that we also calculate the
 			// height larger.
-			if (Screen.isXs) {
+			if (getScreen().isXs.value) {
 				newDimensions.height *= 1.4;
 			}
 

@@ -6,7 +6,7 @@ import { useEscapeStack } from '~common/escape-stack/escape-stack.service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppLightboxItem from '~common/lightbox/item/AppLightboxItem.vue';
 import { getActiveLightbox } from '~common/lightbox/lightbox-helpers';
-import { onScreenResize, Screen } from '~common/screen/screen-service';
+import { getScreen, onScreenResize } from '~common/screen/screen-service';
 import AppTouch, { AppTouchInput } from '~common/touch/AppTouch.vue';
 import { $gettext } from '~common/translate/translate.service';
 
@@ -121,7 +121,7 @@ function close() {
 }
 
 function refreshSliderPosition() {
-	const newOffset = -(Screen.width * activeIndex.value);
+	const newOffset = -(getScreen().screenWidth.value * activeIndex.value);
 	if (slider.value) {
 		slider.value.style.transform = `translate3d( ${newOffset}px, 0, 0 )`;
 	}

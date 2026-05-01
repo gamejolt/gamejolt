@@ -1,4 +1,4 @@
-import { reactive, ref, toRef } from 'vue';
+import { ref, shallowReadonly, toRef } from 'vue';
 
 import { getDeviceType } from '~common/device/device.service';
 import { defineIsolatedState } from '~common/ssr/isolated-state';
@@ -21,19 +21,12 @@ const LG_WIDTH = 1200;
  */
 const HIDPI_BREAKPOINT = 1.5;
 
-type ScreenState = ReturnType<typeof createScreenState>;
-
 /**
- * Per-request screen state. Held inside `defineIsolatedState` so concurrent
- * SSR requests with different user agents don't race on the shared
- * breakpoint flags; `ScreenService` exposes each field as a getter/setter
- * that delegates to this state, so callers keep `Screen.isXs` ergonomics.
- *
  * @__NO_SIDE_EFFECTS__
  */
-function createScreenState() {
-	const width = ref(0);
-	const height = ref(0);
+function createScreenStore() {
+	const screenWidth = ref(0);
+	const screenHeight = ref(0);
 
 	const isHiDpi = ref(false);
 	const isPointerMouse = ref(true);
@@ -47,9 +40,9 @@ function createScreenState() {
 	const isMobile = toRef(() => isXs.value || isSm.value);
 	const isDesktop = toRef(() => !isMobile.value);
 
-	return reactive({
-		width,
-		height,
+	return shallowReadonly({
+		screenWidth,
+		screenHeight,
 		isHiDpi,
 		isPointerMouse,
 		isXs,
@@ -61,107 +54,21 @@ function createScreenState() {
 	});
 }
 
-const _state = defineIsolatedState<ScreenState>(() => createScreenState());
-
-class ScreenService {
-	/**
-	 * The actual width of the browser/screen context. Either in actual
-	 * pixels, or device pixels if we can.
-	 */
-	get width() {
-		return _state().width;
-	}
-	set width(value: number) {
-		_state().width = value;
-	}
-
-	/**
-	 * The actual height of the browser/screen context. Either in actual
-	 * pixels, or device pixels if we can.
-	 */
-	get height() {
-		return _state().height;
-	}
-	set height(value: number) {
-		_state().height = value;
-	}
-
-	/**
-	 * If it's Retina/HiDPI or not.
-	 */
-	get isHiDpi() {
-		return _state().isHiDpi;
-	}
-	set isHiDpi(value: boolean) {
-		_state().isHiDpi = value;
-	}
-
-	/**
-	 * If their primary pointer device is a mouse.
-	 */
-	get isPointerMouse() {
-		return _state().isPointerMouse;
-	}
-	set isPointerMouse(value: boolean) {
-		_state().isPointerMouse = value;
-	}
-
-	get isXs() {
-		return _state().isXs;
-	}
-	set isXs(value: boolean) {
-		_state().isXs = value;
-	}
-
-	get isSm() {
-		return _state().isSm;
-	}
-	set isSm(value: boolean) {
-		_state().isSm = value;
-	}
-
-	get isMd() {
-		return _state().isMd;
-	}
-	set isMd(value: boolean) {
-		_state().isMd = value;
-	}
-
-	get isLg() {
-		return _state().isLg;
-	}
-	set isLg(value: boolean) {
-		_state().isLg = value;
-	}
-
-	/**
-	 * If the breakpoint is either xs or sm.
-	 */
-	get isMobile() {
-		return _state().isMobile;
-	}
-
-	/**
-	 * If the breakpoint is md or greater.
-	 */
-	get isDesktop() {
-		return _state().isDesktop;
-	}
-}
-
-export const Screen: ScreenService = /** @__PURE__ */ new ScreenService();
+export const getScreen = defineIsolatedState(() => createScreenStore());
 
 export function initScreenService() {
+	const store = getScreen();
+
 	// We use their user agent to initialize our initial breakpoints so that mobile
 	// SSR renderers will correctly get the right styling. That is, if they set the
 	// user agent correctly.
 	const _deviceType = getDeviceType();
 
-	Screen.isPointerMouse = _deviceType !== 'mobile' && _deviceType !== 'tablet';
-	Screen.isXs = _deviceType === 'mobile';
-	Screen.isSm = _deviceType === 'tablet';
-	Screen.isMd = false;
-	Screen.isLg = !Screen.isXs && !Screen.isSm && !Screen.isMd;
+	store.isPointerMouse.value = _deviceType !== 'mobile' && _deviceType !== 'tablet';
+	store.isXs.value = _deviceType === 'mobile';
+	store.isSm.value = _deviceType === 'tablet';
+	store.isMd.value = false;
+	store.isLg.value = !store.isXs.value && !store.isSm.value && !store.isMd.value;
 
 	if (!import.meta.env.SSR) {
 		_createMediaQueryWatcher(
@@ -211,8 +118,10 @@ export function triggerOnScreenResize() {
 }
 
 async function _onResize() {
-	Screen.width = window.innerWidth > 0 ? window.innerWidth : (window as any)['width'];
-	Screen.height = window.innerHeight > 0 ? window.innerHeight : (window as any)['height'];
+	const store = getScreen();
+	store.screenWidth.value = window.innerWidth > 0 ? window.innerWidth : (window as any)['width'];
+	store.screenHeight.value =
+		window.innerHeight > 0 ? window.innerHeight : (window as any)['height'];
 
 	// Emit every time we resize.
 	onScreenResize.next();
@@ -227,9 +136,9 @@ function _createMediaQueryWatcher(
 	mediaQuery: string
 ) {
 	const match = window.matchMedia(mediaQuery);
-	Screen[field] = match.matches;
+	getScreen()[field].value = match.matches;
 
-	const onChange = (e: MediaQueryListEvent) => (Screen[field] = e.matches);
+	const onChange = (e: MediaQueryListEvent) => (getScreen()[field].value = e.matches);
 
 	// https://developer.mozilla.org/en-US/docs/Web/API/MediaQueryList#browser_compatibility
 	//

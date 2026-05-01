@@ -8,7 +8,7 @@ import AppAuthJoin from '~common/auth/join/AppAuthJoin.vue';
 import { Environment } from '~common/environment/environment.service';
 import { FiresidePostModel } from '~common/fireside/post/post-model';
 import AppMobileAppButtons from '~common/mobile-app/AppMobileAppButtons.vue';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppThemeSvg from '~common/theme/svg/AppThemeSvg.vue';
 import { $gettext } from '~common/translate/translate.service';
 import { imageGameJoltLogo } from '~img/images';
@@ -23,6 +23,7 @@ type Props = {
 const { posts } = defineProps<Props>();
 
 const fullscreenHeight = useFullscreenHeight();
+const { isXs } = getScreen();
 
 const shuffledPosts = ref<FiresidePostModel[]>([]);
 const currentPostIndex = ref(0);
@@ -110,7 +111,7 @@ function onPostLoaded(post: FiresidePostModel) {
 			:style="styleWhen(!shouldShowTakeover, { position: `relative`, zIndex: 2 })"
 		>
 			<AppThemeSvg
-				v-if="Screen.isXs"
+				v-if="isXs"
 				class="-logo"
 				:src="imageGameJoltLogo"
 				width="328"
@@ -130,7 +131,7 @@ function onPostLoaded(post: FiresidePostModel) {
 			</AppAdTakeoverFloat>
 
 			<div class="-auth-content">
-				<template v-if="Screen.isXs">
+				<template v-if="isXs">
 					<div class="-app-buttons">
 						<AppMobileAppButtons justified source="home-hero" />
 					</div>

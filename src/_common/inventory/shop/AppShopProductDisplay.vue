@@ -10,7 +10,7 @@ import {
 	NormalizedProductData,
 	PurchasableProductType,
 } from '~common/inventory/shop/product-owner-helpers';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { useCommonStore } from '~common/store/common-store';
 import { kThemeFgMuted } from '~common/theme/variables';
 import { UserModel } from '~common/user/user.model';
@@ -46,7 +46,7 @@ const itemWidthStyles = computed(() => {
 		...styleMaxWidthForOptions({
 			ratio: productData.aspectRatio,
 			maxWidth: 320,
-			maxHeight: Screen.height / 3,
+			maxHeight: getScreen().screenHeight.value / 3,
 		}),
 		width: `100%`,
 	} satisfies CSSProperties;

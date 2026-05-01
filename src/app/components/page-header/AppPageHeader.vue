@@ -6,7 +6,7 @@ import { computed, CSSProperties, useSlots } from 'vue';
 import AppEditableOverlay from '~common/editable-overlay/AppEditableOverlay.vue';
 import AppMediaItemCover from '~common/media-item/cover/AppMediaItemCover.vue';
 import { MediaItemModel } from '~common/media-item/media-item-model';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppScrollAffix from '~common/scroll/AppScrollAffix.vue';
 import AppAutoscrollAnchor from '~common/scroll/auto-scroll/AppAutoscrollAnchor.vue';
 
@@ -56,9 +56,10 @@ const emit = defineEmits<{
 }>();
 
 const slots = useSlots();
+const { isXs, isLg, screenHeight } = getScreen();
 
 const hasSpotlight = computed(() => {
-	if (Screen.isXs) {
+	if (isXs.value) {
 		return false;
 	}
 	const override = overrideSlots?.spotlight;
@@ -191,7 +192,7 @@ const hasControls = computed(() => {
 			:disabled="disableAutoscrollAnchor"
 		>
 			<AppScrollAffix
-				:disabled="!(shouldAffixNav && Screen.isLg && Screen.height > 750)"
+				:disabled="!(shouldAffixNav && isLg && screenHeight > 750)"
 				:padding="0"
 			>
 				<section class="section page-header-nav">

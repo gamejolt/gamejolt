@@ -4,7 +4,7 @@ import { RouterView } from 'vue-router';
 import AppPageHeader from '~app/components/page-header/AppPageHeader.vue';
 import butterfliesImage from '~app/views/forums/landing/butterflies.png';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { $gettext } from '~common/translate/translate.service';
 
 export default {
@@ -21,7 +21,7 @@ createAppRoute({});
 <template>
 	<div>
 		<AppPageHeader class="forum-header-landing">
-			<div :class="{ 'text-center': Screen.isXs }">
+			<div :class="{ 'text-center': getScreen().isXs.value }">
 				<h1>
 					{{ $gettext(`Game Jolt Forums`) }}
 				</h1>

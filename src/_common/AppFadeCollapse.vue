@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { onMounted, ref, useTemplateRef, watch } from 'vue';
 
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import {
 	getElementOffsetTopFromContext,
 	getScrollTop,
@@ -110,7 +110,7 @@ function collapse() {
 		if (getScrollTop() > targetTop) {
 			// If we're on a tiny screen, don't animate the scroll.
 			// Just set it and move on.
-			if (Screen.isXs || !animate) {
+			if (getScreen().isXs.value || !animate) {
 				scrollTo(targetTop, { animate: false });
 			} else {
 				// Otherwise set up a scroll animation to follow the bottom of the element as it collapses.

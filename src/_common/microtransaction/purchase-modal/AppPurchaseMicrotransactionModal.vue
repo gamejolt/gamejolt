@@ -15,7 +15,7 @@ import { MicrotransactionProductModel } from '~common/microtransaction/product.m
 import AppModal from '~common/modal/AppModal.vue';
 import { useModal } from '~common/modal/modal.service';
 import { storeModelList } from '~common/model/model-store.service';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 import { useCommonStore } from '~common/store/common-store';
 import { kThemeFg10 } from '~common/theme/variables';
@@ -165,7 +165,7 @@ const itemBorderSeperatorStyles: CSSProperties = {
 					<template v-else-if="!mtxProducts.length">
 						<AppIllustration
 							:asset="illExtremeSadness"
-							:max-width="Screen.width * 0.75"
+							:max-width="getScreen().screenWidth.value * 0.75"
 						>
 							{{
 								$gettext(

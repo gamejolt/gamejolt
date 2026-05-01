@@ -4,7 +4,7 @@ import { computed } from 'vue';
 import AppPostPageRecommendationsPosts from '~app/views/post/_page/recommendations/AppPostPageRecommendationsPosts.vue';
 import AppPostCardPlaceholder from '~common/fireside/post/card/AppPostCardPlaceholder.vue';
 import { FiresidePostModel } from '~common/fireside/post/post-model';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppScrollScroller from '~common/scroll/AppScrollScroller.vue';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 
@@ -13,7 +13,8 @@ type Props = {
 };
 const { post } = defineProps<Props>();
 
-const shouldScroll = computed(() => Screen.isXs);
+const { isXs } = getScreen();
+const shouldScroll = computed(() => isXs.value);
 </script>
 
 <template>
@@ -22,7 +23,7 @@ const shouldScroll = computed(() => Screen.isXs);
 			<AppTranslate>Next up</AppTranslate>
 		</h4>
 		<component
-			:is="Screen.isXs ? AppScrollScroller : 'div'"
+			:is="isXs ? AppScrollScroller : 'div'"
 			:class="{ '-scrollable': shouldScroll }"
 			:horizontal="shouldScroll"
 			:thin="shouldScroll"

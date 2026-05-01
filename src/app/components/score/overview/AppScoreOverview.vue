@@ -10,7 +10,7 @@ import { GameModel } from '~common/game/game.model';
 import { GameScoreTableModel } from '~common/game/score-table/score-table.model';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import { hideAllPoppers } from '~common/popper/popper.service';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { useCommonStore } from '~common/store/common-store';
 import AppTimeAgo from '~common/time/AppTimeAgo.vue';
 import AppTranslate from '~common/translate/AppTranslate.vue';
@@ -26,6 +26,7 @@ type Props = {
 const { game, initialPayload, size = 'full' } = defineProps<Props>();
 
 const { user: appUser } = useCommonStore();
+const { isXs, isDesktop } = getScreen();
 
 const scoreTables = ref<GameScoreTableModel[]>([]);
 const scoreTable = ref<GameScoreTableModel | null>(null);
@@ -202,7 +203,7 @@ async function changeTable(table?: GameScoreTableModel) {
 				<div class="score-overview-top">
 					<h4
 						:class="{
-							'section-header': !appUser || (Screen.isDesktop && size === 'full'),
+							'section-header': !appUser || (isDesktop && size === 'full'),
 						}"
 					>
 						<AppTranslate>Best Scores</AppTranslate>
@@ -212,7 +213,7 @@ async function changeTable(table?: GameScoreTableModel) {
 						<!--
 						When screen isn't XS, we split the scores out into two columns.
 						-->
-						<div v-if="!Screen.isXs" class="row">
+						<div v-if="!isXs" class="row">
 							<div class="col-sm-6">
 								<AppScoreList :scores="scoresLeft" :step="2" />
 							</div>
@@ -224,7 +225,7 @@ async function changeTable(table?: GameScoreTableModel) {
 						<!--
 						When screen is XS we just show as one long list.
 						-->
-						<AppScoreList v-if="Screen.isXs" :scores="scores" />
+						<AppScoreList v-if="isXs" :scores="scores" />
 
 						<AppButton
 							block-xs

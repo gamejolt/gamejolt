@@ -13,7 +13,7 @@ import {
 	watchPostEffect,
 } from 'vue';
 
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppScrollInviewParent from '~common/scroll/inview/AppScrollInviewParent.vue';
 import { DefaultTheme, GrayLight, GraySubtle } from '~common/theme/theme.model';
 import { useThemeStore } from '~common/theme/theme.store';
@@ -158,7 +158,7 @@ onMounted(() => {
 			'_default-scroller': !overlay,
 			'_overlay-scroller': overlay,
 			'_modal-scroller': modalScroller,
-			_mouse: Screen.isPointerMouse,
+			_mouse: getScreen().isPointerMouse.value,
 			_thin: thin,
 			_horizontal: horizontal,
 			'_hide-scrollbar': hideScrollbar,

@@ -15,7 +15,7 @@ import { showErrorGrowl } from '~common/growls/growls.service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import { showLikersModal } from '~common/likers/modal.service';
 import { PostOverlayTextStyles } from '~common/post/post-styles';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import { $gettext } from '~common/translate/translate.service';
 import { styleWhen } from '~styles/mixins';
@@ -130,7 +130,7 @@ function showLikers() {
 			class="blip"
 			:class="{
 				'blip-active': liked,
-				mobile: Screen.isXs,
+				mobile: getScreen().isXs.value,
 				'-highlight': liked,
 			}"
 			:style="styleWhen(overlay, PostOverlayTextStyles)"

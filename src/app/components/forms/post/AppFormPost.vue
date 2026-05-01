@@ -52,7 +52,7 @@ import { MediaItemModel } from '~common/media-item/media-item-model';
 import { storeModelList } from '~common/model/model-store.service';
 import AppProgressBar from '~common/progress/AppProgressBar.vue';
 import { RealmModel } from '~common/realm/realm-model';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { SettingPostBackgroundId } from '~common/settings/settings.service';
 import { useCommonStore } from '~common/store/common-store';
 import AppTheme from '~common/theme/AppTheme.vue';
@@ -118,6 +118,7 @@ const emit = defineEmits<{
 }>();
 
 const { user } = useCommonStore();
+const { isXs } = getScreen();
 
 const wasPublished = ref(false);
 const attachmentType = ref<FiresidePostType.Video | FiresidePostType.Media>();
@@ -1459,7 +1460,7 @@ function _getMatchingBackgroundIdFromPref() {
 						:solid="false"
 						:primary="false"
 						trans
-						:block="Screen.isXs"
+						:block="isXs"
 						:overlay="overlay"
 						@before-submit="onDraftSubmit()"
 					>
@@ -1472,7 +1473,7 @@ function _getMatchingBackgroundIdFromPref() {
 						:disabled="!submitButtonsEnabled"
 						primary
 						solid
-						:block="Screen.isXs"
+						:block="isXs"
 						:overlay="overlay"
 						@before-submit="onPublishSubmit()"
 					>

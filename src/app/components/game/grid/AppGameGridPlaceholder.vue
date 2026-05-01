@@ -7,7 +7,7 @@ import {
 	GameGridRowSizeSm,
 } from '~app/components/game/grid/AppGameGrid.vue';
 import AppGameThumbnailPlaceholder from '~common/game/thumbnail/AppGameThumbnailPlaceholder.vue';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 
 type Props = {
 	num: number;
@@ -17,7 +17,9 @@ type Props = {
 };
 const { num, truncateToFit, scrollable, forceScrollable } = defineProps<Props>();
 
-const isScrollable = toRef(() => (Screen.isXs && scrollable) || forceScrollable);
+const { isXs, isMd, isLg } = getScreen();
+
+const isScrollable = toRef(() => (isXs.value && scrollable) || forceScrollable);
 
 const count = computed(() => {
 	if (!truncateToFit || isScrollable.value) {
@@ -25,11 +27,11 @@ const count = computed(() => {
 	}
 
 	let rowSize: number;
-	if (Screen.isXs) {
+	if (isXs.value) {
 		rowSize = GameGridRowSizeSm;
-	} else if (Screen.isMd) {
+	} else if (isMd.value) {
 		rowSize = GameGridRowSizeMd;
-	} else if (Screen.isLg) {
+	} else if (isLg.value) {
 		rowSize = GameGridRowSizeLg;
 	} else {
 		rowSize = num;

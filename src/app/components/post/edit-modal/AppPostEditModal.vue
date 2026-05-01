@@ -14,7 +14,7 @@ import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
 import AppModal from '~common/modal/AppModal.vue';
 import { useModal } from '~common/modal/modal.service';
 import { RealmModel } from '~common/realm/realm-model';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppTheme from '~common/theme/AppTheme.vue';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 
@@ -75,7 +75,7 @@ function onBackgroundChange(bg?: BackgroundModel) {
 			:background="background || undefined"
 			:darken="overlay"
 			:backdrop-style="
-				Screen.isXs
+				getScreen().isXs.value
 					? undefined
 					: {
 							overflow: 'hidden',

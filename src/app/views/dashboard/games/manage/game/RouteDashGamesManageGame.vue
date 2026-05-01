@@ -10,7 +10,7 @@ import AppExpand from '~common/expand/AppExpand.vue';
 import AppMediaItemCover from '~common/media-item/cover/AppMediaItemCover.vue';
 import AppNavTabList from '~common/nav/tab-list/AppNavTabList.vue';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 
 export default {
 	...defineAppRouteOptions({
@@ -22,6 +22,7 @@ export default {
 <script lang="ts" setup>
 const route = useRoute();
 const { game, media } = useGameDashRouteController()!;
+const { isMobile, isDesktop } = getScreen();
 
 function showEditHeader() {
 	showGameHeaderModal(game.value!);
@@ -64,7 +65,7 @@ createAppRoute({});
 			<AppGameManageMediaBar :game="game!" :media-items="media" />
 		</AppExpand>
 
-		<div v-if="Screen.isMobile" class="container">
+		<div v-if="isMobile" class="container">
 			<br />
 			<AppNavTabList>
 				<AppGameManageNav />
@@ -74,7 +75,7 @@ createAppRoute({});
 		<section class="section">
 			<div class="container">
 				<div class="row">
-					<div v-if="Screen.isDesktop" class="col-md-2">
+					<div v-if="isDesktop" class="col-md-2">
 						<nav class="platform-list">
 							<AppGameManageNav />
 						</nav>

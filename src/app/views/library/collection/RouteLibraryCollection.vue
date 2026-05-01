@@ -35,7 +35,7 @@ import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
 import { Meta } from '~common/meta/meta-service';
 import AppPopper from '~common/popper/AppPopper.vue';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { useCommonStore } from '~common/store/common-store';
 import { useThemeStore } from '~common/theme/theme.store';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
@@ -89,6 +89,7 @@ export default {
 
 <script lang="ts" setup>
 const route = useRoute();
+const { isXs } = getScreen();
 
 const { tillStoreBootstrapped } = useAppStore();
 const { user: sessionUser } = useCommonStore();
@@ -391,7 +392,7 @@ async function loadMore() {
 			:autoscroll-anchor-key="collection._id"
 		>
 			<div class="row collection-copy">
-				<div v-if="!Screen.isXs" class="col-sm-4 col-md-3">
+				<div v-if="!isXs" class="col-sm-4 col-md-3">
 					<AppGameCollectionThumbnail
 						:key="collection._id"
 						class="anim-fade-in-enlarge"
@@ -730,7 +731,7 @@ async function loadMore() {
 						<h1 class="section-header">
 							{{ $gettext(`Recommended Games`) }}
 						</h1>
-						<div :class="{ 'pull-left': !Screen.isXs }">
+						<div :class="{ 'pull-left': !isXs }">
 							<p>
 								{{
 									$gettext(

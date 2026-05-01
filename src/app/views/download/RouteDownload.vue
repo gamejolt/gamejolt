@@ -25,7 +25,7 @@ import { setAppPromotionCohort, useAppPromotionStore } from '~common/mobile-app/
 import { Navigate } from '~common/navigate/navigate.service';
 import { buildPayloadErrorForStatusCode } from '~common/payload/payload-service';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppScrollAffix from '~common/scroll/AppScrollAffix.vue';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 import { $gettext } from '~common/translate/translate.service';
@@ -66,6 +66,7 @@ const DownloadDelay = 8_000;
 const adStore = useAdStore();
 const appPromotionStore = useAppPromotionStore();
 const route = useRoute();
+const { isLg, isDesktop } = getScreen();
 
 const downloadStarted = ref(false);
 const game = ref<GameModel>(null as any);
@@ -209,7 +210,7 @@ function onVideoAdFail() {
 				paddingTop: kLineHeightComputed.px,
 			}"
 		>
-			<AppAdTakeoverFloat v-if="Screen.isDesktop">
+			<AppAdTakeoverFloat v-if="isDesktop">
 				<AppAdWidget
 					unit-name="billboard"
 					:style-override="{
@@ -219,14 +220,14 @@ function onVideoAdFail() {
 			</AppAdTakeoverFloat>
 
 			<AppPageContainer xl>
-				<template v-if="Screen.isDesktop" #left>
+				<template v-if="isDesktop" #left>
 					<AppScrollAffix>
 						<AppAdTakeoverFloat>
 							<AppAdWidget unit-name="halfpage" takeover />
 						</AppAdTakeoverFloat>
 					</AppScrollAffix>
 				</template>
-				<template v-if="Screen.isLg" #right>
+				<template v-if="isLg" #right>
 					<AppScrollAffix>
 						<AppAdTakeoverFloat>
 							<AppAdWidget unit-name="halfpage" />

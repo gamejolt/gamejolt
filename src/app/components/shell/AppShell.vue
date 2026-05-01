@@ -20,7 +20,7 @@ import { Connection } from '~common/connection/connection-service';
 import { Meta } from '~common/meta/meta-service';
 import AppMinbar from '~common/minbar/AppMinbar.vue';
 import AppMobileAppPromotionBanner from '~common/mobile-app/AppMobileAppPromotionBanner.vue';
-import { Screen, triggerOnScreenResize } from '~common/screen/screen-service';
+import { getScreen, triggerOnScreenResize } from '~common/screen/screen-service';
 import AppStickerLayer from '~common/sticker/layer/AppStickerLayer.vue';
 
 const AppQuestWindow = defineAsyncComponent(
@@ -53,6 +53,7 @@ const { chat } = useGridStore();
 const { activeQuestId, activeQuestResource } = useQuestStore();
 const { selectedJoltydexUser } = useJoltydexStore();
 const route = useRoute();
+const { isXs } = getScreen();
 
 initShellRoutes();
 
@@ -114,8 +115,8 @@ watch([hasChatNotification, unreadActivityCount, hasUnreadNotifications], () => 
 			'is-client-offline': Connection.isClientOffline,
 			'left-pane-visible': ssrShouldShowSidebar || !!visibleLeftPane,
 			'right-pane-visible': !!visibleRightPane,
-			'has-cbar': ssrShouldShowSidebar || (hasCbar && !Screen.isXs),
-			'has-cbar-mobile': hasCbar && Screen.isXs,
+			'has-cbar': ssrShouldShowSidebar || (hasCbar && !isXs),
+			'has-cbar-mobile': hasCbar && isXs,
 			'has-banner': hasBanner && !isShellHidden,
 		}"
 		:style="shellCSSVariables"

@@ -5,7 +5,7 @@ import AppWeplayLogo from '~app/components/weplay/logo/AppWeplayLogo.vue';
 import AppButton from '~common/button/AppButton.vue';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import { touchUser } from '~common/user/user.model';
 
@@ -128,7 +128,7 @@ createAppRoute({
 							</tbody>
 						</table>
 
-						<div v-if="!Screen.isXs" class="controls-center">
+						<div v-if="!getScreen().isXs.value" class="controls-center">
 							<div class="controls-stripe" />
 							<div class="controls-stripe" />
 							<div class="controls-stripe" />

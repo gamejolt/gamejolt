@@ -11,7 +11,7 @@ import AppButton from '~common/button/AppButton.vue';
 import AppRealmFollowButton from '~common/realm/AppRealmFollowButton.vue';
 import AppRealmFullCard from '~common/realm/AppRealmFullCard.vue';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import { showShareModal } from '~common/share/card/_modal/modal.service';
 import AppShareCard from '~common/share/card/AppShareCard.vue';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
@@ -28,6 +28,7 @@ export default {
 
 <script lang="ts" setup>
 const router = useRouter();
+const { isMobile, isDesktop } = getScreen();
 
 const routeStore = createRealmRouteStore();
 const { realm, knownFollowers, knownFollowerCount, processPayload } = routeStore;
@@ -49,7 +50,7 @@ function onShareClick() {
 }
 
 // Try matching the sizing of AppSpacer in the template.
-const stickySideTopMargin = toRef(() => 4 * (Screen.isMobile ? 5 : 10));
+const stickySideTopMargin = toRef(() => 4 * (isMobile.value ? 5 : 10));
 </script>
 
 <template>
@@ -59,7 +60,7 @@ const stickySideTopMargin = toRef(() => 4 * (Screen.isMobile ? 5 : 10));
 		<AppPageContainer xl sticky-sides :sticky-side-top-margin="stickySideTopMargin">
 			<template #left>
 				<AppRealmFullCard
-					v-if="Screen.isDesktop"
+					v-if="isDesktop"
 					:realm="realm"
 					:to="realm.routeLocation"
 					link-target="image"
@@ -107,11 +108,7 @@ const stickySideTopMargin = toRef(() => 4 * (Screen.isMobile ? 5 : 10));
 				</div>
 			</template>
 			<template #right>
-				<AppShareCard
-					v-if="shareLink && Screen.isDesktop"
-					resource="realm"
-					:url="shareLink"
-				/>
+				<AppShareCard v-if="shareLink && isDesktop" resource="realm" :url="shareLink" />
 			</template>
 			<template #default>
 				<RouterView />

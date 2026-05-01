@@ -12,7 +12,7 @@ import { trackAppPromotionClick } from '~common/analytics/analytics.service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppLinkExternal from '~common/link/AppLinkExternal.vue';
 import AppPopper from '~common/popper/AppPopper.vue';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 import AppUserCreatorBadge from '~common/user/creator/AppUserCreatorBadge.vue';
 
@@ -49,7 +49,7 @@ function showSystemReport() {
 						@click="
 							trackAppPromotionClick({
 								source: 'top-nav-options',
-								platform: Screen.isDesktop ? 'desktop' : 'mobile',
+								platform: getScreen().isDesktop.value ? 'desktop' : 'mobile',
 							})
 						"
 					>

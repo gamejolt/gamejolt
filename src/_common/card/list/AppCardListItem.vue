@@ -5,7 +5,7 @@ import AppCard from '~common/card/AppCard.vue';
 import { useCardList } from '~common/card/list/AppCardList.vue';
 import AppExpand from '~common/expand/AppExpand.vue';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
-import { Screen } from '~common/screen/screen-service';
+import { getScreen } from '~common/screen/screen-service';
 
 type Props = {
 	item: object;
@@ -53,7 +53,7 @@ function onClick() {
 
 		<div class="card-list-item-body full-bleed-xs">
 			<AppExpand :when="isActive">
-				<div class="well fill-offset" :class="{ 'well-row': Screen.isXs }">
+				<div class="well fill-offset" :class="{ 'well-row': getScreen().isXs.value }">
 					<slot name="body" />
 				</div>
 			</AppExpand>
