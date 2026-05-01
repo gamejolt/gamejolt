@@ -11,7 +11,7 @@ import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vu
 import { styleTextOverflow, styleWhen } from '~styles/mixins';
 import { kBorderRadiusBase } from '~styles/variables';
 
-const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height / 2}px` });
+const InviewConfig = new ScrollInviewConfig({ margin: () => `${Screen.height / 2}px` });
 </script>
 
 <script lang="ts" setup>

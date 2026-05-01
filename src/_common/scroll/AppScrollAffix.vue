@@ -64,19 +64,23 @@ function getOffsetTop() {
 }
 
 function _createInviewConfig() {
-	let offset = padding;
-	if (anchor === 'top') {
-		offset += getOffsetTop();
-	} else if (offsetTop !== undefined) {
-		offset += offsetTop;
-	}
+	return new ScrollInviewConfig({
+		margin() {
+			let offset = padding;
+			if (anchor === 'top') {
+				offset += getOffsetTop();
+			} else if (offsetTop !== undefined) {
+				offset += offsetTop;
+			}
 
-	// The 10000px is so that it only considers the element "out of view" in
-	// one direction.
-	const margin =
-		anchor === 'top' ? `${offset * -1}px 0px 10000px 0px` : `10000px 0px ${offset * -1}px 0px`;
-
-	return new ScrollInviewConfig({ margin, emitsOn: 'full-overlap' });
+			// The 10000px is so that it only considers the element "out of view" in
+			// one direction.
+			return anchor === 'top'
+				? `${offset * -1}px 0px 10000px 0px`
+				: `10000px 0px ${offset * -1}px 0px`;
+		},
+		emitsOn: 'full-overlap',
+	});
 }
 </script>
 

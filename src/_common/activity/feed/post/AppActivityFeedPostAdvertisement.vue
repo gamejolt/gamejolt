@@ -6,16 +6,16 @@ import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
 import AppButton from '~common/button/AppButton.vue';
 import AppImgResponsive from '~common/img/AppImgResponsive.vue';
 import {
+	getPostContentLeadStyles,
+	getPostFeedItemContainerStyles,
+	getPostHeaderAvatarStyles,
+	getPostHeaderMetaStyles,
 	kPostItemPaddingVertical,
 	kPostItemPaddingXsVertical,
 	PostContentContainerStyles,
-	PostContentLeadStyles,
-	PostFeedItemContainerStyles,
-	PostHeaderAvatarStyles,
 	PostHeaderBylineNameStyles,
 	PostHeaderBylineStyles,
 	PostHeaderContentStyles,
-	PostHeaderMetaStyles,
 	PostHeaderStyles,
 } from '~common/post/post-styles';
 import { Screen } from '~common/screen/screen-service';
@@ -48,7 +48,7 @@ const vPadding = computed(() =>
 
 <template>
 	<AppScrollInview :config="inviewConfig" @inview="emit('inview')">
-		<div :style="PostFeedItemContainerStyles">
+		<div :style="getPostFeedItemContainerStyles()">
 			<AppActivityFeedPostWrapper>
 				<a
 					:style="{
@@ -60,7 +60,7 @@ const vPadding = computed(() =>
 				/>
 				<div :style="PostHeaderStyles">
 					<div :style="PostHeaderContentStyles">
-						<div :style="PostHeaderAvatarStyles">
+						<div :style="getPostHeaderAvatarStyles()">
 							<img
 								:src="avatarSrc"
 								class="img-responsive"
@@ -76,7 +76,7 @@ const vPadding = computed(() =>
 							</div>
 						</div>
 					</div>
-					<div :style="PostHeaderMetaStyles">
+					<div :style="getPostHeaderMetaStyles()">
 						<span class="tag">
 							{{ $gettext(`Promoted`) }}
 						</span>
@@ -96,7 +96,7 @@ const vPadding = computed(() =>
 				</div>
 
 				<div :style="PostContentContainerStyles(false)">
-					<div :style="PostContentLeadStyles" class="fireside-post-lead-content">
+					<div :style="getPostContentLeadStyles()" class="fireside-post-lead-content">
 						{{ leadContent }}
 					</div>
 				</div>

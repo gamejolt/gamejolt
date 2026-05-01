@@ -1,4 +1,4 @@
-import { computed, CSSProperties, MaybeRefOrGetter, toValue } from 'vue';
+import { CSSProperties, MaybeRefOrGetter, toValue } from 'vue';
 
 import { Screen } from '~common/screen/screen-service';
 import { kThemeFgMuted, kThemeLink } from '~common/theme/variables';
@@ -40,13 +40,13 @@ export const PostOverlayTextStyles = {
 ////////////////////////////////////////////
 // Feed
 
-export const PostFeedItemContainerStyles = computed(() => {
+export function getPostFeedItemContainerStyles() {
 	return {
 		paddingBottom: Screen.isXs ? kPostItemPaddingXsVertical.px : kPostItemPaddingVertical.px,
 	} as const satisfies CSSProperties;
-});
+}
 
-const PostFeedItemPaddingStyles = computed(() => {
+function getPostFeedItemPaddingStyles() {
 	return Screen.isXs
 		? ({
 				paddingTop: kPostItemPaddingXsVertical.px,
@@ -60,7 +60,7 @@ const PostFeedItemPaddingStyles = computed(() => {
 				paddingLeft: kPostItemPaddingContainer.px,
 				paddingRight: kPostItemPaddingContainer.px,
 			} as const satisfies CSSProperties);
-});
+}
 
 /**
  * Will return styling to make a "post feed item".
@@ -69,7 +69,7 @@ export const stylePostFeedItem = (options: { isHovered: MaybeRefOrGetter<boolean
 	const isHovered = toValue(options.isHovered);
 
 	return {
-		...PostFeedItemPaddingStyles.value,
+		...getPostFeedItemPaddingStyles(),
 		...styleChangeBg('bg'),
 		overflow: `hidden`,
 		position: `relative`,
@@ -104,7 +104,7 @@ export const PostHeaderStyles = {
 	alignItems: `center`,
 } as const satisfies CSSProperties;
 
-export const PostHeaderAvatarStyles = computed(() => {
+export function getPostHeaderAvatarStyles() {
 	return {
 		position: `relative`,
 		flex: `none`,
@@ -114,7 +114,7 @@ export const PostHeaderAvatarStyles = computed(() => {
 		lineHeight: kPostAvatarSize.px,
 		marginBottom: `4px`,
 	} as const satisfies CSSProperties;
-});
+}
 
 export const PostHeaderContentStyles = {
 	flex: `auto`,
@@ -161,7 +161,7 @@ export const PostHeaderTimeStyles = (overlay: boolean) => {
 	} as const satisfies CSSProperties;
 };
 
-export const PostHeaderMetaStyles = computed(() => {
+export function getPostHeaderMetaStyles() {
 	return {
 		flex: `none`,
 		display: `flex`,
@@ -173,7 +173,7 @@ export const PostHeaderMetaStyles = computed(() => {
 		fontSize: kFontSizeSmall.px,
 		color: kThemeFgMuted,
 	} as const satisfies CSSProperties;
-});
+}
 
 ////////////////////////////////////////////
 // Content
@@ -194,10 +194,10 @@ export const PostContentContainerStyles = (overlay: boolean) => {
 	} as const satisfies CSSProperties;
 };
 
-export const PostContentLeadStyles = computed(() => {
+export function getPostContentLeadStyles() {
 	const margin = Screen.isMobile ? kPostItemPaddingXsVertical.px : kPostItemPaddingVertical.px;
 	return {
 		marginTop: margin,
 		marginBottom: margin,
 	} as const satisfies CSSProperties;
-});
+}

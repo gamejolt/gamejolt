@@ -3,14 +3,14 @@ import { computed } from 'vue';
 
 import AppButtonPlaceholder from '~common/button/AppButtonPlaceholder.vue';
 import {
+	getPostContentLeadStyles,
+	getPostFeedItemContainerStyles,
+	getPostHeaderAvatarStyles,
+	getPostHeaderMetaStyles,
 	PostContentContainerStyles,
-	PostContentLeadStyles,
-	PostFeedItemContainerStyles,
-	PostHeaderAvatarStyles,
 	PostHeaderBylineNameStyles,
 	PostHeaderBylineStyles,
 	PostHeaderContentStyles,
-	PostHeaderMetaStyles,
 	PostHeaderStyles,
 	stylePostFeedItem,
 } from '~common/post/post-styles';
@@ -20,13 +20,13 @@ const itemStyles = computed(() => stylePostFeedItem({ isHovered: false }));
 </script>
 
 <template>
-	<div :style="PostFeedItemContainerStyles">
+	<div :style="getPostFeedItemContainerStyles()">
 		<div :style="itemStyles">
 			<div :style="PostHeaderStyles">
 				<div :style="PostHeaderContentStyles">
 					<div
 						:style="[
-							PostHeaderAvatarStyles,
+							getPostHeaderAvatarStyles(),
 							{ borderRadius: `100%`, backgroundColor: kThemeBgSubtle },
 						]"
 					/>
@@ -37,13 +37,13 @@ const itemStyles = computed(() => stylePostFeedItem({ isHovered: false }));
 						</div>
 					</div>
 				</div>
-				<div :style="PostHeaderMetaStyles">
+				<div :style="getPostHeaderMetaStyles()">
 					<span class="-placeholder-small" style="width: 75px" />
 				</div>
 			</div>
 
 			<div :style="PostContentContainerStyles(false)">
-				<div :style="PostContentLeadStyles">
+				<div :style="getPostContentLeadStyles()">
 					<span class="-placeholder-text" />
 					<span class="-placeholder-text" />
 					<span class="-placeholder-text" style="width: 40%" />

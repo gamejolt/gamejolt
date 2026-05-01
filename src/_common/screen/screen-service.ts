@@ -1,10 +1,10 @@
 import { reactive, ref, toRef } from 'vue';
 
 import { getDeviceType } from '~common/device/device.service';
+import { defineIsolatedState } from '~common/ssr/isolated-state';
 import { EventTopic } from '~common/system/event/event-topic';
 import { debounce } from '~utils/utils';
 
-export const Screen = createScreenService();
 export const onScreenResize = new EventTopic<void>();
 
 /**
@@ -21,10 +21,17 @@ const LG_WIDTH = 1200;
  */
 const HIDPI_BREAKPOINT = 1.5;
 
+type ScreenState = ReturnType<typeof createScreenState>;
+
 /**
+ * Per-request screen state. Held inside `defineIsolatedState` so concurrent
+ * SSR requests with different user agents don't race on the shared
+ * breakpoint flags; `ScreenService` exposes each field as a getter/setter
+ * that delegates to this state, so callers keep `Screen.isXs` ergonomics.
+ *
  * @__NO_SIDE_EFFECTS__
  */
-function createScreenService() {
+function createScreenState() {
 	const width = ref(0);
 	const height = ref(0);
 
@@ -41,38 +48,108 @@ function createScreenService() {
 	const isDesktop = toRef(() => !isMobile.value);
 
 	return reactive({
-		/**
-		 * The actual width of the browser/screen context. Either in actual
-		 * pixels, or device pixels if we can.
-		 */
 		width,
-		/**
-		 * The actual height of the browser/screen context. Either in actual
-		 * pixels, or device pixels if we can.
-		 */
 		height,
-		/**
-		 * If it's Retina/HiDPI or not.
-		 */
 		isHiDpi,
-		/**
-		 * If they're primary pointer device is a mouse.
-		 */
 		isPointerMouse,
 		isXs,
 		isSm,
 		isMd,
 		isLg,
-		/**
-		 * If the breakpoint is either xs or sm.
-		 */
 		isMobile,
-		/**
-		 * If the breakpoint is md or greater.
-		 */
 		isDesktop,
 	});
 }
+
+const _state = defineIsolatedState<ScreenState>(() => createScreenState());
+
+class ScreenService {
+	/**
+	 * The actual width of the browser/screen context. Either in actual
+	 * pixels, or device pixels if we can.
+	 */
+	get width() {
+		return _state().width;
+	}
+	set width(value: number) {
+		_state().width = value;
+	}
+
+	/**
+	 * The actual height of the browser/screen context. Either in actual
+	 * pixels, or device pixels if we can.
+	 */
+	get height() {
+		return _state().height;
+	}
+	set height(value: number) {
+		_state().height = value;
+	}
+
+	/**
+	 * If it's Retina/HiDPI or not.
+	 */
+	get isHiDpi() {
+		return _state().isHiDpi;
+	}
+	set isHiDpi(value: boolean) {
+		_state().isHiDpi = value;
+	}
+
+	/**
+	 * If their primary pointer device is a mouse.
+	 */
+	get isPointerMouse() {
+		return _state().isPointerMouse;
+	}
+	set isPointerMouse(value: boolean) {
+		_state().isPointerMouse = value;
+	}
+
+	get isXs() {
+		return _state().isXs;
+	}
+	set isXs(value: boolean) {
+		_state().isXs = value;
+	}
+
+	get isSm() {
+		return _state().isSm;
+	}
+	set isSm(value: boolean) {
+		_state().isSm = value;
+	}
+
+	get isMd() {
+		return _state().isMd;
+	}
+	set isMd(value: boolean) {
+		_state().isMd = value;
+	}
+
+	get isLg() {
+		return _state().isLg;
+	}
+	set isLg(value: boolean) {
+		_state().isLg = value;
+	}
+
+	/**
+	 * If the breakpoint is either xs or sm.
+	 */
+	get isMobile() {
+		return _state().isMobile;
+	}
+
+	/**
+	 * If the breakpoint is md or greater.
+	 */
+	get isDesktop() {
+		return _state().isDesktop;
+	}
+}
+
+export const Screen: ScreenService = /** @__PURE__ */ new ScreenService();
 
 export function initScreenService() {
 	// We use their user agent to initialize our initial breakpoints so that mobile

@@ -28,7 +28,7 @@ type RealmSearchFeed = ReturnType<typeof createRealmSearchFeed>;
 const COL_COUNT_BASE = 4;
 const COL_COUNT_XS = 2;
 
-const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height}px` });
+const InviewConfig = new ScrollInviewConfig({ margin: () => `${Screen.height}px` });
 
 function createRealmSearchFeed(query: string) {
 	const safeQuery = encodeURIComponent(query);

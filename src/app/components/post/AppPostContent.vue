@@ -6,7 +6,7 @@ import { ComponentProps } from '~common/component-helpers';
 import { ContentRules } from '~common/content/content-rules';
 import AppContentViewer from '~common/content/content-viewer/AppContentViewer.vue';
 import { FiresidePostModel } from '~common/fireside/post/post-model';
-import { PostContentContainerStyles, PostContentLeadStyles } from '~common/post/post-styles';
+import { getPostContentLeadStyles, PostContentContainerStyles } from '~common/post/post-styles';
 import AppStickerTarget from '~common/sticker/target/AppStickerTarget.vue';
 import { StickerTargetController } from '~common/sticker/target/target-controller';
 
@@ -65,7 +65,7 @@ function toggleLead() {
 					v-bind="componentProps"
 					@require-change="canToggleLeadChanged"
 				>
-					<div :style="PostContentLeadStyles">
+					<div :style="getPostContentLeadStyles()">
 						<AppContentViewer
 							:source="post.lead_content"
 							:display-rules="displayRules"

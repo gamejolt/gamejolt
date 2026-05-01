@@ -12,7 +12,7 @@ import AppUserVerifiedTick from '~common/user/AppUserVerifiedTick.vue';
 import { UserFriendshipModel } from '~common/user/friendship/friendship.model';
 import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
 
-const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height / 2}px` });
+const InviewConfig = new ScrollInviewConfig({ margin: () => `${Screen.height / 2}px` });
 </script>
 
 <script lang="ts" setup>

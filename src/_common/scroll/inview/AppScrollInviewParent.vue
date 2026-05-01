@@ -95,7 +95,7 @@ function createScrollInviewContainer(config: ScrollInviewConfig, root: Element |
 
 	const _observer = new IntersectionObserver(_processUpdatedEntries, {
 		root,
-		rootMargin: config.margin,
+		rootMargin: config.margin(),
 		// Some components need to react on when an element is fully in view
 		// vs just partially (see 'emits-on' prop in AppScrollInview). For
 		// this reason we need to set both 1 and 0 thresholds. A threshold

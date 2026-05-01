@@ -10,7 +10,7 @@ import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppSc
 import AppVideo from '~common/video/AppVideo.vue';
 import { getVideoPlayerFromSources } from '~common/video/player/controller';
 
-const InviewConfig = new ScrollInviewConfig({ margin: `${Screen.height * 0.25}px` });
+const InviewConfig = new ScrollInviewConfig({ margin: () => `${Screen.height * 0.25}px` });
 </script>
 
 <script lang="ts" setup>

@@ -28,9 +28,9 @@ import { FiresidePostModel } from '~common/fireside/post/post-model';
 import { Navigate } from '~common/navigate/navigate.service';
 import { vAppObserveDimensions } from '~common/observe-dimensions/observe-dimensions.directive';
 import {
+	getPostFeedItemContainerStyles,
 	kPostItemPaddingVertical,
 	kPostItemPaddingXsVertical,
-	PostFeedItemContainerStyles,
 } from '~common/post/post-styles';
 import { Screen } from '~common/screen/screen-service';
 import { scrollTo } from '~common/scroll/scroll.service';
@@ -231,7 +231,7 @@ const vPadding = computed(() =>
 </script>
 
 <template>
-	<div ref="root" v-app-observe-dimensions="onResize" :style="PostFeedItemContainerStyles">
+	<div ref="root" v-app-observe-dimensions="onResize" :style="getPostFeedItemContainerStyles()">
 		<AppStickerLayer no-mask>
 			<AppActivityFeedPostBlocked
 				v-if="shouldBlock"

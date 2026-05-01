@@ -17,7 +17,7 @@ import { useCommonStore } from '~common/store/common-store';
 import { $gettext } from '~common/translate/translate.service';
 
 const endpoint = '/web/discover/communities';
-const InviewConfigLoadMore = new ScrollInviewConfig({ margin: `${Screen.height}px` });
+const InviewConfigLoadMore = new ScrollInviewConfig({ margin: () => `${Screen.height}px` });
 
 const cacheKey = 'DiscoverCommunities';
 interface CacheData {
