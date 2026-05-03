@@ -3,7 +3,7 @@ import { computed, ref, watch } from 'vue';
 
 import AppButton from '~common/button/AppButton.vue';
 import { useForm } from '~common/form-vue/AppForm.vue';
-import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import AppJolticon, { Jolticon } from '~common/jolticon/AppJolticon.vue';
 
 type Props = {
 	showWhenValid?: boolean;
@@ -13,7 +13,7 @@ type Props = {
 	solid?: boolean;
 	block?: boolean;
 	lg?: boolean;
-	icon?: string;
+	icon?: Jolticon;
 	disabled?: boolean;
 };
 const {
@@ -101,13 +101,13 @@ async function onClick(e: Event) {
 <template>
 	<AppButton
 		v-if="shouldShow"
-		:primary="primary"
-		:trans="trans"
-		:overlay="overlay"
-		:solid="solid"
-		:block="block"
+		:primary
+		:trans
+		:overlay
+		:solid
+		:block
+		:icon
 		:disabled="disabled || form.isProcessing"
-		:icon="icon as any"
 		@click="onClick"
 	>
 		<slot />

@@ -76,8 +76,8 @@ export class GamePackageCardModel {
 	extraBuilds: ExtraBuild[] = [];
 	showcasedRelease: GameReleaseModel | null = null;
 	showcasedOs = '';
-	showcasedOsIcon = '';
-	showcasedBrowserIcon = '';
+	showcasedOsIcon: Jolticon = 'other-os';
+	showcasedBrowserIcon: Jolticon = 'other-os';
 	otherOnly = false;
 	linkedKeys: LinkedKeyModel[] = [];
 

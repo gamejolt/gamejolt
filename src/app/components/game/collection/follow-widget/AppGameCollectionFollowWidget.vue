@@ -13,6 +13,7 @@ import {
 import { vAppAuthRequired } from '~common/auth/auth-required-directive';
 import AppButton from '~common/button/AppButton.vue';
 import { formatNumber } from '~common/filters/number';
+import { Jolticon } from '~common/jolticon/AppJolticon.vue';
 import { useCommonStore } from '~common/store/common-store';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import AppTranslate from '~common/translate/AppTranslate.vue';
@@ -49,9 +50,9 @@ const isFollowing = computed(() => {
 	);
 });
 
-const badge = computed(() => {
-	return !circle && isFollowing.value && followerCount ? formatNumber(followerCount) : '';
-});
+const badge = computed(() =>
+	!circle && isFollowing.value && followerCount ? formatNumber(followerCount) : ''
+);
 
 const tooltip = computed(() => {
 	if (collection.type === GameCollectionTypeDeveloper) {
@@ -67,9 +68,9 @@ const tooltip = computed(() => {
 			);
 });
 
-const icon = computed(() => {
+const icon = computed((): Jolticon | undefined => {
 	if (!circle) {
-		return '';
+		return undefined;
 	}
 
 	return !isFollowing.value ? 'subscribe' : 'subscribed';
@@ -106,19 +107,19 @@ async function onClick() {
 		v-app-tooltip.bottom="tooltip"
 		class="game-collection-follow-widget"
 		primary
-		:icon="icon as any"
-		:circle="circle"
-		:overlay="overlay"
-		:block="block"
+		:icon
+		:circle
+		:overlay
+		:block
+		:badge
 		:solid="isFollowing"
-		:badge="badge"
 		@click="onClick"
 	>
 		<template v-if="!circle">
 			<template v-if="!isFollowing">
-				<AppTranslate v-if="collection.type === GameCollectionTypeDeveloper"
-					>Follow Developer</AppTranslate
-				>
+				<AppTranslate v-if="collection.type === GameCollectionTypeDeveloper">
+					Follow Developer
+				</AppTranslate>
 				<AppTranslate v-else>Follow Playlist</AppTranslate>
 			</template>
 			<template v-else>
