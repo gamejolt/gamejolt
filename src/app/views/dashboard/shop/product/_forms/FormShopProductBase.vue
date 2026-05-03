@@ -21,20 +21,23 @@ import {
 	ShopDashProductType,
 	ShopDashStore,
 } from '~app/views/dashboard/shop/shop.store';
+import {
+	ShopDashProductTypeBasic,
+	ShopDashProductTypePremium,
+	ShopDashProductTypeReward,
+} from '~app/views/dashboard/shop/shop.store';
 import AppAlertBox from '~common/alert/AppAlertBox.vue';
 import { Api } from '~common/api/api.service';
 import { AvatarFrameModel } from '~common/avatar/frame.model';
 import {
 	BackgroundDefaultScale,
 	BackgroundModel,
-	BackgroundScaling,
 	getBackgroundCSSProperties,
 } from '~common/background/background.model';
+import { BackgroundScalingtile } from '~common/background/background.model';
 import { ComponentProps } from '~common/component-helpers';
-import {
-	CreatorChangeRequestModel,
-	CreatorChangeRequestStatus,
-} from '~common/creator/change-request/creator-change-request.model';
+import { CreatorChangeRequestModel } from '~common/creator/change-request/creator-change-request.model';
+import { CreatorChangeRequestStatusRejected } from '~common/creator/change-request/creator-change-request.model';
 import { formatFilesize } from '~common/filters/filesize';
 import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
 import AppFormButton from '~common/form-vue/AppFormButton.vue';
@@ -56,6 +59,12 @@ import { showErrorGrowl } from '~common/growls/growls.service';
 import AppLinkHelp from '~common/link/AppLinkHelp.vue';
 import { ModelStoreModel, storeModel } from '~common/model/model-store.service';
 import { ShopProductModel, ShopProductResource } from '~common/shop/product/product-model';
+import {
+	ShopProductResourceAvatarFrame,
+	ShopProductResourceBackground,
+	ShopProductResourceSticker,
+	ShopProductResourceStickerPack,
+} from '~common/shop/product/product-model';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 import { StickerPackModel } from '~common/sticker/pack/pack.model';
 import { StickerModel } from '~common/sticker/sticker.model';
@@ -111,18 +120,18 @@ export function createShopProductBaseForm<
 	if (baseModel) {
 		productType.value = getShopDashProductType(baseModel);
 		fileIsAnimated.value = baseModel.is_animated;
-	} else if (resource === ShopProductResource.Sticker) {
+	} else if (resource === ShopProductResourceSticker) {
 		// For stickers we want to allow them to choose, unless they can't edit
 		// the particular types, in which case we want to choose for them.
 		if (!dashGroup.value.canEditFree) {
 			// This would be weird, but whatever.
-			productType.value = ShopDashProductType.Premium;
+			productType.value = ShopDashProductTypePremium;
 		} else if (!dashGroup.value.canEditPremium) {
-			productType.value = ShopDashProductType.Basic;
+			productType.value = ShopDashProductTypeBasic;
 		}
 	} else {
 		// For other product types, you can currently only add premium.
-		productType.value = ShopDashProductType.Premium;
+		productType.value = ShopDashProductTypePremium;
 	}
 
 	const minNameLength = ref(3);
@@ -140,7 +149,7 @@ export function createShopProductBaseForm<
 	const minHeightAnimated = ref(100);
 	const maxHeightAnimated = ref(400);
 
-	const backgroundDefaultScaling = ref(BackgroundScaling.tile);
+	const backgroundDefaultScaling = ref(BackgroundScalingtile);
 	const backgroundDefaultScaleStatic = ref(BackgroundDefaultScale);
 	const backgroundDefaultScaleAnimated = ref(BackgroundDefaultScale);
 
@@ -221,7 +230,7 @@ export function createShopProductBaseForm<
 		}
 
 		let result: string;
-		if (resource === ShopProductResource.StickerPack) {
+		if (resource === ShopProductResourceStickerPack) {
 			result = `/web/dash/creators/shop/packs/save`;
 		} else {
 			result = `/web/dash/creators/shop/collectibles/save/${resource}`;
@@ -229,7 +238,7 @@ export function createShopProductBaseForm<
 		if (baseModel?.id) {
 			result += `/${baseModel.id}`;
 		}
-		return result + `?is_premium=${productType.value === ShopDashProductType.Premium ? 1 : 0}`;
+		return result + `?is_premium=${productType.value === ShopDashProductTypePremium ? 1 : 0}`;
 	});
 
 	type FormModel = typeof initialFormModel.value;
@@ -309,16 +318,16 @@ export function createShopProductBaseForm<
 			}
 
 			switch (resource) {
-				case ShopProductResource.AvatarFrame:
+				case ShopProductResourceAvatarFrame:
 					maybeStoreModel(AvatarFrameModel);
 					break;
-				case ShopProductResource.Background:
+				case ShopProductResourceBackground:
 					maybeStoreModel(BackgroundModel);
 					break;
-				case ShopProductResource.StickerPack:
+				case ShopProductResourceStickerPack:
 					maybeStoreModel(StickerPackModel);
 					break;
-				case ShopProductResource.Sticker:
+				case ShopProductResourceSticker:
 					maybeStoreModel(StickerModel);
 					break;
 				default:
@@ -332,7 +341,7 @@ export function createShopProductBaseForm<
 				loadUrl.value!,
 				{
 					...objectOmit(form.formModel, ['description', 'file']),
-					is_premium: productType.value === ShopDashProductType.Premium ? 1 : 0,
+					is_premium: productType.value === ShopDashProductTypePremium ? 1 : 0,
 				},
 				{
 					detach: true,
@@ -359,25 +368,25 @@ export function createShopProductBaseForm<
 
 			if (response.resource) {
 				switch (resource) {
-					case ShopProductResource.AvatarFrame:
+					case ShopProductResourceAvatarFrame:
 						updatedModel = updateGroup(
 							shopStore.avatarFrames,
 							storeModel(AvatarFrameModel, response.resource)
 						);
 						break;
-					case ShopProductResource.Background:
+					case ShopProductResourceBackground:
 						updatedModel = updateGroup(
 							shopStore.backgrounds,
 							storeModel(BackgroundModel, response.resource)
 						);
 						break;
-					case ShopProductResource.StickerPack:
+					case ShopProductResourceStickerPack:
 						updatedModel = updateGroup(
 							shopStore.stickerPacks,
 							storeModel(StickerPackModel, response.resource)
 						);
 						break;
-					case ShopProductResource.Sticker:
+					case ShopProductResourceSticker:
 						updatedModel = updateGroup(
 							shopStore.stickers,
 							storeModel(StickerModel, response.resource)
@@ -401,7 +410,7 @@ export function createShopProductBaseForm<
 
 				// Update published state for stickers added/removed from free
 				// packs.
-				if (resource === ShopProductResource.StickerPack && !updatedModel.is_premium) {
+				if (resource === ShopProductResourceStickerPack && !updatedModel.is_premium) {
 					const oldIds = initialFormModel.value.stickers;
 					const newIds = Object.hasOwn(form.formModel, 'stickers')
 						? form.formModel.stickers
@@ -562,7 +571,7 @@ export function createShopProductBaseForm<
 		getFieldAvailabilityUrl(field: keyof typeof initialFormModel.value) {
 			const id = baseModel?.id || 0;
 			const safeField = String(field);
-			if (resource === ShopProductResource.StickerPack) {
+			if (resource === ShopProductResourceStickerPack) {
 				return `/web/dash/creators/shop/packs/check-field-availability/${id}/${safeField}`;
 			}
 			return `/web/dash/creators/shop/collectibles/check-field-availability/${resource}/${id}/${safeField}`;
@@ -601,7 +610,7 @@ export function createShopProductBaseForm<
 
 			if (isInstance(data, BackgroundModel)) {
 				styles = getBackgroundCSSProperties(data);
-				if (data.scaling === BackgroundScaling.tile) {
+				if (data.scaling === BackgroundScalingtile) {
 					tileSize = {
 						width: data.media_item.croppedWidth / data.scale,
 						height: data.media_item.croppedHeight / data.scale,
@@ -610,7 +619,7 @@ export function createShopProductBaseForm<
 			} else {
 				styles.backgroundImage = `url(${data})`;
 
-				if (backgroundDefaultScaling.value === BackgroundScaling.tile) {
+				if (backgroundDefaultScaling.value === BackgroundScalingtile) {
 					const getSize = (min: number, max: number) => {
 						let size = min;
 						if (min !== max) {
@@ -700,15 +709,15 @@ const formGroupBindings: Partial<ComponentProps<typeof AppFormGroup>> & { style:
 // The below are kind of weird states of not being able to edit things that
 // you've set up. We need them here for slow rollout.
 const isUneditableFree = computed(
-	() => productType.value !== ShopDashProductType.Premium && !dashGroup.value.canEditFree
+	() => productType.value !== ShopDashProductTypePremium && !dashGroup.value.canEditFree
 );
 
 const isUneditablePremium = computed(
-	() => productType.value === ShopDashProductType.Premium && !dashGroup.value.canEditPremium
+	() => productType.value === ShopDashProductTypePremium && !dashGroup.value.canEditPremium
 );
 
 const isPremiumApproved = computed(
-	() => productType.value === ShopDashProductType.Premium && baseModel?.was_approved === true
+	() => productType.value === ShopDashProductTypePremium && baseModel?.was_approved === true
 );
 
 // Basically, if none of the states above are set, then we can edit the product.
@@ -718,13 +727,13 @@ const canEdit = computed(
 
 const helpDocLink = computed(() => {
 	switch (resource) {
-		case ShopProductResource.AvatarFrame:
+		case ShopProductResourceAvatarFrame:
 			return 'avatar-frames';
-		case ShopProductResource.Background:
+		case ShopProductResourceBackground:
 			return 'backgrounds';
-		case ShopProductResource.StickerPack:
+		case ShopProductResourceStickerPack:
 			return 'stickers';
-		case ShopProductResource.Sticker:
+		case ShopProductResourceSticker:
 			return 'stickers';
 		default:
 			assertNever(resource);
@@ -734,8 +743,8 @@ const helpDocLink = computed(() => {
 const canBeAnimated = computed(
 	() =>
 		// Sticker packs are not animated no matter what right now.
-		resource !== ShopProductResource.StickerPack &&
-		productType.value === ShopDashProductType.Premium
+		resource !== ShopProductResourceStickerPack &&
+		productType.value === ShopDashProductTypePremium
 );
 </script>
 
@@ -751,7 +760,7 @@ const canBeAnimated = computed(
 			>
 				<div
 					:style="productTypeSelectorStyle"
-					@click="chooseProductType(ShopDashProductType.Premium)"
+					@click="chooseProductType(ShopDashProductTypePremium)"
 				>
 					<div :style="{ fontWeight: `bold` }">
 						{{ $gettext(`Premium`) }}
@@ -767,7 +776,7 @@ const canBeAnimated = computed(
 
 				<div
 					:style="productTypeSelectorStyle"
-					@click="chooseProductType(ShopDashProductType.Basic)"
+					@click="chooseProductType(ShopDashProductTypeBasic)"
 				>
 					<div :style="{ fontWeight: `bold` }">
 						{{ $gettext(`Basic`) }}
@@ -827,7 +836,7 @@ const canBeAnimated = computed(
 				<AppSpacer vertical :scale="6" />
 			</template>
 
-			<template v-if="changeRequest?.status === CreatorChangeRequestStatus.Rejected">
+			<template v-if="changeRequest?.status === CreatorChangeRequestStatusRejected">
 				<div
 					:style="{
 						backgroundColor: kThemeBgOffset,
@@ -1104,7 +1113,7 @@ const canBeAnimated = computed(
 
 				<!-- Reward types are automatically named at the moment. -->
 				<AppFormGroup
-					v-if="productType !== ShopDashProductType.Reward"
+					v-if="productType !== ShopDashProductTypeReward"
 					v-bind="formGroupBindings"
 					name="name"
 				>
@@ -1136,7 +1145,7 @@ const canBeAnimated = computed(
 				<slot name="fields" v-bind="{ formGroupBindings }" />
 
 				<AppAlertBox
-					v-if="productType === ShopDashProductType.Premium"
+					v-if="productType === ShopDashProductTypePremium"
 					icon="notice"
 					fill-color="offset"
 				>
@@ -1155,7 +1164,7 @@ const canBeAnimated = computed(
 				<div class="text-right">
 					<AppFormButton v-if="form.changed && form.valid">
 						{{
-							productType === ShopDashProductType.Premium
+							productType === ShopDashProductTypePremium
 								? $gettext(`Submit for review`)
 								: $gettext(`Save`)
 						}}

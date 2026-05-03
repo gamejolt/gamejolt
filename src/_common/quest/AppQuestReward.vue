@@ -4,7 +4,16 @@ import { computed } from 'vue';
 import { formatNumber } from '~common/filters/number';
 import { useOnHover } from '~common/on/useOnHover';
 import AppQuestRewardThumbnail from '~common/quest/AppQuestRewardThumbnail.vue';
-import { QuestRewardTypes } from '~common/quest/quest-objective-reward-model';
+import {
+	QuestRewardTypesAvatarFrame,
+	QuestRewardTypesBackground,
+	QuestRewardTypesCoin,
+	QuestRewardTypesRandomSticker,
+	QuestRewardTypesSiteTrophy,
+	QuestRewardTypesSticker,
+	QuestRewardTypesStickerPack,
+	QuestRewardTypesUserCharge,
+} from '~common/quest/quest-objective-reward-model';
 import { QuestRewardModel } from '~common/quest/quest-reward-model';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 import { kThemeFg, kThemeFgMuted } from '~common/theme/variables';
@@ -23,11 +32,11 @@ import {
 import { kFontSizeBase, kFontSizeTiny } from '~styles/variables';
 
 const itemsWithCount = new Set([
-	QuestRewardTypes.Sticker,
-	QuestRewardTypes.RandomSticker,
-	QuestRewardTypes.UserCharge,
-	QuestRewardTypes.Coin,
-	QuestRewardTypes.StickerPack,
+	QuestRewardTypesSticker,
+	QuestRewardTypesRandomSticker,
+	QuestRewardTypesUserCharge,
+	QuestRewardTypesCoin,
+	QuestRewardTypesStickerPack,
 ]);
 </script>
 
@@ -51,15 +60,15 @@ const subtitle = computed(() => {
 	}
 
 	switch (reward.type) {
-		case QuestRewardTypes.Sticker:
+		case QuestRewardTypesSticker:
 			return $gettext(`Sticker`);
-		case QuestRewardTypes.SiteTrophy:
+		case QuestRewardTypesSiteTrophy:
 			return $gettext(`Trophy`);
-		case QuestRewardTypes.Background:
+		case QuestRewardTypesBackground:
 			return $gettext(`Background`);
-		case QuestRewardTypes.StickerPack:
+		case QuestRewardTypesStickerPack:
 			return $gettext(`Sticker pack`);
-		case QuestRewardTypes.AvatarFrame:
+		case QuestRewardTypesAvatarFrame:
 			return $gettext(`Avatar frame`);
 	}
 	return null;

@@ -1,12 +1,16 @@
 import { Model } from '~common/model/model.service';
 import { UserModel } from '~common/user/user.model';
 
-export const enum UserFriendshipState {
-	None = 0,
-	RequestSent = 1,
-	RequestReceived = 2,
-	Friends = 3,
-}
+export const UserFriendshipStateNone = 0;
+export const UserFriendshipStateRequestSent = 1;
+export const UserFriendshipStateRequestReceived = 2;
+export const UserFriendshipStateFriends = 3;
+
+export type UserFriendshipState =
+	| typeof UserFriendshipStateNone
+	| typeof UserFriendshipStateRequestSent
+	| typeof UserFriendshipStateRequestReceived
+	| typeof UserFriendshipStateFriends;
 
 export class UserFriendshipModel extends Model {
 	declare user_id: number;

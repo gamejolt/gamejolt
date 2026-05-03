@@ -15,7 +15,10 @@ import {
 	validateMinLength,
 	validateUsername,
 } from '~common/form-vue/validators';
-import { LinkedAccountProvider } from '~common/linked-account/linked-account.model';
+import {
+	LinkedAccountProvider,
+	LinkedAccountProviderGoogle,
+} from '~common/linked-account/linked-account.model';
 import { LinkedAccounts } from '~common/linked-account/linked-accounts.service';
 
 export type JoinFormModel = {
@@ -68,7 +71,7 @@ function linkedChoose(provider: LinkedAccountProvider) {
 					block
 					solid
 					:disabled="Connection.isClientOffline || blocked"
-					@click="linkedChoose(LinkedAccountProvider.Google)"
+					@click="linkedChoose(LinkedAccountProviderGoogle)"
 				>
 					<img :src="googleImage" alt="" />
 					<span>{{ $gettext(`Sign up with Google`) }}</span>

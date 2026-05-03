@@ -4,7 +4,12 @@ import { computed, ref } from 'vue';
 import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
 import AppButton from '~common/button/AppButton.vue';
 import AppCollectibleThumb from '~common/collectible/AppCollectibleThumb.vue';
-import { CollectibleType } from '~common/collectible/collectible.model';
+import {
+	CollectibleType,
+	CollectibleTypeAvatarFrame,
+	CollectibleTypeBackground,
+	CollectibleTypeSticker,
+} from '~common/collectible/collectible.model';
 import AppIllustration from '~common/illustration/AppIllustration.vue';
 import { illExtremeSadness } from '~common/illustration/illustrations';
 import {
@@ -30,16 +35,16 @@ const { user: loggedInUser } = useCommonStore();
 const ItemsPerPage = 24;
 const isInitializing = ref(true);
 
-const feedTypes = [
-	CollectibleType.AvatarFrame,
-	CollectibleType.Background,
-	CollectibleType.Sticker,
+const feedTypes: CollectibleType[] = [
+	CollectibleTypeAvatarFrame,
+	CollectibleTypeBackground,
+	CollectibleTypeSticker,
 ];
 
 const feedLabels = {
-	[CollectibleType.AvatarFrame]: $gettext(`Avatar frames`),
-	[CollectibleType.Background]: $gettext(`Backgrounds`),
-	[CollectibleType.Sticker]: $gettext(`Stickers`),
+	[CollectibleTypeAvatarFrame]: $gettext(`Avatar frames`),
+	[CollectibleTypeBackground]: $gettext(`Backgrounds`),
+	[CollectibleTypeSticker]: $gettext(`Stickers`),
 };
 
 // The number of feeds themselves are constant, no need to make the map a ref.

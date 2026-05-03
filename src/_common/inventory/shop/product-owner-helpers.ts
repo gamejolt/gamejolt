@@ -6,11 +6,14 @@ import { StickerPackModel } from '~common/sticker/pack/pack.model';
 
 export type InventoryShopProduct = StickerPackModel | AvatarFrameModel | BackgroundModel;
 
-export const enum PurchasableProductType {
-	StickerPack = 'Sticker_Pack',
-	AvatarFrame = 'Avatar_Frame',
-	Background = 'Background',
-}
+export const PurchasableProductTypeStickerPack = 'Sticker_Pack';
+export const PurchasableProductTypeAvatarFrame = 'Avatar_Frame';
+export const PurchasableProductTypeBackground = 'Background';
+
+export type PurchasableProductType =
+	| typeof PurchasableProductTypeStickerPack
+	| typeof PurchasableProductTypeAvatarFrame
+	| typeof PurchasableProductTypeBackground;
 
 export type PurchasableProductData = {
 	resource: PurchasableProductType;
@@ -27,16 +30,16 @@ interface BaseProductData {
 }
 
 interface AvatarFrameProductData extends BaseProductData {
-	resource: PurchasableProductType.AvatarFrame;
+	resource: typeof PurchasableProductTypeAvatarFrame;
 	scale?: number;
 }
 
 interface BackgroundProductData extends BaseProductData {
-	resource: PurchasableProductType.Background;
+	resource: typeof PurchasableProductTypeBackground;
 }
 
 interface StickerPackProductData extends BaseProductData {
-	resource: PurchasableProductType.StickerPack;
+	resource: typeof PurchasableProductTypeStickerPack;
 }
 
 export type NormalizedProductData =
@@ -69,7 +72,7 @@ export function getShopProductDisplayData({
 
 	if (avatarFrame) {
 		return {
-			resource: PurchasableProductType.AvatarFrame,
+			resource: PurchasableProductTypeAvatarFrame,
 			resourceId: avatarFrame.id,
 			name: avatarFrame.name,
 			scale: avatarFrame.scale,
@@ -78,7 +81,7 @@ export function getShopProductDisplayData({
 		};
 	} else if (background) {
 		return {
-			resource: PurchasableProductType.Background,
+			resource: PurchasableProductTypeBackground,
 			resourceId: background.id,
 			name: background.name,
 			imgUrl: getBackgroundImgUrl(background),
@@ -88,7 +91,7 @@ export function getShopProductDisplayData({
 		const media = stickerPack.media_item;
 		const mediaserverUrl = media.is_animated ? null : media.mediaserver_url;
 		return {
-			resource: PurchasableProductType.StickerPack,
+			resource: PurchasableProductTypeStickerPack,
 			resourceId: stickerPack.id,
 			name: stickerPack.name,
 			imgUrl: mediaserverUrl ?? media.img_url,
@@ -124,15 +127,15 @@ export function assignShopProductOwnerData(
 		return;
 	}
 	switch (model.product_type) {
-		case PurchasableProductType.StickerPack:
+		case PurchasableProductTypeStickerPack:
 			model.product = storeModel(StickerPackModel, data.product);
 			break;
 
-		case PurchasableProductType.AvatarFrame:
+		case PurchasableProductTypeAvatarFrame:
 			model.product = storeModel(AvatarFrameModel, data.product);
 			break;
 
-		case PurchasableProductType.Background:
+		case PurchasableProductTypeBackground:
 			model.product = storeModel(BackgroundModel, data.product);
 			break;
 
@@ -148,13 +151,13 @@ export function assignShopProductOwnerData(
  */
 export function getReadablePurchasableProductType(type: PurchasableProductType) {
 	switch (type) {
-		case PurchasableProductType.StickerPack:
+		case PurchasableProductTypeStickerPack:
 			return 'Sticker pack';
 
-		case PurchasableProductType.AvatarFrame:
+		case PurchasableProductTypeAvatarFrame:
 			return 'Avatar frame';
 
-		case PurchasableProductType.Background:
+		case PurchasableProductTypeBackground:
 			return 'Background';
 	}
 }

@@ -1,7 +1,13 @@
 <script lang="ts" setup>
 import { showGameDevStageSelectorConfirmModal } from '~app/components/forms/game/dev-stage-selector/confirm-service';
 import AppCard from '~common/card/AppCard.vue';
-import { $setGameDevStage, GameDevelopmentStatus, GameModel } from '~common/game/game.model';
+import {
+	$setGameDevStage,
+	GameDevelopmentStatusDevlog,
+	GameDevelopmentStatusFinished,
+	GameDevelopmentStatusWip,
+	GameModel,
+} from '~common/game/game.model';
 import { showSuccessGrowl } from '~common/growls/growls.service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import { $gettext } from '~common/translate/translate.service';
@@ -22,9 +28,9 @@ const assetPaths = import.meta.glob<string>('./*.png', {
 });
 
 const stages = [
-	GameDevelopmentStatus.Devlog,
-	GameDevelopmentStatus.Wip,
-	GameDevelopmentStatus.Finished,
+	GameDevelopmentStatusDevlog,
+	GameDevelopmentStatusWip,
+	GameDevelopmentStatusFinished,
 ];
 
 async function select(stage: number) {
@@ -54,7 +60,7 @@ function isEnabled(stage: number) {
 	}
 
 	if (
-		(stage === GameDevelopmentStatus.Wip || stage === GameDevelopmentStatus.Finished) &&
+		(stage === GameDevelopmentStatusWip || stage === GameDevelopmentStatusFinished) &&
 		!game.has_active_builds
 	) {
 		return false;
@@ -78,34 +84,34 @@ function isEnabled(stage: number) {
 											: 'radio-circle'
 									"
 								/>
-								<template v-if="stage === GameDevelopmentStatus.Devlog">
+								<template v-if="stage === GameDevelopmentStatusDevlog">
 									{{ $gettext(`Devlog-Only`) }}
 								</template>
-								<template v-else-if="stage === GameDevelopmentStatus.Wip">
+								<template v-else-if="stage === GameDevelopmentStatusWip">
 									{{ $gettext(`Early Access`) }}
 								</template>
-								<template v-else-if="stage === GameDevelopmentStatus.Finished">
+								<template v-else-if="stage === GameDevelopmentStatusFinished">
 									{{ $gettext(`Complete/Stable`) }}
 								</template>
 							</h4>
 						</div>
 
 						<div class="card-content">
-							<template v-if="stage === GameDevelopmentStatus.Devlog">
+							<template v-if="stage === GameDevelopmentStatusDevlog">
 								{{
 									$gettext(
 										`You don't have anything playable yet, but would like to share active game development in the form of images, videos, posts and more.`
 									)
 								}}
 							</template>
-							<template v-else-if="stage === GameDevelopmentStatus.Wip">
+							<template v-else-if="stage === GameDevelopmentStatusWip">
 								{{
 									$gettext(
 										`Your game has playable builds, but you're still actively developing it.`
 									)
 								}}
 							</template>
-							<template v-else-if="stage === GameDevelopmentStatus.Finished">
+							<template v-else-if="stage === GameDevelopmentStatusFinished">
 								{{
 									$gettext(
 										`Your game is complete. It's in a stable state and you only plan on making bug fixes, performance optimizations, or small improvements.`
@@ -129,21 +135,21 @@ function isEnabled(stage: number) {
 
 					<div class="dev-stage-selector-mascot">
 						<img
-							v-if="stage === GameDevelopmentStatus.Devlog"
+							v-if="stage === GameDevelopmentStatusDevlog"
 							:src="assetPaths['./mascot-devlog.png']"
 							width="68"
 							height="68"
 							alt=""
 						/>
 						<img
-							v-else-if="stage === GameDevelopmentStatus.Wip"
+							v-else-if="stage === GameDevelopmentStatusWip"
 							:src="assetPaths['./mascot-early-access.png']"
 							width="48"
 							height="46"
 							alt=""
 						/>
 						<img
-							v-else-if="stage === GameDevelopmentStatus.Finished"
+							v-else-if="stage === GameDevelopmentStatusFinished"
 							:src="assetPaths['./mascot-complete.png']"
 							width="52"
 							height="54"

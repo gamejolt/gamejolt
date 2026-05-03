@@ -8,7 +8,8 @@ import AppImgResponsive from '~common/img/AppImgResponsive.vue';
 import {
 	getReadablePurchasableProductType,
 	NormalizedProductData,
-	PurchasableProductType,
+	PurchasableProductTypeAvatarFrame,
+	PurchasableProductTypeBackground,
 } from '~common/inventory/shop/product-owner-helpers';
 import { getScreen } from '~common/screen/screen-service';
 import { useCommonStore } from '~common/store/common-store';
@@ -32,7 +33,7 @@ const { productData, avatarFrameUser } = defineProps<Props>();
 const { user: authUser } = useCommonStore();
 
 const frameOverride = computed(() => {
-	if (!productData.imgUrl || productData.resource !== PurchasableProductType.AvatarFrame) {
+	if (!productData.imgUrl || productData.resource !== PurchasableProductTypeAvatarFrame) {
 		return undefined;
 	}
 	return {
@@ -69,7 +70,7 @@ const itemWidthStyles = computed(() => {
 				v-bind="{
 					ratio: productData.aspectRatio,
 					style: styleWhen(
-						productData.resource === PurchasableProductType.Background,
+						productData.resource === PurchasableProductTypeBackground,
 						styleBorderRadiusLg
 					),
 				}"

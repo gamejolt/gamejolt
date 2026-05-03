@@ -12,7 +12,7 @@ import {
 import { Api } from '~common/api/api.service';
 import AppButton from '~common/button/AppButton.vue';
 import AppExpand from '~common/expand/AppExpand.vue';
-import { GameLockedStatus } from '~common/game/game.model';
+import { GameLockedStatusAdult, GameLockedStatusDmca } from '~common/game/game.model';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { useCommonStore } from '~common/store/common-store';
@@ -72,7 +72,7 @@ const { isBootstrapped } = createAppRoute({
 					<p>
 						<AppJolticon icon="notice" big />
 					</p>
-					<template v-if="game.locked_status === GameLockedStatus.Dmca">
+					<template v-if="game.locked_status === GameLockedStatusDmca">
 						<div key="locked-reason-dmca">
 							<p>
 								<b>
@@ -88,7 +88,7 @@ const { isBootstrapped } = createAppRoute({
 							</p>
 						</div>
 					</template>
-					<template v-else-if="game.locked_status === GameLockedStatus.Adult">
+					<template v-else-if="game.locked_status === GameLockedStatusAdult">
 						<div key="locked-reason-adult">
 							<p>
 								<b>

@@ -182,12 +182,12 @@ Destructured refs stay reactive because the store bag is populated with refs (no
 
 ## Route Components (dual script pattern)
 
-Route components need `defineAppRouteOptions` in a plain `<script>` (for `beforeRouteEnter`) and all reactive logic in `<script setup>`:
+Route components need `defineAppRouteOptions` in a plain `<script>` (for `beforeRouteEnter`) and all reactive logic in `<script setup>`. **All imports go in the top `<script>` block** — Vue hoists every import in any script block to module scope, and the SFC compiler exposes top-level imports to the template regardless of which block they live in. Don't duplicate imports across blocks, and don't move imports into `<script setup>` just because the template references them:
 
 ```vue
 <script lang="ts">
-import { defineAppRouteOptions } from '../../../_common/route/route-component';
 import { Api } from '../../../_common/api/api.service';
+import { createAppRoute, defineAppRouteOptions } from '../../../_common/route/route-component';
 
 export default {
 	...defineAppRouteOptions({
@@ -198,8 +198,6 @@ export default {
 </script>
 
 <script lang="ts" setup>
-import { createAppRoute } from '../../../_common/route/route-component';
-
 const routeStore = useMyRouteStore()!;
 
 createAppRoute({

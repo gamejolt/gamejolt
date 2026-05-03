@@ -35,7 +35,7 @@ import {
 } from '~common/comment/comment-store';
 import { configGuestNoAuthRequired } from '~common/config/config.service';
 import { getDeviceArch, getDeviceOS } from '~common/device/device.service';
-import { GameBuildType } from '~common/game/build/build.model';
+import { GameBuildTypeHtml } from '~common/game/build/build.model';
 import {
 	CustomGameMessage,
 	GameModel,
@@ -153,7 +153,7 @@ function createController() {
 
 		// On Client we only want to include HTML games.
 		if (GJ_IS_DESKTOP_APP) {
-			builds = builds.filter(item => item.type === GameBuildType.Html);
+			builds = builds.filter(item => item.type === GameBuildTypeHtml);
 		}
 
 		// Pull in ROMs to the browser builds.

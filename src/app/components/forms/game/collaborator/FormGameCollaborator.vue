@@ -4,7 +4,8 @@ import { toRef } from 'vue';
 import {
 	$inviteCollaborator,
 	CollaboratorModel,
-	CollaboratorRole,
+	CollaboratorRoleCommunityManager,
+	CollaboratorRoleEqualCollaborator,
 } from '~common/collaborator/collaborator.model';
 import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
 import AppFormButton from '~common/form-vue/AppFormButton.vue';
@@ -31,10 +32,6 @@ const { game } = props;
 const emit = defineEmits<{
 	submit: [collaborator: CollaboratorModel];
 }>();
-
-const CollaboratorRoleEqualCollaborator = CollaboratorRole.EqualCollaborator;
-const CollaboratorRoleCommunityManager = CollaboratorRole.CommunityManager;
-
 const form: FormController<FormModel> = createForm<FormModel>({
 	model: toRef(props, 'model'),
 	modelClass: CollaboratorModel,

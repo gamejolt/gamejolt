@@ -1,10 +1,12 @@
 import { Api } from '~common/api/api.service';
 import { Model } from '~common/model/model.service';
 
-export const enum GameScoreTableSorting {
-	DirectionDesc = 0,
-	DirectionAsc = 1,
-}
+export const GameScoreTableSortingDirectionDesc = 0;
+export const GameScoreTableSortingDirectionAsc = 1;
+
+export type GameScoreTableSorting =
+	| typeof GameScoreTableSortingDirectionDesc
+	| typeof GameScoreTableSortingDirectionAsc;
 
 export class GameScoreTableModel extends Model {
 	declare game_id: number;

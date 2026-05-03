@@ -2,6 +2,11 @@
 import { computed } from 'vue';
 
 import { formatCurrency } from '~common/filters/currency';
+import {
+	SellableTypeFree,
+	SellableTypePaid,
+	SellableTypePwyw,
+} from '~common/sellable/sellable.model';
 import { useWidgetPackageStore } from '~widget-package/store/index';
 
 const store = useWidgetPackageStore();
@@ -21,7 +26,7 @@ const discount = computed(() =>
 			<strong>OWNED</strong>
 		</template>
 		<template v-else>
-			<template v-if="sellable.type === 'paid'">
+			<template v-if="sellable.type === SellableTypePaid">
 				<span v-if="originalPrice" class="-discount">-{{ discount }}%</span>
 				<strong class="-amount">
 					{{ formatCurrency(price) }}
@@ -32,10 +37,10 @@ const discount = computed(() =>
 				<br />
 				<span class="-tag -muted">or more</span>
 			</template>
-			<template v-else-if="sellable.type === 'pwyw'">
+			<template v-else-if="sellable.type === SellableTypePwyw">
 				<span class="-tag">name your price</span>
 			</template>
-			<template v-else-if="sellable.type === 'free'">
+			<template v-else-if="sellable.type === SellableTypeFree">
 				<strong class="-amount">FREE</strong>
 			</template>
 		</template>

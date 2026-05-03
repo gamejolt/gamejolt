@@ -1,7 +1,15 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import { GameCollectionModel } from '~app/components/game/collection/collection.model';
+import {
+	GameCollectionModel,
+	GameCollectionTypeBundle,
+	GameCollectionTypeDeveloper,
+	GameCollectionTypeFollowed,
+	GameCollectionTypeOwned,
+	GameCollectionTypePlaylist,
+	GameCollectionTypeRecommended,
+} from '~app/components/game/collection/collection.model';
 import AppImgResponsive from '~common/img/AppImgResponsive.vue';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import { $gettext } from '~common/translate/translate.service';
@@ -14,17 +22,17 @@ const { collection, hideTag } = defineProps<Props>();
 
 const tagText = computed(() => {
 	switch (collection.type) {
-		case 'developer':
+		case GameCollectionTypeDeveloper:
 			return $gettext(`Developer's Games`);
-		case 'followed':
+		case GameCollectionTypeFollowed:
 			return $gettext(`Followed Games`);
-		case 'playlist':
+		case GameCollectionTypePlaylist:
 			return $gettext(`Playlist`);
-		case 'bundle':
+		case GameCollectionTypeBundle:
 			return $gettext(`Bundle`);
-		case 'owned':
+		case GameCollectionTypeOwned:
 			return $gettext(`Owned Games`);
-		case 'recommended':
+		case GameCollectionTypeRecommended:
 			return $gettext(`Daily Mix`);
 	}
 });

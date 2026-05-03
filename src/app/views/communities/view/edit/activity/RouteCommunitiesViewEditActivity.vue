@@ -5,10 +5,8 @@ import AppCommunityPageContainer from '~app/views/communities/view/_page-contain
 import { useCommunityRouteStore } from '~app/views/communities/view/view.store';
 import { Api } from '~common/api/api.service';
 import AppButton from '~common/button/AppButton.vue';
-import {
-	CommunityActivityItemModel,
-	CommunityActivityItemType,
-} from '~common/community/activity-item/activity-item.model';
+import { CommunityActivityItemModel } from '~common/community/activity-item/activity-item.model';
+import { CommunityActivityItemTypeCommunityCreated } from '~common/community/activity-item/activity-item.model';
 import AppCommunityActivityItem from '~common/community/activity-item/AppCommunityActivityItem.vue';
 import { formatDate } from '~common/filters/date';
 import AppLoading from '~common/loading/AppLoading.vue';
@@ -80,7 +78,7 @@ function addItems(newItems: CommunityActivityItemModel[]) {
 			showIcon: true,
 		} as ActivityItem;
 
-		if (items.value.length === 0 || item.type === CommunityActivityItemType.CommunityCreated) {
+		if (items.value.length === 0 || item.type === CommunityActivityItemTypeCommunityCreated) {
 			// The first item will always be a user/time split.
 			newItem.timesplit = true;
 			newItem.usersplit = true;

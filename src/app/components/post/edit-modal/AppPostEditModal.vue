@@ -1,7 +1,11 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue';
 
-import { VideoStatus } from '~app/components/forms/post/_video/FormPostVideo.vue';
+import {
+	VideoStatus,
+	VideoStatusIDLE,
+	VideoStatusUPLOADING,
+} from '~app/components/forms/post/_video/FormPostVideo.vue';
 import AppFormPost from '~app/components/forms/post/AppFormPost.vue';
 import AppPostAddPlaceholder from '~app/components/post/add-placeholder/AppPostAddPlaceholder.vue';
 import AppBackground from '~common/background/AppBackground.vue';
@@ -30,11 +34,11 @@ const { postProvider, community, channel, realm } = defineProps<Props>();
 const modal = useModal()!;
 
 const post = ref<FiresidePostModel | null>(null);
-const videoUploadStatus = ref<VideoStatus>(VideoStatus.IDLE);
+const videoUploadStatus = ref<VideoStatus>(VideoStatusIDLE);
 const background = ref<BackgroundModel | null>(null);
 
 const closeButtonDisabled = computed(() => {
-	return videoUploadStatus.value === VideoStatus.UPLOADING;
+	return videoUploadStatus.value === VideoStatusUPLOADING;
 });
 
 const overlay = computed(() => {

@@ -5,7 +5,11 @@ import { ActivityFeedState, ActivityFeedStateOptions } from '~app/components/act
 import { ActivityFeedView, ActivityFeedViewOptions } from '~app/components/activity/feed/view';
 import { EventItemModel } from '~common/event-item/event-item.model';
 import { FiresidePostGotoGrowl } from '~common/fireside/post/goto-growl/goto-growl.service';
-import { FiresidePostModel, FiresidePostStatus } from '~common/fireside/post/post-model';
+import {
+	FiresidePostModel,
+	FiresidePostStatusActive,
+	FiresidePostStatusDraft,
+} from '~common/fireside/post/post-model';
 import { GameModel } from '~common/game/game.model';
 import { HistoryCache } from '~common/history/cache/cache.service';
 import { NotificationModel } from '~common/notification/notification-model';
@@ -125,9 +129,9 @@ export class ActivityFeedService {
 	 * Checks if the feed is correct for the post on the current route.
 	 */
 	private static isInCorrectManageFeed(post: FiresidePostModel, route: RouteLocationNormalized) {
-		if (post.status === FiresidePostStatus.Active) {
+		if (post.status === FiresidePostStatusActive) {
 			return !route.query['tab'];
-		} else if (post.status === FiresidePostStatus.Draft) {
+		} else if (post.status === FiresidePostStatusDraft) {
 			if (post.isScheduled) {
 				return route.query['tab'] === 'scheduled';
 			}
@@ -155,7 +159,7 @@ export class ActivityFeedService {
 			post.game instanceof GameModel &&
 			route.name === 'discover.games.view.overview' &&
 			route.params.id.toString() === post.game.id.toString() &&
-			post.status === FiresidePostStatus.Active
+			post.status === FiresidePostStatusActive
 		);
 	}
 

@@ -7,6 +7,10 @@ import AppContentTargets from '~app/components/content/AppContentTargets.vue';
 import { CONTENT_TARGET_HEIGHT } from '~app/components/content/target/AppContentTarget.vue';
 import AppFormPostMedia from '~app/components/forms/post/_media/FormPostMedia.vue';
 import AppFormPostVideo, { VideoStatus } from '~app/components/forms/post/_video/FormPostVideo.vue';
+import {
+	VideoStatusIDLE,
+	VideoStatusUPLOADING,
+} from '~app/components/forms/post/_video/FormPostVideo.vue';
 import { trackPostPublish } from '~common/analytics/analytics.service';
 import { Api } from '~common/api/api.service';
 import { BackgroundModel } from '~common/background/background.model';
@@ -18,10 +22,15 @@ import AppExpand from '~common/expand/AppExpand.vue';
 import { FiresidePostCommunityModel } from '~common/fireside/post/community/community.model';
 import {
 	$saveFiresidePost,
-	FiresidePostAllowComments,
+	FiresidePostAllowCommentsDisabled,
+	FiresidePostAllowCommentsEnabled,
+	FiresidePostAllowCommentsFriends,
 	FiresidePostModel,
-	FiresidePostStatus,
-	FiresidePostType,
+	FiresidePostStatusActive,
+	FiresidePostStatusDraft,
+	FiresidePostStatusTemp,
+	FiresidePostTypeMedia,
+	FiresidePostTypeVideo,
 } from '~common/fireside/post/post-model';
 import { FiresidePostRealmModel } from '~common/fireside/post/realm/realm.model';
 import { FiresidePostVideoModel } from '~common/fireside/post/video/video-model';
@@ -121,7 +130,7 @@ const { user } = useCommonStore();
 const { isXs } = getScreen();
 
 const wasPublished = ref(false);
-const attachmentType = ref<FiresidePostType.Video | FiresidePostType.Media>();
+const attachmentType = ref<typeof FiresidePostTypeVideo | typeof FiresidePostTypeMedia>();
 const enabledAttachments = ref(false);
 const longEnabled = ref(false);
 const maxFilesize = ref(0);
@@ -154,7 +163,7 @@ const leadLengthLimit = ref(255);
 const articleLengthLimit = ref(50_000);
 const isUploadingPastedImage = ref(false);
 const scrollingKey = ref(1);
-const uploadingVideoStatus = ref(VideoStatus.IDLE);
+const uploadingVideoStatus = ref<VideoStatus>(VideoStatusIDLE);
 const isShowingMoreOptions = ref(false);
 
 const form: FormController<FormPostModel> = createForm<FormPostModel>({
@@ -164,8 +173,8 @@ const form: FormController<FormPostModel> = createForm<FormPostModel>({
 	onInit: async () => {
 		const _model = model;
 
-		isNewPost.value = _model.status === FiresidePostStatus.Temp;
-		isSavedDraftPost.value = _model.status === FiresidePostStatus.Draft;
+		isNewPost.value = _model.status === FiresidePostStatusTemp;
+		isSavedDraftPost.value = _model.status === FiresidePostStatusDraft;
 
 		if (isNewPost.value) {
 			form.formModel.post_to_user_profile = true;
@@ -220,12 +229,12 @@ const form: FormController<FormPostModel> = createForm<FormPostModel>({
 		}
 
 		form.formModel._comments_enabled =
-			_model.allow_comments === FiresidePostAllowComments.Disabled ? false : true;
+			_model.allow_comments === FiresidePostAllowCommentsDisabled ? false : true;
 
 		// Auto-show the more options if the comment options are anything other
 		// than the default.
 		isShowingMoreOptions.value =
-			form.formModel.allow_comments !== FiresidePostAllowComments.Enabled;
+			form.formModel.allow_comments !== FiresidePostAllowCommentsEnabled;
 
 		await fetchTimezones();
 	},
@@ -313,7 +322,7 @@ const form: FormController<FormPostModel> = createForm<FormPostModel>({
 	onSubmit() {
 		// a scheduled post gets saved as draft and will get set to published when the scheduled date is reached
 		if (isScheduling.value) {
-			form.formModel.status = FiresidePostStatus.Draft;
+			form.formModel.status = FiresidePostStatusDraft;
 		}
 
 		form.formModel.attached_communities = attachedCommunities.value.map(
@@ -326,13 +335,13 @@ const form: FormController<FormPostModel> = createForm<FormPostModel>({
 		form.formModel.attached_realms = attachedRealms.value.map(i => i.id);
 
 		// Set or clear attachments as needed
-		if (attachmentType.value === FiresidePostType.Media && form.formModel.media) {
+		if (attachmentType.value === FiresidePostTypeMedia && form.formModel.media) {
 			form.formModel.mediaItemIds = form.formModel.media.map(item => item.id);
 		} else {
 			form.formModel.mediaItemIds = [];
 		}
 
-		if (attachmentType.value === FiresidePostType.Video) {
+		if (attachmentType.value === FiresidePostTypeVideo) {
 			// Unset the video url for linked videos and set the video id for uploaded videos
 			// to signal to the backend that the attached video should be kept.
 			form.formModel.video_id = form.formModel.videos[0].id;
@@ -373,11 +382,11 @@ const mainActionText = computed(() => {
 const isEditing = computed(() => wasPublished.value || isSavedDraftPost.value);
 
 const enabledImages = computed(
-	() => enabledAttachments.value && attachmentType.value === FiresidePostType.Media
+	() => enabledAttachments.value && attachmentType.value === FiresidePostTypeMedia
 );
 
 const enabledVideo = computed(
-	() => enabledAttachments.value && attachmentType.value === FiresidePostType.Video
+	() => enabledAttachments.value && attachmentType.value === FiresidePostTypeVideo
 );
 
 const hasPoll = computed(() => {
@@ -472,7 +481,7 @@ const incompleteDefaultCommunity = computed(() => {
 const submitButtonsEnabled = computed(
 	() =>
 		form.valid &&
-		uploadingVideoStatus.value !== VideoStatus.UPLOADING &&
+		uploadingVideoStatus.value !== VideoStatusUPLOADING &&
 		!isPollTooShort.value &&
 		!isPollTooLong.value
 );
@@ -531,9 +540,9 @@ watch(
 		}
 
 		if (enabled) {
-			form.formModel.allow_comments = FiresidePostAllowComments.Enabled;
+			form.formModel.allow_comments = FiresidePostAllowCommentsEnabled;
 		} else {
-			form.formModel.allow_comments = FiresidePostAllowComments.Disabled;
+			form.formModel.allow_comments = FiresidePostAllowCommentsDisabled;
 		}
 	}
 );
@@ -605,17 +614,17 @@ function removeRealm(realm: RealmModel) {
 }
 
 function onDraftSubmit() {
-	form.formModel.status = FiresidePostStatus.Draft;
+	form.formModel.status = FiresidePostStatusDraft;
 }
 
 function onPublishSubmit() {
-	form.formModel.status = FiresidePostStatus.Active;
+	form.formModel.status = FiresidePostStatusActive;
 	trackPostPublish();
 }
 
 function enableImages() {
 	enabledAttachments.value = true;
-	attachmentType.value = FiresidePostType.Media;
+	attachmentType.value = FiresidePostTypeMedia;
 }
 
 function onMediaUploaded(mediaItems: MediaItemModel[]) {
@@ -660,7 +669,7 @@ function removeMediaItem(mediaItem: MediaItemModel) {
 
 function enableVideo() {
 	enabledAttachments.value = true;
-	attachmentType.value = FiresidePostType.Video;
+	attachmentType.value = FiresidePostTypeVideo;
 }
 
 function disableAttachments() {
@@ -772,7 +781,7 @@ async function fetchTimezones() {
 
 async function onPaste(e: ClipboardEvent) {
 	// Do not react to paste events when "Images" is not selected.
-	if (!!attachmentType.value && attachmentType.value !== FiresidePostType.Media) {
+	if (!!attachmentType.value && attachmentType.value !== FiresidePostTypeMedia) {
 		return;
 	}
 	if (isUploadingPastedImage.value) {
@@ -1291,10 +1300,10 @@ function _getMatchingBackgroundIdFromPref() {
 					:label="$gettext(`Who can comment?`)"
 				>
 					<AppFormControlSelect>
-						<option :value="FiresidePostAllowComments.Enabled">
+						<option :value="FiresidePostAllowCommentsEnabled">
 							{{ $gettext(`Everyone`) }}
 						</option>
-						<option :value="FiresidePostAllowComments.Friends">
+						<option :value="FiresidePostAllowCommentsFriends">
 							{{ $gettext(`Only friends`) }}
 						</option>
 					</AppFormControlSelect>

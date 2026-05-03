@@ -9,6 +9,7 @@ import AppFormControlPrefix from '~common/form-vue/AppFormControlPrefix.vue';
 import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
 import { validateMinValue } from '~common/form-vue/validators';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
+import { SellableTypePaid } from '~common/sellable/sellable.model';
 import { useCommonStore } from '~common/store/common-store';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import AppUserAvatarImg from '~common/user/user-avatar/AppUserAvatarImg.vue';
@@ -33,7 +34,9 @@ const price = computed(() => store.price.value!);
 const minOrderAmount = computed(() => store.minOrderAmount.value!);
 
 const minAmount = computed(() =>
-	sellable.value.type === 'paid' ? pricing.value.amount / 100 : minOrderAmount.value / 100
+	sellable.value.type === SellableTypePaid
+		? pricing.value.amount / 100
+		: minOrderAmount.value / 100
 );
 
 const formError = computed(() => {
@@ -114,7 +117,7 @@ function submit(method: PaymentData['method']) {
 				/>
 			</AppFormControlPrefix>
 
-			<span v-if="sellable.type === 'paid'" class="text-muted">
+			<span v-if="sellable.type === SellableTypePaid" class="text-muted">
 				({{ formatCurrency(price) }} or more)
 
 				<span

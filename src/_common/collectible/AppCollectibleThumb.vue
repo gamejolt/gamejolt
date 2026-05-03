@@ -4,7 +4,7 @@ import { computed, CSSProperties } from 'vue';
 import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
 import AppCollectibleThumbDetails from '~common/collectible/AppCollectibleThumbDetails.vue';
 import AppCollectibleUnlockedRibbon from '~common/collectible/AppCollectibleUnlockedRibbon.vue';
-import { CollectibleModel, CollectibleType } from '~common/collectible/collectible.model';
+import { CollectibleModel, CollectibleTypeBackground } from '~common/collectible/collectible.model';
 import { showCollectibleDetailsModal } from '~common/collectible/details-modal/modal.service';
 import { JoltydexFeed } from '~common/joltydex/joltydex-feed';
 import { useOnHover } from '~common/on/useOnHover';
@@ -154,7 +154,7 @@ const availabilityTagStyles = {
 									width: `100%`,
 									height: `auto`,
 								},
-								styleWhen(collectible.type === CollectibleType.Background, {
+								styleWhen(collectible.type === CollectibleTypeBackground, {
 									borderRadius: kBorderRadiusBase.px,
 								}),
 							]"

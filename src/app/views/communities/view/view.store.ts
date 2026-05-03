@@ -10,7 +10,11 @@ import {
 	CollaboratorModel,
 } from '~common/collaborator/collaborator.model';
 import { CommunityChannelModel } from '~common/community/channel/channel.model';
-import { CommunityModel, CommunityPresetChannelType } from '~common/community/community.model';
+import {
+	CommunityModel,
+	CommunityPresetChannelTypeALL,
+	CommunityPresetChannelTypeFEATURED,
+} from '~common/community/community.model';
 import { Meta } from '~common/meta/meta-service';
 import { getScreen } from '~common/screen/screen-service';
 import { $gettext } from '~common/translate/translate.service';
@@ -98,12 +102,12 @@ function _updateChannels(store: CommunityRouteStore) {
 		permissions: true,
 	};
 	store.frontpageChannel = new CommunityChannelModel({
-		title: CommunityPresetChannelType.FEATURED,
+		title: CommunityPresetChannelTypeFEATURED,
 		background: community.featured_background,
 		...commonFields,
 	});
 	store.allChannel = new CommunityChannelModel({
-		title: CommunityPresetChannelType.ALL,
+		title: CommunityPresetChannelTypeALL,
 		background: community.all_background,
 		...commonFields,
 	});
@@ -160,7 +164,7 @@ export async function declineCollaboration(store: CommunityRouteStore) {
 
 export function getChannelPathFromRoute(route: RouteLocationNormalized) {
 	if (route.name === routeCommunitiesViewOverview.name) {
-		return CommunityPresetChannelType.FEATURED;
+		return CommunityPresetChannelTypeFEATURED;
 	}
 	return (route.params.channel as string) || null;
 }

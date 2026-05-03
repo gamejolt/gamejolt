@@ -23,18 +23,18 @@ import { $gettext } from '~common/translate/translate.service';
 import AppVideoPlayer from '~common/video/player/AppVideoPlayer.vue';
 import AppVideoProcessingProgress from '~common/video/processing-progress/AppVideoProcessingProgress.vue';
 
-export const enum VideoStatus {
-	/** No video is being uploaded */
-	IDLE = 'idle',
-	/** The video file is being uploaded to the Game Jolt server */
-	UPLOADING = 'uploading',
-	/** The uploaded video file is being processed */
-	PROCESSING = 'processing',
-	/** The video upload and processing is completed and the video can be viewed */
-	COMPLETE = 'complete',
-	/** The video upload encountered some error */
-	ERROR = 'error',
-}
+export const VideoStatusIDLE = 'idle';
+export const VideoStatusUPLOADING = 'uploading';
+export const VideoStatusPROCESSING = 'processing';
+export const VideoStatusCOMPLETE = 'complete';
+export const VideoStatusERROR = 'error';
+
+export type VideoStatus =
+	| typeof VideoStatusIDLE
+	| typeof VideoStatusUPLOADING
+	| typeof VideoStatusPROCESSING
+	| typeof VideoStatusCOMPLETE
+	| typeof VideoStatusERROR;
 </script>
 
 <script lang="ts" setup>
@@ -154,25 +154,25 @@ const allowedFiletypesString = computed(() => {
 const videoStatus = computed(() => {
 	if (uploadedVideo.value) {
 		if (hasVideoProcessingError.value) {
-			return VideoStatus.ERROR;
+			return VideoStatusERROR;
 		}
 
 		if (uploadedVideo.value.is_processing) {
-			return VideoStatus.PROCESSING;
+			return VideoStatusPROCESSING;
 		}
 
-		return VideoStatus.COMPLETE;
+		return VideoStatusCOMPLETE;
 	}
 
 	if (form.isProcessing) {
-		return VideoStatus.UPLOADING;
+		return VideoStatusUPLOADING;
 	}
 
-	return VideoStatus.IDLE;
+	return VideoStatusIDLE;
 });
 
 const canRemoveUploadingVideo = computed(() => {
-	return !wasPublished && videoStatus.value !== VideoStatus.UPLOADING;
+	return !wasPublished && videoStatus.value !== VideoStatusUPLOADING;
 });
 
 watch(videoStatus, () => {
@@ -263,7 +263,7 @@ function cancelUpload() {
 }
 
 async function onDeleteUpload() {
-	if (videoStatus.value !== VideoStatus.IDLE) {
+	if (videoStatus.value !== VideoStatusIDLE) {
 		const result = await showModalConfirm(
 			$gettext(
 				`Are you sure you want to remove this video? You'll be able to add another one later.`
@@ -280,7 +280,7 @@ async function onDeleteUpload() {
 	// because otherwise when you click to add a new video, it'd still think
 	// the old video with the error exists - and would report the error
 	// status during this form's loadUrl.
-	if (videoStatus.value === VideoStatus.ERROR) {
+	if (videoStatus.value === VideoStatusERROR) {
 		await $removeFiresidePostVideo(post);
 	}
 

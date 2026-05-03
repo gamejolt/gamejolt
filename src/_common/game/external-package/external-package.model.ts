@@ -1,9 +1,11 @@
 import { Model } from '~common/model/model.service';
 
-export const enum GameExternalPackageStatus {
-	Active = 'active',
-	Removed = 'removed',
-}
+export const GameExternalPackageStatusActive = 'active';
+export const GameExternalPackageStatusRemoved = 'removed';
+
+export type GameExternalPackageStatus =
+	| typeof GameExternalPackageStatusActive
+	| typeof GameExternalPackageStatusRemoved;
 
 export class GameExternalPackageModel extends Model {
 	declare game_id: number;

@@ -47,7 +47,10 @@ import AppTopSupportersCard, {
 } from '~common/supporters/AppTopSupportersCard.vue';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import { $gettext } from '~common/translate/translate.service';
-import { UserFriendshipState } from '~common/user/friendship/friendship.model';
+import {
+	UserFriendshipStateRequestReceived,
+	UserFriendshipStateRequestSent,
+} from '~common/user/friendship/friendship.model';
 import { showUserInviteFollowModal } from '~common/user/invite/modal/modal.service';
 import { $unfollowUser, UserModel } from '~common/user/user.model';
 import { styleChangeBg, styleElevate, styleWhen } from '~styles/mixins';
@@ -391,7 +394,7 @@ async function onFriendRequestReject() {
 						<!-- Friend Requests -->
 						<template v-if="userFriendship">
 							<AppExpand
-								:when="userFriendship.state === UserFriendshipState.RequestSent"
+								:when="userFriendship.state === UserFriendshipStateRequestSent"
 								animate-initial
 							>
 								<div class="alert">
@@ -413,7 +416,7 @@ async function onFriendRequestReject() {
 							</AppExpand>
 
 							<AppExpand
-								:when="userFriendship.state === UserFriendshipState.RequestReceived"
+								:when="userFriendship.state === UserFriendshipStateRequestReceived"
 								animate-initial
 							>
 								<div class="alert">

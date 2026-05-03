@@ -8,7 +8,10 @@ import { vAppAuthRequired } from '~common/auth/auth-required-directive';
 import { AvatarFrameModel } from '~common/avatar/frame.model';
 import { BackgroundModel } from '~common/background/background.model';
 import AppButton from '~common/button/AppButton.vue';
-import { AcquisitionMethod, AcquisitionModel } from '~common/collectible/acquisition.model';
+import {
+	AcquisitionMethodChargeReward,
+	AcquisitionModel,
+} from '~common/collectible/acquisition.model';
 import AppCurrencyImg from '~common/currency/AppCurrencyImg.vue';
 import AppCurrencyPillList from '~common/currency/AppCurrencyPillList.vue';
 import { canAffordCurrency, Currency, CurrencyType } from '~common/currency/currency-type';
@@ -294,7 +297,7 @@ const actionOptionsData = computed<{
 		}
 
 		const chargeRewardAcquisitions = acquisitions.value.filter(
-			i => i.method === AcquisitionMethod.ChargeReward
+			i => i.method === AcquisitionMethodChargeReward
 		);
 		if (chargeRewardAcquisitions.length) {
 			const chargeUser = chargeRewardAcquisitions.find(i => i.owner_user)?.owner_user;

@@ -5,7 +5,11 @@ import { ensureConfig } from '~common/config/config.service';
 import { HistoryCache } from '~common/history/cache/cache.service';
 import { Meta, setMetaTitle } from '~common/meta/meta-service';
 import { Navigate } from '~common/navigate/navigate.service';
-import { PayloadError, PayloadErrorType } from '~common/payload/payload-service';
+import {
+	PayloadError,
+	PayloadErrorTypeHttpError,
+	PayloadErrorTypeNewVersion,
+} from '~common/payload/payload-service';
 import { getCurrentRouter } from '~common/route/current-router-service';
 import { defineIsolatedState } from '~common/ssr/isolated-state';
 import { useCommonStore } from '~common/store/common-store';
@@ -265,11 +269,11 @@ export function createAppRoute({
 		if (payload) {
 			// If the payload errored out.
 			if (payload instanceof PayloadError) {
-				if (payload.type === PayloadErrorType.NewVersion) {
+				if (payload.type === PayloadErrorTypeNewVersion) {
 					// If it was a version change payload error, we want to
 					// refresh the page so that it gets the new code.
 					Navigate.reload();
-				} else if (payload.type === PayloadErrorType.HttpError) {
+				} else if (payload.type === PayloadErrorTypeHttpError) {
 					setError(payload.status || 500);
 				}
 

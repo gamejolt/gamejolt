@@ -276,10 +276,12 @@ export async function leaveCommunity(community: CommunityModel, location?: Commu
 	}
 }
 
-export const enum CommunityPresetChannelType {
-	FEATURED = 'featured',
-	ALL = 'all',
-}
+export const CommunityPresetChannelTypeFEATURED = 'featured';
+export const CommunityPresetChannelTypeALL = 'all';
+
+export type CommunityPresetChannelType =
+	| typeof CommunityPresetChannelTypeFEATURED
+	| typeof CommunityPresetChannelTypeALL;
 
 export function isEditingCommunity(route: RouteLocationNormalized) {
 	return typeof route.name === 'string' && route.name.startsWith('communities.view.edit.');
@@ -290,9 +292,9 @@ export function getCommunityChannelBackground(
 	presetType: CommunityPresetChannelType
 ) {
 	switch (presetType) {
-		case CommunityPresetChannelType.FEATURED:
+		case CommunityPresetChannelTypeFEATURED:
 			return community.featured_background;
-		case CommunityPresetChannelType.ALL:
+		case CommunityPresetChannelTypeALL:
 			return community.all_background;
 		default:
 			assertNever(presetType);

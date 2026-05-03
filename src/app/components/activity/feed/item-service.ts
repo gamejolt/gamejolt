@@ -1,4 +1,4 @@
-import { EventItemModel, EventItemType } from '~common/event-item/event-item.model';
+import { EventItemModel, EventItemTypePostAdd } from '~common/event-item/event-item.model';
 import { $viewPost, FiresidePostModel } from '~common/fireside/post/post-model';
 import { NotificationModel } from '~common/notification/notification-model';
 
@@ -30,7 +30,7 @@ export class ActivityFeedItem {
 	$viewed(sourceFeed: string) {
 		if (
 			this.feedItem instanceof EventItemModel &&
-			this.feedItem.type === EventItemType.PostAdd
+			this.feedItem.type === EventItemTypePostAdd
 		) {
 			$viewPost(this.feedItem.action as FiresidePostModel, sourceFeed);
 		}

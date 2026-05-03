@@ -10,6 +10,7 @@ import {
 	shallowReadonly,
 	watch,
 } from 'vue';
+import { toRef } from 'vue';
 import { useRoute } from 'vue-router';
 
 import { DisplayMode } from '~app/components/comment/modal/modal.service';
@@ -26,6 +27,12 @@ import {
 	CommentModel,
 	CommentSort,
 	getCommentModelResourceName,
+} from '~common/comment/comment-model';
+import {
+	CommentSortHot,
+	CommentSortNew,
+	CommentSortTop,
+	CommentSortYou,
 } from '~common/comment/comment-model';
 import {
 	commentStoreFetch,
@@ -116,11 +123,11 @@ export function createCommentWidget(options: {
 	const totalCommentsCount = computed(() => store.value?.totalCount ?? 0);
 	const totalParentCount = computed(() => store.value?.parentCount ?? 0);
 	const currentParentCount = computed(() => comments.value.length);
-	const currentSort = computed(() => store.value?.sort ?? CommentSort.Hot);
-	const isSortHot = computed(() => currentSort.value === CommentSort.Hot);
-	const isSortTop = computed(() => currentSort.value === CommentSort.Top);
-	const isSortNew = computed(() => currentSort.value === CommentSort.New);
-	const isSortYou = computed(() => currentSort.value === CommentSort.You);
+	const currentSort = computed(() => store.value?.sort ?? CommentSortHot);
+	const isSortHot = computed(() => currentSort.value === CommentSortHot);
+	const isSortTop = computed(() => currentSort.value === CommentSortTop);
+	const isSortNew = computed(() => currentSort.value === CommentSortNew);
+	const isSortYou = computed(() => currentSort.value === CommentSortYou);
 	const showTopSorting = computed(() => getCommentModelResourceName(model.value) === 'Game');
 	const isThreadView = computed(() => !!threadCommentId.value);
 	const shouldShowEmptyMessage = computed(() => !comments.value.length);
@@ -201,7 +208,7 @@ export function createCommentWidget(options: {
 		// comment widget. This way if you open up a new comment widget in the
 		// future, we'll correctly start at the "hot" sort.
 		if (metadata.widgetLocks === 0) {
-			commentStoreSort(store.value, CommentSort.Hot);
+			commentStoreSort(store.value, CommentSortHot);
 		}
 
 		releaseCommentStore(commentManager, store.value);
@@ -305,8 +312,8 @@ export function createCommentWidget(options: {
 		options.onAdd(comment);
 
 		if (store.value) {
-			if (store.value.sort !== CommentSort.You) {
-				setSort(CommentSort.You);
+			if (store.value.sort !== CommentSortYou) {
+				setSort(CommentSortYou);
 			} else {
 				if (storeView.value instanceof CommentStoreSliceView) {
 					storeView.value.registerIds([comment.id]);
@@ -389,8 +396,6 @@ export function useCommentWidget() {
 </script>
 
 <script lang="ts" setup>
-import { toRef } from 'vue';
-
 type Props = {
 	model: Model & CommentableModel;
 	autofocus?: boolean;
@@ -467,19 +472,19 @@ const placeholder = computed(() => {
 });
 
 function sortHot() {
-	setSort(CommentSort.Hot);
+	setSort(CommentSortHot);
 }
 
 function sortTop() {
-	setSort(CommentSort.Top);
+	setSort(CommentSortTop);
 }
 
 function sortNew() {
-	setSort(CommentSort.New);
+	setSort(CommentSortNew);
 }
 
 function sortYou() {
-	setSort(CommentSort.You);
+	setSort(CommentSortYou);
 }
 </script>
 

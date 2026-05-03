@@ -11,10 +11,16 @@ import {
 	LinkedAccountModel,
 	LinkedAccountProvider,
 } from '~common/linked-account/linked-account.model';
+import {
+	LinkedAccountProviderFacebook,
+	LinkedAccountProviderGoogle,
+	LinkedAccountProviderTwitch,
+} from '~common/linked-account/linked-account.model';
 import { LinkedAccounts } from '~common/linked-account/linked-accounts.service';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { useCommonStore } from '~common/store/common-store';
 import { $gettext } from '~common/translate/translate.service';
+
 export default {
 	...defineAppRouteOptions({
 		reloadOn: 'never',
@@ -30,9 +36,9 @@ const { user } = useCommonStore();
 const accounts = ref<LinkedAccountModel[]>([]);
 const loading = ref(false);
 
-const facebookAccount = computed(() => getAccount(LinkedAccountProvider.Facebook));
-const googleAccount = computed(() => getAccount(LinkedAccountProvider.Google));
-const twitchAccount = computed(() => getAccount(LinkedAccountProvider.Twitch));
+const facebookAccount = computed(() => getAccount(LinkedAccountProviderFacebook));
+const googleAccount = computed(() => getAccount(LinkedAccountProviderGoogle));
+const twitchAccount = computed(() => getAccount(LinkedAccountProviderTwitch));
 
 function getAccount(provider: LinkedAccountProvider) {
 	if (accounts.value) {
@@ -110,7 +116,7 @@ createAppRoute({
 				<AppLinkedAccount
 					:account="facebookAccount"
 					:disabled="loading"
-					:provider="LinkedAccountProvider.Facebook"
+					:provider="LinkedAccountProviderFacebook"
 					@link="onLink"
 					@sync="onLink"
 					@unlink="onUnlink"
@@ -120,7 +126,7 @@ createAppRoute({
 				<AppLinkedAccount
 					:account="googleAccount"
 					:disabled="loading"
-					:provider="LinkedAccountProvider.Google"
+					:provider="LinkedAccountProviderGoogle"
 					@link="onLink"
 					@sync="onLink"
 					@unlink="onUnlink"
@@ -130,7 +136,7 @@ createAppRoute({
 				<AppLinkedAccount
 					:account="twitchAccount"
 					:disabled="loading"
-					:provider="LinkedAccountProvider.Twitch"
+					:provider="LinkedAccountProviderTwitch"
 					@link="onLink"
 					@sync="onLink"
 					@unlink="onUnlink"

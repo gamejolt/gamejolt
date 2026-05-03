@@ -3,7 +3,7 @@ import { computed } from 'vue';
 
 import {
 	GameCollectionModel,
-	GameCollectionType,
+	GameCollectionTypeDeveloper,
 } from '~app/components/game/collection/collection.model';
 import {
 	libraryFollowCollection,
@@ -38,7 +38,7 @@ const libraryStore = useLibraryStore();
 const { collections } = libraryStore;
 
 const isFollowing = computed(() => {
-	if (collection.type === GameCollectionType.Developer) {
+	if (collection.type === GameCollectionTypeDeveloper) {
 		return collection.owner!.is_following;
 	}
 
@@ -54,7 +54,7 @@ const badge = computed(() => {
 });
 
 const tooltip = computed(() => {
-	if (collection.type === GameCollectionType.Developer) {
+	if (collection.type === GameCollectionTypeDeveloper) {
 		return undefined;
 	}
 
@@ -116,7 +116,9 @@ async function onClick() {
 	>
 		<template v-if="!circle">
 			<template v-if="!isFollowing">
-				<AppTranslate v-if="collection.type === 'developer'">Follow Developer</AppTranslate>
+				<AppTranslate v-if="collection.type === GameCollectionTypeDeveloper"
+					>Follow Developer</AppTranslate
+				>
 				<AppTranslate v-else>Follow Playlist</AppTranslate>
 			</template>
 			<template v-else>

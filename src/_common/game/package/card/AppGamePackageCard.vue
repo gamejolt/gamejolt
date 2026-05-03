@@ -10,7 +10,8 @@ import AppCountdown from '~common/countdown/AppCountdown.vue';
 import AppExpand from '~common/expand/AppExpand.vue';
 import { formatCurrency } from '~common/filters/currency';
 import { formatFilesize } from '~common/filters/filesize';
-import { GameBuildModel, GameBuildType } from '~common/game/build/build.model';
+import { GameBuildModel } from '~common/game/build/build.model';
+import { GameBuildTypeDownloadable, GameBuildTypeRom } from '~common/game/build/build.model';
 import { GameDownloader } from '~common/game/downloader/downloader.service';
 import { GameModel } from '~common/game/game.model';
 import AppGamePackageCardButtons from '~common/game/package/card/AppGamePackageCardButtons.vue';
@@ -22,7 +23,12 @@ import { GameReleaseModel } from '~common/game/release/release.model';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import { LinkedKeyModel } from '~common/linked-key/linked-key.model';
 import { SellablePricingModel } from '~common/sellable/pricing/pricing.model';
-import { SellableModel } from '~common/sellable/sellable.model';
+import {
+	SellableModel,
+	SellableTypeFree,
+	SellableTypePaid,
+	SellableTypePwyw,
+} from '~common/sellable/sellable.model';
 import AppTimeAgo from '~common/time/AppTimeAgo.vue';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import AppTranslate from '~common/translate/AppTranslate.vue';
@@ -91,7 +97,8 @@ const isOwned = computed(() => {
 const linkedKeys = computed(() => sellable.linked_keys || []);
 
 const canBuy = computed(
-	() => !isOwned.value && (sellable.type === 'pwyw' || sellable.type === 'paid')
+	() =>
+		!isOwned.value && (sellable.type === SellableTypePwyw || sellable.type === SellableTypePaid)
 );
 
 if (sellable.pricings.length > 0) {
@@ -111,7 +118,7 @@ function buildClick(build: GameBuildModel, fromExtraSection = false) {
 	// showing payment form. Just take them directly to site.
 	if (GJ_IS_DESKTOP_APP && fromExtraSection) {
 		doBuildClick(build, fromExtraSection);
-	} else if (sellable.type === 'pwyw' && canBuy.value) {
+	} else if (sellable.type === SellableTypePwyw && canBuy.value) {
 		showPayment(build, fromExtraSection);
 	} else {
 		doBuildClick(build, fromExtraSection);
@@ -119,8 +126,8 @@ function buildClick(build: GameBuildModel, fromExtraSection = false) {
 }
 
 function doBuildClick(build: GameBuildModel, fromExtraSection = false) {
-	let operation = build.type === GameBuildType.Downloadable ? 'download' : 'play';
-	if (build.type === GameBuildType.Rom && fromExtraSection) {
+	let operation = build.type === GameBuildTypeDownloadable ? 'download' : 'play';
+	if (build.type === GameBuildTypeRom && fromExtraSection) {
 		operation = 'download';
 	}
 
@@ -162,7 +169,7 @@ function copyProviderKey(key: LinkedKeyModel) {
 	<AppCard :id="`game-package-card-${package.id}`" class="game-package-card">
 		<div class="game-package-card-pricing fill-gray">
 			<!-- Fixed Pricing -->
-			<div v-if="sellable.type === 'paid' && pricing">
+			<div v-if="sellable.type === SellableTypePaid && pricing">
 				<span v-if="sale" class="game-package-card-pricing-sale-percentage">
 					-{{ salePercentageOff }}%
 				</span>
@@ -178,14 +185,14 @@ function copyProviderKey(key: LinkedKeyModel) {
 			</div>
 
 			<!-- Pay What You Want -->
-			<div v-else-if="sellable.type === 'pwyw'">
+			<div v-else-if="sellable.type === SellableTypePwyw">
 				<AppTranslate class="game-package-card-pricing-tag text-lower">
 					Name Your Price
 				</AppTranslate>
 			</div>
 
 			<!-- Free/Default -->
-			<div v-else-if="sellable.type === 'free'">
+			<div v-else-if="sellable.type === SellableTypeFree">
 				<strong class="game-package-card-pricing-amount text-upper">
 					<AppTranslate>Free</AppTranslate>
 				</strong>
@@ -271,7 +278,7 @@ function copyProviderKey(key: LinkedKeyModel) {
 			</div>
 		</template>
 		<div v-else class="card-controls">
-			<template v-if="sellable.type !== 'paid' || isOwned">
+			<template v-if="sellable.type !== SellableTypePaid || isOwned">
 				<component
 					:is="buttonsComponent"
 					:game="game"
@@ -282,7 +289,7 @@ function copyProviderKey(key: LinkedKeyModel) {
 				/>
 			</template>
 
-			<template v-if="sellable.type === 'paid' && !isOwned">
+			<template v-if="sellable.type === SellableTypePaid && !isOwned">
 				<div class="clearfix">
 					<AppButton primary @click="showPayment(null, false)">
 						<AppTranslate>Buy Now</AppTranslate>

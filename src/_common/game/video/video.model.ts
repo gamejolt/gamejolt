@@ -2,10 +2,10 @@ import { GameModel } from '~common/game/game.model';
 import { LightboxMediaModel, LightboxMediaType } from '~common/lightbox/lightbox-helpers';
 import { Model } from '~common/model/model.service';
 
-export const enum GameVideoType {
-	Youtube = 'youtube',
-	Vimeo = 'vimeo',
-}
+export const GameVideoTypeYoutube = 'youtube';
+export const GameVideoTypeVimeo = 'vimeo';
+
+export type GameVideoType = typeof GameVideoTypeYoutube | typeof GameVideoTypeVimeo;
 
 export class GameVideoModel extends Model implements LightboxMediaModel {
 	declare media_type: 'video';

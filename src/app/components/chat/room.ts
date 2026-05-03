@@ -7,12 +7,16 @@ import { BackgroundModel } from '~common/background/background.model';
 import { ModelStoreModel, storeModel } from '~common/model/model-store.service';
 import { $gettext } from '~common/translate/translate.service';
 
-const enum ChatRoomType {
-	PM = 'pm',
-	OPEN_GROUP = 'open_group',
-	CLOSED_GROUP = 'closed_group',
-	VIRAL_GROUP = 'viral_group',
-}
+const ChatRoomTypePM = 'pm';
+const ChatRoomTypeOPEN_GROUP = 'open_group';
+const ChatRoomTypeCLOSED_GROUP = 'closed_group';
+const ChatRoomTypeVIRAL_GROUP = 'viral_group';
+
+type ChatRoomType =
+	| typeof ChatRoomTypePM
+	| typeof ChatRoomTypeOPEN_GROUP
+	| typeof ChatRoomTypeCLOSED_GROUP
+	| typeof ChatRoomTypeVIRAL_GROUP;
 
 interface TypingUserData {
 	username: string;
@@ -72,7 +76,7 @@ export class ChatRoomModel implements ModelStoreModel {
 			);
 		}
 
-		if (this.type === ChatRoomType.PM) {
+		if (this.type === ChatRoomTypePM) {
 			// We need to rename the room to the username
 			this.user = this.chat.friendsList.getByRoom(this.id);
 		}
@@ -81,27 +85,27 @@ export class ChatRoomModel implements ModelStoreModel {
 		//
 		// NOTE: Left over from Firesides, but might be used in the future.
 		switch (this.type) {
-			case ChatRoomType.PM:
-			case ChatRoomType.CLOSED_GROUP:
-			case ChatRoomType.OPEN_GROUP:
-			case ChatRoomType.VIRAL_GROUP:
+			case ChatRoomTypePM:
+			case ChatRoomTypeCLOSED_GROUP:
+			case ChatRoomTypeOPEN_GROUP:
+			case ChatRoomTypeVIRAL_GROUP:
 				this.messageLimit = null;
 		}
 	}
 
 	get isPmRoom() {
-		return this.type === ChatRoomType.PM;
+		return this.type === ChatRoomTypePM;
 	}
 
 	get isPrivateRoom() {
-		return this.type === ChatRoomType.PM || this.type === ChatRoomType.CLOSED_GROUP;
+		return this.type === ChatRoomTypePM || this.type === ChatRoomTypeCLOSED_GROUP;
 	}
 
 	get isGroupRoom() {
 		return (
-			this.type === ChatRoomType.OPEN_GROUP ||
-			this.type === ChatRoomType.CLOSED_GROUP ||
-			this.type === ChatRoomType.VIRAL_GROUP
+			this.type === ChatRoomTypeOPEN_GROUP ||
+			this.type === ChatRoomTypeCLOSED_GROUP ||
+			this.type === ChatRoomTypeVIRAL_GROUP
 		);
 	}
 
@@ -135,7 +139,7 @@ export class ChatRoomModel implements ModelStoreModel {
 }
 
 export function getChatRoomTitle(room: ChatRoomModel) {
-	if (room.type === ChatRoomType.PM) {
+	if (room.type === ChatRoomTypePM) {
 		return room.user?.display_name ?? $gettext(`PM Chat`);
 	}
 

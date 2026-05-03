@@ -20,7 +20,12 @@ import { showModalConfirm } from '~common/modal/confirm/confirm-service';
 import { storeModel } from '~common/model/model-store.service';
 import AppNavTabList from '~common/nav/tab-list/AppNavTabList.vue';
 import { getScreen } from '~common/screen/screen-service';
-import { ShopProductResource } from '~common/shop/product/product-model';
+import {
+	ShopProductResourceAvatarFrame,
+	ShopProductResourceBackground,
+	ShopProductResourceSticker,
+	ShopProductResourceStickerPack,
+} from '~common/shop/product/product-model';
 import { StickerPackModel } from '~common/sticker/pack/pack.model';
 import { StickerModel } from '~common/sticker/sticker.model';
 import { kThemePrimary, kThemePrimaryFg } from '~common/theme/variables';
@@ -171,16 +176,16 @@ async function setProductPublishState(publish: boolean) {
 			storeModel(StickerPackModel, response.pack);
 		} else if (response.resource) {
 			switch (resource) {
-				case ShopProductResource.AvatarFrame:
+				case ShopProductResourceAvatarFrame:
 					storeModel(AvatarFrameModel, response.resource);
 					break;
-				case ShopProductResource.Background:
+				case ShopProductResourceBackground:
 					storeModel(BackgroundModel, response.resource);
 					break;
-				case ShopProductResource.StickerPack:
+				case ShopProductResourceStickerPack:
 					storeModel(StickerPackModel, response.resource);
 					break;
-				case ShopProductResource.Sticker:
+				case ShopProductResourceSticker:
 					storeModel(StickerModel, response.resource);
 					break;
 				default:
@@ -235,16 +240,16 @@ async function cancelChangeRequest() {
 			// Remove the item from the store if it was never approved and we
 			// have no change request remaining.
 			switch (resource) {
-				case ShopProductResource.AvatarFrame:
+				case ShopProductResourceAvatarFrame:
 					arrayRemove(avatarFrames.value.items, i => i.id === baseModel.id);
 					break;
-				case ShopProductResource.Background:
+				case ShopProductResourceBackground:
 					arrayRemove(backgrounds.value.items, i => i.id === baseModel.id);
 					break;
-				case ShopProductResource.StickerPack:
+				case ShopProductResourceStickerPack:
 					arrayRemove(stickerPacks.value.items, i => i.id === baseModel.id);
 					break;
-				case ShopProductResource.Sticker:
+				case ShopProductResourceSticker:
 					arrayRemove(stickers.value.items, i => i.id === baseModel.id);
 					break;
 				default:

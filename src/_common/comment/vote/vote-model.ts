@@ -1,9 +1,9 @@
 import { Model } from '~common/model/model.service';
 
-export const enum CommentVoteType {
-	Upvote = 1,
-	Downvote = 0,
-}
+export const CommentVoteTypeUpvote = 1;
+export const CommentVoteTypeDownvote = 0;
+
+export type CommentVoteType = typeof CommentVoteTypeUpvote | typeof CommentVoteTypeDownvote;
 
 export class CommentVoteModel extends Model {
 	declare comment_id: number;

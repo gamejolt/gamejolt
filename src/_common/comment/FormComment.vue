@@ -15,7 +15,10 @@ import {
 } from '~common/comment/comment-model';
 import { ContentContext, ContextCapabilities } from '~common/content/content-context';
 import { ContentRules } from '~common/content/content-rules';
-import { FiresidePostAllowComments, FiresidePostModel } from '~common/fireside/post/post-model';
+import {
+	FiresidePostAllowCommentsFriends,
+	FiresidePostModel,
+} from '~common/fireside/post/post-model';
 import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
 import AppFormButton from '~common/form-vue/AppFormButton.vue';
 import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
@@ -148,7 +151,7 @@ const postModel = computed(() => (model instanceof FiresidePostModel ? model : u
 
 /** Whether or not only friends can comment */
 const onlyFriends = computed(
-	() => postModel.value?.allow_comments === FiresidePostAllowComments.Friends
+	() => postModel.value?.allow_comments === FiresidePostAllowCommentsFriends
 );
 </script>
 

@@ -1,10 +1,12 @@
 import { CommunityModel } from '~common/community/community.model';
 import { Model } from '~common/model/model.service';
 
-export const enum CommunityUserNotificationType {
-	POSTS_MOVE = 'posts/move',
-	POSTS_EJECT = 'posts/eject',
-}
+export const CommunityUserNotificationTypePOSTS_MOVE = 'posts/move';
+export const CommunityUserNotificationTypePOSTS_EJECT = 'posts/eject';
+
+export type CommunityUserNotificationType =
+	| typeof CommunityUserNotificationTypePOSTS_MOVE
+	| typeof CommunityUserNotificationTypePOSTS_EJECT;
 
 export class CommunityUserNotificationModel extends Model {
 	declare community: CommunityModel;

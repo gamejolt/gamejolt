@@ -25,59 +25,83 @@ import { $gettext } from '~common/translate/translate.service';
 import { UserFriendshipModel } from '~common/user/friendship/friendship.model';
 import { UserGameTrophyModel } from '~common/user/trophy/game-trophy.model';
 import { UserSiteTrophyModel } from '~common/user/trophy/site-trophy.model';
-import { UserModel, UserType } from '~common/user/user.model';
+import { UserModel, UserTypeDeveloper } from '~common/user/user.model';
 import { UserAvatarFrameModel } from '~common/user/user-avatar/frame/frame.model';
 
-export const enum NotificationType {
-	CommentAdd = 'comment-add',
-	CommentAddObjectOwner = 'comment-add-object-owner',
-	ForumPostAdd = 'forum-post-add',
-	FriendshipRequest = 'friendship-request',
-	FriendshipAccept = 'friendship-accept',
-	FriendshipCancel = 'friendship-cancel',
-	GameRatingAdd = 'game-rating-add',
-	GameFollow = 'game-follow',
-	PostAdd = 'post-add',
-	PostFeaturedInCommunity = 'post-featured-in-community',
-	SellableSell = 'sellable-sell',
-	UserFollow = 'user-follow',
-	CollaboratorInvite = 'collaborator-invite',
-	Mention = 'mention',
-	GameTrophyAchieved = 'game-trophy-achieved',
-	SiteTrophyAchieved = 'site-trophy-achieved',
-	CommunityUserNotification = 'community-user-notification',
-	QuestNotification = 'quest-notification',
-	ChargedSticker = 'charged-sticker',
-	SupporterMessage = 'supporter-message',
-	PollEnded = 'poll-ended',
-	CreatorLevelUp = 'creator-level-up',
-	UnlockedAvatarFrame = 'unlocked-avatar-frame',
-	ShopGiftReceived = 'shop-gift-received',
-}
+export const NotificationTypeCommentAdd = 'comment-add';
+export const NotificationTypeCommentAddObjectOwner = 'comment-add-object-owner';
+export const NotificationTypeForumPostAdd = 'forum-post-add';
+export const NotificationTypeFriendshipRequest = 'friendship-request';
+export const NotificationTypeFriendshipAccept = 'friendship-accept';
+export const NotificationTypeFriendshipCancel = 'friendship-cancel';
+export const NotificationTypeGameRatingAdd = 'game-rating-add';
+export const NotificationTypeGameFollow = 'game-follow';
+export const NotificationTypePostAdd = 'post-add';
+export const NotificationTypePostFeaturedInCommunity = 'post-featured-in-community';
+export const NotificationTypeSellableSell = 'sellable-sell';
+export const NotificationTypeUserFollow = 'user-follow';
+export const NotificationTypeCollaboratorInvite = 'collaborator-invite';
+export const NotificationTypeMention = 'mention';
+export const NotificationTypeGameTrophyAchieved = 'game-trophy-achieved';
+export const NotificationTypeSiteTrophyAchieved = 'site-trophy-achieved';
+export const NotificationTypeCommunityUserNotification = 'community-user-notification';
+export const NotificationTypeQuestNotification = 'quest-notification';
+export const NotificationTypeChargedSticker = 'charged-sticker';
+export const NotificationTypeSupporterMessage = 'supporter-message';
+export const NotificationTypePollEnded = 'poll-ended';
+export const NotificationTypeCreatorLevelUp = 'creator-level-up';
+export const NotificationTypeUnlockedAvatarFrame = 'unlocked-avatar-frame';
+export const NotificationTypeShopGiftReceived = 'shop-gift-received';
 
-export const ActivityFeedTypes = [NotificationType.PostAdd];
+export type NotificationType =
+	| typeof NotificationTypeCommentAdd
+	| typeof NotificationTypeCommentAddObjectOwner
+	| typeof NotificationTypeForumPostAdd
+	| typeof NotificationTypeFriendshipRequest
+	| typeof NotificationTypeFriendshipAccept
+	| typeof NotificationTypeFriendshipCancel
+	| typeof NotificationTypeGameRatingAdd
+	| typeof NotificationTypeGameFollow
+	| typeof NotificationTypePostAdd
+	| typeof NotificationTypePostFeaturedInCommunity
+	| typeof NotificationTypeSellableSell
+	| typeof NotificationTypeUserFollow
+	| typeof NotificationTypeCollaboratorInvite
+	| typeof NotificationTypeMention
+	| typeof NotificationTypeGameTrophyAchieved
+	| typeof NotificationTypeSiteTrophyAchieved
+	| typeof NotificationTypeCommunityUserNotification
+	| typeof NotificationTypeQuestNotification
+	| typeof NotificationTypeChargedSticker
+	| typeof NotificationTypeSupporterMessage
+	| typeof NotificationTypePollEnded
+	| typeof NotificationTypeCreatorLevelUp
+	| typeof NotificationTypeUnlockedAvatarFrame
+	| typeof NotificationTypeShopGiftReceived;
+
+export const ActivityFeedTypes = [NotificationTypePostAdd];
 
 export const NotificationFeedTypes = [
-	NotificationType.CommentAdd,
-	NotificationType.CommentAddObjectOwner,
-	NotificationType.ForumPostAdd,
-	NotificationType.FriendshipAccept,
-	NotificationType.GameRatingAdd,
-	NotificationType.GameFollow,
-	NotificationType.PostFeaturedInCommunity,
-	NotificationType.SellableSell,
-	NotificationType.UserFollow,
-	NotificationType.Mention,
-	NotificationType.CollaboratorInvite,
-	NotificationType.GameTrophyAchieved,
-	NotificationType.SiteTrophyAchieved,
-	NotificationType.CommunityUserNotification,
-	NotificationType.ChargedSticker,
-	NotificationType.SupporterMessage,
-	NotificationType.PollEnded,
-	NotificationType.CreatorLevelUp,
-	NotificationType.UnlockedAvatarFrame,
-	NotificationType.ShopGiftReceived,
+	NotificationTypeCommentAdd,
+	NotificationTypeCommentAddObjectOwner,
+	NotificationTypeForumPostAdd,
+	NotificationTypeFriendshipAccept,
+	NotificationTypeGameRatingAdd,
+	NotificationTypeGameFollow,
+	NotificationTypePostFeaturedInCommunity,
+	NotificationTypeSellableSell,
+	NotificationTypeUserFollow,
+	NotificationTypeMention,
+	NotificationTypeCollaboratorInvite,
+	NotificationTypeGameTrophyAchieved,
+	NotificationTypeSiteTrophyAchieved,
+	NotificationTypeCommunityUserNotification,
+	NotificationTypeChargedSticker,
+	NotificationTypeSupporterMessage,
+	NotificationTypePollEnded,
+	NotificationTypeCreatorLevelUp,
+	NotificationTypeUnlockedAvatarFrame,
+	NotificationTypeShopGiftReceived,
 ];
 
 export class NotificationModel extends Model {
@@ -174,68 +198,68 @@ export class NotificationModel extends Model {
 			this.to_model = new CommunityModel(data.to_resource_model);
 		}
 
-		if (this.type === NotificationType.CommentAdd) {
+		if (this.type === NotificationTypeCommentAdd) {
 			this.action_model = storeModel(CommentModel, data.action_resource_model);
 			this.is_user_based = true;
-		} else if (this.type === NotificationType.CommentAddObjectOwner) {
+		} else if (this.type === NotificationTypeCommentAddObjectOwner) {
 			this.action_model = storeModel(CommentModel, data.action_resource_model);
 			this.is_user_based = true;
-		} else if (this.type === NotificationType.ForumPostAdd) {
+		} else if (this.type === NotificationTypeForumPostAdd) {
 			this.action_model = new ForumPostModel(data.action_resource_model);
 			this.is_user_based = true;
-		} else if (this.type === NotificationType.FriendshipRequest) {
+		} else if (this.type === NotificationTypeFriendshipRequest) {
 			this.action_model = new UserFriendshipModel(data.action_resource_model);
 			this.is_user_based = true;
-		} else if (this.type === NotificationType.FriendshipAccept) {
+		} else if (this.type === NotificationTypeFriendshipAccept) {
 			this.action_model = new UserFriendshipModel(data.action_resource_model);
 			this.is_user_based = true;
-		} else if (this.type === NotificationType.GameRatingAdd) {
+		} else if (this.type === NotificationTypeGameRatingAdd) {
 			this.action_model = new GameRatingModel(data.action_resource_model);
 			this.is_user_based = true;
-		} else if (this.type === NotificationType.GameFollow) {
+		} else if (this.type === NotificationTypeGameFollow) {
 			this.action_model = new GameLibraryGameModel(data.action_resource_model);
 			this.is_user_based = true;
-		} else if (this.type === NotificationType.PostAdd) {
+		} else if (this.type === NotificationTypePostAdd) {
 			this.action_model = new FiresidePostModel(data.action_resource_model);
 			this.is_game_based = this.to_model instanceof GameModel;
-		} else if (this.type === NotificationType.PostFeaturedInCommunity) {
+		} else if (this.type === NotificationTypePostFeaturedInCommunity) {
 			this.action_model = new FiresidePostCommunityModel(data.action_resource_model);
-		} else if (this.type === NotificationType.SellableSell) {
+		} else if (this.type === NotificationTypeSellableSell) {
 			this.action_model = new OrderItemModel(data.action_resource_model);
 			this.is_user_based = true;
-		} else if (this.type === NotificationType.UserFollow) {
+		} else if (this.type === NotificationTypeUserFollow) {
 			this.action_model = new SubscriptionModel(data.action_resource_model);
 			this.is_user_based = true;
-		} else if (this.type === NotificationType.CollaboratorInvite) {
+		} else if (this.type === NotificationTypeCollaboratorInvite) {
 			this.action_model = new CollaboratorModel(data.action_resource_model);
 			this.is_user_based = true;
-		} else if (this.type === NotificationType.Mention) {
+		} else if (this.type === NotificationTypeMention) {
 			this.action_model = new MentionModel(data.action_resource_model);
 			this.is_user_based = true;
-		} else if (this.type === NotificationType.GameTrophyAchieved) {
+		} else if (this.type === NotificationTypeGameTrophyAchieved) {
 			this.action_model = new UserGameTrophyModel(data.action_resource_model);
 			this.is_user_based = true;
-		} else if (this.type === NotificationType.SiteTrophyAchieved) {
+		} else if (this.type === NotificationTypeSiteTrophyAchieved) {
 			this.action_model = new UserSiteTrophyModel(data.action_resource_model);
 			this.is_user_based = true;
-		} else if (this.type === NotificationType.CommunityUserNotification) {
+		} else if (this.type === NotificationTypeCommunityUserNotification) {
 			this.action_model = new CommunityUserNotificationModel(data.action_resource_model);
 			this.is_community_based = true;
-		} else if (this.type === NotificationType.QuestNotification) {
+		} else if (this.type === NotificationTypeQuestNotification) {
 			this.action_model = new QuestNotificationModel(data.action_resource_model);
-		} else if (this.type === NotificationType.ChargedSticker) {
+		} else if (this.type === NotificationTypeChargedSticker) {
 			this.action_model = new StickerPlacementModel(data.action_resource_model);
 			this.is_user_based = true;
-		} else if (this.type === NotificationType.SupporterMessage) {
+		} else if (this.type === NotificationTypeSupporterMessage) {
 			this.action_model = new SupporterActionModel(data.action_resource_model);
 			this.is_user_based = true;
-		} else if (this.type === NotificationType.PollEnded) {
+		} else if (this.type === NotificationTypePollEnded) {
 			this.action_model = new PollModel(data.action_resource_model);
-		} else if (this.type === NotificationType.CreatorLevelUp) {
+		} else if (this.type === NotificationTypeCreatorLevelUp) {
 			this.action_model = new CreatorExperienceLevelModel(data.action_resource_model);
-		} else if (this.type === NotificationType.UnlockedAvatarFrame) {
+		} else if (this.type === NotificationTypeUnlockedAvatarFrame) {
 			this.action_model = storeModel(UserAvatarFrameModel, data.action_resource_model);
-		} else if (this.type === NotificationType.ShopGiftReceived) {
+		} else if (this.type === NotificationTypeShopGiftReceived) {
 			this.action_model = storeModel(InventoryShopGiftModel, data.action_resource_model);
 			this.is_user_based = true;
 		}
@@ -265,34 +289,34 @@ export class NotificationModel extends Model {
  */
 export function getNotificationFeedTypeLabels(user: UserModel) {
 	const labels = {
-		[NotificationType.CommentAdd]: $gettext(`Comment replies`),
-		[NotificationType.CommentAddObjectOwner]: $gettext(`Comments on your content`),
-		[NotificationType.ForumPostAdd]: $gettext(`Forum posts`),
-		[NotificationType.FriendshipAccept]: $gettext(`Accepted friend requests`),
-		[NotificationType.PostFeaturedInCommunity]: $gettext(`Post featured`),
-		[NotificationType.UserFollow]: $gettext(`Follows`),
-		[NotificationType.Mention]: $gettext(`Mentions`),
-		[NotificationType.CollaboratorInvite]: $gettext(`Collaborator invites`),
-		[NotificationType.GameTrophyAchieved]: $gettext(`Game trophies`),
-		[NotificationType.SiteTrophyAchieved]: $gettext(`Site trophies`),
-		[NotificationType.CommunityUserNotification]: $gettext(`Community actions`),
-		[NotificationType.QuestNotification]: $gettext(`Quests`),
-		[NotificationType.SupporterMessage]: $gettext(`Creator thank-you messages`),
-		[NotificationType.PollEnded]: $gettext(`Polls`),
-		[NotificationType.ShopGiftReceived]: $gettext(`Gifts`),
+		[NotificationTypeCommentAdd]: $gettext(`Comment replies`),
+		[NotificationTypeCommentAddObjectOwner]: $gettext(`Comments on your content`),
+		[NotificationTypeForumPostAdd]: $gettext(`Forum posts`),
+		[NotificationTypeFriendshipAccept]: $gettext(`Accepted friend requests`),
+		[NotificationTypePostFeaturedInCommunity]: $gettext(`Post featured`),
+		[NotificationTypeUserFollow]: $gettext(`Follows`),
+		[NotificationTypeMention]: $gettext(`Mentions`),
+		[NotificationTypeCollaboratorInvite]: $gettext(`Collaborator invites`),
+		[NotificationTypeGameTrophyAchieved]: $gettext(`Game trophies`),
+		[NotificationTypeSiteTrophyAchieved]: $gettext(`Site trophies`),
+		[NotificationTypeCommunityUserNotification]: $gettext(`Community actions`),
+		[NotificationTypeQuestNotification]: $gettext(`Quests`),
+		[NotificationTypeSupporterMessage]: $gettext(`Creator thank-you messages`),
+		[NotificationTypePollEnded]: $gettext(`Polls`),
+		[NotificationTypeShopGiftReceived]: $gettext(`Gifts`),
 	} as Record<NotificationType, string>;
 
 	// Creator notification types.
 	if (user.is_creator) {
-		labels[NotificationType.ChargedSticker] = $gettext(`Charged stickers`);
-		labels[NotificationType.CreatorLevelUp] = $gettext(`Creator level ups`);
+		labels[NotificationTypeChargedSticker] = $gettext(`Charged stickers`);
+		labels[NotificationTypeCreatorLevelUp] = $gettext(`Creator level ups`);
 	}
 
 	// Game developer notification types.
-	if (user.type === UserType.Developer) {
-		labels[NotificationType.GameRatingAdd] = $gettext(`Game ratings`);
-		labels[NotificationType.GameFollow] = $gettext(`Game follows`);
-		labels[NotificationType.SellableSell] = $gettext(`Sales`);
+	if (user.type === UserTypeDeveloper) {
+		labels[NotificationTypeGameRatingAdd] = $gettext(`Game ratings`);
+		labels[NotificationTypeGameFollow] = $gettext(`Game follows`);
+		labels[NotificationTypeSellableSell] = $gettext(`Sales`);
 	}
 
 	return labels;

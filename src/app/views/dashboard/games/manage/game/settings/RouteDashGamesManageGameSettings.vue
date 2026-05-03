@@ -5,7 +5,7 @@ import FormGameSettings from '~app/components/forms/game/settings/FormGameSettin
 import { useGameDashRouteController } from '~app/views/dashboard/games/manage/manage.store';
 import { Api } from '~common/api/api.service';
 import AppButton from '~common/button/AppButton.vue';
-import { GameStatus } from '~common/game/game.model';
+import { GameStatusHidden } from '~common/game/game.model';
 import { showSuccessGrowl } from '~common/growls/growls.service';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { scrollTo } from '~common/scroll/scroll.service';
@@ -32,7 +32,7 @@ const game = computed(() => routeStore.game.value!);
 
 const hasCompetitionEntries = ref(false);
 
-const isUnlisted = computed(() => game.value.status === GameStatus.Hidden);
+const isUnlisted = computed(() => game.value.status === GameStatusHidden);
 const isCanceled = computed(() => game.value.canceled);
 const isCollaborator = computed(() => user.value!.id !== game.value.developer.id);
 

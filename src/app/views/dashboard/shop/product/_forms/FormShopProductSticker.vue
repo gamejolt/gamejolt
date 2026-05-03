@@ -5,7 +5,11 @@ import FormShopProductBase, {
 	createShopProductBaseForm,
 } from '~app/views/dashboard/shop/product/_forms/FormShopProductBase.vue';
 import AppDashShopProductHeader from '~app/views/dashboard/shop/product/AppDashShopProductHeader.vue';
-import { ShopDashProductType, useShopDashStore } from '~app/views/dashboard/shop/shop.store';
+import {
+	ShopDashProductTypeBasic,
+	ShopDashProductTypePremium,
+	useShopDashStore,
+} from '~app/views/dashboard/shop/shop.store';
 import AppFormControl from '~common/form-vue/AppFormControl.vue';
 import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
 import AppFormControlPrefix from '~common/form-vue/AppFormControlPrefix.vue';
@@ -17,7 +21,7 @@ import {
 	validateMinLength,
 } from '~common/form-vue/validators';
 import AppLinkHelp from '~common/link/AppLinkHelp.vue';
-import { ShopProductResource } from '~common/shop/product/product-model';
+import { ShopProductResourceSticker } from '~common/shop/product/product-model';
 import { StickerModel } from '~common/sticker/sticker.model';
 import { $gettext } from '~common/translate/translate.service';
 
@@ -34,7 +38,7 @@ const shopStore = useShopDashStore()!;
 
 const data = createShopProductBaseForm({
 	shopStore,
-	resource: ShopProductResource.Sticker,
+	resource: ShopProductResourceSticker,
 	baseModel: model,
 	fields: {
 		emoji_name: model?.emoji?.short_name ?? '',
@@ -69,7 +73,7 @@ const heading = computed(() => {
 
 <template>
 	<AppDashShopProductHeader :product-type="productType" :heading="heading">
-		<template v-if="productType === ShopDashProductType.Basic">
+		<template v-if="productType === ShopDashProductTypeBasic">
 			<div>
 				{{
 					$gettext(
@@ -83,7 +87,7 @@ const heading = computed(() => {
 				</AppLinkHelp>
 			</div>
 		</template>
-		<template v-else-if="productType === ShopDashProductType.Premium">
+		<template v-else-if="productType === ShopDashProductTypePremium">
 			<div>
 				{{
 					$gettext(

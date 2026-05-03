@@ -4,7 +4,7 @@ import {
 	$followGameCollection,
 	$unfollowGameCollection,
 	GameCollectionModel,
-	GameCollectionType,
+	GameCollectionTypeDeveloper,
 } from '~app/components/game/collection/collection.model';
 import { showGamePlaylistSaveModal } from '~app/components/game-playlist/save-modal/save-modal.service';
 import { trackGameFollow } from '~common/analytics/analytics.service';
@@ -55,14 +55,14 @@ export function createLibraryStore() {
 	 * These are their followed developer playlists.
 	 */
 	const developerPlaylists = computed(() =>
-		collections.value.filter(item => item.type === GameCollectionType.Developer)
+		collections.value.filter(item => item.type === GameCollectionTypeDeveloper)
 	);
 
 	/**
 	 * These are playlists that don't belong to a folder.
 	 */
 	const mainPlaylists = computed(() =>
-		collections.value.filter(item => item.type !== GameCollectionType.Developer)
+		collections.value.filter(item => item.type !== GameCollectionTypeDeveloper)
 	);
 
 	/**

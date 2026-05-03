@@ -2,11 +2,11 @@ import { Model } from '~common/model/model.service';
 
 export function getLinkedAccountPlatformIcon(provider: LinkedAccountProvider) {
 	switch (provider) {
-		case LinkedAccountProvider.Facebook:
+		case LinkedAccountProviderFacebook:
 			return 'facebook';
-		case LinkedAccountProvider.Google:
+		case LinkedAccountProviderGoogle:
 			return 'google';
-		case LinkedAccountProvider.Twitch:
+		case LinkedAccountProviderTwitch:
 			return 'twitch';
 	}
 	return 'remove'; // invalid provider
@@ -14,21 +14,24 @@ export function getLinkedAccountPlatformIcon(provider: LinkedAccountProvider) {
 
 export function getLinkedAccountProviderDisplayName(provider: LinkedAccountProvider) {
 	switch (provider) {
-		case LinkedAccountProvider.Facebook:
+		case LinkedAccountProviderFacebook:
 			return 'Facebook';
-		case LinkedAccountProvider.Google:
+		case LinkedAccountProviderGoogle:
 			return 'Google';
-		case LinkedAccountProvider.Twitch:
+		case LinkedAccountProviderTwitch:
 			return 'Twitch';
 	}
 	return 'Invalid provider';
 }
 
-export const enum LinkedAccountProvider {
-	Facebook = 'facebook',
-	Google = 'google',
-	Twitch = 'twitch',
-}
+export const LinkedAccountProviderFacebook = 'facebook';
+export const LinkedAccountProviderGoogle = 'google';
+export const LinkedAccountProviderTwitch = 'twitch';
+
+export type LinkedAccountProvider =
+	| typeof LinkedAccountProviderFacebook
+	| typeof LinkedAccountProviderGoogle
+	| typeof LinkedAccountProviderTwitch;
 
 export class LinkedAccountModel extends Model {
 	declare game_id: number;
@@ -47,11 +50,11 @@ export class LinkedAccountModel extends Model {
 
 	get platformLink() {
 		switch (this.provider) {
-			case LinkedAccountProvider.Facebook:
+			case LinkedAccountProviderFacebook:
 				return `https://facebook.com/${this.provider_id}`;
-			case LinkedAccountProvider.Google:
+			case LinkedAccountProviderGoogle:
 				return `https://plus.google.com/${this.provider_id}`;
-			case LinkedAccountProvider.Twitch:
+			case LinkedAccountProviderTwitch:
 				return `https://twitch.tv/${this.name}`;
 		}
 		return 'Invalid provider';
@@ -67,7 +70,7 @@ export class LinkedAccountModel extends Model {
 
 	get profileImageUrl() {
 		switch (this.provider) {
-			case LinkedAccountProvider.Facebook:
+			case LinkedAccountProviderFacebook:
 				return `http://graph.facebook.com/${this.provider_id}/picture`;
 		}
 	}

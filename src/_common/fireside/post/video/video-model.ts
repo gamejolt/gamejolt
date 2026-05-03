@@ -1,5 +1,11 @@
 import { sendHistoryTick } from '~common/history-tick/history-tick-service';
-import { MediaItemModel, MediaItemType } from '~common/media-item/media-item-model';
+import {
+	MediaItemModel,
+	MediaItemTypeTranscodedVideo,
+	MediaItemTypeTranscodedVideoCard,
+	MediaItemTypeVideoManifest,
+	MediaItemTypeVideoPoster,
+} from '~common/media-item/media-item-model';
 import { Model } from '~common/model/model.service';
 import { VideoSourceArray } from '~common/video/AppVideo.vue';
 
@@ -22,12 +28,12 @@ export class FiresidePostVideoModel extends Model {
 	}
 
 	get posterMediaItem() {
-		return this.media.find(i => i.type === MediaItemType.VideoPoster);
+		return this.media.find(i => i.type === MediaItemTypeVideoPoster);
 	}
 
 	get postCardVideo(): VideoSourceArray | null {
 		return this.media
-			.filter(i => i.type === MediaItemType.TranscodedVideoCard)
+			.filter(i => i.type === MediaItemTypeTranscodedVideoCard)
 			.map(i => ({ src: i.img_url, type: i.filetype }));
 	}
 
@@ -44,14 +50,14 @@ export class FiresidePostVideoModel extends Model {
 		};
 
 		return this.media
-			.filter(i => i.type === MediaItemType.VideoManifest)
+			.filter(i => i.type === MediaItemTypeVideoManifest)
 			.sort((a, b) => getManifestPreference(a) - getManifestPreference(b))
 			.map(i => ({ src: i.img_url, type: i.filetype }));
 	}
 
 	get transcodedVideos(): VideoSourceArray {
 		return this.media
-			.filter(i => i.type === MediaItemType.TranscodedVideo)
+			.filter(i => i.type === MediaItemTypeTranscodedVideo)
 			.map(i => ({ type: i.filetype, src: i.img_url }));
 	}
 }

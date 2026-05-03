@@ -15,7 +15,8 @@ import { GamePackageModel } from '~common/game/package/package.model';
 import { showErrorGrowl, showSuccessGrowl } from '~common/growls/growls.service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import { $removeKey, KeyModel } from '~common/key/key-model';
-import { $removeKeyGroup, KeyGroupModel, KeyGroupType } from '~common/key-group/key-group.model';
+import { $removeKeyGroup, KeyGroupModel } from '~common/key-group/key-group.model';
+import { KeyGroupTypeEmail, KeyGroupTypeUser } from '~common/key-group/key-group.model';
 import { showModalConfirm } from '~common/modal/confirm/confirm-service';
 import AppProgressBar from '~common/progress/AppProgressBar.vue';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
@@ -54,10 +55,6 @@ const search = ref({
 	filter: '',
 	state: 'all',
 });
-
-const KeyGroupTypeUser = KeyGroupType.User;
-const KeyGroupTypeEmail = KeyGroupType.Email;
-
 async function searchKeys() {
 	const response = await Api.sendRequest(
 		'/web/dash/developer/games/key-groups/search-keys/' +

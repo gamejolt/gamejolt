@@ -6,7 +6,14 @@ import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
 import { AvatarFrameModel, DefaultAvatarFrameScale } from '~common/avatar/frame.model';
 import { getScreen } from '~common/screen/screen-service';
 import AppScrollScroller from '~common/scroll/AppScrollScroller.vue';
-import { ShopProductModel, ShopProductResource } from '~common/shop/product/product-model';
+import {
+	ShopProductModel,
+	ShopProductResource,
+	ShopProductResourceAvatarFrame,
+	ShopProductResourceBackground,
+	ShopProductResourceSticker,
+	ShopProductResourceStickerPack,
+} from '~common/shop/product/product-model';
 import { StickerPackRatio } from '~common/sticker/pack/AppStickerPack.vue';
 import AppUserAvatarBubble from '~common/user/user-avatar/AppUserAvatarBubble.vue';
 import { styleFlexCenter, styleMaxWidthForOptions, styleWhen } from '~styles/mixins';
@@ -24,7 +31,7 @@ const { resource, form, model, imgUrl } = defineProps<Props>();
 const { screenWidth, screenHeight } = getScreen();
 
 const backgroundData = computed(() => {
-	if (resource !== ShopProductResource.Background) {
+	if (resource !== ShopProductResourceBackground) {
 		return undefined;
 	}
 	return form.getBackgroundSize(model ?? imgUrl);
@@ -56,18 +63,18 @@ const imgData = computed(() => {
 	let borderRadius = '';
 	let placeholderRatio = 1;
 	switch (resource) {
-		case ShopProductResource.Background:
+		case ShopProductResourceBackground:
 			borderRadius = kBorderRadiusLg.px;
 			break;
 
-		case ShopProductResource.StickerPack:
+		case ShopProductResourceStickerPack:
 			borderRadius = kBorderRadiusLg.px;
 			placeholderRatio = StickerPackRatio;
 			break;
 
 		// They're displayed the same way.
-		case ShopProductResource.AvatarFrame:
-		case ShopProductResource.Sticker:
+		case ShopProductResourceAvatarFrame:
+		case ShopProductResourceSticker:
 			borderRadius = kBorderRadiusBase.px;
 			placeholderRatio = 1.54;
 			break;
@@ -99,13 +106,13 @@ const multiSizeGridStyles: CSSProperties = {
 };
 
 const gridAreaSizes = {
-	[ShopProductResource.AvatarFrame]: {
+	[ShopProductResourceAvatarFrame]: {
 		a: 200,
 		b: 100,
 		c: 64,
 		d: 24,
 	},
-	[ShopProductResource.Sticker]: {
+	[ShopProductResourceSticker]: {
 		a: 200,
 		b: 100,
 		c: 64,
@@ -129,7 +136,7 @@ const gridAreaSizes = {
 			),
 		}"
 	>
-		<template v-if="resource === ShopProductResource.Background">
+		<template v-if="resource === ShopProductResourceBackground">
 			<AppScrollScroller
 				v-if="backgroundData?.tileSize"
 				:style="{
@@ -160,7 +167,7 @@ const gridAreaSizes = {
 			</div>
 		</template>
 		<AppAspectRatio
-			v-else-if="resource === ShopProductResource.StickerPack"
+			v-else-if="resource === ShopProductResourceStickerPack"
 			:ratio="imgData.placeholderRatio"
 		>
 			<img v-if="imgUrl" :style="imgData.styles" :src="imgUrl" />
@@ -168,8 +175,8 @@ const gridAreaSizes = {
 		</AppAspectRatio>
 		<div
 			v-else-if="
-				resource === ShopProductResource.Sticker ||
-				resource === ShopProductResource.AvatarFrame
+				resource === ShopProductResourceSticker ||
+				resource === ShopProductResourceAvatarFrame
 			"
 			:style="multiSizeGridStyles"
 		>
@@ -180,7 +187,7 @@ const gridAreaSizes = {
 							:ratio="1"
 							:inner-styles="[styleFlexCenter(), { padding: `2px` }]"
 						>
-							<template v-if="resource === ShopProductResource.Sticker">
+							<template v-if="resource === ShopProductResourceSticker">
 								<img
 									v-if="imgUrl"
 									:style="{

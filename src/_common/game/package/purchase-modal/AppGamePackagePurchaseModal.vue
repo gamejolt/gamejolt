@@ -2,7 +2,8 @@
 import { computed } from 'vue';
 
 import AppButton from '~common/button/AppButton.vue';
-import { GameBuildModel, GameBuildType } from '~common/game/build/build.model';
+import { GameBuildModel } from '~common/game/build/build.model';
+import { GameBuildTypeDownloadable, GameBuildTypeRom } from '~common/game/build/build.model';
 import { GameDownloader } from '~common/game/downloader/downloader.service';
 import type { GameModel } from '~common/game/game.model';
 import type { GamePackageModel } from '~common/game/package/package.model';
@@ -42,8 +43,8 @@ const packageOperation = computed(() => {
 	}
 
 	let operation: 'download' | 'play' =
-		build.type === GameBuildType.Downloadable ? 'download' : 'play';
-	if (build.type === GameBuildType.Rom && fromExtraSection) {
+		build.type === GameBuildTypeDownloadable ? 'download' : 'play';
+	if (build.type === GameBuildTypeRom && fromExtraSection) {
 		operation = 'download';
 	}
 	return operation;

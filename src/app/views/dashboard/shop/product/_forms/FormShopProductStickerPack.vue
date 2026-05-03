@@ -6,7 +6,11 @@ import FormShopProductBase, {
 	createShopProductBaseForm,
 } from '~app/views/dashboard/shop/product/_forms/FormShopProductBase.vue';
 import AppDashShopProductHeader from '~app/views/dashboard/shop/product/AppDashShopProductHeader.vue';
-import { ShopDashProductType, useShopDashStore } from '~app/views/dashboard/shop/shop.store';
+import {
+	ShopDashProductTypePremium,
+	ShopDashProductTypeReward,
+	useShopDashStore,
+} from '~app/views/dashboard/shop/shop.store';
 import AppAlertBox from '~common/alert/AppAlertBox.vue';
 import AppButton from '~common/button/AppButton.vue';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
@@ -14,7 +18,7 @@ import AppLinkHelp from '~common/link/AppLinkHelp.vue';
 import { showModalConfirm } from '~common/modal/confirm/confirm-service';
 import { storeModelList } from '~common/model/model-store.service';
 import AppOnHover from '~common/on/AppOnHover.vue';
-import { ShopProductResource } from '~common/shop/product/product-model';
+import { ShopProductResourceStickerPack } from '~common/shop/product/product-model';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 import AppStickerImg from '~common/sticker/AppStickerImg.vue';
 import { StickerPackModel } from '~common/sticker/pack/pack.model';
@@ -37,7 +41,7 @@ const shopStore = useShopDashStore()!;
 
 const data = createShopProductBaseForm({
 	shopStore,
-	resource: ShopProductResource.StickerPack,
+	resource: ShopProductResourceStickerPack,
 	baseModel: model,
 	fields: {
 		stickers: [] as number[],
@@ -120,7 +124,7 @@ async function addStickers() {
 	// Will return all the stickers (the current in pack as well as new).
 	const newStickers = await showFormStickerSelectorModal({
 		stickerPackId: model?.id,
-		premium: productType.value === ShopDashProductType.Premium,
+		premium: productType.value === ShopDashProductTypePremium,
 		currentStickers: stickers.value,
 		availableSlots: maxStickers.value,
 	});
@@ -148,7 +152,7 @@ async function removeSticker(sticker: StickerModel) {
 		:product-type="productType"
 		:heading="isEditing ? $gettext(`Edit sticker pack`) : $gettext(`Add sticker pack`)"
 	>
-		<template v-if="productType === ShopDashProductType.Reward">
+		<template v-if="productType === ShopDashProductTypeReward">
 			<div>
 				{{
 					$gettext(
@@ -162,7 +166,7 @@ async function removeSticker(sticker: StickerModel) {
 				</AppLinkHelp>
 			</div>
 		</template>
-		<template v-else-if="productType === ShopDashProductType.Premium">
+		<template v-else-if="productType === ShopDashProductTypePremium">
 			<div>
 				{{
 					$gettext(

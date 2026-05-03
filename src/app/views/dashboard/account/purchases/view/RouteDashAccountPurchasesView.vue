@@ -11,7 +11,11 @@ import { Geo } from '~common/geo/geo.service';
 import AppMicrotransactionItem from '~common/microtransaction/AppMicrotransactionItem.vue';
 import { MicrotransactionProductModel } from '~common/microtransaction/product.model';
 import { OrderModel } from '~common/order/order.model';
-import { OrderPaymentMethod } from '~common/order/payment/payment.model';
+import {
+	OrderPaymentMethodCCStripe,
+	OrderPaymentMethodPaypal,
+	OrderPaymentMethodWallet,
+} from '~common/order/payment/payment.model';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { getScreen } from '~common/screen/screen-service';
 import { $gettext } from '~common/translate/translate.service';
@@ -51,7 +55,7 @@ const hasVisiblePayment = computed(() => {
 	}
 
 	return order.value.payments.some(
-		i => i.method !== OrderPaymentMethod.CCStripe || !!i.stripe_payment_source
+		i => i.method !== OrderPaymentMethodCCStripe || !!i.stripe_payment_source
 	);
 });
 
@@ -149,7 +153,7 @@ function isMicrotransactionProduct(resource: any): resource is MicrotransactionP
 				<div v-for="payment of order.payments" :key="payment.id">
 					<template
 						v-if="
-							payment.method === OrderPaymentMethod.CCStripe &&
+							payment.method === OrderPaymentMethodCCStripe &&
 							payment.stripe_payment_source
 						"
 					>
@@ -159,11 +163,11 @@ function isMicrotransactionProduct(resource: any): resource is MicrotransactionP
 						****
 						{{ payment.stripe_payment_source.last4 }}
 					</template>
-					<template v-else-if="payment.method === OrderPaymentMethod.Paypal">
+					<template v-else-if="payment.method === OrderPaymentMethodPaypal">
 						<span class="tag"> PayPal </span>
 						{{ payment.paypal_email_address }}
 					</template>
-					<template v-else-if="payment.method === OrderPaymentMethod.Wallet">
+					<template v-else-if="payment.method === OrderPaymentMethodWallet">
 						<span class="tag"> Wallet </span>
 						{{ formatCurrency(payment.amount) }}
 					</template>

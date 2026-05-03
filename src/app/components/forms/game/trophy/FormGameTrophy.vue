@@ -27,13 +27,19 @@ import { showModalConfirm } from '~common/modal/confirm/confirm-service';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 import { $gettext } from '~common/translate/translate.service';
 import { TranslateDirective as vTranslate } from '~common/translate/translate-directive';
-import { BaseTrophyDifficulty } from '~common/trophy/base-trophy.model';
+import {
+	BaseTrophyDifficulty,
+	BaseTrophyDifficultyBronze,
+	BaseTrophyDifficultyGold,
+	BaseTrophyDifficultyPlatinum,
+	BaseTrophyDifficultySilver,
+} from '~common/trophy/base-trophy.model';
 
 type FormModel = GameTrophyModel;
 
 type Props = {
 	game: GameModel;
-	difficulty: number;
+	difficulty: BaseTrophyDifficulty;
 	model?: GameTrophyModel;
 };
 
@@ -74,10 +80,10 @@ const form: FormController<FormModel> = createForm<FormModel>({
 });
 
 const difficultyOptions = computed(() => [
-	{ label: $gettext('Bronze'), value: BaseTrophyDifficulty.Bronze },
-	{ label: $gettext('Silver'), value: BaseTrophyDifficulty.Silver },
-	{ label: $gettext('Gold'), value: BaseTrophyDifficulty.Gold },
-	{ label: $gettext('Platinum'), value: BaseTrophyDifficulty.Platinum },
+	{ label: $gettext('Bronze'), value: BaseTrophyDifficultyBronze },
+	{ label: $gettext('Silver'), value: BaseTrophyDifficultySilver },
+	{ label: $gettext('Gold'), value: BaseTrophyDifficultyGold },
+	{ label: $gettext('Platinum'), value: BaseTrophyDifficultyPlatinum },
 ]);
 
 async function clearImage() {

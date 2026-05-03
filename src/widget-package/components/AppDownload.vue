@@ -8,11 +8,12 @@ import { formatFilesize } from '~common/filters/filesize';
 import {
 	GameBuildEmulatorInfo,
 	GameBuildModel,
-	GameBuildType,
+	GameBuildTypeDownloadable,
+	GameBuildTypeRom,
 } from '~common/game/build/build.model';
 import { sendHistoryTick } from '~common/history-tick/history-tick-service';
 import AppJolticon, { Jolticon } from '~common/jolticon/AppJolticon.vue';
-import { SellableType } from '~common/sellable/sellable.model';
+import { SellableTypePwyw } from '~common/sellable/sellable.model';
 import { useCommonStore } from '~common/store/common-store';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import AppFadeCollapse from '~widget-package/components/AppFadeCollapse.vue';
@@ -62,7 +63,7 @@ async function buildClick(build?: GameBuildModel) {
 		throw new Error('Build must always be set.');
 	}
 
-	if (sellable.value.type === SellableType.Pwyw && !isShowingPayment.value) {
+	if (sellable.value.type === SellableTypePwyw && !isShowingPayment.value) {
 		clickedBuild.value = build;
 		isShowingPayment.value = true;
 		return;
@@ -75,7 +76,7 @@ async function buildClick(build?: GameBuildModel) {
 		sourceResourceId: game.value.id,
 	});
 
-	if (build.isBrowserBased || build.type === GameBuildType.Rom) {
+	if (build.isBrowserBased || build.type === GameBuildTypeRom) {
 		// We have to open the window first before getting the URL. The browser
 		// will block the popup unless it's done directly in the onclick
 		// handler. Once we have the download URL we can direct the window that
@@ -168,7 +169,7 @@ async function buildClick(build?: GameBuildModel) {
 							<!-- If a ROM, we want to show a tooltip on what kind. -->
 							<AppButton
 								v-app-tooltip.touchable="
-									extraBuild.build.type === GameBuildType.Rom
+									extraBuild.build.type === GameBuildTypeRom
 										? GameBuildEmulatorInfo[extraBuild.build.emulator_type]
 										: undefined
 								"
@@ -178,10 +179,14 @@ async function buildClick(build?: GameBuildModel) {
 							>
 								<!-- We show the filename if it's an "Other" build. -->
 								<template v-if="!extraBuild.build.os_other">
-									<template v-if="extraBuild.build.type === 'downloadable'">
+									<template
+										v-if="extraBuild.build.type === GameBuildTypeDownloadable"
+									>
 										Download
 									</template>
-									<template v-else-if="extraBuild.build.type === 'rom'">
+									<template
+										v-else-if="extraBuild.build.type === GameBuildTypeRom"
+									>
 										Download ROM
 									</template>
 									<template v-else> Play </template>

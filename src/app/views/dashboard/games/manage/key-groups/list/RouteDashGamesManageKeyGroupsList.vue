@@ -11,7 +11,13 @@ import AppCardListAdd from '~common/card/list/AppCardListAdd.vue';
 import AppCardListItem from '~common/card/list/AppCardListItem.vue';
 import { formatNumber } from '~common/filters/number';
 import { GamePackageModel } from '~common/game/package/package.model';
-import { KeyGroupModel, KeyGroupType } from '~common/key-group/key-group.model';
+import { KeyGroupModel } from '~common/key-group/key-group.model';
+import {
+	KeyGroupTypeAnonymous,
+	KeyGroupTypeAnonymousClaim,
+	KeyGroupTypeEmail,
+	KeyGroupTypeUser,
+} from '~common/key-group/key-group.model';
 import AppProgressBar from '~common/progress/AppProgressBar.vue';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import AppTranslate from '~common/translate/AppTranslate.vue';
@@ -37,12 +43,6 @@ const game = computed(() => routeStore.game.value!);
 const keyGroups = ref<KeyGroupModel[]>([]);
 const packages = ref<GamePackageModel[]>([]);
 const isAdding = ref(false);
-
-const KeyGroupTypeAnonymous = KeyGroupType.Anonymous;
-const KeyGroupTypeAnonymousClaim = KeyGroupType.AnonymousClaim;
-const KeyGroupTypeEmail = KeyGroupType.Email;
-const KeyGroupTypeUser = KeyGroupType.User;
-
 function onKeyGroupAdded(keyGroup: KeyGroupModel) {
 	router.push({
 		name: 'dash.games.manage.key-groups.edit',

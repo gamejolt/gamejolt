@@ -4,7 +4,9 @@ import { toRef } from 'vue';
 import {
 	$inviteCollaborator,
 	CollaboratorModel,
-	CollaboratorRole,
+	CollaboratorRoleEqualCollaborator,
+	CollaboratorRoleJamOrganizer,
+	CollaboratorRoleModerator,
 } from '~common/collaborator/collaborator.model';
 import { CommunityModel } from '~common/community/community.model';
 import AppForm, { createForm, FormController } from '~common/form-vue/AppForm.vue';
@@ -76,7 +78,7 @@ const form: FormController<FormModel> = createForm<FormModel>({
 		<AppFormGroup name="role" :label="$gettext('Role')">
 			<div class="radio">
 				<label>
-					<AppFormControlRadio :value="CollaboratorRole.EqualCollaborator" />
+					<AppFormControlRadio :value="CollaboratorRoleEqualCollaborator" />
 					{{ $gettext(`Full Collaborator`) }}
 					&mdash;
 					<span class="help-inline">
@@ -90,7 +92,7 @@ const form: FormController<FormModel> = createForm<FormModel>({
 			</div>
 			<div class="radio">
 				<label>
-					<AppFormControlRadio :value="CollaboratorRole.JamOrganizer" />
+					<AppFormControlRadio :value="CollaboratorRoleJamOrganizer" />
 					{{ $gettext(`Jam Organizer`) }}
 					&mdash;
 					<span class="help-inline">
@@ -104,7 +106,7 @@ const form: FormController<FormModel> = createForm<FormModel>({
 			</div>
 			<div class="radio">
 				<label>
-					<AppFormControlRadio :value="CollaboratorRole.Moderator" />
+					<AppFormControlRadio :value="CollaboratorRoleModerator" />
 					{{ $gettext(`Moderator`) }}
 					&mdash;
 					<span class="help-inline">

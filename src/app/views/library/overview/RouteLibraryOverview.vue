@@ -1,7 +1,10 @@
 <script lang="ts">
 import { computed } from 'vue';
 
-import { GameCollectionModel } from '~app/components/game/collection/collection.model';
+import {
+	GameCollectionModel,
+	GameCollectionTypePlaylist,
+} from '~app/components/game/collection/collection.model';
 import AppGameCollectionGrid from '~app/components/game/collection/grid/AppGameCollectionGrid.vue';
 import AppGameCollectionList from '~app/components/game/collection/list/AppGameCollectionList.vue';
 import AppPageHeader from '~app/components/page-header/AppPageHeader.vue';
@@ -45,7 +48,7 @@ const mainCollections = computed(() => {
 
 const playlistCollections = computed(() =>
 	collections.value.filter(collection => {
-		if (collection.type === 'playlist' && !collection.from_subscription) {
+		if (collection.type === GameCollectionTypePlaylist && !collection.from_subscription) {
 			return true;
 		}
 		return false;

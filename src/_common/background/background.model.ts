@@ -7,10 +7,10 @@ import { getMediaserverUrlForBounds } from '~utils/image';
 
 export const BackgroundDefaultScale = 2.0;
 
-export const enum BackgroundScaling {
-	stretch = 'stretch',
-	tile = 'tile',
-}
+export const BackgroundScalingstretch = 'stretch';
+export const BackgroundScalingtile = 'tile';
+
+export type BackgroundScaling = typeof BackgroundScalingstretch | typeof BackgroundScalingtile;
 
 export class BackgroundModel implements ModelStoreModel, ShopProductCommonFields {
 	declare id: number;
@@ -55,7 +55,7 @@ export function getBackgroundImgUrl(background: BackgroundModel) {
 
 	const { scaling, scale } = background;
 	let src = mediaserver_url;
-	if (scaling === BackgroundScaling.tile) {
+	if (scaling === BackgroundScalingtile) {
 		src = getMediaserverUrlForBounds({
 			src,
 			maxWidth: width / scale,
@@ -75,7 +75,7 @@ export function getBackgroundCSSProperties(background: BackgroundModel) {
 	let backgroundRepeat = 'no-repeat';
 
 	switch (scaling) {
-		case BackgroundScaling.tile: {
+		case BackgroundScalingtile: {
 			const width = media_item.width / scale;
 			const height = media_item.height / scale;
 			backgroundSize = `${width}px ${height}px`;
@@ -83,7 +83,7 @@ export function getBackgroundCSSProperties(background: BackgroundModel) {
 			break;
 		}
 
-		case BackgroundScaling.stretch:
+		case BackgroundScalingstretch:
 			backgroundSize = `100% 100%`;
 			break;
 	}

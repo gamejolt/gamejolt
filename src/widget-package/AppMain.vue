@@ -2,7 +2,7 @@
 import { onMounted } from 'vue';
 
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
-import { SellableType } from '~common/sellable/sellable.model';
+import { SellableTypePaid } from '~common/sellable/sellable.model';
 import AppTheme from '~common/theme/AppTheme.vue';
 import { useThemeStore } from '~common/theme/theme.store';
 import AppTooltipPortal from '~common/tooltip/AppTooltipPortal.vue';
@@ -82,7 +82,7 @@ function dismissError() {
 			<div v-if="isLoaded">
 				<AppGameHeader />
 				<FormPayment
-					v-if="sellable && sellable.type === SellableType.Paid && !sellable.is_owned"
+					v-if="sellable && sellable.type === SellableTypePaid && !sellable.is_owned"
 				/>
 				<AppDownload v-else />
 			</div>

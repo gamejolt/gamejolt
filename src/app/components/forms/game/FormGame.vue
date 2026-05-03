@@ -16,7 +16,7 @@ import {
 	validateMaxLength,
 	validateUrlPath,
 } from '~common/form-vue/validators';
-import { $saveGame, GameModel } from '~common/game/game.model';
+import { $saveGame, GameDevelopmentStatus, GameModel } from '~common/game/game.model';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 
@@ -95,7 +95,7 @@ const stage = computed(() => {
 	return 'details';
 });
 
-function selectStage(s: number) {
+function selectStage(s: GameDevelopmentStatus) {
 	form.formModel.development_status = s;
 }
 </script>

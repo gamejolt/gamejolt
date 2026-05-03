@@ -5,7 +5,10 @@ import {
 	$pinComment,
 	CommentModel,
 	CommentSort,
-	CommentStatus,
+	CommentSortHot,
+	CommentSortNew,
+	CommentSortYou,
+	CommentStatusSpam,
 	fetchComments,
 } from '~common/comment/comment-model';
 import { showSuccessGrowl } from '~common/growls/growls.service';
@@ -25,7 +28,7 @@ export class CommentStoreModel {
 	parentCount = 0;
 	comments: CommentModel[] = [];
 	locks = 0;
-	sort = CommentSort.Hot;
+	sort: CommentSort = CommentSortHot;
 	// This flag gets set for every change (add/remove/update), that prompts the
 	// overview component owner to update the comment info
 	overviewNeedsRefresh = false;
@@ -140,7 +143,7 @@ export async function commentStoreFetch(store: CommentStoreModel, page?: number)
 	let response: any;
 
 	// 'new' and 'you' sort by last timestamp using scroll
-	if (store.sort === CommentSort.New || store.sort === CommentSort.You) {
+	if (store.sort === CommentSortNew || store.sort === CommentSortYou) {
 		// load comments after the last timestamp
 		const lastComment =
 			store.parentComments.length === 0
@@ -223,7 +226,7 @@ export function commentStoreUpdate(store: CommentStoreModel, commentId: number, 
 export function commentStoreHandleAdd(manager: CommentStoreManager, comment: CommentModel) {
 	const store = getCommentStore(manager, comment.resource, comment.resource_id);
 
-	if (comment.status === CommentStatus.Spam) {
+	if (comment.status === CommentStatusSpam) {
 		showSuccessGrowl(
 			$gettext(
 				`Your comment has been marked for review. Please allow some time for it to show on the site.`
@@ -232,7 +235,7 @@ export function commentStoreHandleAdd(manager: CommentStoreManager, comment: Com
 		);
 	} else if (store && !store.contains(comment)) {
 		// insert the new comment at the beginning
-		if (store.sort === CommentSort.You || comment.parent_id) {
+		if (store.sort === CommentSortYou || comment.parent_id) {
 			++store.count;
 			store.comments.unshift(comment);
 			if (!comment.parent_id) {
@@ -245,7 +248,7 @@ export function commentStoreHandleAdd(manager: CommentStoreManager, comment: Com
 
 export function commentStoreHandleEdit(manager: CommentStoreManager, comment: CommentModel) {
 	// Was it marked as possible spam?
-	if (comment.status === CommentStatus.Spam) {
+	if (comment.status === CommentStatusSpam) {
 		showSuccessGrowl(
 			$gettext(
 				`Your comment has been marked for review. Please allow some time for it to show on the site.`

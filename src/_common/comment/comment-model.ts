@@ -4,7 +4,7 @@ import {
 	$removeCommentVote,
 	$saveCommentVote,
 	CommentVoteModel,
-	CommentVoteType,
+	CommentVoteTypeUpvote,
 } from '~common/comment/vote/vote-model';
 import { ContentDocument } from '~common/content/content-document';
 import { Environment } from '~common/environment/environment.service';
@@ -33,18 +33,25 @@ export interface CommentableModel {
 	canInteractWithComments: boolean;
 }
 
-export const enum CommentStatus {
-	Removed = 0,
-	Visible = 1,
-	Spam = 2,
-}
+export const CommentStatusRemoved = 0;
+export const CommentStatusVisible = 1;
+export const CommentStatusSpam = 2;
 
-export const enum CommentSort {
-	Hot = 'hot',
-	Top = 'top',
-	New = 'new',
-	You = 'you',
-}
+export type CommentStatus =
+	| typeof CommentStatusRemoved
+	| typeof CommentStatusVisible
+	| typeof CommentStatusSpam;
+
+export const CommentSortHot = 'hot';
+export const CommentSortTop = 'top';
+export const CommentSortNew = 'new';
+export const CommentSortYou = 'you';
+
+export type CommentSort =
+	| typeof CommentSortHot
+	| typeof CommentSortTop
+	| typeof CommentSortNew
+	| typeof CommentSortYou;
 
 export class CommentModel implements ModelStoreModel, RemovableModel, ReactionableModel {
 	declare id: number;
@@ -271,7 +278,7 @@ export async function $voteOnComment(comment: CommentModel, vote: number) {
 	// they had previously set it to upvote and are changing to downvote to signify the removal
 	// of the upvote only.
 	let operation = 0;
-	if (vote === CommentVoteType.Upvote) {
+	if (vote === CommentVoteTypeUpvote) {
 		operation = 1;
 	} else if (hadPreviousVote) {
 		// Their previous vote had to be an upvote in this case.
@@ -301,7 +308,7 @@ export async function $unvoteOnComment(comment: CommentModel) {
 	const previousVote = comment.user_vote;
 
 	// Votes only show upvotes, so don't modify vote count if it was a downvote.
-	if (previousVote.vote === CommentVoteType.Upvote) {
+	if (previousVote.vote === CommentVoteTypeUpvote) {
 		--comment.votes;
 	}
 	comment.user_vote = undefined;

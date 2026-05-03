@@ -4,20 +4,26 @@ import { Model } from '~common/model/model.service';
 import { getCommonStore } from '~common/store/common-store';
 import { UserModel } from '~common/user/user.model';
 
-export const enum GameCollectionType {
-	Followed = 'followed',
-	Developer = 'developer',
-	Owned = 'owned',
-	Recommended = 'recommended',
-	Playlist = 'playlist',
-	Bundle = 'bundle',
-}
+export const GameCollectionTypeFollowed = 'followed';
+export const GameCollectionTypeDeveloper = 'developer';
+export const GameCollectionTypeOwned = 'owned';
+export const GameCollectionTypeRecommended = 'recommended';
+export const GameCollectionTypePlaylist = 'playlist';
+export const GameCollectionTypeBundle = 'bundle';
+
+export type GameCollectionType =
+	| typeof GameCollectionTypeFollowed
+	| typeof GameCollectionTypeDeveloper
+	| typeof GameCollectionTypeOwned
+	| typeof GameCollectionTypeRecommended
+	| typeof GameCollectionTypePlaylist
+	| typeof GameCollectionTypeBundle;
 
 export const GameCollectionUserTypes = [
-	GameCollectionType.Followed,
-	GameCollectionType.Developer,
-	GameCollectionType.Owned,
-	GameCollectionType.Recommended,
+	GameCollectionTypeFollowed,
+	GameCollectionTypeDeveloper,
+	GameCollectionTypeOwned,
+	GameCollectionTypeRecommended,
 ];
 
 export class GameCollectionModel extends Model {

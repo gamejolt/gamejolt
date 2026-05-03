@@ -14,13 +14,19 @@ import { CreatorChangeRequestModel } from '~common/creator/change-request/creato
 import { storeModelList } from '~common/model/model-store.service';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { ShopProductResource } from '~common/shop/product/product-model';
+import {
+	ShopProductResourceAvatarFrame,
+	ShopProductResourceBackground,
+	ShopProductResourceSticker,
+	ShopProductResourceStickerPack,
+} from '~common/shop/product/product-model';
 import { StickerPackModel } from '~common/sticker/pack/pack.model';
 import { StickerModel } from '~common/sticker/sticker.model';
 import { $gettext } from '~common/translate/translate.service';
 import { RouteLocationRedirect } from '~utils/router';
 
 async function _makeSectionPromise(
-	resource: Exclude<ShopProductResource, ShopProductResource.StickerPack> | 'packs'
+	resource: Exclude<ShopProductResource, typeof ShopProductResourceStickerPack> | 'packs'
 ) {
 	let url = `/web/dash/creators/shop`;
 	if (resource !== 'packs') {
@@ -32,10 +38,10 @@ async function _makeSectionPromise(
 
 async function fetchOverviewData() {
 	const [avatarFrames, backgrounds, stickerPacks, stickers] = await Promise.all([
-		_makeSectionPromise(ShopProductResource.AvatarFrame),
-		_makeSectionPromise(ShopProductResource.Background),
+		_makeSectionPromise(ShopProductResourceAvatarFrame),
+		_makeSectionPromise(ShopProductResourceBackground),
 		_makeSectionPromise('packs'),
-		_makeSectionPromise(ShopProductResource.Sticker),
+		_makeSectionPromise(ShopProductResourceSticker),
 	]);
 
 	return {

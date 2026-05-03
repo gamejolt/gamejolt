@@ -8,7 +8,7 @@ import { useContentFocusService } from '~common/content-focus/content-focus.serv
 import { FiresidePostModel } from '~common/fireside/post/post-model';
 import AppImgResponsive from '~common/img/AppImgResponsive.vue';
 import AppMediaItemBackdrop from '~common/media-item/backdrop/AppMediaItemBackdrop.vue';
-import { MediaItemType } from '~common/media-item/media-item-model';
+import { MediaItemTypeTranscodedVideoCard } from '~common/media-item/media-item-model';
 import AppResponsiveDimensions from '~common/responsive-dimensions/AppResponsiveDimensions.vue';
 import { getScreen } from '~common/screen/screen-service';
 import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
@@ -111,7 +111,7 @@ const video = computed(() => {
 		return undefined;
 	}
 
-	return post?.videos[0].media.find(i => i.type === MediaItemType.TranscodedVideoCard);
+	return post?.videos[0].media.find(i => i.type === MediaItemTypeTranscodedVideoCard);
 });
 
 const background = computed(() => post.background);

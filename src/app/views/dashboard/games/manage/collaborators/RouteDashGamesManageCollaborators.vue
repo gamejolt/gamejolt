@@ -10,8 +10,12 @@ import AppCardListItem from '~common/card/list/AppCardListItem.vue';
 import {
 	$removeCollaboratorInvite,
 	CollaboratorModel,
-	CollaboratorRole,
-	CollaboratorStatus,
+} from '~common/collaborator/collaborator.model';
+import { CollaboratorStatusActive } from '~common/collaborator/collaborator.model';
+import {
+	CollaboratorRoleCommunityManager,
+	CollaboratorRoleDeveloper,
+	CollaboratorRoleEqualCollaborator,
 } from '~common/collaborator/collaborator.model';
 import { showErrorGrowl, showSuccessGrowl } from '~common/growls/growls.service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
@@ -133,27 +137,27 @@ createAppRoute({
 								<span class="tag">
 									<template
 										v-if="
-											collaborator.role === CollaboratorRole.EqualCollaborator
+											collaborator.role === CollaboratorRoleEqualCollaborator
 										"
 									>
 										{{ $gettext(`Collaborator`) }}
 									</template>
 									<template
 										v-else-if="
-											collaborator.role === CollaboratorRole.CommunityManager
+											collaborator.role === CollaboratorRoleCommunityManager
 										"
 									>
 										{{ $gettext(`Community Manager`) }}
 									</template>
 									<template
-										v-else-if="collaborator.role === CollaboratorRole.Developer"
+										v-else-if="collaborator.role === CollaboratorRoleDeveloper"
 									>
 										{{ $gettext(`Developer`) }}
 									</template>
 									<template v-else> - </template>
 								</span>
 
-								<template v-if="collaborator.status !== CollaboratorStatus.Active">
+								<template v-if="collaborator.status !== CollaboratorStatusActive">
 									<span class="tag">{{ $gettext(`Invited`) }}</span>
 									<br />
 									{{

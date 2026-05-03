@@ -16,7 +16,12 @@ import { BackgroundModel } from '~common/background/background.model';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppLoading from '~common/loading/AppLoading.vue';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
-import { ShopProductResource } from '~common/shop/product/product-model';
+import {
+	ShopProductResourceAvatarFrame,
+	ShopProductResourceBackground,
+	ShopProductResourceSticker,
+	ShopProductResourceStickerPack,
+} from '~common/shop/product/product-model';
 import { StickerPackModel } from '~common/sticker/pack/pack.model';
 import { StickerModel } from '~common/sticker/sticker.model';
 import { $gettext } from '~common/translate/translate.service';
@@ -47,10 +52,10 @@ const resource = computed(() =>
 );
 
 const routeTitles = {
-	[ShopProductResource.AvatarFrame]: $gettext(`Avatar frame product`),
-	[ShopProductResource.Background]: $gettext(`Background product`),
-	[ShopProductResource.Sticker]: $gettext(`Sticker product`),
-	[ShopProductResource.StickerPack]: $gettext(`Sticker pack product`),
+	[ShopProductResourceAvatarFrame]: $gettext(`Avatar frame product`),
+	[ShopProductResourceBackground]: $gettext(`Background product`),
+	[ShopProductResourceSticker]: $gettext(`Sticker product`),
+	[ShopProductResourceStickerPack]: $gettext(`Sticker pack product`),
 };
 
 const routeTitle = computed(() => (resource.value ? routeTitles[resource.value] : ''));
@@ -65,16 +70,16 @@ const { isBootstrapped } = createAppRoute({
 		const modelId = parseInt(route.params.id as string, 10);
 
 		switch (resource.value) {
-			case ShopProductResource.AvatarFrame:
+			case ShopProductResourceAvatarFrame:
 				avatarFrame.value = avatarFrames.value.items.find(i => i.id === modelId);
 				break;
-			case ShopProductResource.Background:
+			case ShopProductResourceBackground:
 				background.value = backgrounds.value.items.find(i => i.id === modelId);
 				break;
-			case ShopProductResource.StickerPack:
+			case ShopProductResourceStickerPack:
 				stickerPack.value = stickerPacks.value.items.find(i => i.id === modelId);
 				break;
-			case ShopProductResource.Sticker:
+			case ShopProductResourceSticker:
 				sticker.value = stickers.value.items.find(i => i.id === modelId);
 				break;
 		}
@@ -94,19 +99,19 @@ const { isBootstrapped } = createAppRoute({
 
 	<template v-if="isBootstrapped">
 		<FormShopProductAvatarFrame
-			v-if="resource === ShopProductResource.AvatarFrame"
+			v-if="resource === ShopProductResourceAvatarFrame"
 			:model="avatarFrame"
 		/>
 		<FormShopProductBackground
-			v-else-if="resource === ShopProductResource.Background"
+			v-else-if="resource === ShopProductResourceBackground"
 			:model="background"
 		/>
 		<FormShopProductStickerPack
-			v-else-if="resource === ShopProductResource.StickerPack"
+			v-else-if="resource === ShopProductResourceStickerPack"
 			:model="stickerPack"
 		/>
 		<FormShopProductSticker
-			v-else-if="resource === ShopProductResource.Sticker"
+			v-else-if="resource === ShopProductResourceSticker"
 			:model="sticker"
 		/>
 		<template v-else>

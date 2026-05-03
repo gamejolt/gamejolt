@@ -1,9 +1,9 @@
 import { Model } from '~common/model/model.service';
 
-export const enum UserAddressType {
-	Billing = 'billing',
-	Shipping = 'shipping',
-}
+export const UserAddressTypeBilling = 'billing';
+export const UserAddressTypeShipping = 'shipping';
+
+export type UserAddressType = typeof UserAddressTypeBilling | typeof UserAddressTypeShipping;
 
 export class UserAddressModel extends Model {
 	declare user_id: number;

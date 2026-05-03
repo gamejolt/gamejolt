@@ -1,17 +1,21 @@
 import { Model } from '~common/model/model.service';
 
-export const enum BaseTrophyDifficulty {
-	Bronze = 1,
-	Silver = 2,
-	Gold = 3,
-	Platinum = 4,
-}
+export const BaseTrophyDifficultyBronze = 1;
+export const BaseTrophyDifficultySilver = 2;
+export const BaseTrophyDifficultyGold = 3;
+export const BaseTrophyDifficultyPlatinum = 4;
+
+export type BaseTrophyDifficulty =
+	| typeof BaseTrophyDifficultyBronze
+	| typeof BaseTrophyDifficultySilver
+	| typeof BaseTrophyDifficultyGold
+	| typeof BaseTrophyDifficultyPlatinum;
 
 export const BaseTrophyDifficulties = <BaseTrophyDifficulty[]>[
-	BaseTrophyDifficulty.Bronze,
-	BaseTrophyDifficulty.Silver,
-	BaseTrophyDifficulty.Gold,
-	BaseTrophyDifficulty.Platinum,
+	BaseTrophyDifficultyBronze,
+	BaseTrophyDifficultySilver,
+	BaseTrophyDifficultyGold,
+	BaseTrophyDifficultyPlatinum,
 ];
 
 export abstract class BaseTrophyModel extends Model {
@@ -33,13 +37,13 @@ export abstract class BaseTrophyModel extends Model {
 
 	get difficultyLabel() {
 		switch (this.difficulty) {
-			case BaseTrophyDifficulty.Bronze:
+			case BaseTrophyDifficultyBronze:
 				return 'Bronze';
-			case BaseTrophyDifficulty.Silver:
+			case BaseTrophyDifficultySilver:
 				return 'Silver';
-			case BaseTrophyDifficulty.Gold:
+			case BaseTrophyDifficultyGold:
 				return 'Gold';
-			case BaseTrophyDifficulty.Platinum:
+			case BaseTrophyDifficultyPlatinum:
 				return 'Platinum';
 		}
 	}

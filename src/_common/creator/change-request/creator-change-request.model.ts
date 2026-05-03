@@ -3,14 +3,20 @@ import { ModelStoreModel } from '~common/model/model-store.service';
 import { ShopProductResource } from '~common/shop/product/product-model';
 import { UserModel } from '~common/user/user.model';
 
-export const enum CreatorChangeRequestStatus {
-	Initial = 'initial',
-	Submitted = 'submitted',
-	InReview = 'in-review',
-	Approved = 'approved',
-	Rejected = 'rejected',
-	Dismissed = 'dismissed',
-}
+export const CreatorChangeRequestStatusInitial = 'initial';
+export const CreatorChangeRequestStatusSubmitted = 'submitted';
+export const CreatorChangeRequestStatusInReview = 'in-review';
+export const CreatorChangeRequestStatusApproved = 'approved';
+export const CreatorChangeRequestStatusRejected = 'rejected';
+export const CreatorChangeRequestStatusDismissed = 'dismissed';
+
+export type CreatorChangeRequestStatus =
+	| typeof CreatorChangeRequestStatusInitial
+	| typeof CreatorChangeRequestStatusSubmitted
+	| typeof CreatorChangeRequestStatusInReview
+	| typeof CreatorChangeRequestStatusApproved
+	| typeof CreatorChangeRequestStatusRejected
+	| typeof CreatorChangeRequestStatusDismissed;
 
 export class CreatorChangeRequestModel implements ModelStoreModel {
 	declare id: number;

@@ -9,6 +9,11 @@ import {
 	LinkedAccountModel,
 	LinkedAccountProvider,
 } from '~common/linked-account/linked-account.model';
+import {
+	LinkedAccountProviderFacebook,
+	LinkedAccountProviderGoogle,
+	LinkedAccountProviderTwitch,
+} from '~common/linked-account/linked-account.model';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { useCommonStore } from '~common/store/common-store';
 import { $gettext } from '~common/translate/translate.service';
@@ -109,9 +114,9 @@ createAppRoute({
 			}
 		} else {
 			switch (provider) {
-				case LinkedAccountProvider.Facebook:
-				case LinkedAccountProvider.Google:
-				case LinkedAccountProvider.Twitch:
+				case LinkedAccountProviderFacebook:
+				case LinkedAccountProviderGoogle:
+				case LinkedAccountProviderTwitch:
 					{
 						const account = new LinkedAccountModel(payload.account);
 						showSuccessGrowl(

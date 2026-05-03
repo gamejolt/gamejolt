@@ -1,12 +1,16 @@
 import { Model } from '~common/model/model.service';
 import { OrderPaymentRefundModel } from '~common/order/payment/refund/refund.model';
 
-export const enum OrderPaymentMethod {
-	CCStripe = 'cc-stripe',
-	Paypal = 'paypal',
-	Amazon = 'amazon',
-	Wallet = 'wallet',
-}
+export const OrderPaymentMethodCCStripe = 'cc-stripe';
+export const OrderPaymentMethodPaypal = 'paypal';
+export const OrderPaymentMethodAmazon = 'amazon';
+export const OrderPaymentMethodWallet = 'wallet';
+
+export type OrderPaymentMethod =
+	| typeof OrderPaymentMethodCCStripe
+	| typeof OrderPaymentMethodPaypal
+	| typeof OrderPaymentMethodAmazon
+	| typeof OrderPaymentMethodWallet;
 
 export class OrderPaymentModel extends Model {
 	declare order_id: number;

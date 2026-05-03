@@ -13,12 +13,16 @@ export type StickerStack = {
 	sticker: StickerModel;
 };
 
-export const enum StickerRarity {
-	Common = 0,
-	Uncommon = 1,
-	Rare = 2,
-	Epic = 3,
-}
+export const StickerRarityCommon = 0;
+export const StickerRarityUncommon = 1;
+export const StickerRarityRare = 2;
+export const StickerRarityEpic = 3;
+
+export type StickerRarity =
+	| typeof StickerRarityCommon
+	| typeof StickerRarityUncommon
+	| typeof StickerRarityRare
+	| typeof StickerRarityEpic;
 
 export class StickerModel implements ModelStoreModel, ShopProductCommonFields {
 	declare id: number;
@@ -68,13 +72,13 @@ export class StickerModel implements ModelStoreModel, ShopProductCommonFields {
 
 	get rarityColor() {
 		switch (this.rarity) {
-			case StickerRarity.Uncommon:
+			case StickerRarityUncommon:
 				return '#1bb804';
 
-			case StickerRarity.Rare:
+			case StickerRarityRare:
 				return '#18a5f2';
 
-			case StickerRarity.Epic:
+			case StickerRarityEpic:
 				return '#ffbc56';
 
 			default:
@@ -84,16 +88,16 @@ export class StickerModel implements ModelStoreModel, ShopProductCommonFields {
 
 	get rarityName() {
 		switch (this.rarity) {
-			case StickerRarity.Common:
+			case StickerRarityCommon:
 				return 'Common';
 
-			case StickerRarity.Uncommon:
+			case StickerRarityUncommon:
 				return 'Uncommon';
 
-			case StickerRarity.Rare:
+			case StickerRarityRare:
 				return 'Rare';
 
-			case StickerRarity.Epic:
+			case StickerRarityEpic:
 				return 'Epic';
 
 			default:

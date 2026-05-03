@@ -5,7 +5,10 @@ import { useProfileRouteStore } from '~app/views/profile/RouteProfile.vue';
 import AppButton from '~common/button/AppButton.vue';
 import { Jolticon } from '~common/jolticon/AppJolticon.vue';
 import AppLinkExternal from '~common/link/AppLinkExternal.vue';
-import { LinkedAccountProvider } from '~common/linked-account/linked-account.model';
+import {
+	LinkedAccountProvider,
+	LinkedAccountProviderTwitch,
+} from '~common/linked-account/linked-account.model';
 import { getScreen } from '~common/screen/screen-service';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 import { $gettext } from '~common/translate/translate.service';
@@ -32,7 +35,7 @@ const socialLinks = computed(() => {
 		return items;
 	}
 
-	const twitchAccount = _getLinkedAccount(LinkedAccountProvider.Twitch);
+	const twitchAccount = _getLinkedAccount(LinkedAccountProviderTwitch);
 	if (twitchAccount) {
 		items.push({
 			label: twitchAccount.name,

@@ -14,7 +14,8 @@ import { GameModel } from '~common/game/game.model';
 import {
 	$saveGameScoreTable,
 	GameScoreTableModel,
-	GameScoreTableSorting,
+	GameScoreTableSortingDirectionAsc,
+	GameScoreTableSortingDirectionDesc,
 } from '~common/game/score-table/score-table.model';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 
@@ -32,8 +33,8 @@ const emit = defineEmits<{
 	submit: [table: GameScoreTableModel];
 }>();
 
-const DirectionAscend = GameScoreTableSorting.DirectionAsc;
-const DirectionDescend = GameScoreTableSorting.DirectionDesc;
+const DirectionAscend = GameScoreTableSortingDirectionAsc;
+const DirectionDescend = GameScoreTableSortingDirectionDesc;
 
 const form: FormController<FormModel> = createForm<FormModel>({
 	model: toRef(props, 'model'),
@@ -44,7 +45,7 @@ const form: FormController<FormModel> = createForm<FormModel>({
 
 		if (form.method === 'add') {
 			form.formModel.unique_scores = true;
-			form.formModel.scores_sorting_direction = GameScoreTableSorting.DirectionDesc;
+			form.formModel.scores_sorting_direction = GameScoreTableSortingDirectionDesc;
 		}
 	},
 	onSubmitSuccess() {

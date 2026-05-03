@@ -10,7 +10,8 @@ import {
 	$setGameCanceled,
 	$setGameStatus,
 	GameModel,
-	GameStatus,
+	GameStatusHidden,
+	GameStatusVisible,
 } from '~common/game/game.model';
 import { GameScreenshotModel } from '~common/game/screenshot/screenshot.model';
 import { GameSketchfabModel } from '~common/game/sketchfab/sketchfab.model';
@@ -184,7 +185,7 @@ export function createGameDashRouteController() {
 			return;
 		}
 
-		await $setGameStatus(game.value!, GameStatus.Visible);
+		await $setGameStatus(game.value!, GameStatusVisible);
 
 		showSuccessGrowl(
 			$gettext(
@@ -221,7 +222,7 @@ export function createGameDashRouteController() {
 			return;
 		}
 
-		await $setGameStatus(game.value!, GameStatus.Hidden);
+		await $setGameStatus(game.value!, GameStatusHidden);
 
 		showInfoGrowl($gettext('Your game page is now unlisted.'), $gettext('Game Unlisted'));
 	}

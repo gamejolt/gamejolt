@@ -19,16 +19,21 @@ import {
 	$saveCommunityChannelSortArchived,
 	CommunityChannelModel,
 } from '~common/community/channel/channel.model';
-import { CommunityModel, CommunityPresetChannelType } from '~common/community/community.model';
+import {
+	CommunityModel,
+	CommunityPresetChannelType,
+	CommunityPresetChannelTypeALL,
+	CommunityPresetChannelTypeFEATURED,
+} from '~common/community/community.model';
 import { showErrorGrowl } from '~common/growls/growls.service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppLoading from '~common/loading/AppLoading.vue';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { $gettext } from '~common/translate/translate.service';
 
-const communityPresetChannels = [
-	CommunityPresetChannelType.FEATURED,
-	CommunityPresetChannelType.ALL,
+const communityPresetChannels: CommunityPresetChannelType[] = [
+	CommunityPresetChannelTypeFEATURED,
+	CommunityPresetChannelTypeALL,
 ];
 
 export default {

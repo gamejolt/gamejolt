@@ -3,13 +3,20 @@ import { computed, CSSProperties } from 'vue';
 
 import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
 import AppButton from '~common/button/AppButton.vue';
-import { AcquisitionMethod } from '~common/collectible/acquisition.model';
+import { AcquisitionMethodShopPurchase } from '~common/collectible/acquisition.model';
 import {
 	CollectibleModel,
-	CollectibleType,
+	CollectibleTypeAvatarFrame,
+	CollectibleTypeBackground,
+	CollectibleTypeSticker,
 	getCollectibleResourceId,
 } from '~common/collectible/collectible.model';
-import { PurchasableProductType } from '~common/inventory/shop/product-owner-helpers';
+import {
+	PurchasableProductType,
+	PurchasableProductTypeAvatarFrame,
+	PurchasableProductTypeBackground,
+	PurchasableProductTypeStickerPack,
+} from '~common/inventory/shop/product-owner-helpers';
 import { showPurchaseShopProductModal } from '~common/inventory/shop/purchase-modal/modal.service';
 import { JoltydexFeed } from '~common/joltydex/joltydex-feed';
 import AppCircularProgress from '~common/progress/AppCircularProgress.vue';
@@ -50,21 +57,21 @@ const stickerMasteryInfo = computed(() => {
 
 const collectibleResourceAcquisition = computed(() => {
 	const productType = collectible.type;
-	if (!productType || productType === CollectibleType.Sticker) {
+	if (!productType || productType === CollectibleTypeSticker) {
 		return null;
 	}
 	// Ignore if we have no shop purchase acquisitions.
-	if (collectible.acquisition.every(i => i.method !== AcquisitionMethod.ShopPurchase)) {
+	if (collectible.acquisition.every(i => i.method !== AcquisitionMethodShopPurchase)) {
 		return null;
 	}
 
 	let resource: PurchasableProductType;
 	switch (productType) {
-		case CollectibleType.AvatarFrame:
-			resource = PurchasableProductType.AvatarFrame;
+		case CollectibleTypeAvatarFrame:
+			resource = PurchasableProductTypeAvatarFrame;
 			break;
-		case CollectibleType.Background:
-			resource = PurchasableProductType.Background;
+		case CollectibleTypeBackground:
+			resource = PurchasableProductTypeBackground;
 			break;
 	}
 	return {
@@ -108,7 +115,7 @@ const mutedStyles = {
 							width: `100%`,
 							height: `auto`,
 						},
-						styleWhen(collectible.type === CollectibleType.Background, {
+						styleWhen(collectible.type === CollectibleTypeBackground, {
 							borderRadius: kBorderRadiusBase.px,
 						}),
 					]"
@@ -118,7 +125,7 @@ const mutedStyles = {
 			</AppAspectRatio>
 		</div>
 
-		<div v-if="collectible.type === CollectibleType.Sticker">
+		<div v-if="collectible.type === CollectibleTypeSticker">
 			<h2 :style="headingStyles">
 				{{ $gettext(`Mastery`) }}
 			</h2>
@@ -188,7 +195,7 @@ const mutedStyles = {
 						can-click-pack
 						@click-pack="
 							showPurchaseShopProductModal({
-								resource: PurchasableProductType.StickerPack,
+								resource: PurchasableProductTypeStickerPack,
 								resourceId: pack.id,
 							})
 						"

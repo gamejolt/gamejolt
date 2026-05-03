@@ -1,9 +1,9 @@
 import { Model } from '~common/model/model.service';
 
-export const enum GameRatingValue {
-	Like = 1,
-	Dislike = 0,
-}
+export const GameRatingValueLike = 1;
+export const GameRatingValueDislike = 0;
+
+export type GameRatingValue = typeof GameRatingValueLike | typeof GameRatingValueDislike;
 
 export class GameRatingModel extends Model {
 	declare game_id: number;

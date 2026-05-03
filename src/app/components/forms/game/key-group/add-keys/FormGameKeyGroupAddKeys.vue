@@ -9,7 +9,13 @@ import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
 import AppFormControlTextarea from '~common/form-vue/controls/AppFormControlTextarea.vue';
 import { validateMaxLength, validateMaxValue, validateMinValue } from '~common/form-vue/validators';
-import { KeyGroupModel, KeyGroupType } from '~common/key-group/key-group.model';
+import {
+	KeyGroupModel,
+	KeyGroupTypeAnonymous,
+	KeyGroupTypeAnonymousClaim,
+	KeyGroupTypeEmail,
+	KeyGroupTypeUser,
+} from '~common/key-group/key-group.model';
 import { $gettext } from '~common/translate/translate.service';
 
 type Props = {
@@ -21,12 +27,6 @@ const { keyGroup } = defineProps<Props>();
 const emit = defineEmits<{
 	submit: [];
 }>();
-
-const KeyGroupTypeAnonymous = KeyGroupType.Anonymous;
-const KeyGroupTypeAnonymousClaim = KeyGroupType.AnonymousClaim;
-const KeyGroupTypeEmail = KeyGroupType.Email;
-const KeyGroupTypeUser = KeyGroupType.User;
-
 type FormModel = {
 	amount?: number;
 	emails?: string;

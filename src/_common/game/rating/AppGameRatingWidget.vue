@@ -11,8 +11,8 @@ import {
 	$removeGameRating,
 	$saveGameRating,
 	GameRatingModel,
-	GameRatingValue,
 } from '~common/game/rating/rating.model';
+import { GameRatingValueDislike, GameRatingValueLike } from '~common/game/rating/rating.model';
 import { showErrorGrowl } from '~common/growls/growls.service';
 import { showLikersModal } from '~common/likers/modal.service';
 import { EventTopic } from '~common/system/event/event-topic';
@@ -36,8 +36,8 @@ type Props = {
 };
 const { game, userRating, hideCount } = defineProps<Props>();
 
-const hasLiked = computed(() => userRating?.rating === GameRatingValue.Like);
-const hasDisliked = computed(() => userRating?.rating === GameRatingValue.Dislike);
+const hasLiked = computed(() => userRating?.rating === GameRatingValueLike);
+const hasDisliked = computed(() => userRating?.rating === GameRatingValueDislike);
 
 onMounted(() => {
 	trackExperimentEngagement(configGuestNoAuthRequired);
@@ -48,11 +48,11 @@ function showLikers() {
 }
 
 function like() {
-	updateVote(GameRatingValue.Like);
+	updateVote(GameRatingValueLike);
 }
 
 function dislike() {
-	updateVote(GameRatingValue.Dislike);
+	updateVote(GameRatingValueDislike);
 }
 
 async function updateVote(rating: number) {
@@ -62,7 +62,7 @@ async function updateVote(rating: number) {
 
 	try {
 		if (oldUserRating?.rating === rating) {
-			if (rating === GameRatingValue.Like) {
+			if (rating === GameRatingValueLike) {
 				operation = -1;
 			}
 
@@ -86,9 +86,9 @@ async function updateVote(rating: number) {
 			// old rating dislike, new rating like => +1
 			// old rating like, new rating dislike => -1
 			const oldRating = oldUserRating ? oldUserRating.rating : null;
-			if (rating === GameRatingValue.Like) {
+			if (rating === GameRatingValueLike) {
 				operation = 1;
-			} else if (oldRating === GameRatingValue.Like) {
+			} else if (oldRating === GameRatingValueLike) {
 				operation = -1;
 			}
 

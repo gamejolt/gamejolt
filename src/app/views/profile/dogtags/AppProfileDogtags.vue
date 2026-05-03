@@ -4,7 +4,7 @@ import { CSSProperties } from 'vue';
 import { useProfileRouteStore } from '~app/views/profile/RouteProfile.vue';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import AppUserDogtag from '~common/user/AppUserDogtag.vue';
-import { UserFriendshipState } from '~common/user/friendship/friendship.model';
+import { UserFriendshipStateFriends } from '~common/user/friendship/friendship.model';
 
 type Props = {
 	wrap?: CSSProperties['flexWrap'];
@@ -29,7 +29,7 @@ const { user: routeUser, userFriendship, isOnline } = useProfileRouteStore()!;
 
 		<!-- Friend status -->
 		<span
-			v-if="userFriendship && userFriendship.state === UserFriendshipState.Friends"
+			v-if="userFriendship && userFriendship.state === UserFriendshipStateFriends"
 			v-app-tooltip="$gettext('You are friends! Awwww!')"
 			class="tag tag-highlight"
 		>

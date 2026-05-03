@@ -3,7 +3,10 @@ import { computed } from 'vue';
 
 import { ShopDashProductStates } from '~app/views/dashboard/shop/shop.store';
 import AppJolticon, { Jolticon } from '~common/jolticon/AppJolticon.vue';
-import { ShopProductResource } from '~common/shop/product/product-model';
+import {
+	ShopProductResource,
+	ShopProductResourceSticker,
+} from '~common/shop/product/product-model';
 import {
 	kThemeBiBg,
 	kThemeBiFg,
@@ -36,7 +39,7 @@ const data = computed(() => {
 		};
 	} else if (published) {
 		let label = $gettext(`Published`);
-		if (resource === ShopProductResource.Sticker) {
+		if (resource === ShopProductResourceSticker) {
 			label = $gettext(`In published sticker pack`);
 		}
 

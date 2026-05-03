@@ -21,13 +21,19 @@ import { scrollTo } from '~common/scroll/scroll.service';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import { $gettext } from '~common/translate/translate.service';
 import { BaseTrophyDifficulties, BaseTrophyDifficulty } from '~common/trophy/base-trophy.model';
+import {
+	BaseTrophyDifficultyBronze,
+	BaseTrophyDifficultyGold,
+	BaseTrophyDifficultyPlatinum,
+	BaseTrophyDifficultySilver,
+} from '~common/trophy/base-trophy.model';
 import AppTrophyThumbnail from '~common/trophy/thumbnail/AppTrophyThumbnail.vue';
 
 const trophyLabels = {
-	[BaseTrophyDifficulty.Bronze]: $gettext('Bronze'),
-	[BaseTrophyDifficulty.Silver]: $gettext('Silver'),
-	[BaseTrophyDifficulty.Gold]: $gettext('Gold'),
-	[BaseTrophyDifficulty.Platinum]: $gettext('Platinum'),
+	[BaseTrophyDifficultyBronze]: $gettext('Bronze'),
+	[BaseTrophyDifficultySilver]: $gettext('Silver'),
+	[BaseTrophyDifficultyGold]: $gettext('Gold'),
+	[BaseTrophyDifficultyPlatinum]: $gettext('Platinum'),
 };
 
 export default {
@@ -48,10 +54,10 @@ const activeItem = ref<{ [x: number]: GameTrophyModel | undefined }>({});
 
 const groupedTrophies = computed(() => {
 	const newTrophies: { [x: number]: GameTrophyModel[] } = {
-		[BaseTrophyDifficulty.Bronze]: [],
-		[BaseTrophyDifficulty.Silver]: [],
-		[BaseTrophyDifficulty.Gold]: [],
-		[BaseTrophyDifficulty.Platinum]: [],
+		[BaseTrophyDifficultyBronze]: [],
+		[BaseTrophyDifficultySilver]: [],
+		[BaseTrophyDifficultyGold]: [],
+		[BaseTrophyDifficultyPlatinum]: [],
 	};
 
 	trophies.value.forEach(item => newTrophies[item.difficulty].push(item));
@@ -60,10 +66,10 @@ const groupedTrophies = computed(() => {
 });
 
 const trophySorts = computed(() => ({
-	[BaseTrophyDifficulty.Bronze]: getTrophyGroup(BaseTrophyDifficulty.Bronze),
-	[BaseTrophyDifficulty.Silver]: getTrophyGroup(BaseTrophyDifficulty.Silver),
-	[BaseTrophyDifficulty.Gold]: getTrophyGroup(BaseTrophyDifficulty.Gold),
-	[BaseTrophyDifficulty.Platinum]: getTrophyGroup(BaseTrophyDifficulty.Platinum),
+	[BaseTrophyDifficultyBronze]: getTrophyGroup(BaseTrophyDifficultyBronze),
+	[BaseTrophyDifficultySilver]: getTrophyGroup(BaseTrophyDifficultySilver),
+	[BaseTrophyDifficultyGold]: getTrophyGroup(BaseTrophyDifficultyGold),
+	[BaseTrophyDifficultyPlatinum]: getTrophyGroup(BaseTrophyDifficultyPlatinum),
 }));
 
 const hasHiddenTrophies = computed(() => trophies.value.filter(item => !item.visible).length > 0);
@@ -127,19 +133,19 @@ async function removeTrophy(trophy: GameTrophyModel) {
 
 function resetAdding() {
 	isAdding.value = {
-		[BaseTrophyDifficulty.Bronze]: false,
-		[BaseTrophyDifficulty.Silver]: false,
-		[BaseTrophyDifficulty.Gold]: false,
-		[BaseTrophyDifficulty.Platinum]: false,
+		[BaseTrophyDifficultyBronze]: false,
+		[BaseTrophyDifficultySilver]: false,
+		[BaseTrophyDifficultyGold]: false,
+		[BaseTrophyDifficultyPlatinum]: false,
 	};
 }
 
 function resetActive() {
 	activeItem.value = {
-		[BaseTrophyDifficulty.Bronze]: undefined,
-		[BaseTrophyDifficulty.Silver]: undefined,
-		[BaseTrophyDifficulty.Gold]: undefined,
-		[BaseTrophyDifficulty.Platinum]: undefined,
+		[BaseTrophyDifficultyBronze]: undefined,
+		[BaseTrophyDifficultySilver]: undefined,
+		[BaseTrophyDifficultyGold]: undefined,
+		[BaseTrophyDifficultyPlatinum]: undefined,
 	};
 }
 

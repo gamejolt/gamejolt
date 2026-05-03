@@ -11,12 +11,13 @@ import AppButton from '~common/button/AppButton.vue';
 import AppCard from '~common/card/AppCard.vue';
 import { formatNumber } from '~common/filters/number';
 import AppGamePackageCard from '~common/game/package/card/AppGamePackageCard.vue';
-import { GamePackageModel, GamePackageVisibility } from '~common/game/package/package.model';
+import { GamePackageModel } from '~common/game/package/package.model';
+import { GamePackageVisibilityPublic } from '~common/game/package/package.model';
 import { GamePackagePayloadModel } from '~common/game/package/package-payload.model';
+import { $removeGameRelease, GameReleaseModel } from '~common/game/release/release.model';
 import {
-	$removeGameRelease,
-	GameReleaseModel,
-	GameReleaseStatus,
+	GameReleaseStatusHidden,
+	GameReleaseStatusPublished,
 } from '~common/game/release/release.model';
 import { showErrorGrowl, showSuccessGrowl } from '~common/growls/growls.service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
@@ -63,11 +64,6 @@ const previewData = ref<GamePackagePayloadModel | null>(null);
 const buildsProcessingCount = ref(0);
 const isLoadingPreview = ref(false);
 const isAddingRelease = ref(false);
-
-const GamePackageVisibilityPublic = GamePackageVisibility.Public;
-const GameReleaseStatusHidden = GameReleaseStatus.Hidden;
-const GameReleaseStatusPublished = GameReleaseStatus.Published;
-
 const hasBuildsPerms = computed(() => game.value && game.value.hasPerms('builds'));
 const hasAnalyticsPerms = computed(() => game.value && game.value.hasPerms('analytics'));
 

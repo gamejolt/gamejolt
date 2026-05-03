@@ -31,16 +31,19 @@ export interface UserCommonFields {
 	avatar_frame?: AvatarFrameModel;
 }
 
-export const enum UserType {
-	Gamer = 'User',
-	Developer = 'Developer',
-}
+export const UserTypeGamer = 'User';
+export const UserTypeDeveloper = 'Developer';
 
-export const enum CreatorStatus {
-	Creator = 1,
-	Applied = 2,
-	Suspended = 3,
-}
+export type UserType = typeof UserTypeGamer | typeof UserTypeDeveloper;
+
+export const CreatorStatusCreator = 1;
+export const CreatorStatusApplied = 2;
+export const CreatorStatusSuspended = 3;
+
+export type CreatorStatus =
+	| typeof CreatorStatusCreator
+	| typeof CreatorStatusApplied
+	| typeof CreatorStatusSuspended;
 
 export class UserModel
 	extends Model
@@ -186,9 +189,9 @@ export class UserModel
 	constructor(data: any = {}) {
 		super(data);
 
-		if (this.type === UserType.Gamer) {
+		if (this.type === UserTypeGamer) {
 			this.is_gamer = true;
-		} else if (this.type === UserType.Developer) {
+		} else if (this.type === UserTypeDeveloper) {
 			this.is_developer = true;
 		}
 
@@ -314,9 +317,9 @@ export async function $toggleUserFollow(
 
 export function userCanAccessCreatorForm(user: UserModel) {
 	return (
-		user.creator_status === CreatorStatus.Applied ||
-		user.creator_status === CreatorStatus.Creator ||
-		user.creator_status === CreatorStatus.Suspended
+		user.creator_status === CreatorStatusApplied ||
+		user.creator_status === CreatorStatusCreator ||
+		user.creator_status === CreatorStatusSuspended
 	);
 }
 

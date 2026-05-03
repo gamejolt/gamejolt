@@ -9,7 +9,16 @@ import AppIllustration, { IllustrationAsset } from '~common/illustration/AppIllu
 import AppJolticon, { Jolticon } from '~common/jolticon/AppJolticon.vue';
 import AppMediaItemImg from '~common/media-item/AppMediaItemImg.vue';
 import { getMediaItemImageSrc } from '~common/media-item/media-item-model';
-import { QuestRewardTypes } from '~common/quest/quest-objective-reward-model';
+import {
+	QuestRewardTypesAvatarFrame,
+	QuestRewardTypesBackground,
+	QuestRewardTypesCoin,
+	QuestRewardTypesRandomSticker,
+	QuestRewardTypesSiteTrophy,
+	QuestRewardTypesSticker,
+	QuestRewardTypesStickerPack,
+	QuestRewardTypesUserCharge,
+} from '~common/quest/quest-objective-reward-model';
 import { QuestRewardModel } from '~common/quest/quest-reward-model';
 import { StickerPackRatio } from '~common/sticker/pack/AppStickerPack.vue';
 import { useCommonStore } from '~common/store/common-store';
@@ -26,9 +35,9 @@ const { user: authUser } = useCommonStore();
 const childInfo = computed<{ ratio: number; illString?: string; illAsset?: IllustrationAsset }>(
 	() => {
 		switch (reward.type) {
-			case QuestRewardTypes.StickerPack:
+			case QuestRewardTypesStickerPack:
 				return { ratio: StickerPackRatio };
-			case QuestRewardTypes.Coin: {
+			case QuestRewardTypesCoin: {
 				const asset = CurrencyType.coins.asset;
 				if (typeof asset === 'string') {
 					return { ratio: 1, illString: asset };
@@ -46,11 +55,11 @@ const icon = computed<Jolticon>(() => {
 	}
 
 	switch (reward.type) {
-		case QuestRewardTypes.Sticker:
+		case QuestRewardTypesSticker:
 			return 'sticker-filled';
-		case QuestRewardTypes.SiteTrophy:
+		case QuestRewardTypesSiteTrophy:
 			return 'trophy';
-		case QuestRewardTypes.RandomSticker:
+		case QuestRewardTypesRandomSticker:
 			return 'sticker-filled';
 	}
 	return 'gift';
@@ -84,12 +93,12 @@ const iconStyles = {
 		/>
 		<img v-else-if="childInfo?.illString" :src="childInfo.illString" :style="styleFill" />
 		<AppAnimChargeOrb
-			v-else-if="reward.type === QuestRewardTypes.UserCharge"
+			v-else-if="reward.type === QuestRewardTypesUserCharge"
 			:style="styleFill"
 		/>
 		<template v-else-if="reward.media">
 			<AppUserAvatarBubble
-				v-if="reward.type === QuestRewardTypes.AvatarFrame"
+				v-if="reward.type === QuestRewardTypesAvatarFrame"
 				:user="authUser"
 				disable-link
 				show-frame
@@ -104,7 +113,7 @@ const iconStyles = {
 				:media-item="reward.media"
 				:style="{
 					...styleFill,
-					...styleWhen(reward.type === QuestRewardTypes.Background, styleBorderRadiusLg),
+					...styleWhen(reward.type === QuestRewardTypesBackground, styleBorderRadiusLg),
 				}"
 			/>
 		</template>

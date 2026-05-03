@@ -3,9 +3,9 @@ import { GameModel } from '~common/game/game.model';
 import { Model } from '~common/model/model.service';
 import { UserModel } from '~common/user/user.model';
 
-export const enum EventItemType {
-	PostAdd = 'post-add',
-}
+export const EventItemTypePostAdd = 'post-add';
+
+export type EventItemType = typeof EventItemTypePostAdd;
 
 export class EventItemModel extends Model {
 	declare type: EventItemType;
@@ -27,7 +27,7 @@ export class EventItemModel extends Model {
 		this.added_on = data.added_on;
 		this.scroll_id = data.scroll_id;
 
-		if (this.type === EventItemType.PostAdd) {
+		if (this.type === EventItemTypePostAdd) {
 			this.action = new FiresidePostModel(data.action_resource_model);
 			this.from = new UserModel(data.from_resource_model);
 			this.to =
@@ -47,7 +47,7 @@ export class EventItemModel extends Model {
 			return;
 		}
 
-		if (this.type === EventItemType.PostAdd) {
+		if (this.type === EventItemTypePostAdd) {
 			const post = this.action as FiresidePostModel;
 			if (post.game && post.as_game_owner) {
 				post.game.developer = user;
@@ -65,7 +65,7 @@ export class EventItemModel extends Model {
 	 */
 	get user(): UserModel {
 		switch (this.type) {
-			case EventItemType.PostAdd: {
+			case EventItemTypePostAdd: {
 				const post = this.action as FiresidePostModel;
 				return post.displayUser;
 			}
@@ -77,13 +77,13 @@ export class EventItemModel extends Model {
 			return;
 		}
 
-		if (this.type === EventItemType.PostAdd && this.to instanceof GameModel) {
+		if (this.type === EventItemTypePostAdd && this.to instanceof GameModel) {
 			this.to = game;
 		}
 	}
 
 	get game() {
-		if (this.type === EventItemType.PostAdd && this.to instanceof GameModel) {
+		if (this.type === EventItemTypePostAdd && this.to instanceof GameModel) {
 			return this.to;
 		}
 	}

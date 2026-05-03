@@ -3,7 +3,13 @@ import { computed, type HTMLAttributes, onMounted, ref, useTemplateRef } from 'v
 
 import AppImgResponsive from '~common/img/AppImgResponsive.vue';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
-import { BaseTrophyDifficulty, BaseTrophyModel } from '~common/trophy/base-trophy.model';
+import { BaseTrophyModel } from '~common/trophy/base-trophy.model';
+import {
+	BaseTrophyDifficultyBronze,
+	BaseTrophyDifficultyGold,
+	BaseTrophyDifficultyPlatinum,
+	BaseTrophyDifficultySilver,
+} from '~common/trophy/base-trophy.model';
 import bronzeImage from '~common/trophy/thumbnail/bronze.png';
 import bronzeSecretImage from '~common/trophy/thumbnail/bronze-secret.png';
 import goldImage from '~common/trophy/thumbnail/gold.png';
@@ -32,13 +38,13 @@ export function getTrophyImg(trophy: BaseTrophyModel) {
 	}
 
 	let img = '';
-	if (trophy.difficulty === BaseTrophyDifficulty.Bronze) {
+	if (trophy.difficulty === BaseTrophyDifficultyBronze) {
 		img = 'bronze';
-	} else if (trophy.difficulty === BaseTrophyDifficulty.Silver) {
+	} else if (trophy.difficulty === BaseTrophyDifficultySilver) {
 		img = 'silver';
-	} else if (trophy.difficulty === BaseTrophyDifficulty.Gold) {
+	} else if (trophy.difficulty === BaseTrophyDifficultyGold) {
 		img = 'gold';
-	} else if (trophy.difficulty === BaseTrophyDifficulty.Platinum) {
+	} else if (trophy.difficulty === BaseTrophyDifficultyPlatinum) {
 		img = 'platinum';
 	}
 

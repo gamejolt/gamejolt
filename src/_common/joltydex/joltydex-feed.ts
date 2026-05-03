@@ -2,7 +2,7 @@ import { computed, ref, shallowReadonly } from 'vue';
 
 import { Api } from '~common/api/api.service';
 import {
-	AcquisitionMethod,
+	AcquisitionMethodPackOpen,
 	AcquisitionModel,
 	filterAcquisitionMethods,
 } from '~common/collectible/acquisition.model';
@@ -42,7 +42,7 @@ export function makeJoltydexFeed(type: CollectibleType) {
 	function getAcquisitionPacks(acquisitions: AcquisitionModel[]) {
 		const packOpenAcquisitions = filterAcquisitionMethods(
 			acquisitions,
-			AcquisitionMethod.PackOpen
+			AcquisitionMethodPackOpen
 		);
 		return packOpenAcquisitions.reduce((packs, i) => {
 			const packData = _packLoadingData.value.get(i.sticker_pack_id);
@@ -177,7 +177,7 @@ export function applyPayloadToJoltydexFeed(
 	for (const collectible of newCollectibles) {
 		const packIdsForCollectible = filterAcquisitionMethods(
 			collectible.acquisition,
-			AcquisitionMethod.PackOpen
+			AcquisitionMethodPackOpen
 		).map(i => i.sticker_pack_id);
 		packIds.push(...packIdsForCollectible);
 	}

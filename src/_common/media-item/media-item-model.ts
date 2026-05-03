@@ -2,35 +2,59 @@ import { LightboxMediaModel, LightboxMediaType } from '~common/lightbox/lightbox
 import { Model } from '~common/model/model.service';
 import { constructStickerCounts, StickerCount } from '~common/sticker/sticker-count';
 
-export const enum MediaItemType {
-	GameThumbnail = 'game-thumbnail',
-	GameHeader = 'game-header',
-	GameScreenshot = 'game-screenshot',
-	GameTrophy = 'game-trophy',
-	GameDescription = 'game-description',
-	FiresidePostHeader = 'fireside-post-header',
-	FiresidePostImage = 'fireside-post-image',
-	FiresidePostVideo = 'fireside-post-video',
-	FiresidePostArticleImage = 'fireside-post-article-image',
-	FeaturedHeader = 'featured-header',
-	Comment = 'comment',
-	ForumPost = 'forum-post',
-	CommunityDescription = 'community-description',
-	CommunityChannelDescription = 'community-channel-description',
-	ChatMessage = 'chat-message',
-	ChatCommand = 'chat-command',
-	VideoPoster = 'video-poster',
-	VideoManifest = 'video-manifest',
-	TranscodedVideo = 'transcoded-video',
-	TranscodedVideoCard = 'transcoded-video-card',
-	HelpPageImage = 'help-page-image',
-}
+export const MediaItemTypeGameThumbnail = 'game-thumbnail';
+export const MediaItemTypeGameHeader = 'game-header';
+export const MediaItemTypeGameScreenshot = 'game-screenshot';
+export const MediaItemTypeGameTrophy = 'game-trophy';
+export const MediaItemTypeGameDescription = 'game-description';
+export const MediaItemTypeFiresidePostHeader = 'fireside-post-header';
+export const MediaItemTypeFiresidePostImage = 'fireside-post-image';
+export const MediaItemTypeFiresidePostVideo = 'fireside-post-video';
+export const MediaItemTypeFiresidePostArticleImage = 'fireside-post-article-image';
+export const MediaItemTypeFeaturedHeader = 'featured-header';
+export const MediaItemTypeComment = 'comment';
+export const MediaItemTypeForumPost = 'forum-post';
+export const MediaItemTypeCommunityDescription = 'community-description';
+export const MediaItemTypeCommunityChannelDescription = 'community-channel-description';
+export const MediaItemTypeChatMessage = 'chat-message';
+export const MediaItemTypeChatCommand = 'chat-command';
+export const MediaItemTypeVideoPoster = 'video-poster';
+export const MediaItemTypeVideoManifest = 'video-manifest';
+export const MediaItemTypeTranscodedVideo = 'transcoded-video';
+export const MediaItemTypeTranscodedVideoCard = 'transcoded-video-card';
+export const MediaItemTypeHelpPageImage = 'help-page-image';
 
-export const enum MediaItemStatus {
-	Active = 'active',
-	Removed = 'removed',
-	Inactive = 'inactive',
-}
+export type MediaItemType =
+	| typeof MediaItemTypeGameThumbnail
+	| typeof MediaItemTypeGameHeader
+	| typeof MediaItemTypeGameScreenshot
+	| typeof MediaItemTypeGameTrophy
+	| typeof MediaItemTypeGameDescription
+	| typeof MediaItemTypeFiresidePostHeader
+	| typeof MediaItemTypeFiresidePostImage
+	| typeof MediaItemTypeFiresidePostVideo
+	| typeof MediaItemTypeFiresidePostArticleImage
+	| typeof MediaItemTypeFeaturedHeader
+	| typeof MediaItemTypeComment
+	| typeof MediaItemTypeForumPost
+	| typeof MediaItemTypeCommunityDescription
+	| typeof MediaItemTypeCommunityChannelDescription
+	| typeof MediaItemTypeChatMessage
+	| typeof MediaItemTypeChatCommand
+	| typeof MediaItemTypeVideoPoster
+	| typeof MediaItemTypeVideoManifest
+	| typeof MediaItemTypeTranscodedVideo
+	| typeof MediaItemTypeTranscodedVideoCard
+	| typeof MediaItemTypeHelpPageImage;
+
+export const MediaItemStatusActive = 'active';
+export const MediaItemStatusRemoved = 'removed';
+export const MediaItemStatusInactive = 'inactive';
+
+export type MediaItemStatus =
+	| typeof MediaItemStatusActive
+	| typeof MediaItemStatusRemoved
+	| typeof MediaItemStatusInactive;
 
 export class MediaItemModel extends Model implements LightboxMediaModel {
 	declare type: MediaItemType;

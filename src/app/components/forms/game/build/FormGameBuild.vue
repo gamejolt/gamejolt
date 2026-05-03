@@ -19,10 +19,23 @@ import { validateMaxLength } from '~common/form-vue/validators';
 import {
 	$saveGameBuild,
 	GameBuildEmulatorInfo,
-	GameBuildError,
 	GameBuildModel,
-	GameBuildStatus,
-	GameBuildType,
+} from '~common/game/build/build.model';
+import {
+	GameBuildTypeApplet,
+	GameBuildTypeDownloadable,
+	GameBuildTypeFlash,
+	GameBuildTypeHtml,
+	GameBuildTypeRom,
+	GameBuildTypeSilverlight,
+	GameBuildTypeUnity,
+} from '~common/game/build/build.model';
+import { GameBuildStatusActive, GameBuildStatusAdding } from '~common/game/build/build.model';
+import {
+	GameBuildErrorInvalidArchive,
+	GameBuildErrorMissingFields,
+	GameBuildErrorNotHtmlArchive,
+	GameBuildErrorPasswordArchive,
 } from '~common/game/build/build.model';
 import {
 	GameBuildLaunchablePlatforms,
@@ -82,21 +95,21 @@ const buildLaunchOptions = ref<GameBuildLaunchOptionModel[]>([]);
 const wasChanged = ref(false);
 
 const GameBuildTypes = {
-	downloadable: GameBuildType.Downloadable,
-	html: GameBuildType.Html,
-	flash: GameBuildType.Flash,
-	unity: GameBuildType.Unity,
-	silverlight: GameBuildType.Silverlight,
-	applet: GameBuildType.Applet,
-	rom: GameBuildType.Rom,
-};
+	downloadable: GameBuildTypeDownloadable,
+	html: GameBuildTypeHtml,
+	flash: GameBuildTypeFlash,
+	unity: GameBuildTypeUnity,
+	silverlight: GameBuildTypeSilverlight,
+	applet: GameBuildTypeApplet,
+	rom: GameBuildTypeRom,
+} as const;
 const GameBuildStatuses = {
-	adding: GameBuildStatus.Adding,
-	active: GameBuildStatus.Active,
-};
+	adding: GameBuildStatusAdding,
+	active: GameBuildStatusActive,
+} as const;
 const GameBuildErrors = {
-	missingFields: GameBuildError.MissingFields,
-};
+	missingFields: GameBuildErrorMissingFields,
+} as const;
 
 const form: FormController<GameBuildFormModel> = createForm<GameBuildFormModel>({
 	model: toRef(props, 'model') as Ref<GameBuildFormModel | undefined>,
@@ -145,22 +158,22 @@ const pollUrl = computed(
 );
 
 const shouldPollProgress = computed(
-	() => props.model && props.model.status === GameBuildStatus.Adding && !archiveError.value
+	() => props.model && props.model.status === GameBuildStatusAdding && !archiveError.value
 );
 
 const archiveError = computed(() => {
 	if (!props.model) {
 		return '';
 	}
-	if (props.model.hasError(GameBuildError.InvalidArchive)) {
+	if (props.model.hasError(GameBuildErrorInvalidArchive)) {
 		return $gettext(
 			`The archive you uploaded looks corrupted, we can't extract it on our end.`
 		);
 	}
-	if (props.model.hasError(GameBuildError.PasswordArchive)) {
+	if (props.model.hasError(GameBuildErrorPasswordArchive)) {
 		return $gettext(`The archive you uploaded is password-protected.`);
 	}
-	if (props.model.hasError(GameBuildError.NotHtmlArchive)) {
+	if (props.model.hasError(GameBuildErrorNotHtmlArchive)) {
 		return $gettext(
 			`The archive you uploaded doesn't look like a valid html build. We expect a zip with an index.html at the root of the archive.`
 		);
@@ -175,8 +188,7 @@ const hasPlatformsError = computed(() => form.hasCustomError('platforms'));
 const isDeprecated = computed(() =>
 	Boolean(
 		props.model &&
-		(props.model.type === GameBuildType.Applet ||
-			props.model.type === GameBuildType.Silverlight)
+		(props.model.type === GameBuildTypeApplet || props.model.type === GameBuildTypeSilverlight)
 	)
 );
 
@@ -194,7 +206,7 @@ const platformsValid = computed(() => {
 	if (!props.model) {
 		return false;
 	}
-	if (props.model.type !== GameBuildType.Downloadable) {
+	if (props.model.type !== GameBuildTypeDownloadable) {
 		return true;
 	}
 	return (

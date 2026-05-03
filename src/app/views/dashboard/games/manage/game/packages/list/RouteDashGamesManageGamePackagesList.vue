@@ -16,14 +16,14 @@ import {
 	$removeGamePackage,
 	$saveGamePackageSort,
 	GamePackageModel,
-	GamePackageVisibility,
 } from '~common/game/package/package.model';
+import { GamePackageVisibilityPrivate } from '~common/game/package/package.model';
 import { showSuccessGrowl } from '~common/growls/growls.service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppLinkHelp from '~common/link/AppLinkHelp.vue';
 import { showModalConfirm } from '~common/modal/confirm/confirm-service';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
-import { SellableModel } from '~common/sellable/sellable.model';
+import { SellableModel, SellableTypePaid, SellableTypePwyw } from '~common/sellable/sellable.model';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 import { $gettext } from '~common/translate/translate.service';
@@ -46,9 +46,6 @@ const game = computed(() => routeStore.game.value!);
 
 const packages = ref<GamePackageModel[]>([]);
 const sellables = ref<{ [x: number]: SellableModel }>({});
-
-const GamePackageVisibilityPrivate = GamePackageVisibility.Private;
-
 const hasAllPerms = computed(() => game.value.hasPerms('all'));
 const hasBuildsPerms = computed(() => game.value.hasPerms('builds'));
 const packagesSort = computed(() => packages.value.map(i => i.id));
@@ -235,7 +232,10 @@ const appRoute = createAppRoute({
 								</span>
 
 								<template
-									v-if="sellables[pkg.id] && sellables[pkg.id].type === 'pwyw'"
+									v-if="
+										sellables[pkg.id] &&
+										sellables[pkg.id].type === SellableTypePwyw
+									"
 								>
 									<span class="tag">
 										<AppTranslate>Pay What You Want</AppTranslate>
@@ -259,7 +259,8 @@ const appRoute = createAppRoute({
 								</template>
 								<template
 									v-else-if="
-										sellables[pkg.id] && sellables[pkg.id].type === 'paid'
+										sellables[pkg.id] &&
+										sellables[pkg.id].type === SellableTypePaid
 									"
 								>
 									<span class="tag">

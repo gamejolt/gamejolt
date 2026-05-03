@@ -13,7 +13,8 @@ import { formatFilesize } from '~common/filters/filesize';
 import {
 	canInstallGameBuild,
 	type GameBuildModel,
-	GameBuildType,
+	GameBuildTypeHtml,
+	GameBuildTypeRom,
 } from '~common/game/build/build.model';
 import { GameModel } from '~common/game/game.model';
 import AppGamePackageCardMoreOptions from '~common/game/package/card/AppGamePackageCardMoreOptions.vue';
@@ -158,8 +159,8 @@ function retryUninstall() {
 // TODO(game-build-installers) this is extremely silly. put this logic in card model.
 if (
 	card.browserBuild &&
-	card.browserBuild.type !== GameBuildType.Html &&
-	card.browserBuild.type !== GameBuildType.Rom
+	card.browserBuild.type !== GameBuildTypeHtml &&
+	card.browserBuild.type !== GameBuildTypeRom
 ) {
 	const _build = card.browserBuild;
 

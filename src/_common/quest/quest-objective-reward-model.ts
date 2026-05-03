@@ -5,29 +5,26 @@ import { storeModel } from '~common/model/model-store.service';
 import { SiteTrophyModel } from '~common/site/trophy/trophy.model';
 import { StickerRewardModel } from '~common/sticker/sticker-reward-model';
 
-export const enum QuestRewardTypes {
-	// Never used, old reward type.
-	//
-	// Exp = 0,
-	Sticker = 1,
-	SiteTrophy = 2,
-	RandomSticker = 3,
+export const QuestRewardTypesSticker = 1;
+export const QuestRewardTypesSiteTrophy = 2;
+export const QuestRewardTypesRandomSticker = 3;
+export const QuestRewardTypesCustom = 4;
+export const QuestRewardTypesBackground = 5;
+export const QuestRewardTypesUserCharge = 6;
+export const QuestRewardTypesCoin = 7;
+export const QuestRewardTypesStickerPack = 8;
+export const QuestRewardTypesAvatarFrame = 9;
 
-	/**
-	 * Should just use the fallback values so we can display it however backend
-	 * wants to.
-	 */
-	Custom = 4,
-	Background = 5,
-
-	/**
-	 * Adds charge to the StickerStore.
-	 */
-	UserCharge = 6,
-	Coin = 7,
-	StickerPack = 8,
-	AvatarFrame = 9,
-}
+export type QuestRewardTypes =
+	| typeof QuestRewardTypesSticker
+	| typeof QuestRewardTypesSiteTrophy
+	| typeof QuestRewardTypesRandomSticker
+	| typeof QuestRewardTypesCustom
+	| typeof QuestRewardTypesBackground
+	| typeof QuestRewardTypesUserCharge
+	| typeof QuestRewardTypesCoin
+	| typeof QuestRewardTypesStickerPack
+	| typeof QuestRewardTypesAvatarFrame;
 
 export class QuestObjectiveRewardModel extends Model {
 	constructor(data: any = {}) {
@@ -62,64 +59,62 @@ export class QuestObjectiveRewardModel extends Model {
 	declare is_condensed?: boolean;
 
 	get isSticker() {
-		return (
-			this.type === QuestRewardTypes.Sticker || this.type === QuestRewardTypes.RandomSticker
-		);
+		return this.type === QuestRewardTypesSticker || this.type === QuestRewardTypesRandomSticker;
 	}
 
 	get isTrophy() {
-		return this.type === QuestRewardTypes.SiteTrophy;
+		return this.type === QuestRewardTypesSiteTrophy;
 	}
 
 	get isBackground() {
-		return this.type === QuestRewardTypes.Background;
+		return this.type === QuestRewardTypesBackground;
 	}
 
 	get isCharge() {
-		return this.type === QuestRewardTypes.UserCharge;
+		return this.type === QuestRewardTypesUserCharge;
 	}
 
 	get isCoin() {
-		return this.type === QuestRewardTypes.Coin;
+		return this.type === QuestRewardTypesCoin;
 	}
 
 	get isStickerPack() {
-		return this.type === QuestRewardTypes.StickerPack;
+		return this.type === QuestRewardTypesStickerPack;
 	}
 
 	get isAvatarFrame() {
-		return this.type === QuestRewardTypes.AvatarFrame;
+		return this.type === QuestRewardTypesAvatarFrame;
 	}
 
 	get name() {
 		let result = this.fallback_name;
 		switch (this.type) {
-			case QuestRewardTypes.Sticker:
-			case QuestRewardTypes.RandomSticker:
+			case QuestRewardTypesSticker:
+			case QuestRewardTypesRandomSticker:
 				result = 'Sticker';
 				break;
 
-			case QuestRewardTypes.SiteTrophy:
+			case QuestRewardTypesSiteTrophy:
 				result = 'Trophy';
 				break;
 
-			case QuestRewardTypes.Background:
+			case QuestRewardTypesBackground:
 				result = 'Background';
 				break;
 
-			case QuestRewardTypes.UserCharge:
+			case QuestRewardTypesUserCharge:
 				result = 'Charge';
 				break;
 
-			case QuestRewardTypes.Coin:
+			case QuestRewardTypesCoin:
 				result = 'Coin';
 				break;
 
-			case QuestRewardTypes.StickerPack:
+			case QuestRewardTypesStickerPack:
 				result = 'Sticker pack';
 				break;
 
-			case QuestRewardTypes.AvatarFrame:
+			case QuestRewardTypesAvatarFrame:
 				result = 'Avatar frame';
 				break;
 		}

@@ -6,14 +6,18 @@ import { ContentContainerModel } from '~common/content/content-container-model';
 import { ContentContext } from '~common/content/content-context';
 import { ContentSetCache } from '~common/content/content-set-cache';
 import { DeviceArch, DeviceOs } from '~common/device/device.service';
-import { canInstallGameBuild, GameBuildModel, GameBuildType } from '~common/game/build/build.model';
+import {
+	canInstallGameBuild,
+	GameBuildModel,
+	GameBuildTypeRom,
+} from '~common/game/build/build.model';
 import { GamePackageModel } from '~common/game/package/package.model';
 import { showErrorGrowl } from '~common/growls/growls.service';
 import { MediaItemModel } from '~common/media-item/media-item-model';
 import { Model } from '~common/model/model.service';
 import { storeInRegistry } from '~common/registry/registry.service';
 import { getCurrentRouter } from '~common/route/current-router-service';
-import { SellableModel } from '~common/sellable/sellable.model';
+import { SellableModel, SellableTypeFree, SellableTypePaid } from '~common/sellable/sellable.model';
 import { SiteModel } from '~common/site/site-model';
 import { ThemeModel } from '~common/theme/theme.model';
 import { $gettext } from '~common/translate/translate.service';
@@ -28,24 +32,34 @@ export interface CustomGameMessage {
 
 export const GameCreationToolOther = 'Other';
 
-export const enum GameStatus {
-	Hidden = 0,
-	Visible = 1,
-	Removed = 2,
-}
+export const GameStatusHidden = 0;
+export const GameStatusVisible = 1;
+export const GameStatusRemoved = 2;
 
-export const enum GameDevelopmentStatus {
-	Finished = 1,
-	Wip = 2,
-	Canceled = 3,
-	Devlog = 4,
-}
+export type GameStatus =
+	| typeof GameStatusHidden
+	| typeof GameStatusVisible
+	| typeof GameStatusRemoved;
 
-export const enum GameLockedStatus {
-	Unlocked = 0,
-	Dmca = 1,
-	Adult = 3,
-}
+export const GameDevelopmentStatusFinished = 1;
+export const GameDevelopmentStatusWip = 2;
+export const GameDevelopmentStatusCanceled = 3;
+export const GameDevelopmentStatusDevlog = 4;
+
+export type GameDevelopmentStatus =
+	| typeof GameDevelopmentStatusFinished
+	| typeof GameDevelopmentStatusWip
+	| typeof GameDevelopmentStatusCanceled
+	| typeof GameDevelopmentStatusDevlog;
+
+export const GameLockedStatusUnlocked = 0;
+export const GameLockedStatusDmca = 1;
+export const GameLockedStatusAdult = 3;
+
+export type GameLockedStatus =
+	| typeof GameLockedStatusUnlocked
+	| typeof GameLockedStatusDmca
+	| typeof GameLockedStatusAdult;
 
 export class GameModel
 	extends Collaboratable(Model)
@@ -144,7 +158,7 @@ export class GameModel
 		// Should show as owned for the dev and collaborators of the game.
 		if (data.sellable) {
 			this.sellable = new SellableModel(data.sellable);
-			if (this.sellable.type !== 'free' && this.hasPerms()) {
+			if (this.sellable.type !== SellableTypeFree && this.hasPerms()) {
 				this.sellable.is_owned = true;
 			}
 		}
@@ -161,7 +175,7 @@ export class GameModel
 	}
 
 	get is_paid_game() {
-		return this.sellable?.type === 'paid';
+		return this.sellable?.type === SellableTypePaid;
 	}
 
 	get isOwned() {
@@ -174,27 +188,27 @@ export class GameModel
 
 	// We don't want to show ads if this game has sellable items.
 	get _should_show_ads() {
-		return this.should_show_ads && (!this.sellable || this.sellable.type === 'free');
+		return this.should_show_ads && (!this.sellable || this.sellable.type === SellableTypeFree);
 	}
 
 	get _is_finished() {
-		return this.development_status === GameDevelopmentStatus.Finished;
+		return this.development_status === GameDevelopmentStatusFinished;
 	}
 
 	get _is_wip() {
-		return this.development_status === GameDevelopmentStatus.Wip;
+		return this.development_status === GameDevelopmentStatusWip;
 	}
 
 	get _is_devlog() {
-		return this.development_status === GameDevelopmentStatus.Devlog;
+		return this.development_status === GameDevelopmentStatusDevlog;
 	}
 
 	get isVisible() {
-		return this.status === GameStatus.Visible;
+		return this.status === GameStatusVisible;
 	}
 
 	get isUnlisted() {
-		return this.status === GameStatus.Hidden;
+		return this.status === GameStatusHidden;
 	}
 
 	get _has_cover() {
@@ -301,7 +315,7 @@ export function pluckInstallableGameBuilds(options: {
 		// Can't install them if they can't be bought.
 		if (
 			_package._sellable &&
-			_package._sellable.type === 'paid' &&
+			_package._sellable.type === SellableTypePaid &&
 			!_package._sellable.is_owned
 		) {
 			return;
@@ -328,7 +342,7 @@ export function pluckBrowserGameBuilds(packages: GamePackageModel[]) {
 }
 
 export function pluckRomGameBuilds(packages: GamePackageModel[]) {
-	return _pluckBuilds(packages, i => i.type === GameBuildType.Rom);
+	return _pluckBuilds(packages, i => i.type === GameBuildTypeRom);
 }
 
 function _pluckBuilds(packages: GamePackageModel[], func: (build: GameBuildModel) => boolean) {

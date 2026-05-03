@@ -5,11 +5,14 @@ import { Model } from '~common/model/model.service';
 import { NotificationModel } from '~common/notification/notification-model';
 import { UserModel } from '~common/user/user.model';
 
-export const enum ForumPostStatus {
-	Active = 'active',
-	Spam = 'spam',
-	Removed = 'removed',
-}
+export const ForumPostStatusActive = 'active';
+export const ForumPostStatusSpam = 'spam';
+export const ForumPostStatusRemoved = 'removed';
+
+export type ForumPostStatus =
+	| typeof ForumPostStatusActive
+	| typeof ForumPostStatusSpam
+	| typeof ForumPostStatusRemoved;
 
 export class ForumPostModel extends Model {
 	declare user_id: number;

@@ -11,7 +11,11 @@ import AppGamePackageCard from '~common/game/package/card/AppGamePackageCard.vue
 import { GamePackagePayloadModel } from '~common/game/package/package-payload.model';
 import { GameBundleModel } from '~common/game-bundle/game-bundle.model';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
-import { KeyGroupModel, KeyGroupType } from '~common/key-group/key-group.model';
+import {
+	KeyGroupModel,
+	KeyGroupTypeAnonymousClaim,
+	KeyGroupTypeUser,
+} from '~common/key-group/key-group.model';
 import AppMediaItemCover from '~common/media-item/cover/AppMediaItemCover.vue';
 import { useCommonStore } from '~common/store/common-store';
 import { useThemeStore } from '~common/theme/theme.store';
@@ -47,8 +51,7 @@ const packagePayload = ref<GamePackagePayloadModel | null>(null);
 
 if (
 	keyGroup.value &&
-	(keyGroup.value.type === KeyGroupType.User ||
-		keyGroup.value.type === KeyGroupType.AnonymousClaim)
+	(keyGroup.value.type === KeyGroupTypeUser || keyGroup.value.type === KeyGroupTypeAnonymousClaim)
 ) {
 	isClaimOnly.value = true;
 } else {

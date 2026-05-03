@@ -3,7 +3,7 @@ import { computed, ref } from 'vue';
 
 import { Environment } from '~common/environment/environment.service';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
-import { SellableType } from '~common/sellable/sellable.model';
+import { SellableTypeFree } from '~common/sellable/sellable.model';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import AppIncludedItems from '~widget-package/components/AppIncludedItems.vue';
 import AppPricingCard from '~widget-package/components/AppPricingCard.vue';
@@ -23,7 +23,7 @@ const gameUrl = computed(() => Environment.baseUrl + game.value.getUrl());
 const developerUrl = computed(
 	() => developer.value.web_site || Environment.baseUrl + developer.value.url
 );
-const shouldShowIncluded = computed(() => sellable.value.type !== SellableType.Free);
+const shouldShowIncluded = computed(() => sellable.value.type !== SellableTypeFree);
 </script>
 
 <template>

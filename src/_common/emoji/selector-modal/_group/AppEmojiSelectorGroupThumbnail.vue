@@ -1,7 +1,12 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import { EmojiGroupModel, EmojiGroupType } from '~common/emoji/emoji-group.model';
+import {
+	EmojiGroupModel,
+	EmojiGroupTypeCollection,
+	EmojiGroupTypeLegacy,
+	EmojiGroupTypeUnicode,
+} from '~common/emoji/emoji-group.model';
 import AppImgResponsive from '~common/img/AppImgResponsive.vue';
 import AppJolticon, { Jolticon } from '~common/jolticon/AppJolticon.vue';
 import AppMediaItemBackdrop from '~common/media-item/backdrop/AppMediaItemBackdrop.vue';
@@ -22,11 +27,11 @@ const icon = computed(() => {
 	let result: Jolticon = 'other-os';
 
 	switch (group.type) {
-		case EmojiGroupType.Legacy:
+		case EmojiGroupTypeLegacy:
 			result = 'bolt-filled';
 			break;
 
-		case EmojiGroupType.Unicode: {
+		case EmojiGroupTypeUnicode: {
 			const name = group.name.toLowerCase();
 
 			if (name === 'smileys & people' || name === 'smileys & emotion') {
@@ -49,7 +54,7 @@ const icon = computed(() => {
 			break;
 		}
 
-		case EmojiGroupType.Collection:
+		case EmojiGroupTypeCollection:
 			result = 'smiley';
 			break;
 

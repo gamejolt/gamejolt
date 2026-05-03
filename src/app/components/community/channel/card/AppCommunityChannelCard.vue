@@ -2,7 +2,8 @@
 import { computed, type HTMLAttributes, onMounted, ref, useTemplateRef } from 'vue';
 import { RouterLink } from 'vue-router';
 
-import { CommunityModel, CommunityPresetChannelType } from '~common/community/community.model';
+import { CommunityModel } from '~common/community/community.model';
+import { CommunityPresetChannelTypeFEATURED } from '~common/community/community.model';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppMediaItemBackdrop from '~common/media-item/backdrop/AppMediaItemBackdrop.vue';
 import { MediaItemModel } from '~common/media-item/media-item-model';
@@ -46,7 +47,7 @@ const rootElem = useTemplateRef('rootElem');
 const cardHeight = ref<number>(CommunityChannelCardHeight);
 
 const linkTo = computed(() => {
-	if (path === CommunityPresetChannelType.FEATURED) {
+	if (path === CommunityPresetChannelTypeFEATURED) {
 		return {
 			name: 'communities.view.overview',
 			params: { path: community.path },

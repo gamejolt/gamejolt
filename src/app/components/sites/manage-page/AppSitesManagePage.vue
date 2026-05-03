@@ -9,7 +9,7 @@ import AppButton from '~common/button/AppButton.vue';
 import { GameModel } from '~common/game/game.model';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppNavTabList from '~common/nav/tab-list/AppNavTabList.vue';
-import { $deactivateSite, SiteModel, SiteStatus } from '~common/site/site-model';
+import { $deactivateSite, SiteModel, SiteStatusActive } from '~common/site/site-model';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 
@@ -27,11 +27,11 @@ const tab = computed(() => {
 });
 
 const staticEnabled = computed(() => {
-	return site.status === SiteStatus.Active && site.is_static;
+	return site.status === SiteStatusActive && site.is_static;
 });
 
 const templateEnabled = computed(() => {
-	return site.status === SiteStatus.Active && !site.is_static;
+	return site.status === SiteStatusActive && !site.is_static;
 });
 
 function disable() {

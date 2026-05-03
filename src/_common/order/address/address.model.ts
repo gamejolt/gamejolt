@@ -1,9 +1,9 @@
 import { Model } from '~common/model/model.service';
 
-export const enum OrderAddressType {
-	Billing = 'billing',
-	Shipping = 'shipping',
-}
+export const OrderAddressTypeBilling = 'billing';
+export const OrderAddressTypeShipping = 'shipping';
+
+export type OrderAddressType = typeof OrderAddressTypeBilling | typeof OrderAddressTypeShipping;
 
 export class OrderAddressModel extends Model {
 	declare order_id: number;

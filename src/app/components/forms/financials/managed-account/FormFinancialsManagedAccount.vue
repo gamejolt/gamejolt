@@ -17,10 +17,14 @@ import AppLinkExternal from '~common/link/AppLinkExternal.vue';
 import AppLinkHelp from '~common/link/AppLinkHelp.vue';
 import AppLoading from '~common/loading/AppLoading.vue';
 import AppTranslate from '~common/translate/AppTranslate.vue';
+import { UserStripeManagedAccountModel } from '~common/user/stripe-managed-account/stripe-managed-account';
 import {
-	UserStripeManagedAccountModel,
-	UserStripeManagedAccountStatus,
-	UserStripeManagedAccountType,
+	UserStripeManagedAccountTypeCompany,
+	UserStripeManagedAccountTypeIndividual,
+} from '~common/user/stripe-managed-account/stripe-managed-account';
+import {
+	UserStripeManagedAccountStatusPending,
+	UserStripeManagedAccountStatusUnverified,
 } from '~common/user/stripe-managed-account/stripe-managed-account';
 import { UserModel } from '~common/user/user.model';
 import { loadScript } from '~utils/utils';
@@ -222,9 +226,9 @@ let stripeInst: stripe.Stripe = null as any;
 const individualRef = useTemplateRef('individual');
 const representativeRef = useTemplateRef('representative');
 
-const IndividualAccountType = UserStripeManagedAccountType.Individual;
-const CompanyAccountType = UserStripeManagedAccountType.Company;
-const UnverifiedStatus = UserStripeManagedAccountStatus.Unverified;
+const IndividualAccountType = UserStripeManagedAccountTypeIndividual;
+const CompanyAccountType = UserStripeManagedAccountTypeCompany;
+const UnverifiedStatus = UserStripeManagedAccountStatusUnverified;
 
 const form: FormController<ManagedAccountFormModel> = createForm<ManagedAccountFormModel>({
 	resetOnSubmit: true,
@@ -350,7 +354,7 @@ const requiresVerificationDocument = computed(() => {
 
 const isVerificationPending = computed(() => {
 	// If they're in pending state and we don't require more info from them.
-	if (!account.value || account.value.status !== UserStripeManagedAccountStatus.Pending) {
+	if (!account.value || account.value.status !== UserStripeManagedAccountStatusPending) {
 		return false;
 	}
 
@@ -363,7 +367,7 @@ const isComplete = computed(() => {
 	}
 
 	const allPersons = Object.values(stripe.value.persons || []);
-	if (account.value.type === UserStripeManagedAccountType.Individual) {
+	if (account.value.type === UserStripeManagedAccountTypeIndividual) {
 		allPersons.push(stripe.value.current.individual as any);
 	}
 

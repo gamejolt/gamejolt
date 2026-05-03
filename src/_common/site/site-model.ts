@@ -3,11 +3,14 @@ import { SiteBuildModel } from '~common/site/build/build-model';
 import { SiteContentBlockModel } from '~common/site/content-block/content-block-model';
 import { SiteThemeModel } from '~common/site/theme/theme-model';
 
-export const enum SiteStatus {
-	Inactive = 'inactive',
-	Active = 'active',
-	Removed = 'removed',
-}
+export const SiteStatusInactive = 'inactive';
+export const SiteStatusActive = 'active';
+export const SiteStatusRemoved = 'removed';
+
+export type SiteStatus =
+	| typeof SiteStatusInactive
+	| typeof SiteStatusActive
+	| typeof SiteStatusRemoved;
 
 export class SiteModel extends Model {
 	declare user_id: number;

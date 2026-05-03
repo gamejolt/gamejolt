@@ -9,7 +9,13 @@ import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
 import AppFormControlTextarea from '~common/form-vue/controls/AppFormControlTextarea.vue';
 import { validateMaxLength, validatePattern } from '~common/form-vue/validators';
 import { GameModel } from '~common/game/game.model';
-import { $saveGameVideo, GameVideoModel, GameVideoType } from '~common/game/video/video.model';
+import {
+	$saveGameVideo,
+	GameVideoModel,
+	GameVideoType,
+	GameVideoTypeVimeo,
+	GameVideoTypeYoutube,
+} from '~common/game/video/video.model';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 import { TranslateDirective as vTranslate } from '~common/translate/translate-directive';
 import AppVideoEmbed from '~common/video/embed/AppVideoEmbed.vue';
@@ -42,9 +48,9 @@ const form: FormController<FormModel> = createForm({
 
 		// We use _url as the form model's URL and copy back and forth.
 		if (form.formModel.url) {
-			if (form.formModel.type === GameVideoType.Vimeo) {
+			if (form.formModel.type === GameVideoTypeVimeo) {
 				form.formModel._url = 'https://www.vimeo.com/' + form.formModel.url;
-			} else if (form.formModel.type === GameVideoType.Youtube) {
+			} else if (form.formModel.type === GameVideoTypeYoutube) {
 				form.formModel._url = 'https://www.youtube.com/watch?v=' + form.formModel.url;
 			}
 		}
@@ -54,7 +60,7 @@ const form: FormController<FormModel> = createForm({
 	},
 });
 
-const videoData = computed(() => {
+const videoData = computed((): { id: string; type: GameVideoType } | null => {
 	const url = form.formModel._url;
 	if (!url) {
 		return null;
@@ -62,12 +68,12 @@ const videoData = computed(() => {
 
 	const youtubeMatch = url.match(REGEX_YOUTUBE);
 	if (youtubeMatch) {
-		return { id: youtubeMatch[youtubeMatch.length - 1], type: GameVideoType.Youtube };
+		return { id: youtubeMatch[youtubeMatch.length - 1], type: GameVideoTypeYoutube };
 	}
 
 	const vimeoMatch = url.match(REGEX_VIMEO);
 	if (vimeoMatch) {
-		return { id: vimeoMatch[vimeoMatch.length - 1], type: GameVideoType.Vimeo };
+		return { id: vimeoMatch[vimeoMatch.length - 1], type: GameVideoTypeVimeo };
 	}
 
 	return null;

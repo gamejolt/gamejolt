@@ -3,10 +3,10 @@ import FormShopProductBase, {
 	createShopProductBaseForm,
 } from '~app/views/dashboard/shop/product/_forms/FormShopProductBase.vue';
 import AppDashShopProductHeader from '~app/views/dashboard/shop/product/AppDashShopProductHeader.vue';
-import { ShopDashProductType, useShopDashStore } from '~app/views/dashboard/shop/shop.store';
+import { ShopDashProductTypePremium, useShopDashStore } from '~app/views/dashboard/shop/shop.store';
 import { BackgroundModel } from '~common/background/background.model';
 import AppLinkHelp from '~common/link/AppLinkHelp.vue';
-import { ShopProductResource } from '~common/shop/product/product-model';
+import { ShopProductResourceBackground } from '~common/shop/product/product-model';
 import { $gettext } from '~common/translate/translate.service';
 
 type Props = {
@@ -18,7 +18,7 @@ const shopStore = useShopDashStore()!;
 
 const data = createShopProductBaseForm({
 	shopStore,
-	resource: ShopProductResource.Background,
+	resource: ShopProductResourceBackground,
 	baseModel: model,
 });
 
@@ -31,7 +31,7 @@ const { productType, isEditing } = data;
 		:heading="isEditing ? $gettext(`Edit background`) : $gettext(`Add background`)"
 	>
 		<!-- Only premium backgrounds are valid at the moment, so no need for free messaging. -->
-		<template v-if="productType === ShopDashProductType.Premium">
+		<template v-if="productType === ShopDashProductTypePremium">
 			<div>
 				{{
 					$gettext(

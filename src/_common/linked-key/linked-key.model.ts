@@ -1,8 +1,8 @@
 import { Model } from '~common/model/model.service';
 
-export const enum LinkedKeyProvider {
-	Steam = 'steam',
-}
+export const LinkedKeyProviderSteam = 'steam';
+
+export type LinkedKeyProvider = typeof LinkedKeyProviderSteam;
 
 export class LinkedKeyModel extends Model {
 	declare key: string;

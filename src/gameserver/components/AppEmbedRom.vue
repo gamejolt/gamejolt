@@ -1,7 +1,20 @@
 <script lang="ts" setup>
 import { onMounted } from 'vue';
 
-import { GameBuildEmulator } from '~common/game/build/build.model';
+import {
+	GameBuildEmulatorAtari2600,
+	GameBuildEmulatorC64,
+	GameBuildEmulatorCpc,
+	GameBuildEmulatorGb,
+	GameBuildEmulatorGba,
+	GameBuildEmulatorGbc,
+	GameBuildEmulatorGenesis,
+	GameBuildEmulatorMsx,
+	GameBuildEmulatorNes,
+	GameBuildEmulatorSnes,
+	GameBuildEmulatorVboy,
+	GameBuildEmulatorZx,
+} from '~common/game/build/build.model';
 import { useGameserverStore } from '~gameserver/store/index';
 import { loadScript } from '~utils/utils';
 
@@ -15,40 +28,40 @@ onMounted(async () => {
 	await loadScript(`${RetroJoltBaseUrl}/retrojolt.js`);
 
 	switch (build.value!.emulator_type) {
-		case GameBuildEmulator.Gb:
+		case GameBuildEmulatorGb:
 			_gb();
 			break;
-		case GameBuildEmulator.Gbc:
+		case GameBuildEmulatorGbc:
 			_gbc();
 			break;
-		case GameBuildEmulator.Gba:
+		case GameBuildEmulatorGba:
 			_gba();
 			break;
-		case GameBuildEmulator.Nes:
+		case GameBuildEmulatorNes:
 			_nes();
 			break;
-		case GameBuildEmulator.Vboy:
+		case GameBuildEmulatorVboy:
 			_vboy();
 			break;
-		case GameBuildEmulator.Genesis:
+		case GameBuildEmulatorGenesis:
 			_genesis();
 			break;
-		case GameBuildEmulator.Snes:
+		case GameBuildEmulatorSnes:
 			_snes();
 			break;
-		case GameBuildEmulator.C64:
+		case GameBuildEmulatorC64:
 			_c64();
 			break;
-		case GameBuildEmulator.Zx:
+		case GameBuildEmulatorZx:
 			_zx();
 			break;
-		case GameBuildEmulator.Atari2600:
+		case GameBuildEmulatorAtari2600:
 			_atari2600();
 			break;
-		case GameBuildEmulator.Cpc:
+		case GameBuildEmulatorCpc:
 			_cpc();
 			break;
-		case GameBuildEmulator.Msx:
+		case GameBuildEmulatorMsx:
 			_msx();
 			break;
 	}

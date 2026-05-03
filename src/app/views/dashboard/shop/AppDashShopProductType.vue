@@ -1,7 +1,12 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 
-import { ShopDashProductType } from '~app/views/dashboard/shop/shop.store';
+import {
+	ShopDashProductType,
+	ShopDashProductTypeBasic,
+	ShopDashProductTypePremium,
+	ShopDashProductTypeReward,
+} from '~app/views/dashboard/shop/shop.store';
 import { kThemeGjBlue, kThemeGray } from '~common/theme/variables';
 import { $gettext } from '~common/translate/translate.service';
 import { styleBorderRadiusLg, styleWhen } from '~styles/mixins';
@@ -32,15 +37,15 @@ const label = computed(() => {
 			display: `inline-block`,
 			fontWeight: `bold`,
 			padding: `2px 6px`,
-			...styleWhen(productType === ShopDashProductType.Premium, {
+			...styleWhen(productType === ShopDashProductTypePremium, {
 				backgroundColor: ShopProductPremiumColor,
 				color: `black`,
 			}),
-			...styleWhen(productType === ShopDashProductType.Basic, {
+			...styleWhen(productType === ShopDashProductTypeBasic, {
 				backgroundColor: kThemeGray,
 				color: `white`,
 			}),
-			...styleWhen(productType === ShopDashProductType.Reward, {
+			...styleWhen(productType === ShopDashProductTypeReward, {
 				backgroundColor: kThemeGjBlue,
 				color: `black`,
 			}),

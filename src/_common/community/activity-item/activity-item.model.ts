@@ -13,41 +13,60 @@ type TypeIcon = {
 	color: string;
 };
 
-export const enum CommunityActivityItemType {
-	CommunityCreated = 'community/created',
+export const CommunityActivityItemTypeCommunityCreated = 'community/created';
+export const CommunityActivityItemTypePostFeature = 'post/feature';
+export const CommunityActivityItemTypePostUnfeature = 'post/unfeature';
+export const CommunityActivityItemTypePostMove = 'post/move';
+export const CommunityActivityItemTypePostEject = 'post/eject';
+export const CommunityActivityItemTypeModInvite = 'mod/invite';
+export const CommunityActivityItemTypeModAccept = 'mod/accept';
+export const CommunityActivityItemTypeModRemove = 'mod/remove';
+export const CommunityActivityItemTypeBlockUser = 'block/user';
+export const CommunityActivityItemTypeEditDescription = 'edit/description';
+export const CommunityActivityItemTypeEditThumbnail = 'edit/thumbnail';
+export const CommunityActivityItemTypeEditHeader = 'edit/header';
+export const CommunityActivityItemTypeEditDetails = 'edit/details';
+export const CommunityActivityItemTypeEditHeaderRemove = 'edit/header/remove';
+export const CommunityActivityItemTypeChannelAdd = 'channel/add';
+export const CommunityActivityItemTypeChannelRemove = 'channel/remove';
+export const CommunityActivityItemTypeChannelEdit = 'channel/edit';
+export const CommunityActivityItemTypeChannelRename = 'channel/rename';
+export const CommunityActivityItemTypeGameLink = 'game/link';
+export const CommunityActivityItemTypeGameUnlink = 'game/unlink';
+export const CommunityActivityItemTypeCompetitionEditSettings = 'competition/edit/settings';
+export const CommunityActivityItemTypeCompetitionEditVoting = 'competition/edit/voting';
+export const CommunityActivityItemTypeCompetitionVotingSetActive = 'competition/voting/set-active';
+export const CommunityActivityItemTypeCompetitionEntryRemove = 'competition/entry/remove';
+export const CommunityActivityItemTypeCompetitionEntryUnremove = 'competition/entry/unremove';
+export const CommunityActivityItemTypeCompetitionEntryGiveAward = 'competition/entry/give-award';
 
-	PostFeature = 'post/feature',
-	PostUnfeature = 'post/unfeature',
-	PostMove = 'post/move',
-	PostEject = 'post/eject',
-
-	ModInvite = 'mod/invite',
-	ModAccept = 'mod/accept',
-	ModRemove = 'mod/remove',
-
-	BlockUser = 'block/user',
-
-	EditDescription = 'edit/description',
-	EditThumbnail = 'edit/thumbnail',
-	EditHeader = 'edit/header',
-	EditDetails = 'edit/details',
-	EditHeaderRemove = 'edit/header/remove',
-
-	ChannelAdd = 'channel/add',
-	ChannelRemove = 'channel/remove',
-	ChannelEdit = 'channel/edit',
-	ChannelRename = 'channel/rename',
-
-	GameLink = 'game/link',
-	GameUnlink = 'game/unlink',
-
-	CompetitionEditSettings = 'competition/edit/settings',
-	CompetitionEditVoting = 'competition/edit/voting',
-	CompetitionVotingSetActive = 'competition/voting/set-active',
-	CompetitionEntryRemove = 'competition/entry/remove',
-	CompetitionEntryUnremove = 'competition/entry/unremove',
-	CompetitionEntryGiveAward = 'competition/entry/give-award',
-}
+export type CommunityActivityItemType =
+	| typeof CommunityActivityItemTypeCommunityCreated
+	| typeof CommunityActivityItemTypePostFeature
+	| typeof CommunityActivityItemTypePostUnfeature
+	| typeof CommunityActivityItemTypePostMove
+	| typeof CommunityActivityItemTypePostEject
+	| typeof CommunityActivityItemTypeModInvite
+	| typeof CommunityActivityItemTypeModAccept
+	| typeof CommunityActivityItemTypeModRemove
+	| typeof CommunityActivityItemTypeBlockUser
+	| typeof CommunityActivityItemTypeEditDescription
+	| typeof CommunityActivityItemTypeEditThumbnail
+	| typeof CommunityActivityItemTypeEditHeader
+	| typeof CommunityActivityItemTypeEditDetails
+	| typeof CommunityActivityItemTypeEditHeaderRemove
+	| typeof CommunityActivityItemTypeChannelAdd
+	| typeof CommunityActivityItemTypeChannelRemove
+	| typeof CommunityActivityItemTypeChannelEdit
+	| typeof CommunityActivityItemTypeChannelRename
+	| typeof CommunityActivityItemTypeGameLink
+	| typeof CommunityActivityItemTypeGameUnlink
+	| typeof CommunityActivityItemTypeCompetitionEditSettings
+	| typeof CommunityActivityItemTypeCompetitionEditVoting
+	| typeof CommunityActivityItemTypeCompetitionVotingSetActive
+	| typeof CommunityActivityItemTypeCompetitionEntryRemove
+	| typeof CommunityActivityItemTypeCompetitionEntryUnremove
+	| typeof CommunityActivityItemTypeCompetitionEntryGiveAward;
 
 export class CommunityActivityItemModel extends Model {
 	declare type: CommunityActivityItemType;
@@ -74,43 +93,43 @@ export class CommunityActivityItemModel extends Model {
 
 		if (data.action_resource) {
 			switch (this.type) {
-				case CommunityActivityItemType.PostFeature:
-				case CommunityActivityItemType.PostUnfeature:
-				case CommunityActivityItemType.PostMove:
-				case CommunityActivityItemType.PostEject:
+				case CommunityActivityItemTypePostFeature:
+				case CommunityActivityItemTypePostUnfeature:
+				case CommunityActivityItemTypePostMove:
+				case CommunityActivityItemTypePostEject:
 					this.action_resource = new FiresidePostModel(data.action_resource);
 					break;
 
-				case CommunityActivityItemType.ModInvite:
-				case CommunityActivityItemType.ModAccept:
-				case CommunityActivityItemType.ModRemove:
+				case CommunityActivityItemTypeModInvite:
+				case CommunityActivityItemTypeModAccept:
+				case CommunityActivityItemTypeModRemove:
 					this.action_resource = new UserModel(data.action_resource);
 					break;
 
-				case CommunityActivityItemType.BlockUser:
+				case CommunityActivityItemTypeBlockUser:
 					this.action_resource = new UserBlockModel(data.action_resource);
 					break;
 
-				case CommunityActivityItemType.ChannelAdd:
-				case CommunityActivityItemType.ChannelEdit:
-				case CommunityActivityItemType.ChannelRename:
+				case CommunityActivityItemTypeChannelAdd:
+				case CommunityActivityItemTypeChannelEdit:
+				case CommunityActivityItemTypeChannelRename:
 					this.action_resource = new CommunityChannelModel(data.action_resource);
 					break;
 
-				case CommunityActivityItemType.GameLink:
-				case CommunityActivityItemType.GameUnlink:
+				case CommunityActivityItemTypeGameLink:
+				case CommunityActivityItemTypeGameUnlink:
 					this.action_resource = new GameModel(data.action_resource);
 					break;
 
-				case CommunityActivityItemType.CompetitionEditSettings:
-				case CommunityActivityItemType.CompetitionEditVoting:
-				case CommunityActivityItemType.CompetitionVotingSetActive:
+				case CommunityActivityItemTypeCompetitionEditSettings:
+				case CommunityActivityItemTypeCompetitionEditVoting:
+				case CommunityActivityItemTypeCompetitionVotingSetActive:
 					this.action_resource = new CommunityCompetitionModel(data.action_resource);
 					break;
 
-				case CommunityActivityItemType.CompetitionEntryRemove:
-				case CommunityActivityItemType.CompetitionEntryUnremove:
-				case CommunityActivityItemType.CompetitionEntryGiveAward:
+				case CommunityActivityItemTypeCompetitionEntryRemove:
+				case CommunityActivityItemTypeCompetitionEntryUnremove:
+				case CommunityActivityItemTypeCompetitionEntryGiveAward:
 					this.action_resource = new CommunityCompetitionEntryModel(data.action_resource);
 					break;
 			}
@@ -119,58 +138,58 @@ export class CommunityActivityItemModel extends Model {
 
 	public getTypeIcon(): TypeIcon | undefined {
 		switch (this.type) {
-			case CommunityActivityItemType.CommunityCreated:
+			case CommunityActivityItemTypeCommunityCreated:
 				return { icon: 'heart-filled', color: 'notice' };
 
-			case CommunityActivityItemType.PostFeature:
+			case CommunityActivityItemTypePostFeature:
 				return { icon: 'star', color: '' };
-			case CommunityActivityItemType.PostUnfeature:
+			case CommunityActivityItemTypePostUnfeature:
 				return { icon: 'star', color: '' };
-			case CommunityActivityItemType.PostMove:
+			case CommunityActivityItemTypePostMove:
 				return { icon: 'arrow-forward', color: '' };
-			case CommunityActivityItemType.PostEject:
+			case CommunityActivityItemTypePostEject:
 				return { icon: 'eject', color: 'notice' };
 
-			case CommunityActivityItemType.ModInvite:
+			case CommunityActivityItemTypeModInvite:
 				return { icon: 'friend-add-1', color: '' };
-			case CommunityActivityItemType.ModAccept:
+			case CommunityActivityItemTypeModAccept:
 				return { icon: 'friends', color: 'theme' };
-			case CommunityActivityItemType.ModRemove:
+			case CommunityActivityItemTypeModRemove:
 				return { icon: 'friend-remove-1', color: 'notice' };
 
-			case CommunityActivityItemType.BlockUser:
+			case CommunityActivityItemTypeBlockUser:
 				return { icon: 'friend-remove-2', color: 'notice' };
 
-			case CommunityActivityItemType.EditDescription:
-			case CommunityActivityItemType.EditThumbnail:
-			case CommunityActivityItemType.EditHeader:
-			case CommunityActivityItemType.EditDetails:
-			case CommunityActivityItemType.EditHeaderRemove:
-			case CommunityActivityItemType.CompetitionEditSettings:
-			case CommunityActivityItemType.CompetitionEditVoting:
+			case CommunityActivityItemTypeEditDescription:
+			case CommunityActivityItemTypeEditThumbnail:
+			case CommunityActivityItemTypeEditHeader:
+			case CommunityActivityItemTypeEditDetails:
+			case CommunityActivityItemTypeEditHeaderRemove:
+			case CommunityActivityItemTypeCompetitionEditSettings:
+			case CommunityActivityItemTypeCompetitionEditVoting:
 				return { icon: 'edit', color: '' };
 
-			case CommunityActivityItemType.ChannelAdd:
+			case CommunityActivityItemTypeChannelAdd:
 				return { icon: 'add', color: '' };
-			case CommunityActivityItemType.ChannelRemove:
+			case CommunityActivityItemTypeChannelRemove:
 				return { icon: 'remove', color: 'notice' };
-			case CommunityActivityItemType.ChannelEdit:
-			case CommunityActivityItemType.ChannelRename:
+			case CommunityActivityItemTypeChannelEdit:
+			case CommunityActivityItemTypeChannelRename:
 				return { icon: 'edit', color: '' };
 
-			case CommunityActivityItemType.GameLink:
-			case CommunityActivityItemType.GameUnlink:
+			case CommunityActivityItemTypeGameLink:
+			case CommunityActivityItemTypeGameUnlink:
 				return { icon: 'gamepad', color: '' };
 
-			case CommunityActivityItemType.CompetitionVotingSetActive:
+			case CommunityActivityItemTypeCompetitionVotingSetActive:
 				return { icon: 'pedestals-numbers', color: '' };
 
-			case CommunityActivityItemType.CompetitionEntryRemove:
+			case CommunityActivityItemTypeCompetitionEntryRemove:
 				return { icon: 'bullet-list', color: 'notice' };
-			case CommunityActivityItemType.CompetitionEntryUnremove:
+			case CommunityActivityItemTypeCompetitionEntryUnremove:
 				return { icon: 'bullet-list', color: '' };
 
-			case CommunityActivityItemType.CompetitionEntryGiveAward:
+			case CommunityActivityItemTypeCompetitionEntryGiveAward:
 				return { icon: 'medal', color: '' };
 		}
 	}

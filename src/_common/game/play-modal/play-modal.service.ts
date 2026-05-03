@@ -1,7 +1,11 @@
 import { defineAsyncComponent, inject, InjectionKey, ref, shallowReadonly } from 'vue';
 
 import { Environment } from '~common/environment/environment.service';
-import { GameBuildModel, GameBuildType } from '~common/game/build/build.model';
+import {
+	GameBuildModel,
+	GameBuildTypeHtml,
+	GameBuildTypeRom,
+} from '~common/game/build/build.model';
 import { GameModel } from '~common/game/game.model';
 import { showErrorGrowl } from '~common/growls/growls.service';
 import { sendHistoryTick } from '~common/history-tick/history-tick-service';
@@ -58,8 +62,8 @@ export function useShowGamePlayModal() {
 		// Will open the gameserver in their browser.
 		if (
 			GJ_IS_DESKTOP_APP &&
-			build.type !== GameBuildType.Html &&
-			build.type !== GameBuildType.Rom
+			build.type !== GameBuildTypeHtml &&
+			build.type !== GameBuildTypeRom
 		) {
 			const downloadUrl = await _getDownloadUrl(build, { key: options.key });
 			Navigate.gotoExternal(downloadUrl);

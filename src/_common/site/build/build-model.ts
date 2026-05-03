@@ -1,10 +1,13 @@
 import { Model } from '~common/model/model.service';
 
-export const enum SiteBuildStatus {
-	Active = 'active',
-	Inactive = 'inactive',
-	Removed = 'removed',
-}
+export const SiteBuildStatusActive = 'active';
+export const SiteBuildStatusInactive = 'inactive';
+export const SiteBuildStatusRemoved = 'removed';
+
+export type SiteBuildStatus =
+	| typeof SiteBuildStatusActive
+	| typeof SiteBuildStatusInactive
+	| typeof SiteBuildStatusRemoved;
 
 export class SiteBuildModel extends Model {
 	declare site_id: number;

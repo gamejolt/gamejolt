@@ -6,7 +6,7 @@ import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
 import AppButton from '~common/button/AppButton.vue';
 import { ContentEditorModelData } from '~common/content/content-owner';
 import { EmojiModel } from '~common/emoji/emoji.model';
-import { EmojiGroupModel, EmojiGroupType } from '~common/emoji/emoji-group.model';
+import { EmojiGroupModel, EmojiGroupTypeLocalRecent } from '~common/emoji/emoji-group.model';
 import AppEmojiSelectorGroup from '~common/emoji/selector-modal/_group/AppEmojiSelectorGroup.vue';
 import { showErrorGrowl } from '~common/growls/growls.service';
 import AppModal from '~common/modal/AppModal.vue';
@@ -114,7 +114,7 @@ async function init() {
 				emojis: rawRecentEmojis,
 				num_emojis: rawRecentEmojis.length,
 				added_on: Date.now(),
-				type: EmojiGroupType.LocalRecent,
+				type: EmojiGroupTypeLocalRecent,
 				media_item: undefined,
 			} as ModelData<EmojiGroupModel>);
 

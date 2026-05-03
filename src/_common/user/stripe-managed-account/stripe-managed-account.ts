@@ -1,15 +1,20 @@
 import { Model } from '~common/model/model.service';
 
-export const enum UserStripeManagedAccountType {
-	Company = 'company',
-	Individual = 'individual',
-}
+export const UserStripeManagedAccountTypeCompany = 'company';
+export const UserStripeManagedAccountTypeIndividual = 'individual';
 
-export const enum UserStripeManagedAccountStatus {
-	Unverified = 'unverified',
-	Pending = 'pending',
-	Verified = 'verified',
-}
+export type UserStripeManagedAccountType =
+	| typeof UserStripeManagedAccountTypeCompany
+	| typeof UserStripeManagedAccountTypeIndividual;
+
+export const UserStripeManagedAccountStatusUnverified = 'unverified';
+export const UserStripeManagedAccountStatusPending = 'pending';
+export const UserStripeManagedAccountStatusVerified = 'verified';
+
+export type UserStripeManagedAccountStatus =
+	| typeof UserStripeManagedAccountStatusUnverified
+	| typeof UserStripeManagedAccountStatusPending
+	| typeof UserStripeManagedAccountStatusVerified;
 
 export const ManagedAccountTermsDistributionVersion = 2;
 export const ManagedAccountTermsPartnerVersion = 1;

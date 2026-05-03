@@ -5,11 +5,14 @@ import { Model } from '~common/model/model.service';
 import { storeModel } from '~common/model/model-store.service';
 import { SellablePricingModel } from '~common/sellable/pricing/pricing.model';
 
-export const enum SellableType {
-	Free = 'free',
-	Paid = 'paid',
-	Pwyw = 'pwyw',
-}
+export const SellableTypeFree = 'free';
+export const SellableTypePaid = 'paid';
+export const SellableTypePwyw = 'pwyw';
+
+export type SellableType =
+	| typeof SellableTypeFree
+	| typeof SellableTypePaid
+	| typeof SellableTypePwyw;
 
 export class SellableModel extends Model {
 	declare type: SellableType;

@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-// We want to make sure it doesn't actually have to import all these models to
-// display.
 import '~common/comment/comment.styl';
 
 import { computed, ref } from 'vue';
@@ -20,7 +18,8 @@ import type { CommunityModel } from '~common/community/community.model';
 import AppCommunityThumbnailImg from '~common/community/thumbnail/AppCommunityThumbnailImg.vue';
 import {
 	CommunityUserNotificationModel,
-	CommunityUserNotificationType,
+	CommunityUserNotificationTypePOSTS_EJECT,
+	CommunityUserNotificationTypePOSTS_MOVE,
 } from '~common/community/user-notification/user-notification.model';
 import AppContentViewer from '~common/content/content-viewer/AppContentViewer.vue';
 import { CreatorExperienceLevelModel } from '~common/creator/experience/level.model';
@@ -33,7 +32,19 @@ import type { MentionModel } from '~common/mention/mention.model';
 import {
 	$readNotification,
 	NotificationModel,
-	NotificationType,
+	NotificationTypeCommentAdd,
+	NotificationTypeCommentAddObjectOwner,
+	NotificationTypeCommunityUserNotification,
+	NotificationTypeCreatorLevelUp,
+	NotificationTypeGameTrophyAchieved,
+	NotificationTypeMention,
+	NotificationTypePollEnded,
+	NotificationTypePostFeaturedInCommunity,
+	NotificationTypeQuestNotification,
+	NotificationTypeShopGiftReceived,
+	NotificationTypeSiteTrophyAchieved,
+	NotificationTypeSupporterMessage,
+	NotificationTypeUnlockedAvatarFrame,
 } from '~common/notification/notification-model';
 import { NotificationText } from '~common/notification/notification-text.service';
 import type { QuestNotificationModel } from '~common/quest/quest-notification-model';
@@ -53,6 +64,9 @@ import AppUserAvatar from '~common/user/user-avatar/AppUserAvatar.vue';
 import { UserAvatarFrameModel } from '~common/user/user-avatar/frame/frame.model';
 import { isInstance } from '~utils/utils';
 
+// We want to make sure it doesn't actually have to import all these models to
+// display.
+
 type Props = {
 	item: ActivityFeedItem;
 };
@@ -69,12 +83,12 @@ const canToggleContent = ref(false);
 const notification = computed(() => item.feedItem as NotificationModel);
 const isNew = computed(() => feed.isItemUnread(item));
 const showUserAvatar = computed(() => {
-	if (notification.value.type === NotificationType.ShopGiftReceived) {
+	if (notification.value.type === NotificationTypeShopGiftReceived) {
 		return false;
 	}
 	return notification.value.from_model instanceof UserModel;
 });
-const showTime = computed(() => notification.value.type !== NotificationType.QuestNotification);
+const showTime = computed(() => notification.value.type !== NotificationTypeQuestNotification);
 const titleText = computed(() => NotificationText.getText(notification.value, false));
 
 // Only show when there is a title text for the notification.
@@ -85,39 +99,36 @@ const notificationLocation = computed(() => getNotificationRouteLocation(notific
 const hasDetails = computed(() => {
 	const { type, action_model } = notification.value;
 
-	if (
-		type === NotificationType.Mention &&
-		(action_model as MentionModel).resource === 'Comment'
-	) {
+	if (type === NotificationTypeMention && (action_model as MentionModel).resource === 'Comment') {
 		return true;
 	}
 
 	// Community user notifications with a post want to show the post lead.
 	if (
-		type === NotificationType.CommunityUserNotification &&
+		type === NotificationTypeCommunityUserNotification &&
 		[
-			CommunityUserNotificationType.POSTS_EJECT,
-			CommunityUserNotificationType.POSTS_MOVE,
+			CommunityUserNotificationTypePOSTS_EJECT,
+			CommunityUserNotificationTypePOSTS_MOVE,
 		].includes((action_model as CommunityUserNotificationModel).type)
 	) {
 		return true;
 	}
 
-	if (type === NotificationType.SupporterMessage) {
+	if (type === NotificationTypeSupporterMessage) {
 		return !!(action_model as SupporterActionModel).message?.content;
 	}
 
 	return [
-		NotificationType.CommentAdd,
-		NotificationType.CommentAddObjectOwner,
-		NotificationType.PostFeaturedInCommunity,
-		NotificationType.QuestNotification,
-		NotificationType.GameTrophyAchieved,
-		NotificationType.SiteTrophyAchieved,
-		NotificationType.PollEnded,
-		NotificationType.CreatorLevelUp,
-		NotificationType.UnlockedAvatarFrame,
-		NotificationType.ShopGiftReceived,
+		NotificationTypeCommentAdd,
+		NotificationTypeCommentAddObjectOwner,
+		NotificationTypePostFeaturedInCommunity,
+		NotificationTypeQuestNotification,
+		NotificationTypeGameTrophyAchieved,
+		NotificationTypeSiteTrophyAchieved,
+		NotificationTypePollEnded,
+		NotificationTypeCreatorLevelUp,
+		NotificationTypeUnlockedAvatarFrame,
+		NotificationTypeShopGiftReceived,
 	].includes(type);
 });
 
@@ -161,7 +172,7 @@ function onMarkRead() {
 								<template
 									v-if="
 										notification.type ===
-										NotificationType.CommunityUserNotification
+										NotificationTypeCommunityUserNotification
 									"
 								>
 									<div class="-community-thumb">
@@ -183,7 +194,7 @@ function onMarkRead() {
 								<template
 									v-else-if="
 										notification.type ===
-										NotificationType.PostFeaturedInCommunity
+										NotificationTypePostFeaturedInCommunity
 									"
 								>
 									<div class="-community-thumb">
@@ -198,15 +209,15 @@ function onMarkRead() {
 								</template>
 								<template
 									v-else-if="
-										notification.type === NotificationType.GameTrophyAchieved ||
-										notification.type === NotificationType.SiteTrophyAchieved
+										notification.type === NotificationTypeGameTrophyAchieved ||
+										notification.type === NotificationTypeSiteTrophyAchieved
 									"
 								>
 									<img class="img-circle -trophy-img" :src="trophyImg" />
 								</template>
 								<template
 									v-else-if="
-										notification.type === NotificationType.QuestNotification
+										notification.type === NotificationTypeQuestNotification
 									"
 								>
 									<div class="-avatar-icon">
@@ -214,7 +225,7 @@ function onMarkRead() {
 									</div>
 								</template>
 								<template
-									v-else-if="notification.type === NotificationType.PollEnded"
+									v-else-if="notification.type === NotificationTypePollEnded"
 								>
 									<div class="-avatar-icon">
 										<AppJolticon icon="pedestals-numbers" />
@@ -222,7 +233,7 @@ function onMarkRead() {
 								</template>
 								<template
 									v-else-if="
-										notification.type === NotificationType.CreatorLevelUp &&
+										notification.type === NotificationTypeCreatorLevelUp &&
 										notification.action_model instanceof
 											CreatorExperienceLevelModel
 									"
@@ -233,14 +244,14 @@ function onMarkRead() {
 								</template>
 								<template
 									v-else-if="
-										notification.type === NotificationType.UnlockedAvatarFrame
+										notification.type === NotificationTypeUnlockedAvatarFrame
 									"
 								>
 									<img class="img-circle -trophy-img" :src="avatarFrameImg" />
 								</template>
 								<template
 									v-else-if="
-										notification.type === NotificationType.ShopGiftReceived
+										notification.type === NotificationTypeShopGiftReceived
 									"
 								>
 									<div class="-avatar-icon">
@@ -270,9 +281,9 @@ function onMarkRead() {
 												<AppContentViewer
 													v-if="
 														notification.type ===
-															NotificationType.CommentAdd ||
+															NotificationTypeCommentAdd ||
 														notification.type ===
-															NotificationType.CommentAddObjectOwner
+															NotificationTypeCommentAddObjectOwner
 													"
 													:source="
 														(notification.action_model as CommentModel)
@@ -282,7 +293,7 @@ function onMarkRead() {
 												<AppContentViewer
 													v-else-if="
 														notification.type ===
-														NotificationType.Mention
+														NotificationTypeMention
 													"
 													:source="
 														(notification.action_model as MentionModel)
@@ -292,7 +303,7 @@ function onMarkRead() {
 												<AppContentViewer
 													v-else-if="
 														notification.type ===
-														NotificationType.SupporterMessage
+														NotificationTypeSupporterMessage
 													"
 													:source="
 														(
@@ -303,7 +314,7 @@ function onMarkRead() {
 												<span
 													v-else-if="
 														notification.type ===
-														NotificationType.PollEnded
+														NotificationTypePollEnded
 													"
 												>
 													{{
@@ -315,7 +326,7 @@ function onMarkRead() {
 												<span
 													v-else-if="
 														notification.type ===
-														NotificationType.PostFeaturedInCommunity
+														NotificationTypePostFeaturedInCommunity
 													"
 												>
 													{{
@@ -327,7 +338,7 @@ function onMarkRead() {
 												<span
 													v-else-if="
 														notification.type ===
-														NotificationType.CommunityUserNotification
+														NotificationTypeCommunityUserNotification
 													"
 												>
 													{{
@@ -339,9 +350,9 @@ function onMarkRead() {
 												<span
 													v-else-if="
 														notification.type ===
-															NotificationType.GameTrophyAchieved ||
+															NotificationTypeGameTrophyAchieved ||
 														notification.type ===
-															NotificationType.SiteTrophyAchieved
+															NotificationTypeSiteTrophyAchieved
 													"
 												>
 													{{
@@ -355,7 +366,7 @@ function onMarkRead() {
 												<span
 													v-else-if="
 														notification.type ===
-														NotificationType.QuestNotification
+														NotificationTypeQuestNotification
 													"
 													class="tiny text-muted"
 												>
@@ -368,7 +379,7 @@ function onMarkRead() {
 												<span
 													v-else-if="
 														notification.type ===
-															NotificationType.CreatorLevelUp &&
+															NotificationTypeCreatorLevelUp &&
 														notification.action_model instanceof
 															CreatorExperienceLevelModel &&
 														notification.action_model.ability !== null
@@ -383,7 +394,7 @@ function onMarkRead() {
 												<span
 													v-else-if="
 														notification.type ===
-														NotificationType.UnlockedAvatarFrame
+														NotificationTypeUnlockedAvatarFrame
 													"
 												>
 													{{ $gettext(`Click to equip!`) }}
@@ -391,7 +402,7 @@ function onMarkRead() {
 												<span
 													v-else-if="
 														notification.type ===
-															NotificationType.ShopGiftReceived &&
+															NotificationTypeShopGiftReceived &&
 														isInstance(
 															notification.action_model,
 															InventoryShopGiftModel

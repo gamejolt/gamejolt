@@ -32,7 +32,8 @@ import { useCommonStore } from '~common/store/common-store';
 import { useThemeStore } from '~common/theme/theme.store';
 import AppTimeAgo from '~common/time/AppTimeAgo.vue';
 import { $gettext } from '~common/translate/translate.service';
-import { UserFriendshipModel, UserFriendshipState } from '~common/user/friendship/friendship.model';
+import { UserFriendshipModel } from '~common/user/friendship/friendship.model';
+import { UserFriendshipStateFriends } from '~common/user/friendship/friendship.model';
 import { populateTrophies } from '~common/user/trophy/trophy-utils';
 import { UserBaseTrophyModel } from '~common/user/trophy/user-base-trophy.model';
 import { UserModel } from '~common/user/user.model';
@@ -79,7 +80,7 @@ function createProfileRouteStore({
 	const linkedAccounts = ref<LinkedAccountModel[]>([]);
 
 	const isFriend = computed(
-		() => userFriendship.value && userFriendship.value.state === UserFriendshipState.Friends
+		() => userFriendship.value && userFriendship.value.state === UserFriendshipStateFriends
 	);
 
 	const isOnline = computed<null | boolean>(() => {

@@ -9,52 +9,79 @@ import { GameReleaseModel } from '~common/game/release/release.model';
 import { Jolticon } from '~common/jolticon/AppJolticon.vue';
 import { Model } from '~common/model/model.service';
 
-export const enum GameBuildType {
-	Downloadable = 'downloadable',
-	Html = 'html',
-	Flash = 'flash',
-	Silverlight = 'silverlight',
-	Unity = 'unity',
-	Applet = 'applet',
-	Rom = 'rom',
-}
+export const GameBuildTypeDownloadable = 'downloadable';
+export const GameBuildTypeHtml = 'html';
+export const GameBuildTypeFlash = 'flash';
+export const GameBuildTypeSilverlight = 'silverlight';
+export const GameBuildTypeUnity = 'unity';
+export const GameBuildTypeApplet = 'applet';
+export const GameBuildTypeRom = 'rom';
 
-export const enum GameBuildStatus {
-	Adding = 'adding',
-	Active = 'active',
-	Removed = 'removed',
-}
+export type GameBuildType =
+	| typeof GameBuildTypeDownloadable
+	| typeof GameBuildTypeHtml
+	| typeof GameBuildTypeFlash
+	| typeof GameBuildTypeSilverlight
+	| typeof GameBuildTypeUnity
+	| typeof GameBuildTypeApplet
+	| typeof GameBuildTypeRom;
 
-export const enum GameBuildError {
-	MissingFields = 'missing-fields',
-	LaunchOptions = 'launch-options',
-	InvalidArchive = 'invalid-archive',
-	PasswordArchive = 'password-archive',
-	NotHtmlArchive = 'not-html-archive',
-}
+export const GameBuildStatusAdding = 'adding';
+export const GameBuildStatusActive = 'active';
+export const GameBuildStatusRemoved = 'removed';
+
+export type GameBuildStatus =
+	| typeof GameBuildStatusAdding
+	| typeof GameBuildStatusActive
+	| typeof GameBuildStatusRemoved;
+
+export const GameBuildErrorMissingFields = 'missing-fields';
+export const GameBuildErrorLaunchOptions = 'launch-options';
+export const GameBuildErrorInvalidArchive = 'invalid-archive';
+export const GameBuildErrorPasswordArchive = 'password-archive';
+export const GameBuildErrorNotHtmlArchive = 'not-html-archive';
+
+export type GameBuildError =
+	| typeof GameBuildErrorMissingFields
+	| typeof GameBuildErrorLaunchOptions
+	| typeof GameBuildErrorInvalidArchive
+	| typeof GameBuildErrorPasswordArchive
+	| typeof GameBuildErrorNotHtmlArchive;
 
 export const GameBuildBrowserTypes = [
-	GameBuildType.Html,
-	GameBuildType.Flash,
-	GameBuildType.Silverlight,
-	GameBuildType.Unity,
-	GameBuildType.Applet,
+	GameBuildTypeHtml,
+	GameBuildTypeFlash,
+	GameBuildTypeSilverlight,
+	GameBuildTypeUnity,
+	GameBuildTypeApplet,
 ];
 
-export const enum GameBuildEmulator {
-	Gba = 'gba',
-	Gbc = 'gbc',
-	Gb = 'gb',
-	Nes = 'nes',
-	Vboy = 'vb',
-	Genesis = 'md',
-	Snes = 'snes',
-	Zx = 'zx',
-	Msx = 'msx',
-	Atari2600 = 'atari2600',
-	C64 = 'c64',
-	Cpc = 'cpc',
-}
+export const GameBuildEmulatorGba = 'gba';
+export const GameBuildEmulatorGbc = 'gbc';
+export const GameBuildEmulatorGb = 'gb';
+export const GameBuildEmulatorNes = 'nes';
+export const GameBuildEmulatorVboy = 'vb';
+export const GameBuildEmulatorGenesis = 'md';
+export const GameBuildEmulatorSnes = 'snes';
+export const GameBuildEmulatorZx = 'zx';
+export const GameBuildEmulatorMsx = 'msx';
+export const GameBuildEmulatorAtari2600 = 'atari2600';
+export const GameBuildEmulatorC64 = 'c64';
+export const GameBuildEmulatorCpc = 'cpc';
+
+export type GameBuildEmulator =
+	| typeof GameBuildEmulatorGba
+	| typeof GameBuildEmulatorGbc
+	| typeof GameBuildEmulatorGb
+	| typeof GameBuildEmulatorNes
+	| typeof GameBuildEmulatorVboy
+	| typeof GameBuildEmulatorGenesis
+	| typeof GameBuildEmulatorSnes
+	| typeof GameBuildEmulatorZx
+	| typeof GameBuildEmulatorMsx
+	| typeof GameBuildEmulatorAtari2600
+	| typeof GameBuildEmulatorC64
+	| typeof GameBuildEmulatorCpc;
 
 interface PlatformSupport {
 	icon: Jolticon;
@@ -143,18 +170,18 @@ export const GameBuildPlatformSupportInfo: { [k: string]: PlatformSupport } = {
 };
 
 export const GameBuildEmulatorInfo = {
-	[GameBuildEmulator.Gb]: 'Game Boy',
-	[GameBuildEmulator.Gbc]: 'Game Boy Color',
-	[GameBuildEmulator.Gba]: 'Game Boy Advance',
-	[GameBuildEmulator.Nes]: 'NES',
-	[GameBuildEmulator.Snes]: 'SNES',
-	[GameBuildEmulator.Vboy]: 'Virtual Boy',
-	[GameBuildEmulator.Genesis]: 'Genesis/Mega Drive',
-	[GameBuildEmulator.Atari2600]: 'Atari 2600',
-	[GameBuildEmulator.Zx]: 'ZX Spectrum',
-	[GameBuildEmulator.C64]: 'Commodore 64',
-	[GameBuildEmulator.Cpc]: 'Amstrad CPC',
-	[GameBuildEmulator.Msx]: 'MSX',
+	[GameBuildEmulatorGb]: 'Game Boy',
+	[GameBuildEmulatorGbc]: 'Game Boy Color',
+	[GameBuildEmulatorGba]: 'Game Boy Advance',
+	[GameBuildEmulatorNes]: 'NES',
+	[GameBuildEmulatorSnes]: 'SNES',
+	[GameBuildEmulatorVboy]: 'Virtual Boy',
+	[GameBuildEmulatorGenesis]: 'Genesis/Mega Drive',
+	[GameBuildEmulatorAtari2600]: 'Atari 2600',
+	[GameBuildEmulatorZx]: 'ZX Spectrum',
+	[GameBuildEmulatorC64]: 'Commodore 64',
+	[GameBuildEmulatorCpc]: 'Amstrad CPC',
+	[GameBuildEmulatorMsx]: 'MSX',
 };
 
 export class GameBuildModel extends Model {

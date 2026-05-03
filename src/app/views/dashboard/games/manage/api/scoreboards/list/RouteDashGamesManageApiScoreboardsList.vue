@@ -13,7 +13,10 @@ import {
 	$removeGameScoreTable,
 	$saveGameScoreTableSort,
 	GameScoreTableModel,
-	GameScoreTableSorting,
+} from '~common/game/score-table/score-table.model';
+import {
+	GameScoreTableSortingDirectionAsc,
+	GameScoreTableSortingDirectionDesc,
 } from '~common/game/score-table/score-table.model';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppLinkHelp from '~common/link/AppLinkHelp.vue';
@@ -183,7 +186,7 @@ createAppRoute({
 									<span
 										v-if="
 											scoreTable.scores_sorting_direction ===
-											GameScoreTableSorting.DirectionAsc
+											GameScoreTableSortingDirectionAsc
 										"
 										v-app-tooltip="
 											$gettext(
@@ -197,7 +200,7 @@ createAppRoute({
 									<span
 										v-if="
 											scoreTable.scores_sorting_direction ===
-											GameScoreTableSorting.DirectionDesc
+											GameScoreTableSortingDirectionDesc
 										"
 										v-app-tooltip="
 											$gettext(

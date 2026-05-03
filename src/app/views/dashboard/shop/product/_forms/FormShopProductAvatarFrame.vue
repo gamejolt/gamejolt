@@ -3,10 +3,10 @@ import FormShopProductBase, {
 	createShopProductBaseForm,
 } from '~app/views/dashboard/shop/product/_forms/FormShopProductBase.vue';
 import AppDashShopProductHeader from '~app/views/dashboard/shop/product/AppDashShopProductHeader.vue';
-import { ShopDashProductType, useShopDashStore } from '~app/views/dashboard/shop/shop.store';
+import { ShopDashProductTypePremium, useShopDashStore } from '~app/views/dashboard/shop/shop.store';
 import { AvatarFrameModel } from '~common/avatar/frame.model';
 import AppLinkHelp from '~common/link/AppLinkHelp.vue';
-import { ShopProductResource } from '~common/shop/product/product-model';
+import { ShopProductResourceAvatarFrame } from '~common/shop/product/product-model';
 import { $gettext } from '~common/translate/translate.service';
 
 type Props = {
@@ -18,7 +18,7 @@ const shopStore = useShopDashStore()!;
 
 const data = createShopProductBaseForm({
 	shopStore,
-	resource: ShopProductResource.AvatarFrame,
+	resource: ShopProductResourceAvatarFrame,
 	baseModel: model,
 });
 
@@ -30,7 +30,7 @@ const { productType, isEditing } = data;
 		:product-type="productType"
 		:heading="isEditing ? $gettext(`Edit avatar frame`) : $gettext(`Add avatar frame`)"
 	>
-		<div v-if="productType === ShopDashProductType.Premium">
+		<div v-if="productType === ShopDashProductTypePremium">
 			{{
 				$gettext(
 					`Premium avatar frames are available for purchase with joltbux in your shop. We recommend you upload animated avatars.`

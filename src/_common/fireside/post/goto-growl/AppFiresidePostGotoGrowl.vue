@@ -3,7 +3,11 @@ import { computed, onMounted, onUnmounted, toRef } from 'vue';
 import { RouteLocationRaw, RouterLink, useRoute, useRouter } from 'vue-router';
 
 import AppButton from '~common/button/AppButton.vue';
-import { FiresidePostModel, FiresidePostStatus } from '~common/fireside/post/post-model';
+import {
+	FiresidePostModel,
+	FiresidePostStatusActive,
+	FiresidePostStatusDraft,
+} from '~common/fireside/post/post-model';
 import { GameModel } from '~common/game/game.model';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppTimeAgo from '~common/time/AppTimeAgo.vue';
@@ -24,9 +28,9 @@ const emit = defineEmits<{
 const route = useRoute();
 const router = useRouter();
 
-const isActive = toRef(() => post.status === FiresidePostStatus.Active);
-const isScheduled = toRef(() => post.isScheduled && post.status === FiresidePostStatus.Draft);
-const isDraft = toRef(() => !post.isScheduled && post.status === FiresidePostStatus.Draft);
+const isActive = toRef(() => post.status === FiresidePostStatusActive);
+const isScheduled = toRef(() => post.isScheduled && post.status === FiresidePostStatusDraft);
+const isDraft = toRef(() => !post.isScheduled && post.status === FiresidePostStatusDraft);
 
 const draftsLocation = computed<RouteLocationRaw>(() => getFeedLocation('draft'));
 const scheduledLocation = computed<RouteLocationRaw>(() => getFeedLocation('scheduled'));

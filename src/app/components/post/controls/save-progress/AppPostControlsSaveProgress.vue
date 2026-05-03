@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 
-import { FiresidePostModel } from '~common/fireside/post/post-model';
+import { FiresidePostModel, FiresidePostStatusActive } from '~common/fireside/post/post-model';
 import AppProgressBar from '~common/progress/AppProgressBar.vue';
 import AppProgressPoller from '~common/progress/poller/AppProgressPoller.vue';
 import AppTranslate from '~common/translate/AppTranslate.vue';
@@ -44,7 +44,7 @@ function assignPost(postData: any) {
 				active
 			/>
 		</div>
-		<template v-if="post.status === 'active'">
+		<template v-if="post.status === FiresidePostStatusActive">
 			<AppTranslate>
 				Your post is being processed and will be published once it's ready
 			</AppTranslate>

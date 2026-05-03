@@ -1,21 +1,27 @@
 import { Model } from '~common/model/model.service';
 
-export const enum GameBuildLaunchOptionOs {
-	Windows = 'windows',
-	Windows64 = 'windows_64',
-	Mac = 'mac',
-	Mac64 = 'mac_64',
-	Linux = 'linux',
-	Linux64 = 'linux_64',
-}
+export const GameBuildLaunchOptionOsWindows = 'windows';
+export const GameBuildLaunchOptionOsWindows64 = 'windows_64';
+export const GameBuildLaunchOptionOsMac = 'mac';
+export const GameBuildLaunchOptionOsMac64 = 'mac_64';
+export const GameBuildLaunchOptionOsLinux = 'linux';
+export const GameBuildLaunchOptionOsLinux64 = 'linux_64';
+
+export type GameBuildLaunchOptionOs =
+	| typeof GameBuildLaunchOptionOsWindows
+	| typeof GameBuildLaunchOptionOsWindows64
+	| typeof GameBuildLaunchOptionOsMac
+	| typeof GameBuildLaunchOptionOsMac64
+	| typeof GameBuildLaunchOptionOsLinux
+	| typeof GameBuildLaunchOptionOsLinux64;
 
 export const GameBuildLaunchablePlatforms = [
-	GameBuildLaunchOptionOs.Windows,
-	GameBuildLaunchOptionOs.Windows64,
-	GameBuildLaunchOptionOs.Mac,
-	GameBuildLaunchOptionOs.Mac64,
-	GameBuildLaunchOptionOs.Linux,
-	GameBuildLaunchOptionOs.Linux64,
+	GameBuildLaunchOptionOsWindows,
+	GameBuildLaunchOptionOsWindows64,
+	GameBuildLaunchOptionOsMac,
+	GameBuildLaunchOptionOsMac64,
+	GameBuildLaunchOptionOsLinux,
+	GameBuildLaunchOptionOsLinux64,
 ];
 
 export class GameBuildLaunchOptionModel extends Model {

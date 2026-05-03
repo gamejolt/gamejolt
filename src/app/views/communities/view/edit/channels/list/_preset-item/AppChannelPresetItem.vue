@@ -7,6 +7,8 @@ import AppCardListItem from '~common/card/list/AppCardListItem.vue';
 import {
 	CommunityModel,
 	CommunityPresetChannelType,
+	CommunityPresetChannelTypeALL,
+	CommunityPresetChannelTypeFEATURED,
 	getCommunityChannelBackground,
 } from '~common/community/community.model';
 import { $gettext } from '~common/translate/translate.service';
@@ -27,9 +29,9 @@ const elementId = computed(() => `channel-container-${presetType}`);
 
 const label = computed(() => {
 	switch (presetType) {
-		case CommunityPresetChannelType.ALL:
+		case CommunityPresetChannelTypeALL:
 			return $gettext(`All Posts`);
-		case CommunityPresetChannelType.FEATURED:
+		case CommunityPresetChannelTypeFEATURED:
 			return $gettext(`Frontpage`);
 	}
 

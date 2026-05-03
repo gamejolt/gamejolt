@@ -9,12 +9,16 @@ import { assertNever } from '~utils/utils';
  */
 export type ShopProductModel = AvatarFrameModel | BackgroundModel | StickerPackModel | StickerModel;
 
-export const enum ShopProductResource {
-	AvatarFrame = 'Avatar_Frame',
-	Background = 'Background',
-	StickerPack = 'Sticker_Pack',
-	Sticker = 'Sticker',
-}
+export const ShopProductResourceAvatarFrame = 'Avatar_Frame';
+export const ShopProductResourceBackground = 'Background';
+export const ShopProductResourceStickerPack = 'Sticker_Pack';
+export const ShopProductResourceSticker = 'Sticker';
+
+export type ShopProductResource =
+	| typeof ShopProductResourceAvatarFrame
+	| typeof ShopProductResourceBackground
+	| typeof ShopProductResourceStickerPack
+	| typeof ShopProductResourceSticker;
 
 /**
  * Common fields required for shop products. Some of these fields will only be
@@ -34,13 +38,13 @@ export interface ShopProductCommonFields {
  */
 export function getShopProductResource(product: ShopProductModel): ShopProductResource {
 	if (product instanceof AvatarFrameModel) {
-		return ShopProductResource.AvatarFrame;
+		return ShopProductResourceAvatarFrame;
 	} else if (product instanceof BackgroundModel) {
-		return ShopProductResource.Background;
+		return ShopProductResourceBackground;
 	} else if (product instanceof StickerPackModel) {
-		return ShopProductResource.StickerPack;
+		return ShopProductResourceStickerPack;
 	} else if (product instanceof StickerModel) {
-		return ShopProductResource.Sticker;
+		return ShopProductResourceSticker;
 	} else {
 		return assertNever(product);
 	}

@@ -36,24 +36,34 @@ export type CommunityNotifyOptions = {
 	reasonType: string | null;
 };
 
-export const enum FiresidePostType {
-	Text = 'text',
-	Media = 'media',
-	Video = 'video',
-}
+export const FiresidePostTypeText = 'text';
+export const FiresidePostTypeMedia = 'media';
+export const FiresidePostTypeVideo = 'video';
 
-export const enum FiresidePostStatus {
-	Draft = 'draft',
-	Active = 'active',
-	Removed = 'removed',
-	Temp = 'temp',
-}
+export type FiresidePostType =
+	| typeof FiresidePostTypeText
+	| typeof FiresidePostTypeMedia
+	| typeof FiresidePostTypeVideo;
 
-export const enum FiresidePostAllowComments {
-	Disabled = 0,
-	Enabled = 1,
-	Friends = 2,
-}
+export const FiresidePostStatusDraft = 'draft';
+export const FiresidePostStatusActive = 'active';
+export const FiresidePostStatusRemoved = 'removed';
+export const FiresidePostStatusTemp = 'temp';
+
+export type FiresidePostStatus =
+	| typeof FiresidePostStatusDraft
+	| typeof FiresidePostStatusActive
+	| typeof FiresidePostStatusRemoved
+	| typeof FiresidePostStatusTemp;
+
+export const FiresidePostAllowCommentsDisabled = 0;
+export const FiresidePostAllowCommentsEnabled = 1;
+export const FiresidePostAllowCommentsFriends = 2;
+
+export type FiresidePostAllowComments =
+	| typeof FiresidePostAllowCommentsDisabled
+	| typeof FiresidePostAllowCommentsEnabled
+	| typeof FiresidePostAllowCommentsFriends;
 
 export class FiresidePostModel extends Model implements ContentContainerModel, CommentableModel {
 	declare hash: string;
@@ -187,15 +197,15 @@ export class FiresidePostModel extends Model implements ContentContainerModel, C
 	}
 
 	get isActive() {
-		return this.status === FiresidePostStatus.Active;
+		return this.status === FiresidePostStatusActive;
 	}
 
 	get isDraft() {
-		return this.status === FiresidePostStatus.Draft;
+		return this.status === FiresidePostStatusDraft;
 	}
 
 	get isRemoved() {
-		return this.status === FiresidePostStatus.Removed;
+		return this.status === FiresidePostStatusRemoved;
 	}
 
 	get isScheduled() {
@@ -287,7 +297,7 @@ export class FiresidePostModel extends Model implements ContentContainerModel, C
 
 	get canInteractWithComments() {
 		return (
-			this._canInteractWithPost && this.allow_comments !== FiresidePostAllowComments.Disabled
+			this._canInteractWithPost && this.allow_comments !== FiresidePostAllowCommentsDisabled
 		);
 	}
 

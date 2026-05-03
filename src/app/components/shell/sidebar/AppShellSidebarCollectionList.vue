@@ -2,7 +2,10 @@
 import { computed } from 'vue';
 import { RouterLink } from 'vue-router';
 
-import { GameCollectionModel } from '~app/components/game/collection/collection.model';
+import {
+	GameCollectionModel,
+	GameCollectionTypeDeveloper,
+} from '~app/components/game/collection/collection.model';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 import { stringSort } from '~utils/array';
@@ -20,8 +23,8 @@ const filtered = computed(() => {
 	}
 
 	return [...collections].sort((a, b) => {
-		const aVal = a.type === 'developer' && a.owner ? a.owner.username : a.name;
-		const bVal = b.type === 'developer' && b.owner ? b.owner.username : b.name;
+		const aVal = a.type === GameCollectionTypeDeveloper && a.owner ? a.owner.username : a.name;
+		const bVal = b.type === GameCollectionTypeDeveloper && b.owner ? b.owner.username : b.name;
 		return stringSort(aVal, bVal);
 	});
 });
@@ -68,7 +71,7 @@ function filterComparator(item: GameCollectionModel) {
 				</span>
 
 				<span
-					v-if="collection.owner && collection.type === 'developer'"
+					v-if="collection.owner && collection.type === GameCollectionTypeDeveloper"
 					class="shell-nav-label"
 				>
 					@{{ collection.owner.username }}

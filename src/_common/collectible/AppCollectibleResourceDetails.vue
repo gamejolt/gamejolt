@@ -8,13 +8,22 @@ import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
 import { AvatarFrameModel } from '~common/avatar/frame.model';
 import { BackgroundModel } from '~common/background/background.model';
 import AppButton from '~common/button/AppButton.vue';
-import { AcquisitionMethod, filterAcquisitionMethods } from '~common/collectible/acquisition.model';
+import {
+	AcquisitionMethodPackOpen,
+	AcquisitionMethodShopPurchase,
+	filterAcquisitionMethods,
+} from '~common/collectible/acquisition.model';
 import AppCollectibleUnlockedRibbon from '~common/collectible/AppCollectibleUnlockedRibbon.vue';
 import { CollectibleModel } from '~common/collectible/collectible.model';
 import { CollectibleResourceItem } from '~common/collectible/resource-details-modal/modal.service';
 import { EmojiModel } from '~common/emoji/emoji.model';
 import AppImgResponsive from '~common/img/AppImgResponsive.vue';
-import { PurchasableProductType } from '~common/inventory/shop/product-owner-helpers';
+import {
+	PurchasableProductType,
+	PurchasableProductTypeAvatarFrame,
+	PurchasableProductTypeBackground,
+	PurchasableProductTypeStickerPack,
+} from '~common/inventory/shop/product-owner-helpers';
 import { showPurchaseShopProductModal } from '~common/inventory/shop/purchase-modal/modal.service';
 import AppLoading from '~common/loading/AppLoading.vue';
 import { getMediaItemImageSrc } from '~common/media-item/media-item-model';
@@ -132,16 +141,16 @@ const collectibleResourceAcquisition = computed(() => {
 	// Ignore if we have no shop purchase acquisitions.
 	if (
 		!acquisitions?.length ||
-		acquisitions.every(i => i.method !== AcquisitionMethod.ShopPurchase)
+		acquisitions.every(i => i.method !== AcquisitionMethodShopPurchase)
 	) {
 		return null;
 	}
 
 	let resource: PurchasableProductType;
 	if (avatarFrame.value) {
-		resource = PurchasableProductType.AvatarFrame;
+		resource = PurchasableProductTypeAvatarFrame;
 	} else if (background.value) {
-		resource = PurchasableProductType.Background;
+		resource = PurchasableProductTypeBackground;
 	} else {
 		return null;
 	}
@@ -192,7 +201,7 @@ onMounted(async () => {
 		const newCollectible = storeModel(CollectibleModel, rawCollectible);
 		const packIds = filterAcquisitionMethods(
 			newCollectible.acquisition,
-			AcquisitionMethod.PackOpen
+			AcquisitionMethodPackOpen
 		).map(i => i.sticker_pack_id);
 
 		const newPacks: StickerPackModel[] = [];
@@ -383,7 +392,7 @@ const mutedStyles = {
 							can-click-pack
 							@click-pack="
 								showPurchaseShopProductModal({
-									resource: PurchasableProductType.StickerPack,
+									resource: PurchasableProductTypeStickerPack,
 									resourceId: pack.id,
 								})
 							"

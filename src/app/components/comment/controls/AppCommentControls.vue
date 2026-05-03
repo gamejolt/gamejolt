@@ -6,7 +6,7 @@ import { useCommentWidget } from '~app/components/comment/widget/AppCommentWidge
 import { vAppAuthRequired } from '~common/auth/auth-required-directive';
 import AppButton from '~common/button/AppButton.vue';
 import { $unvoteOnComment, $voteOnComment, CommentModel } from '~common/comment/comment-model';
-import { CommentVoteType } from '~common/comment/vote/vote-model';
+import { CommentVoteTypeDownvote, CommentVoteTypeUpvote } from '~common/comment/vote/vote-model';
 import { formatFuzzynumber } from '~common/filters/fuzzynumber';
 import AppJolticon, { Jolticon } from '~common/jolticon/AppJolticon.vue';
 import { showLikersModal } from '~common/likers/modal.service';
@@ -71,11 +71,11 @@ const votingTooltip = computed(() => {
 });
 
 const hasUpvote = toRef(
-	() => comment.user_vote && comment.user_vote.vote === CommentVoteType.Upvote
+	() => comment.user_vote && comment.user_vote.vote === CommentVoteTypeUpvote
 );
 
 const hasDownvote = toRef(
-	() => comment.user_vote && comment.user_vote.vote === CommentVoteType.Downvote
+	() => comment.user_vote && comment.user_vote.vote === CommentVoteTypeDownvote
 );
 
 const showOwnerInteraction = toRef(() => comment.has_owner_like || comment.has_owner_reply);
@@ -122,11 +122,11 @@ const ownerIndicatorIcons = computed(() => {
 });
 
 function onUpvoteClick() {
-	$voteComment(CommentVoteType.Upvote);
+	$voteComment(CommentVoteTypeUpvote);
 }
 
 function onDownvoteClick() {
-	$voteComment(CommentVoteType.Downvote);
+	$voteComment(CommentVoteTypeDownvote);
 }
 
 async function $voteComment(vote: number) {

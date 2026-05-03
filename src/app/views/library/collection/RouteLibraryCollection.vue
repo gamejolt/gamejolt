@@ -5,6 +5,12 @@ import { useRoute } from 'vue-router';
 import {
 	GameCollectionModel,
 	GameCollectionType,
+	GameCollectionTypeBundle,
+	GameCollectionTypeDeveloper,
+	GameCollectionTypeFollowed,
+	GameCollectionTypeOwned,
+	GameCollectionTypePlaylist,
+	GameCollectionTypeRecommended,
 	GameCollectionUserTypes,
 } from '~app/components/game/collection/collection.model';
 import AppGameCollectionFollowWidget from '~app/components/game/collection/follow-widget/AppGameCollectionFollowWidget.vue';
@@ -45,7 +51,12 @@ import { enforceLocation } from '~utils/router';
 
 const CollectionThemeKey = 'collection';
 
-const MixableTypes = ['followed', 'playlist', 'owned', 'developer'];
+const MixableTypes = [
+	GameCollectionTypeFollowed,
+	GameCollectionTypePlaylist,
+	GameCollectionTypeOwned,
+	GameCollectionTypeDeveloper,
+];
 
 export default {
 	...defineAppRouteOptions({
@@ -72,7 +83,7 @@ export default {
 
 			// These are the only types with a slug in the URL. The rest have to be
 			// exact param matches and can never change.
-			if (type === 'bundle' || type === 'playlist') {
+			if (type === GameCollectionTypeBundle || type === GameCollectionTypePlaylist) {
 				if (payload && payload.collection) {
 					const redirect = enforceLocation(route, { slug: payload.collection.slug });
 					if (redirect) {
@@ -117,7 +128,7 @@ const routeTitle = computed(() => {
 	if (metaTitle.value) {
 		return metaTitle.value;
 	} else if (type.value) {
-		if (type.value === GameCollectionType.Followed && user.value && collection.value) {
+		if (type.value === GameCollectionTypeFollowed && user.value && collection.value) {
 			const params = { user: '@' + user.value.username };
 			if (collection.value.isOwner) {
 				return $gettext('Your Followed Games');
@@ -125,7 +136,7 @@ const routeTitle = computed(() => {
 				return $gettext('Games Followed by %{ user }', params);
 			}
 		} else if (
-			type.value === GameCollectionType.Playlist &&
+			type.value === GameCollectionTypePlaylist &&
 			playlist.value &&
 			user.value &&
 			collection.value
@@ -139,32 +150,28 @@ const routeTitle = computed(() => {
 			} else {
 				return $gettext('%{ playlist } by %{ user }', params);
 			}
-		} else if (type.value === GameCollectionType.Developer && user.value && collection.value) {
+		} else if (type.value === GameCollectionTypeDeveloper && user.value && collection.value) {
 			const params = { user: '@' + user.value.username };
 			if (collection.value.isOwner) {
 				return $gettext('Your Games');
 			} else {
 				return $gettext('Games by %{ user }', params);
 			}
-		} else if (type.value === GameCollectionType.Owned && user.value && collection.value) {
+		} else if (type.value === GameCollectionTypeOwned && user.value && collection.value) {
 			const params = { user: '@' + user.value.username };
 			if (collection.value.isOwner) {
 				return $gettext('Your Owned Games');
 			} else {
 				return $gettext('Games Owned by %{ user }', params);
 			}
-		} else if (
-			type.value === GameCollectionType.Recommended &&
-			collection.value &&
-			user.value
-		) {
+		} else if (type.value === GameCollectionTypeRecommended && collection.value && user.value) {
 			const params = { user: '@' + user.value.username };
 			if (collection.value.isOwner) {
 				return $gettext('Your Daily Mix');
 			} else {
 				return $gettext('Daily Mix for %{ user }', params);
 			}
-		} else if (type.value === GameCollectionType.Bundle && bundle.value) {
+		} else if (type.value === GameCollectionTypeBundle && bundle.value) {
 			return bundle.value.title;
 		}
 	}
@@ -185,7 +192,7 @@ const processedId = computed(() => {
 });
 
 const shouldShowFollowers = toRef(() => {
-	return type.value !== GameCollectionType.Bundle && type.value !== GameCollectionType.Owned;
+	return type.value !== GameCollectionTypeBundle && type.value !== GameCollectionTypeOwned;
 });
 
 const shouldShowFollow = computed(() => {
@@ -194,14 +201,14 @@ const shouldShowFollow = computed(() => {
 	}
 
 	// Don't show follow for owned collections
-	if (collection.value.isOwner || collection.value.type === GameCollectionType.Owned) {
+	if (collection.value.isOwner || collection.value.type === GameCollectionTypeOwned) {
 		return false;
 	}
 
 	// Special case for developer collections: They prompt to follow the user instead of a playlist,
 	// so we need to make sure we hide the button if the user is blocked.
 	if (
-		collection.value.type === 'developer' &&
+		collection.value.type === GameCollectionTypeDeveloper &&
 		collection.value.owner &&
 		sessionUser.value &&
 		collection.value.owner.id !== sessionUser.value.id
@@ -215,14 +222,14 @@ const shouldShowFollow = computed(() => {
 const shouldShowEditPlaylist = computed(() => {
 	return (
 		!shouldShowFollow.value &&
-		collection.value.type === GameCollectionType.Playlist &&
+		collection.value.type === GameCollectionTypePlaylist &&
 		collection.value.isOwner
 	);
 });
 
 const canReorder = computed(() => {
 	return (
-		collection.value.type === GameCollectionType.Developer &&
+		collection.value.type === GameCollectionTypeDeveloper &&
 		collection.value.isOwner &&
 		(filtering.value === null || filtering.value.areTagFiltersEmpty)
 	);
@@ -243,7 +250,7 @@ const { reload: reloadRoute, isLoading } = createAppRoute({
 		if (!listing.value || !filtering.value) {
 			filtering.value = new GameFilteringContainer(route);
 			listing.value = new GameListingContainer({
-				loadInfinitely: type.value === GameCollectionType.Developer,
+				loadInfinitely: type.value === GameCollectionTypeDeveloper,
 			});
 		}
 
@@ -271,12 +278,12 @@ const { reload: reloadRoute, isLoading } = createAppRoute({
 
 		user.value = null;
 		if (
-			type.value === GameCollectionType.Followed ||
-			type.value === GameCollectionType.Owned ||
-			type.value === GameCollectionType.Recommended
+			type.value === GameCollectionTypeFollowed ||
+			type.value === GameCollectionTypeOwned ||
+			type.value === GameCollectionTypeRecommended
 		) {
 			user.value = new UserModel(payload.user);
-		} else if (type.value === GameCollectionType.Developer) {
+		} else if (type.value === GameCollectionTypeDeveloper) {
 			user.value = new UserModel(payload.developer);
 		} else if (playlist.value) {
 			user.value = playlist.value.user;
@@ -388,7 +395,7 @@ async function loadMore() {
 	<template v-if="collection">
 		<AppPageHeader
 			class="library-collection-header"
-			:hide-nav="type === 'bundle'"
+			:hide-nav="type === GameCollectionTypeBundle"
 			:autoscroll-anchor-key="collection._id"
 		>
 			<div class="row collection-copy">
@@ -405,7 +412,7 @@ async function loadMore() {
 							<!--
 								Followed Games
 							-->
-							<template v-if="type === 'followed'">
+							<template v-if="type === GameCollectionTypeFollowed">
 								<template v-if="collection.isOwner">
 									<h1>
 										{{ $gettext(`Your Followed Games`) }}
@@ -454,7 +461,7 @@ async function loadMore() {
 							<!--
 								Developer Games
 							-->
-							<template v-else-if="type === 'developer'">
+							<template v-else-if="type === GameCollectionTypeDeveloper">
 								<template v-if="collection.isOwner">
 									<h1>
 										{{ $gettext(`Your Games`) }}
@@ -511,7 +518,7 @@ async function loadMore() {
 							<!--
 								Owned Games
 							-->
-							<template v-else-if="type === 'owned'">
+							<template v-else-if="type === GameCollectionTypeOwned">
 								<template v-if="collection.isOwner">
 									<h1>
 										{{ $gettext(`Your Owned Games`) }}
@@ -553,7 +560,7 @@ async function loadMore() {
 							<!--
 								Recommended Games
 							-->
-							<template v-else-if="type === 'recommended'">
+							<template v-else-if="type === GameCollectionTypeRecommended">
 								<template v-if="collection.isOwner">
 									<h1>
 										{{ $gettext(`Your Daily Mix`) }}
@@ -591,7 +598,7 @@ async function loadMore() {
 							<!--
 								Playlist
 							-->
-							<template v-else-if="type === 'playlist' && playlist">
+							<template v-else-if="type === GameCollectionTypePlaylist && playlist">
 								<h1>
 									{{ playlist.name }}
 								</h1>
@@ -616,7 +623,7 @@ async function loadMore() {
 							<!--
 								Bundle
 							-->
-							<template v-else-if="type === 'bundle' && bundle">
+							<template v-else-if="type === GameCollectionTypeBundle && bundle">
 								<h1>{{ bundle.title }}</h1>
 								<p class="text-muted small">{{ bundle.description }}</p>
 							</template>
@@ -701,11 +708,14 @@ async function loadMore() {
 					@sort="$event => onSortedGames($event)"
 				>
 					<template
-						v-if="type === 'playlist' || type === 'followed'"
+						v-if="
+							type === GameCollectionTypePlaylist ||
+							type === GameCollectionTypeFollowed
+						"
 						#thumbnail-controls="props"
 					>
 						<AppButton
-							v-if="type === 'playlist' && collection.isOwner"
+							v-if="type === GameCollectionTypePlaylist && collection.isOwner"
 							v-app-tooltip="$gettext(`Remove from playlist`)"
 							icon="remove"
 							circle
@@ -714,7 +724,7 @@ async function loadMore() {
 						/>
 
 						<AppButton
-							v-if="type === 'followed' && collection.isOwner"
+							v-if="type === GameCollectionTypeFollowed && collection.isOwner"
 							v-app-tooltip="$gettext(`Stop following`)"
 							icon="remove"
 							circle

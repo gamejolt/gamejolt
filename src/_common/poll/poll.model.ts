@@ -1,10 +1,10 @@
 import { Model } from '~common/model/model.service';
 import { buildPollItemForPoll, PollItemModel } from '~common/poll/item/item.model';
 
-export const enum PollStatus {
-	Active = 'active',
-	Removed = 'removed',
-}
+export const PollStatusActive = 'active';
+export const PollStatusRemoved = 'removed';
+
+export type PollStatus = typeof PollStatusActive | typeof PollStatusRemoved;
 
 export class PollModel extends Model {
 	declare fireside_post_id: number;

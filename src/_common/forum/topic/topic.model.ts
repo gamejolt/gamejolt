@@ -2,11 +2,14 @@ import { ForumPostModel } from '~common/forum/post/post.model';
 import { Model } from '~common/model/model.service';
 import { UserModel } from '~common/user/user.model';
 
-export const enum ForumTopicStatus {
-	Active = 'active',
-	Spam = 'spam',
-	Removed = 'removed',
-}
+export const ForumTopicStatusActive = 'active';
+export const ForumTopicStatusSpam = 'spam';
+export const ForumTopicStatusRemoved = 'removed';
+
+export type ForumTopicStatus =
+	| typeof ForumTopicStatusActive
+	| typeof ForumTopicStatusSpam
+	| typeof ForumTopicStatusRemoved;
 
 export class ForumTopicModel extends Model {
 	declare user_id: number;

@@ -30,7 +30,8 @@ import { GameModel } from '~common/game/game.model';
 import {
 	$saveGamePackage,
 	GamePackageModel,
-	GamePackageVisibility,
+	GamePackageVisibilityPrivate,
+	GamePackageVisibilityPublic,
 } from '~common/game/package/package.model';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
@@ -40,7 +41,7 @@ import {
 	getPromotionalSellablePricing,
 	SellablePricingModel,
 } from '~common/sellable/pricing/pricing.model';
-import { SellableModel, SellableType } from '~common/sellable/sellable.model';
+import { SellableModel, SellableTypeFree } from '~common/sellable/sellable.model';
 import { useCommonStore } from '~common/store/common-store';
 import AppTimeAgo from '~common/time/AppTimeAgo.vue';
 import { Timezone, TimezoneData } from '~common/timezone/timezone.service';
@@ -90,10 +91,6 @@ const pricings = ref<SellablePricingModel[]>([]);
 const originalPricing = ref<SellablePricingModel | null>(null);
 const promotionalPricing = ref<SellablePricingModel | null>(null);
 const timezones = ref<{ [region: string]: (TimezoneData & { label?: string })[] }>({});
-
-const GamePackageVisibilityPublic = GamePackageVisibility.Public;
-const GamePackageVisibilityPrivate = GamePackageVisibility.Private;
-
 const form: FormController<FormGamePackageModel> = createForm<FormGamePackageModel>({
 	model: toRef(props, 'model') as Ref<FormGamePackageModel | undefined>,
 	modelClass: GamePackageModel as any,
@@ -148,12 +145,12 @@ const form: FormController<FormGamePackageModel> = createForm<FormGamePackageMod
 			form.formModel.primary = true;
 		}
 
-		form.formModel.pricing_type = SellableType.Free;
+		form.formModel.pricing_type = SellableTypeFree;
 		form.formModel.sale_start = startOfTomorrow().getTime();
 		form.formModel.sale_end = startOfDay(addWeeks(Date.now(), 1)).getTime();
 
 		if (form.method === 'add') {
-			form.formModel.visibility = GamePackageVisibility.Public;
+			form.formModel.visibility = GamePackageVisibilityPublic;
 			if (payload.hasDefaultPackage) {
 				form.formModel.title = '';
 			} else {
@@ -166,7 +163,7 @@ const form: FormController<FormGamePackageModel> = createForm<FormGamePackageMod
 
 			form.formModel.primary = sellable!.primary;
 
-			if (sellable!.type !== 'free') {
+			if (sellable!.type !== SellableTypeFree) {
 				form.formModel.pricing_type = sellable!.type;
 
 				originalPricing.value = getOriginalSellablePricing(pricings.value) || null;

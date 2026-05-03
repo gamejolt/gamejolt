@@ -13,7 +13,10 @@ import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
 import { validateMaxLength, validateUsername } from '~common/form-vue/validators';
 import AppGrecaptchaWidget from '~common/grecaptcha/widget/AppGrecaptchaWidget.vue';
-import { LinkedAccountProvider } from '~common/linked-account/linked-account.model';
+import {
+	LinkedAccountProvider,
+	LinkedAccountProviderGoogle,
+} from '~common/linked-account/linked-account.model';
 import { LinkedAccounts } from '~common/linked-account/linked-accounts.service';
 import AppLoading from '~common/loading/AppLoading.vue';
 import AppTranslate from '~common/translate/AppTranslate.vue';
@@ -267,7 +270,7 @@ function linkedChoose(provider: LinkedAccountProvider) {
 					solid
 					block
 					:disabled="Connection.isClientOffline"
-					@click="linkedChoose(LinkedAccountProvider.Google)"
+					@click="linkedChoose(LinkedAccountProviderGoogle)"
 				>
 					<img :src="googleImage" alt="" />
 					<span><AppTranslate>Sign in with Google</AppTranslate></span>

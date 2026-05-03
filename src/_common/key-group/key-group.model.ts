@@ -1,13 +1,18 @@
 import { GamePackageModel } from '~common/game/package/package.model';
 import { Model } from '~common/model/model.service';
 
-export const enum KeyGroupType {
-	Order = 'order',
-	Anonymous = 'anonymous',
-	AnonymousClaim = 'anonymous-claim',
-	Email = 'email',
-	User = 'user',
-}
+export const KeyGroupTypeOrder = 'order';
+export const KeyGroupTypeAnonymous = 'anonymous';
+export const KeyGroupTypeAnonymousClaim = 'anonymous-claim';
+export const KeyGroupTypeEmail = 'email';
+export const KeyGroupTypeUser = 'user';
+
+export type KeyGroupType =
+	| typeof KeyGroupTypeOrder
+	| typeof KeyGroupTypeAnonymous
+	| typeof KeyGroupTypeAnonymousClaim
+	| typeof KeyGroupTypeEmail
+	| typeof KeyGroupTypeUser;
 
 export class KeyGroupModel extends Model {
 	declare game_id: number;

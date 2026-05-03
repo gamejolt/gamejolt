@@ -4,12 +4,18 @@ import { AvatarFrameModel } from '~common/avatar/frame.model';
 import { BackgroundModel } from '~common/background/background.model';
 import {
 	CreatorChangeRequestModel,
-	CreatorChangeRequestStatus,
+	CreatorChangeRequestStatusInReview,
+	CreatorChangeRequestStatusRejected,
+	CreatorChangeRequestStatusSubmitted,
 } from '~common/creator/change-request/creator-change-request.model';
 import {
 	getShopProductResource,
 	ShopProductModel,
 	ShopProductResource,
+	ShopProductResourceAvatarFrame,
+	ShopProductResourceBackground,
+	ShopProductResourceSticker,
+	ShopProductResourceStickerPack,
 } from '~common/shop/product/product-model';
 import { StickerPackModel } from '~common/sticker/pack/pack.model';
 import { StickerModel } from '~common/sticker/sticker.model';
@@ -39,10 +45,10 @@ export interface ShopDashProductStates {
 
 // Simple mapping of the product resources to their "pretty" route params.
 const productResourceParams = {
-	[ShopProductResource.AvatarFrame]: 'avatar-frame',
-	[ShopProductResource.Background]: 'background',
-	[ShopProductResource.Sticker]: 'sticker',
-	[ShopProductResource.StickerPack]: 'sticker-pack',
+	[ShopProductResourceAvatarFrame]: 'avatar-frame',
+	[ShopProductResourceBackground]: 'background',
+	[ShopProductResourceSticker]: 'sticker',
+	[ShopProductResourceStickerPack]: 'sticker-pack',
 } as const satisfies Record<ShopProductResource, string>;
 
 /**
@@ -75,19 +81,22 @@ export function getShopDashProductResourceFromParam(param: ShopDashProductResour
 	}
 }
 
-export const enum ShopDashProductType {
-	Basic = 'basic',
-	Premium = 'premium',
-	Reward = 'reward',
-}
+export const ShopDashProductTypeBasic = 'basic';
+export const ShopDashProductTypePremium = 'premium';
+export const ShopDashProductTypeReward = 'reward';
+
+export type ShopDashProductType =
+	| typeof ShopDashProductTypeBasic
+	| typeof ShopDashProductTypePremium
+	| typeof ShopDashProductTypeReward;
 
 export function getShopDashProductType(product: ShopProductModel): ShopDashProductType {
 	if (product.is_premium) {
-		return ShopDashProductType.Premium;
+		return ShopDashProductTypePremium;
 	} else if (product instanceof StickerPackModel) {
-		return ShopDashProductType.Reward;
+		return ShopDashProductTypeReward;
 	} else {
-		return ShopDashProductType.Basic;
+		return ShopDashProductTypeBasic;
 	}
 }
 
@@ -100,10 +109,10 @@ export function createShopDashStore() {
 
 	const changeRequests = ref(new Map<string, CreatorChangeRequestModel>());
 
-	const avatarFrames = _makeEmptyGroup<AvatarFrameModel>(ShopProductResource.AvatarFrame);
-	const backgrounds = _makeEmptyGroup<BackgroundModel>(ShopProductResource.Background);
-	const stickerPacks = _makeEmptyGroup<StickerPackModel>(ShopProductResource.StickerPack);
-	const stickers = _makeEmptyGroup<StickerModel>(ShopProductResource.Sticker);
+	const avatarFrames = _makeEmptyGroup<AvatarFrameModel>(ShopProductResourceAvatarFrame);
+	const backgrounds = _makeEmptyGroup<BackgroundModel>(ShopProductResourceBackground);
+	const stickerPacks = _makeEmptyGroup<StickerPackModel>(ShopProductResourceStickerPack);
+	const stickers = _makeEmptyGroup<StickerModel>(ShopProductResourceSticker);
 
 	function _makeEmptyGroup<T extends ShopProductModel>(resource: ShopProductResource) {
 		const items = ref<T[]>([]);
@@ -157,13 +166,13 @@ export function createShopDashStore() {
 
 	function getGroupForResource(resource: ShopProductResource) {
 		switch (resource) {
-			case ShopProductResource.AvatarFrame:
+			case ShopProductResourceAvatarFrame:
 				return avatarFrames.value;
-			case ShopProductResource.Background:
+			case ShopProductResourceBackground:
 				return backgrounds.value;
-			case ShopProductResource.StickerPack:
+			case ShopProductResourceStickerPack:
 				return stickerPacks.value;
-			case ShopProductResource.Sticker:
+			case ShopProductResourceSticker:
 				return stickers.value;
 			default:
 				return assertNever(resource);
@@ -240,9 +249,9 @@ export function createShopDashStore() {
 		return {
 			published,
 			inReview:
-				status === CreatorChangeRequestStatus.Submitted ||
-				status === CreatorChangeRequestStatus.InReview,
-			rejected: status === CreatorChangeRequestStatus.Rejected,
+				status === CreatorChangeRequestStatusSubmitted ||
+				status === CreatorChangeRequestStatusInReview,
+			rejected: status === CreatorChangeRequestStatusRejected,
 		};
 	}
 

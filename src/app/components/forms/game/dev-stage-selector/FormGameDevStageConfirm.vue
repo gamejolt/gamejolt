@@ -1,6 +1,10 @@
 <script lang="ts" setup>
 import AppButton from '~common/button/AppButton.vue';
-import { GameDevelopmentStatus, GameModel } from '~common/game/game.model';
+import {
+	GameDevelopmentStatusDevlog,
+	GameDevelopmentStatusWip,
+	GameModel,
+} from '~common/game/game.model';
 import AppModal from '~common/modal/AppModal.vue';
 import { useModal } from '~common/modal/modal.service';
 import AppTranslate from '~common/translate/AppTranslate.vue';
@@ -16,18 +20,18 @@ const { game, stage } = defineProps<Props>();
 const modal = useModal()!;
 
 function getStatusTranslated(s: number) {
-	if (s === GameDevelopmentStatus.Devlog) {
+	if (s === GameDevelopmentStatusDevlog) {
 		return $gettext('devlog-only');
-	} else if (s === GameDevelopmentStatus.Wip) {
+	} else if (s === GameDevelopmentStatusWip) {
 		return $gettext('early access');
 	}
 	return $gettext('complete');
 }
 
 function getStatusString(s: number) {
-	if (s === GameDevelopmentStatus.Devlog) {
+	if (s === GameDevelopmentStatusDevlog) {
 		return 'devlog';
-	} else if (s === GameDevelopmentStatus.Wip) {
+	} else if (s === GameDevelopmentStatusWip) {
 		return 'wip';
 	}
 	return 'complete';

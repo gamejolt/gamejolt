@@ -3,18 +3,23 @@ import { GameBuildModel } from '~common/game/build/build.model';
 import { GameModel } from '~common/game/game.model';
 import { GameReleaseModel } from '~common/game/release/release.model';
 import { Model } from '~common/model/model.service';
-import { SellableModel } from '~common/sellable/sellable.model';
+import { SellableModel, SellableTypePwyw } from '~common/sellable/sellable.model';
 
-export const enum GamePackageStatus {
-	Hidden = 'hidden',
-	Active = 'active',
-	Removed = 'removed',
-}
+export const GamePackageStatusHidden = 'hidden';
+export const GamePackageStatusActive = 'active';
+export const GamePackageStatusRemoved = 'removed';
 
-export const enum GamePackageVisibility {
-	Private = 'private',
-	Public = 'public',
-}
+export type GamePackageStatus =
+	| typeof GamePackageStatusHidden
+	| typeof GamePackageStatusActive
+	| typeof GamePackageStatusRemoved;
+
+export const GamePackageVisibilityPrivate = 'private';
+export const GamePackageVisibilityPublic = 'public';
+
+export type GamePackageVisibility =
+	| typeof GamePackageVisibilityPrivate
+	| typeof GamePackageVisibilityPublic;
 
 export class GamePackageModel extends Model {
 	declare game_id: number;
@@ -52,7 +57,9 @@ export class GamePackageModel extends Model {
 	}
 
 	shouldShowNamePrice() {
-		return this._sellable && this._sellable.type === 'pwyw' && !this._sellable.is_owned;
+		return (
+			this._sellable && this._sellable.type === SellableTypePwyw && !this._sellable.is_owned
+		);
 	}
 }
 

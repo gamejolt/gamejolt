@@ -10,7 +10,7 @@ import { unref, watch } from 'vue';
 import { Router } from 'vue-router';
 
 import { AuthMethod } from '~common/auth/auth.service';
-import { CommentVoteType } from '~common/comment/vote/vote-model';
+import { CommentVoteTypeDownvote, CommentVoteTypeUpvote } from '~common/comment/vote/vote-model';
 import { ConfigOption, ensureConfig } from '~common/config/config.service';
 import { Currency } from '~common/currency/currency-type';
 import { DeviceArch, DeviceOs, isDynamicGoogleBot } from '~common/device/device.service';
@@ -375,9 +375,9 @@ export function trackCommentVote(vote: number, params: { failed: boolean; toggle
 	const { failed, toggled } = params;
 
 	let type = '';
-	if (vote === CommentVoteType.Upvote) {
+	if (vote === CommentVoteTypeUpvote) {
 		type = 'like';
-	} else if (vote === CommentVoteType.Downvote) {
+	} else if (vote === CommentVoteTypeDownvote) {
 		type = 'dislike';
 	} else {
 		return;

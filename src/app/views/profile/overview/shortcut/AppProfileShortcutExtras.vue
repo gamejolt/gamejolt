@@ -11,7 +11,7 @@ import AppPopper from '~common/popper/AppPopper.vue';
 import { showReportModal } from '~common/report/modal/modal.service';
 import { copyShareLink } from '~common/share/share.service';
 import { useCommonStore } from '~common/store/common-store';
-import { UserFriendshipState } from '~common/user/friendship/friendship.model';
+import { UserFriendshipStateFriends } from '~common/user/friendship/friendship.model';
 
 const router = useRouter();
 
@@ -71,7 +71,7 @@ async function blockUser() {
 					{{ $gettext(`Report user`) }}
 				</a>
 				<a
-					v-if="userFriendship && userFriendship.state === UserFriendshipState.Friends"
+					v-if="userFriendship && userFriendship.state === UserFriendshipStateFriends"
 					class="list-group-item has-icon"
 					@click="removeFriend()"
 				>

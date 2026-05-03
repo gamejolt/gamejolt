@@ -4,7 +4,11 @@ import { ActivityFeedService } from '~app/components/activity/feed/feed-service'
 import { ActivityFeedView } from '~app/components/activity/feed/view';
 import { getChannelPathFromRoute } from '~app/views/communities/view/view.store';
 import { Api } from '~common/api/api.service';
-import { CommunityModel, CommunityPresetChannelType } from '~common/community/community.model';
+import {
+	CommunityModel,
+	CommunityPresetChannelTypeALL,
+	CommunityPresetChannelTypeFEATURED,
+} from '~common/community/community.model';
 import { configCommunityFrontpageFeedType } from '~common/config/config.service';
 
 /**
@@ -15,7 +19,7 @@ export function doFeedChannelPayload(route: RouteLocationNormalized) {
 	const sort = getFeedChannelSort(route);
 	let apiOverviewUrl = `/web/communities/overview/${route.params.path}/${channel}?sort=${sort}`;
 	if (
-		channel === CommunityPresetChannelType.FEATURED &&
+		channel === CommunityPresetChannelTypeFEATURED &&
 		configCommunityFrontpageFeedType.value !== configCommunityFrontpageFeedType.defaultValue
 	) {
 		apiOverviewUrl += '&frontpage-feed-type=' + configCommunityFrontpageFeedType.value;
@@ -38,11 +42,11 @@ export function resolveFeedChannelPayload(
 
 	let feedName = null;
 	switch (channel) {
-		case CommunityPresetChannelType.FEATURED:
+		case CommunityPresetChannelTypeFEATURED:
 			feedName = 'community-featured';
 			break;
 
-		case CommunityPresetChannelType.ALL:
+		case CommunityPresetChannelTypeALL:
 			feedName = 'community-all';
 			break;
 
@@ -76,7 +80,7 @@ export function getFeedChannelFetchUrl(route: RouteLocationNormalized) {
 	const sort = getFeedChannelSort(route);
 	const channels: string[] = [sort];
 
-	if (channel !== CommunityPresetChannelType.ALL) {
+	if (channel !== CommunityPresetChannelTypeALL) {
 		channels.push(channel);
 	}
 
@@ -87,7 +91,7 @@ export function getFeedChannelFetchUrl(route: RouteLocationNormalized) {
 		urlParams.push(...channels.map(name => `channels[]=` + encodeURIComponent(name)));
 	}
 	if (
-		channel === CommunityPresetChannelType.FEATURED &&
+		channel === CommunityPresetChannelTypeFEATURED &&
 		configCommunityFrontpageFeedType.value !== configCommunityFrontpageFeedType.defaultValue
 	) {
 		urlParams.push(

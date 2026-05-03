@@ -20,7 +20,14 @@ import { FiresidePostCommunityModel } from '~common/fireside/post/community/comm
 import { FiresidePostModel } from '~common/fireside/post/post-model';
 import { GameTrophyModel } from '~common/game/trophy/trophy.model';
 import { showInfoGrowl } from '~common/growls/growls.service';
-import { NotificationModel, NotificationType } from '~common/notification/notification-model';
+import {
+	NotificationModel,
+	NotificationTypeChargedSticker,
+	NotificationTypeGameTrophyAchieved,
+	NotificationTypePostAdd,
+	NotificationTypePostFeaturedInCommunity,
+	NotificationTypeSiteTrophyAchieved,
+} from '~common/notification/notification-model';
 import { NotificationText } from '~common/notification/notification-text.service';
 import { isOnboarding } from '~common/onboarding/onboarding.service';
 import { SettingFeedNotifications } from '~common/settings/settings.service';
@@ -341,7 +348,7 @@ export class GridClient {
 
 		if (message !== undefined) {
 			let title = $gettext('New Notification');
-			if (notification.type === NotificationType.PostAdd) {
+			if (notification.type === NotificationTypePostAdd) {
 				if (notification.from_model instanceof UserModel) {
 					// We send a notification to the author of the post.
 					// Do not show a notification in that case, the purpose is to increment the activity feed counter.
@@ -366,7 +373,7 @@ export class GridClient {
 				} else {
 					title = $gettext('New Post');
 				}
-			} else if (notification.type === NotificationType.GameTrophyAchieved) {
+			} else if (notification.type === NotificationTypeGameTrophyAchieved) {
 				if (
 					notification.action_model instanceof UserGameTrophyModel &&
 					notification.action_model.trophy instanceof GameTrophyModel
@@ -375,7 +382,7 @@ export class GridClient {
 					message = notification.action_model.trophy.title;
 					icon = getTrophyImg(notification.action_model.trophy);
 				}
-			} else if (notification.type === NotificationType.SiteTrophyAchieved) {
+			} else if (notification.type === NotificationTypeSiteTrophyAchieved) {
 				if (
 					notification.action_model instanceof UserSiteTrophyModel &&
 					notification.action_model.trophy instanceof SiteTrophyModel
@@ -384,11 +391,11 @@ export class GridClient {
 					message = notification.action_model.trophy.title;
 					icon = getTrophyImg(notification.action_model.trophy);
 				}
-			} else if (notification.type === NotificationType.PostFeaturedInCommunity) {
+			} else if (notification.type === NotificationTypePostFeaturedInCommunity) {
 				if (notification.action_model instanceof FiresidePostCommunityModel) {
 					icon = notification.action_model.community.img_thumbnail;
 				}
-			} else if (notification.type === NotificationType.ChargedSticker) {
+			} else if (notification.type === NotificationTypeChargedSticker) {
 				title = $gettext('Charged Sticker');
 			}
 

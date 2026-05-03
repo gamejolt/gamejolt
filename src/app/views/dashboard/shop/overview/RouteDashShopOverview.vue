@@ -7,6 +7,12 @@ import { useShopDashStore } from '~app/views/dashboard/shop/shop.store';
 import AppLinkHelp from '~common/link/AppLinkHelp.vue';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import { ShopProductModel, ShopProductResource } from '~common/shop/product/product-model';
+import {
+	ShopProductResourceAvatarFrame,
+	ShopProductResourceBackground,
+	ShopProductResourceSticker,
+	ShopProductResourceStickerPack,
+} from '~common/shop/product/product-model';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 import { StickerPackRatio } from '~common/sticker/pack/AppStickerPack.vue';
 import { StickerPackModel } from '~common/sticker/pack/pack.model';
@@ -47,19 +53,19 @@ function getPublishedCount(items: ShopProductModel[]) {
 function getCanAddForProductResource(resource: ShopProductResource) {
 	switch (resource) {
 		// Can only add premium.
-		case ShopProductResource.AvatarFrame:
+		case ShopProductResourceAvatarFrame:
 			return avatarFrames.value.canEditPremium === true;
 
 		// Can only add premium.
-		case ShopProductResource.Background:
+		case ShopProductResourceBackground:
 			return backgrounds.value.canEditPremium === true;
 
 		// Can only add premium.
-		case ShopProductResource.StickerPack:
+		case ShopProductResourceStickerPack:
 			return stickerPacks.value.canEditPremium === true;
 
 		// Need to check both fields.
-		case ShopProductResource.Sticker:
+		case ShopProductResourceSticker:
 			return (stickers.value.canEditFree || stickers.value.canEditPremium) === true;
 	}
 }
@@ -69,32 +75,34 @@ function getLimitText(current: number, max: number, type: string) {
 }
 
 const sectionData = computed(() => {
-	return [
-		{
-			resource: ShopProductResource.AvatarFrame,
-			label: $gettext(`Avatar frames`),
-			group: avatarFrames.value,
-			ratio: 1,
-		},
-		{
-			resource: ShopProductResource.Background,
-			label: $gettext(`Backgrounds`),
-			group: backgrounds.value,
-			ratio: 1,
-		},
-		{
-			resource: ShopProductResource.StickerPack,
-			label: $gettext(`Sticker packs`),
-			group: stickerPacks.value,
-			ratio: StickerPackRatio,
-		},
-		{
-			resource: ShopProductResource.Sticker,
-			label: $gettext(`Stickers`),
-			group: stickers.value,
-			ratio: 1,
-		},
-	].map(i => ({
+	const sections: { resource: ShopProductResource; label: string; group: any; ratio: number }[] =
+		[
+			{
+				resource: ShopProductResourceAvatarFrame,
+				label: $gettext(`Avatar frames`),
+				group: avatarFrames.value,
+				ratio: 1,
+			},
+			{
+				resource: ShopProductResourceBackground,
+				label: $gettext(`Backgrounds`),
+				group: backgrounds.value,
+				ratio: 1,
+			},
+			{
+				resource: ShopProductResourceStickerPack,
+				label: $gettext(`Sticker packs`),
+				group: stickerPacks.value,
+				ratio: StickerPackRatio,
+			},
+			{
+				resource: ShopProductResourceSticker,
+				label: $gettext(`Stickers`),
+				group: stickers.value,
+				ratio: 1,
+			},
+		];
+	return sections.map(i => ({
 		...i,
 		canAdd: getCanAddForProductResource(i.resource),
 	}));

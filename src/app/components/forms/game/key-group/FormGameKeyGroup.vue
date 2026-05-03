@@ -13,8 +13,15 @@ import AppFormControlRadio from '~common/form-vue/controls/AppFormControlRadio.v
 import AppFormControlTextarea from '~common/form-vue/controls/AppFormControlTextarea.vue';
 import { validateMaxLength, validateMaxValue, validateMinValue } from '~common/form-vue/validators';
 import { GameModel } from '~common/game/game.model';
-import { GamePackageModel, GamePackageVisibility } from '~common/game/package/package.model';
-import { $saveKeyGroup, KeyGroupModel, KeyGroupType } from '~common/key-group/key-group.model';
+import { GamePackageModel, GamePackageVisibilityPrivate } from '~common/game/package/package.model';
+import {
+	$saveKeyGroup,
+	KeyGroupModel,
+	KeyGroupTypeAnonymous,
+	KeyGroupTypeAnonymousClaim,
+	KeyGroupTypeEmail,
+	KeyGroupTypeUser,
+} from '~common/key-group/key-group.model';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import AppTranslate from '~common/translate/AppTranslate.vue';
 
@@ -36,13 +43,6 @@ const { game, packages } = props;
 const emit = defineEmits<{
 	submit: [keyGroup: KeyGroupModel];
 }>();
-
-const GamePackageVisibilityPrivate = GamePackageVisibility.Private;
-const KeyGroupTypeAnonymous = KeyGroupType.Anonymous;
-const KeyGroupTypeAnonymousClaim = KeyGroupType.AnonymousClaim;
-const KeyGroupTypeEmail = KeyGroupType.Email;
-const KeyGroupTypeUser = KeyGroupType.User;
-
 const form: FormController<FormModel> = createForm<FormModel>({
 	model: toRef(props, 'model'),
 	modelClass: KeyGroupModel,

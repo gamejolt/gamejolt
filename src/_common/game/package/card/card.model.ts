@@ -4,7 +4,7 @@ import {
 	canRunGameBuild,
 	type GameBuildModel,
 	GameBuildPlatformSupportInfo,
-	GameBuildType,
+	GameBuildTypeRom,
 } from '~common/game/build/build.model';
 import { GameReleaseModel } from '~common/game/release/release.model';
 import { Jolticon } from '~common/jolticon/AppJolticon.vue';
@@ -108,7 +108,7 @@ export class GamePackageCardModel {
 				}
 				// ROMs are special cases as they can be treated as
 				// downloadables or emulated on the browser.
-				else if (build.type === GameBuildType.Rom) {
+				else if (build.type === GameBuildTypeRom) {
 					browserBasedBuilds[build.type] = build;
 					this.platformSupport.push(build.type);
 					// Adding them to other builds lets them show as downloadables.
@@ -352,7 +352,7 @@ export class GamePackageCardModel {
 
 				// ROMs were added to other builds to make sure they are
 				// downloadable. Show the ROM icon for them tho.
-				if (build.type === GameBuildType.Rom) {
+				if (build.type === GameBuildTypeRom) {
 					supportKey = 'rom';
 				}
 

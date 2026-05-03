@@ -14,20 +14,27 @@ export type Roles =
 	| 'moderator'
 	| 'jam-organizer';
 
-export const enum CollaboratorStatus {
-	Active = 'active',
-	Invite = 'invite',
-}
+export const CollaboratorStatusActive = 'active';
+export const CollaboratorStatusInvite = 'invite';
 
-export const enum CollaboratorRole {
-	Owner = 'owner',
-	EqualCollaborator = 'collaborator',
-	CommunityManager = 'community-manager',
-	Developer = 'developer',
-	DJ = 'dj',
-	Moderator = 'moderator',
-	JamOrganizer = 'jam-organizer',
-}
+export type CollaboratorStatus = typeof CollaboratorStatusActive | typeof CollaboratorStatusInvite;
+
+export const CollaboratorRoleOwner = 'owner';
+export const CollaboratorRoleEqualCollaborator = 'collaborator';
+export const CollaboratorRoleCommunityManager = 'community-manager';
+export const CollaboratorRoleDeveloper = 'developer';
+export const CollaboratorRoleDJ = 'dj';
+export const CollaboratorRoleModerator = 'moderator';
+export const CollaboratorRoleJamOrganizer = 'jam-organizer';
+
+export type CollaboratorRole =
+	| typeof CollaboratorRoleOwner
+	| typeof CollaboratorRoleEqualCollaborator
+	| typeof CollaboratorRoleCommunityManager
+	| typeof CollaboratorRoleDeveloper
+	| typeof CollaboratorRoleDJ
+	| typeof CollaboratorRoleModerator
+	| typeof CollaboratorRoleJamOrganizer;
 
 export class CollaboratorModel extends Model {
 	declare resource: 'Game' | 'Community';

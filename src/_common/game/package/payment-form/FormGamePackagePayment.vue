@@ -25,10 +25,15 @@ import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppLoading from '~common/loading/AppLoading.vue';
 import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
 import { Navigate } from '~common/navigate/navigate.service';
-import { OrderPaymentMethod } from '~common/order/payment/payment.model';
+import {
+	OrderPaymentMethod,
+	OrderPaymentMethodCCStripe,
+	OrderPaymentMethodPaypal,
+	OrderPaymentMethodWallet,
+} from '~common/order/payment/payment.model';
 import AppPopper from '~common/popper/AppPopper.vue';
 import { getScreen } from '~common/screen/screen-service';
-import { SellableModel, SellableType } from '~common/sellable/sellable.model';
+import { SellableModel, SellableTypePaid, SellableTypePwyw } from '~common/sellable/sellable.model';
 import { useCommonStore } from '~common/store/common-store';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import { $gettext } from '~common/translate/translate.service';
@@ -56,7 +61,7 @@ const { isXs } = getScreen();
 const isBootstrapped = ref(false);
 const isLoadingMethods = ref(true);
 const isProcessing = ref(false);
-const checkoutType = ref<OrderPaymentMethod>(OrderPaymentMethod.CCStripe);
+const checkoutType = ref<OrderPaymentMethod>(OrderPaymentMethodCCStripe);
 const checkoutStep = ref('primary');
 
 const cards = ref<any[]>([]);
@@ -70,14 +75,14 @@ const walletBalance = ref(0);
 const walletTax = ref(0);
 const minOrderAmount = ref(50);
 
-const isNameYourPrice = computed(() => sellable.type === 'pwyw');
+const isNameYourPrice = computed(() => sellable.type === SellableTypePwyw);
 const isPlaying = computed(() => operation === 'play');
 const isDownloading = computed(() => operation === 'download' && !GJ_IS_DESKTOP_APP);
 const isInstalling = computed(() => operation === 'download' && GJ_IS_DESKTOP_APP);
 const pricing = computed(() => sellable.pricings[0]);
 
 const _minOrderAmount = computed(() =>
-	sellable.type === 'paid' ? pricing.value.amount / 100 : minOrderAmount.value / 100
+	sellable.type === SellableTypePaid ? pricing.value.amount / 100 : minOrderAmount.value / 100
 );
 
 const formattedAmount = computed(() => formatCurrency(pricing.value.amount));
@@ -101,7 +106,7 @@ const hasSufficientWalletFunds = computed(() => {
 	const currentAmount = form.formModel.amount * 100; // The formModel amount is a decimal.
 
 	// Paid games have to be more than the amount of the game base price.
-	if (sellable.type === SellableType.Paid && walletBalance.value < sellableAmount + taxAmount) {
+	if (sellable.type === SellableTypePaid && walletBalance.value < sellableAmount + taxAmount) {
 		return false;
 	}
 
@@ -153,7 +158,7 @@ const form: FormController<FormModel> = createForm({
 	onSubmitSuccess(response: any) {
 		if (GJ_IS_DESKTOP_APP) {
 			// Our checkout can be done in client.
-			if (checkoutType.value === OrderPaymentMethod.CCStripe) {
+			if (checkoutType.value === OrderPaymentMethodCCStripe) {
 				Navigate.goto(Environment.checkoutBaseUrl + '/checkout/' + response.cart.hash);
 			} else {
 				// Otherwise we have to open in browser.
@@ -241,11 +246,11 @@ function addMoney(amount: number) {
 
 function collectAddress(chosenCheckoutType: OrderPaymentMethod) {
 	if (addresses.value.length) {
-		if (chosenCheckoutType === OrderPaymentMethod.Paypal) {
+		if (chosenCheckoutType === OrderPaymentMethodPaypal) {
 			checkoutPaypal();
 			form.submit();
 			return;
-		} else if (chosenCheckoutType === OrderPaymentMethod.Wallet) {
+		} else if (chosenCheckoutType === OrderPaymentMethodWallet) {
 			checkoutWallet();
 			return;
 		}
@@ -280,11 +285,11 @@ async function getAddressTax() {
 }
 
 function checkoutCard() {
-	checkoutType.value = OrderPaymentMethod.CCStripe;
+	checkoutType.value = OrderPaymentMethodCCStripe;
 }
 
 function checkoutPaypal() {
-	checkoutType.value = OrderPaymentMethod.Paypal;
+	checkoutType.value = OrderPaymentMethodPaypal;
 }
 
 function startOver() {
@@ -293,7 +298,7 @@ function startOver() {
 
 function checkoutSavedCard(card: any) {
 	const data: any = {
-		payment_method: 'cc-stripe',
+		payment_method: OrderPaymentMethodCCStripe,
 		sellable_id: sellable.id,
 		pricing_id: pricing.value.id,
 		amount: form.formModel.amount * 100,
@@ -304,7 +309,7 @@ function checkoutSavedCard(card: any) {
 
 function checkoutWallet() {
 	const data: any = {
-		payment_method: 'wallet',
+		payment_method: OrderPaymentMethodWallet,
 		sellable_id: sellable.id,
 		pricing_id: pricing.value.id,
 		amount: form.formModel.amount * 100,
@@ -507,7 +512,7 @@ async function doCheckout(setupData: any, chargeData: any) {
 										<span
 											class="saved-card"
 											:class="{ disabled: isLoadingMethods }"
-											@click="collectAddress(OrderPaymentMethod.Wallet)"
+											@click="collectAddress(OrderPaymentMethodWallet)"
 										>
 											<div class="saved-card-avatar">
 												<img
@@ -650,7 +655,7 @@ async function doCheckout(setupData: any, chargeData: any) {
 
 								<AppButton
 									:disabled="!form.valid"
-									@click="collectAddress(OrderPaymentMethod.Paypal)"
+									@click="collectAddress(OrderPaymentMethodPaypal)"
 								>
 									{{ $gettext(`PayPal`) }}
 								</AppButton>
@@ -743,7 +748,7 @@ async function doCheckout(setupData: any, chargeData: any) {
 							</a>
 						</div>
 
-						<div v-if="checkoutType === 'paypal'">
+						<div v-if="checkoutType === OrderPaymentMethodPaypal">
 							<AppFormButton
 								:solid="false"
 								:disabled="!form.valid"
@@ -752,7 +757,7 @@ async function doCheckout(setupData: any, chargeData: any) {
 								{{ $gettext(`Proceed to PayPal`) }}
 							</AppFormButton>
 						</div>
-						<div v-else-if="checkoutType === 'wallet'">
+						<div v-else-if="checkoutType === OrderPaymentMethodWallet">
 							<AppLoading
 								v-if="!calculatedAddressTax && form.valid"
 								class="loading-centered"

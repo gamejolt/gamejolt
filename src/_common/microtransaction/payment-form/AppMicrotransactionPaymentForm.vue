@@ -19,7 +19,11 @@ import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppLoading from '~common/loading/AppLoading.vue';
 import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
 import { Navigate } from '~common/navigate/navigate.service';
-import { OrderPaymentMethod } from '~common/order/payment/payment.model';
+import {
+	OrderPaymentMethodCCStripe,
+	OrderPaymentMethodPaypal,
+	OrderPaymentMethodWallet,
+} from '~common/order/payment/payment.model';
 import AppPopper from '~common/popper/AppPopper.vue';
 import { getScreen } from '~common/screen/screen-service';
 import { SellableModel } from '~common/sellable/sellable.model';
@@ -28,7 +32,10 @@ import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import { $gettext } from '~common/translate/translate.service';
 import { arrayIndexBy } from '~utils/array';
 
-type CheckoutType = 'cc-stripe' | 'paypal' | 'wallet';
+type CheckoutType =
+	| typeof OrderPaymentMethodCCStripe
+	| typeof OrderPaymentMethodPaypal
+	| typeof OrderPaymentMethodWallet;
 type CheckoutStep = 'primary' | 'address';
 
 type FormModel = {
@@ -50,7 +57,7 @@ const { isXs } = getScreen();
 const isBootstrapped = ref(false);
 const isLoadingMethods = ref(true);
 const isProcessing = ref(false);
-const checkoutType = ref('cc-stripe') as Ref<CheckoutType>;
+const checkoutType = ref<CheckoutType>(OrderPaymentMethodCCStripe);
 const checkoutStep = ref('primary') as Ref<CheckoutStep>;
 
 const cards = ref([]) as Ref<any[]>;
@@ -148,7 +155,7 @@ const form: FormController<FormModel> = createForm<FormModel>({
 	onSubmitSuccess(response: any) {
 		if (GJ_IS_DESKTOP_APP) {
 			// Our checkout can be done in client.
-			if (checkoutType.value === OrderPaymentMethod.CCStripe) {
+			if (checkoutType.value === OrderPaymentMethodCCStripe) {
 				Navigate.goto(Environment.checkoutBaseUrl + '/checkout/' + response.cart.hash);
 			} else {
 				// Otherwise we have to open in browser.
@@ -192,11 +199,11 @@ watch(
 
 function collectAddress(newCheckoutType: CheckoutType) {
 	if (addresses.value.length) {
-		if (newCheckoutType === 'paypal') {
+		if (newCheckoutType === OrderPaymentMethodPaypal) {
 			checkoutPaypal();
 			form.submit();
 			return;
-		} else if (newCheckoutType === 'wallet') {
+		} else if (newCheckoutType === OrderPaymentMethodWallet) {
 			checkoutWallet();
 			return;
 		}
@@ -231,11 +238,11 @@ async function getAddressTax() {
 }
 
 function checkoutCard() {
-	checkoutType.value = 'cc-stripe';
+	checkoutType.value = OrderPaymentMethodCCStripe;
 }
 
 function checkoutPaypal() {
-	checkoutType.value = 'paypal';
+	checkoutType.value = OrderPaymentMethodPaypal;
 }
 
 function startOver() {
@@ -244,7 +251,7 @@ function startOver() {
 
 function checkoutSavedCard(card: any) {
 	const data: any = {
-		payment_method: 'cc-stripe',
+		payment_method: OrderPaymentMethodCCStripe,
 		sellable_id: sellable.id,
 		pricing_id: pricing.value.id,
 		amount: pricing.value.amount,
@@ -255,7 +262,7 @@ function checkoutSavedCard(card: any) {
 
 function checkoutWallet() {
 	const data: any = {
-		payment_method: 'wallet',
+		payment_method: OrderPaymentMethodWallet,
 		sellable_id: sellable.id,
 		pricing_id: pricing.value.id,
 		amount: pricing.value.amount,
@@ -367,7 +374,7 @@ async function doCheckout(setupData: any, chargeData: any) {
 									<span
 										class="saved-card"
 										:class="{ disabled: isLoadingMethods }"
-										@click="collectAddress('wallet')"
+										@click="collectAddress(OrderPaymentMethodWallet)"
 									>
 										<div class="saved-card-avatar">
 											<img
@@ -515,7 +522,10 @@ async function doCheckout(setupData: any, chargeData: any) {
 								</template>
 							</AppFormButton>
 
-							<AppButton :disabled="!form.valid" @click="collectAddress('paypal')">
+							<AppButton
+								:disabled="!form.valid"
+								@click="collectAddress(OrderPaymentMethodPaypal)"
+							>
 								{{ $gettext(`PayPal`) }}
 							</AppButton>
 						</div>
@@ -590,7 +600,7 @@ async function doCheckout(setupData: any, chargeData: any) {
 							</a>
 						</div>
 
-						<div v-if="checkoutType === 'paypal'">
+						<div v-if="checkoutType === OrderPaymentMethodPaypal">
 							<AppFormButton
 								:solid="false"
 								:disabled="!form.valid"
@@ -599,7 +609,7 @@ async function doCheckout(setupData: any, chargeData: any) {
 								{{ $gettext(`Proceed to PayPal`) }}
 							</AppFormButton>
 						</div>
-						<div v-else-if="checkoutType === 'wallet'">
+						<div v-else-if="checkoutType === OrderPaymentMethodWallet">
 							<AppLoading
 								v-if="!calculatedAddressTax && form.valid"
 								class="loading-centered"

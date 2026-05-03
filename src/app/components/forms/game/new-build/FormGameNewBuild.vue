@@ -7,7 +7,16 @@ import AppFormControlErrors from '~common/form-vue/AppFormControlErrors.vue';
 import AppFormGroup from '~common/form-vue/AppFormGroup.vue';
 import AppFormControlUpload from '~common/form-vue/controls/upload/AppFormControlUpload.vue';
 import { validateFilesize } from '~common/form-vue/validators';
-import { $saveGameBuild, GameBuildModel, GameBuildType } from '~common/game/build/build.model';
+import {
+	$saveGameBuild,
+	GameBuildModel,
+	GameBuildType,
+	GameBuildTypeDownloadable,
+	GameBuildTypeFlash,
+	GameBuildTypeHtml,
+	GameBuildTypeRom,
+	GameBuildTypeUnity,
+} from '~common/game/build/build.model';
 import { GameModel } from '~common/game/game.model';
 import { GamePackageModel } from '~common/game/package/package.model';
 import { GameReleaseModel } from '~common/game/release/release.model';
@@ -56,9 +65,9 @@ const form: FormController<NewGameBuildFormModel> = createForm<NewGameBuildFormM
 		form.formModel.game_release_id = props.release.id;
 
 		browserTypes = {
-			'.zip': GameBuildType.Html,
-			'.swf': GameBuildType.Flash,
-			'.unity3d': GameBuildType.Unity,
+			'.zip': GameBuildTypeHtml,
+			'.swf': GameBuildTypeFlash,
+			'.unity3d': GameBuildTypeUnity,
 		};
 	},
 	onLoad(payload: any) {
@@ -70,7 +79,7 @@ const form: FormController<NewGameBuildFormModel> = createForm<NewGameBuildFormM
 		// ROM types can change, so we pull from server.
 		if (romTypes.value) {
 			for (const ext of romTypes.value) {
-				browserTypes[ext] = GameBuildType.Rom;
+				browserTypes[ext] = GameBuildTypeRom;
 			}
 		}
 	},
@@ -92,7 +101,7 @@ const browserTypeValid = computed(() => {
 	}
 
 	const releaseTypes = props.builds
-		.filter(build => build.type !== GameBuildType.Downloadable)
+		.filter(build => build.type !== GameBuildTypeDownloadable)
 		.map(build => build.type);
 
 	const accept = Object.entries(browserTypes)

@@ -9,11 +9,14 @@ import { UserModel } from '~common/user/user.model';
 import { UserAvatarFrameModel } from '~common/user/user-avatar/frame/frame.model';
 import { isInstance } from '~utils/utils';
 
-export const enum CollectibleType {
-	Sticker = 'Sticker',
-	Background = 'Background',
-	AvatarFrame = 'Avatar_Frame',
-}
+export const CollectibleTypeSticker = 'Sticker';
+export const CollectibleTypeBackground = 'Background';
+export const CollectibleTypeAvatarFrame = 'Avatar_Frame';
+
+export type CollectibleType =
+	| typeof CollectibleTypeSticker
+	| typeof CollectibleTypeBackground
+	| typeof CollectibleTypeAvatarFrame;
 
 export class CollectibleModel implements ModelStoreModel {
 	declare id: string;
@@ -71,11 +74,11 @@ export function markProductAsUnlocked(
 
 	let type: CollectibleType | null = null;
 	if (isInstance(product, AvatarFrameModel)) {
-		type = CollectibleType.AvatarFrame;
+		type = CollectibleTypeAvatarFrame;
 	} else if (isInstance(product, BackgroundModel)) {
-		type = CollectibleType.Background;
+		type = CollectibleTypeBackground;
 	} else if (isInstance(product, StickerModel)) {
-		type = CollectibleType.Sticker;
+		type = CollectibleTypeSticker;
 	}
 	if (!type) {
 		return;

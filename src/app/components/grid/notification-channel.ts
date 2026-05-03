@@ -7,7 +7,11 @@ import { importNoSSR } from '~common/code-splitting';
 import { CurrencyType } from '~common/currency/currency-type';
 import { FiresidePostGotoGrowl } from '~common/fireside/post/goto-growl/goto-growl.service';
 import { FiresidePostModel } from '~common/fireside/post/post-model';
-import { NotificationModel, NotificationType } from '~common/notification/notification-model';
+import {
+	NotificationModel,
+	NotificationTypeFriendshipRequest,
+	NotificationTypeQuestNotification,
+} from '~common/notification/notification-model';
 import { QuestNotificationModel } from '~common/quest/quest-notification-model';
 import { createSocketChannelController } from '~common/socket/socket-controller';
 import { getCommonStore } from '~common/store/common-store';
@@ -228,13 +232,13 @@ export function createGridNotificationChannel(client: GridClient, options: { use
 		const notification = reactive(new NotificationModel(data)) as NotificationModel;
 
 		switch (notification.type) {
-			case NotificationType.FriendshipRequest:
+			case NotificationTypeFriendshipRequest:
 				// For an incoming friend request, set that they have a new friend request.
 				appStore.setHasNewFriendRequests(true);
 				client.spawnNotification(notification);
 				break;
 
-			case NotificationType.QuestNotification: {
+			case NotificationTypeQuestNotification: {
 				if (!(notification.action_model instanceof QuestNotificationModel)) {
 					break;
 				}

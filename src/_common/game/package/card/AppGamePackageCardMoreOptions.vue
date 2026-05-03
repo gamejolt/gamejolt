@@ -1,6 +1,11 @@
 <script lang="ts" setup>
 import { formatFilesize } from '~common/filters/filesize';
-import { GameBuildEmulatorInfo, GameBuildModel } from '~common/game/build/build.model';
+import {
+	GameBuildEmulatorInfo,
+	GameBuildModel,
+	GameBuildTypeDownloadable,
+	GameBuildTypeRom,
+} from '~common/game/build/build.model';
 import { GamePackageCardModel } from '~common/game/package/card/card.model';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppTranslate from '~common/translate/AppTranslate.vue';
@@ -31,11 +36,11 @@ function click(build: GameBuildModel) {
 
 			<!-- We show the filename if it's an "Other" build. -->
 			<template v-if="!extraBuild.build.os_other">
-				<AppTranslate v-if="extraBuild.build.type === 'downloadable'">
+				<AppTranslate v-if="extraBuild.build.type === GameBuildTypeDownloadable">
 					Download
 				</AppTranslate>
 				<AppTranslate
-					v-else-if="extraBuild.build.type === 'rom'"
+					v-else-if="extraBuild.build.type === GameBuildTypeRom"
 					:translate-params="{
 						platform: GameBuildEmulatorInfo[extraBuild.build.emulator_type],
 					}"

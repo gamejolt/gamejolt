@@ -3,11 +3,14 @@ import { GameModel } from '~common/game/game.model';
 import { GamePackageModel } from '~common/game/package/package.model';
 import { Model } from '~common/model/model.service';
 
-export const enum GameReleaseStatus {
-	Hidden = 'hidden',
-	Published = 'published',
-	Removed = 'removed',
-}
+export const GameReleaseStatusHidden = 'hidden';
+export const GameReleaseStatusPublished = 'published';
+export const GameReleaseStatusRemoved = 'removed';
+
+export type GameReleaseStatus =
+	| typeof GameReleaseStatusHidden
+	| typeof GameReleaseStatusPublished
+	| typeof GameReleaseStatusRemoved;
 
 export class GameReleaseModel extends Model {
 	declare game_id: number;

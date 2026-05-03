@@ -2,12 +2,16 @@ import { EmojiModel } from '~common/emoji/emoji.model';
 import { MediaItemModel } from '~common/media-item/media-item-model';
 import { ModelStoreModel, storeModelList } from '~common/model/model-store.service';
 
-export const enum EmojiGroupType {
-	LocalRecent = 'local-recent',
-	Unicode = 'unicode',
-	Legacy = 'legacy',
-	Collection = 'sticker-collection',
-}
+export const EmojiGroupTypeLocalRecent = 'local-recent';
+export const EmojiGroupTypeUnicode = 'unicode';
+export const EmojiGroupTypeLegacy = 'legacy';
+export const EmojiGroupTypeCollection = 'sticker-collection';
+
+export type EmojiGroupType =
+	| typeof EmojiGroupTypeLocalRecent
+	| typeof EmojiGroupTypeUnicode
+	| typeof EmojiGroupTypeLegacy
+	| typeof EmojiGroupTypeCollection;
 
 export class EmojiGroupModel implements ModelStoreModel {
 	declare id: number;
@@ -37,6 +41,6 @@ export class EmojiGroupModel implements ModelStoreModel {
 	}
 
 	get isRecentlyUsed() {
-		return this.type === EmojiGroupType.LocalRecent && this.id <= 0;
+		return this.type === EmojiGroupTypeLocalRecent && this.id <= 0;
 	}
 }

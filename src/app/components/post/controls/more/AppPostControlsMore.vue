@@ -23,7 +23,7 @@ import {
 	$togglePinOnFiresidePost,
 	$unfeatureFiresidePost,
 	FiresidePostModel,
-	FiresidePostStatus,
+	FiresidePostStatusActive,
 } from '~common/fireside/post/post-model';
 import { GameModel } from '~common/game/game.model';
 import { showErrorGrowl } from '~common/growls/growls.service';
@@ -61,7 +61,7 @@ const emit = defineEmits<{
 
 const canEdit = toRef(() => post.isEditableByUser(sessionUser.value));
 const shouldShowManageCommunities = toRef(
-	() => post.status === FiresidePostStatus.Active && post.manageableCommunities.length !== 0
+	() => post.status === FiresidePostStatusActive && post.manageableCommunities.length !== 0
 );
 const shouldShowModTools = toRef(() => sessionUser.value && sessionUser.value.isMod);
 const siteModerateLink = toRef(
@@ -87,7 +87,7 @@ const shouldShowPins = computed(() => {
 		return false;
 	}
 
-	if (post.status !== FiresidePostStatus.Active) {
+	if (post.status !== FiresidePostStatusActive) {
 		return false;
 	}
 

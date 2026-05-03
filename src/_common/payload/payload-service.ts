@@ -10,17 +10,26 @@ import { $gettext } from '~common/translate/translate.service';
 
 export type PayloadFormErrors = { [errorId: string]: boolean };
 
-export const enum PayloadErrorType {
-	NewVersion = 'payload-new-version',
-	NotLogged = 'payload-not-logged',
-	Invalid = 'payload-invalid',
-	HttpError = 'payload-error',
-	Offline = 'payload-offline',
-	Redirect = 'payload-redirect',
-	NewClientVersion = 'payload-new-client-version',
-	UserTimedOut = 'payload-user-timed-out',
-	RateLimit = 'payload-rate-limit',
-}
+export const PayloadErrorTypeNewVersion = 'payload-new-version';
+export const PayloadErrorTypeNotLogged = 'payload-not-logged';
+export const PayloadErrorTypeInvalid = 'payload-invalid';
+export const PayloadErrorTypeHttpError = 'payload-error';
+export const PayloadErrorTypeOffline = 'payload-offline';
+export const PayloadErrorTypeRedirect = 'payload-redirect';
+export const PayloadErrorTypeNewClientVersion = 'payload-new-client-version';
+export const PayloadErrorTypeUserTimedOut = 'payload-user-timed-out';
+export const PayloadErrorTypeRateLimit = 'payload-rate-limit';
+
+export type PayloadErrorType =
+	| typeof PayloadErrorTypeNewVersion
+	| typeof PayloadErrorTypeNotLogged
+	| typeof PayloadErrorTypeInvalid
+	| typeof PayloadErrorTypeHttpError
+	| typeof PayloadErrorTypeOffline
+	| typeof PayloadErrorTypeRedirect
+	| typeof PayloadErrorTypeNewClientVersion
+	| typeof PayloadErrorTypeUserTimedOut
+	| typeof PayloadErrorTypeRateLimit;
 
 export class PayloadError {
 	constructor(
@@ -32,13 +41,13 @@ export class PayloadError {
 }
 
 export function buildPayloadErrorForStatusCode(statusCode: number) {
-	return new PayloadError(PayloadErrorType.HttpError, undefined, statusCode);
+	return new PayloadError(PayloadErrorTypeHttpError, undefined, statusCode);
 }
 
 function _buildPayloadErrorFromAxios({ response }: AxiosError) {
 	// If the response indicated a failed connection.
 	if (response === undefined || response.status === -1) {
-		return new PayloadError(PayloadErrorType.Offline);
+		return new PayloadError(PayloadErrorTypeOffline);
 	}
 
 	const data = response.data as any;
@@ -46,16 +55,16 @@ function _buildPayloadErrorFromAxios({ response }: AxiosError) {
 	if (response.status === 401) {
 		// If it was a 401 error, then they need to be logged in.
 		// Let's redirect them to the login page on the main site.
-		return new PayloadError(PayloadErrorType.NotLogged, data || undefined, 401);
+		return new PayloadError(PayloadErrorTypeNotLogged, data || undefined, 401);
 	} else if (response.status === 403 && data.user?.timeout) {
-		return new PayloadError(PayloadErrorType.UserTimedOut, data || undefined, 403);
+		return new PayloadError(PayloadErrorTypeUserTimedOut, data || undefined, 403);
 	} else if (response.status === 429) {
-		return new PayloadError(PayloadErrorType.RateLimit, data || undefined, 429);
+		return new PayloadError(PayloadErrorTypeRateLimit, data || undefined, 429);
 	}
 
 	// Otherwise, show an error page.
 	return new PayloadError(
-		PayloadErrorType.HttpError,
+		PayloadErrorTypeHttpError,
 		data || undefined,
 		response.status || undefined
 	);
@@ -112,7 +121,7 @@ class PayloadService {
 			if (!response || !response.data) {
 				if (!options.noErrorRedirect) {
 					throw new PayloadError(
-						PayloadErrorType.Invalid,
+						PayloadErrorTypeInvalid,
 						response ? response.data || undefined : undefined
 					);
 				} else {
@@ -184,7 +193,7 @@ class PayloadService {
 			if (this.ver === undefined) {
 				this.ver = data.ver;
 			} else {
-				throw new PayloadError(PayloadErrorType.NewVersion);
+				throw new PayloadError(PayloadErrorTypeNewVersion);
 			}
 		}
 	}
@@ -220,28 +229,28 @@ class PayloadService {
 		}
 
 		if (data.clientForceUpgrade) {
-			throw new PayloadError(PayloadErrorType.NewClientVersion);
+			throw new PayloadError(PayloadErrorTypeNewClientVersion);
 		}
 	}
 
 	private handlePayloadError(error: PayloadError) {
-		if (error.type === PayloadErrorType.NewVersion) {
+		if (error.type === PayloadErrorTypeNewVersion) {
 			// Do nothing. Our BeforeRouteEnter util will catch this payload
 			// error and do a refresh of the page after it has the URL to
 			// reload.
-		} else if (error.type === PayloadErrorType.NotLogged) {
+		} else if (error.type === PayloadErrorTypeNotLogged) {
 			const redirect = encodeURIComponent(
 				import.meta.env.SSR ? getSsrContext().url : window.location.href
 			);
 			const location = Environment.authBaseUrl + '/login?redirect=' + redirect;
 			this.commonStore.redirect(location);
-		} else if (error.type === PayloadErrorType.NewClientVersion) {
+		} else if (error.type === PayloadErrorTypeNewClientVersion) {
 			this.commonStore.redirect(Environment.clientSectionUrl + '/upgrade');
-		} else if (error.type === PayloadErrorType.UserTimedOut) {
+		} else if (error.type === PayloadErrorTypeUserTimedOut) {
 			this.commonStore.redirect(Environment.wttfBaseUrl + '/timeout');
-		} else if (error.type === PayloadErrorType.Invalid) {
+		} else if (error.type === PayloadErrorTypeInvalid) {
 			this.commonStore.setError(500);
-		} else if (error.type === PayloadErrorType.RateLimit) {
+		} else if (error.type === PayloadErrorTypeRateLimit) {
 			showErrorGrowl({
 				title: $gettext(`Whoa there, slow down!`),
 				message: $gettext(
@@ -249,7 +258,7 @@ class PayloadService {
 				),
 			});
 		} else if (
-			error.type === PayloadErrorType.HttpError &&
+			error.type === PayloadErrorTypeHttpError &&
 			(!error.status || this.httpErrors.indexOf(error.status) !== -1)
 		) {
 			this.commonStore.setError(error.status || 500);

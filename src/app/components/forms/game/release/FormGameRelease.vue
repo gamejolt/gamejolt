@@ -23,11 +23,8 @@ import { $removeGameBuild, GameBuildModel } from '~common/game/build/build.model
 import { GameBuildLaunchOptionModel } from '~common/game/build/launch-option/launch-option.model';
 import { GameModel } from '~common/game/game.model';
 import { GamePackageModel } from '~common/game/package/package.model';
-import {
-	$saveGameRelease,
-	GameReleaseModel,
-	GameReleaseStatus,
-} from '~common/game/release/release.model';
+import { $saveGameRelease, GameReleaseModel } from '~common/game/release/release.model';
+import { GameReleaseStatusPublished } from '~common/game/release/release.model';
 import { showSuccessGrowl } from '~common/growls/growls.service';
 import AppLinkHelp from '~common/link/AppLinkHelp.vue';
 import { showModalConfirm } from '~common/modal/confirm/confirm-service';
@@ -82,9 +79,6 @@ async function saveBuildForms() {
 
 const timezones = ref<{ [region: string]: (TimezoneData & { label?: string })[] }>(null as any);
 const now = ref(0);
-
-const GameReleaseStatusPublished = GameReleaseStatus.Published;
-
 const form: FormController<FormModel> = createForm<FormModel>({
 	model: toRef(() => model),
 	modelClass: GameReleaseModel,

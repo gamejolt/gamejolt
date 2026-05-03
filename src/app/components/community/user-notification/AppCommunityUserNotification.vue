@@ -6,7 +6,8 @@ import AppCommunityThumbnailImg from '~common/community/thumbnail/AppCommunityTh
 import {
 	$removeCommunityUserNotification,
 	CommunityUserNotificationModel,
-	CommunityUserNotificationType,
+	CommunityUserNotificationTypePOSTS_EJECT,
+	CommunityUserNotificationTypePOSTS_MOVE,
 } from '~common/community/user-notification/user-notification.model';
 import AppTimeAgo from '~common/time/AppTimeAgo.vue';
 import AppTranslate from '~common/translate/AppTranslate.vue';
@@ -27,9 +28,9 @@ const emit = defineEmits<{
 
 const notificationReasons = computed(() => {
 	switch (notification.type) {
-		case CommunityUserNotificationType.POSTS_MOVE:
+		case CommunityUserNotificationTypePOSTS_MOVE:
 			return getCommunityMovePostReasons();
-		case CommunityUserNotificationType.POSTS_EJECT:
+		case CommunityUserNotificationTypePOSTS_EJECT:
 			return getCommunityEjectPostReasons();
 	}
 
@@ -77,7 +78,7 @@ function onDismiss() {
 
 		<div class="-message">
 			<div>
-				<template v-if="notification.type === CommunityUserNotificationType.POSTS_MOVE">
+				<template v-if="notification.type === CommunityUserNotificationTypePOSTS_MOVE">
 					<AppTranslate
 						:translate-params="{
 							fromChannel: notification.extra_data['from-channel'],
@@ -89,7 +90,7 @@ function onDismiss() {
 					</AppTranslate>
 				</template>
 				<template
-					v-else-if="notification.type === CommunityUserNotificationType.POSTS_EJECT"
+					v-else-if="notification.type === CommunityUserNotificationTypePOSTS_EJECT"
 				>
 					<AppTranslate>Your post has been ejected from the community.</AppTranslate>
 				</template>
