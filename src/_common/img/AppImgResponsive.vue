@@ -2,7 +2,7 @@
 import { ImgHTMLAttributes, nextTick, onMounted, ref, useTemplateRef, watch } from 'vue';
 
 import { ImgHelper } from '~common/img/helper/helper-service';
-import { Ruler } from '~common/ruler/ruler-service';
+import { getElementHeight, getElementWidth } from '~common/ruler/ruler-service';
 import { onScreenResize } from '~common/screen/screen-service';
 import { useEventSubscription } from '~common/system/event/event-topic';
 import { getMediaserverUrlForBounds } from '~utils/image';
@@ -43,8 +43,8 @@ async function _updateSrc() {
 		return;
 	}
 
-	const containerWidth = Ruler.width(parent);
-	const containerHeight = Ruler.height(parent);
+	const containerWidth = getElementWidth(parent);
+	const containerHeight = getElementHeight(parent);
 
 	// Make sure we never do a 0 width, just in case. Seems to happen in some
 	// situations.

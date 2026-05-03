@@ -2,7 +2,7 @@
 import { onMounted, onUnmounted, useTemplateRef, watch } from 'vue';
 import { useRouter } from 'vue-router';
 
-import { Ruler } from '~common/ruler/ruler-service';
+import { getElementOffset } from '~common/ruler/ruler-service';
 import {
 	AutoscrollAnchorState,
 	getScrollOffsetTop,
@@ -59,7 +59,7 @@ onMounted(() => {
 			const recordedScroll = getScrollTop();
 
 			// We only scroll to the anchor if they're scrolled past it currently.
-			const offset = Ruler.offset(rootEl.value!);
+			const offset = getElementOffset(rootEl.value!);
 			if (recordedScroll > offset.top - getScrollOffsetTop()) {
 				// Scroll to the anchor.
 				anchorState.scrollTo = offset.top - getScrollOffsetTop();

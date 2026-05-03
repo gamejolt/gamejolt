@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, ref, useTemplateRef, watch } from 'vue';
 
-import { Ruler } from '~common/ruler/ruler-service';
+import { getElementOffset } from '~common/ruler/ruler-service';
 import AppTouch, { AppTouchInput } from '~common/touch/AppTouch.vue';
 
 type Props = {
@@ -62,10 +62,10 @@ function panStart(event: AppTouchInput) {
 
 	isDragging.value = true;
 
-	let offset = Ruler.offset(event.target);
+	let offset = getElementOffset(event.target);
 	startX.value = event.center.x;
 
-	offset = Ruler.offset(timebar.value);
+	offset = getElementOffset(timebar.value);
 	timebarWidth.value = offset.width;
 	timebarLeft.value = offset.left;
 

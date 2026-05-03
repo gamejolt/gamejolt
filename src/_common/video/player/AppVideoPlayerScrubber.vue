@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, Ref, ref } from 'vue';
 
-import { Ruler } from '~common/ruler/ruler-service';
+import { getElementOffset } from '~common/ruler/ruler-service';
 import { kThemeHighlight } from '~common/theme/variables';
 import AppTouch, { AppTouchInput } from '~common/touch/AppTouch.vue';
 import { scrubVideo, VideoPlayerController } from '~common/video/player/controller';
@@ -61,7 +61,7 @@ function panEnd(event: AppTouchInput) {
 }
 
 function initTimebarData() {
-	const { width, left } = Ruler.offset(timebar.value);
+	const { width, left } = getElementOffset(timebar.value);
 	timebarWidth.value = width;
 	timebarLeft.value = left;
 }

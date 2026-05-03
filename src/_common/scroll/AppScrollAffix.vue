@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { CSSProperties, ref, toRef, useTemplateRef } from 'vue';
 
-import { Ruler } from '~common/ruler/ruler-service';
+import { getElementOuterHeight } from '~common/ruler/ruler-service';
 import AppScrollInview, { ScrollInviewConfig } from '~common/scroll/inview/AppScrollInview.vue';
 import { getScrollOffsetTop } from '~common/scroll/scroll.service';
 import { styleWhen } from '~styles/mixins';
@@ -47,7 +47,7 @@ function outview() {
 		return;
 	}
 
-	height.value = Ruler.outerHeight(container.value!);
+	height.value = getElementOuterHeight(container.value!);
 	shouldAffix.value = true;
 }
 

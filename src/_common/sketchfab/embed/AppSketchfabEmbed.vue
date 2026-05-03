@@ -1,7 +1,7 @@
 <script lang="ts">
 import { nextTick, onMounted, ref, useTemplateRef, watch } from 'vue';
 
-import { Ruler } from '~common/ruler/ruler-service';
+import { getElementWidth } from '~common/ruler/ruler-service';
 import { onScreenResize } from '~common/screen/screen-service';
 import { useEventSubscription } from '~common/system/event/event-topic';
 
@@ -85,7 +85,7 @@ async function recalculateDimensions() {
 		return;
 	}
 
-	width.value = Ruler.width(innerElem.value);
+	width.value = getElementWidth(innerElem.value);
 
 	if (maxWidth) {
 		width.value = Math.min(maxWidth, width.value);

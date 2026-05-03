@@ -1,7 +1,7 @@
 <script lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, useTemplateRef, watch } from 'vue';
 
-import { Ruler } from '~common/ruler/ruler-service';
+import { getElementOffset } from '~common/ruler/ruler-service';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import { clampNumber } from '~utils/number';
 
@@ -96,7 +96,7 @@ function initVariables() {
 	if (!slider.value) {
 		return;
 	}
-	const offset = Ruler.offset(slider.value);
+	const offset = getElementOffset(slider.value);
 	_sliderOffset.value = vertical ? offset.top : offset.left;
 	sliderSize.value = vertical ? offset.height : offset.width;
 }

@@ -4,7 +4,7 @@ import { ref, useTemplateRef, watch } from 'vue';
 import AppImgResponsive from '~common/img/AppImgResponsive.vue';
 import AppMediaItemBackdrop from '~common/media-item/backdrop/AppMediaItemBackdrop.vue';
 import { MediaItemModel } from '~common/media-item/media-item-model';
-import { Ruler } from '~common/ruler/ruler-service';
+import { getElementWidth } from '~common/ruler/ruler-service';
 import { getScreen } from '~common/screen/screen-service';
 import { useResizeObserver } from '~utils/resize-observer';
 
@@ -34,7 +34,7 @@ watch([() => mediaItem, () => maxHeight], recalcHeight);
 function recalcHeight() {
 	if (mediaItem) {
 		if (el.value) {
-			const newDimensions = mediaItem.getDimensions(Ruler.width(el.value), undefined, {
+			const newDimensions = mediaItem.getDimensions(getElementWidth(el.value), undefined, {
 				force: true,
 			});
 

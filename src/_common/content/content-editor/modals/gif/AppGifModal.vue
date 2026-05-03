@@ -13,7 +13,7 @@ import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppLoading from '~common/loading/AppLoading.vue';
 import AppModal from '~common/modal/AppModal.vue';
 import { useModal } from '~common/modal/modal.service';
-import { Ruler } from '~common/ruler/ruler-service';
+import { getElementHeight } from '~common/ruler/ruler-service';
 import { getScreen } from '~common/screen/screen-service';
 import AppScrollScroller, { createScroller } from '~common/scroll/AppScrollScroller.vue';
 import AppTranslate from '~common/translate/AppTranslate.vue';
@@ -194,7 +194,7 @@ function onContainerScroll() {
 	if (!isLoading.value && searchValue.value.length > 0 && !reachedLastPage.value) {
 		const container = contentScroller.element.value;
 		if (container) {
-			const height = Ruler.height(container);
+			const height = getElementHeight(container);
 			if (container.scrollHeight < container.scrollTop + height + 100) {
 				loadNextPage();
 			}

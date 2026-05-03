@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, ref, useTemplateRef } from 'vue';
 
-import { Ruler } from '~common/ruler/ruler-service';
+import { getElementWidth } from '~common/ruler/ruler-service';
 import { styleWhen } from '~styles/mixins';
 import { buildCSSPixelValue } from '~styles/variables';
 import { useResizeObserver } from '~utils/resize-observer';
@@ -23,8 +23,8 @@ function queueAction() {
 			sizeDiff.value = 0;
 			return;
 		}
-		const rootWidth = Ruler.width(root.value);
-		const childWidth = Ruler.width(child.value);
+		const rootWidth = getElementWidth(root.value);
+		const childWidth = getElementWidth(child.value);
 
 		sizeDiff.value = childWidth - rootWidth;
 		hasQueuedAction = false;

@@ -4,7 +4,7 @@ import { computed, ref, useTemplateRef } from 'vue';
 import AppAnimSlideshowImg from '~common/animation/AppAnimSlideshowImg.vue';
 import { getImgSlideshowData, ImgSlideshow } from '~common/animation/slideshow/sheets';
 import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
-import { Ruler } from '~common/ruler/ruler-service';
+import { getElementOffset } from '~common/ruler/ruler-service';
 import { styleWhen } from '~styles/mixins';
 import { useResizeObserver } from '~utils/resize-observer';
 
@@ -30,7 +30,7 @@ function onDimensionsChanged() {
 	if (!root.value) {
 		return;
 	}
-	const { width, height } = Ruler.offset(root.value);
+	const { width, height } = getElementOffset(root.value);
 	size.value = { width, height };
 }
 </script>

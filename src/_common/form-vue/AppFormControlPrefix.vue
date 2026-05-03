@@ -2,7 +2,7 @@
 import { computed, Ref, ref, useTemplateRef, watch } from 'vue';
 
 import { provideFormControlHooks } from '~common/form-vue/form-control-hooks';
-import { Ruler } from '~common/ruler/ruler-service';
+import { getElementOuterWidth } from '~common/ruler/ruler-service';
 import { useResizeObserver } from '~utils/resize-observer';
 
 type Props = {
@@ -28,7 +28,8 @@ const originalOffsetLeft = computed(
 
 function recalcPositioning() {
 	if (prefixElement.value) {
-		paddingLeft.value = Ruler.outerWidth(prefixElement.value) + originalOffsetLeft.value + 'px';
+		paddingLeft.value =
+			getElementOuterWidth(prefixElement.value) + originalOffsetLeft.value + 'px';
 	} else {
 		paddingLeft.value = originalOffsetLeft.value + 'px';
 	}

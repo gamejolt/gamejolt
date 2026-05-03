@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, CSSProperties, useTemplateRef } from 'vue';
 
-import { Ruler } from '~common/ruler/ruler-service';
+import { getElementOffset } from '~common/ruler/ruler-service';
 import { getScreen } from '~common/screen/screen-service';
 import { useStickerStore } from '~common/sticker/sticker-store';
 import AppTranslate from '~common/translate/AppTranslate.vue';
@@ -51,10 +51,10 @@ const tooltipPosition = computed<CSSProperties | null>(() => {
 	if (!caretElement) {
 		return null;
 	}
-	const anchorOffset = Ruler.offset(caretElement);
+	const anchorOffset = getElementOffset(caretElement);
 
-	const widthTrackerOffset = widthElement ? Ruler.offset(widthElement) : null;
-	const parentOffset = parent ? Ruler.offset(parent) : null;
+	const widthTrackerOffset = widthElement ? getElementOffset(widthElement) : null;
+	const parentOffset = parent ? getElementOffset(parent) : null;
 
 	const {
 		top: caretAnchorTop,

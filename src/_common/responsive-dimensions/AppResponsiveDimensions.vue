@@ -1,7 +1,7 @@
 <script lang="ts">
 import { onMounted, ref, useTemplateRef, watch } from 'vue';
 
-import { Ruler } from '~common/ruler/ruler-service';
+import { getElementWidth } from '~common/ruler/ruler-service';
 import { onScreenResize } from '~common/screen/screen-service';
 import { useEventSubscription } from '~common/system/event/event-topic';
 import { useResizeObserver } from '~utils/resize-observer';
@@ -59,7 +59,7 @@ function _updateDimensions() {
 	}
 
 	let isFilled = true;
-	let newWidth = parentWidth ?? Ruler.width(root.value.parentNode as HTMLElement);
+	let newWidth = parentWidth ?? getElementWidth(root.value.parentNode as HTMLElement);
 
 	if (maxWidth && newWidth > maxWidth) {
 		newWidth = maxWidth;

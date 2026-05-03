@@ -9,7 +9,7 @@ import {
 	sheetShockRectTR,
 	sheetShockSquare,
 } from '~common/animation/slideshow/sheets';
-import { Ruler } from '~common/ruler/ruler-service';
+import { getElementOffset } from '~common/ruler/ruler-service';
 import { useResizeObserver } from '~utils/resize-observer';
 
 type ShockAnimation = 'square' | 'wide-rect' | 'adaptive';
@@ -63,7 +63,7 @@ function onDimensionsChanged() {
 	if (!root.value) {
 		return;
 	}
-	const { width, height } = Ruler.offset(root.value);
+	const { width, height } = getElementOffset(root.value);
 	size.value = { width, height };
 }
 

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { nextTick, onMounted, ref, useTemplateRef } from 'vue';
 
-import { Ruler } from '~common/ruler/ruler-service';
+import { getElementHeight } from '~common/ruler/ruler-service';
 
 const emit = defineEmits<{
 	required: [];
@@ -15,8 +15,8 @@ const isCollapsed = ref(false);
 
 onMounted(async () => {
 	await nextTick();
-	height.value = Ruler.height(root.value!);
-	innerHeight.value = Ruler.height(inner.value!);
+	height.value = getElementHeight(root.value!);
+	innerHeight.value = getElementHeight(inner.value!);
 
 	if (innerHeight.value > height.value) {
 		isCollapsed.value = true;

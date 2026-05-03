@@ -1,6 +1,6 @@
 import { onUnmounted, ref, shallowReadonly, toRef } from 'vue';
 
-import { Ruler } from '~common/ruler/ruler-service';
+import { getElementOffset } from '~common/ruler/ruler-service';
 import { defineIsolatedState } from '~common/ssr/isolated-state';
 import { arrayRemove } from '~utils/array';
 import { sleep } from '~utils/utils';
@@ -125,14 +125,14 @@ export function getScrollWindowWidth(element?: ScrollContext): number {
  * Returns the element's offset from the top of the scroll context.
  */
 export function getElementOffsetTopFromContext(element: HTMLElement) {
-	return Ruler.offset(element).top - _state().offsetTop;
+	return getElementOffset(element).top - _state().offsetTop;
 }
 
 /**
  * Returns the element's offset from the bottom of the scroll context.
  */
 export function getElementOffsetBottomFromContext(element: HTMLElement) {
-	const { top, height } = Ruler.offset(element);
+	const { top, height } = getElementOffset(element);
 	return top + height;
 }
 

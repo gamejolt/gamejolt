@@ -17,7 +17,7 @@ import { showVendingMachineModal } from '~common/inventory/shop/vending-machine/
 import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
 import { vAppObserveDimensions } from '~common/observe-dimensions/observe-dimensions.directive';
 import AppPageIndicatorCompact from '~common/pagination/AppPageIndicatorCompact.vue';
-import { Ruler } from '~common/ruler/ruler-service';
+import { getElementHeight } from '~common/ruler/ruler-service';
 import { getScreen, onScreenResize } from '~common/screen/screen-service';
 import AppScrollScroller from '~common/scroll/AppScrollScroller.vue';
 import AppStickerLayerDrawerItem from '~common/sticker/layer/AppStickerLayerDrawerItem.vue';
@@ -202,7 +202,7 @@ function onContentDimensionsChanged() {
 	if (showPlaceButton.value || !content.value) {
 		return;
 	}
-	setStickerDrawerHeight(stickerStore, Ruler.height(content.value));
+	setStickerDrawerHeight(stickerStore, getElementHeight(content.value));
 }
 
 function onClickPurchasePacks() {

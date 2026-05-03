@@ -32,99 +32,95 @@ function elementParentOffset(el: HTMLElement) {
 	return offsetParent || document;
 }
 
-class RulerService {
-	width(elem: HTMLElement | Document) {
-		return this.dimensions('clientWidth', elem);
+function dimensions(
+	baseProp: 'clientWidth' | 'clientHeight' | 'offsetWidth' | 'offsetHeight',
+	_elem: HTMLElement | Document
+): number {
+	let elem: HTMLElement;
+
+	if (_elem === window.document) {
+		elem = window.document.body;
+	} else {
+		elem = <HTMLElement>_elem;
 	}
 
-	height(elem: HTMLElement | Document) {
-		return this.dimensions('clientHeight', elem);
-	}
+	const styles = window.getComputedStyle(elem);
 
-	outerWidth(elem: HTMLElement | Document) {
-		return this.dimensions('offsetWidth', elem);
-	}
+	// Certain elements can have dimension info if we invisibly show them,
+	// but it must have a current display style that would benefit.
+	// This only matters for currently hidden elements that wouldn't return dimensions.
+	let swappedStyles = false;
+	const oldStyles: any = {};
+	if (DISPLAY_SWAP_REGEX.test(styles.display || '') && elem.offsetWidth === 0) {
+		swappedStyles = true;
 
-	outerHeight(elem: HTMLElement | Document) {
-		return this.dimensions('offsetHeight', elem);
-	}
-
-	position(el: HTMLElement) {
-		const elOffset = this.offset(el);
-		let parentRect = { top: 0, left: 0 };
-		const offsetParentEl = elementParentOffset(el);
-		if (offsetParentEl !== (document as any)) {
-			parentRect = this.offset(offsetParentEl);
-			parentRect.top += offsetParentEl.clientTop - offsetParentEl.scrollTop;
-			parentRect.left += offsetParentEl.clientLeft - offsetParentEl.scrollLeft;
+		for (const name in CSS_SHOW_STYLES) {
+			oldStyles[name] = (elem.style as any)[name];
+			(elem.style as any)[name] = CSS_SHOW_STYLES[name];
 		}
-
-		const boundingClientRect = el.getBoundingClientRect();
-		return {
-			width: boundingClientRect.width || el.offsetWidth,
-			height: boundingClientRect.height || el.offsetHeight,
-			top: elOffset.top - parentRect.top,
-			left: elOffset.left - parentRect.left,
-		};
 	}
 
-	offset(el: HTMLElement) {
-		const rect = el.getBoundingClientRect();
-		return {
-			width: rect.width || el.offsetWidth,
-			height: rect.height || el.offsetHeight,
-			top: rect.top + (window.pageYOffset || document.documentElement.scrollTop),
-			left: rect.left + (window.pageXOffset || document.documentElement.scrollLeft),
-		};
+	let val = elem[baseProp];
+	if (baseProp === 'clientWidth') {
+		val -= parseFloat(styles.paddingLeft || '') + parseFloat(styles.paddingRight || '');
+	} else if (baseProp === 'clientHeight') {
+		val -= parseFloat(styles.paddingTop || '') + parseFloat(styles.paddingBottom || '');
+	} else if (baseProp === 'offsetWidth') {
+		val += parseFloat(styles.marginLeft || '') + parseFloat(styles.marginRight || '');
+	} else if (baseProp === 'offsetHeight') {
+		val += parseFloat(styles.marginTop || '') + parseFloat(styles.marginBottom || '');
 	}
 
-	private dimensions(
-		baseProp: 'clientWidth' | 'clientHeight' | 'offsetWidth' | 'offsetHeight',
-		_elem: HTMLElement | Document
-	): number {
-		let elem: HTMLElement;
-
-		if (_elem === window.document) {
-			elem = window.document.body;
-		} else {
-			elem = <HTMLElement>_elem;
+	if (swappedStyles) {
+		for (const name in CSS_SHOW_STYLES) {
+			(elem.style as any)[name] = oldStyles[name];
 		}
-
-		const styles = window.getComputedStyle(elem);
-
-		// Certain elements can have dimension info if we invisibly show them,
-		// but it must have a current display style that would benefit.
-		// This only matters for currently hidden elements that wouldn't return dimensions.
-		let swappedStyles = false;
-		const oldStyles: any = {};
-		if (DISPLAY_SWAP_REGEX.test(styles.display || '') && elem.offsetWidth === 0) {
-			swappedStyles = true;
-
-			for (const name in CSS_SHOW_STYLES) {
-				oldStyles[name] = (elem.style as any)[name];
-				(elem.style as any)[name] = CSS_SHOW_STYLES[name];
-			}
-		}
-
-		let val = elem[baseProp];
-		if (baseProp === 'clientWidth') {
-			val -= parseFloat(styles.paddingLeft || '') + parseFloat(styles.paddingRight || '');
-		} else if (baseProp === 'clientHeight') {
-			val -= parseFloat(styles.paddingTop || '') + parseFloat(styles.paddingBottom || '');
-		} else if (baseProp === 'offsetWidth') {
-			val += parseFloat(styles.marginLeft || '') + parseFloat(styles.marginRight || '');
-		} else if (baseProp === 'offsetHeight') {
-			val += parseFloat(styles.marginTop || '') + parseFloat(styles.marginBottom || '');
-		}
-
-		if (swappedStyles) {
-			for (const name in CSS_SHOW_STYLES) {
-				(elem.style as any)[name] = oldStyles[name];
-			}
-		}
-
-		return val;
 	}
+
+	return val;
 }
 
-export const Ruler = /** @__PURE__ */ new RulerService();
+export function getElementWidth(elem: HTMLElement | Document) {
+	return dimensions('clientWidth', elem);
+}
+
+export function getElementHeight(elem: HTMLElement | Document) {
+	return dimensions('clientHeight', elem);
+}
+
+export function getElementOuterWidth(elem: HTMLElement | Document) {
+	return dimensions('offsetWidth', elem);
+}
+
+export function getElementOuterHeight(elem: HTMLElement | Document) {
+	return dimensions('offsetHeight', elem);
+}
+
+export function getElementOffset(el: HTMLElement) {
+	const rect = el.getBoundingClientRect();
+	return {
+		width: rect.width || el.offsetWidth,
+		height: rect.height || el.offsetHeight,
+		top: rect.top + (window.pageYOffset || document.documentElement.scrollTop),
+		left: rect.left + (window.pageXOffset || document.documentElement.scrollLeft),
+	};
+}
+
+export function getElementPosition(el: HTMLElement) {
+	const elOffset = getElementOffset(el);
+	let parentRect = { top: 0, left: 0 };
+	const offsetParentEl = elementParentOffset(el);
+	if (offsetParentEl !== (document as any)) {
+		parentRect = getElementOffset(offsetParentEl);
+		parentRect.top += offsetParentEl.clientTop - offsetParentEl.scrollTop;
+		parentRect.left += offsetParentEl.clientLeft - offsetParentEl.scrollLeft;
+	}
+
+	const boundingClientRect = el.getBoundingClientRect();
+	return {
+		width: boundingClientRect.width || el.offsetWidth,
+		height: boundingClientRect.height || el.offsetHeight,
+		top: elOffset.top - parentRect.top,
+		left: elOffset.left - parentRect.left,
+	};
+}
