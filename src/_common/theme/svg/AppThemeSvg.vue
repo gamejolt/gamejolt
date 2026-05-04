@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { darken, lighten, parseToHsl } from 'polished';
 import { computed, ImgHTMLAttributes, ref, watch } from 'vue';
 
 import { Api } from '~common/api/api.service';
@@ -7,6 +6,7 @@ import { isDynamicGoogleBot } from '~common/device/device.service';
 import { DefaultTheme, ThemeModel } from '~common/theme/theme.model';
 import { useThemeStore } from '~common/theme/theme.store';
 import { arrayUnique } from '~utils/array';
+import { darken, lighten, parseToHsl } from '~utils/color';
 
 const SvgGraysRegex = /#([a-f\d]{1,2})\1{2}\b/gi;
 
@@ -41,7 +41,7 @@ const processedSvg = computed(() => {
 				'#' +
 				(isDark.value ? actualTheme.value.darkHighlight_ : actualTheme.value.highlight_);
 			const hsl = parseToHsl(highlight_);
-			if (hsl.lightness < 0.4) {
+			if (hsl.l < 0.4) {
 				highlight = lighten(0.3, highlight_);
 				backlight = highlight_;
 			} else {

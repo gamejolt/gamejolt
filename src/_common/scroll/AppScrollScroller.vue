@@ -1,7 +1,6 @@
 <script lang="ts">
 import type { UseOverlayScrollbarsInstance } from 'overlayscrollbars-vue';
 import { useOverlayScrollbars } from 'overlayscrollbars-vue';
-import { darken, lighten } from 'polished';
 import {
 	computed,
 	inject,
@@ -17,6 +16,7 @@ import { getScreen } from '~common/screen/screen-service';
 import AppScrollInviewParent from '~common/scroll/inview/AppScrollInviewParent.vue';
 import { DefaultTheme, GrayLight, GraySubtle } from '~common/theme/theme.model';
 import { useThemeStore } from '~common/theme/theme.store';
+import { darken, lighten } from '~utils/color';
 
 export type ScrollController = ReturnType<typeof createScroller>;
 

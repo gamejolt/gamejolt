@@ -1,19 +1,17 @@
+import { Model } from '~common/model/model.service';
+import { ThemePresetModel } from '~common/theme/preset/preset.model';
 import {
 	complement,
 	desaturate,
 	hsl,
+	labToRgb,
 	mix,
-	parseToHsl,
 	parseToRgb,
 	readableColor,
 	rgb,
-	rgbToColorString,
-} from 'polished';
-import { RgbColor } from 'polished/lib/types/color';
-
-import { Model } from '~common/model/model.service';
-import { ThemePresetModel } from '~common/theme/preset/preset.model';
-import { lab2rgb, rgb2lab } from '~utils/color';
+	rgbToHsl,
+	rgbToLab,
+} from '~utils/color';
 
 // Sync with variables in stylus.
 
@@ -48,11 +46,6 @@ export function makeThemeFromColor(color: string) {
 	return new ThemeModel({
 		custom: color,
 	});
-}
-
-function rgb2hsl(color: RgbColor) {
-	const str = rgbToColorString(color);
-	return parseToHsl(str);
 }
 
 /**
@@ -115,24 +108,15 @@ function biRamp(
 	return out;
 }
 
-function rgbToTuple(rgbObj: RgbColor): [number, number, number] {
-	return [rgbObj.red, rgbObj.green, rgbObj.blue];
-}
-
-function rgbFromTuple(rgbArray: [number, number, number]): RgbColor {
-	return { red: rgbArray[0], green: rgbArray[1], blue: rgbArray[2] };
-}
-
 function getReadableCustom(custom: string | undefined, background: 'light' | 'dark') {
 	if (!custom) {
 		return undefined;
 	}
 
 	const initialRgb = parseToRgb('#' + custom);
-	const initialRgbArr = rgbToTuple(initialRgb);
-	const initialHsl = parseToHsl('#' + custom);
-	const labColor = rgb2lab(initialRgbArr);
-	const labLitNorm = labColor[0] / 100; // Lab lightness normalized to 0 to 1 range.
+	const initialHsl = rgbToHsl(initialRgb);
+	const labColor = rgbToLab(initialRgb);
+	const labLitNorm = labColor.l / 100; // Lab lightness normalized to 0 to 1 range.
 
 	if (background === 'light') {
 		// Note: We can use the raw MaxLitBase value for the IF and the clamp, because we don't need
@@ -142,10 +126,8 @@ function getReadableCustom(custom: string | undefined, background: 'light' | 'da
 		if (labLitNorm > MaxLitBase) {
 			// Force lightness down to preferred ceiling value.
 			// Due to the preceding IF, this is essentially a ceiling clamp.
-			labColor[0] = MaxLitBase * 100;
-			const convertedRgb = lab2rgb(labColor);
-
-			return rgb(rgbFromTuple(convertedRgb)).substr(1);
+			labColor.l = MaxLitBase * 100;
+			return rgb(labToRgb(labColor)).substr(1);
 		}
 	} else if (background === 'dark') {
 		// IMPORTANT: In Dark mode, we don't just use a single fixed value for the
@@ -165,9 +147,9 @@ function getReadableCustom(custom: string | undefined, background: 'light' | 'da
 
 		// Calc clamp params. Then do clamp:
 		//   Calc the biRamp boost value for the current hue.
-		const biRampBoost = biRamp(initialHsl.hue, 180, 240, 300, 0, BlueBoost);
+		const biRampBoost = biRamp(initialHsl.h, 180, 240, 300, 0, BlueBoost);
 		//   Calc the "colorfulness" of the current color, because we only need to apply the boost
-		const colorfulness = initialHsl.saturation * biRamp(initialHsl.lightness, 0, 0.5, 1, 0, 1);
+		const colorfulness = initialHsl.s * biRamp(initialHsl.l, 0, 0.5, 1, 0, 1);
 		//   Calc the final lightness floor value. (This incorporates the blue adjustment.)
 		const MinLitAdjusted = MinLitBase + biRampBoost * colorfulness;
 
@@ -178,16 +160,11 @@ function getReadableCustom(custom: string | undefined, background: 'light' | 'da
 			// It's roughly equivalent to this:
 			//   const clamped = clamp( labLitNorm, MinLitAdjusted, 1 );
 
-			labColor[0] = MinLitAdjusted * 100;
-			const convertedRgb = lab2rgb(labColor);
-			const convertedHsl = rgb2hsl(rgbFromTuple(convertedRgb));
+			labColor.l = MinLitAdjusted * 100;
+			const convertedHsl = rgbToHsl(labToRgb(labColor));
 
 			// Use the original hue and only use the saturation/lightness from the clamped value.
-			const iH = initialHsl.hue;
-			const cS = convertedHsl.saturation;
-			const cL = convertedHsl.lightness;
-
-			return hsl(iH, cS, cL).substr(1);
+			return hsl(initialHsl.h, convertedHsl.s, convertedHsl.l).substr(1);
 		}
 	}
 

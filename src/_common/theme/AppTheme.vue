@@ -1,10 +1,10 @@
 <script lang="ts">
-import { parseToRgb, transparentize } from 'polished';
 import { computed, inject, InjectionKey, MaybeRefOrGetter, provide, toRef } from 'vue';
 
 import AppStyle from '~common/AppStyle.vue';
 import { DefaultTheme, ThemeModel } from '~common/theme/theme.model';
 import { useThemeStore } from '~common/theme/theme.store';
+import { parseToRgb } from '~utils/color';
 
 // This needs to be global so that we can generate an ID for each component.
 let _inc = 0;
@@ -12,13 +12,13 @@ let _inc = 0;
 // Global helpers for generating the style rules.
 function genVar(varname: string, value: string, isDark = false) {
 	value = '#' + value;
-	const rgbValue = parseToRgb(value);
+	const { r, g, b } = parseToRgb(value);
 	const dark = isDark ? 'dark-' : '';
 
 	return `
 		--${dark}theme-${varname}: ${value};
-		--${dark}theme-${varname}-trans: ${transparentize(1, value)};
-		--${dark}theme-${varname}-rgb: ${rgbValue.red}, ${rgbValue.green}, ${rgbValue.blue};
+		--${dark}theme-${varname}-trans: rgba(${r}, ${g}, ${b}, 0);
+		--${dark}theme-${varname}-rgb: ${r}, ${g}, ${b};
 	`;
 }
 
