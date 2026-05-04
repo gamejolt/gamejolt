@@ -1,4 +1,3 @@
-import { parse } from 'qs';
 import { computed, inject, InjectionKey, ref } from 'vue';
 
 import { Api } from '~common/api/api.service';
@@ -64,12 +63,12 @@ export function createGameserverStore() {
 	async function bootstrap() {
 		Api.apiHost = Environment.gameserverApiHost;
 
-		const query = parse(window.location.search.substring(1));
-		if (!query['token']) {
+		const searchParams = new URLSearchParams(window.location.search);
+		const tokenId = searchParams.get('token');
+		if (!tokenId) {
 			throw new Error('Invalid token.');
 		}
 
-		const tokenId = query['token'];
 		let requestUrl = `/gameserver/${tokenId}`;
 
 		if (!Environment.isSecure) {

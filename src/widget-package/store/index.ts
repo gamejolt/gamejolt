@@ -1,4 +1,3 @@
-import { parse } from 'qs';
 import { computed, inject, InjectionKey, ref } from 'vue';
 
 import { Api } from '~common/api/api.service';
@@ -33,10 +32,10 @@ export function useWidgetPackageStore() {
 }
 
 export function createWidgetPackageStore() {
-	const query = parse(window.location.search.substring(1));
+	const searchParams = new URLSearchParams(window.location.search);
 
-	const sellableKey = ref(query.key as string);
-	const isLightTheme = ref(query.theme === 'light');
+	const sellableKey = ref(searchParams.get('key')!);
+	const isLightTheme = ref(searchParams.get('theme') === 'light');
 	const isLoaded = ref(false);
 	const isProcessing = ref(false);
 
