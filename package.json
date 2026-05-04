@@ -88,7 +88,6 @@
 		"jquery": "3.6.0",
 		"jstimezonedetect": "1.0.7",
 		"minimist": "1.2.8",
-		"node-fetch": "3.3.2",
 		"overlayscrollbars": "2.4.3",
 		"overlayscrollbars-vue": "0.5.9",
 		"oxfmt": "0.46.0",

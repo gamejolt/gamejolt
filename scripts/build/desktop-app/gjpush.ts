@@ -1,7 +1,5 @@
 import fsExtra from 'fs-extra';
 import * as https from 'https';
-import type { RequestInit } from 'node-fetch';
-import fetch from 'node-fetch';
 import * as os from 'os';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
@@ -282,27 +280,22 @@ export class Gjpush {
 			throw new Error('GJPUSH_TOKEN environment variable is not set');
 		}
 
-		const hostname =
-			this.config.environment === 'development' ? 'development.gamejolt.com' : 'gamejolt.com';
-
-		const requestOpts: RequestInit = {
-			method: 'GET',
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: gjpushToken,
-			},
+		const isDev = this.config.environment === 'development';
+		const hostname = isDev ? 'development.gamejolt.com' : 'gamejolt.com';
+		const url = `https://${hostname}/service-api/push${endpoint}`;
+		const headers = {
+			'Content-Type': 'application/json',
+			Authorization: gjpushToken,
 		};
 
-		// Use self signed certificat when uploading to dev.
-		if (this.config.environment === 'development') {
+		// Dev hits a self-signed cert. Native fetch has no per-call option to
+		// trust a custom CA, so fall back to https.request for that case only.
+		if (isDev) {
 			const ca = await readFile(path.resolve(__dirname, '..', '..', '..', 'gamejoltCA.crt'));
-			requestOpts.agent = new https.Agent({ ca });
+			return await httpsGetJson(url, headers, ca);
 		}
 
-		const response = await fetch(
-			`https://${hostname}/service-api/push${endpoint}`,
-			requestOpts
-		);
+		const response = await fetch(url, { method: 'GET', headers });
 
 		if (!response.ok) {
 			throw new Error('Service api request failed');
@@ -310,4 +303,28 @@ export class Gjpush {
 
 		return await response.json();
 	}
+}
+
+function httpsGetJson(url: string, headers: Record<string, string>, ca: Buffer) {
+	return new Promise<any>((resolve, reject) => {
+		const req = https.request(url, { method: 'GET', headers, ca }, res => {
+			const status = res.statusCode ?? 0;
+			if (status < 200 || status >= 300) {
+				reject(new Error('Service api request failed'));
+				return;
+			}
+			const chunks: Buffer[] = [];
+			res.on('data', c => chunks.push(c));
+			res.on('end', () => {
+				try {
+					resolve(JSON.parse(Buffer.concat(chunks).toString('utf8')));
+				} catch (e) {
+					reject(e);
+				}
+			});
+			res.on('error', reject);
+		});
+		req.on('error', reject);
+		req.end();
+	});
 }
