@@ -32,7 +32,10 @@ export function loggedUserBlock() {
 export default {
 	...defineAppRouteOptions({
 		reloadOn: 'never',
-		resolver: () => Api.sendRequest('/web/auth/get-customized-page'),
+		// The customized-page payload is purely decorative (cover image,
+		// featured game). Never let a failure here block the auth forms from
+		// rendering.
+		resolver: () => Api.sendRequest('/web/auth/get-customized-page').catch(() => ({})),
 	}),
 };
 </script>

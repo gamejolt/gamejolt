@@ -19,6 +19,10 @@ export function createAuthStore() {
 	const inviteUser = ref<UserModel>();
 
 	function bootstrap(payload: any) {
+		if (!payload) {
+			return;
+		}
+
 		coverMediaItem.value = payload.mediaItem && new MediaItemModel(payload.mediaItem);
 		coverGame.value = payload.game && new GameModel(payload.game);
 		inviteUser.value = payload.inviteUser && new UserModel(payload.inviteUser);
