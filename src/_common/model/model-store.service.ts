@@ -16,7 +16,23 @@ export interface RemovableModel {
 
 type ModelConstructor<T extends ModelStoreModel> = new () => T;
 
-const _models = defineIsolatedState(() => ref(new Map<string, ModelStoreModel>()));
+/**
+ * Keyed by the constructor function itself. Using the constructor reference is
+ * intrinsically mangler-proof: a function is its own identity.
+ */
+const _models = defineIsolatedState(() =>
+	ref(new Map<ModelConstructor<ModelStoreModel>, Map<number | string, ModelStoreModel>>())
+);
+
+function _getOrCreateModelMap<T extends ModelStoreModel>(modelConstructor: ModelConstructor<T>) {
+	const all = _models().value;
+	let forModelType = all.get(modelConstructor);
+	if (!forModelType) {
+		forModelType = new Map();
+		all.set(modelConstructor, forModelType);
+	}
+	return forModelType as Map<number | string, T>;
+}
 
 /**
  * Will register new model data with the store and return the corresponding
@@ -26,15 +42,13 @@ export function storeModel<T extends ModelStoreModel>(
 	modelConstructor: ModelConstructor<T>,
 	data: Record<string, any>
 ): T {
-	const typename = modelConstructor.name;
-
 	if (!data || Object.keys(data).length === 0) {
-		throw new Error(`Called storeModel with empty data: ${typename}.`);
+		throw new Error(`Called storeModel with empty data: ${modelConstructor.name}.`);
 	}
 
 	const id = _getModelId(data);
-	const key = _generateKey(typename, id);
-	let targetModel = _models().value.get(key) as T | undefined;
+	const modelMap = _getOrCreateModelMap(modelConstructor);
+	let targetModel = modelMap.get(id);
 
 	if (targetModel) {
 		targetModel.update(data);
@@ -43,7 +57,7 @@ export function storeModel<T extends ModelStoreModel>(
 
 	targetModel = reactive(new modelConstructor()) as T;
 	targetModel.update(data);
-	_models().value.set(key, targetModel);
+	modelMap.set(id, targetModel);
 
 	return targetModel;
 }
@@ -72,8 +86,7 @@ export function getModel<T extends ModelStoreModel>(
 	modelConstructor: ModelConstructor<T>,
 	id: number | string
 ) {
-	const key = _generateKey(modelConstructor.name, id);
-	return _models().value.get(key) as T | undefined;
+	return _models().value.get(modelConstructor)?.get(id) as T | undefined;
 }
 
 function _getModelId(modelData: any) {
@@ -89,14 +102,6 @@ function _getModelId(modelData: any) {
 	}
 
 	return id;
-}
-
-function _generateKey(typename: string, id?: number | string) {
-	if (!id) {
-		throw new Error(`Tried generating key for model with a null id: ${typename}`);
-	}
-
-	return `${typename}:${id}`;
 }
 
 export async function saveModel<T extends ModelStoreModel>(
