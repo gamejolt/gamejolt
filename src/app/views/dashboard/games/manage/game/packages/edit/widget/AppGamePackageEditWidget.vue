@@ -1,5 +1,5 @@
 <script lang="ts">
-import { ref, watch } from 'vue';
+import { computed, ref } from 'vue';
 
 import { Api } from '~common/api/api.service';
 import { Environment } from '~common/environment/environment.service';
@@ -25,28 +25,29 @@ export default {
 
 <script lang="ts" setup>
 const sellable = ref<SellableModel | null>(null);
-const theme = ref<string>(null as any);
-const widgetUrl = ref('');
-const widgetCode = ref('');
+const theme = ref<'' | 'light'>(''); // Default to dark.
 
-watch(theme, () => {
+const widgetUrl = computed(() => {
 	if (!sellable.value) {
-		return;
+		return '';
 	}
 
-	widgetUrl.value = Environment.widgetHost + '/package/v1?key=' + sellable.value.key;
+	let url = Environment.widgetHost + '/package/v1?key=' + sellable.value.key;
 	if (theme.value === 'light') {
-		widgetUrl.value += '&theme=light';
+		url += '&theme=light';
 	}
-
-	widgetCode.value =
-		'<iframe src="' + widgetUrl.value + '" frameborder="0" width="500" height="245"></iframe>';
+	return url;
 });
+
+const widgetCode = computed(() =>
+	widgetUrl.value
+		? `<iframe src="${widgetUrl.value}" frameborder="0" width="500" height="245"></iframe>`
+		: ''
+);
 
 createAppRoute({
 	onResolved({ payload }) {
 		sellable.value = payload.sellable ? new SellableModel(payload.sellable) : null;
-		theme.value = ''; // Default to dark.
 	},
 });
 </script>
@@ -106,7 +107,7 @@ createAppRoute({
 				<AppTranslate>Embed Code</AppTranslate>
 			</h3>
 
-			<textarea v-model="widgetCode" class="form-control" rows="3" readonly />
+			<textarea :value="widgetCode" class="form-control" rows="3" readonly />
 		</div>
 		<div class="col-sm-10 col-md-7 col-lg-6">
 			<h3 :class="{ 'section-header': getScreen().isDesktop.value }">
