@@ -295,7 +295,7 @@ async function toggleFavorite(searchResult: SearchResult) {
 						<input
 							ref="searchInput"
 							class="search form-control"
-							:placeholder="$gettext('Search Tenor...')"
+							:placeholder="$gettext('Search KLIPY...')"
 							:disabled="loadingCategories ? 'true' : undefined"
 							:value="searchValue"
 							@input="onSearchInput"
@@ -303,6 +303,14 @@ async function toggleFavorite(searchResult: SearchResult) {
 						/>
 					</div>
 				</div>
+				<a
+					class="klipy-attribution text-muted"
+					href="https://klipy.com"
+					target="_blank"
+					rel="noopener"
+				>
+					{{ $gettext(`Powered by KLIPY`) }}
+				</a>
 				<div v-if="loadingCategories" class="loading-categories">
 					<AppLoading centered big />
 				</div>
@@ -459,6 +467,17 @@ $result-border-width = 4px
 		color: var(--theme-fg-muted)
 
 	&:hover .-icon
+		color: var(--theme-fg)
+
+.klipy-attribution
+	display: block
+	margin-top: 6px
+	margin-left: 8px
+	font-size: $font-size-tiny
+	letter-spacing: 0.5px
+	text-transform: uppercase
+
+	&:hover
 		color: var(--theme-fg)
 
 .loading-categories
