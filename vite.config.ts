@@ -370,6 +370,17 @@ export default defineConfig(async (_configEnv: ConfigEnv): Promise<ViteUserConfi
 						// reachable locally.
 						host: true,
 
+						// Vite blocks requests whose Host header isn't in this
+						// list. The reverse proxy reaches us through the docker
+						// host gateway, so it sends `host.docker.internal`. The
+						// leading dot is a subdomain wildcard, covering us for
+						// when the proxy forwards the original host instead.
+						//
+						// Keep this an explicit list rather than `true`, since
+						// we bind to 0.0.0.0 above and this check is what keeps
+						// the devserver from answering to anything else.
+						allowedHosts: ['host.docker.internal', '.development.gamejolt.com'],
+
 						// The devserver runs locally on port 8080, but is
 						// served from https://development.gamejolt.com. This
 						// will cause requests to the HMR endpoint to get
