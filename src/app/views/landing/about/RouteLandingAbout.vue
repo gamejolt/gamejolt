@@ -136,7 +136,7 @@ createAppRoute({
 								<div v-for="username of staff" :key="username" class="-staff-item">
 									<a :href="`https://gamejolt.com/@${username}`">
 										<img
-											:src="assetUrls[`./profile-/${username}.jpg`]"
+											:src="assetUrls[`./profile-${username}.jpg`]"
 											:alt="`@${username}`"
 											class="-avatar"
 										/>
