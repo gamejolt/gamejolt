@@ -11,7 +11,7 @@ import { $gettext } from '~common/translate/translate.service';
 import { imageJolt } from '~img/images';
 import { arrayShuffle } from '~utils/array';
 
-const assetUrls = import.meta.glob<string>('./*.(png|jpg)', {
+const assetUrls = import.meta.glob<string>('./*.{png,jpg}', {
 	eager: true,
 	query: '?url',
 	import: 'default',

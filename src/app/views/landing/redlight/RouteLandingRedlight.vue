@@ -45,7 +45,7 @@ const handles = [
 	'Bungie',
 ];
 
-const assetPaths = import.meta.glob<string>('./*.(svg|png)', {
+const assetPaths = import.meta.glob<string>('./*.{svg,png}', {
 	eager: true,
 	query: '?url',
 	import: 'default',

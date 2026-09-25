@@ -7,7 +7,7 @@ import AppThemeSvg from '~common/theme/svg/AppThemeSvg.vue';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import { imageJolt } from '~img/images';
 
-const assetPaths = import.meta.glob<string>('./*.(svg|png)', {
+const assetPaths = import.meta.glob<string>('./*.{svg,png}', {
 	eager: true,
 	query: '?url',
 	import: 'default',

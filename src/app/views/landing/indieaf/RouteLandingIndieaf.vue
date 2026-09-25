@@ -12,7 +12,7 @@ import AppSocialTwitterShare from '~common/social/twitter/share/AppSocialTwitter
 import { useCommonStore } from '~common/store/common-store';
 import { $gettext } from '~common/translate/translate.service';
 
-const assetPaths = import.meta.glob<string>('./*.(svg|jpg|png)', {
+const assetPaths = import.meta.glob<string>('./*.{svg,jpg,png}', {
 	eager: true,
 	query: '?url',
 	import: 'default',
