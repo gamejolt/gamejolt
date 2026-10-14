@@ -242,7 +242,7 @@ async function reloadPreviewComments() {
 		<section class="section section-thin">
 			<AppAdWidget
 				v-if="globalShouldShowAds && !isMobile"
-				unit-name="billboard"
+				unit-name="leaderboard"
 				:style-override="{
 					paddingBottom: `8px`,
 					marginBottom: kLineHeightComputed.px,
@@ -307,7 +307,7 @@ async function reloadPreviewComments() {
 								:affixed-styles="styleWhen(screenWidth > 2300, { right: `8px` })"
 							>
 								<AppAdWidget
-									unit-name="mpu"
+									unit-name="incontent"
 									:style-override="{
 										...styleChangeBg('bg'),
 										...styleElevate(3),

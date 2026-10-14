@@ -75,11 +75,18 @@ const ownerGames = ref<GameModel[]>([]);
 const recommendedGames = ref<GameModel[]>([]);
 
 const videoAdDone = ref(false);
-const showMonetizeMoreFallback = ref(false);
+const showInstreamSlot = ref(false);
 let videoAdResolver: () => void;
 const videoAdPromise = new Promise<void>(resolve => {
 	videoAdResolver = resolve;
 });
+
+// AdBridg serves the video through its own in-stream slot. We don't hear back
+// from it when the video is done, so we don't hold the download for it.
+if (adStore.adapter.provider === 'adbridg') {
+	showInstreamSlot.value = true;
+	onVideoAdDone();
+}
 
 const type = toRef(() => route.params['type'] as 'build' | 'soundtrack');
 
@@ -163,7 +170,7 @@ const { isBootstrapped } = createAppRoute({
 		}
 	},
 	onDestroyed() {
-		_releaseAdSettings;
+		_releaseAdSettings();
 	},
 });
 
@@ -190,8 +197,8 @@ function onVideoAdDone() {
 }
 
 function onVideoAdFail() {
-	// Show MonetizeMore fallback when IMA SDK fails.
-	showMonetizeMoreFallback.value = true;
+	// Show the in-stream slot as a fallback when IMA SDK fails.
+	showInstreamSlot.value = true;
 
 	// We resolve the video ad promise anyway so that the download can start.
 	onVideoAdDone();
@@ -212,7 +219,7 @@ function onVideoAdFail() {
 		>
 			<AppAdTakeoverFloat v-if="isDesktop">
 				<AppAdWidget
-					unit-name="billboard"
+					unit-name="leaderboard"
 					:style-override="{
 						marginBottom: `16px`,
 					}"
@@ -223,14 +230,14 @@ function onVideoAdFail() {
 				<template v-if="isDesktop" #left>
 					<AppScrollAffix>
 						<AppAdTakeoverFloat>
-							<AppAdWidget unit-name="halfpage" takeover />
+							<AppAdWidget unit-name="sidebar" takeover />
 						</AppAdTakeoverFloat>
 					</AppScrollAffix>
 				</template>
 				<template v-if="isLg" #right>
 					<AppScrollAffix>
 						<AppAdTakeoverFloat>
-							<AppAdWidget unit-name="halfpage" />
+							<AppAdWidget unit-name="sidebar" />
 						</AppAdTakeoverFloat>
 					</AppScrollAffix>
 				</template>
@@ -267,8 +274,8 @@ function onVideoAdFail() {
 							<AppAdGptVideo @fail="onVideoAdFail" @done="onVideoAdDone" />
 							<AppSpacer vertical :scale="4" />
 						</template>
-						<template v-else-if="showMonetizeMoreFallback">
-							<AppAdWidget unit-name="video" />
+						<template v-else-if="showInstreamSlot">
+							<AppAdWidget unit-name="instream" />
 							<AppSpacer vertical :scale="4" />
 						</template>
 

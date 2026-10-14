@@ -1,19 +1,29 @@
 <script lang="ts" setup>
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 
-import { AdAdapterComponentProps } from '~common/ad/adapter-base';
+import { AdSlot, AdUnitName } from '~common/ad/ad-slot-info';
 import AppAdMonetizeMoreNativePost, {
 	AdNativePostProps,
 } from '~common/ad/monetizemore/AppAdMonetizeMoreNativePost.vue';
 import AppAdMonetizeMoreTakeover, {
 	AdTakeoverProps,
 } from '~common/ad/monetizemore/AppAdMonetizeMoreTakeover.vue';
-import { AdMonetizeMoreAdapter } from '~common/ad/monetizemore/monetizemore-adapter';
+import { MonetizeMoreAdapter } from '~common/ad/monetizemore/monetizemore-adapter';
 import { getScreen } from '~common/screen/screen-service';
 
-type Props = AdAdapterComponentProps<AdMonetizeMoreAdapter>;
+type Props = {
+	adSlot: AdSlot;
+	adapter: MonetizeMoreAdapter;
+};
 
 const { adSlot, adapter } = defineProps<Props>();
+
+const MonetizeMoreUnits: Record<Exclude<AdUnitName, 'instream'>, string> = {
+	leaderboard: 'billboard',
+	sidebar: 'halfpage',
+	gutter: 'rail',
+	incontent: 'mpu',
+};
 
 const takeoverData = ref<AdTakeoverProps | null>(null);
 const nativePostData = ref<AdNativePostProps | null>(null);
@@ -37,9 +47,11 @@ onBeforeUnmount(() => {
 
 const tagUnit = computed(() => {
 	// Handle special video unit case.
-	if (adSlot.unitName === 'video') {
+	if (adSlot.unitName === 'instream') {
 		return 'gamejolt.com_OS_OOP';
 	}
+
+	const unit = MonetizeMoreUnits[adSlot.unitName];
 
 	let suffix = '';
 	if (adSlot.takeover) {
@@ -47,9 +59,7 @@ const tagUnit = computed(() => {
 	} else if (adSlot.nativePost) {
 		suffix = '_native';
 	}
-	return getScreen().isMobile.value
-		? `mobile_${adSlot.unitName}${suffix}`
-		: `desktop_${adSlot.unitName}${suffix}`;
+	return getScreen().isMobile.value ? `mobile_${unit}${suffix}` : `desktop_${unit}${suffix}`;
 });
 
 function showTakeover(event: MessageEvent) {

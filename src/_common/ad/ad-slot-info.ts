@@ -1,4 +1,14 @@
-export type AdUnitName = 'halfpage' | 'rail' | 'billboard' | 'mpu' | 'video';
+/**
+ * Where on the page an ad slot is placed. Each ad adapter maps these to its own
+ * ad units.
+ *
+ * - leaderboard: wide banner at the top of a page.
+ * - sidebar: tall unit in a page's sidebar column.
+ * - gutter: narrow rail in the page gutter, only on very wide screens.
+ * - incontent: repeating unit within feeds, grids and lists.
+ * - instream: 16:9 video unit.
+ */
+export type AdUnitName = 'leaderboard' | 'sidebar' | 'gutter' | 'incontent' | 'instream';
 
 export class AdSlot {
 	/**

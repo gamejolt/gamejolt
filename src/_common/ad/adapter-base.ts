@@ -1,49 +1,35 @@
-import type { PropType } from 'vue';
-
-import { AdSlot } from '~common/ad/ad-slot-info';
-import { isDynamicGoogleBot } from '~common/device/device.service';
-
-export interface AdAdapter {
-	onBeforeRouteChange(): void;
-	onRouteChanged(): void;
-}
-
-export class AdAdapterHelper {
-	private ranOnce = false;
-
-	/**
-	 * Convenience method to run something just once for this adapter. Most
-	 * likely an adapter would use this to load the ad script just once on the
-	 * first ad display (lazy initialization).
-	 */
-	runOnce(cb: () => void) {
-		if (import.meta.env.SSR || isDynamicGoogleBot() || this.ranOnce) {
-			return;
-		}
-
-		cb();
-		this.ranOnce = true;
-	}
-}
+import { AdPageView } from '~common/ad/ad-page-view';
+import { AdProvider } from '~common/ad/ad-provider';
 
 /**
- * Used to define the common interface for all ad adapter components. These are
- * always passed into every ad adapter's components to display the actual ads.
+ * The ad store drives every adapter through this. Adapters are only ever
+ * created on devices that are allowed to show ads.
  */
-export function defineAdAdapterComponentProps<T extends AdAdapter>() {
-	return {
-		adSlot: {
-			type: Object as PropType<AdSlot>,
-			required: true,
-		},
-		adapter: {
-			type: Object as PropType<T>,
-			required: true,
-		},
-	} as const;
-}
+export type AdAdapterBase = {
+	provider: AdProvider;
 
-export type AdAdapterComponentProps<T extends AdAdapter> = {
-	adSlot: AdSlot;
-	adapter: T;
+	/**
+	 * Called once when the ad store is created.
+	 */
+	init(): void;
+
+	/**
+	 * A route change has started. The previous page is about to go away.
+	 */
+	onBeforeRouteChange(): void;
+
+	/**
+	 * The new page has resolved and rendered. When [isCorrection] is true, the
+	 * page view for this route was already sent, but the page's ad settings
+	 * changed after the fact.
+	 */
+	onPageView(pageView: AdPageView, options: { isCorrection: boolean }): void;
 };
+
+/**
+ * Checks that an adapter implements the base while keeping its own extra
+ * functions in the returned type.
+ */
+export function defineAdAdapter<T extends AdAdapterBase>(adapter: T) {
+	return adapter;
+}
