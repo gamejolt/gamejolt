@@ -1,19 +1,25 @@
 import {
 	inject,
 	InjectionKey,
+	nextTick,
 	onUnmounted,
 	provide,
 	ref,
 	shallowReadonly,
 	shallowRef,
 	toRef,
+	watch,
 } from 'vue';
 import { RouteLocationNormalized, useRouter } from 'vue-router';
 
-import { AdMonetizeMoreAdapter } from '~common/ad/monetizemore/monetizemore-adapter';
+import { AdPageType, AdPageView, getAdPageType } from '~common/ad/ad-page-view';
+import { resolveAdProvider } from '~common/ad/ad-provider';
+import { createAdBridgAdapter } from '~common/ad/adbridg/adbridg-adapter';
+import { createMonetizeMoreAdapter } from '~common/ad/monetizemore/monetizemore-adapter';
 import { isDynamicGoogleBot } from '~common/device/device.service';
 import { Model } from '~common/model/model.service';
-import { onRouteChangeAfter } from '~common/route/route-component';
+import { AppRouteOptionsInternal, onRouteChangeAfter } from '~common/route/route-component';
+import { useCommonStore } from '~common/store/common-store';
 import { objectEquals } from '~utils/object';
 import { loadScript } from '~utils/utils';
 
@@ -27,37 +33,40 @@ export const AdsDisabledDev = GJ_BUILD_TYPE === 'serve-hmr' || GJ_BUILD_TYPE ===
 const areAdsDisabledForDevice =
 	GJ_IS_DESKTOP_APP || import.meta.env.SSR || isDynamicGoogleBot() || AdsDisabledDev;
 
-/**
- * This is the interface that our ad components must register with us.
- */
-export type AdInterface = { display: () => void };
-
 export class AdSettingsContainer {
 	isPageDisabled = false;
 	resource: Model | null = null;
 }
 
 export function createAdStore() {
-	const routeResolved = ref(false);
-	const ads = ref(new Set<AdInterface>());
+	const { user } = useCommonStore();
+
+	const provider = resolveAdProvider();
+	const adapter = provider === 'adbridg' ? createAdBridgAdapter() : createMonetizeMoreAdapter();
+
 	const pageSettings = ref<AdSettingsContainer | null>(null);
 	const _defaultSettings = new AdSettingsContainer();
 	const targetingTags = ref<string[]>([]);
 
-	const monetizeMoreAdapter = new AdMonetizeMoreAdapter();
+	/**
+	 * The page type of the current route, once it has resolved. Null while a
+	 * route change is in progress.
+	 */
+	const pageType = ref<AdPageType | null>(null);
 
 	const settings = toRef(() => pageSettings.value || _defaultSettings);
+
+	/**
+	 * Whether the current page allows ads at all, regardless of device.
+	 */
+	const allowAdsOnPage = toRef(() => !settings.value.isPageDisabled);
 
 	const shouldShow = toRef(() => {
 		if (areAdsDisabledForDevice) {
 			return false;
 		}
 
-		if (settings.value.isPageDisabled) {
-			return false;
-		}
-
-		return true;
+		return allowAdsOnPage.value;
 	});
 
 	const hasTakeover = ref(false);
@@ -65,9 +74,7 @@ export function createAdStore() {
 	const videoAdsLoaded = ref(false);
 
 	const c = shallowReadonly({
-		monetizeMoreAdapter,
-		routeResolved,
-		ads,
+		adapter,
 		pageSettings,
 		settings,
 		shouldShow,
@@ -82,31 +89,94 @@ export function createAdStore() {
 		return c;
 	}
 
+	adapter.init();
+
+	const router = useRouter();
+
+	/**
+	 * Whether we've told the adapter about the current page yet.
+	 */
+	let sentPageView = false;
+
+	function _buildPageView(type: AdPageType): AdPageView {
+		return {
+			pageType: type,
+			loggedIn: !!user.value,
+			// Pages without an ad section never had ads, so keep it that way.
+			allowAds: type !== 'other' && allowAdsOnPage.value,
+			targetingTags: targetingTags.value,
+		};
+	}
+
 	// We set up events so that we know when a route begins and when the
 	// routing is fully resolved.
-	const beforeDeregister = useRouter().beforeEach((to, from, next) => {
+	const beforeDeregister = router.beforeEach((to, from, next) => {
 		// Make sure we only update if the route actually changed,
 		// since this gets called even if just a simple hash has
 		// changed.
 		if (_didRouteChange(from, to)) {
-			monetizeMoreAdapter.onBeforeRouteChange();
-			routeResolved.value = false;
+			adapter.onBeforeRouteChange();
+			pageType.value = null;
+			sentPageView = false;
+
+			// The new route's payload will set new ones if it has any.
+			targetingTags.value = [];
 		}
 		next();
 	});
 
-	const routeAfter$ = onRouteChangeAfter.subscribe(() => {
-		if (routeResolved.value) {
+	const routeAfter$ = onRouteChangeAfter.subscribe(() => _onPageResolved());
+
+	// Routes without a resolver never emit [onRouteChangeAfter], so we have to
+	// send their page view as soon as the navigation finishes. 404s don't
+	// match any route and are handled the same way.
+	const afterDeregister = router.afterEach((to, from, failure) => {
+		if (!failure && _didRouteChange(from, to) && !_hasRouteResolver(to)) {
+			_onPageResolved();
+		}
+	});
+
+	// The app mounts after the initial navigation finished, so the afterEach
+	// hook above missed the page we landed on.
+	if (!_hasRouteResolver(router.currentRoute.value)) {
+		_onPageResolved();
+	}
+
+	async function _onPageResolved() {
+		if (pageType.value) {
 			return;
 		}
 
-		routeResolved.value = true;
-		monetizeMoreAdapter.onRouteChanged();
-		_displayAds(Array.from(ads.value));
+		const type = getAdPageType(router.currentRoute.value);
+		pageType.value = type;
+
+		// Wait for the resolved page to render so that its ad slots are in
+		// the DOM.
+		await nextTick();
+
+		// The route may have changed again while we were waiting.
+		if (pageType.value !== type) {
+			return;
+		}
+
+		adapter.onPageView(_buildPageView(type), { isCorrection: false });
+		sentPageView = true;
+	}
+
+	// A page may set its ad settings after the route resolved, for example
+	// when a parent route resolves after its child. Let the adapter know so
+	// it doesn't keep running with the wrong settings.
+	watch(allowAdsOnPage, () => {
+		if (!pageType.value || !sentPageView) {
+			return;
+		}
+
+		adapter.onPageView(_buildPageView(pageType.value), { isCorrection: true });
 	});
 
 	onUnmounted(() => {
 		beforeDeregister();
+		afterDeregister();
 		routeAfter$.close();
 	});
 
@@ -123,6 +193,24 @@ function _didRouteChange(from: RouteLocationNormalized, to: RouteLocationNormali
 	);
 }
 
+/**
+ * Only the deepest route with app route options emits [onRouteChangeAfter], and
+ * only when it has a resolver.
+ */
+function _hasRouteResolver(route: RouteLocationNormalized) {
+	for (const record of [...route.matched].reverse()) {
+		const component = record.components?.default as
+			| { appRouteOptions?: AppRouteOptionsInternal }
+			| undefined;
+
+		if (component?.appRouteOptions) {
+			return !!component.appRouteOptions.resolver;
+		}
+	}
+
+	return false;
+}
+
 export function useAdStore() {
 	return inject(AdStoreKey)!;
 }
@@ -133,27 +221,6 @@ export function setPageAdsSettings({ pageSettings }: AdStore, container: AdSetti
 
 export function releasePageAdsSettings({ pageSettings }: AdStore) {
 	pageSettings.value = null;
-}
-
-export function addAd(c: AdStore, ad: AdInterface) {
-	const { ads, routeResolved } = c;
-	ads.value.add(ad);
-
-	// If the route already resolved then this ad was mounted after the
-	// fact. We have to call the initial display.
-	if (routeResolved.value) {
-		_displayAds([ad]);
-	}
-}
-
-export function removeAd({ ads }: AdStore, ad: AdInterface) {
-	ads.value.delete(ad);
-}
-
-async function _displayAds(displayedAds: AdInterface[]) {
-	for (const ad of displayedAds) {
-		ad.display();
-	}
 }
 
 export async function loadVideoAdsTag({ videoAdsLoadPromise, videoAdsLoaded }: AdStore) {
@@ -174,18 +241,12 @@ export async function loadVideoAdsTag({ videoAdsLoadPromise, videoAdsLoaded }: A
 	return videoAdsLoadPromise.value;
 }
 
-export function setAdsTargetingTags(
-	{ monetizeMoreAdapter, targetingTags }: AdStore,
-	tags: string[]
-) {
+export function setAdsTargetingTags({ targetingTags }: AdStore, tags: string[]) {
 	if (areAdsDisabledForDevice) {
 		console.info('Not setting ad targeting tags since ads are disabled for device.');
 		return;
 	}
 
-	const processedTags = tags.map(tag => `tt_${tag}`);
-
-	// Store centrally so video ads can use them.
-	targetingTags.value = processedTags;
-	monetizeMoreAdapter.setTargetingTags(processedTags);
+	// Stored centrally so that the adapters and video ads can use them.
+	targetingTags.value = tags;
 }

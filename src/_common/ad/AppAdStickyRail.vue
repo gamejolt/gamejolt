@@ -34,7 +34,7 @@ const { screenWidth } = getScreen();
 		>
 			<!-- We set the padding to 80 just in case there's a top nav affixed -->
 			<AppScrollAffix :padding="80">
-				<AppAdWidget unit-name="rail" />
+				<AppAdWidget unit-name="gutter" />
 			</AppScrollAffix>
 		</div>
 
@@ -50,7 +50,7 @@ const { screenWidth } = getScreen();
 		>
 			<!-- We set the padding to 80 just in case there's a top nav affixed -->
 			<AppScrollAffix :padding="80">
-				<AppAdWidget unit-name="rail" />
+				<AppAdWidget unit-name="gutter" />
 			</AppScrollAffix>
 		</div>
 

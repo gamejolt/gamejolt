@@ -220,7 +220,7 @@ function shouldShowAd(index: number) {
 
 				<template v-if="shouldShowAd(i)">
 					<AppAdWidget
-						unit-name="mpu"
+						unit-name="incontent"
 						:native-post="i === 1"
 						class-override="well fill-offset full-bleed-xs text-center"
 						:style-override="

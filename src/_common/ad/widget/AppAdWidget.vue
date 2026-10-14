@@ -3,7 +3,8 @@ import { ref, StyleValue, watch } from 'vue';
 
 import { AdSlot, AdUnitName } from '~common/ad/ad-slot-info';
 import { useAdStore } from '~common/ad/ad-store';
-import AppAdWidgetInner from '~common/ad/widget/AppAdWidgetInner.vue';
+import AppAdAdBridg from '~common/ad/adbridg/AppAdAdBridg.vue';
+import AppAdMonetizeMoreSlot from '~common/ad/monetizemore/AppAdMonetizeMoreSlot.vue';
 import AppAspectRatio from '~common/aspect-ratio/AppAspectRatio.vue';
 import { styleWhen } from '~styles/mixins';
 
@@ -17,7 +18,7 @@ type Props = {
 
 const { unitName, takeover = false, nativePost = false } = defineProps<Props>();
 
-const { shouldShow } = useAdStore();
+const { shouldShow, adapter } = useAdStore();
 
 const adSlot = ref(_makeAdSlot());
 
@@ -43,26 +44,30 @@ function _makeAdSlot() {
 				alignItems: `center`,
 				justifyContent: `center`,
 				margin: `0 auto`,
-				...styleWhen(unitName === 'billboard', {
+				...styleWhen(unitName === 'leaderboard', {
 					minHeight: `115px`,
 				}),
-				...styleWhen(unitName === 'mpu' || unitName === 'halfpage', {
+				...styleWhen(unitName === 'incontent' || unitName === 'sidebar', {
 					minHeight: `250px`,
 				}),
 				// For debugging ad placements.
 				...styleWhen(GJ_BUILD_TYPE !== 'build', {
 					background: `rgba(255, 0, 0, 0.2)`,
-					...styleWhen(unitName === 'rail', {
+					...styleWhen(unitName === 'gutter', {
 						minWidth: `160px`,
 						minHeight: `600px`,
 					}),
 				}),
 			}"
 		>
-			<AppAspectRatio v-if="unitName === 'video'" :ratio="16 / 9">
-				<AppAdWidgetInner :ad-slot="adSlot" />
+			<AppAspectRatio v-if="unitName === 'instream'" :ratio="16 / 9">
+				<AppAdAdBridg v-if="adapter.provider === 'adbridg'" :ad-slot :adapter />
+				<AppAdMonetizeMoreSlot v-else :ad-slot :adapter />
 			</AppAspectRatio>
-			<AppAdWidgetInner v-else :ad-slot="adSlot" />
+			<template v-else>
+				<AppAdAdBridg v-if="adapter.provider === 'adbridg'" :ad-slot :adapter />
+				<AppAdMonetizeMoreSlot v-else :ad-slot :adapter />
+			</template>
 		</div>
 	</div>
 </template>

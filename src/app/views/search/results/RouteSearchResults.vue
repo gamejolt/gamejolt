@@ -153,7 +153,7 @@ const slicedRealms = computed(() => {
 					:padding="isLg ? 80 : 8"
 				>
 					<AppAdWidget
-						unit-name="mpu"
+						unit-name="incontent"
 						:style-override="{
 							...styleChangeBg('bg'),
 							...styleElevate(3),

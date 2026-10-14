@@ -274,7 +274,7 @@ async function onFriendRequestReject() {
 
 								<AppSpacer vertical :scale="4" />
 								<AppAdWidget
-									unit-name="halfpage"
+									unit-name="sidebar"
 									takeover
 									:style-override="{
 										...styleChangeBg('bg'),
@@ -321,7 +321,7 @@ async function onFriendRequestReject() {
 
 							<AppSpacer vertical :scale="4" />
 							<AppAdWidget
-								unit-name="halfpage"
+								unit-name="sidebar"
 								takeover
 								:style-override="{
 									...styleChangeBg('bg'),
