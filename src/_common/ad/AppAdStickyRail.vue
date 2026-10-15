@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { useAdStore } from '~common/ad/ad-store';
+import AppAdAdBridgStickyTarget from '~common/ad/adbridg/AppAdAdBridgStickyTarget.vue';
 import AppAdWidget from '~common/ad/widget/AppAdWidget.vue';
 import { getScreen } from '~common/screen/screen-service';
 import AppScrollAffix from '~common/scroll/AppScrollAffix.vue';
@@ -12,25 +13,24 @@ type Props = {
 	 * The minimum width in pixels that the screen must be for the ads to show.
 	 */
 	minWidth?: number;
+	/**
+	 * For pages that have a sidebar. AdBridg's sticky has to sit below the
+	 * sidebar content, so the page renders it there instead.
+	 */
+	hideAdBridgSticky?: boolean;
 };
 
-const { showLeft, showRight, minWidth = 2000 } = defineProps<Props>();
+const { showLeft, showRight, minWidth = 2000, hideAdBridgSticky } = defineProps<Props>();
 
 const { shouldShow, adapter } = useAdStore();
 const { screenWidth, isMobile } = getScreen();
+
+const isAdBridg = adapter.provider === 'adbridg';
 </script>
 
 <template>
 	<div :style="{ position: `relative` }">
-		<template v-if="adapter.provider === 'adbridg'">
-			<!-- AdBridg runs all the sticky logic, we only give them the target. -->
-			<div
-				v-if="(showLeft || showRight) && shouldShow && !isMobile"
-				id="dt-sticky-sidebar-target"
-				:style="{ width: `100%` }"
-			/>
-		</template>
-		<template v-else>
+		<template v-if="!isAdBridg">
 			<div
 				v-if="showLeft && shouldShow && screenWidth >= minWidth"
 				:style="{
@@ -65,5 +65,16 @@ const { screenWidth, isMobile } = getScreen();
 		</template>
 
 		<slot />
+
+		<!-- AdBridg's sticky always sits below the content. -->
+		<AppAdAdBridgStickyTarget
+			v-if="
+				isAdBridg &&
+				!hideAdBridgSticky &&
+				(showLeft || showRight) &&
+				shouldShow &&
+				!isMobile
+			"
+		/>
 	</div>
 </template>

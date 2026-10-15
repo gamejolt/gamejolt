@@ -222,8 +222,10 @@ const noResults = computed(() => {
 	<AppShellPageBackdrop id="search-results">
 		<section v-if="hasSearch" class="section">
 			<!-- Game results are wider and already show a sticky video ad on the right -->
+			<!-- The results page has a sidebar that holds the AdBridg sticky. -->
 			<AppAdStickyRail
 				show-left
+				:hide-ad-bridg-sticky="route.name === 'search.results'"
 				:show-right="route.name !== 'search.games'"
 				:min-width="route.name === 'search.games' ? 2000 : 1600"
 			>
