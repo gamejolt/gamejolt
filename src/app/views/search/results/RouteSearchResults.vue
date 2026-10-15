@@ -11,6 +11,8 @@ import AppPageContainer from '~app/components/page-container/AppPageContainer.vu
 import { sendSearch } from '~app/components/search/search-service';
 import { routeSearchRealms } from '~app/views/search/realms/realms.route';
 import { useSearchRouteController } from '~app/views/search/RouteSearch.vue';
+import { useAdStore } from '~common/ad/ad-store';
+import AppAdAdBridgStickyTarget from '~common/ad/adbridg/AppAdAdBridgStickyTarget.vue';
 import AppAdWidget from '~common/ad/widget/AppAdWidget.vue';
 import AppButton from '~common/button/AppButton.vue';
 import AppCommunityThumbnail from '~common/community/thumbnail/AppCommunityThumbnail.vue';
@@ -43,6 +45,8 @@ export default {
 const route = useRoute();
 const { processPayload, hasSearch, searchPayload, query } = useSearchRouteController()!;
 const { isXs, isSm, isLg, isMobile } = getScreen();
+const { shouldShow: globalShouldShowAds, adapter } = useAdStore();
+const isAdBridg = adapter.provider === 'adbridg';
 
 const feed = ref(null) as Ref<ActivityFeedView | null>;
 
@@ -141,6 +145,7 @@ const slicedRealms = computed(() => {
 				<AppSpacer vertical :scale="6" />
 
 				<AppScrollAffix
+					:disabled="isAdBridg"
 					:style="{
 						position: `relative`,
 						zIndex: kLayerAds,
@@ -197,6 +202,11 @@ const slicedRealms = computed(() => {
 							{{ $gettext(`View all`) }}
 						</RouterLink>
 					</div>
+				</template>
+
+				<template v-if="globalShouldShowAds && isAdBridg">
+					<AppSpacer vertical :scale="4" />
+					<AppAdAdBridgStickyTarget />
 				</template>
 			</template>
 

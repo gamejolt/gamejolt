@@ -48,7 +48,7 @@ const emit = defineEmits<{
 	sort: [games: GameModel[]];
 }>();
 
-const { shouldShow: globalShouldShowAds } = useAdStore();
+const { shouldShow: globalShouldShowAds, adapter } = useAdStore();
 const { isXs, isSm, isMd, isLg, isDesktop, screenWidth } = getScreen();
 
 const id = ++idCounter;
@@ -158,7 +158,7 @@ function shouldShowAd(index: number) {
 					>
 						<AppScrollAffix
 							:style="{ position: `relative`, zIndex: kLayerAds }"
-							:disabled="!shouldShowStickyAd"
+							:disabled="!shouldShowStickyAd || adapter.provider === 'adbridg'"
 							:padding="8"
 							:affixed-styles="{ right: `8px` }"
 						>

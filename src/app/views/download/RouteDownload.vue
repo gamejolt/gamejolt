@@ -67,6 +67,7 @@ const adStore = useAdStore();
 const appPromotionStore = useAppPromotionStore();
 const route = useRoute();
 const { isLg, isDesktop } = getScreen();
+const isAdBridg = adStore.adapter.provider === 'adbridg';
 
 const downloadStarted = ref(false);
 const game = ref<GameModel>(null as any);
@@ -83,7 +84,7 @@ const videoAdPromise = new Promise<void>(resolve => {
 
 // AdBridg serves the video through its own in-stream slot. We don't hear back
 // from it when the video is done, so we don't hold the download for it.
-if (adStore.adapter.provider === 'adbridg') {
+if (isAdBridg) {
 	showInstreamSlot.value = true;
 	onVideoAdDone();
 }
@@ -228,14 +229,14 @@ function onVideoAdFail() {
 
 			<AppPageContainer xl>
 				<template v-if="isDesktop" #left>
-					<AppScrollAffix>
+					<AppScrollAffix :disabled="isAdBridg">
 						<AppAdTakeoverFloat>
 							<AppAdWidget unit-name="sidebar" takeover />
 						</AppAdTakeoverFloat>
 					</AppScrollAffix>
 				</template>
 				<template v-if="isLg" #right>
-					<AppScrollAffix>
+					<AppScrollAffix :disabled="isAdBridg">
 						<AppAdTakeoverFloat>
 							<AppAdWidget unit-name="sidebar" />
 						</AppAdTakeoverFloat>

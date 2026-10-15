@@ -42,7 +42,6 @@ type AdBridgSlotDefinition = {
 const DesktopSlots: Partial<Record<AdUnitName, AdBridgSlotDefinition>> = {
 	leaderboard: { slot: 'lb', maxWidth: 970, maxHeight: 250 },
 	sidebar: { slot: 'rail-left', maxWidth: 300, maxHeight: 600 },
-	gutter: { slot: 'rail-left', maxWidth: 300, maxHeight: 600 },
 	incontent: { slot: 'incontent', maxWidth: 336, maxHeight: 280 },
 	instream: { slot: 'instream' },
 };

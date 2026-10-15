@@ -27,6 +27,7 @@ import AppGameStatbar from '~app/views/discover/games/view/overview/_statbar/App
 import AppDiscoverGamesViewOverviewSupporters from '~app/views/discover/games/view/overview/AppDiscoverGamesViewOverviewSupporters.vue';
 import { useGameRouteController } from '~app/views/discover/games/view/RouteDiscoverGamesView.vue';
 import { useAdStore } from '~common/ad/ad-store';
+import AppAdAdBridgStickyTarget from '~common/ad/adbridg/AppAdAdBridgStickyTarget.vue';
 import AppAdStickyRail from '~common/ad/AppAdStickyRail.vue';
 import AppAdWidget from '~common/ad/widget/AppAdWidget.vue';
 import { trackExperimentEngagement } from '~common/analytics/analytics.service';
@@ -109,11 +110,18 @@ const {
 	toggleDetails,
 } = useGameRouteController()!;
 
-const { shouldShow: globalShouldShowAds } = useAdStore();
+const { shouldShow: globalShouldShowAds, adapter } = useAdStore();
+const isAdBridg = adapter.provider === 'adbridg';
 const commentManager = useCommentStoreManager()!;
 const router = useRouter();
 const route = useRoute();
 const { isLg, isMobile, screenWidth } = getScreen();
+
+/**
+ * AdBridg's sticky has to be the last thing in the sidebar. When the columns
+ * get combined, the comments end up below the right column, so it moves there.
+ */
+const showAdBridgSticky = computed(() => globalShouldShowAds.value && isAdBridg && !isMobile.value);
 
 const isBootstrapped = ref(false);
 const feed = ref(null) as Ref<ActivityFeedView | null>;
@@ -250,7 +258,7 @@ async function reloadPreviewComments() {
 				}"
 			/>
 
-			<AppAdStickyRail show-left>
+			<AppAdStickyRail show-left hide-ad-bridg-sticky>
 				<AppPageContainer xl>
 					<template #left>
 						<AppGameStatbar />
@@ -271,37 +279,48 @@ async function reloadPreviewComments() {
 						<AppGameCommunityBadge v-if="game?.community" :community="game.community" />
 					</template>
 
-					<template v-if="!isMobile && game?.comments_enabled" #left-bottom>
-						<div class="pull-right">
-							<AppButton trans @click="showComments()">
-								{{ $gettext(`View all`) }}
-							</AppButton>
-						</div>
+					<template
+						v-if="!isMobile && (game?.comments_enabled || (showAdBridgSticky && !isLg))"
+						#left-bottom
+					>
+						<template v-if="game?.comments_enabled">
+							<div class="pull-right">
+								<AppButton trans @click="showComments()">
+									{{ $gettext(`View all`) }}
+								</AppButton>
+							</div>
 
-						<h4 class="section-header">
-							{{ $gettext(`Comments`) }}
-							<small v-if="commentsCount > 0">
-								({{ formatNumber(commentsCount) }})
-							</small>
-						</h4>
+							<h4 class="section-header">
+								{{ $gettext(`Comments`) }}
+								<small v-if="commentsCount > 0">
+									({{ formatNumber(commentsCount) }})
+								</small>
+							</h4>
 
-						<AppCommentAddButton
-							v-if="shouldShowCommentAdd"
-							:model="game"
-							display-mode="comments"
-						/>
+							<AppCommentAddButton
+								v-if="shouldShowCommentAdd"
+								:model="game"
+								display-mode="comments"
+							/>
 
-						<AppCommentOverview
-							:comments="overviewComments"
-							:model="game"
-							display-mode="comments"
-							@reload-comments="reloadPreviewComments"
-						/>
+							<AppCommentOverview
+								:comments="overviewComments"
+								:model="game"
+								display-mode="comments"
+								@reload-comments="reloadPreviewComments"
+							/>
+						</template>
+
+						<template v-if="showAdBridgSticky && !isLg">
+							<AppSpacer vertical :scale="4" />
+							<AppAdAdBridgStickyTarget />
+						</template>
 					</template>
 
 					<template #right>
 						<template v-if="globalShouldShowAds && !isMobile">
 							<AppScrollAffix
+								:disabled="isAdBridg"
 								:style="{ position: `relative`, zIndex: kLayerAds }"
 								:padding="isLg ? 80 : 8"
 								:affixed-styles="styleWhen(screenWidth > 2300, { right: `8px` })"
@@ -327,6 +346,11 @@ async function reloadPreviewComments() {
 
 							<AppGameListPlaceholder v-if="!isOverviewLoaded" :num="5" />
 							<AppGameList v-else :games="recommendedGames" />
+						</template>
+
+						<template v-if="showAdBridgSticky && isLg">
+							<AppSpacer vertical :scale="4" />
+							<AppAdAdBridgStickyTarget />
 						</template>
 					</template>
 
@@ -481,6 +505,11 @@ async function reloadPreviewComments() {
 								</div>
 							</div>
 						</div>
+
+						<template v-if="globalShouldShowAds && isAdBridg">
+							<AppAdWidget unit-name="instream" />
+							<AppSpacer vertical :scale="4" />
+						</template>
 
 						<AppPostAddButton v-if="hasDevlogPerms" :game="game" @add="onPostAdded" />
 
