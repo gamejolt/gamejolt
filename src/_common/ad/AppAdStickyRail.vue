@@ -16,43 +16,53 @@ type Props = {
 
 const { showLeft, showRight, minWidth = 2000 } = defineProps<Props>();
 
-const { shouldShow } = useAdStore();
-const { screenWidth } = getScreen();
+const { shouldShow, adapter } = useAdStore();
+const { screenWidth, isMobile } = getScreen();
 </script>
 
 <template>
 	<div :style="{ position: `relative` }">
-		<div
-			v-if="showLeft && shouldShow && screenWidth >= minWidth"
-			:style="{
-				position: `absolute`,
-				left: `20px`,
-				top: 0,
-				width: `160px`,
-				zIndex: kLayerAds,
-			}"
-		>
-			<!-- We set the padding to 80 just in case there's a top nav affixed -->
-			<AppScrollAffix :padding="80">
-				<AppAdWidget unit-name="gutter" />
-			</AppScrollAffix>
-		</div>
+		<template v-if="adapter.provider === 'adbridg'">
+			<!-- AdBridg runs all the sticky logic, we only give them the target. -->
+			<div
+				v-if="(showLeft || showRight) && shouldShow && !isMobile"
+				id="dt-sticky-sidebar-target"
+				:style="{ width: `100%` }"
+			/>
+		</template>
+		<template v-else>
+			<div
+				v-if="showLeft && shouldShow && screenWidth >= minWidth"
+				:style="{
+					position: `absolute`,
+					left: `20px`,
+					top: 0,
+					width: `160px`,
+					zIndex: kLayerAds,
+				}"
+			>
+				<!-- We set the padding to 80 just in case there's a top nav affixed -->
+				<AppScrollAffix :padding="80">
+					<AppAdWidget unit-name="gutter" />
+				</AppScrollAffix>
+			</div>
 
-		<div
-			v-if="showRight && shouldShow && screenWidth >= minWidth"
-			:style="{
-				position: `absolute`,
-				right: `20px`,
-				top: 0,
-				width: `160px`,
-				zIndex: kLayerAds,
-			}"
-		>
-			<!-- We set the padding to 80 just in case there's a top nav affixed -->
-			<AppScrollAffix :padding="80">
-				<AppAdWidget unit-name="gutter" />
-			</AppScrollAffix>
-		</div>
+			<div
+				v-if="showRight && shouldShow && screenWidth >= minWidth"
+				:style="{
+					position: `absolute`,
+					right: `20px`,
+					top: 0,
+					width: `160px`,
+					zIndex: kLayerAds,
+				}"
+			>
+				<!-- We set the padding to 80 just in case there's a top nav affixed -->
+				<AppScrollAffix :padding="80">
+					<AppAdWidget unit-name="gutter" />
+				</AppScrollAffix>
+			</div>
+		</template>
 
 		<slot />
 	</div>
