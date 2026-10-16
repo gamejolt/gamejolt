@@ -29,6 +29,10 @@ const target = computed(() => adapter.getSlotTarget(adSlot.unitName, isMobile.va
 			width: `100%`,
 			maxWidth: target.maxWidth ? `${target.maxWidth}px` : undefined,
 			maxHeight: target.maxHeight ? `${target.maxHeight}px` : undefined,
+			// AdBridg adds a 14px label above the unit, which overflows the max
+			// height. Reserve room for it so it doesn't spill out of whatever
+			// the ad sits in.
+			marginBottom: `14px`,
 		}"
 	/>
 </template>

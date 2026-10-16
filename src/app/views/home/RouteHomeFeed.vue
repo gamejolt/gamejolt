@@ -302,13 +302,9 @@ async function refreshQuests() {
 						<AppSpacer vertical :scale="8" />
 					</template>
 
-					<AppAdWidget unit-name="sidebar" takeover />
-
-					<!-- AdBridg's sticky goes below all of the sidebar content. -->
-					<template v-if="isAdBridg && globalShouldShowAds">
-						<AppSpacer vertical :scale="4" />
-						<AppAdAdBridgStickyTarget />
-					</template>
+					<!-- AdBridg only gets its sticky unit here, not the sidebar unit. -->
+					<AppAdAdBridgStickyTarget v-if="isAdBridg && globalShouldShowAds" />
+					<AppAdWidget v-else-if="!isAdBridg" unit-name="sidebar" takeover />
 				</template>
 
 				<!-- Main -->
