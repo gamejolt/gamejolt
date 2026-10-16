@@ -18,7 +18,7 @@ const { hasContentSidebar } = useAppStore();
 	position: relative
 	background-color: transparent
 	z-index: $zindex-shell-body
-	overflow: hidden
+	overflow: clip
 	min-height: 100vh
 
 	.container

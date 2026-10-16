@@ -60,7 +60,15 @@ function _makeAdSlot() {
 				}),
 			}"
 		>
-			<AppAspectRatio v-if="unitName === 'instream'" :ratio="16 / 9">
+			<!--
+			The aspect ratio box only has absolutely positioned children, so as a
+			flex item its width collapses to 0 and the overflow clips the player.
+			-->
+			<AppAspectRatio
+				v-if="unitName === 'instream'"
+				:ratio="16 / 9"
+				:style="{ width: `100%` }"
+			>
 				<AppAdAdBridg v-if="adapter.provider === 'adbridg'" :ad-slot :adapter />
 				<AppAdMonetizeMoreSlot v-else :ad-slot :adapter />
 			</AppAspectRatio>

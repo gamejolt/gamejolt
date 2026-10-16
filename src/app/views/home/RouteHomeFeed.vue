@@ -18,6 +18,8 @@ import {
 	HOME_FEED_FYP,
 	HomeFeedService,
 } from '~app/views/home/home-feed.service';
+import { useAdStore } from '~common/ad/ad-store';
+import AppAdAdBridgStickyTarget from '~common/ad/adbridg/AppAdAdBridgStickyTarget.vue';
 import AppAdTakeoverBackground from '~common/ad/AppAdTakeoverBackground.vue';
 import AppAdTakeoverFloat from '~common/ad/AppAdTakeoverFloat.vue';
 import AppAdWidget from '~common/ad/widget/AppAdWidget.vue';
@@ -68,6 +70,8 @@ defineOptions({
 });
 
 const { user } = useCommonStore();
+const { shouldShow: globalShouldShowAds, adapter } = useAdStore();
+const isAdBridg = adapter.provider === 'adbridg';
 const questStore = useQuestStore();
 const route = useRoute();
 
@@ -195,7 +199,7 @@ async function refreshQuests() {
 		<section class="section">
 			<AppPageContainer
 				xl
-				sticky-sides
+				:sticky-sides="{ left: true, right: !isAdBridg }"
 				:sticky-side-top-margin="isXs ? kGridGutterWidthXs.value : kGridGutterWidth.value"
 			>
 				<!-- Left sidebar -->
@@ -299,6 +303,12 @@ async function refreshQuests() {
 					</template>
 
 					<AppAdWidget unit-name="sidebar" takeover />
+
+					<!-- AdBridg's sticky goes below all of the sidebar content. -->
+					<template v-if="isAdBridg && globalShouldShowAds">
+						<AppSpacer vertical :scale="4" />
+						<AppAdAdBridgStickyTarget />
+					</template>
 				</template>
 
 				<!-- Main -->

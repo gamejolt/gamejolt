@@ -9,7 +9,7 @@ type AdBridgCommand = {
 		pagetype: AdPageType;
 		loggedIn: boolean;
 		allowAds: boolean;
-		targeting: Record<string, string[]>;
+		targeting: Record<string, string | string[]>;
 	};
 };
 
@@ -111,7 +111,10 @@ export function createAdBridgAdapter() {
 					pagetype: pageType,
 					loggedIn,
 					allowAds,
-					targeting: { tt: targetingTags },
+					targeting: {
+						loggedIn: loggedIn ? 'true' : 'false',
+						tt: targetingTags,
+					},
 				},
 			});
 		},
