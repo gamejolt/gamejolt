@@ -6,6 +6,7 @@ import AppPageContainer from '~app/components/page-container/AppPageContainer.vu
 import AppShellPageBackdrop from '~app/components/shell/AppShellPageBackdrop.vue';
 import AppUserKnownFollowers from '~app/components/user/known-followers/AppUserKnownFollowers.vue';
 import { createRealmRouteStore, RealmRouteStoreKey } from '~app/views/realms/view/view.store';
+import AppAdWidget from '~common/ad/widget/AppAdWidget.vue';
 import { Api } from '~common/api/api.service';
 import AppButton from '~common/button/AppButton.vue';
 import AppRealmFollowButton from '~common/realm/AppRealmFollowButton.vue';
@@ -16,6 +17,8 @@ import { showShareModal } from '~common/share/card/_modal/modal.service';
 import AppShareCard from '~common/share/card/AppShareCard.vue';
 import AppSpacer from '~common/spacer/AppSpacer.vue';
 import AppTranslate from '~common/translate/AppTranslate.vue';
+import { styleChangeBg, styleElevate } from '~styles/mixins';
+import { kBorderRadiusLg } from '~styles/variables';
 import { getAbsoluteLink } from '~utils/router';
 
 export default {
@@ -108,6 +111,22 @@ const stickySideTopMargin = toRef(() => 4 * (isMobile.value ? 5 : 10));
 				</div>
 			</template>
 			<template #right>
+				<template v-if="isDesktop">
+					<AppAdWidget
+						unit-name="sidebar"
+						takeover
+						:style-override="{
+							...styleChangeBg('bg'),
+							...styleElevate(3),
+							// Can't change this, needs to be at least 300px wide.
+							minWidth: `300px`,
+							borderRadius: kBorderRadiusLg.px,
+							padding: `8px`,
+						}"
+					/>
+					<AppSpacer vertical :scale="6" />
+				</template>
+
 				<AppShareCard v-if="shareLink && isDesktop" resource="realm" :url="shareLink" />
 			</template>
 			<template #default>

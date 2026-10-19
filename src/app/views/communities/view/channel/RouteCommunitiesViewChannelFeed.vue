@@ -19,6 +19,8 @@ import {
 	setCommunityMeta,
 	useCommunityRouteStore,
 } from '~app/views/communities/view/view.store';
+import { useAdStore } from '~common/ad/ad-store';
+import AppAdAdBridgStickyTarget from '~common/ad/adbridg/AppAdAdBridgStickyTarget.vue';
 import { FiresidePostModel } from '~common/fireside/post/post-model';
 import AppIllustration from '~common/illustration/AppIllustration.vue';
 import { illNoComments } from '~common/illustration/illustrations';
@@ -43,7 +45,14 @@ const { communityStates } = useAppStore();
 const { grid } = useGridStore();
 const { user } = useCommonStore();
 const route = useRoute();
-const { isMobile, isDesktop } = getScreen();
+const { isMobile, isDesktop, isLg } = getScreen();
+const { shouldShow: globalShouldShowAds, adapter } = useAdStore();
+
+const isAdBridg = adapter.provider === 'adbridg';
+
+// Channel feeds have no sidebar content, so only fill the empty sidebar column
+// on lg. Adding sidebar content on md would squeeze the feed.
+const showAdBridgSticky = toRef(() => isAdBridg && globalShouldShowAds.value && isLg.value);
 
 const feed = ref(null) as Ref<ActivityFeedView | null>;
 const isBootstrapped = ref(false);
@@ -205,6 +214,9 @@ const appRoute = createAppRoute({
 				@add-post="onPostAdded"
 				@load-new="loadedNew"
 			/>
+		</template>
+		<template v-if="showAdBridgSticky" #sidebar>
+			<AppAdAdBridgStickyTarget />
 		</template>
 	</AppCommunityPageContainer>
 </template>

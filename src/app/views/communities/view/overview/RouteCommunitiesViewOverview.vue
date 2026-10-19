@@ -20,10 +20,14 @@ import {
 	setCommunityMeta,
 	useCommunityRouteStore,
 } from '~app/views/communities/view/view.store';
+import { useAdStore } from '~common/ad/ad-store';
+import AppAdAdBridgStickyTarget from '~common/ad/adbridg/AppAdAdBridgStickyTarget.vue';
 import AppButton from '~common/button/AppButton.vue';
 import { FiresidePostModel } from '~common/fireside/post/post-model';
 import { showSuccessGrowl } from '~common/growls/growls.service';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
+import { getScreen } from '~common/screen/screen-service';
+import AppSpacer from '~common/spacer/AppSpacer.vue';
 import { useCommonStore } from '~common/store/common-store';
 import { vAppTooltip } from '~common/tooltip/tooltip-directive';
 import { $gettext } from '~common/translate/translate.service';
@@ -44,6 +48,10 @@ const { user } = useCommonStore();
 const { grid } = useGridStore();
 const routeStore = useCommunityRouteStore()!;
 const route = useRoute();
+const { shouldShow: globalShouldShowAds, adapter } = useAdStore();
+const { isDesktop } = getScreen();
+
+const isAdBridg = adapter.provider === 'adbridg';
 
 const isBootstrapped = ref(false);
 const feed = ref(null) as Ref<ActivityFeedView | null>;
@@ -177,6 +185,12 @@ const appRoute = createAppRoute({
 			</template>
 			<template #sidebar>
 				<AppCommunitySidebar :sidebar-data="sidebarData" :community="community" />
+
+				<!-- We don't pin the sidebar here, so AdBridg handles the sticky. -->
+				<template v-if="isAdBridg && globalShouldShowAds && isDesktop">
+					<AppSpacer vertical :scale="4" />
+					<AppAdAdBridgStickyTarget />
+				</template>
 			</template>
 		</AppCommunityPageContainer>
 	</div>
