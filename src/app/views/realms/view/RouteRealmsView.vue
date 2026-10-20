@@ -111,7 +111,10 @@ const stickySideTopMargin = toRef(() => 4 * (isMobile.value ? 5 : 10));
 				</div>
 			</template>
 			<template #right>
+				<AppShareCard v-if="shareLink && isDesktop" resource="realm" :url="shareLink" />
+
 				<template v-if="isDesktop">
+					<AppSpacer vertical :scale="6" />
 					<AppAdWidget
 						unit-name="sidebar"
 						takeover
@@ -124,10 +127,7 @@ const stickySideTopMargin = toRef(() => 4 * (isMobile.value ? 5 : 10));
 							padding: `8px`,
 						}"
 					/>
-					<AppSpacer vertical :scale="6" />
 				</template>
-
-				<AppShareCard v-if="shareLink && isDesktop" resource="realm" :url="shareLink" />
 			</template>
 			<template #default>
 				<RouterView />
