@@ -304,7 +304,7 @@ async function refreshQuests() {
 
 					<!-- AdBridg only gets its sticky unit here, not the sidebar unit. -->
 					<AppAdAdBridgStickyTarget v-if="isAdBridg && globalShouldShowAds" />
-					<AppAdWidget v-else-if="!isAdBridg" unit-name="sidebar" takeover />
+					<AppAdWidget v-else-if="!isAdBridg" unit-name="rail" takeover />
 				</template>
 
 				<!-- Main -->

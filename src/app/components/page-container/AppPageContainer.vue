@@ -2,6 +2,7 @@
 import { computed, CSSProperties, toRef, watch } from 'vue';
 
 import { kShellTopNavHeight } from '~app/styles/variables';
+import AppAdColumn from '~common/ad/AppAdColumn.vue';
 import { ComponentProps } from '~common/component-helpers';
 import { getScreen } from '~common/screen/screen-service';
 import AppScrollAffix from '~common/scroll/AppScrollAffix.vue';
@@ -180,8 +181,10 @@ const stickyScrollerStyles = computed<CSSProperties>(() => {
 							...(stickySideData.left ? { controller: scrollerLeft } : {}),
 						}"
 					>
-						<slot name="left" />
-						<slot name="left-bottom" />
+						<AppAdColumn column="left">
+							<slot name="left" />
+							<slot name="left-bottom" />
+						</AppAdColumn>
 					</component>
 				</component>
 			</template>
@@ -212,9 +215,12 @@ const stickyScrollerStyles = computed<CSSProperties>(() => {
 							...(stickySideData.right ? { controller: scrollerRight } : {}),
 						}"
 					>
-						<slot v-if="shouldCombineColumns" name="left" />
-						<slot name="right" v-bind="{ combined: shouldCombineColumns }" />
-						<slot v-if="shouldCombineColumns" name="left-bottom" />
+						<!-- The left slot shows in here when combined, so it's on the right. -->
+						<AppAdColumn column="right">
+							<slot v-if="shouldCombineColumns" name="left" />
+							<slot name="right" v-bind="{ combined: shouldCombineColumns }" />
+							<slot v-if="shouldCombineColumns" name="left-bottom" />
+						</AppAdColumn>
 					</component>
 				</component>
 			</template>

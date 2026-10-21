@@ -20,7 +20,8 @@ const { adSlot, adapter } = defineProps<Props>();
 
 const MonetizeMoreUnits: Record<Exclude<AdUnitName, 'instream'>, string> = {
 	leaderboard: 'billboard',
-	sidebar: 'halfpage',
+	rail: 'halfpage',
+	'rail-mpu': 'mpu',
 	gutter: 'rail',
 	incontent: 'mpu',
 };

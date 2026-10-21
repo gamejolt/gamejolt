@@ -3,12 +3,14 @@
  * ad units.
  *
  * - leaderboard: wide banner at the top of a page.
- * - sidebar: tall unit in a page's sidebar column.
+ * - rail: tall unit in a page's side column. Which side it's on comes from the
+ *   column it renders in, see `AdColumn`.
+ * - rail-mpu: medium rectangle in a page's side column.
  * - gutter: narrow rail in the page gutter, only on very wide screens.
  * - incontent: repeating unit within feeds, grids and lists.
  * - instream: 16:9 video unit.
  */
-export type AdUnitName = 'leaderboard' | 'sidebar' | 'gutter' | 'incontent' | 'instream';
+export type AdUnitName = 'leaderboard' | 'rail' | 'rail-mpu' | 'gutter' | 'incontent' | 'instream';
 
 export class AdSlot {
 	/**

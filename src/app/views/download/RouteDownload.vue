@@ -231,14 +231,14 @@ function onVideoAdFail() {
 				<template v-if="isDesktop" #left>
 					<AppScrollAffix :disabled="isAdBridg">
 						<AppAdTakeoverFloat>
-							<AppAdWidget unit-name="sidebar" takeover />
+							<AppAdWidget unit-name="rail" takeover />
 						</AppAdTakeoverFloat>
 					</AppScrollAffix>
 				</template>
 				<template v-if="isLg" #right>
 					<AppScrollAffix :disabled="isAdBridg">
 						<AppAdTakeoverFloat>
-							<AppAdWidget unit-name="sidebar" />
+							<AppAdWidget unit-name="rail" />
 						</AppAdTakeoverFloat>
 					</AppScrollAffix>
 				</template>

@@ -1,3 +1,4 @@
+import { AdColumn } from '~common/ad/ad-column';
 import { AdPageType } from '~common/ad/ad-page-view';
 import { AdUnitName } from '~common/ad/ad-slot-info';
 import { defineAdAdapter } from '~common/ad/adapter-base';
@@ -31,6 +32,11 @@ type AdBridgSlotDefinition = {
 	 * The part of AdBridg's ad class that comes after the device prefix.
 	 */
 	slot: string;
+	/**
+	 * Appends the side column the slot renders in, e.g. "rail-left". The unit
+	 * isn't shown outside of a side column.
+	 */
+	sided?: boolean;
 	maxWidth?: number;
 	maxHeight?: number;
 };
@@ -41,7 +47,8 @@ type AdBridgSlotDefinition = {
  */
 const DesktopSlots: Partial<Record<AdUnitName, AdBridgSlotDefinition>> = {
 	leaderboard: { slot: 'lb', maxWidth: 970, maxHeight: 250 },
-	sidebar: { slot: 'rail-left', maxWidth: 300, maxHeight: 600 },
+	rail: { slot: 'rail', sided: true, maxWidth: 300, maxHeight: 600 },
+	'rail-mpu': { slot: 'rail-mpu', maxWidth: 300, maxHeight: 250 },
 	incontent: { slot: 'incontent', maxWidth: 336, maxHeight: 280 },
 	instream: { slot: 'instream' },
 };
@@ -68,21 +75,33 @@ export function createAdBridgAdapter() {
 
 	/**
 	 * Gets the target that AdBridg will render the ad into. Returns null if the
-	 * unit shouldn't show on this device.
+	 * unit shouldn't show on this device or in this column.
 	 */
-	function getSlotTarget(unitName: AdUnitName, isMobile: boolean): AdBridgSlotTarget | null {
+	function getSlotTarget(
+		unitName: AdUnitName,
+		isMobile: boolean,
+		column: AdColumn | null
+	): AdBridgSlotTarget | null {
 		const definition = (isMobile ? MobileSlots : DesktopSlots)[unitName];
 		if (!definition) {
 			return null;
 		}
 
+		let slot = definition.slot;
+		if (definition.sided) {
+			if (!column) {
+				return null;
+			}
+			slot += `-${column}`;
+		}
+
 		const devicePrefix = isMobile ? 'mb' : 'dt';
-		const adClass = `adb-gj-${devicePrefix}-${definition.slot}`;
+		const adClass = `adb-gj-${devicePrefix}-${slot}`;
 		const count = (slotCounts.get(adClass) ?? 0) + 1;
 		slotCounts.set(adClass, count);
 
 		return {
-			id: `${devicePrefix}-${definition.slot}-${count}`,
+			id: `${devicePrefix}-${slot}-${count}`,
 			adClass,
 			maxWidth: definition.maxWidth,
 			maxHeight: definition.maxHeight,

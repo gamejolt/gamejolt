@@ -47,7 +47,7 @@ function _makeAdSlot() {
 				...styleWhen(unitName === 'leaderboard', {
 					minHeight: `115px`,
 				}),
-				...styleWhen(unitName === 'incontent' || unitName === 'sidebar', {
+				...styleWhen(['incontent', 'rail', 'rail-mpu'].includes(unitName), {
 					minHeight: `250px`,
 				}),
 				// For debugging ad placements.

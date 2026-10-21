@@ -116,7 +116,7 @@ const stickySideTopMargin = toRef(() => 4 * (isMobile.value ? 5 : 10));
 				<template v-if="isDesktop">
 					<AppSpacer vertical :scale="6" />
 					<AppAdWidget
-						unit-name="sidebar"
+						unit-name="rail"
 						takeover
 						:style-override="{
 							...styleChangeBg('bg'),
