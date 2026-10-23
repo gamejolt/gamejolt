@@ -1,9 +1,7 @@
 <script lang="ts">
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 
-import { Api } from '~common/api/api.service';
 import AppButton from '~common/button/AppButton.vue';
-import { formatNumber } from '~common/filters/number';
 import { createAppRoute, defineAppRouteOptions } from '~common/route/route-component';
 import AppThemeSvg from '~common/theme/svg/AppThemeSvg.vue';
 import { $gettext } from '~common/translate/translate.service';
@@ -11,19 +9,12 @@ import { imageJolt } from '~img/images';
 
 export default {
 	...defineAppRouteOptions({
-		cache: true,
-		lazy: true,
 		reloadOn: 'never',
-		resolver: () => Api.sendRequest('/web/landing/game-api'),
 	}),
 };
 </script>
 
 <script lang="ts" setup>
-const totalScores = ref(0);
-const totalAchievedTrophies = ref(0);
-const sessionTime = ref(0);
-
 const assetPaths = import.meta.glob<string>('./*.svg', {
 	eager: true,
 	query: '?url',
@@ -32,11 +23,6 @@ const assetPaths = import.meta.glob<string>('./*.svg', {
 
 createAppRoute({
 	routeTitle: computed(() => $gettext(`Game API`)),
-	onResolved({ payload }) {
-		totalScores.value = payload.totalScores || 0;
-		totalAchievedTrophies.value = payload.totalAchievedTrophies || 0;
-		sessionTime.value = payload.sessionTime ? Math.floor(payload.sessionTime / 60 / 60) : 0;
-	},
 });
 </script>
 
@@ -67,38 +53,6 @@ createAppRoute({
 							<AppButton primary :to="{ name: 'landing.game-api-doc' }">
 								{{ $gettext(`Get Started`) }}
 							</AppButton>
-						</div>
-					</div>
-				</div>
-			</div>
-		</section>
-
-		<section class="section">
-			<div class="container">
-				<div class="row text-center">
-					<div class="col-lg-3" />
-					<div v-if="totalScores" class="col-lg-2">
-						<div class="stat-big">
-							<div class="stat-big-digit">
-								{{ formatNumber(totalScores) }}
-							</div>
-							<div class="stat-big-label">{{ $gettext(`Scores Logged`) }}</div>
-						</div>
-					</div>
-					<div class="col-lg-2">
-						<div v-if="totalAchievedTrophies" class="stat-big">
-							<div class="stat-big-digit">
-								{{ formatNumber(totalAchievedTrophies) }}
-							</div>
-							<div class="stat-big-label">{{ $gettext(`Trophies Achieved`) }}</div>
-						</div>
-					</div>
-					<div class="col-lg-2">
-						<div v-if="sessionTime" class="stat-big">
-							<div class="stat-big-digit">
-								{{ formatNumber(sessionTime) }}
-							</div>
-							<div class="stat-big-label">{{ $gettext(`Hours Logged`) }}</div>
 						</div>
 					</div>
 				</div>
