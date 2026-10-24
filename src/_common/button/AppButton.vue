@@ -39,7 +39,7 @@ type Props = {
 	 * {@link icon} is set.
 	 */
 	dynamicSlots?: 'icon'[] | Record<'icon', boolean> | boolean;
-} & /* @vue-ignore */ Pick<HTMLAttributes, 'onMouseenter' | 'onMouseleave'>;
+} & /* @vue-ignore */ Pick<HTMLAttributes, 'onMouseenter' | 'onMouseleave' | 'aria-pressed'>;
 
 const {
 	tag = 'button',

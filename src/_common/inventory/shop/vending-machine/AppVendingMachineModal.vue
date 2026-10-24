@@ -15,6 +15,12 @@ import { PurchasableProductTypeStickerPack } from '~common/inventory/shop/produc
 import { showPurchaseShopProductModal } from '~common/inventory/shop/purchase-modal/modal.service';
 import AppVendingMachineProduct from '~common/inventory/shop/vending-machine/_product/AppVendingMachineProduct.vue';
 import AppVendingMachineCurrencyCard from '~common/inventory/shop/vending-machine/AppVendingMachineCurrencyCard.vue';
+import AppVendingMachineFilters from '~common/inventory/shop/vending-machine/AppVendingMachineFilters.vue';
+import {
+	createDefaultShopFilters,
+	saleMatchesShopFilters,
+	ShopFilters,
+} from '~common/inventory/shop/vending-machine/shop-filters';
 import imageVance from '~common/inventory/shop/vending-machine/vance.png';
 import AppJolticon from '~common/jolticon/AppJolticon.vue';
 import AppLoadingFade from '~common/loading/AppLoadingFade.vue';
@@ -90,6 +96,8 @@ const shopOwner = ref<UserModel>();
 const sections = ref([]) as Ref<Section[]>;
 const chargeRewardPack = ref<StickerPackModel>();
 
+const filters = ref<ShopFilters>(createDefaultShopFilters());
+
 const isLoading = ref(false);
 const productProcessing = ref<number>();
 
@@ -102,6 +110,23 @@ const hasProducts = computed(() => {
 	}
 	return false;
 });
+
+const visibleSections = computed(() =>
+	sections.value
+		.map(section => ({
+			...section,
+			sales: section.sales.filter(sale => saleMatchesShopFilters(sale, filters.value)),
+		}))
+		.filter(section => section.sales.length > 0)
+);
+
+const totalSaleCount = computed(() =>
+	sections.value.reduce((count, { sales }) => count + sales.length, 0)
+);
+
+const visibleSaleCount = computed(() =>
+	visibleSections.value.reduce((count, { sales }) => count + sales.length, 0)
+);
 
 const currencyCardData = computed(() => {
 	const result = [{ currency: CurrencyType.coins, amount: coinBalance.value }];
@@ -539,7 +564,32 @@ const rewardPackImageSize = run(() => {
 								</div>
 							</div>
 							<template v-else-if="hasProducts">
-								<template v-for="section in sections" :key="section.id">
+								<!--
+									Only on the main shop. Filters don't make sense in a
+									creator shop, where all items use Joltbux and none are
+									limited time only.
+								-->
+								<AppVendingMachineFilters
+									v-if="!userId"
+									v-model="filters"
+									:shown-count="visibleSaleCount"
+									:total-count="totalSaleCount"
+								/>
+
+								<AppIllustration
+									v-if="!visibleSections.length"
+									:asset="illNoCommentsSmall"
+								>
+									<div>
+										{{ $gettext(`No items match these filters.`) }}
+									</div>
+									<AppSpacer vertical :scale="2" />
+									<AppButton @click="filters = createDefaultShopFilters()">
+										{{ $gettext(`Clear filters`) }}
+									</AppButton>
+								</AppIllustration>
+
+								<template v-for="section in visibleSections" :key="section.id">
 									<div
 										v-if="section.sales.length"
 										class="fill-offset"
