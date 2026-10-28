@@ -4,7 +4,7 @@ export type AdProvider = 'monetizemore' | 'adbridg';
  * The percent of sessions (0-100) that get AdBridg. Everyone else gets
  * MonetizeMore. Ramp this up through deploys until we fully hand over.
  */
-const AdBridgTrafficPercent = 0;
+const AdBridgTrafficPercent = 100;
 
 /**
  * Add `?ad_provider=adbridg` (or `?ad_provider=monetizemore`) to any URL to
