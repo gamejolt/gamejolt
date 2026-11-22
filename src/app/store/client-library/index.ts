@@ -217,8 +217,10 @@ export function createClientLibraryStore() {
 		installerInit();
 		launcherInit();
 
-		syncOps.syncCheck();
-		setInterval(() => syncOps.syncCheck(), 60 * 60 * 1000); // 1hr currently
+		// Kicks off the recurring library sync.
+		// The loop reschedules itself after each cycle completes
+		// (a cycle may span multiple paginated requests).
+		syncOps.startSyncLoop();
 
 		_bootstrapResolve();
 	}
