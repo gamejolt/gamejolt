@@ -218,7 +218,7 @@ function onVideoAdFail() {
 				paddingTop: kLineHeightComputed.px,
 			}"
 		>
-			<AppAdTakeoverFloat v-if="isDesktop">
+			<AppAdTakeoverFloat>
 				<AppAdWidget
 					unit-name="leaderboard"
 					:style-override="{

@@ -249,7 +249,7 @@ async function reloadPreviewComments() {
 
 		<section class="section section-thin">
 			<AppAdWidget
-				v-if="globalShouldShowAds && !isMobile"
+				v-if="globalShouldShowAds"
 				unit-name="leaderboard"
 				:style-override="{
 					paddingBottom: `8px`,

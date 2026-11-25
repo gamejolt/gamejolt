@@ -54,7 +54,7 @@ const DesktopSlots: Partial<Record<AdUnitName, AdBridgSlotDefinition>> = {
 };
 
 const MobileSlots: Partial<Record<AdUnitName, AdBridgSlotDefinition>> = {
-	leaderboard: { slot: 'lb', maxWidth: 320, maxHeight: 100 },
+	leaderboard: { slot: 'lb', maxWidth: 336, maxHeight: 280 },
 	incontent: { slot: 'incontent', maxWidth: 336, maxHeight: 280 },
 	instream: { slot: 'instream' },
 };
