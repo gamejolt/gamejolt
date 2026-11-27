@@ -82,7 +82,8 @@ export const SettingThemeDark = new BooleanSetting('theme-dark', true);
 export const SettingThemeAlwaysOurs = new BooleanSetting('theme-always-ours', false);
 export const SettingGameInstallDir = new StringSetting('game-install-dir', () => {
 	const path = require('path') as typeof import('path');
-	const dataPath = nw.App.dataPath;
+	// Keep installs outside Chromium's profile folders; long paths can prevent games from loading DLLs.
+	const dataPath = nw.App.dataPath.replace(/(?:[\\/]User Data)?[\\/]Default[\\/]?$/, '');
 
 	return path.join(dataPath, 'Games');
 });
